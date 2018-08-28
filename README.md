@@ -1,4 +1,4 @@
-<img src="vulas_logo_va_2048.png" height="64" width="64">
+# <img src="vulas_logo_va_2048.png" height="64" width="64"> Code-centric and usage-based vulnerability assessment for Java and Python
 
 ## Description
 
