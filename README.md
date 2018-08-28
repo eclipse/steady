@@ -31,6 +31,8 @@ To foster the adoption of Vulas, we plan to release the following other artifact
 - Steps 2 and 3 will be facilitated by the release of Docker files and Docker Compose files
 - Step 4 will be facilitated by the release of the existing knowledge base comprising 700+ vulnerabilities in Q4 2018. 
 
+<!--
+
 ## Download and Installation
 
 ## Configuration
@@ -41,7 +43,7 @@ As of today, the static and dynamic analysis is only available for Java applicat
 
 ## Known Issues
 
-
+-->
 
 ## How to obtain support
 
@@ -57,11 +59,15 @@ You want to contribute? Here are the options:
  * [Contribute Code](CONTRIBUTING.md#contribute-code)
  * [Contribute to the Vulnerability Knowledge Base](CONTRIBUTING.md#knowledge-base)
 
+<!--
+
 ## To-Do (upcoming changes)
 The following is a subset of pending feature requests:
 - Static and dynamic analysis for Python
 - Support of JavaScript (client- and server-side)
 - UI dashboards for workspaces
+
+-->
 
 ## License
 Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
