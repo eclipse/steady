@@ -1,4 +1,4 @@
-![Image](vulas_logo_va_2048.png?raw=true){: height=64 width=64}
+<img src="vulas_logo_va_2048.png" height="64" width="64">
 
 ## Description
 
