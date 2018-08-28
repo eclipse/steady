@@ -98,5 +98,7 @@ This project is licensed under the Apache Software License, v. 2 except as noted
 
 ## References
 [1] [https://snyk.io/blog/owasp-top-10-breaches/](https://snyk.io/blog/owasp-top-10-breaches/)
+
 [2] [https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html](https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html)
+
 [3] [https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en](https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en)
