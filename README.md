@@ -22,7 +22,10 @@ Vulas has been originally developed by SAP Security Research [[2]](https://www.s
 ## Features
 
 In the following a couple of example features:
-- Vulas is robust against the ...
+- The detection of vulnerable code is realized by discovering method signatures in Java archives and comparing their source and byte code with the vulnerable and fixed version (as known from the fix commit). As such, the detection is more acurate than for approaches based on metadata (less false-positives and false-negatives). In particular, it is robust against rebundling, a very common practice in the Java ecosystem.
+- Individual findings can be exempted if developers come to the conclusion that a vulnerability cannot be exploited in a given application-context. This information can be maintained in an auditable fashion (incl. timestamp and author information) and typically prevents build exeptions during CI/CD pipelines.
+- The addition of new vulnerabilities to the knowledge base does not require the re-scan of applications.
+- Many more...
 
 ## Requirements
 
@@ -94,6 +97,6 @@ Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
 This project is licensed under the Apache Software License, v. 2 except as noted otherwise in the [LICENSE file](LICENSE.txt).
 
 ## References
-[1] https://snyk.io/blog/owasp-top-10-breaches/
-[2] https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html
-[3] https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en
+[1] [https://snyk.io/blog/owasp-top-10-breaches/](https://snyk.io/blog/owasp-top-10-breaches/)
+[2] [https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html](https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html)
+[3] [https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en](https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en)
