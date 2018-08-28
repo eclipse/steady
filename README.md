@@ -1,3 +1,5 @@
+![Image](vulas_logo_va_2048.png?raw=true)
+
 ## Description
 
 Vulas supports software development organizations in regards to the secure use of open-source components during application development. It is a collection of client-side scan tools, RESTful microservices and rich [OpenUI5](https://openui5.hana.ondemand.com/) Web frontends.
