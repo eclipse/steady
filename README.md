@@ -1,4 +1,4 @@
-![Image](vulas_logo_va_2048.png?raw=true)
+![Image](vulas_logo_va_2048.png?raw=true){:height="64px" width="64px"}
 
 ## Description
 
