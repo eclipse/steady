@@ -1,14 +1,14 @@
-<img src="vulas_logo_va_2048.png" height="64" width="64">
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.wdf.sap.corp/vulas/vulas/blob/master/LICENSE.txt) [![Build Status](https://prod-build10200.wdf.sap.corp:443/job/vulas/job/vulas-vulas-master-CI-linuxx86_64/144/badge/icon)](https://prod-build10200.wdf.sap.corp:443/job/vulas/job/vulas-vulas-master-CI-linuxx86_64/144/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-## Notice
+<p align="left">
+  #
+  <img height="64" src="./media/images/logo/vulas.png">
+  Vulnerability Assessment tool (Vulas)
+</p>
 
-Note that this repository does not yet contain the source code of the Vulnerability Assessment tool. Its release is planned for September 2018, and additional artifacts will follow in Q4 2018 in order to facilitate tool operations (see below).
+> Vulas supports the discovery, assessment and mitigation of known vulnerabilities in your Java and Python projects
 
-The decision to already put the repository live, despite the lack of source code, was made in order to support the dissemination at prominent industry and scientific events taking place in August and September 2018.
-
-## Description
-
-The Vulnerability Assessment tool supports software development organizations in regards to the secure use of open-source components during application development. It is a collection of client-side scan tools, RESTful microservices and rich [OpenUI5](https://openui5.hana.ondemand.com/) Web frontends.
+Vulas supports software development organizations in regards to the secure use of open-source components during application development. It is a collection of client-side scan tools, RESTful microservices and rich [OpenUI5](https://openui5.hana.ondemand.com/) Web frontends.
 
 The tool analyzes **Java** and **Python** applications in order to
 - detect whether they depend on open-source components with known vulnerabilities,
@@ -23,7 +23,7 @@ In comparison to other tools, the detection is code-centric and usage-based, whi
 
 ## History
 
-The tool has been originally developed by SAP Security Research [[2]](https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html)[[3]](https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en). Since then, it has become the officially recommended open-source scan tool for Java application at SAP. Since the beginning of 2017, it has been used to perform 20K+ scans of more than 600+ Java development projects.
+Originally developed by SAP Security Research [[2]](https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html)[[3]](https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en), the tool has become the officially recommended open-source scan tool for Java applications at SAP. Since the beginning of 2017, it has been used to perform 20K+ scans of more than 600+ Java development projects.
 
 ## Features
 
@@ -37,23 +37,22 @@ In the following a couple of example features:
 
 ## Requirements
 
-For the time being, the Vulnerability Assessment tool primarily addresses software development organizations. The main reason is that its setup and operation requires some investment (see below). However, the planned release of additional artifacts will lower this hurdle and foster the adoption. To put it in other words: It is not (yet) a tool that can be downloaded and run out-of-the-box in 5 minutes.
+The Vulnerability Assessment tool has a distributed architecture composed of a couple of Spring Boot microservices, two Web frontends and a number of client-side scanners/plugins, which perform the actual analysis of application and dependency code on build systems or developer workstations.
+
+To facilitate experiments and tests, we provide a set of Docker files to run the ensemble of services on a single machine (cf. section [Download and Installation](#download-and-installation).
+
+However, a setup on a single machine does not meet the requirements for productive use in regards to scalability and availability. In consequence, the tool primarily addresses software development organizations (with multiple development teams), which have the required resources to setup and operate the tool 24/7.
 
 ## Download and Installation
 
-The Vulnerability Assessment tool is a collection of client-side scan tools, two RESTful microservices and two rich [OpenUI5](https://openui5.hana.ondemand.com/) Web frontends.
+Proceed as follows to build and run the tool locally, on a single system:
 
-Before being able to actually scan applications using the client-side tools, one has to:
-1. Clone this repository, and build the various binaries using `mvn clean install`
-2. Deploy the two microservices (`rest-backend` and `rest-lib-utils`)
-3. Deploy the two Web frontends (`frontend-apps` and `frontend-bugs`)
-4. Add vulnerabilities to the knowledge base (using the `patch-analyzer`, which analyzes the commits fixing given vulnerabilities in open-source components, and the `patch-lib-analyzer`, which checks whether libraries are affected by vulnerabilities)
+1. Clone the repository
+2. Build all client-side and server-side artifacts (with help of the Docker file `docker/...`)
+3. Build the runtime Docker images using those artifacts
+4. Execute all the runtime Docker images locally
 
-Obviously, those activities are relatively involved, hence, we aim at releasing the following additional artifacts in order to facilitate its setup and operation. The current plan is to release by Q4 2018, in dedicated repositories:
-- Docker and Docker Compose files to facilitate the operation (steps 2 and 3)
-- The existing knowledge base comprising 700+ vulnerabilities (step 4) 
-
-Moreover, in order to avoid the necessity to build the various binaries, we aim at publishing (some of) them on public repositories such as Maven Central. 
+**Note:** The **single-system setup** is not recommended for productive use in larger development organizations. In such cases, the Docker images built in step 3 must be run with, for instance, Docker Compose or Kubernetes. Moreover, client-side artifacts such as the Maven or Gradle plugins must be made available to your developers using  your organization's package repositories, e.g., Nexus or artifactory.
 
 ## Configuration
 
@@ -63,17 +62,15 @@ The microservices and Web frontends can be configured to integrate with an organ
 
 The tool was originally built to manage publicly known vulnerabilities in open-source components, however, the knowledge base can also (in parallel) comprise non-public vulnerabilities. This possibility is particularly useful for larger development organiations with many internal re-use components. As for open-source components, thanks to the integration with private Nexus and PyPI repositories, the tool can suggest the latest non-vulnerable version of such internal re-use components.
 
-<!--
-
 ## Limitations
 
 As of today, the static and dynamic analysis is only available for Java applications.
 
+Moreover, the RESTful API of the microservices is not protected through authentication or authorization.
+
 ## Known Issues
 
-Lack of authentication and authorization.
-
--->
+None.
 
 ## How to obtain support
 
@@ -83,14 +80,12 @@ We will create a dedicated tag on [Stack Overflow](https://stackoverflow.com) to
 
 Our aim is to build a lively community, hence, we welcome any exchange and collaboration with individuals and organizations interested in the use, support and extension of the Vulnerability Assessment tool.
 
-You want to contribute? Here are the options we currently have in mind:
-- Help others on Stack Overflow
-- Report bugs as GitHub issues
-- Analyze GitHub issues
-- Contribute code (bug fixes and features)
-- Contribute vulnerability information to the knowledge base: As mentioned before, we plan to use a dedicated GitHub repository to organize the sharing and joint maintenance of information about publicly known vulnerabilities in open-source components. In the majority of the cases, such information essentially consists of a bug identifier and references to one or more commits (created by the developers of the vulnerable component in order to fix the vulnerability). 
-
-<!--
+Please read [this document](CONTRIBUTIONS.md) to read more about your options:
+ * [Help Others](CONTRIBUTING.md#help-others) on Stack Overflow
+ * [Report Bugs](CONTRIBUTING.md#report-an-issue) as GitHub issues
+ * [Analyze Bugs](CONTRIBUTING.md#analyze-issues)
+ * [Contribute Code](CONTRIBUTING.md#contribute-code) (fixes and features)
+ * [Contribute to the Vulnerability Knowledge Base](CONTRIBUTING.md#knowledge-base): The fuel driving the Vulnerability Assessment tool is its vulnerability database. We plan to use a dedicated GitHub repository to organize the sharing and joint maintenance of information about publicly known vulnerabilities in open-source components. In the majority of the cases, such information essentially consists of a bug identifier and references to one or more commits (created by the developers of the vulnerable component in order to fix the vulnerability). 
 
 ## To-Do (upcoming changes)
 The following is a subset of pending feature requests:
@@ -98,13 +93,12 @@ The following is a subset of pending feature requests:
 - Support of JavaScript (client- and server-side)
 - UI dashboards for workspaces
 
--->
-
 ## License
 Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
-This project is licensed under the Apache Software License, v. 2 except as noted otherwise in the [LICENSE file](LICENSE).
+This project is licensed under the Apache Software License, v. 2 except as noted otherwise in the [LICENSE file](LICENSE.txt).
 
 ## References
-- [1] [https://snyk.io/blog/owasp-top-10-breaches/](https://snyk.io/blog/owasp-top-10-breaches/)
-- [2] [https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html](https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html)
-- [3] [https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en](https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en)
+\[1\] [https://snyk.io/blog/owasp-top-10-breaches/](https://snyk.io/blog/owasp-top-10-breaches/)
+
+\[2\] [https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html](https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html)
+\[3\] [https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en](https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en)
