@@ -1,6 +1,6 @@
 # Contributing
 
-Our aim is to build a lively community, hence, we welcome any exchange and collaboration with individuals and organizations interested in the use, support and extension of the open-source vulnerability management tool.
+Our aim is to build a lively community, hence, we welcome any exchange and collaboration with individuals and organizations interested in the use, support and extension of the open-source vulnerability assessment tool.
 
 To contribute, read on to learn about your options:
  * [Help Others](#help-others) on Stack Overflow
@@ -11,11 +11,11 @@ To contribute, read on to learn about your options:
 
 ## Help Others
 
-You can help by helping others who use the open-source vulnerability management tool and need support. Find them on [StackOverflow](http://stackoverflow.com/questions/tagged/vulas).
+You can help by helping others who use the open-source vulnerability assessment tool and need support. Find them on [StackOverflow](http://stackoverflow.com/questions/tagged/vulas).
 
 ## Report an Issue
 
-If you find a bug - behavior of the open-source vulnerability management tool code contradicting its specification - you are welcome to report it.
+If you find a bug - behavior of the open-source vulnerability assessment tool code contradicting its specification - you are welcome to report it.
 We can only handle well-reported, actual bugs, so please follow the guidelines below and use forums like [Stack Overflow](http://stackoverflow.com/questions/tagged/vulas) for support questions or when in doubt whether the issue is an actual bug.
 
 Once you have familiarized with the guidelines, you can go to the [Github issue tracker](https://github.com/SAP/open-source-vulnerability-mgmt/issues/new) to report the issue.
@@ -37,7 +37,7 @@ Issue report checklist:
 
 These eight requirements are the mandatory base of a good bug report:
 1. **Only real bugs**: please do your best to make sure to only report real bugs! Do not report:
-    * issues caused by application code or any code outside the open-source vulnerability management tool.
+    * issues caused by application code or any code outside the open-source vulnerability assessment tool.
     * something that behaves just different from what you expected. A bug is when something behaves different than specified. When in doubt, ask in a forum.
     * something you do not get to work properly. Use a support forum like Stack Overflow to request help.
     * feature requests. Well, this is arguable: critical or easy-to-do enhancement suggestions are welcome, but we do not want to use the issue tracker as wishlist.
@@ -60,7 +60,7 @@ You are encouraged to use [this template](./docs/ISSUE_TEMPLATE.md).
 
 Please report bugs in English, so all users can understand them.
 
-If the bug appears to be a regression introduced in a new version of the open-source vulnerability management tool, try to find the closest versions between which it was introduced.<!-- and take special care to make sure the issue is not caused by your application's usage of any internal method which changed its behavior.-->
+If the bug appears to be a regression introduced in a new version of the open-source vulnerability assessment tool, try to find the closest versions between which it was introduced.<!-- and take special care to make sure the issue is not caused by your application's usage of any internal method which changed its behavior.-->
 
 ### Issue handling process
 
@@ -103,7 +103,7 @@ The labels can only be set and modified by committers.
 
 ### Issue Reporting Disclaimer
 
-We want to improve the quality of the open-source vulnerability management tool and good bug reports are welcome! But our capacity is limited, so we cannot handle questions or consultation requests and we cannot afford to ask for required details. So we reserve the right to close or to not process insufficient bug reports in favor of those which are very cleanly documented and easy to reproduce. Even though we would like to solve each well-documented issue, there is always the chance that it won't happen - remember: The open-source vulnerability management tool is Open Source and comes without warranty.
+We want to improve the quality of the open-source vulnerability assessment tool and good bug reports are welcome! But our capacity is limited, so we cannot handle questions or consultation requests and we cannot afford to ask for required details. So we reserve the right to close or to not process insufficient bug reports in favor of those which are very cleanly documented and easy to reproduce. Even though we would like to solve each well-documented issue, there is always the chance that it won't happen - remember: The open-source vulnerability assessment tool is Open Source and comes without warranty.
 
 ## Analyze Issues
 
@@ -119,11 +119,11 @@ There are three important things to know:
 
 1.  You must be aware of the Apache License (which describes contributions) and **agree to the Contributors License Agreement**. This is common practice in all major Open Source projects. To make this process as simple as possible, we are using *[CLA assistant](https://cla-assistant.io/)* for individual contributions. CLA assistant is an open source tool that integrates with GitHub very well and enables a one-click-experience for accepting the CLA. For company contributers special rules apply. See the respective section below for details.
 2.  There are **several requirements regarding code style, quality, and product standards** which need to be met (we also have to follow them). The respective section below gives more details on the coding guidelines.
-3.  **Not all proposed contributions can be accepted**. Some features may e.g. just fit a third-party add-on better. The code must fit the overall direction of the open-source vulnerability management tool and really improve it, so there should be some "bang for the byte". For most bug fixes this is a given, but major feature implementation first need to be discussed with one of the open-source vulnerability management tool committers <!--(the top 20 or more of the [Contributors List](https://github.com/SAP/openui5/graphs/contributors))-->, possibly one who touched the related code recently. The more effort you invest, the better you should clarify in advance whether the contribution fits: the best way would be to just open an enhancement ticket in the issue tracker to discuss the feature you plan to implement (make it clear you intend to contribute). We will then forward the proposal to the respective code owner, this avoids disappointment.
+3.  **Not all proposed contributions can be accepted**. Some features may e.g. just fit a third-party add-on better. The code must fit the overall direction of the open-source vulnerability assessment tool and really improve it, so there should be some "bang for the byte". For most bug fixes this is a given, but major feature implementation first need to be discussed with one of the open-source vulnerability assessment tool committers <!--(the top 20 or more of the [Contributors List](https://github.com/SAP/openui5/graphs/contributors))-->, possibly one who touched the related code recently. The more effort you invest, the better you should clarify in advance whether the contribution fits: the best way would be to just open an enhancement ticket in the issue tracker to discuss the feature you plan to implement (make it clear you intend to contribute). We will then forward the proposal to the respective code owner, this avoids disappointment.
 
 ### Contributor License Agreement
 
-When you contribute (code, documentation, or anything else), you have to be aware that your contribution is covered by the same [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0) that is applied to the open-source vulnerability management tool itself.
+When you contribute (code, documentation, or anything else), you have to be aware that your contribution is covered by the same [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0) that is applied to the open-source vulnerability assessment tool itself.
 In particular you need to agree to the Individual Contributor License Agreement,
 which can be [found here](https://gist.github.com/CLAassistant/bd1ea8ec8aa0357414e8).
 
@@ -146,7 +146,7 @@ The form contains a list of employees who are authorized to contribute on behalf
 
 Contributed content can be accepted if it:
 
-1. is useful to improve the open-source vulnerability management tool (explained above)
+1. is useful to improve the open-source vulnerability assessment tool (explained above)
 2. follows the applicable guidelines and standards
 
 The second requirement could be described in entire books and would still lack a 100%-clear definition, so you will get a committer's feedback if something is not right. Extensive conventions and guidelines documentation is [available here](docs/guidelines.md).
@@ -171,7 +171,7 @@ If this list sounds lengthy and hard to achieve - well, that's what WE have to c
 ### How to contribute - the Process
 
 1.  Make sure the change would be welcome (e.g. a bugfix or a useful feature); best do so by proposing it in a GitHub issue
-2.  Create a branch forking the the open-source vulnerability management tool repository and do your change
+2.  Create a branch forking the the open-source vulnerability assessment tool repository and do your change
 3.  Commit and push your changes on that branch
     -   When you have several commits, squash them into one (see [this explanation](http://davidwalsh.name/squash-commits-git)) - this also needs to be done when additional changes are required after the code review
 
@@ -183,7 +183,7 @@ If this list sounds lengthy and hard to achieve - well, that's what WE have to c
 6.  Create a Pull Request to github.com/SAP/open-source-vulnerability-mgmt
 7.  Follow the link posted by the CLA assistant to your pull request and accept it, as described in detail above.
 8.  Wait for our code review and approval, possibly enhancing your change on request
-    -   Note that the open-source vulnerability management tool developers also have their regular duties, so depending on the required effort for reviewing, testing and clarification this may take a while
+    -   Note that the open-source vulnerability assessment tool developers also have their regular duties, so depending on the required effort for reviewing, testing and clarification this may take a while
 
 9.  Once the change has been approved we will inform you in a comment
 10.  Your pull request cannot be merged directly into the branch (internal SAP processes), but will be merged internally and immediately appear in the public repository as well. Pull requests for non-code branches (like "gh-pages" for the website) can be directly merged.
@@ -191,7 +191,7 @@ If this list sounds lengthy and hard to achieve - well, that's what WE have to c
 
 ## Knowledge Base
 
-The open-source vulnerability management tool relies on a database with detailled information about vulnerable code (methods, functions, etc.) in open-source software libraries. This information is built by analyzing the source code changes (commits) done by open-source developers to fix a given vulnerability. In order to reflect new vulnerability disclosures, one has to analyze those so-called _fix commits_ and add corresponding entries to the local database.
+The open-source vulnerability assessment tool relies on a database with detailled information about vulnerable code (methods, functions, etc.) in open-source software libraries. This information is built by analyzing the source code changes (commits) done by open-source developers to fix a given vulnerability. In order to reflect new vulnerability disclosures, one has to analyze those so-called _fix commits_ and add corresponding entries to the local database.
 
 This analysis is done using the `PatchAnalyzer`, which takes several arguments as input, e.g., the source code repository of the respective component, the commit identifier(s), and a vulnerability identifier.
 
