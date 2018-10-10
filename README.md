@@ -1,10 +1,10 @@
 <p align="center"><img height="64" src="./docs/media/images/logo/vulas.png"></p>
 
-# Open-source vulnerability management tool [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.wdf.sap.corp/vulas/vulas/blob/master/LICENSE.txt) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) <!-- [![Build Status](https://<host>/job/<name>/job/<job-name>/lastBuild/badge/icon)](https://<host>/job/<name>/job/<job-name>/lastBuild/)-->
+# Open-source vulnerability assessment tool [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.wdf.sap.corp/vulas/vulas/blob/master/LICENSE.txt) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) <!-- [![Build Status](https://<host>/job/<name>/job/<job-name>/lastBuild/badge/icon)](https://<host>/job/<name>/job/<job-name>/lastBuild/)-->
 
 > Discover, assess and mitigate known vulnerabilities in your Java and Python projects
 
-The open-source vulnerability management tool supports software development organizations in regards to the secure use of open-source components during application development. It is a collection of client-side scan tools, RESTful microservices and rich [OpenUI5](https://openui5.hana.ondemand.com/) Web frontends.
+The open-source vulnerability assessment tool supports software development organizations in regards to the secure use of open-source components during application development. It is a collection of client-side scan tools, RESTful microservices and rich [OpenUI5](https://openui5.hana.ondemand.com/) Web frontends.
 
 The tool analyzes **Java** and **Python** applications in order to
 - detect whether they depend on open-source components with known vulnerabilities,
@@ -13,7 +13,7 @@ The tool analyzes **Java** and **Python** applications in order to
 
 As such, it addresses the OWASP Top 10 security risk A9, [Using Components with Known Vulnerabilities](https://www.owasp.org/index.php/Top_10-2017_A9-Using_Components_with_Known_Vulnerabilities), which is often the root cause of data breaches [[1]](https://snyk.io/blog/owasp-top-10-breaches/).
 
-In comparison to other tools, the detection is code-centric and usage-based, which allows for more accurate detection and assessment than tools relying on meta-data. The approach implemented in the open-source vulnerability management tool as is best described in the following scientific papers:
+In comparison to other tools, the detection is code-centric and usage-based, which allows for more accurate detection and assessment than tools relying on meta-data. The approach implemented in the open-source vulnerability assessment tool as is best described in the following scientific papers:
 - Serena Ponta, Henrik Plate, Antonino Sabetta, [Beyond Metadata: Code-centric and Usage-based Analysis of Known Vulnerabilities in Open-source Software](https://arxiv.org/abs/1806.05893), 34th International Conference on Software Maintenance and Evolution (ICSME), 2018
 - Henrik Plate, Serena Ponta, Antonino Sabetta, [Impact Assessment for Vulnerabilities in Open-Source Software Libraries](https://arxiv.org/pdf/1504.04971.pdf), 31st International Conference on Software Maintenance and Evolution (ICSME), 2015
 
@@ -35,7 +35,7 @@ Visit the Wiki in order to get a better understanding of the various features an
 
 ## Requirements
 
-The open-source vulnerability management tool has a distributed architecture composed of a couple of Spring Boot microservices, two Web frontends and a number of client-side scanners/plugins, which perform the actual analysis of application and dependency code on build systems or developer workstations.
+The open-source vulnerability assessment tool has a distributed architecture composed of a couple of Spring Boot microservices, two Web frontends and a number of client-side scanners/plugins, which perform the actual analysis of application and dependency code on build systems or developer workstations.
 
 To facilitate experiments and tests, we provide a set of Docker files to build and run the ensemble of services on a single machine (cf. section [Download and Installation](#download-and-installation)).
 
@@ -97,14 +97,14 @@ We will soon create a dedicated tag on [Stack Overflow](https://stackoverflow.co
 
 ## Contributing
 
-Our aim is to build a lively community, hence, we welcome any exchange and collaboration with individuals and organizations interested in the use, support and extension of the open-source vulnerability management tool.
+Our aim is to build a lively community, hence, we welcome any exchange and collaboration with individuals and organizations interested in the use, support and extension of the open-source vulnerability assessment tool.
 
 Please read [this document](CONTRIBUTING.md) to read more about your options:
  * [Help Others](CONTRIBUTING.md#help-others) on Stack Overflow
  * [Report Bugs](CONTRIBUTING.md#report-an-issue) as GitHub issues
  * [Analyze Bugs](CONTRIBUTING.md#analyze-issues)
  * [Contribute Code](CONTRIBUTING.md#contribute-code) (fixes and features)
- * [Contribute to the Vulnerability Knowledge Base](CONTRIBUTING.md#knowledge-base): The fuel driving the open-source vulnerability management tool is its vulnerability database. We plan to use a dedicated GitHub repository to organize the sharing and joint maintenance of information about publicly known vulnerabilities in open-source components. In the majority of the cases, such information essentially consists of a bug identifier and references to one or more commits (created by the developers of the vulnerable component in order to fix the vulnerability). 
+ * [Contribute to the Vulnerability Knowledge Base](CONTRIBUTING.md#knowledge-base): The fuel driving the open-source vulnerability assessment tool is its vulnerability database. We plan to use a dedicated GitHub repository to organize the sharing and joint maintenance of information about publicly known vulnerabilities in open-source components. In the majority of the cases, such information essentially consists of a bug identifier and references to one or more commits (created by the developers of the vulnerable component in order to fix the vulnerability). 
 
 ## To-Do (upcoming changes)
 
