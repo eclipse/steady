@@ -19,3 +19,7 @@ bin/
 /.metadata/
 out/
 gradle.zip
+**/docs/site
+/docker/**/*.*ar
+/docker/.env
+/.vscode
