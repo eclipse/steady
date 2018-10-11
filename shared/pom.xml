@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.sap.research.security.vulas</groupId>
+		<artifactId>root</artifactId>
+		<version>3.0.10-SNAPSHOT</version>
+	</parent>
+	<artifactId>shared</artifactId>
+
+	<name>Shared classes</name>
+	<description>
+		Contains class definitions shared between the different Vulas modules.
+		They can be classified as follows: Classes for JSON (de)serialization, classes
+		supporting service connectivity, utility classes and classes used to ensure
+		consistency across modules.
+	</description>
+	
+	<distributionManagement>
+		<site>
+			<id>vulas.website</id>
+			<name>Vulas Documentation</name>
+			<url>file:${project.basedir}/docs/site</url>
+		</site>
+	</distributionManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+		</dependency>
+		<!-- Required by VulasConfiguration -->
+		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Used to provide version information in "vulas-version.properties" -->
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<file>${project.basedir}/src/main/resources/vulas-version.properties</file>
+					<outputFile>${project.build.directory}/classes/vulas-version.properties</outputFile>
+					<regex>false</regex>
+					<replacements>
+						<replacement>
+							<token>$version$</token>
+							<value>${project.version}</value>
+						</replacement>
+						<replacement>
+							<token>$buildTimestamp$</token>
+							<value>${maven.build.timestamp}</value>
+						</replacement>
+						<replacement>
+							<token>$buildNumber$</token>
+							<value>${buildNumber}</value>
+						</replacement>
+						<replacement>
+							<token>$buildScmBranch$</token>
+							<value>${scmBranch}</value>
+						</replacement>
+					</replacements>
+				</configuration>
+			</plugin>
+			
+			<!-- Quick & dirty: Create a test-jar so that other modules can use the 
+				JUnit category annotation with SlowTest and FastTest. Creating a separate 
+				module would be cleaner, though. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+						<configuration>
+							<includes>
+								<include>**/categories/*</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

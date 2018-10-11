@@ -1,0 +1,28 @@
+{
+  "group": "com.acme",
+  "artifact": "vulas",
+  "version": "0.0.1", 
+  "dependencies": [
+    {
+      "lib": "sha1",
+      "scope": "COMPILE",
+      "transitive": false,
+      "declared": true,
+      "traced": true,
+      "filename": "commons-lib.jar",
+      "path": null
+    }
+  ],
+  "constructs": [
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "com.acme.Vulas"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.Vulas.vulas()"
+    }
+  ]
+}

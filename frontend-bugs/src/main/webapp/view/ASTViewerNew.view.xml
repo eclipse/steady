@@ -1,0 +1,135 @@
+<mvc:View controllerName="view.ASTViewerNew" xmlns="sap.m"
+          xmlns:c="sap.suite.ui.commons" xmlns:form="sap.ui.layout.form"
+          xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+    <Page id="idASTViewerNewPage" showNavButton='true' navButtonPress='handleNavBack'>
+        <headerContent>
+            <Button icon="sap-icon://email"  press="writeEmail" tooltip="Provide feedback on vulnerable archive releases" text="Feedback" />
+        </headerContent>
+        <content>
+<FlexBox justifyContent="Center" alignItems="Center" width="99%">
+                <items>
+                    <Table xmlns="sap.ui.table" width="80%" selectionMode = "None" editable="false" id="idChangesTable"
+                            rows="{/}"
+                            visibleRowCount="{path: '/', formatter: 'model.Formatter.getShortListLength'}"
+                            allowColumnReordering="false" cellClick="onChangedEntityClick"       
+                        >
+                        <Column xmlns="sap.ui.table" width="8%" >
+                            <Label text="Change" xmlns="sap.ui.commons" />
+                            <template>
+                                <TextView xmlns="sap.ui.commons" wrapping="true"
+                                             text="{OperationType}">
+                                </TextView>
+                            </template>
+                        </Column>
+                        <Column xmlns="sap.ui.table" width="20%" >
+                            <Label text="Entity Type" xmlns="sap.ui.commons" />
+                            <template>
+                                <TextView xmlns="sap.ui.commons" wrapping="true"
+                                             text="{EntityType}">
+                                </TextView>
+                            </template>
+                        </Column>
+                        <Column xmlns="sap.ui.table" width="42%" >
+                            <Label text="Changed Entity" xmlns="sap.ui.commons" />
+                            <template>
+                                <TextView xmlns="sap.ui.commons" wrapping="true"
+                                             text="{EntityName}">
+                                </TextView>
+                            </template>
+                        </Column>
+                        <Column xmlns="sap.ui.table" width="42%" >
+                            <Label text="New Entity" xmlns="sap.ui.commons" />
+                            <template>
+                                <TextView xmlns="sap.ui.commons" wrapping="true"
+                                             text="{NewEntity}">
+                                </TextView>
+                            </template>
+                        </Column>
+                        <Column xmlns="sap.ui.table" width="10%" visible="false" sorted="true"
+                                        sortProperty="rangeStart">
+                            <Label text="SourceCodeRangeStart" xmlns="sap.ui.commons" />
+                            <template>
+                                <TextView xmlns="sap.ui.commons" wrapping="true"
+                                             text="{rangeStart}">
+                                </TextView>
+                            </template>
+                        </Column>
+                    </Table>
+                </items>
+            </FlexBox>
+            <Panel xmlns="sap.ui.commons" text="Vulnerable to Fixed">
+            <l:Grid 	class="sapUiSmallMarginTop"
+                    hSpacing="2"
+                    defaultSpan="L6 M6 S10">
+                <l:content>
+                    <TreeTable xmlns="sap.ui.table"
+                               id="idBuggyTree"
+                               rows="{path:'/root', parameters: {arrayNames:['children']}}"
+                               visibleRowCount="{path: '/root', formatter: 'model.Formatter.getListLength'}"
+                               selectionMode="MultiToggle"
+                               enableSelectAll="false"
+                               cellClick="onVulnerableEntityClick" >
+                        <toolbar>
+                            <Toolbar xmlns="sap.m" >
+                                <Title id="titleVulnerable" text="Vulnerable"/>
+                                <ToolbarSpacer/>
+                                <Button text="Collapse all" press="onCollapseAllVulnerable" />
+                                <Button text="Expand all" press="onExpandAllVulnerable"/>
+                            </Toolbar>
+                        </toolbar>
+                        <columns>
+                            <Column width="13rem" xmlns="sap.ui.table">
+                                <Label text="AST Code Representation" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{name}" xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>
+                            <Column width="2rem" xmlns="sap.ui.table" >
+                                <Label text="Change" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{modificationType}" xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>
+                        </columns>
+                    </TreeTable>
+                    <TreeTable xmlns="sap.ui.table"
+                               id="idFixedTree"
+                               rows="{path:'/root', parameters: {arrayNames:['children']}}"
+                               visibleRowCount="{path: '/root', formatter: 'model.Formatter.getListLength'}"
+                               selectionMode="MultiToggle"
+                               enableSelectAll="false"
+                               cellClick="onFixedEntityClick">
+                        <toolbar>
+                            <Toolbar xmlns="sap.m">
+                                <Title id="titleFixed" text="Fixed"/>
+                                <ToolbarSpacer/>
+                                <Button text="Collapse all" press="onCollapseAllFixed" />
+                                <Button text="Expand all" press="onExpandAllFixed"/>
+                            </Toolbar>
+                        </toolbar>
+                        <columns>
+                            <Column width="13rem" xmlns="sap.ui.table" >
+                                <Label text="AST Code Representation" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{name}" xmlns="sap.ui.commons" class="myDefaultColor"/>
+                                    <!--semanticColor="{path:'modificationType', formatter: 'model.Formatter.rowColorAST'}"-->
+                                    
+                                </template>
+                            </Column>
+                            <Column width="2rem" xmlns="sap.ui.table" >
+                                <Label text="Change" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{modificationType}" xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>
+                        </columns>
+                    </TreeTable>
+                </l:content>
+            </l:Grid>
+            </Panel>
+        </content>
+    </Page>
+</mvc:View>

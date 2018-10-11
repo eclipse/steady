@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.sap.research.security.vulas</groupId>
+	<artifactId>root</artifactId>
+	<version>3.0.10-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>Vulas</name>
+	<description>Vulas analyses your Java and Python applications for open-source dependencies with known vulnerabilities, using both static analysis and testing to determine code context and usage for greater accuracy.</description>
+	<url>https://github.com/SAP/vulas</url>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>manual</distribution><!-- Must be build and installed locally 
+				(manual), cannot be redistributed on Maven (repo) -->
+		</license>
+	</licenses>
+	<organization>
+		<name>SAP Security Research</name>
+	</organization>
+	<developers>
+		<developer>
+			<id>plate</id>
+			<name>Henrik PLATE</name>
+			<email>henrik.plate@sap.com</email>
+		</developer>
+		<developer>
+			<id>ponta</id>
+			<name>Serena Elisa PONTA</name>
+			<email>serena.ponta@sap.com</email>
+		</developer>
+		<developer>
+			<id>sabetta</id>
+			<name>Antonino SABETTA</name>
+			<email>antonino.sabetta@sap.com</email>
+		</developer>
+		<developer>
+			<id>dangremont</id>
+			<name>Cedric DANGREMONT</name>
+			<email>cedric.dangremont@sap.com</email>
+		</developer>
+		<developer>
+			<id>pezze</id>
+			<name>Alessandro PEZZE</name>
+			<email>alessandro.pezze@sap.com</email>
+		</developer>
+	</developers>
+
+	<modules>
+		<!-- Shared across all modules -->
+		<module>shared</module>
+
+		<!-- Framework and base classes for lang-specific analysis -->
+		<module>lang</module>
+
+		<!-- Language-specific analysis -->
+		<module>lang-java-init</module>
+		<module>lang-java</module>
+		<module>lang-java-reach</module>
+		<module>lang-java-reach-wala</module>
+
+		<module>lang-python</module>
+
+		<!-- Analysis of security patches and libraries -->
+		<module>repo-client</module>
+		<module>patch-analyzer</module>
+		<module>patch-lib-analyzer</module>
+
+		<!-- Allow the scanning of applications -->
+		<module>cli-scanner</module>
+		<module>plugin-maven</module> <!-- NOTE: The naming violates the Maven naming convention (which asks for 
+			vulas-maven-plugin), but this is just a warning. -->
+
+		<!-- Web frontends -->
+		<module>frontend-apps</module>
+		<module>frontend-bugs</module>
+		<module>frontend-patch-analyzer</module> <!-- IMPORTANT: This frontend is years old, one has to check whether it still 
+			works. -->
+
+		<!-- REST services -->
+		<module>rest-lib-utils-init</module>
+		<module>rest-lib-utils</module>
+		<module>rest-backend</module>
+	</modules>
+
+	<properties>
+		<!-- Leave at 1.7, otherwise the agent may not work with older applications -->
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		
+		<!-- Specify as system property (-D) -->
+		<snapshots.repo></snapshots.repo>
+		<milestones.repo></milestones.repo>
+		<releases.repo></releases.repo>
+	</properties>
+
+	<profiles>
+		<!--
+			Activate in order to build the Soot call graph construction service. 
+			Make sure to exlcude the soot repo from mirrors in settings.xml, e.g., <mirrorOf>*,!soot</mirrorOf>
+			See here for more details: https://maven.apache.org/guides/mini/guide-mirror-settings.html
+		-->
+		<profile>
+			<id>soot</id>
+			<modules>
+				<module>lang-java-reach-soot</module>
+				<module>lang-java-reach-soot-init</module>
+			</modules>
+			<repositories>
+				<repository>
+					<id>soot</id>
+					<url>https://soot-build.cs.uni-paderborn.de/nexus/repository/soot-snapshot/</url><!-- Alternative: soot-snapshot -->
+				</repository>
+			</repositories>
+		</profile>
+
+		<profile>
+			<id>gradle</id>
+			<modules>
+				<module>plugin-gradle</module>
+			</modules>
+			<repositories>
+				<repository>
+					<id>google</id>
+					<url>https://maven.google.com/</url>
+				</repository>
+			</repositories>
+		</profile>
+	</profiles>
+
+	<distributionManagement>
+        <snapshotRepository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>build.snapshots.repo</id>
+            <name>Internal Snapshots</name>
+            <url>${snapshots.repo}</url>
+        </snapshotRepository>
+        <repository>
+            <id>build.releases.repo</id>
+            <name>Internal Releases</name>
+            <url>${milestones.repo}</url>
+        </repository>
+        <site>
+            <id>vulas.website</id>
+            <name>Vulas Documentation</name>
+            <url>file:${project.basedir}/docs/site</url>
+        </site>
+	</distributionManagement>
+
+	<!-- Dependencies common to all child projects -->
+	<dependencies>
+		<!-- Good overview about annotation alternatives: http://stackoverflow.com/questions/4963300/which-notnull-java-annotation-should-i-use -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+	</dependencies>
+
+	<!-- Use the same versions across all child projects -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.5.6</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-cli</groupId>
+				<artifactId>commons-cli</artifactId>
+				<version>1.4</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-configuration</groupId>
+				<artifactId>commons-configuration</artifactId>
+				<version>1.10</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-collections</groupId>
+				<artifactId>commons-collections</artifactId>
+				<version>3.2.2</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.6</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-compress</artifactId>
+				<version>1.18</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>1.9.3</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.code.gson</groupId>
+				<artifactId>gson</artifactId>
+				<version>2.8.5</version>
+			</dependency>
+			<dependency>
+				<groupId>org.javassist</groupId>
+				<artifactId>javassist</artifactId>
+				<version>3.23.1-GA</version>
+			</dependency>
+			<dependency>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4-runtime</artifactId>
+				<version>4.7.1</version>
+			</dependency>
+
+			<!-- Versions of 'com.fasterxml.jackson.core' artifacts should be identical -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+				<version>2.9.7</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>2.9.7</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>2.9.7</version>
+			</dependency>
+
+			<!-- Versions of 'org.apache.maven' artifacts should be identical -->
+			<dependency>
+				<groupId>org.apache.maven</groupId>
+				<artifactId>maven-core</artifactId>
+				<version>3.5.4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven</groupId>
+				<artifactId>maven-model</artifactId>
+				<version>3.5.4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven</groupId>
+				<artifactId>maven-plugin-api</artifactId>
+				<version>3.5.4</version>
+			</dependency>
+
+			<!-- Test deps -->
+			<dependency>
+				<groupId>com.xebialabs.restito</groupId>
+				<artifactId>restito</artifactId>
+				<version>0.9.3</version>
+			</dependency>
+			<dependency>
+				<groupId>com.jayway.restassured</groupId>
+				<artifactId>rest-assured</artifactId>
+				<version>2.9.0</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<scm>
+		<url>https://github.com/SAP/vulas</url>
+		<connection>scm:git:https://github.com/SAP/vulas</connection>
+		<developerConnection>scm:git:https://github.com/SAP/vulas</developerConnection>
+	</scm>
+
+	<issueManagement>
+		<url>https://github.com/SAP/vulas/issues</url>
+		<system>GitHub</system>
+	</issueManagement>
+
+	<build>
+		<plugins>
+
+			<!-- Show whether there are newer versions available, run fully-qualified 
+				with 'mvn -DallowMajorUpdates=false -DprocessDependencyManagement=false org.codehaus.mojo:versions-maven-plugin:2.5:display-dependency-updates' -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.5</version>
+				<executions>
+					<!-- Bound to lifecycle phase validate -->
+					<execution>
+						<id>check-version</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>display-dependency-updates</goal>
+							<goal>display-property-updates</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<processDependencyManagement>false</processDependencyManagement>
+					<allowMajorUpdates>false</allowMajorUpdates>
+				</configuration>
+			</plugin>
+
+			<!-- Successor of Findbugs, run fully-qualified with 'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml 
+				-Dspotbugs.failOnError=false com.github.spotbugs:spotbugs-maven-plugin:3.1.3:check' -->
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>3.1.3</version>
+				<configuration>
+					<failOnError>false</failOnError>
+					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+					<omitVisitors></omitVisitors>
+				</configuration>
+			</plugin>
+
+			<!-- Make build info available to all modules -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.0</version>
+				<configuration>
+					<excludes>
+						<!-- Exclude ANTLR generated classes -->
+						<!-- See here: http://stackoverflow.com/questions/27799419/maven-jacoco-configuration-exclude-classes-packages-from-report-not-working -->
+						<exclude>**/antlr/Java*.*</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>default-prepare-agent</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+						</configuration>
+					</execution>
+					<execution>
+						<id>default-report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+						</configuration>
+					</execution>
+					<execution>
+						<id>default-check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<!-- implementation is needed only for Maven 2 -->
+								<rule implementation="org.jacoco.maven.RuleConfiguration">
+									<element>BUNDLE</element>
+									<limits>
+										<!-- implementation is needed only for Maven 2 -->
+										<limit implementation="org.jacoco.report.check.Limit">
+											<counter>COMPLEXITY</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.0</minimum>
+										</limit>
+									</limits>
+								</rule>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.7.1</version>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.maven.wagon</groupId>
+							<artifactId>wagon-file</artifactId>
+							<version>3.2.0</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+				<plugin>
+					<groupId>com.google.code.maven-replacer-plugin</groupId>
+					<artifactId>replacer</artifactId>
+					<version>1.5.3</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>2.4.3</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.6</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.22.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>2.22.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.antlr</groupId>
+					<artifactId>antlr4-maven-plugin</artifactId>
+					<version>4.7.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.8</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<!-- Run with 'mvn spotbugs:spotbugs site' -->
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.7.1</version>
+				<!--configuration> <outputDirectory>${project.basedir}/docs/site</outputDirectory> 
+					</configuration -->
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.9</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.0.1</version>
+				<configuration>
+					<failOnError>false</failOnError>
+					<noindex>false</noindex>
+					<show>public</show>
+					<links>
+						<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+					</links>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<id>aggregate</id>
+						<inherited>false</inherited>
+						<reports>
+							<report>aggregate</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>3.1.3</version>
+				<configuration>
+					<failOnError>false</failOnError>
+					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+					<omitVisitors></omitVisitors>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<id>aggregate</id>
+						<inherited>false</inherited>
+						<reports>
+							<report>spotbugs</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.0.0</version>
+				<reportSets>
+					<reportSet>
+						<id>aggregate</id>
+						<inherited>false</inherited>
+						<reports>
+							<report>checkstyle</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
+</project>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.sap.research.security.vulas</groupId>
+		<artifactId>root</artifactId>
+		<version>3.0.10-SNAPSHOT</version>
+	</parent>
+	<artifactId>lang-java-reach</artifactId>
+
+	<name>Java - Core classes and SPI for Java reachability analysis</name>
+	<description>Performs static analysis of application and OSS source code in order to analyze the reachability of vulnerable Java constructs</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.sap.research.security.vulas</groupId>
+			<artifactId>lang-java</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.wala</groupId>
+			<artifactId>com.ibm.wala.core</artifactId>
+			<version>1.4.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.wala</groupId>
+			<artifactId>com.ibm.wala.util</artifactId>
+			<version>1.4.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.wala</groupId>
+			<artifactId>com.ibm.wala.shrike</artifactId>
+			<version>1.4.3</version>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>com.sap.research.security.vulas</groupId>
+			<artifactId>shared</artifactId>
+			<classifier>tests</classifier> <!-- type=test-jar does not seem to work here, use classifier instead -->
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Increase memory for Junit test case execution -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>-Xmx4096M -Xms2048M -XX:MaxPermSize=2024M
+						-XX:+CMSClassUnloadingEnabled</argLine>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

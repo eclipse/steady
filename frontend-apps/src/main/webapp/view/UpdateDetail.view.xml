@@ -1,0 +1,82 @@
+<mvc:View controllerName="view.UpdateDetail" xmlns="sap.m"
+	xmlns:c="sap.suite.ui.commons" xmlns:form="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:commons="sap.ui.commons" xmlns:m="sap.ui.commons.layout">
+	<Page id="updateDetailPage" showNavButton='true' navButtonPress='handleNavBack'
+		title="{/filename}">
+		<headerContent>
+			<Button icon="sap-icon://sys-help" press="openWiki" tooltip="Open help in wiki page" />
+	    </headerContent>
+	    <content>
+	    <l:VerticalLayout width="100%" class="marginVerticalContent">
+				<l:content>
+					<Label design="Bold" text="Calls from application to archive to be modified:" class="marginVerticalContent" />
+					<m:MatrixLayout layoutFixed="false" columns="2">
+							 <m:MatrixLayoutRow>
+							  <m:MatrixLayoutCell><Text id="callsToModifyCount"  xmlns="sap.m" text="None"/></m:MatrixLayoutCell>
+							  </m:MatrixLayoutRow>
+							<m:MatrixLayoutRow>
+<!-- 							  <m:MatrixLayoutCell rowSpan="3"><Image src="img/touch_point.gif" alt="Touch Point" height="50px"/></m:MatrixLayoutCell> -->
+							  <m:MatrixLayoutCell><Text id="callersToModifyCount"  xmlns="sap.m" text="None"/></m:MatrixLayoutCell>
+							</m:MatrixLayoutRow>
+							<m:MatrixLayoutRow>
+							  <m:MatrixLayoutCell><Text id="calleesDeletedCount"  xmlns="sap.m" text="None"/></m:MatrixLayoutCell>
+							  </m:MatrixLayoutRow>
+<!-- 							  <m:MatrixLayoutRow> -->
+<!-- 							  <m:MatrixLayoutCell><Text id="callsCount"  xmlns="sap.m" text="None"/></m:MatrixLayoutCell> -->
+<!-- 							  </m:MatrixLayoutRow> -->
+<!-- 							  <m:MatrixLayoutRow> -->
+<!-- 							  <m:MatrixLayoutCell><Text id="callersCount"  xmlns="sap.m" text="None"/></m:MatrixLayoutCell> -->
+<!-- 							  </m:MatrixLayoutRow> -->
+<!-- 							  <m:MatrixLayoutRow> -->
+<!-- 							  <m:MatrixLayoutCell><Text id="calleesCount"  xmlns="sap.m" text="None"/></m:MatrixLayoutCell> -->
+<!-- 							  </m:MatrixLayoutRow> -->
+						</m:MatrixLayout>
+								
+					
+					
+				
+					<Table xmlns="sap.ui.table" selectionMode="None"
+						editable="false" allowColumnReordering="false" rows="{/}"
+						visibleRowCount="{path: '/', formatter: 'model.Formatter.getListLength'}">
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="from/qname">
+							<Label text="Caller" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{from/qname}">
+								</TextView>
+							</template>
+						</Column>
+                        <Column xmlns="sap.ui.table" sorted="true" sortProperty="to/type">
+                            <Label text="Callee type" xmlns="sap.ui.commons" />
+                            <template>
+                                    <TextView xmlns="sap.ui.commons" wrapping="true" text="{to/type}">
+                                    </TextView>
+                            </template>
+						</Column>
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="to/qname">
+							<Label text="Callee" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{to/qname}">
+								</TextView>
+							</template>
+						</Column>
+					 	<Column xmlns="sap.ui.table" sorted="true" sortProperty="potential">
+							<Label text="Potential" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{potential}"
+                                                                    semanticColor="{ path: 'potential', formatter: 'model.Formatter.falseToHighlight'}">
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="traced">
+							<Label text="Traced" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{traced}">
+								</TextView>
+							</template>
+						</Column>
+					</Table>
+									</l:content>
+			</l:VerticalLayout>
+		</content>
+	</Page>
+</mvc:View>

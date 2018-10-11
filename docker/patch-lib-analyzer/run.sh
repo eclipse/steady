@@ -1,0 +1,10 @@
+#!/bin/sh
+
+java \
+	-Dhttp.nonProxyHosts=$NON_PROXY_HOSTS \
+	-Dhttp.proxyHost=$HTTP_PROXY_HOST \
+	-Dhttp.proxyPort=$HTTP_PROXY_PORT \
+	-Dhttps.proxyHost=$HTTPS_PROXY_HOST \
+	-Dhttps.proxyPort=$HTTPS_PROXY_PORT \
+    -Dspring.profiles.active=docker \
+	-jar /vulas/vulas-patcheval.jar $PATCHEVAL_OPTS

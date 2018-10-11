@@ -1,0 +1,5 @@
+create table bug_affected_construct_change_same_bytecode_lids (affected_construct_change_id int8 not null, same_bytecode_lids_id int8 not null);
+alter table bug_affected_construct_change_same_bytecode_lids add constraint FKfirn9bju9powr15m6rd5883g3 foreign key (same_bytecode_lids_id) references library_id;
+alter table bug_affected_construct_change_same_bytecode_lids add constraint FK2j92tqd59rkb75xo97r70w465 foreign key (affected_construct_change_id) references bug_affected_construct_change;
+ALTER TABLE bug_affected_construct_change_same_bytecode_lids ADD PRIMARY KEY (affected_construct_change_id,same_bytecode_lids_id);
+alter table bug_affected_construct_change drop column ast_equal;

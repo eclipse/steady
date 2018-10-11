@@ -1,0 +1,102 @@
+<mvc:View controllerName="view.Master" xmlns="sap.m" xmlns:l="sap.ui.layout"
+	xmlns:form="sap.ui.layout.form" xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns:m="sap.ui.commons.layout">
+	<Page id="page" title="{i18n>masterTitle}" navButtonPress="onHomePress">
+		<!-- showFooter="{device>/isNoPhone}" > -->
+		<headerContent>
+	        <Button icon="sap-icon://home"  press="onHomePress" tooltip="Home" text="" />
+	    </headerContent>
+		<subHeader>
+			<Bar id="searchBar">
+			    <contentMiddle>
+					<SearchField id="searchField" showRefreshButton="true" refreshButtonTooltip="{i18n>masterSearchRefreshTooltip}"
+						placeholder="{i18n>masterSearchPlaceholder}" search="handleSearch"
+						liveChange="handleSearch" tooltip="{i18n>masterSearchTooltip}" />
+				</contentMiddle>
+			</Bar>
+		</subHeader>
+		<content>
+			<Table items="{/}" id="idListApplications" visible="true"
+				select="onListItemTap" mode="SingleSelectMaster">
+				<columns>
+				    <Column mergeDuplicates="false">
+						<header>
+							<Label id="app-label" />
+						</header>
+					</Column>
+					<!--Column mergeDuplicates="true">
+						<header>
+							<Label text="{i18n>MasterTableGroupIdColumn}" />
+						</header>
+					</Column>
+					<Column mergeDuplicates="false">
+						<header>
+							<Label text="{i18n>MasterTableArtifactIdColumn}" />
+						</header>
+					</Column>
+					<Column mergeDuplicates="true">
+						<header>
+							<Label text="{i18n>MasterTableVersionColumn}" />
+						</header>
+					</Column-->
+					<!-- Column width="12%">
+						<header>
+							<Label text="" />
+						</header>
+					</Column-->
+				</columns>
+				<ColumnListItem>
+<!-- 					<m:MatrixLayout columns="2" layoutFixed="false"> -->
+<!-- 						<m:MatrixLayoutRow> -->
+<!-- 							<m:MatrixLayoutCell> -->
+	 					<l:HorizontalLayout class="sapUiNoMargin" > 
+	<!-- 						<HBox> -->
+								<Image src="{
+		 		 							parts: ['hasVulnerabilities'],
+	  		 							formatter: 'model.Formatter.appHasVuln' 
+			 						}" width="70%"/> 
+			 					<!-- 							</m:MatrixLayoutCell> -->
+<!-- 							<m:MatrixLayoutCell> -->
+								<HBox  width="100%">
+								</HBox>
+							    <l:VerticalLayout class="sapUiNoMargin" >
+								    <!--Text text="{groupid}" /-->
+								    <Text text="{artifact}" tooltip="{group} : {artifact} : {version}" emphasized="true"/>
+								    <Text text="{version}"    tooltip="{group} : {artifact} : {version}" wrapping="true" type="{device>/listItemType}" />
+								</l:VerticalLayout>
+
+						  	<!-- Image src="{
+		 		 							parts: ['vulns_count', 'affected_version', 'affected_version_confirmed', 'reachable', 'reachable_confirmed', 'traced', 'traced_confirmed', 'artifactid'],
+		 		 							formatter: 'model.Formatter.appSummary'
+		 		 						}"/-->
+ 
+		 		 			
+<!-- 							</m:MatrixLayoutCell>	 -->
+<!-- 						</m:MatrixLayoutRow> -->
+<!-- 					</m:MatrixLayout>  -->
+<!-- 						</HBox> -->
+					</l:HorizontalLayout> 
+				</ColumnListItem>
+			</Table>
+<!-- 			<HBox height="3em" justifyContent="Center" alignItems="Center"> -->
+<!-- 				<BusyIndicator id="busyIndicator" class="sapUiSmallMarginTop" -->
+<!-- 					visible="true" text="{i18n>masterBusyText}" /> -->
+<!-- 			</HBox> -->
+		</content>
+		<footer>
+			<Bar>
+			    <contentLeft>
+			        <Text text="" />
+			    </contentLeft>
+				<contentRight>
+				    <Button icon="sap-icon://refresh" press="reloadData" tooltip="{i18n>masterAppReloadTooltip}" text="" />
+ 					<Button icon="sap-icon://settings" press="handleSettings" text=""/>
+ 					<Button icon="sap-icon://add-folder" press="createSpace" tooltip="{i18n>masterCreateSpaceTooltip}" text=""/>
+ 					<!--Button icon="sap-icon://browse-folder" press="openSpace" tooltip="{i18n>masterOpenSpaceTooltip}" text=""/-->
+					<Button icon="sap-icon://education" press="openDoc" tooltip="{i18n>masterDocTooltip}" text=""/>
+					<Button icon="sap-icon://sys-help" press="openHelp" tooltip="{i18n>masterHelpTooltip}" text=""/>
+					<Button icon="sap-icon://hint" press="onInfoPress" tooltip="{i18n>masterInfoTooltip}" text=""/>
+				</contentRight>
+			</Bar>
+		</footer>
+	</Page>
+</mvc:View>

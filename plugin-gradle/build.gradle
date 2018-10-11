@@ -1,0 +1,57 @@
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'groovy'
+
+gradlePlugin {
+    plugins {
+        vulas {
+            id = 'vulas'
+            implementationClass = 'com.sap.vulas.gradle.VulasPlugin'
+        }
+    }
+}
+
+def getClasspathFiles(String classpathListRelativePath) {
+    def classpathListFile = new File(classpathListRelativePath)
+    
+    //for standalone clean task classpath list files are not required
+    if (project.gradle.startParameter.taskNames.equals(Collections.singletonList("clean"))) {
+        return files()
+    }
+
+    try {
+        return files(classpathListFile.text.split(File.pathSeparator))
+    } catch (java.io.FileNotFoundException e) {
+        throw new ProjectConfigurationException("Classpath files are missing, run 'mvn test-compile' before invoking gradle build", e)
+    }
+}
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+sourceSets {
+    main {
+        java {
+            srcDirs = [] // don't compile Java code twice
+        }
+        groovy {
+            srcDirs = [ 'src/main/groovy', 'src/main/java' ]
+            compileClasspath += getClasspathFiles("${projectDir}/target/compile.classpath")
+        }
+    }
+    test {
+        java {
+            compileClasspath += getClasspathFiles("${projectDir}/target/test.classpath")
+            runtimeClasspath += compileClasspath
+        }
+    }
+}
+
+// workaround to delegate gradle distribution download to maven
+// procedure to update gradle version
+//  1. change the gradle.distribution.url property in pom.xml to point to a newer version
+//  2. run mvn process-sources
+//  3. run ./gradlew wrapper on Linux/Mac, gardlew.bat on windows
+//  4. if there is any change, commit the content of gradle/wrapper folder (including the jar there)
+task wrapper(type: Wrapper) {
+    distributionUrl "gradle.zip"
+}

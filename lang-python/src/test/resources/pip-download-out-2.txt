@@ -1,0 +1,18 @@
+DEPRECATION: pip install --download has been deprecated and will be removed in the future. Pip now has a download command that should be used instead.
+Processing c:\tmp\venv-2\cf-helloworld
+  Link is a directory, ignoring download_dir
+Collecting flask>=0.11 (from cf-helloworld==1.0)
+  File was already downloaded ../download\Flask-0.12.2-py2.py3-none-any.whl
+Collecting gunicorn>=19.0 (from cf-helloworld==1.0)
+  File was already downloaded ../download\gunicorn-19.7.1-py2.py3-none-any.whl
+Collecting itsdangerous>=0.21 (from flask>=0.11->cf-helloworld==1.0)
+  File was already downloaded ../download\itsdangerous-0.24.tar.gz
+Collecting Werkzeug>=0.7 (from flask>=0.11->cf-helloworld==1.0)
+  File was already downloaded ../download\Werkzeug-0.12.2-py2.py3-none-any.whl
+Collecting Jinja2>=2.4 (from flask>=0.11->cf-helloworld==1.0)
+  File was already downloaded ../download\Jinja2-2.9.6-py2.py3-none-any.whl
+Collecting click>=2.0 (from flask>=0.11->cf-helloworld==1.0)
+  File was already downloaded ../download\click-6.7-py2.py3-none-any.whl
+Collecting MarkupSafe>=0.23 (from Jinja2>=2.4->flask>=0.11->cf-helloworld==1.0)
+  File was already downloaded ../download\MarkupSafe-1.0.tar.gz
+Successfully downloaded cf-helloworld flask gunicorn itsdangerous Werkzeug Jinja2 click MarkupSafe

@@ -1,0 +1,44 @@
+{
+  "bugId": "bug-foo",
+  "source": "NVD",
+  "description": "MultipartStream.java in Apache Commons FileUpload before 1.3.1, as used in Apache Tomcat, JBoss Web, and other products, allows remote attackers to cause a denial of service (infinite loop and CPU consumption) via a crafted Content-Type header that bypasses a loop's intended exit conditions.",
+  "url": "https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2014-0050",
+  "constructChanges": [
+    {
+      "repo": "svn.apache.org",
+      "commit": "123456",
+      "repoPath": "/branch/1.x/src/main/java/org/lib/Foo.java",
+      "constructId": {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "org.lib.Foo"
+      },
+      "committedAt": "2016-05-13T14:35:50.274+0000",
+      "constructChangeType": "MOD"
+    },
+    {
+      "repo": "svn.apache.org",
+      "commit": "123456",
+      "repoPath": "/trunk/src/main/java/org/lib/Foo.java",
+      "constructId": {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "org.lib.Foo"
+      },
+      "committedAt": "2016-05-13T14:35:50.274+0000",
+      "constructChangeType": "MOD"
+    },
+    {
+      "repo": "svn.apache.org",
+      "commit": "123456",
+      "repoPath": "/trunk/src/test/java/org/lib/FooTest.java",
+      "constructId": {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "org.lib.FooTest"
+      },
+      "committedAt": "2016-05-13T14:35:50.274+0000",
+      "constructChangeType": "ADD"
+    }
+  ]
+}

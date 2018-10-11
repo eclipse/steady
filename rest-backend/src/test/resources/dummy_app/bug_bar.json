@@ -1,0 +1,32 @@
+{
+  "bugId": "bug-bar",
+  "source": "NVD",
+  "description": "Bla",
+  "url": "https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2014-0051",
+  "constructChanges": [
+    {
+      "repo": "svn.apache.org",
+      "commit": "1234567",
+      "repoPath": "/branch/1.x/src/main/java/com/acme/Bar.java",
+      "constructId": {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "com.acme.Bar"
+      },
+      "committedAt": "2016-05-13T14:35:50.274+0000",
+      "constructChangeType": "MOD"
+    },
+    {
+      "repo": "svn.apache.org",
+      "commit": "1234567",
+      "repoPath": "/trunk/src/main/java/com/acme/Bar.java",
+      "constructId": {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "com.acme.Bar"
+      },
+      "committedAt": "2016-05-13T14:35:50.274+0000",
+      "constructChangeType": "MOD"
+    }
+  ]
+}

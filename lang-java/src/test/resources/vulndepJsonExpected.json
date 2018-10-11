@@ -1,0 +1,30 @@
+{
+    "dep": {
+      "lib": {
+        "sha1": "C621B54583719AC0310404463D6D99DB27E1052C",
+        "createdAt": "2016-06-30T15:05:55.750+0000",
+        "libraryId": {
+          "artifact": "commons-fileupload",
+          "version": "1.3.1",
+          "group": "commons-fileupload"
+        },
+        "wellknownSha1": true
+      },
+      "declared": true,
+      "traced": false,
+      "scope": "COMPILE",
+      "transitive": false,
+      "filename": "commons-fileupload-1.3.1.jar",
+      "tracedExecConstructsCounter": null,
+      "reachableConstructTypeCounters": {
+        "ENUM": 0,
+        "INIT": 0,
+        "CONS": 0,
+        "METH": 0,
+        "countExecutable": 0,
+        "countTotal": 0,
+        "CLASS": 0,
+        "PACK": 0
+      }
+    }
+}

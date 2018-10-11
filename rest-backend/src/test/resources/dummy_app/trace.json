@@ -1,0 +1,36 @@
+[
+  {
+    "app": {
+      "artifact": "vulas",
+      "version": "0.0.1",
+      "group": "com.acme"
+    },
+    "lib": "sha1",
+    "filename": "commons-lib.jar",
+    "count": 1,
+    "tracedAt": "2016-05-13T14:35:50.274+0000",
+    "executionId": "TEST-1234",
+    "constructId": {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.lib.Foo.bar()"
+    }
+  },
+  {
+    "app": {
+      "artifact": "vulas",
+      "version": "0.0.1",
+      "group": "com.acme"
+    },
+    "lib": null,
+    "filename": null,
+    "count": 1,
+    "tracedAt": "2016-05-13T14:35:50.274+0000",
+    "executionId": "TEST-1234",
+    "constructId": {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.Vulas.vulas()"
+    }
+  }
+]

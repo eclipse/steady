@@ -1,0 +1,232 @@
+<mvc:View controllerName="view.CheckversionDetail" xmlns="sap.m"
+          xmlns:c="sap.suite.ui.commons" xmlns:form="sap.ui.layout.form"
+          xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+    <Page id="idBugDetailPage" showNavButton='true' navButtonPress='handleNavBack'>
+        <headerContent>
+            <Button icon="sap-icon://email"  press="writeEmail" tooltip="Provide feedback on vulnerable archive releases" text="Feedback" />
+            <Button icon="sap-icon://action" press="openNVD" tooltip="National Vulnerability Database" text="NVD" />
+            <Button icon="sap-icon://action" press="openExploitDb" tooltip="Exploit Database" text="Exploit DB" />
+    </headerContent>
+        <content>
+            <l:VerticalLayout width="100%" class="marginVerticalContent">
+                <l:content>
+                    <!--<l:HorizontalLayout width="100%">
+                        <l:content>
+                            <Label design="Bold" text="Vulnerability Id: " class="marginVerticalContent" />
+                            <Label text="{cveModel>/id}" class="marginVerticalContent" />
+                        </l:content>
+                    </l:HorizontalLayout>-->
+                    <Label design="Bold" text="Description: " class="marginVerticalContent" />
+                    <Text text="{cveModel>/summary}" class="marginVerticalContent" /> 
+                    <l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/cvss', 
+ 								formatter: 'model.Formatter.fieldVisibility'}">
+                        <l:content>
+                            <Label design="Bold" text="CVSS Score: " class="marginVerticalContent" />
+                            <Label text="{cveModel>/cvss}" class="marginVerticalContent" />
+                        </l:content>
+                    </l:HorizontalLayout>
+                    <l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/Published', 
+ 								formatter: 'model.Formatter.fieldVisibility'}">
+                        <l:content>
+                            <Label design="Bold" text="Published at: " class="marginVerticalContent" />
+                            <Label text="{cveModel>/Published}" class="marginVerticalContent" />
+                        </l:content>
+                    </l:HorizontalLayout>
+                    <l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/Modified', 
+ 								formatter: 'model.Formatter.fieldVisibility'}">
+                        <l:content>
+                            <Label design="Bold" text="Modified at: " class="marginVerticalContent" />
+                            <Label text="{cveModel>/Modified}" class="marginVerticalContent" />
+                        </l:content>
+                    </l:HorizontalLayout>
+                    <l:HorizontalLayout width="100%" visible="true">
+                        <l:content>
+                            <Label design="Bold" text="Repo: " class="marginVerticalContent" />
+                            <Label text="{repoModel>/repo}" class="marginVerticalContent" />
+                        </l:content>
+                    </l:HorizontalLayout>
+                    <!--<l:HorizontalLayout width="100%">
+                        <l:content>
+                            <Label design="Bold" text="Filename: " class="marginVerticalContent" />
+                            <Link xmlns="sap.m"
+                                                              href="/vulasfrontend/#/apps/{app>/groupid}/{app>/artifactid}/{app>/version}/archive/{/dep/lib/sha1}"
+                                                              class="marginVerticalContent" text="{/dep/filename}">
+                            </Link>
+                        </l:content>
+                    </l:HorizontalLayout>-->
+                    <l:HorizontalLayout width="100%"
+                                                            visible="{ parts: ['/dep/lib/libraryId/group', '/dep/lib/libraryId/artifact','/dep/lib/libraryId/version'], 
+ 								formatter: 'model.Formatter.mavenIdVisibility'}">
+                        <l:content>
+                            <Label design="Bold" text="Maven ID: " class="marginVerticalContent" />
+                            <Link xmlns="sap.m"  target="_blank" href="{parts: ['/dep/lib/libraryId/group', '/dep/lib/libraryId/artifact'], 
+ 								formatter: 'model.Formatter.buildmavenIdLink'}"
+                                                              class="marginVerticalContent"
+                                                              text="{parts: ['/dep/lib/libraryId/group', '/dep/lib/libraryId/artifact','/dep/lib/libraryId/version'], 
+ 								formatter: 'model.Formatter.mavenIdLink'}" >
+                            </Link>
+                        </l:content>
+                    </l:HorizontalLayout>
+                    <l:VerticalLayout width="100%" class="marginBugDetailTables">
+                        <l:content>
+                            <!--<Table xmlns="sap.ui.table" width="99%" selectionMode = "None" editable="false" id="idChangeConstructList"
+                                    rows="{/}"
+                                    visibleRowCount="{path: '/', formatter: 'model.Formatter.getMediumListLength'}"
+                                    allowColumnReordering="false"
+                                    cellClick="onConstructNameClick"   
+                                >
+                                <Column xmlns="sap.ui.table" width="18%" sorted="true" visible="true"
+                                            filterProperty="cc/repoPath"    sortProperty="cc/repoPath">
+                                    <Label text="RepoPath" xmlns="sap.ui.commons" />
+                                    <template>
+                                        <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                     text="{cc/repoPath}">
+                                        </TextView>
+                                    </template>
+                                </Column>
+                                <Column xmlns="sap.ui.table" width="8%" sorted="true"
+                                            filterProperty="cc/commit"    sortProperty="cc/commit">
+                                    <Label text="Commit" xmlns="sap.ui.commons" />
+                                    <template>
+                                        <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                     text="{cc/commit}">
+                                        </TextView>
+                                    </template>
+                                </Column>
+                                <Column xmlns="sap.ui.table" width="8%" sorted="true"
+                                        filterProperty="cc/constructChangeType"  sortProperty="cc/constructChangeType">
+                                    <Label text="CC Type" xmlns="sap.ui.commons" tooltip="Construct change type" />
+                                    <template>
+                                        <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                      text="{cc/constructChangeType}">
+                                        </TextView>
+                                    </template>
+                                </Column>
+                                <Column xmlns="sap.ui.table" width="8%" sorted="true"
+                                             filterProperty="cc/constructId/type" sortProperty="cc/constructId/type">
+                                    <Label text="Type" xmlns="sap.ui.commons" tooltip="Construct type"/>
+                                    <template>
+                                        <TextView xmlns="sap.ui.commons" wrapping="true" 
+                                                       text="{cc/constructId/type}">
+                                        </TextView>
+                                    </template>
+                                </Column>
+                                <Column xmlns="sap.ui.table" width="18%" sorted="true"
+                                        filterProperty="cc/constructId/qname"  sortProperty="cc/constructId/qname">
+                                    <Label text="Qualified Name" xmlns="sap.ui.commons" />
+                                    <template>
+                                        <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                      text="{cc/constructId/qname}">
+                                        </TextView>
+                                    </template>
+                                </Column>
+                                <Column xmlns="sap.ui.table" width="8%" sorted="true"
+                                        filterProperty="inArchive"  sortProperty="inArchive">
+                                    <Label text="In archive" xmlns="sap.ui.commons" tooltip="Construct in archive" />
+                                    <template>
+                                        <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                      text="{inArchive}">
+                                        </TextView>
+                                    </template>
+                                </Column>
+                                <Column xmlns="sap.ui.table" width="8%" sorted="true"
+                                        filterProperty="classInArchive"  sortProperty="classInArchive">
+                                    <Label text="Class in archive" xmlns="sap.ui.commons" tooltip="Class in archive" />
+                                    <template>
+                                        <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                      text="{classInArchive}">
+                                        </TextView>
+                                    </template>
+                                </Column>
+                                <Column xmlns="sap.ui.table" width="8%" sorted="true"
+                                        filterProperty="affected"  sortProperty="affected">
+                                    <Label text="Affected" xmlns="sap.ui.commons" tooltip="Affected" />
+                                    <template>
+                                        <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                      text="{affected}">
+                                        </TextView>
+                                    </template>
+                                </Column>
+                            </Table>-->
+                            <!-- #####################################################################################  -->
+                            <TreeTable xmlns="sap.ui.table"
+                               id="idChangeConstructListTree"
+                               rows="{path:'/root', parameters: {arrayNames:['children']}}"
+                               visibleRowCount="{path: '/root', formatter: 'model.Formatter.getListLength'}"
+                               selectionMode="MultiToggle"
+                               enableSelectAll="false"
+                               cellClick="onConstructListTreeClick"
+                            >
+                        <toolbar>
+                            <Toolbar xmlns="sap.m">
+                                <Title id="titleConstructsTree" text="Constructs"/>
+                                <ToolbarSpacer/>
+                                <Button text="Collapse all" press="onCollapseAllConstructs" />
+                                <Button text="Expand all" press="onExpandAllConstructs"/>
+                            </Toolbar>
+                        </toolbar>
+                        <columns>
+                            <Column width="10rem" xmlns="sap.ui.table" >
+                                <Label text="Repo Path" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <l:HorizontalLayout>
+                                        <Image xmlns="sap.ui.commons" src="img/linkimage.png"
+                                        visible="{path: 'name', formatter:'model.Formatter.showImageConstructName'}"/>
+                                        <TextView text="{name}" xmlns="sap.ui.commons" class="myDefaultColor"/>  
+                                    </l:HorizontalLayout>                              
+                                </template>
+                            </Column>
+                            <Column width="3rem" xmlns="sap.ui.table" >
+                                <Label text="Construct Type" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{type}" xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>
+                            <Column width="3rem" xmlns="sap.ui.table" >
+                                <Label text="Assessment" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{path:'constructAffected',formatter: 'model.Formatter.textForAffected'}" 
+                                              xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>
+                            <Column width="3rem" xmlns="sap.ui.table" >
+                                <Label text="Change type" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{overallChg}" xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>
+                            <Column width="3rem" xmlns="sap.ui.table">
+                                <Label text="In archive" xmlns="sap.ui.commons" tooltip="Construct in archive" />
+                                <template>
+                                    <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                  text="{inArchive}">
+                                    </TextView>
+                                </template>
+                            </Column>
+                            <Column width="3rem" xmlns="sap.ui.table">
+                                <Label text="Class in archive" xmlns="sap.ui.commons" tooltip="Class in archive" />
+                                <template>
+                                    <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                  text="{classInArchive}">
+                                    </TextView>
+                                </template>
+                            </Column>
+                            <!--<Column width="3rem" xmlns="sap.ui.table" >
+                                <Label text="Single Change type" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{singleChangeType}" xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>-->
+                        </columns>
+                    </TreeTable>
+                        </l:content>
+                    </l:VerticalLayout>
+                </l:content>
+            </l:VerticalLayout>
+        </content>
+    </Page>
+</mvc:View>

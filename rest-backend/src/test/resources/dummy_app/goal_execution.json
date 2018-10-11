@@ -1,0 +1,30 @@
+{
+  "id": null,
+  "goal": "APP",
+  "createdAt": null,
+  "startedAtClient": "2016-06-01T20:39:26.405+0000",
+  "runtimeNano": 44444,
+  "executionId": "APP-1234",
+  "exception": "ExampleException",
+  "memMax": 11111,
+  "memUsedMax": 33333,
+  "memUsedAvg": 22222,
+  "clientVersion": "1.1.0-SNAPSHOT",
+  "configuration": [
+    {
+      "source": "GOAL_CONFIG",
+      "name": "entry",
+      "value": "value"
+    }
+  ],
+  "systemInfo": [
+    {
+      "source": "GOAL_CONFIG",
+      "name": "entry",
+      "value": "value"
+    }
+  ],
+  "statistics": {
+    "abc": 123
+  }
+}

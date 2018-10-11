@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<mvc:View
+    controllerName="sap.psr.patcha.web.view.Settings"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:cmn="sap.ui.commons"
+    xmlns:cor="sap.ui.core"
+    xmlns:frm="sap.ui.layout.form"
+    xmlns="sap.m">
+
+    <Page
+        showNavButton="true"
+        navButtonPress="handleNavButtonPress"
+        title="{i18n>SecondPageTitle}">
+
+            <frm:SimpleForm
+                id="settingsForm"
+                maxContainerCols="1">
+                
+                <cmn:Label text="Upload URL"/>
+                <cmn:TextField
+                	id="uploadURLTextField"
+                	value="{settings>/uploadURL}"
+                	type="Url"
+        			placeholder="Enter URL ..."/>
+        			
+        		<cmn:Label text="Upload User"/>
+                <cmn:TextField
+                	id="uploadUserTextField"
+                	value="{settings>/uploadUser}"
+        			placeholder="Enter User Id"/>
+
+				<cmn:Label text="Password"/>
+                <cmn:PasswordField
+                	id="uploadUserPwdPasswordField"
+                	value="{settings>/uploadUserPwd}"/>
+
+
+                <cmn:Label text="Delete temp. files"/>
+                <Switch id="delSwitch" state="{settings>/delTemp}">
+		          <layoutData>
+		            <FlexItemData growFactor="1" />
+		          </layoutData>
+		        </Switch>
+
+                <cmn:Label text="Frontend debugging"/>
+                <Switch id="debugSwitch" state="{settings>/debMode}">
+		          <layoutData>
+		            <FlexItemData growFactor="1" />
+		          </layoutData>
+		        </Switch>
+                
+            </frm:SimpleForm>
+
+	        <Bar>
+	        	<!-- <contentRight>
+	            	<Button
+	            		id="saveSettingsButton"
+	            		icon="sap-icon://save"
+	            		text="Apply"
+	            		tooltip="Apply changes and leave to previous screen"
+	            		press="saveSettings" />
+	            	<Button
+	            		id="cancelSettingsButton"
+	            		icon="sap-icon://decline"
+	            		text="Cancel"
+	            		tooltip="Leave to previous screen w/o considering changes (if any)"
+	            		press="cancelSettings" />
+	        	</contentRight>  -->
+	        </Bar>
+ 
+    </Page>
+</mvc:View>

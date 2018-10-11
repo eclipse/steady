@@ -1,0 +1,113 @@
+{
+	"variables": [],
+	"info": {
+		"name": "DependencyTree",
+		"_postman_id": "ff4a5b5f-15bf-fd82-38d2-ff47e82102ff",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8091/backend/apps/",
+			"request": {
+				"url": "http://localhost:8091/backend/apps/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"constructs\": [\r\n     {\r\n      \"lang\": \"JAVA\",\r\n      \"type\": \"PACK\",\r\n      \"qname\": \"com.acme\",\r\n      \"relates\": null,\r\n      \"attributes\": null\r\n    }\r\n  ],\r\n  \"dependencies\": [\r\n     {\r\n      \"lib\": {\r\n        \"digest\": \"407B3DA4CDB780701BE40CCF6E8EF540F3D5A249\",\r\n        \"digestAlgorithm\": \"SHA1\",\r\n        \"libraryId\": {\r\n          \"artifact\": \"asm-tree\",\r\n          \"version\": \"5.0.2\",\r\n          \"group\": \"org.ow2.asm\"\r\n        }\r\n      },\r\n\t  \"parent\" : null,\r\n\t  \"relativePath\" : null,\r\n      \"declared\": true,\r\n      \"traced\": null,\r\n      \"scope\": \"COMPILE\",\r\n      \"transitive\": true,\r\n      \"filename\": \"asm-tree-5.0.2.jar\",\r\n      \"path\": \"C:\\\\tmp\\\\.m2\\\\repository\\\\org\\\\ow2\\\\asm\\\\asm-tree\\\\5.0.2\\\\asm-tree-5.0.2.jar\"\r\n    },\r\n\t{\r\n      \"lib\": {\r\n        \"digest\": \"16CF5A6B78951F50713D29BFAE3230A611DC01F0\",\r\n        \"digestAlgorithm\": \"SHA1\",\r\n        \"libraryId\": {\r\n          \"artifact\": \"httpclient\",\r\n          \"version\": \"4.1.3\",\r\n          \"group\": \"org.apache.httpcomponents\"\r\n        }\r\n      },\r\n      \"parent\" : {\r\n      \t\r\n\t\t\t  \"lib\": {\r\n\t\t\t\t\"digest\": \"407B3DA4CDB780701BE40CCF6E8EF540F3D5A249\",\r\n\t\t\t\t\"digestAlgorithm\": \"SHA1\",\r\n\t\t\t\t\"libraryId\": {\r\n\t\t\t\t  \"artifact\": \"asm-tree\",\r\n\t\t\t\t  \"version\": \"5.0.2\",\r\n\t\t\t\t  \"group\": \"org.ow2.asm\"\r\n\t\t\t\t}\r\n\t\t\t  },\r\n\t\t\t  \"parent\" : null,\r\n\t\t\t  \"relativePath\" : null,\r\n\t\t\t  \"declared\": true,\r\n\t\t\t  \"traced\": null,\r\n\t\t\t  \"scope\": \"COMPILE\",\r\n\t\t\t  \"transitive\": true,\r\n\t\t\t  \"filename\": \"asm-tree-5.0.2.jar\",\r\n\t\t\t  \"path\": \"C:\\\\tmp\\\\.m2\\\\repository\\\\org\\\\ow2\\\\asm\\\\asm-tree\\\\5.0.2\\\\asm-tree-5.0.2.jar\"\r\n\t\t\t\r\n      },\r\n      \"declared\": true,\r\n      \"scope\": \"COMPILE\",\r\n      \"transitive\": false,\r\n      \"filename\": \"httpclient-4.1.3.jar\",\r\n\t  \"relativePath\" : null,\r\n      \"path\": \"C:\\\\tmp\\\\.m2\\\\repository\\\\org\\\\apache\\\\httpcomponents\\\\httpclient\\\\4.1.3\\\\httpclient-4.1.3.jar\"\r\n    }\r\n    ],\r\n     \"artifact\": \"vulas-testapp-webapp\",\r\n  \"version\": \"3.0.6\",\r\n  \"group\": \"com.acme.foo\"}"
+				},
+				"description": "Create an application with one direct (d1) and one transitive dependency with parent (d2->d1)"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8091/backend/apps/com.acme.foo/vulas-testapp-webapp/3.0.6",
+			"request": {
+				"url": "http://localhost:8091/backend/apps/com.acme.foo/vulas-testapp-webapp/3.0.6",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"constructs\": [\r\n     {\r\n      \"lang\": \"JAVA\",\r\n      \"type\": \"PACK\",\r\n      \"qname\": \"com.acme\",\r\n      \"relates\": null,\r\n      \"attributes\": null\r\n    }\r\n  ],\r\n  \"dependencies\": [\r\n     {\r\n      \"lib\": {\r\n        \"digest\": \"407B3DA4CDB780701BE40CCF6E8EF540F3D5A249\",\r\n        \"digestAlgorithm\": \"SHA1\",\r\n        \"libraryId\": {\r\n          \"artifact\": \"asm-tree\",\r\n          \"version\": \"5.0.2\",\r\n          \"group\": \"org.ow2.asm\"\r\n        }\r\n      },\r\n\t  \"parent\" : null,\r\n\t  \"relativePath\" : null,\r\n      \"declared\": true,\r\n      \"traced\": null,\r\n      \"scope\": \"COMPILE\",\r\n      \"transitive\": true,\r\n      \"filename\": \"asm-tree-5.0.2.jar\",\r\n      \"path\": \"C:\\\\tmp\\\\.m2\\\\repository\\\\org\\\\ow2\\\\asm\\\\asm-tree\\\\5.0.2\\\\asm-tree-5.0.2.jar\"\r\n    },\r\n\t{\r\n      \"lib\": {\r\n        \"digest\": \"16CF5A6B78951F50713D29BFAE3230A611DC01F0\",\r\n        \"digestAlgorithm\": \"SHA1\",\r\n        \"libraryId\": {\r\n          \"artifact\": \"httpclient\",\r\n          \"version\": \"4.1.3\",\r\n          \"group\": \"org.apache.httpcomponents\"\r\n        }\r\n      },\r\n      \"parent\" : {\r\n      \t\r\n\t\t\t  \"lib\": {\r\n\t\t\t\t\"digest\": \"407B3DA4CDB780701BE40CCF6E8EF540F3D5A249\",\r\n\t\t\t\t\"digestAlgorithm\": \"SHA1\",\r\n\t\t\t\t\"libraryId\": {\r\n\t\t\t\t  \"artifact\": \"asm-tree\",\r\n\t\t\t\t  \"version\": \"5.0.2\",\r\n\t\t\t\t  \"group\": \"org.ow2.asm\"\r\n\t\t\t\t}\r\n\t\t\t  },\r\n\t\t\t  \"parent\" : null,\r\n\t\t\t  \"relativePath\" : null,\r\n\t\t\t  \"declared\": true,\r\n\t\t\t  \"traced\": null,\r\n\t\t\t  \"scope\": \"COMPILE\",\r\n\t\t\t  \"transitive\": true,\r\n\t\t\t  \"filename\": \"asm-tree-5.0.2.jar\",\r\n\t\t\t  \"path\": \"C:\\\\tmp\\\\.m2\\\\repository\\\\org\\\\ow2\\\\asm\\\\asm-tree\\\\5.0.2\\\\asm-tree-5.0.2.jar\"\r\n\t\t\t\r\n      },\r\n      \"declared\": true,\r\n      \"scope\": \"COMPILE\",\r\n      \"transitive\": false,\r\n      \"filename\": \"httpclient-4.1.3.jar\",\r\n\t  \"relativePath\" : null,\r\n      \"path\": \"C:\\\\tmp\\\\.m2\\\\repository\\\\org\\\\apache\\\\httpcomponents\\\\httpclient\\\\4.1.3\\\\httpclient-4.1.3.jar\"\r\n    },\r\n    {\r\n      \"lib\": {\r\n        \"digest\": \"A3665CF8E3426686EE751790F3D1E1EC5705E9DC\",\r\n        \"digestAlgorithm\": \"SHA1\",\r\n        \"libraryId\": {\r\n          \"artifact\": \"ognl\",\r\n          \"version\": \"3.0.6\",\r\n          \"group\": \"ognl\"\r\n        }\r\n      },\r\n\t  \"parent\" : null,\r\n\t  \"relativePath\" : null,\r\n      \"declared\": true,\r\n      \"scope\": \"COMPILE\",\r\n      \"transitive\": true,\r\n      \"filename\": \"ognl-3.0.6.jar\",\r\n      \"path\": \"C:\\\\tmp\\\\.m2\\\\repository\\\\ognl\\\\ognl\\\\3.0.6\\\\ognl-3.0.6.jar\"\r\n    }\r\n    ],\r\n     \"artifact\": \"vulas-testapp-webapp\",\r\n  \"version\": \"3.0.6\",\r\n  \"group\": \"com.acme.foo\"}"
+				},
+				"description": "Modify the previously saved application with an additional direct dependency (d3) on top of d1 and d2"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8091/backend/apps/com.acme.foo/vulas-testapp-webapp/3.0.6",
+			"request": {
+				"url": "http://localhost:8091/backend/apps/com.acme.foo/vulas-testapp-webapp/3.0.6",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"constructs\": [\r\n     {\r\n      \"lang\": \"JAVA\",\r\n      \"type\": \"PACK\",\r\n      \"qname\": \"com.acme\",\r\n      \"relates\": null,\r\n      \"attributes\": null\r\n    }\r\n  ],\r\n  \"dependencies\": [\r\n     {\r\n      \"lib\": {\r\n        \"digest\": \"407B3DA4CDB780701BE40CCF6E8EF540F3D5A249\",\r\n        \"digestAlgorithm\": \"SHA1\",\r\n        \"libraryId\": {\r\n          \"artifact\": \"asm-tree\",\r\n          \"version\": \"5.0.2\",\r\n          \"group\": \"org.ow2.asm\"\r\n        }\r\n      },\r\n\t  \"parent\" : null,\r\n\t  \"relativePath\" : null,\r\n      \"declared\": true,\r\n      \"traced\": null,\r\n      \"scope\": \"COMPILE\",\r\n      \"transitive\": false,\r\n      \"filename\": \"asm-tree-5.0.2.jar\",\r\n      \"path\": \"C:\\\\tmp\\\\.m2\\\\repository\\\\org\\\\ow2\\\\asm\\\\asm-tree\\\\5.0.2\\\\asm-tree-5.0.2.jar\"\r\n    },\r\n\t{\r\n      \"lib\": {\r\n        \"digest\": \"16CF5A6B78951F50713D29BFAE3230A611DC01F0\",\r\n        \"digestAlgorithm\": \"SHA1\",\r\n        \"libraryId\": {\r\n          \"artifact\": \"httpclient\",\r\n          \"version\": \"4.1.3\",\r\n          \"group\": \"org.apache.httpcomponents\"\r\n        }\r\n      },\r\n      \"parent\" : {\r\n      \t\r\n\t\t\t  \"lib\": {\r\n\t\t\t\t\"digest\": \"407B3DA4CDB780701BE40CCF6E8EF540F3D5A249\",\r\n\t\t\t\t\"digestAlgorithm\": \"SHA1\",\r\n\t\t\t\t\"libraryId\": {\r\n\t\t\t\t  \"artifact\": \"asm-tree\",\r\n\t\t\t\t  \"version\": \"5.0.2\",\r\n\t\t\t\t  \"group\": \"org.ow2.asm\"\r\n\t\t\t\t}\r\n\t\t\t  },\r\n\t\t\t  \"parent\" : null,\r\n\t\t\t  \"relativePath\" : null,\r\n\t\t\t  \"declared\": true,\r\n\t\t\t  \"traced\": null,\r\n\t\t\t  \"scope\": \"COMPILE\",\r\n\t\t\t  \"transitive\": false,\r\n\t\t\t  \"filename\": \"asm-tree-5.0.2.jar\",\r\n\t\t\t  \"path\": \"C:\\\\tmp\\\\.m2\\\\repository\\\\org\\\\ow2\\\\asm\\\\asm-tree\\\\5.0.2\\\\asm-tree-5.0.2.jar\"\r\n\t\t\t\r\n      },\r\n      \"declared\": true,\r\n      \"scope\": \"COMPILE\",\r\n      \"transitive\": false,\r\n      \"filename\": \"httpclient-4.1.3.jar\",\r\n\t  \"relativePath\" : null,\r\n      \"path\": \"C:\\\\tmp\\\\.m2\\\\repository\\\\org\\\\apache\\\\httpcomponents\\\\httpclient\\\\4.1.3\\\\httpclient-4.1.3.jar\"\r\n    },\r\n    {\r\n      \"lib\": {\r\n        \"digest\": \"A3665CF8E3426686EE751790F3D1E1EC5705E9DC\",\r\n        \"digestAlgorithm\": \"SHA1\",\r\n        \"libraryId\": {\r\n          \"artifact\": \"ognl\",\r\n          \"version\": \"3.0.6\",\r\n          \"group\": \"ognl\"\r\n        }\r\n      },\r\n\t  \"parent\" : null,\r\n\t  \"relativePath\" : null,\r\n      \"declared\": true,\r\n      \"scope\": \"COMPILE\",\r\n      \"transitive\": true,\r\n      \"filename\": \"ognl-3.0.6.jar\",\r\n      \"path\": \"C:\\\\tmp\\\\.m2\\\\repository\\\\ognl\\\\ognl\\\\3.0.6\\\\ognl-3.0.6.jar\"\r\n    }\r\n    ],\r\n     \"artifact\": \"vulas-testapp-webapp\",\r\n  \"version\": \"3.0.6\",\r\n  \"group\": \"com.acme.foo\"}"
+				},
+				"description": "Modify the dependency tree changing the transitive flag of d1 from true to false"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8091/backend/apps/com.acme.foo/vulas-testapp-webapp?keep=0",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8091/backend/apps/com.acme.foo/vulas-testapp-webapp?keep=0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"backend",
+						"apps",
+						"com.acme.foo",
+						"vulas-testapp-webapp"
+					],
+					"query": [
+						{
+							"key": "keep",
+							"value": "0",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"constructs\": [\r\n     {\r\n      \"lang\": \"JAVA\",\r\n      \"type\": \"PACK\",\r\n      \"qname\": \"com.acme\",\r\n      \"relates\": null,\r\n      \"attributes\": null\r\n    }\r\n  ],\r\n  \"dependencies\": [\r\n     {\r\n      \"lib\": {\r\n        \"digest\": \"407B3DA4CDB780701BE40CCF6E8EF540F3D5A249\",\r\n        \"digestAlgorithm\": \"SHA1\",\r\n        \"libraryId\": {\r\n          \"artifact\": \"asm-tree\",\r\n          \"version\": \"5.0.2\",\r\n          \"group\": \"org.ow2.asm\"\r\n        }\r\n      },\r\n\t  \"parent\" : null,\r\n\t  \"relativePath\" : null,\r\n      \"declared\": true,\r\n      \"traced\": null,\r\n      \"scope\": \"COMPILE\",\r\n      \"transitive\": true,\r\n      \"filename\": \"asm-tree-5.0.2.jar\",\r\n      \"path\": \"C:\\\\tmp\\\\.m2\\\\repository\\\\org\\\\ow2\\\\asm\\\\asm-tree\\\\5.0.2\\\\asm-tree-5.0.2.jar\"\r\n    },\r\n\t{\r\n      \"lib\": {\r\n        \"digest\": \"16CF5A6B78951F50713D29BFAE3230A611DC01F0\",\r\n        \"digestAlgorithm\": \"SHA1\",\r\n        \"libraryId\": {\r\n          \"artifact\": \"httpclient\",\r\n          \"version\": \"4.1.3\",\r\n          \"group\": \"org.apache.httpcomponents\"\r\n        }\r\n      },\r\n      \"parent\" : {\r\n      \t\r\n\t\t\t  \"lib\": {\r\n\t\t\t\t\"digest\": \"407B3DA4CDB780701BE40CCF6E8EF540F3D5A249\",\r\n\t\t\t\t\"digestAlgorithm\": \"SHA1\",\r\n\t\t\t\t\"libraryId\": {\r\n\t\t\t\t  \"artifact\": \"asm-tree\",\r\n\t\t\t\t  \"version\": \"5.0.2\",\r\n\t\t\t\t  \"group\": \"org.ow2.asm\"\r\n\t\t\t\t}\r\n\t\t\t  },\r\n\t\t\t  \"parent\" : null,\r\n\t\t\t  \"relativePath\" : null,\r\n\t\t\t  \"declared\": true,\r\n\t\t\t  \"traced\": null,\r\n\t\t\t  \"scope\": \"COMPILE\",\r\n\t\t\t  \"transitive\": true,\r\n\t\t\t  \"filename\": \"asm-tree-5.0.2.jar\",\r\n\t\t\t  \"path\": \"C:\\\\tmp\\\\.m2\\\\repository\\\\org\\\\ow2\\\\asm\\\\asm-tree\\\\5.0.2\\\\asm-tree-5.0.2.jar\"\r\n\t\t\t\r\n      },\r\n      \"declared\": true,\r\n      \"scope\": \"COMPILE\",\r\n      \"transitive\": false,\r\n      \"filename\": \"httpclient-4.1.3.jar\",\r\n\t  \"relativePath\" : null,\r\n      \"path\": \"C:\\\\tmp\\\\.m2\\\\repository\\\\org\\\\apache\\\\httpcomponents\\\\httpclient\\\\4.1.3\\\\httpclient-4.1.3.jar\"\r\n    }\r\n    ],\r\n     \"artifact\": \"vulas-testapp-webapp\",\r\n  \"version\": \"3.0.6\",\r\n  \"group\": \"com.acme.foo\"}"
+				},
+				"description": "Delete application and its dependencies"
+			},
+			"response": []
+		}
+	]
+}

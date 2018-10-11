@@ -1,0 +1,19 @@
+plugins {
+    id 'vulas'
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion Integer.valueOf(androidCompileSdkVersion)
+    buildToolsVersion androidBuildToolsVersion
+    defaultConfig {
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
+    }
+}
+
+dependencies {
+    api project(path: ":android-lib1")
+    implementation("org.jdeferred:jdeferred-android-aar:1.2.6")
+}

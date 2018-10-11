@@ -1,0 +1,1 @@
+create index IF NOT EXISTS construct_index on lib_constructs (constructs_id);

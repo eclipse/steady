@@ -1,0 +1,39 @@
+[
+  {
+    "app": {
+      "group": "com.acme",
+      "artifact": "vulas",
+      "version": "0.0.1"
+    },
+    "bug": "bug-bar",
+    "executionId": "A2C-1234",
+    "source": "T2C",
+    "path": [
+      {
+        "constructId": {
+          "lang": "JAVA",
+          "type": "METH",
+          "qname": "com.acme.Vulas.vulas()"
+        },
+        "lib": null
+      },
+      {
+        "constructId": {
+          "lang": "JAVA",
+          "type": "CONS",
+          "qname": "org.lib.Foo()"
+        },
+        "lib": "sha1"
+      },
+      {
+        "constructId": {
+          "lang": "JAVA",
+          "type": "METH",
+          "qname": "org.lib.Foo.bar()"
+        },
+        "lib": "sha1"
+      }
+    ],
+    "length": 3
+  }
+]

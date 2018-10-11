@@ -1,0 +1,96 @@
+<mvc:View controllerName="view.ExecutionDetail" xmlns="sap.m"
+	xmlns:c="sap.suite.ui.commons" xmlns:form="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+	<Page id="executionDetailsPage" showNavButton='true' navButtonPress='handleNavBack'
+		title="{/filename}">
+		<headerContent>
+			<Button icon="sap-icon://sys-help" press="openWiki" tooltip="Open help in wiki page" />
+		</headerContent>
+		<content>
+			<l:VerticalLayout width="100%" class="marginVerticalContent">
+				<l:content>
+				    <l:HorizontalLayout width="100%">
+						<l:content>
+							<Label design="Bold" text="Goal Execution ID: " class="marginVerticalContent" />
+							<Label text="{/executionId}" class="marginVerticalContent" />
+						</l:content>
+					</l:HorizontalLayout>
+					<l:HorizontalLayout width="100%">
+						<l:content>
+							<Label design="Bold" text="Started At: " class="marginVerticalContent" />
+							<Label text="{/startedAtClient}" class="marginVerticalContent" />
+						</l:content>
+					</l:HorizontalLayout>
+					<l:HorizontalLayout width="100%" visible="{ path: '/exception', 
+ 								formatter: 'model.Formatter.exceptionVisibility'}">
+						<l:content>
+							<Label design="Bold" text="Exception: " class="marginVerticalContent" />
+							<Label text="{/exception}" class="marginVerticalContent" />
+						</l:content>
+					</l:HorizontalLayout>
+					<Label design="Bold" text="Goal Statistics:" class="marginVerticalContent" />
+					<Table xmlns="sap.ui.table" selectionMode="None"
+						editable="false" allowColumnReordering="false" rows="{/statistics}"
+						visibleRowCount="{path: '/statistics', formatter: 'model.Formatter.getListLength'}">
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="name" filterProperty="name">
+							<Label text="Property Name" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{name}">
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="value" filterProperty="value">
+							<Label text="Property Value" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{value}">
+								</TextView>
+							</template>
+						</Column>
+					</Table>
+					<Label design="Bold" text="Goal Configuration:" class="marginVerticalContent" />
+					<Table xmlns="sap.ui.table" selectionMode="None"
+						editable="false" allowColumnReordering="false" rows="{/configuration}"
+						visibleRowCount="{path: '/configuration', formatter: 'model.Formatter.getListLength'}">
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="name" filterProperty="name">
+							<Label text="Property Name" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{name}">
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="value" filterProperty="value">
+							<Label text="Property Value" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{value}">
+								</TextView>
+							</template>
+						</Column>
+					</Table>
+					<Label design="Bold" text="System information:" class="marginVerticalContent" />
+					<Table xmlns="sap.ui.table" selectionMode="None"
+						editable="false" allowColumnReordering="false" rows="{/systemInfo}"
+						visibleRowCount="{path: '/systemInfo', formatter: 'model.Formatter.getListLength'}">
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="name" filterProperty="name">
+							<Label text="Property Name" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{name}">
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="value" filterProperty="value">
+							<Label text="Property Value" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{value}">
+								</TextView>
+							</template>
+						</Column>
+					</Table>
+				</l:content>
+			</l:VerticalLayout>
+		</content>
+	</Page>
+</mvc:View>
+
+
+
+

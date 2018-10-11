@@ -1,0 +1,519 @@
+<mvc:View controllerName="view.Component" xmlns="sap.m"
+          xmlns:c="sap.suite.ui.commons" xmlns:form="sap.ui.layout.form"
+          xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:m="sap.ui.commons.layout" xmlns:commons="sap.ui.commons" xmlns:mm="sap.m">
+    <Page id="componentPage">
+        <headerContent>
+            <Button icon="sap-icon://refresh"  press="loadData" tooltip="Reload App data"  />
+            <Button icon="sap-icon://action" press="openNVD" tooltip="National Vulnerability Database" text="NVD" />
+        </headerContent>
+        <content>
+            <l:VerticalLayout width="100%">
+                <l:content>
+                    <l:VerticalLayout width="100%" class="marginVerticalContent" id="idCveModelDetails">
+                        <l:content>
+                        	<l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/bugIdAlt', 
+                                                    formatter: 'model.Formatter.fieldVisibility'}">
+                        		<mm:Label design="Bold" width="130px" text="Alternative Bug Id: " />
+	                        	<mm:Text text="{cveModel>/bugIdAlt}" />
+	                        </l:HorizontalLayout>
+                        	<l:VerticalLayout width="100%" visible="{ path: 'cveModel>/summary', 
+                                                    formatter: 'model.Formatter.fieldVisibility'}">
+	                            <mm:Label design="Bold" text="Description: " />
+	                            <mm:Text text="{cveModel>/summary}" />
+                            </l:VerticalLayout>
+                        	<l:VerticalLayout width="100%" visible="{ path: 'cveModel>/summaryAlt', 
+                                                    formatter: 'model.Formatter.fieldVisibility'}">
+	                            <mm:Label design="Bold" text="Alternative Description: " />
+	                            <mm:Text text="{cveModel>/summaryAlt}" />
+                            </l:VerticalLayout>
+                            <l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/maturity', 
+                                                    formatter: 'model.Formatter.fieldVisibility'}">
+	                            <mm:Label design="Bold" width="130px" text="Maturity: " />
+	                            <mm:Text text="{cveModel>/maturity}" />
+                            </l:HorizontalLayout>
+                        	<l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/origin', 
+                                                    formatter: 'model.Formatter.fieldVisibility'}">
+	                            <mm:Label design="Bold" width="130px" text="Origin: " />
+	                            <mm:Text text="{cveModel>/origin}" />
+                            </l:HorizontalLayout>                              
+                            <l:VerticalLayout width="100%" visible="{ path: 'cveModel>/reference', 
+                                                    formatter: 'model.Formatter.fieldVisibility'}">
+	                            <mm:Label design="Bold" text="References: " />
+	                            <mm:List items="{path:'cveModel>/reference'}"  showNoData="false"> 
+										<mm:CustomListItem>
+											<mm:Link text="{cveModel>url}" href="{cveModel>url}" target="_window"/>
+										 </mm:CustomListItem>
+								</mm:List>
+							</l:VerticalLayout>
+                            <l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/cvssScore', 
+                                                    formatter: 'model.Formatter.fieldVisibility'}">
+                                <mm:Label design="Bold" width="130px" text="CVSS Score: " />
+                                <mm:Label text="{cveModel>/cvssScore}" />
+                            </l:HorizontalLayout>
+                            <l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/cvssVersion', 
+                                                    formatter: 'model.Formatter.fieldVisibility'}">
+                                <mm:Label design="Bold" width="130px" text="CVSS Version: " />
+                                <mm:Label text="{cveModel>/cvssVersion}" />
+                            </l:HorizontalLayout>
+                            <l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/cvssVector', 
+                                                    formatter: 'model.Formatter.fieldVisibility'}">
+                                <mm:Label design="Bold" width="130px" text="CVSS vector: " />
+                                <mm:Label text="{cveModel>/cvssVector}" />
+                            </l:HorizontalLayout>                                                        
+                            <l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/Published', 
+                                                    formatter: 'model.Formatter.fieldVisibility'}">
+                                <mm:Label design="Bold" width="130px" text="Published at: " />
+                                <mm:Label text="{cveModel>/Published}" />
+                            </l:HorizontalLayout>
+                            <l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/Modified', 
+                                                    formatter: 'model.Formatter.fieldVisibility'}">
+                                <mm:Label design="Bold" width="130px" text="Modified at: " />
+                                <mm:Label text="{cveModel>/Modified}" />
+                            </l:HorizontalLayout>
+                        </l:content>
+                    </l:VerticalLayout><!--
+                    <l:VerticalLayout width="100%" class="marginVerticalContent" id="idOSSPatchDetails">
+                            <l:content>
+                                    <Label design="Bold"
+                                            text="Programming constructs of the change list of the OSS patch" />
+                                    <l:HorizontalLayout width="100%">
+                                            <l:content>
+                                                    <Label text="Repository: " />
+                                                    <Link xmlns="sap.m" href="{osspatch>/repo}" target="_blank"
+                                                            text="{osspatch>/repo}">
+                                                    </Link>
+                                            </l:content>
+                                    </l:HorizontalLayout>
+                                    <l:HorizontalLayout width="100%">
+                                            <l:content>
+                                                    <Label text="Revisions fixing the vulnerability: " />
+                                                    <Label text="{osspatch>/revisions}" />
+                                            </l:content>
+                                    </l:HorizontalLayout>
+                            </l:content>
+                    </l:VerticalLayout>-->
+                    
+                    
+                    <IconTabBar>
+                            <items>
+                                <IconTabFilter text="Affected Libraries" icon="sap-icon://wounds-doc"  tooltip="Affected Libraries">
+                                    <FlexBox xmlns="sap.m" alignItems="Center" justifyContent="Center">
+                                    <items>
+                                <Button xmlns="sap.ui.commons" icon="sap-icon://save" 
+                                        tooltip="Save Manual Assessment" text="Save" style="Accept" 
+                                        press="onSaveButtonPress"
+                                        height="70px" width="100px"
+                                />
+                                    </items>
+                                    </FlexBox>
+                        <Table xmlns="sap.ui.table" id="idBugAnalysisList" width="99%" selectionMode = "None" editable="false"
+                                rows="{/affectedVersions}" allowColumnReordering="false" 
+                                cellClick="onBugListItemTap" 
+                            >
+                            <columns>
+                                <Column xmlns="sap.ui.table" width="10%" mergeDuplicates="false" 
+                                        sorted="true" sortProperty="group"
+                                        filterProperty="group">
+                                    <Label text="Group" xmlns="sap.ui.commons" />
+                                    <template>
+                                        <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                            text="{group}">
+                                        </TextView>
+                                    </template>
+                                </Column>
+                                <Column xmlns="sap.ui.table" width="10%" mergeDuplicates="false" 
+                                        sorted="true" sortProperty="artifact" 
+                                        filterProperty="artifact">
+                                    <Label text="Artifact" xmlns="sap.ui.commons" />
+                                    <template>
+                                        <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                            text="{artifact}">
+                                        </TextView>
+                                    </template>
+                                </Column>
+                                <Column xmlns="sap.ui.table" width="5%" mergeDuplicates="false" 
+                                        sorted="true" sortProperty="version" 
+                                        filterProperty="version">
+                                    <Label text="Version" xmlns="sap.ui.commons" />
+                                    <template>
+                                        <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                            text="{version}">
+                                        </TextView>
+                                    </template>
+                                </Column>
+                                <Column xmlns="sap.ui.table" width="5%" mergeDuplicates="false" 
+                                        sorted="true" sortProperty="sha1" 
+                                        filterProperty="sha1">
+                                    <Label text="SHA1" xmlns="sap.ui.commons" />
+                                    <template>
+                                        <l:HorizontalLayout>
+                                            <Image xmlns="sap.ui.commons" src="img/linkimage.png"
+                                            visible="{path: 'sha1', formatter:'model.Formatter.showImageLink'}"/>
+                                            <TextView text="{sha1}" xmlns="sap.ui.commons" wrapping="true"/>  
+                                        </l:HorizontalLayout> 
+                                    </template>
+                                </Column>
+                                 <Column xmlns="sap.ui.table" width="3%" mergeDuplicates="false" >
+                               	 <Label text="Sources Availables" xmlns="sap.ui.commons" />
+                               	 <template>
+											<commons:TextView text="{sourcesAvailable}"
+												semanticColor="{ path: 'sourcesAvailable', 
+	             								    formatter: 'model.Formatter.booleanToSemantic'}">
+											</commons:TextView>
+										</template>
+                                </Column>
+                                <Column xmlns="sap.ui.table" width="10%" mergeDuplicates="false" 
+                                        sorted="true" sortProperty="manual" >
+                                    <Label text="Assessment (Manual)" xmlns="sap.ui.commons" />
+                                    <template>
+                                        <!--<FlexBox xmlns="sap.m" alignItems="Start" justifyContent="SpaceBetween">
+                                        <items>
+                                            <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                text="{manual}"
+                                                semanticColor="{path: 'manual', formatter: 'model.Formatter.rowColorForArchives'}"
+                                            >
+                                            </TextView>
+                                            <CheckBox  id="manualCB" xmlns="sap.ui.commons" 
+                                                       checked="{manual}" editable="true"
+                                                        change="onCheckBoxStateChanged"  />
+                                            <RadioButtonGroup xmlns="sap.ui.commons" columns="3" id="idRBGmanual"
+                                                              selectedIndex="{path: 'manual',  formatter: 'model.Formatter.radioButtonFormatter'}"
+                                                              select="onRadioButtonClick"  
+                                                              >
+                                                <Item xmlns="sap.ui.core" text="true" key = "mkt" />
+                                                <Item xmlns="sap.ui.core" text="false" key = "mkf" />    
+                                                <Item xmlns="sap.ui.core" text="none" key = "mkn" />    
+                                            </RadioButtonGroup>
+                                        </items>
+                                        </FlexBox>-->
+                                        <SegmentedButton xmlns="sap.m" id="idSBmanual" width="100%"
+                                                         selectedKey="{path: 'manual',  formatter: 'model.Formatter.radioButtonFormatter'}"
+                                                         select="onRadioButtonClick" >
+                                               <items>
+                                                <SegmentedButtonItem text="" key = "mkt" icon="sap-icon://message-warning"/>
+                                                <SegmentedButtonItem text="" key = "mkf" icon="sap-icon://accept" />
+                                                <SegmentedButtonItem text="" key = "mkn" icon="sap-icon://question-mark"/>
+                                        </items>
+                                        </SegmentedButton>
+                                    </template>
+                                </Column>
+                                <Column xmlns="sap.ui.table" width="10%" mergeDuplicates="false" >
+                                    <Label text="Patch eval" xmlns="sap.ui.commons" />
+                                        <template>
+<!--                                             <l:HorizontalLayout> -->
+                                            
+                                            <m:MatrixLayout columns="1">
+										<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+                                           <Image xmlns="sap.m" decorative="true" 
+                                                    src="{
+                                                            parts: ['patcheval', 'patchevalAff'],
+                                                            formatter: 'model.Formatter.showImagePE'
+                                                            }">
+                                            </Image>
+                                             <TextView xmlns="sap.ui.commons" wrapping="true" 
+                                                      tooltip="{parts: ['firstFixed', 'lastVulnerable', 'fromIntersection', 'toIntersection'], formatter: 'model.Formatter.tooltipPEFormatter'}"
+                                               text="{
+			 												parts: ['patcheval'],
+			 												formatter: 'model.Formatter.affectedVersionSource'
+			 												}"/>
+                                            	</m:MatrixLayoutCell>
+                                            	</m:MatrixLayoutRow>
+                                            		<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+			 								<TextView xmlns="sap.ui.commons" 
+                                               text="{parts: ['firstFixed', 'lastVulnerable', 'fromIntersection', 'toIntersection', 'overallConfidence','pathConfidence'], formatter: 'model.Formatter.tooltipPEFormatter'}"/>
+                                            	</m:MatrixLayoutCell>
+                                            	</m:MatrixLayoutRow>
+<!--                                             </l:HorizontalLayout> -->
+ </m:MatrixLayout>
+                                        </template>
+                                       </Column>
+<!--                                 <Column xmlns="sap.ui.table" width="3%" mergeDuplicates="false" > -->
+<!--                                	 <Label text="Confidence" xmlns="sap.ui.commons" /> -->
+<!--                                	 <template> -->
+<!-- 											<commons:TextView text="{overallConfidence}" -->
+<!-- 												/> -->
+											
+<!-- 										</template> -->
+<!--                                 </Column> -->
+<!--                                  <Column xmlns="sap.ui.table" width="3%" mergeDuplicates="false" > -->
+<!--                                	 <Label text="Path Confidence" xmlns="sap.ui.commons" /> -->
+<!--                                	 <template> -->
+<!-- 											<commons:TextView text="{pathConfidence}" -->
+<!-- 												/> -->
+<!-- 										</template> -->
+<!--                                 </Column> -->
+                                
+                                <Column xmlns="sap.ui.table" width="3%" mergeDuplicates="false" 
+                                        sorted="true" sortProperty="checkvers">
+                                    <Label text="Assessment (Code)" xmlns="sap.ui.commons" />
+                                    <template>
+                                        <l:HorizontalLayout>
+                                            <Image xmlns="sap.ui.commons" src="img/linkimage.png"
+                                                visible="{path: 'checkvers', formatter:'model.Formatter.showImageLink'}"/>
+                                            <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                text="{path:'checkvers', formatter:'model.Formatter.textForAffected'}"
+                                                semanticColor="{path: 'checkvers', formatter: 'model.Formatter.rowColorForArchives'}"/>  
+                                        </l:HorizontalLayout> 
+                                    </template>
+                                </Column>
+                                <Column xmlns="sap.ui.table" width="1%" mergeDuplicates="false" 
+                                        sorted="true" sortProperty="precommitpom">
+                                    <Label text="Pre commit pom" xmlns="sap.ui.commons" />
+                                        <template>
+                                            <TextView xmlns="sap.ui.commons" wrapping="true"
+                                                text="{precommitpom}"
+                                                semanticColor="{path: 'precommitpom', formatter: 'model.Formatter.rowColorForArchives'}">
+                                            </TextView>
+                                        </template>
+                                </Column>
+                            </columns>
+                        </Table>   
+                                </IconTabFilter>
+                            <IconTabFilter text="Construct changes" icon="sap-icon://horizontal-bar-chart" tooltip="Construct changes">
+                                    <TreeTable xmlns="sap.ui.table"
+                                id="idChangeListPath"
+                                rows="{path:'/root', parameters: {arrayNames:['children']}}"
+                                visibleRowCount="{path: '/root'}"
+                                selectionMode="None"
+                                enableSelectAll="false"
+                                cellClick="onModConstructClick"
+                             >
+                        <toolbar>
+                            <Toolbar xmlns="sap.m">
+                                <Title id="titleConstructsTree" text="Constructs change per path"/>
+                                <ToolbarSpacer/>
+                                <Button text="Collapse all" press="onCollapseAllConstructsP" />
+                                <Button text="Expand all" press="onExpandAllConstructsP"/>
+                            </Toolbar>
+                        </toolbar>
+                        <columns>
+                            <Column  xmlns="sap.ui.table" >
+                                <Label text="Repo Path" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <l:HorizontalLayout>
+                                        <Image xmlns="sap.m" decorative="true" 
+                                                    src="{
+                                                            parts: ['name', 'overallChg'],
+                                                            formatter: 'model.Formatter.showImageModTree'
+                                                            }">
+                                            </Image>
+                                        <TextView text="{name}" xmlns="sap.ui.commons" class="myDefaultColor"/>  
+                                    </l:HorizontalLayout>                              
+                                </template>
+                            </Column>
+                            <Column  xmlns="sap.ui.table" >
+                                <Label text="Construct Type" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{type}" xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>
+                            <Column xmlns="sap.ui.table" >
+                                <Label text="Change type" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{overallChg}" xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>
+                            <!--<Column width="3rem" xmlns="sap.ui.table" >
+                                <Label text="Single Change type" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{singleChangeType}" xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>-->
+                        </columns>
+                    </TreeTable>
+                    <TreeTable xmlns="sap.ui.table"
+                                id="idChangeListCommit"
+                                rows="{path:'/root', parameters: {arrayNames:['children']}}"
+                                visibleRowCount="{path: '/root'}"
+                                selectionMode="None"
+                                enableSelectAll="false"
+                             >
+                        <toolbar>
+                            <Toolbar xmlns="sap.m">
+                                <Title id="titleConstructsTreeC" text="Constructs change per commit"/>
+                                <ToolbarSpacer/>
+                                <Button text="Collapse all" press="onCollapseAllConstructsC" />
+                                <Button text="Expand all" press="onExpandAllConstructsC"/>
+                            </Toolbar>
+                        </toolbar>
+                        <columns>
+                            <Column xmlns="sap.ui.table" >
+                                <Label text="Repo Path" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <l:HorizontalLayout>
+                                        <TextView text="{name}" xmlns="sap.ui.commons" class="myDefaultColor"/>  
+                                    </l:HorizontalLayout>                              
+                                </template>
+                            </Column>
+                            <Column  xmlns="sap.ui.table" >
+                                <Label text="Construct Type" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{type}" xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>
+                            <Column  xmlns="sap.ui.table" >
+                                <Label text="Change type" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{overallChg}" xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>
+                            <!--<Column width="3rem" xmlns="sap.ui.table" >
+                                <Label text="Single Change type" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{singleChangeType}" xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>-->
+                        </columns>
+                    </TreeTable>
+                                </IconTabFilter>
+                                <IconTabFilter text="Update bug description" icon="sap-icon://edit" tooltip="Update bug description">
+                                   <FlexBox xmlns="sap.m" alignItems="left" justifyContent="Left" width="100%" fitContainer="true">
+                                    <items>
+                                        <l:VerticalLayout id="idCveModelDetailsUpdate">
+	                                        <l:HorizontalLayout width="100%">
+	                                             <l:content>
+	                                                <mm:Label 	 design="Bold" text="Alternative bug Id: " width="150px" />
+	                                                <mm:TextArea rows="1" value="{cveUpdateModel>/bugIdAlt}" id="tfBugIdAlt" />
+	                                             </l:content>
+	                                        </l:HorizontalLayout>
+	                                        <l:VerticalLayout width="100%" >
+	                                             <l:content>
+	                                                <mm:Label    design="Bold" text="Description: " width="150px" />
+	                                               	<mm:TextArea rows="5" value="{cveUpdateModel>/summary}" id="tfDescription" width="100%" />
+	                                            </l:content>
+	                                        </l:VerticalLayout>                                        
+	                                        <l:VerticalLayout width="100%">
+	                                             <l:content>
+	                                                <mm:Label    design="Bold" text="Alternative Description: " width="250px" />
+	                                                <mm:TextArea rows="5" value="{cveUpdateModel>/summaryAlt}" id="tfDescriptionAlt" width="100%" />
+	                                             </l:content>
+	                                        </l:VerticalLayout>
+	                                        <l:HorizontalLayout width="100%">
+	                                             <l:content>
+	                                                <mm:Label design="Bold" text="Maturity: " width="150px" />
+	                                                <mm:TextArea rows="1" value="{cveUpdateModel>/maturity}" id="tfMaturity" visible="false" />
+	                                                <mm:ComboBox
+	                                                	id="sMaturity"																										
+														items="{
+	 														path: 'maturityModel>/ContentMaturityLevel', 
+	 														sorter: { path: 'Maturity' } 
+	 													}"> 
+														<core:Item key="{maturityModel>Maturity}" text="{maturityModel>Maturity}" />
+													</mm:ComboBox>
+	                                             </l:content>
+	                                        </l:HorizontalLayout>                                        
+	                                        <l:HorizontalLayout width="100%">
+	                                             <l:content>
+	                                                <mm:Label design="Bold" text="Origin: " width="150px" />
+	                                                <mm:TextArea rows="1" value="{cveUpdateModel>/origin}" id="tfOrigin" visible="false" />
+	                                                <mm:ComboBox
+	                                                	id="sOrigin"
+														items="{
+															path: 'originModel>/ContentOriginLevel',
+															sorter: { path: 'Origin' }
+														}">
+														<core:Item key="{originModel>Origin}" text="{originModel>Origin}" />
+													</mm:ComboBox>                                               
+	                                             </l:content>
+	                                        </l:HorizontalLayout>
+	                                        <l:HorizontalLayout width="100%">
+	                                             <l:content>
+	                                                <mm:Label design="Bold" text="New Url: " width="150px" />
+	                                                <l:VerticalLayout width="100%">
+	                                                	<l:content>
+	                                                		<mm:TextArea rows="1" value="" width="100%" id="tfUrl"/>
+			                                                <List
+																id="lReferences"
+																items="{path:'cveUpdateModel>/reference'}"
+																mode="MultiSelect"
+																includeItemInSelection="true">
+																<!-- headerToolbar>
+																	<Toolbar>
+																		<content>
+																			<Title text="UR" level="H2" />
+																			<ToolbarSpacer />
+																			<Select
+																				selectedKey="MultiSelect"
+																				change="handleSelectChange">
+																				<items>
+																					<core:Item key="{cveModel>url}" text="{cveModel>url}" />
+																				</items>
+																			</Select>
+																		</content>
+																	</Toolbar>
+																</headerToolbar-->
+																<StandardListItem													
+																	title="{cveUpdateModel>url}"
+																	selected="true"
+																	 />
+																	<!--
+																	description="URL(s)"  
+																	icon="{ProductPicUrl}"
+																	iconDensityAware="false"
+																	iconInset="false" -->
+															</List>
+														</l:content>
+	                                        		</l:VerticalLayout>		
+													<Button xmlns="sap.ui.commons"  
+			                                            tooltip="Add new URL" text="+" style="Accept" align="Center"
+			                                            press="onAddURLButtonPress"
+			                                            height="50px" width="120px"
+			                                        />
+			                                        <!-- icon="sap-icon://save" -->
+	                                             </l:content>
+	                                        </l:HorizontalLayout>
+	
+	                                        <l:HorizontalLayout width="100%">
+	                                             <l:content>
+	                                                 <Label    xmlns="sap.m" design="Bold" text="CVSS Score: " width="150px" />
+	                                                 <TextArea xmlns="sap.m" rows="1" value="{cveUpdateModel>/cvssScore}" id="tfCVSSScore"/>
+	                                             </l:content>
+	                                        </l:HorizontalLayout>
+	                                        <l:HorizontalLayout width="100%">
+	                                             <l:content>
+	                                                 <Label    xmlns="sap.m" design="Bold" text="CVSS Version: " width="150px" />
+	                                                 <TextArea xmlns="sap.m" rows="1" value="{cveUpdateModel>/cvssVersion}" id="tfCVSSVersion"/>
+	                                             </l:content>
+	                                        </l:HorizontalLayout>
+	                                        <l:HorizontalLayout width="100%">
+	                                             <l:content>
+	                                                 <Label    xmlns="sap.m" design="Bold" text="CVSS Vector: " width="150px" />
+	                                                 <TextArea xmlns="sap.m" rows="1" value="{cveUpdateModel>/cvssVector}" id="tfCVSSVector"/>
+	                                             </l:content>
+	                                        </l:HorizontalLayout>
+		                                    <l:HorizontalLayout width="100%" align="center">
+			                                    <Button xmlns="sap.ui.commons" icon="sap-icon://save" 
+			                                            tooltip="Saving Bug data" text="Update Bug!" style="Accept" align="Center"
+			                                            press="onUpdateDescriptionButtonPress"
+			                                            height="50px" width="120px"
+			                                    />
+		                                    </l:HorizontalLayout>
+	                                    	<!--  press="onUpdateDescriptionButtonPress" -->
+                                        </l:VerticalLayout>
+                                    </items>
+                                   </FlexBox>
+                                </IconTabFilter>
+                            </items>
+                    </IconTabBar>
+                    <!--<FlexBox xmlns="sap.m" alignItems="Center" justifyContent="Center">
+                        <items>
+                        <Button xmlns="sap.ui.commons" icon="sap-icon://save" 
+                                tooltip="Save Manual Assessment" text="Save" style="Accept" 
+                                press="onSaveButtonPress"
+                                height="70px" width="100px"
+                        />	 
+                        </items>
+                    </FlexBox>-->
+                </l:content>
+            </l:VerticalLayout>
+        </content>
+    </Page>
+</mvc:View>

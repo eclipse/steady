@@ -1,0 +1,62 @@
+<mvc:View controllerName="view.GraphDetail" xmlns="sap.m" xmlns:commons="sap.ui.commons"
+	xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout">
+	<Page id="idGraphDetailPage" showNavButton='true' navButtonPress='handleNavBack'>
+		<headerContent>
+	        <Button icon="sap-icon://action" press="openNVD" tooltip="National Vulnerability Database" text="NVD" />
+	        <Button icon="sap-icon://sys-help" press="openWiki" tooltip="Open help in wiki page" />
+	    </headerContent>
+	    <content>
+			<l:VerticalLayout width="100%" class="marginVerticalContent">
+			<l:content>
+			
+				<!--  Label design="Bold" text="Bug Description:" class="marginVerticalContent" />
+				<Text text="{/cve/summary}" class="marginVerticalContent" /-->
+
+				<Label design="Bold" text="Vulnerable change list element (in red):" class="marginVerticalContent" />
+				<Text text="{data>/change}" class="marginVerticalContent" />
+				
+				<l:HorizontalLayout width="100%"><l:content>
+					<Label design="Bold" text="Callgraph entry point(s):" class="marginVerticalContent" />
+					<Text text="[{/visiblePaths}/{data>/totalPathsCount}] middle-size green nodes (i.e. shortest paths)" class="marginVerticalContent" />
+				</l:content></l:HorizontalLayout>
+				
+				<l:HorizontalLayout width="100%"><l:content>
+					<Label design="Bold" text="Possible executions resulting from static reachability analysis:" class="marginVerticalContent" />
+					<Text text="Nodes connected through black arrows" class="marginVerticalContent" />
+				</l:content></l:HorizontalLayout>
+				
+				<l:HorizontalLayout width="100%"><l:content>
+					<Label design="Bold" text="Actual executions observed during test execution:" class="marginVerticalContent" />
+					<Text text="Nodes with black borders connected through red edges" class="marginVerticalContent" />
+				</l:content></l:HorizontalLayout>
+				
+				<l:HorizontalLayout width="100%"><l:content>
+					<commons:TextField id="pkg" value="" width="300px" class="marginVerticalContent" />
+					<commons:Button text="Collapse nodes" tooltip="Collapse nodes whose qualified name start with the given string" 
+									press="onclickCollapsePKGButton" class="marginVerticalContent" />
+				</l:content></l:HorizontalLayout>
+				
+				<l:HorizontalLayout width="100%"><l:content>
+					<commons:Button text="Expand all" tooltip="Restore the original construct graph" 
+									press="onclickRemoveButton" class="marginVerticalContent" />
+					<commons:Button text="Collapse on class-level" tooltip="Show the collapsed class-level graph" 
+									press="onclickClassGraphButton" class="marginVerticalContent" />
+					<commons:Button text="Collapse on package-level" tooltip="Show the collapsed package-level graph" 
+									press="onclickPackageGraphButton" class="marginVerticalContent" />
+					<commons:Button text="Collapse on library-level" tooltip="Show the collapsed package-level graph" 
+									press="onclickLibGraphButton" class="marginVerticalContent" />
+				</l:content></l:HorizontalLayout>
+				
+<!-- 				<l:HorizontalLayout width="100%"><l:content> -->
+<!-- 					<commons:Button text="Show exploitability" tooltip="Show exploitability"  -->
+<!-- 									press="onclickExploitabilityButton" class="marginVerticalContent" /> -->
+<!-- 					<commons:Button text="Hide exploitability" tooltip="Hide exploitability"  -->
+<!-- 									press="loadDataIntoView" class="marginVerticalContent" /> -->
+<!-- 				</l:content></l:HorizontalLayout> -->
+				
+				<FlexBox id="GraphHolder" width="100%" height="1000px" alignItems="Start" justifyContent="Center" />
+			</l:content>
+			</l:VerticalLayout>
+		</content>
+	</Page>
+</mvc:View>

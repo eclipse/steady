@@ -1,0 +1,1 @@
+ALTER TABLE app_goal_exe ALTER COLUMN exception TYPE text;

@@ -1,0 +1,1674 @@
+{
+  "digest": "C621B54583719AC0310404463D6D99DB27E1052C",
+  "digestAlgorithm": "SHA1",
+  "libraryId": null,
+  "properties": [
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Bundle-License",
+      "value": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Bundle-SymbolicName",
+      "value": "org.apache.commons.fileupload"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Archiver-Version",
+      "value": "Plexus Archiver"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Built-By",
+      "value": "Administrator"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Bnd-LastModified",
+      "value": "1391706206354"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Implementation-Vendor-Id",
+      "value": "org.apache"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Specification-Title",
+      "value": "Apache Commons FileUpload"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Include-Resource",
+      "value": "META-INF/LICENSE.txt=LICENSE.txt,META-INF/NOTICE.txt=NOTICE.txt"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Bundle-DocURL",
+      "value": "http://commons.apache.org/proper/commons-fileupload/"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Import-Package",
+      "value": "javax.servlet,javax.servlet.http,org.apache.commons.io,org.apache.commons.io.output"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "DynamicImport-Package",
+      "value": "javax.portlet"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Export-Package",
+      "value": "org.apache.commons.fileupload;version=\"1.3.1\",org.apache.commons.fileupload.disk;version=\"1.3.1\",org.apache.commons.fileupload.portlet;version=\"1.3.1\",org.apache.commons.fileupload.servlet;version=\"1.3.1\",org.apache.commons.fileupload.util;version=\"1.3.1\""
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Bundle-Name",
+      "value": "Apache Commons FileUpload"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Bundle-Description",
+      "value": "The Apache Commons FileUpload component provides a simple yet flexible means of adding support for multipart    file upload functionality to servlets and web applications."
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Implementation-Title",
+      "value": "Apache Commons FileUpload"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Implementation-Version",
+      "value": "1.3.1"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Bundle-ManifestVersion",
+      "value": "2"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Specification-Vendor",
+      "value": "The Apache Software Foundation"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Bundle-Vendor",
+      "value": "The Apache Software Foundation"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Tool",
+      "value": "Bnd-2.1.0.20130426-122213"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Manifest-Version",
+      "value": "1.0"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Implementation-Vendor",
+      "value": "The Apache Software Foundation"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Bundle-Version",
+      "value": "1.3.1"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "X-Compile-Target-JDK",
+      "value": "1.5"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Implementation-Build",
+      "value": "trunk@r1565338; 2014-02-06 17:03:20+0000"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Private-Package",
+      "value": "org.apache.commons.fileupload.util.mime"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "X-Compile-Source-JDK",
+      "value": "1.5"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Build-Jdk",
+      "value": "1.5.0_22"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Created-By",
+      "value": "Apache Maven Bundle Plugin"
+    },
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "Specification-Version",
+      "value": "1.3.1"
+    }
+  ],
+  "constructs": [
+    {
+      "lang": "JAVA",
+      "type": "PACK",
+      "qname": "org.apache.commons.fileupload"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.DefaultFileItem"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.DefaultFileItem(String,String,boolean,String,int,File)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.DefaultFileItemFactory"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.DefaultFileItemFactory()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.DefaultFileItemFactory(int,File)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.DefaultFileItemFactory.createItem(String,String,boolean,String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.DiskFileUpload"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.DiskFileUpload()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.DiskFileUpload(DefaultFileItemFactory)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.DiskFileUpload.getFileItemFactory()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.DiskFileUpload.getRepositoryPath()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.DiskFileUpload.getSizeThreshold()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.DiskFileUpload.parseRequest(HttpServletRequest,int,long,String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.DiskFileUpload.setFileItemFactory(FileItemFactory)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.DiskFileUpload.setRepositoryPath(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.DiskFileUpload.setSizeThreshold(int)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileItemStream$ItemSkippedException"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileItemStream$ItemSkippedException()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileUpload"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUpload()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUpload(FileItemFactory)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUpload.getFileItemFactory()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUpload.setFileItemFactory(FileItemFactory)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$1"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$1(InputStream,long,FileUploadBase)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$1.raiseError(long,long)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl$1"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl$1(InputStream,long,FileItemIteratorImpl,ItemInputStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl$1.raiseError(long,long)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl(String,String,String,boolean,long)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl.access$000(FileItemStreamImpl)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl.access$300(FileItemStreamImpl)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl.close()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl.getContentType()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl.getFieldName()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl.getHeaders()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl.getName()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl.isFormField()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl.openStream()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl$FileItemStreamImpl.setHeaders(FileItemHeaders)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl(RequestContext)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl.access$100(FileItemIteratorImpl)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl.findNextItem()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl.getContentLength(FileItemHeaders)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl.hasNext()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl.next()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileSizeLimitExceededException"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileSizeLimitExceededException(String,long,long)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileSizeLimitExceededException.getFieldName()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileSizeLimitExceededException.getFileName()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileSizeLimitExceededException.setFieldName(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileSizeLimitExceededException.setFileName(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileUploadIOException"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileUploadIOException(FileUploadException)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$FileUploadIOException.getCause()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$IOFileUploadException"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$IOFileUploadException(String,IOException)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$IOFileUploadException.getCause()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$InvalidContentTypeException"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$InvalidContentTypeException()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$InvalidContentTypeException(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$InvalidContentTypeException(String,Throwable)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$SizeException"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$SizeException(String,long,long)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$SizeException.getActualSize()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$SizeException.getPermittedSize()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$SizeLimitExceededException"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$SizeLimitExceededException()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$SizeLimitExceededException(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$SizeLimitExceededException(String,long,long)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$UnknownSizeException"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$UnknownSizeException()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase$UnknownSizeException(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadBase()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.access$200(FileUploadBase)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.access$400(FileUploadBase)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.access$500(FileUploadBase)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.access$600(FileUploadBase)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.createItem(Map,boolean)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getBoundary(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getFieldName(FileItemHeaders)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getFieldName(Map)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getFieldName(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getFileItemFactory()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getFileName(FileItemHeaders)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getFileName(Map)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getFileName(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getFileSizeMax()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getHeader(Map,String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getHeaderEncoding()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getItemIterator(RequestContext)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getParsedHeaders(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getProgressListener()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.getSizeMax()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.isMultipartContent(HttpServletRequest)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.isMultipartContent(RequestContext)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.newFileItemHeaders()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.parseEndOfLine(String,int)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.parseHeaderLine(FileItemHeadersImpl,String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.parseHeaders(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.parseParameterMap(RequestContext)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.parseRequest(HttpServletRequest)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.parseRequest(RequestContext)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.setFileItemFactory(FileItemFactory)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.setFileSizeMax(long)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.setHeaderEncoding(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.setProgressListener(ProgressListener)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadBase.setSizeMax(long)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.FileUploadException"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadException()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadException(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.FileUploadException(String,Throwable)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadException.getCause()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadException.printStackTrace(PrintStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.FileUploadException.printStackTrace(PrintWriter)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.InvalidFileNameException"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.InvalidFileNameException(String,String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.InvalidFileNameException.getName()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.MultipartStream"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.MultipartStream$IllegalBoundaryException"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.MultipartStream$IllegalBoundaryException()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.MultipartStream$IllegalBoundaryException(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ItemInputStream"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ItemInputStream()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ItemInputStream.available()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ItemInputStream.close()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ItemInputStream.close(boolean)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ItemInputStream.findSeparator()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ItemInputStream.getBytesRead()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ItemInputStream.isClosed()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ItemInputStream.makeAvailable()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ItemInputStream.read()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ItemInputStream.read(byte[],int,int)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ItemInputStream.skip(long)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.MultipartStream$MalformedStreamException"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.MultipartStream$MalformedStreamException()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.MultipartStream$MalformedStreamException(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ProgressNotifier"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ProgressNotifier(ProgressListener,long)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ProgressNotifier.noteBytesRead(int)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ProgressNotifier.noteItem()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream$ProgressNotifier.notifyListener()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.MultipartStream()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.MultipartStream(InputStream,byte[])"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.MultipartStream(InputStream,byte[],ProgressNotifier)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.MultipartStream(InputStream,byte[],int)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.MultipartStream(InputStream,byte[],int,ProgressNotifier)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.access$000(MultipartStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.access$002(MultipartStream,int)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.access$012(MultipartStream,int)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.access$100(MultipartStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.access$102(MultipartStream,int)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.access$108(MultipartStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.access$112(MultipartStream,int)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.access$114(MultipartStream,long)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.access$200(MultipartStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.access$300(MultipartStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.access$400(MultipartStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.access$500(MultipartStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.access$600(MultipartStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.arrayequals(byte[],byte[],int)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.discardBodyData()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.findByte(byte,int)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.findSeparator()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.getHeaderEncoding()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.newInputStream()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.readBodyData(OutputStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.readBoundary()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.readByte()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.readHeaders()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.setBoundary(byte[])"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.setHeaderEncoding(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.MultipartStream.skipPreamble()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.ParameterParser"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.ParameterParser()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.ParameterParser.getToken(boolean)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.ParameterParser.hasChar()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.ParameterParser.isLowerCaseNames()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.ParameterParser.isOneOf(char,char[])"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.ParameterParser.parse(String,char)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.ParameterParser.parse(String,char[])"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.ParameterParser.parse(char[],char)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.ParameterParser.parse(char[],int,int,char)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.ParameterParser.parseQuotedToken(char[])"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.ParameterParser.parseToken(char[])"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.ParameterParser.setLowerCaseNames(boolean)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "PACK",
+      "qname": "org.apache.commons.fileupload.disk"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem(String,String,boolean,String,int,File)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.delete()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.finalize()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.get()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.getCharSet()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.getContentType()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.getFieldName()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.getHeaders()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.getInputStream()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.getName()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.getOutputStream()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.getSize()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.getStoreLocation()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.getString()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.getString(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.getTempFile()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.getUniqueId()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.isFormField()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.isInMemory()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.readObject(ObjectInputStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.setFieldName(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.setFormField(boolean)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.setHeaders(FileItemHeaders)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.toString()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.write(File)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItem.writeObject(ObjectOutputStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItemFactory"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItemFactory()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItemFactory(int,File)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItemFactory.createItem(String,String,boolean,String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItemFactory.getFileCleaningTracker()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItemFactory.getRepository()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItemFactory.getSizeThreshold()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItemFactory.setFileCleaningTracker(FileCleaningTracker)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItemFactory.setRepository(File)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.disk.DiskFileItemFactory.setSizeThreshold(int)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "PACK",
+      "qname": "org.apache.commons.fileupload.portlet"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.portlet.PortletFileUpload"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.portlet.PortletFileUpload()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.portlet.PortletFileUpload(FileItemFactory)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.portlet.PortletFileUpload.getItemIterator(ActionRequest)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.portlet.PortletFileUpload.isMultipartContent(ActionRequest)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.portlet.PortletFileUpload.parseParameterMap(ActionRequest)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.portlet.PortletFileUpload.parseRequest(ActionRequest)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.portlet.PortletRequestContext"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.portlet.PortletRequestContext(ActionRequest)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.portlet.PortletRequestContext.contentLength()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.portlet.PortletRequestContext.getCharacterEncoding()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.portlet.PortletRequestContext.getContentLength()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.portlet.PortletRequestContext.getContentType()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.portlet.PortletRequestContext.getInputStream()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.portlet.PortletRequestContext.toString()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "PACK",
+      "qname": "org.apache.commons.fileupload.servlet"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.servlet.FileCleanerCleanup"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.servlet.FileCleanerCleanup()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.servlet.FileCleanerCleanup.contextDestroyed(ServletContextEvent)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.servlet.FileCleanerCleanup.contextInitialized(ServletContextEvent)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.servlet.FileCleanerCleanup.getFileCleaningTracker(ServletContext)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.servlet.FileCleanerCleanup.setFileCleaningTracker(ServletContext,FileCleaningTracker)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.servlet.ServletFileUpload"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.servlet.ServletFileUpload()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.servlet.ServletFileUpload(FileItemFactory)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.servlet.ServletFileUpload.getItemIterator(HttpServletRequest)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.servlet.ServletFileUpload.isMultipartContent(HttpServletRequest)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.servlet.ServletFileUpload.parseParameterMap(HttpServletRequest)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.servlet.ServletFileUpload.parseRequest(HttpServletRequest)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.servlet.ServletRequestContext"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.servlet.ServletRequestContext(HttpServletRequest)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.servlet.ServletRequestContext.contentLength()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.servlet.ServletRequestContext.getCharacterEncoding()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.servlet.ServletRequestContext.getContentLength()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.servlet.ServletRequestContext.getContentType()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.servlet.ServletRequestContext.getInputStream()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.servlet.ServletRequestContext.toString()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "PACK",
+      "qname": "org.apache.commons.fileupload.util"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.util.FileItemHeadersImpl"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.util.FileItemHeadersImpl()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.FileItemHeadersImpl.addHeader(String,String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.FileItemHeadersImpl.getHeader(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.FileItemHeadersImpl.getHeaderNames()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.FileItemHeadersImpl.getHeaders(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.util.LimitedInputStream"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.util.LimitedInputStream(InputStream,long)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.LimitedInputStream.checkLimit()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.LimitedInputStream.close()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.LimitedInputStream.isClosed()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.LimitedInputStream.raiseError(long,long)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.LimitedInputStream.read()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.LimitedInputStream.read(byte[],int,int)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.util.Streams"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.util.Streams()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.Streams.asString(InputStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.Streams.asString(InputStream,String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.Streams.checkFileName(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.Streams.copy(InputStream,OutputStream,boolean)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.Streams.copy(InputStream,OutputStream,boolean,byte[])"
+    },
+    {
+      "lang": "JAVA",
+      "type": "PACK",
+      "qname": "org.apache.commons.fileupload.util.mime"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.util.mime.Base64Decoder"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.util.mime.Base64Decoder()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.mime.Base64Decoder.decode(byte[],OutputStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.util.mime.MimeUtility"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.util.mime.MimeUtility()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.mime.MimeUtility.decodeText(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.mime.MimeUtility.decodeWord(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.mime.MimeUtility.javaCharset(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.util.mime.ParseException"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.util.mime.ParseException(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.apache.commons.fileupload.util.mime.QuotedPrintableDecoder"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.apache.commons.fileupload.util.mime.QuotedPrintableDecoder()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.mime.QuotedPrintableDecoder.decode(byte[],OutputStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.apache.commons.fileupload.util.mime.QuotedPrintableDecoder.hexToBinary(byte)"
+    }
+  ]
+}

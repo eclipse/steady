@@ -1,0 +1,128 @@
+version: '2'
+
+services:
+  frontend-apps:
+    container_name: vulas-os-frontend-apps
+    hostname: frontend-apps
+    env_file: .env
+    build: 
+      context: ./frontend-apps
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+    expose:
+      - "8080"
+
+  frontend-bugs:
+    container_name: vulas-os-frontend-bugs
+    hostname: frontend-bugs
+    env_file: .env
+    build: 
+      context: ./frontend-bugs
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+    expose:
+      - "8080"
+
+  haproxy:
+    container_name: vulas-os-haproxy
+    hostname: haproxy
+    env_file: .env
+    build: 
+      context: ./haproxy
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+        - http_proxy=${http_proxy}
+        - https_proxy=${https_proxy}
+    restart: unless-stopped
+    ports:
+      - "8033:8080"
+      - "8034:7070"
+    volumes:
+      - "./haproxy/conf/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
+      - "/var/run:/var/run"
+    depends_on: 
+      - frontend-apps
+      - frontend-bugs
+      - rest-backend
+      - rest-lib-utils
+
+  patch-lib-analyzer:
+    container_name: vulas-os-patch-lib-analyzer
+    hostname: patch-lib-analyzer
+    env_file: .env
+    build: 
+      context: ./patch-lib-analyzer
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+        - http_proxy=${http_proxy}
+        - https_proxy=${https_proxy}
+    expose:
+      - "8080"
+    volumes:
+      - "./data/patcheval:/patcheval-data"
+    links:
+      - rest-backend:backend
+      - rest-lib-utils:cia
+    environment:
+      - PATCHEVAL_OPTS=-bug "" -folder /patcheval-data -j -h 0 -p 6
+      - vulas.shared.cia.serviceUrl=http://cia:8092/cia
+      - vulas.shared.backend.serviceUrl=http://backend:8091/backend
+      - vulas.patchEval.onlyAddNewResults=true
+  
+  postgresql:
+    container_name: vulas-os-postgresql
+    hostname: postgresql
+    env_file: .env
+    build: 
+      context: ./postgresql
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+    ports:
+      - "8032:5432"
+    volumes:
+      - "./data/postgresql:/var/lib/postgresql/data"
+
+  rest-backend:
+    container_name: vulas-os-rest-backend
+    hostname: rest-backend
+    env_file: .env
+    build: 
+      context: ./rest-backend    
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+        - http_proxy=${http_proxy}
+        - https_proxy=${https_proxy}
+    expose:
+      - "8091"
+    environment:
+      - DELAY_STARTUP=20
+      - vulas.shared.cia.serviceUrl=http://cia:8092/cia
+      - vulas.backend.coverageService.langConfidenceThreshold=0.2
+      - vulas.backend.coverageService.licenseConfidenceThreshold=0.2
+    links:
+      - postgresql:postgresql
+      - rest-lib-utils:cia
+    volumes:
+      - "./data/db-dump/flyway-callbacks:/flyway-callbacks"
+
+  rest-lib-utils:
+    container_name: vulas-os-rest-lib-utils
+    hostname: rest-lib-utils
+    env_file: .env
+    build: 
+      context: ./rest-lib-utils 
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+        - http_proxy=${http_proxy}
+        - https_proxy=${https_proxy}
+    expose:
+        - "8092"
+    volumes:
+      - "./data/rest-lib-utils:/root/"

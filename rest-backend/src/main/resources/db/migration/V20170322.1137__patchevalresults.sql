@@ -1,0 +1,10 @@
+alter table bug_affected_construct_change add column fixed_body text;
+alter table bug_affected_construct_change add column path_group varchar(255);
+alter table bug_affected_construct_change add column qname_in_jar boolean;
+alter table bug_affected_construct_change add column vuln_body text;
+alter table bug_affected_library add column adfixed varchar(255);
+alter table bug_affected_library add column adpath_fixed varchar(255);
+alter table bug_affected_library add column overall_confidence varchar(255);
+alter table bug_affected_library add column path_confidence varchar(255);
+alter table bug_affected_library add column sources_available boolean;
+alter table bug_affected_library alter column affected DROP NOT NULL;

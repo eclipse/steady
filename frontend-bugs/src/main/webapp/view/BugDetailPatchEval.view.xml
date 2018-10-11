@@ -1,0 +1,324 @@
+
+<mvc:View controllerName="view.BugDetailPatchEval" xmlns="sap.m"
+	xmlns:c="sap.suite.ui.commons" xmlns:form="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+	<Page id="idBugDetailPatchEvalPage" showNavButton='true' navButtonPress='handleNavBack'>
+	    <headerContent>
+	        <Button icon="sap-icon://action" press="openNVD" tooltip="National Vulnerability Database" text="NVD" />
+			<Button icon="sap-icon://action" press="openExploitDb" tooltip="Exploit Database" text="Exploit DB" />
+			<!--<Button id="idButtonOpenSmash" icon="sap-icon://action" press="openSmash" tooltip="Social Media Analysis for Security on HANA" text="SMASH" type="{path: '/smash/result', formatter: 'model.Formatter.getSmashButtonType'}" />-->
+	    </headerContent>
+		<content>
+			<l:VerticalLayout width="100%" class="marginVerticalContent">
+				<l:content>
+					<!--<l:HorizontalLayout width="100%">
+						<l:content>
+							<Label design="Bold" text="Vulnerability Id: " class="marginVerticalContent" />
+							<Label text="{/bug/bugId}" class="marginVerticalContent" />
+						</l:content>
+					</l:HorizontalLayout>-->
+                                        <Label design="Bold" text="Maven Identifier (GroupId : ArtifactId : Version): " class="marginVerticalContent" />
+                                        <Text xmlns="sap.m" 
+                                                class="marginVerticalContent"
+                                                text="{ parts: ['archiveModel>/group', 'archiveModel>/artifact','archiveModel>/version'], 
+                                                formatter: 'model.Formatter.mavenIdLink'}">
+                                        </Text>
+		 			<Label design="Bold" text="Description: " class="marginVerticalContent" />
+					<Text text="{cveModel>/summary}" class="marginVerticalContent" /> 
+					<l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/cvss', 
+ 								formatter: 'model.Formatter.fieldVisibility'}">
+						<l:content>
+							<Label design="Bold" text="CVSS Score: " class="marginVerticalContent" />
+							<Label text="{cveModel>/cvss}" class="marginVerticalContent" />
+						</l:content>
+					</l:HorizontalLayout>
+					
+					<l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/Published', 
+ 								formatter: 'model.Formatter.fieldVisibility'}">
+						<l:content>
+							<Label design="Bold" text="Published at: " class="marginVerticalContent" />
+							<Label text="{cveModel>/Published}" class="marginVerticalContent" />
+						</l:content>
+					</l:HorizontalLayout>
+					<l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/Modified', 
+ 								formatter: 'model.Formatter.fieldVisibility'}">
+						<l:content>
+							<Label design="Bold" text="Modified at: " class="marginVerticalContent" />
+							<Label text="{cveModel>/Modified}" class="marginVerticalContent" />
+						</l:content>
+					</l:HorizontalLayout>
+                             
+					
+			
+					
+					<l:VerticalLayout width="100%" class="marginBugDetailTables">
+						<l:content>
+							<l:VerticalLayout width="100%" class="marginVerticalContent">
+								<l:content>
+									<Label design="Bold"
+										text="Programming constructs of the change list of the OSS patch" /> <!--  / reachable from application / traced): " /> -->
+									<!--<l:HorizontalLayout width="100%">
+										<l:content>
+											<Label text="Repository: " />
+											<Link xmlns="sap.m" href="{osspatch>/repo}" target="_blank"
+												text="{osspatch>/repo}">
+											</Link>
+										</l:content>
+									</l:HorizontalLayout>
+									<l:HorizontalLayout width="100%">
+										<l:content>
+											<Label text="Revisions fixing the vulnerability: " />
+											<Label text="{osspatch>/revisions}" />
+										</l:content>
+									</l:HorizontalLayout>-->
+								</l:content>
+							</l:VerticalLayout>
+							<Table xmlns="sap.ui.table" width="99%" selectionMode = "None" editable="false" id="idChangeConstructList"
+								visibleRowCount="{path: '/', formatter: 'model.Formatter.getListLength'}"
+								allowColumnReordering="false" rows="{/}" cellClick="onChangeConstructItemTap">
+								<Column xmlns="sap.ui.table" width="8%" sorted="true"
+									sortProperty="cc/constructChangeType"
+                                                                        filterProperty="cc/constructChangeType">
+									<Label text="Change" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											text="{cc/constructChangeType}">
+											<!--semanticColor="{path: 'used', formatter: 'model.Formatter.rowColorForConstructs'}"-->
+										</TextView>
+									</template>
+								</Column>
+<!-- 								<Column xmlns="sap.ui.table" width="8%" sorted="true" -->
+<!-- 									sortProperty="cc/commit" -->
+<!--                                                                         filterProperty="cc/commit"> -->
+<!-- 									<Label text="Revision" xmlns="sap.ui.commons" /> -->
+<!-- 									<template> -->
+<!-- 										<TextView xmlns="sap.ui.commons" wrapping="true" -->
+<!-- 											text="{cc/commit}"> -->
+<!-- 										</TextView> -->
+<!-- 									</template> -->
+<!-- 								</Column> -->
+								<Column xmlns="sap.ui.table" width="8%" sorted="true"
+									sortProperty="cc/constructId/type"
+                                                                        filterProperty="cc/constructId/type">
+									<Label text="Type" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											text="{path: 'cc/constructId/type', formatter: 'model.Formatter.constructType'}">
+											<!-- semanticColor="{path: 'used', formatter: 'model.Formatter.rowColorForConstructs'}"-->
+										</TextView>
+									</template>
+								</Column>
+								<Column xmlns="sap.ui.table" width="52%" sorted="true"
+									sortProperty="cc/constructId/qname"
+                                                                        filterProperty="cc/constructId/qname">
+									<Label text="Qualified Construct Name (Path)" xmlns="sap.ui.commons" />
+									<template>
+										<l:VerticalLayout class="sapUiNoMargin" >
+											<TextView xmlns="sap.ui.commons" wrapping="true"
+											    text="{cc/constructId/qname}" design="Bold">
+											  <!--   semanticColor="{path: 'used', formatter: 'model.Formatter.rowColorForConstructs'}"> -->
+										    </TextView>
+										    <TextView xmlns="sap.ui.commons" wrapping="true"
+											    text="{cc/repoPath}">
+											 <!--    semanticColor="{path: 'used', formatter: 'model.Formatter.rowColorForConstructs'}"-->
+										</TextView>
+										</l:VerticalLayout>
+									</template>
+								</Column>
+								<Column xmlns="sap.ui.table" width="8%" sorted="true">
+									<Label text="QnameInJar" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											    text="{qnameInJar}" 
+											    >
+										</TextView>
+									</template>
+								</Column> 
+<!-- 							 	<Column xmlns="sap.ui.table" width="8%" > -->
+<!-- 									<Label text="Ast equal" xmlns="sap.ui.commons" /> -->
+<!-- 									<template> -->
+<!-- 										<TextView xmlns="sap.ui.commons" wrapping="true" -->
+<!-- 											    text="{astEqual}"  -->
+<!-- 											    > -->
+<!-- 										</TextView> -->
+<!-- 									</template> -->
+<!-- 								</Column>  -->
+                                <Column xmlns="sap.ui.table" width="8%" sorted="true"
+									sortProperty="dtv">
+									<Label text="Distance to V" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											    text="{dtv}" 
+											    >
+										</TextView>
+									</template>
+								</Column> 
+                                                                <Column xmlns="sap.ui.table" width="8%" sorted="true"
+									sortProperty="dtf">
+									<Label text="Distance to F" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											    text="{dtf}" 
+											    >
+										</TextView>
+									</template>
+								</Column> 
+								
+							</Table>
+						</l:content>
+					</l:VerticalLayout>
+				</l:content>
+			</l:VerticalLayout>
+			
+			
+			 <Panel xmlns="sap.ui.commons" text="Select a row above to populate ASTs">
+            <l:Grid 	class="sapUiSmallMarginTop"
+                    hSpacing="2"
+                    defaultSpan="L6 M6 S10">
+                <l:content>
+                    <TreeTable xmlns="sap.ui.table"
+                               id="idVuln"
+                               rows="{path:'/root', parameters: {arrayNames:['children']}}"
+                               visibleRowCount="{path: '/root', formatter: 'model.Formatter.getListLength'}"
+                               selectionMode="MultiToggle"
+                               enableSelectAll="false"
+                               cellClick="onVulnerableEntityClick" >
+<!--                         <toolbar> -->
+<!--                             <Toolbar xmlns="sap.m" > -->
+<!--                                 <Title id="titleVulnerable" text="Vulnerable"/> -->
+<!--                                 <ToolbarSpacer/> -->
+<!--                                 <Button text="Collapse all" press="onCollapseAllVulnerable" /> -->
+<!--                                 <Button text="Expand all" press="onExpandAllVulnerable"/> -->
+<!--                             </Toolbar> -->
+<!--                         </toolbar> -->
+                        <columns>
+                            <Column width="13rem" xmlns="sap.ui.table">
+                                <Label text="VULNERABLE AST Code Representation" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{name}" xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>
+<!--                             <Column width="2rem" xmlns="sap.ui.table" > -->
+<!--                                 <Label text="Change" xmlns="sap.ui.commons" textAlign="Center"/> -->
+<!--                                 <template> -->
+<!--                                     <TextView text="{modificationType}" xmlns="sap.ui.commons" -->
+<!--                                     /> -->
+<!--                                 </template> -->
+<!--                             </Column> -->
+                        </columns>
+                    </TreeTable>
+                    <TreeTable xmlns="sap.ui.table"
+                               id="idFixed"
+                               rows="{path:'/root', parameters: {arrayNames:['children']}}"
+                               visibleRowCount="{path: '/root', formatter: 'model.Formatter.getListLength'}"
+                               selectionMode="MultiToggle"
+                               enableSelectAll="false"
+                               cellClick="onFixedEntityClick">
+<!--                         <toolbar> -->
+<!--                             <Toolbar xmlns="sap.m"> -->
+<!--                                 <Title id="titleFixed" text="Fixed"/> -->
+<!--                                 <ToolbarSpacer/> -->
+<!--                                 <Button text="Collapse all" press="onCollapseAllFixed" /> -->
+<!--                                 <Button text="Expand all" press="onExpandAllFixed"/> -->
+<!--                             </Toolbar> -->
+<!--                         </toolbar> -->
+                        <columns>
+                            <Column width="13rem" xmlns="sap.ui.table" >
+                                <Label text="FIXED AST Code Representation" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{name}" xmlns="sap.ui.commons" class="myDefaultColor"/>
+                                    <!--semanticColor="{path:'modificationType', formatter: 'model.Formatter.rowColorAST'}"-->
+                                    
+                                </template>
+                            </Column>
+<!--                             <Column width="2rem" xmlns="sap.ui.table" > -->
+<!--                                 <Label text="Change" xmlns="sap.ui.commons" textAlign="Center"/> -->
+<!--                                 <template> -->
+<!--                                     <TextView text="{modificationType}" xmlns="sap.ui.commons" -->
+<!--                                     /> -->
+<!--                                 </template> -->
+<!--                             </Column> -->
+                        </columns>
+                    </TreeTable>
+                </l:content>
+            </l:Grid>
+             <l:Grid 	class="sapUiSmallMarginTop"
+                    hSpacing="2"
+                    defaultSpan="L6 M6 S10">
+                <l:content>
+                    <TreeTable xmlns="sap.ui.table"
+                               id="idTested"
+                               rows="{path:'/root', parameters: {arrayNames:['children']}}"
+                               visibleRowCount="{path: '/root', formatter: 'model.Formatter.getListLength'}"
+                               selectionMode="MultiToggle"
+                               enableSelectAll="false"
+                               cellClick="onVulnerableEntityClick" >
+<!--                         <toolbar> -->
+<!--                             <Toolbar xmlns="sap.m" > -->
+<!--                                 <Title id="titleVulnerable" text="Vulnerable"/> -->
+<!--                                 <ToolbarSpacer/> -->
+<!--                                 <Button text="Collapse all" press="onCollapseAllVulnerable" /> -->
+<!--                                 <Button text="Expand all" press="onExpandAllVulnerable"/> -->
+<!--                             </Toolbar> -->
+<!--                         </toolbar> -->
+                        <columns>
+                            <Column width="13rem" xmlns="sap.ui.table">
+                                <Label text="TESTED AST Code Representation" xmlns="sap.ui.commons" textAlign="Center"/>
+                                <template>
+                                    <TextView text="{name}" xmlns="sap.ui.commons"
+                                    />
+                                </template>
+                            </Column>
+<!--                             <Column width="2rem" xmlns="sap.ui.table" > -->
+<!--                                 <Label text="Change" xmlns="sap.ui.commons" textAlign="Center"/> -->
+<!--                                 <template> -->
+<!--                                     <TextView text="{modificationType}" xmlns="sap.ui.commons" -->
+<!--                                     /> -->
+<!--                                 </template> -->
+<!--                             </Column> -->
+                        </columns>
+                    </TreeTable>
+					<Table xmlns="sap.ui.table" width="99%" selectionMode = "None" editable="false" id="idSameBytecode"
+								visibleRowCount="{path: '/sameBytecodeLids', formatter: 'model.Formatter.getListLength'}"
+								allowColumnReordering="false" rows="{/sameBytecodeLids}" title="Same Bytecode">
+						<Column xmlns="sap.ui.table" width="8%" sorted="true"
+							sortProperty="group"
+                                                                      filterProperty="group">
+							<Label text="Group" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true"
+									text="{group}">
+									<!--semanticColor="{path: 'used', formatter: 'model.Formatter.rowColorForConstructs'}"-->
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table" width="8%" sorted="true"
+							sortProperty="artifact"
+                                                                      filterProperty="artifact">
+							<Label text="Artifact" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true"
+									text="{artifact}">
+									<!--semanticColor="{path: 'used', formatter: 'model.Formatter.rowColorForConstructs'}"-->
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table" width="8%" sorted="true"
+							sortProperty="version"
+                                                                      filterProperty="version">
+							<Label text="Version" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true"
+									text="{version}">
+									<!--semanticColor="{path: 'used', formatter: 'model.Formatter.rowColorForConstructs'}"-->
+								</TextView>
+							</template>
+						</Column>
+					</Table>
+                </l:content>
+            </l:Grid>
+            </Panel>
+		</content>
+	</Page>
+</mvc:View>

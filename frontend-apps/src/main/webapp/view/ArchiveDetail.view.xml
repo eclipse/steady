@@ -1,0 +1,317 @@
+<mvc:View controllerName="view.ArchiveDetail" xmlns="sap.m"
+	xmlns:c="sap.suite.ui.commons" xmlns:form="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:commons="sap.ui.commons" xmlns:m="sap.ui.commons.layout" xmlns:mm="sap.m" >
+	<Page id="archiveDetailPage" showNavButton='true' navButtonPress='handleNavBack'
+		title="{/filename}">
+		<headerContent>
+			<Button id="idButtonOpenMaven" icon="sap-icon://action" press="openMaven" tooltip="The Central Repository" text="Maven Central" enabled="{ parts: ['/lib/libraryId'], formatter: 'model.Formatter.mavenIdVisibility'}" />
+			<Button icon="sap-icon://sys-help" press="openWiki" tooltip="Open help in wiki page" />
+			<!-- <Button id="idButtonOpenSmash" icon="sap-icon://action" press="openSmash" tooltip="Social Media Analysis for Security on HANA" text="SMASH" type="{path: '/smash/result', formatter: 'model.Formatter.getSmashButtonType'}" />-->
+	    </headerContent>
+	    <content>
+			<l:VerticalLayout width="100%" class="marginVerticalContent">
+			<!--  before vulas3 we were showing the verification flag only in case the libraryId exists (as no verification is performed otherwise
+			      As we now have a static table, the row is always shown. 
+			      We currently set a custom style 'archiveTable' which is supposed to put a frame around the cells but it's not working -->
+				<l:content>
+					<!-- mm:Table width="70%" 	inset="true">
+						<mm:columns>
+             			   <mm:Column />
+           				   <mm:Column />                
+              			</mm:columns>
+              			<mm:items >
+              				<mm:ColumnListItem class="archiveTable">
+                 			 <mm:cells >
+	              				<Label design="Bold" text="Maven Identifier (GroupId : ArtifactId : Version): " class="marginVerticalContent" />
+								<Link xmlns="sap.m" press="openMavenElement"
+									href="" target="_blank"
+									class="marginVerticalContent"
+									text="{ parts: ['/lib/libraryId/group', '/lib/libraryId/artifact','/lib/libraryId/version'], 
+	 								formatter: 'model.Formatter.mavenIdLink'}">
+								</Link>
+								</mm:cells>
+                			</mm:ColumnListItem>
+	                		<mm:ColumnListItem class="archiveTable">
+	                 		 <mm:cells >
+                    			<Label design="Bold" text="Archive Digest: " class="marginVerticalContent" />
+								<Text id="idArchiveIdText" xmlns="sap.m" 
+									class="marginVerticalContent"
+									text="{/lib/digest}"/>
+									
+							</mm:cells>
+                			</mm:ColumnListItem>
+                			
+                			<mm:ColumnListItem class="archiveTable">
+                 			 <mm:cells >
+                 			 <Label design="Bold" text="Digest Algorithm: " class="marginVerticalContent" />
+                 			 <Text  xmlns="sap.m" 
+									class="marginVerticalContent"
+									text="{/lib/digestAlgorithm}"/>
+                  			</mm:cells>
+                			</mm:ColumnListItem>
+                			<mm:ColumnListItem >
+                 			 <mm:cells >
+                 			 <Label design="Bold" text="Digest Verification Url " class="marginVerticalContent" />
+                 			 <Text xmlns="sap.m" 
+									class="marginVerticalContent"
+									text="{/lib/digestVerificationUrl}"/>
+                  			</mm:cells>
+                			</mm:ColumnListItem>
+                			<mm:ColumnListItem class="archiveTable">
+                 			 <mm:cells >
+                 			 <Label design="Bold" text="Digest verified: " class="marginVerticalContent" />
+							<commons:TextView
+								class="marginVerticalContent"
+								text="{/lib/wellknownDigest}"
+ 								semanticColor="{ parts: ['/lib/wellknownDigest'], 
+ 								    formatter: 'model.Formatter.mavenIdConfirmedColor'}">
+							</commons:TextView>
+                  			</mm:cells>
+                			</mm:ColumnListItem>
+                		</mm:items>
+                		
+					</mm:Table-->
+					
+ 					<l:HorizontalLayout width="100%"
+						visible="{ parts: ['/lib/libraryId'], 
+ 								formatter: 'model.Formatter.mavenIdVisibility'}">
+						<l:content>
+							<Label design="Bold" text="Digest: " class="marginVerticalContent" />
+							<commons:TextView
+								class="marginVerticalContent"
+								text="{/lib/digest} ({/lib/digestAlgorithm})">
+							</commons:TextView>
+						</l:content>
+					</l:HorizontalLayout>
+					
+					<l:HorizontalLayout width="100%"
+						visible="{ parts: ['/lib/libraryId'], 
+ 								formatter: 'model.Formatter.mavenIdVisibility'}">
+						<l:content>
+							<Label design="Bold" text="Digest verified: " class="marginVerticalContent" />
+							<commons:TextView
+								class="marginVerticalContent"
+								text="{/lib/wellknownDigest}"
+ 								semanticColor="{ parts: ['/lib/wellknownDigest'], 
+ 								    formatter: 'model.Formatter.mavenIdConfirmedColor'}">
+							</commons:TextView>
+							<commons:TextView
+								class="marginVerticalContent"
+								text="{/lib/digestVerificationUrl}">
+							</commons:TextView>
+						</l:content>
+					</l:HorizontalLayout>
+
+					<l:HorizontalLayout width="100%"
+						visible="{ path: '/mvn/latestMinor', 
+ 								formatter: 'model.Formatter.latestMinorVisibility'}">
+						<l:content>
+							<Label design="Bold" text="Latest Minor Version: " class="marginVerticalContent" />
+							<Link xmlns="sap.m" text="{/mvn/latestMinor}" href="{/mvn/latestMinorLink}"
+								target="_blank" class="marginVerticalContent">
+							</Link>
+						</l:content>
+					</l:HorizontalLayout>
+					<l:HorizontalLayout width="100%"
+						visible="{ path: '/mvn/latestMajor', 
+ 								formatter: 'model.Formatter.latestMajorVisibility'}">
+						<l:content>
+							<Label design="Bold" text="Latest Major Version: " class="marginVerticalContent" />
+							<Link xmlns="sap.m" text="{/mvn/latestMajor}" href="{/mvn/latestMajorLink}"
+								target="_blank" class="marginVerticalContent">
+							</Link>
+						</l:content>
+					</l:HorizontalLayout>
+					<l:HorizontalLayout width="100%" 	visible="{ parts: ['/path'], 
+ 								formatter: 'model.Formatter.mavenIdVisibility'}">
+ 								<l:content>
+						<Label design="Bold" text="Dependency Path: " class="marginVerticalContent" />
+							</l:content>
+					</l:HorizontalLayout>
+					<l:HorizontalLayout width="100%" 	visible="{ parts: ['/path'], 
+ 								formatter: 'model.Formatter.mavenIdVisibility'}">
+						<l:content>
+							<Text xmlns="sap.m" 
+								class="marginVerticalContent"
+								text="{/path}">
+							</Text>
+						</l:content>
+					</l:HorizontalLayout>
+
+					
+					<Label design="Bold" text="Calls from application to archive:" class="marginVerticalContent" />
+					<m:MatrixLayout layoutFixed="false" columns="2">
+							<m:MatrixLayoutRow>
+							  <m:MatrixLayoutCell rowSpan="3"><Image src="img/touch_point.gif" alt="Touch Point" height="50px"/></m:MatrixLayoutCell>
+							  <m:MatrixLayoutCell><Text id="callersCount"  xmlns="sap.m" text="None"/></m:MatrixLayoutCell>
+							</m:MatrixLayoutRow>
+							<m:MatrixLayoutRow>
+							  <m:MatrixLayoutCell><Text id="calleesCount"  xmlns="sap.m" text="None"/></m:MatrixLayoutCell>
+							  </m:MatrixLayoutRow>
+							  <m:MatrixLayoutRow>
+							  <m:MatrixLayoutCell><Text id="callsCount"  xmlns="sap.m" text="None"/></m:MatrixLayoutCell>
+							  </m:MatrixLayoutRow>
+						</m:MatrixLayout>
+								
+					
+					
+				
+					<Table xmlns="sap.ui.table" selectionMode="None"
+						allowColumnReordering="false" rows="{archiveTouchPoints>/}"
+						visibleRowCount="{path: 'archiveTouchPoints>/', formatter: 'model.Formatter.getListLength'}">
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="from/qname"
+						filterProperty="from/qname">
+							<Label text="Caller" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{archiveTouchPoints>from/qname}">
+								</TextView>
+							</template>
+						</Column>
+                                                <Column xmlns="sap.ui.table" sorted="true" sortProperty="archiveTouchPoints>to/type">
+                                                    <Label text="Caller type" xmlns="sap.ui.commons" />
+                                                    <template>
+                                                            <TextView xmlns="sap.ui.commons" wrapping="true" text="{archiveTouchPoints>to/type}">
+                                                            </TextView>
+                                                    </template>
+						</Column>
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="to/qname"
+						 filterProperty="to/qname">
+							<Label text="Callee" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{archiveTouchPoints>to/qname}">
+								</TextView>
+							</template>
+						</Column>
+					 	<Column xmlns="sap.ui.table" sorted="true" sortProperty="archiveTouchPoints>potential">
+							<Label text="Potential" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{archiveTouchPoints>potential}"
+                                                                    semanticColor="{ path: 'archiveTouchPoints>potential', formatter: 'model.Formatter.falseToHighlight'}">
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="archiveTouchPoints>traced">
+							<Label text="Traced" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{archiveTouchPoints>traced}">
+								</TextView>
+							</template>
+						</Column>
+					</Table>
+					
+					
+					<Label design="Bold" text="Library size and application-specific use" class="marginVerticalContent" />
+					<Table xmlns="sap.ui.table" selectionMode="None"
+						editable="false" allowColumnReordering="false" rows="{archiveConstructCounts>/constructTypeCounters}"
+						visibleRowCount="{path: 'archiveConstructCounts>/constructTypeCounters', formatter: 'model.Formatter.getListLength'}">
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="archiveConstructCounts>type">
+							<Label text="Construct Type" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{archiveConstructCounts>type}">
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="archiveConstructCounts>value">
+							<Label text="Count Total" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{archiveConstructCounts>value}">
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="archiveConstructCounts>valueReach">
+							<Label text="Count Reachable" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{archiveConstructCounts>valueReach}">
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="archiveConstructCounts>valueTraced">
+							<Label text="Count Traced" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{archiveConstructCounts>valueTraced}">
+								</TextView>
+							</template>
+						</Column>
+					</Table>
+					
+						<Label design="Bold" text="Finding non-vulnerable library releases" class="marginVerticalContent" />
+					<Text xmls="sap.m" text="Only libraries that are not vulnerable and newer than the one in use are shown."/>
+					<!--  Button id="toggle" text="Show/hide all releases"
+									press="toggleAllVersion" /-->
+					<Table xmlns="sap.ui.table" selectionMode="None" id="idArchiveMetrics" cellClick="onLibItemTap"
+						editable="false" allowColumnReordering="false" rows="{metricModel>/}" noData="No newer non-vulnerable library is known to Vulas. Click Show/Hide All versions to see all the available ones."
+						visibleRowCount="{path: 'archiveConstructCounts>/constructTypeCounters', formatter: 'model.Formatter.getListLength'}">
+					
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="archiveConstructCounts>type">
+							<Label text="Library Id" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{metricModel>archive}">
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table"  id="id-countVulnXX" filtered="true" >
+							<Label text="Count confirmed vulnerabilities" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{metricModel>countVuln}">
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table"  >
+							<Label text="Callee stability" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{metricModel>calleeDelCount} out of {metricModel>calleeDelTotal} ({metricModel>calleeDelRatio} %)">
+								</TextView>
+							</template>
+						</Column>
+						
+						<Column xmlns="sap.ui.table"  >
+							<Label text="Dev. effort (calls to modify)" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{metricModel>callsToModifyCount} out of {metricModel>callsToModifyTotal} ({metricModel>callsToModifyRatio} %)">
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table"  >
+							<Label text="Reachable body stability" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{metricModel>reachableBodyChangedCount} out of {metricModel>reachableBodyChangedTotal} ({metricModel>reachableBodyChangedRatio} %)">
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table" >
+							<Label text="Overall body stability" xmlns="sap.ui.commons" sortProperty="{metricModel>bodyStabilityRatio}" sorted="false" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{metricModel>bodyStabilityCount} out of {metricModel>bodyStabilityTotal} ({metricModel>bodyStabilityRatio} %)">
+								</TextView>
+							</template>
+						</Column>
+					</Table>
+					
+					<Label design="Bold" text="Archive Properties:" class="marginVerticalContent" />
+					<Table xmlns="sap.ui.table" selectionMode="None"
+						editable="false" allowColumnReordering="false" rows="{/lib/properties}"
+						visibleRowCount="{path: '/lib/properties', formatter: 'model.Formatter.getListLength'}">
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="name">
+							<Label text="Property Name" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{name}">
+								</TextView>
+							</template>
+						</Column>
+						<Column xmlns="sap.ui.table" sorted="true" sortProperty="value">
+							<Label text="Property Value" xmlns="sap.ui.commons" />
+							<template>
+								<TextView xmlns="sap.ui.commons" wrapping="true" text="{value}">
+								</TextView>
+							</template>
+						</Column>
+					</Table>
+				</l:content>
+			</l:VerticalLayout>
+		</content>
+	</Page>
+</mvc:View>
+
+
+
+

@@ -1,0 +1,23 @@
+
+public static String[] getCNs(final X509Certificatecert) {
+
+    	final LinkedList<String> cnList = new LinkedList<String>();
+		final String subjectPrincipal = cert.getSubjectX500Principal().toString();
+    	final StringTokenizer st = new StringTokenizer(subjectPrincipal, ",+");
+
+    while(st.hasMoreTokens()) {
+        final String tok = st.nextToken().trim();
+        if (tok.length() > 3) {
+            if (tok.substring(0, 3).equalsIgnoreCase("CN=")) {
+                cnList.add(tok.substring(3));
+            }
+        }
+    }
+    if(!cnList.isEmpty()) {
+        finalString[]cns= new String[cnList.size()];
+        cnList.toArray(cns);
+        returncns;
+    } else {
+        return null;
+    }
+}

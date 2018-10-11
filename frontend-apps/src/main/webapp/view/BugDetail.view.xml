@@ -1,0 +1,398 @@
+<mvc:View controllerName="view.BugDetail" xmlns="sap.m"
+	xmlns:c="sap.suite.ui.commons" xmlns:form="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:mm="sap.m" id="component-view">
+	<Page id="idBugDetailPage" showNavButton='true' navButtonPress='handleNavBack'>
+	    <headerContent>
+<!-- 	        <Button icon="sap-icon://email"  press="writeEmail" tooltip="Provide feedback on vulnerable archive releases" text="Feedback" /> -->
+	        <Button icon="sap-icon://action" press="openNVD" tooltip="National Vulnerability Database" text="NVD" />
+			<Button icon="sap-icon://action" press="openExploitDb" tooltip="Exploit Database" text="Exploit DB" />
+			<Button icon="sap-icon://sys-help" press="openWiki" tooltip="Open help in wiki page" />
+			<!--<Button id="idButtonOpenSmash" icon="sap-icon://action" press="openSmash" tooltip="Social Media Analysis for Security on HANA" text="SMASH" type="{path: '/smash/result', formatter: 'model.Formatter.getSmashButtonType'}" />-->
+	    </headerContent>
+		<content>
+			<l:VerticalLayout width="100%" class="marginVerticalContent">
+				<l:content>
+					<l:HorizontalLayout width="100%">
+						<l:content>
+							<Label design="Bold" text="Vulnerability Id: " class="marginVerticalContent" />
+							<Label text="{/bug/bugId}" class="marginVerticalContent" />
+						</l:content>
+					</l:HorizontalLayout>
+		 			<Label design="Bold" text="Description: " class="marginVerticalContent" />
+					<Text text="{cveModel>/summary}" class="marginVerticalContent" /> 
+					<Label design="Bold" text="References: " class="marginVerticalContent" />
+                    <mm:List items="{path:'cveModel>/reference'}"  showNoData="false"> 
+                 		<mm:CustomListItem>
+							<mm:Link text="{cveModel>url}" href="{cveModel>url}" target="_window"/>
+						</mm:CustomListItem>
+					</mm:List>
+					<l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/cvssDisplayString', 
+ 								formatter: 'model.Formatter.fieldVisibility'}">
+						<l:content>
+							<Label design="Bold" text="CVSS Score: " class="marginVerticalContent" />
+							<Label text="{cveModel>/cvssDisplayString}" class="marginVerticalContent" />
+						</l:content>
+					</l:HorizontalLayout>
+					<!-- l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/cwe', 
+ 								formatter: 'model.Formatter.fieldVisibility'}">
+						<l:content>
+							<Label design="Bold" text="CWE: " class="marginVerticalContent" />
+							<Link xmlns="sap.m" target="_blank"
+								href="{path: 'cveModel>cwe', formatter: 'model.Formatter.buildCweUrl'}"
+								class="marginVerticalContent" text="{cveModel>cwe}">
+							</Link>
+						</l:content>
+					</l:HorizontalLayout-->
+					<l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/Published', 
+ 								formatter: 'model.Formatter.fieldVisibility'}">
+						<l:content>
+							<Label design="Bold" text="Published at: " class="marginVerticalContent" />
+							<Label text="{cveModel>/Published}" class="marginVerticalContent" />
+						</l:content>
+					</l:HorizontalLayout>
+					<l:HorizontalLayout width="100%" visible="{ path: 'cveModel>/Modified', 
+ 								formatter: 'model.Formatter.fieldVisibility'}">
+						<l:content>
+							<Label design="Bold" text="Modified at: " class="marginVerticalContent" />
+							<Label text="{cveModel>/Modified}" class="marginVerticalContent" />
+						</l:content>
+					</l:HorizontalLayout>
+					<l:HorizontalLayout width="100%" visible="true">
+						<l:content>
+							<Label design="Bold" text="Covered by Vulas since: " class="marginVerticalContent" />
+							<Label text="{cveModel>/createdAt}" class="marginVerticalContent" />
+						</l:content>
+					</l:HorizontalLayout>
+					<l:HorizontalLayout width="100%">
+						<l:content>
+							<Label design="Bold" text="Filename: " class="marginVerticalContent" />
+							<Link xmlns="sap.m"
+								href="/apps/#/apps/{app>/groupid}/{app>/artifactid}/{app>/version}/archive/{/dep/lib/digest}"
+								class="marginVerticalContent" text="{/dep/filename}">
+							</Link>
+						</l:content>
+					</l:HorizontalLayout>
+					<l:HorizontalLayout width="100%"
+						visible="{ parts: ['/dep/lib/libraryId/group', '/dep/lib/libraryId/artifact','/dep/lib/libraryId/version'], 
+ 								formatter: 'model.Formatter.mavenIdVisibility'}">
+						<l:content>
+							<Label design="Bold" text="Archive ID: " class="marginVerticalContent" />
+						 	<Link xmlns="sap.m"  target="_blank" href="{parts: ['/dep/lib/libraryId/group', '/dep/lib/libraryId/artifact'], 
+ 								formatter: 'model.Formatter.buildmavenIdLink'}"
+								class="marginVerticalContent"
+								text="{parts: ['/dep/lib/libraryId/group', '/dep/lib/libraryId/artifact','/dep/lib/libraryId/version'], 
+ 								formatter: 'model.Formatter.mavenIdLink'}" >
+							</Link>
+							<!-- Label text="{parts: ['/dep/lib/libraryId/group', '/dep/lib/libraryId/artifact','/dep/lib/libraryId/version'], 
+ 								formatter: 'model.Formatter.mavenIdLink'}" class="marginVerticalContent" /-->
+						</l:content>
+					</l:HorizontalLayout>
+					
+			<!-- 	<l:VerticalLayout width="100%" class="marginBugDetailTables">
+						<l:content>
+							<l:HorizontalLayout width="100%">
+								<l:content>
+									<Label design="Bold" text="Archive releases (vulnerable/used/recommended): "
+										class="marginVerticalContent" />
+									<Button xmlns="sap.ui.commons" id="showAllButton" text="Show All"
+										styled="true" lite="false" style="Default" press="showOrHide">
+									</Button>
+								</l:content>
+							</l:HorizontalLayout>
+							<Table xmlns="sap.ui.table" selectionMode="None" editable="false"
+								width="99%" id="idBugDetailArchiveTable" filter="doSomething"
+								visibleRowCount="{path: '/archives', formatter: 'model.Formatter.getListLength'}"
+								allowColumnReordering="false" rows="{/archives}">
+								<Column>
+									<Label text="Maven Group" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											text="{g}"
+											design="{path: 'used', formatter: 'model.Formatter.designForArchives'}"
+											semanticColor="{path: 'recommended', formatter: 'model.Formatter.rowColorForArchives'}">
+										</TextView>
+									</template>
+								</Column>
+								<Column>
+									<Label text="Maven Artifact" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											text="{a}"
+											design="{path: 'used', formatter: 'model.Formatter.designForArchives'}"
+											semanticColor="{path: 'recommended', formatter: 'model.Formatter.rowColorForArchives'}">
+										</TextView>
+									</template>
+								</Column>
+								<Column sorted="true" sortOrder="Descending" sortProperty="mvnVersion">
+									<Label text="Maven Version" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											text="{v}"
+											design="{path: 'used', formatter: 'model.Formatter.designForArchives'}"
+											semanticColor="{path: 'recommended', formatter: 'model.Formatter.rowColorForArchives'}">
+										</TextView>
+									</template>
+								</Column>
+								<Column xmlns="sap.ui.table" width="10%" sorted="true"
+									sortProperty="affected">
+									<Label text="Vulnerable" xmlns="sap.ui.commons" />
+									<template>
+										<Image xmlns="sap.ui.commons"
+											src="{path: 'affected_version', formatter: 'model.Formatter.affectedColumnImage'}">
+										</Image>
+									</template>
+								</Column>
+							</Table>
+						</l:content>
+					</l:VerticalLayout>  -->
+					
+					<!-- l:VerticalLayout width="100%" class="marginBugDetailTables">
+						<l:content>
+							<l:HorizontalLayout width="100%">
+								<l:content>
+									<Label design="Bold" text="Archives (vulnerable/used/recommended): "
+										class="marginVerticalContent" />
+									<Button xmlns="sap.ui.commons" id="showAllButton" text="Show All"
+										styled="true" lite="false" style="Default" press="showOrHide">
+									</Button>
+								</l:content>
+							</l:HorizontalLayout>
+							<Table xmlns="sap.ui.table" selectionMode="None" editable="false"
+								width="99%" id="idBugDetailArchiveTable" filter="doSomething"
+								visibleRowCount="{path: '/archives', formatter: 'model.Formatter.getListLength'}"
+								allowColumnReordering="false" rows="{/archives}">
+								<Column>
+									<Label text="CPE Vendor" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											text="{cpeVendor}"
+											design="{path: 'used', formatter: 'model.Formatter.designForArchives'}"
+											semanticColor="{path: 'recommended', formatter: 'model.Formatter.rowColorForArchives'}">
+										</TextView>
+									</template>
+								</Column>
+								<Column>
+									<Label text="CPE Product" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											text="{cpeProduct}"
+											design="{path: 'used', formatter: 'model.Formatter.designForArchives'}"
+											semanticColor="{path: 'recommended', formatter: 'model.Formatter.rowColorForArchives'}">
+										</TextView>
+									</template>
+								</Column>
+								<Column>
+									<Label text="CPE Version" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											text="{version}"
+											design="{path: 'used', formatter: 'model.Formatter.designForArchives'}"
+											semanticColor="{path: 'recommended', formatter: 'model.Formatter.rowColorForArchives'}">
+										</TextView>
+									</template>
+								</Column>
+								<Column sorted="true" sortOrder="Descending" sortProperty="mvnVersion">
+									<Label text="Maven Version" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											text="{mvnVersion}"
+											design="{path: 'used', formatter: 'model.Formatter.designForArchives'}"
+											semanticColor="{path: 'recommended', formatter: 'model.Formatter.rowColorForArchives'}">
+										</TextView>
+									</template>
+								</Column>
+								<Column>
+									<Label text="Maven Group" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											text="{mvnGroup}"
+											design="{path: 'used', formatter: 'model.Formatter.designForArchives'}"
+											semanticColor="{path: 'recommended', formatter: 'model.Formatter.rowColorForArchives'}">
+										</TextView>
+									</template>
+								</Column>
+								<Column>
+									<Label text="Maven Artifact" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											text="{mvnArtifact}"
+											design="{path: 'used', formatter: 'model.Formatter.designForArchives'}"
+											semanticColor="{path: 'recommended', formatter: 'model.Formatter.rowColorForArchives'}">
+										</TextView>
+									</template>
+								</Column>
+							</Table>
+						</l:content>
+					</l:VerticalLayout-->
+					
+					<l:HorizontalLayout width="100%"
+						visible="{ parts: ['/constructList'], formatter: 'model.Formatter.noChangeListVisibility'}">
+						<l:content>
+							<Label design="Bold" text="Note: " class="marginVerticalContent" />
+							<Label text="No vulnerable source code is known for this vulnerability. A common explanation is that the vulnerability is caused by insecure default configuration settings." class="marginVerticalContent" />
+						</l:content>
+					</l:HorizontalLayout>
+					
+					<l:VerticalLayout width="100%" class="marginBugDetailTables"
+						visible="{ parts: ['/constructList'], formatter: 'model.Formatter.constructListVisibility'}">
+						<l:content>
+							<l:VerticalLayout width="100%" class="marginVerticalContent">
+								<l:content>
+									<Label design="Bold"
+										text="Programming constructs of the change list of the OSS patch" /> <!--  / reachable from application / traced): " /> -->
+									<l:HorizontalLayout width="100%">
+										<l:content>
+											<Label text="Repository: " />
+											<Link xmlns="sap.m" href="{osspatch>/repo}" target="_blank"
+												text="{osspatch>/repo}">
+											</Link>
+										</l:content>
+									</l:HorizontalLayout>
+									<l:HorizontalLayout width="100%">
+										<l:content>
+											<Label text="Revisions fixing the vulnerability: " />
+											<Label text="{osspatch>/revisions}" />
+										</l:content>
+									</l:HorizontalLayout>
+								</l:content>
+							</l:VerticalLayout>
+							
+							<Table xmlns="sap.ui.table" width="99%" selectionMode = "None" editable="false" id="idChangeConstructList"
+								visibleRowCount="{path: '/constructList', formatter: 'model.Formatter.getListLength'}"
+								allowColumnReordering="false" rows="{/constructList}">
+								<Column xmlns="sap.ui.table" width="8%" sorted="true"
+									sortProperty="constructChange/constructChangeType"
+                                                                        filterProperty="constructChange/constructChangeType">
+									<Label text="Change" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											text="{constructChange/constructChangeType}">
+											<!--semanticColor="{path: 'used', formatter: 'model.Formatter.rowColorForConstructs'}"-->
+										</TextView>
+									</template>
+								</Column>
+								<Column xmlns="sap.ui.table" width="8%" sorted="true"
+									sortProperty="constructChange/commit"
+                                                                        filterProperty="constructChange/commit">
+									<Label text="Revision" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											text="{constructChange/commit}">
+										</TextView>
+									</template>
+								</Column>
+								<Column xmlns="sap.ui.table" width="8%" sorted="true"
+									sortProperty="constructChange/constructId/type"
+                                                                        filterProperty="constructChange/constructId/type">
+									<Label text="Type" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											text="{path: 'constructChange/constructId/type', formatter: 'model.Formatter.constructType'}">
+											<!-- semanticColor="{path: 'used', formatter: 'model.Formatter.rowColorForConstructs'}"-->
+										</TextView>
+									</template>
+								</Column>
+								<Column xmlns="sap.ui.table" width="52%" sorted="true"
+									sortProperty="constructChange/constructId/qname"
+                                                                        filterProperty="constructChange/constructId/qname">
+									<Label text="Qualified Construct Name (Path)" xmlns="sap.ui.commons" />
+									<template>
+										<l:VerticalLayout class="sapUiNoMargin" >
+											<TextView xmlns="sap.ui.commons" wrapping="true"
+											    text="{constructChange/constructId/qname}" design="Bold">
+											  <!--   semanticColor="{path: 'used', formatter: 'model.Formatter.rowColorForConstructs'}"> -->
+										    </TextView>
+										    <TextView xmlns="sap.ui.commons" wrapping="true"
+											    text="{constructChange/repoPath}">
+											 <!--    semanticColor="{path: 'used', formatter: 'model.Formatter.rowColorForConstructs'}"-->
+										</TextView>
+										</l:VerticalLayout>
+									</template>
+								</Column>
+							 	<Column xmlns="sap.ui.table" width="8%" sorted="true"
+									sortProperty="InArchive">
+									<Label text="Contained" xmlns="sap.ui.commons" />
+									<template>
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											    text="{inArchive}" 
+											    semanticColor="{path: 'inArchive', formatter: 'model.Formatter.rowColorForConstructs'}">
+										</TextView>
+									</template>
+								</Column> 
+								<!-- Column xmlns="sap.ui.table" width="8%" sorted="true"
+									sortProperty="affected">
+									<Label text="Vulnerable (beta)" xmlns="sap.ui.commons" />
+									<template>
+										<Image xmlns="sap.ui.commons" press="onChangeConstructItemTap"
+											src="{path: 'affected', formatter: 'model.Formatter.vulnerableColumnImage'}">
+											<tooltip>
+												<RichTooltip
+													text="In archive: {inArchive}&#13;&#10;
+													      Class in archive: {classInArchive}&#13;&#10;
+													      Fix missing: {affected}&#13;&#10;
+													      Overall change type: {equalChangeType}&#13;&#10;
+													      Overall change: {overall_change}">
+												</RichTooltip>
+											</tooltip>
+										</Image>
+									</template>
+								</Column-->
+								<Column xmlns="sap.ui.table" width="8%" sorted="true"
+									sortProperty="reachable">
+									<Label text="Reachable" xmlns="sap.ui.commons" />
+									<template>
+									<l:HorizontalLayout>
+										<Image xmlns="sap.ui.commons" press="onChangeConstructItemTap" alt="N/a"
+											src="{path: 'reachable',
+											formatter: 'model.Formatter.reachableColumnImage'}">
+											<!-- 		<tooltip>
+												<RichTooltip
+													text="Entrypoint: {reachabilityGraph/shortestpathEP/qname}&#13;&#10;
+ 														 Source Description: {reachabilityGraph/sourceDescription}&#13;&#10;
+ 														 Distance: {reachabilityGraph/shortestpathlength}">
+												</RichTooltip>
+											</tooltip> -->
+										</Image>
+										
+										<TextView xmlns="sap.ui.commons" wrapping="true"
+											    text="{path: 'constructChange/constructId/type', 
+											    formatter: 'model.Formatter.reachTracedColumnText'}"/>
+											     	</l:HorizontalLayout>
+									</template>
+								</Column>
+								<Column xmlns="sap.ui.table" width="8%" sorted="true" 
+									sortProperty="traced">
+									<Label text="Traced" xmlns="sap.ui.commons" />
+									<template>
+										<l:HorizontalLayout>
+													<Image xmlns="sap.ui.commons" press="onChangeConstructItemTap" alt="N/a"
+													src="{path: 'traced', 
+													formatter: 'model.Formatter.usedColumnImage'}">
+										 			<tooltip>
+													<RichTooltip
+													text="Execution Time: {trace/tracedAt}&#13;&#10;Execution Id: {trace/executionId}&#13;&#10;Count: {trace/count}">
+													</RichTooltip>
+													</tooltip> 
+													</Image>
+													
+													<TextView xmlns="sap.ui.commons" wrapping="true"
+											    	text="{path: 'constructChange/constructId/type', 
+ 											    	formatter: 'model.Formatter.reachTracedColumnText'}"/> 
+											    	</l:HorizontalLayout>
+									</template>
+								</Column>
+							</Table>
+						</l:content>
+					</l:VerticalLayout>
+					<l:VerticalLayout width="100%" >
+					<core:HTML width="100%" id="trendGraph"/> 
+			   		</l:VerticalLayout>
+   
+   
+  </l:content>
+  </l:VerticalLayout>
+			
+			
+</content>
+	</Page>
+</mvc:View>

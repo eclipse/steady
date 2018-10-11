@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.sap.research.security.vulas</groupId>
+		<artifactId>root</artifactId>
+		<version>3.0.10-SNAPSHOT</version>
+	</parent>
+	<artifactId>rest-lib-utils-init</artifactId>
+	<packaging>pom</packaging>
+
+	<name>REST service to analyze and compare libraries (init)</name>
+	<description>Copies 3rd party libraries into the local repo</description>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<!-- https://github.com/jeantessier/dependency-finder, BSD-license @ https://github.com/jeantessier/dependency-finder/blob/master/license.txt -->
+					<execution>
+						<id>install-dependency-finder</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>com.jeantessier</groupId>
+							<artifactId>dependency-finder</artifactId>
+							<version>1.2.1-beta5</version>
+							<packaging>jar</packaging>
+							<file>${basedir}/lib/dependency-finder-1.2.1-beta5.jar</file>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

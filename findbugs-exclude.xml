@@ -1,0 +1,6 @@
+<FindBugsFilter>
+	<!-- Exclude ANTLR generated files -->
+	<Match>
+		<Class name="~com\.sap\..*\.antlr\..*" />
+	</Match>
+</FindBugsFilter>

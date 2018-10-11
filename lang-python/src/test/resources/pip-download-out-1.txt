@@ -1,0 +1,25 @@
+DEPRECATION: pip install --download has been deprecated and will be removed in the future. Pip now has a download command that should be used instead.
+Processing c:\tmp\venv-2\cf-helloworld
+  Link is a directory, ignoring download_dir
+Collecting flask>=0.11 (from cf-helloworld==1.0)
+  Downloading https://files.pythonhosted.org/packages/77/32/e3597cb19ffffe724ad4bf0beca4153419918e7fa4ba6a34b04ee4da3371/Flask-0.12.2-py2.py3-none-any.whl (83kB)
+  Saved c:\tmp\venv-2\download\flask-0.12.2-py2.py3-none-any.whl
+Collecting gunicorn>=19.0 (from cf-helloworld==1.0)
+  Downloading https://files.pythonhosted.org/packages/64/32/becbd4089a4c06f0f9f538a76e9fe0b19a08f010bcb47dcdbfbc640cdf7d/gunicorn-19.7.1-py2.py3-none-any.whl (111kB)
+  Saved c:\tmp\venv-2\download\gunicorn-19.7.1-py2.py3-none-any.whl
+Collecting Jinja2>=2.4 (from flask>=0.11->cf-helloworld==1.0)
+  Downloading https://files.pythonhosted.org/packages/5e/73/10c45b82a88ed6b7751bd40da31eeefd7b362e07b56a99aa6e56655a0794/Jinja2-2.9.6-py2.py3-none-any.whl (340kB)
+  Saved c:\tmp\venv-2\download\jinja2-2.9.6-py2.py3-none-any.whl
+Collecting itsdangerous>=0.21 (from flask>=0.11->cf-helloworld==1.0)
+  Downloading https://files.pythonhosted.org/packages/dc/b4/a60bcdba945c00f6d608d8975131ab3f25b22f2bcfe1dab221165194b2d4/itsdangerous-0.24.tar.gz (46kB)
+  Saved c:\tmp\venv-2\download\itsdangerous-0.24.tar.gz
+Collecting Werkzeug>=0.7 (from flask>=0.11->cf-helloworld==1.0)
+  Downloading https://files.pythonhosted.org/packages/97/02/306e0d57fdbf467ec1c763bc1757ec6ba20b1332e0ea7e49111533d71d1c/Werkzeug-0.12.2-py2.py3-none-any.whl (312kB)
+  Saved c:\tmp\venv-2\download\werkzeug-0.12.2-py2.py3-none-any.whl
+Collecting click>=2.0 (from flask>=0.11->cf-helloworld==1.0)
+  Downloading https://files.pythonhosted.org/packages/34/c1/8806f99713ddb993c5366c362b2f908f18269f8d792aff1abfd700775a77/click-6.7-py2.py3-none-any.whl (71kB)
+  Saved c:\tmp\venv-2\download\click-6.7-py2.py3-none-any.whl
+Collecting MarkupSafe>=0.23 (from Jinja2>=2.4->flask>=0.11->cf-helloworld==1.0)
+  Downloading https://files.pythonhosted.org/packages/4d/de/32d741db316d8fdb7680822dd37001ef7a448255de9699ab4bfcbdf4172b/MarkupSafe-1.0.tar.gz
+  Saved c:\tmp\venv-2\download\markupsafe-1.0.tar.gz
+Successfully downloaded cf-helloworld flask gunicorn Jinja2 itsdangerous Werkzeug click MarkupSafe

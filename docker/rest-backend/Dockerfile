@@ -1,0 +1,15 @@
+FROM openjdk:8-jre-alpine
+
+LABEL maintainer="Antonino Sabetta antonino.sabetta@sap.com"
+
+ARG VULAS_RELEASE
+
+COPY rest-backend-$VULAS_RELEASE.jar /vulas/vulas-backend.jar
+COPY vulas-backend.sh /vulas/vulas-backend.sh
+RUN touch /$VULAS_RELEASE
+
+EXPOSE 8091
+
+RUN chmod +x /vulas/vulas-backend.sh
+
+CMD ["/vulas/vulas-backend.sh"]

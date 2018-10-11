@@ -1,0 +1,676 @@
+<mvc:View controllerName="view.Component" xmlns="sap.m"
+	xmlns:c="sap.suite.ui.commons" xmlns:form="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core"
+	xmlns:commons="sap.ui.commons" xmlns:m="sap.ui.commons.layout">
+	<Page id="componentPage">
+		<headerContent>
+			<Button icon="sap-icon://refresh" press="loadData" tooltip="Reload App data" />
+			<Button icon="sap-icon://sys-help" press="openWiki" tooltip="Open help in wiki page" />
+		</headerContent>
+		<content>
+			<l:VerticalLayout width="100%">
+				<l:content>
+					<IconTabBar id="id_tabBar" select="onSelectChanged">
+						<items>
+							<IconTabFilter text="{i18n>patchAnalysis}" icon="sap-icon://quality-issue" id="id_compVuln">
+							
+								<m:MatrixLayout columns="1">
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="lastScanDate" xmlns="sap.m" text="Date of last scan (APP goal): loading..." />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="archiveCount" xmlns="sap.m" text="None" />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="vulnCount" xmlns="sap.m" text="None" />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+								</m:MatrixLayout>
+
+								<m:MatrixLayout columns="5" layoutFixed="false">
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Button text="Reset table" press="resetVulnTable" tooltip="Reset table groups and filters" />
+										</m:MatrixLayoutCell>
+										<m:MatrixLayoutCell>
+											<Button id="toggle" text="Reload data" press="loadVulns" tooltip="Reload table data using the selected filters" />
+										</m:MatrixLayoutCell>
+										<m:MatrixLayoutCell>
+											<CheckBox id="includeHistorical" text="Include historical vulnerabilities" selected="false" />
+										</m:MatrixLayoutCell>
+										<m:MatrixLayoutCell>
+											<CheckBox id="includeUnconfirmed" text="Include unconfirmed vulnerabilities (hourglass)" selected="true" />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+								</m:MatrixLayout>
+								
+								<m:MatrixLayout columns="1">
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<TextView xmlns="sap.ui.commons" id="id-cvss-legend" text="* Analyze and assess ALL vulnerabilities, no matter the CVSS score. The severity of open-source vulnerabilities significantly depends on the application-specific context (in which the open-source component is used). Thus, the actual severity can differ significantly from the (context-independent) CVSS base score provided by 3rd parties such as the NVD."></TextView>
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+								</m:MatrixLayout>
+																
+								<Table xmlns="sap.ui.table" id="idPatchAnalysisList"
+									cellClick="onBugListItemTap" selectionMode="None" noData="Loading..."
+									enableGrouping="true" filter="filterEvent"
+									rows="{
+										path: '/'	
+										}">
+
+									<columns>
+										<Column width="5%" grouped="false">
+											<multiLabels>
+												<Label text="Assessment" xmlns="sap.ui.commons" />
+											</multiLabels>
+											<template>
+												<Image xmlns="sap.m" decorative="true" id="vulnExcempted"
+													width="30px"
+													src="{
+ 		 												parts: ['excemption'],
+ 		 												formatter: 'model.Formatter.excemptedSrc'
+ 		 												}"
+ 		 											tooltip="{
+ 		 												parts: ['excemption', 'dep/scope'],
+ 		 												formatter: 'model.Formatter.excemptedTooltip'
+ 		 												}">
+												</Image>
+											</template>
+										</Column>
+										<Column width="10%" sorted="true" sortProperty="dep/scope">
+											<multiLabels>
+												<Label text="Dependency Scope" xmlns="sap.ui.commons" />
+												<Label text="(Direct / Transitive)" xmlns="sap.ui.commons" />
+											</multiLabels>
+											<template>
+												<ObjectIdentifier title="{dep/scope}"
+													text="{
+		 												path: 'dep/transitive',
+		 												formatter: 'model.Formatter.directTransitive'
+		 												}"
+													xmlns="sap.m" />
+											</template>
+										</Column>
+										<Column width="30%" sorted="true" sortProperty="dep/filename"
+											filtered="true" filterProperty="dep/filename" filter="filterEvent">
+											<Label text="Archive Filename&#13;&#10;(Digest)" xmlns="sap.ui.commons" />
+											<template>
+												<ObjectIdentifier title="{dep/filename}"
+													text="{dep/lib/digest}" xmlns="sap.m" />
+											</template>
+										</Column>
+										<Column width="25%" sorted="true" sortProperty="bug/cvssScore"
+											filtered="true" filterProperty="bug/bugId" filter="filterEvent">
+											<multiLabels>
+												<Label text="Vulnerability" xmlns="sap.ui.commons" />
+												<Label text="(CVSS Score*)" xmlns="sap.ui.commons" />
+											</multiLabels>
+											<template>
+												<l:VerticalLayout class="sapUiNoMargin">
+													<ObjectIdentifier title="{bug/bugId}"
+														text="{bug/cvssDisplayString}" xmlns="sap.m"
+														tooltip="{bug/tooltip}" />
+												</l:VerticalLayout>
+												<!-- l:VerticalLayout class="sapUiNoMargin">
+													<Text xmlns="sap.m" text="{bug/bugId}"></Text>
+												</l:VerticalLayout-->
+											</template>
+										</Column>
+										<Column id="id-vuln-included" width="10%" grouped="false"
+											filtered="true" filterProperty="affected_version">
+											<!-- { -->
+											<!-- parts: ['affected_version', 'affected_version_confirmed'], -->
+											<!-- formatter: 'model.Formatter.affectedReleaseAsString' -->
+											<!-- }"> -->
+											<multiLabels>
+												<Label text="Inclusion of" xmlns="sap.ui.commons" />
+												<Label text="vulnerable code" xmlns="sap.ui.commons" />
+											</multiLabels>
+											<template>
+												<l:HorizontalLayout>
+													<Image xmlns="sap.m" decorative="true" id="affectedVersion"
+														width="30px"
+														src="{
+			 												parts: ['affected_version', 'affected_version_confirmed'],
+			 												formatter: 'model.Formatter.affectedRelease'
+			 												}">
+													</Image>
+													<!-- Text
+														text="{
+			 												parts: ['affectedVersionSource','affected_version_confirmed'],
+			 												formatter: 'model.Formatter.affectedVersionSource'
+			 												}"
+														xmlns="sap.m" /-->
+												</l:HorizontalLayout>
+											</template>
+										</Column>
+										<Column width="10%" grouped="false">
+											<multiLabels>
+												<Label text="Static Analysis: Potential" xmlns="sap.ui.commons" />
+												<Label text="execution of vuln. code" xmlns="sap.ui.commons" />
+											</multiLabels>
+											<template>
+												<Image xmlns="sap.m" decorative="true" id="vulnReachable"
+													width="30px"
+													src="{
+ 		 												parts: ['affected_version', 'affected_version_confirmed', 'reachable', 'reachable_confirmed'],
+ 		 												formatter: 'model.Formatter.vulnReachable'
+ 		 												}">
+												</Image>
+											</template>
+										</Column>
+										<Column width="10%" grouped="false">
+											<multiLabels>
+												<Label text="Dynamic Analysis: Actual" xmlns="sap.ui.commons" />
+												<Label text="execution of vuln. code" xmlns="sap.ui.commons" />
+											</multiLabels>
+											<template>
+												<Image xmlns="sap.m" decorative="true" id="vulnTraced"
+													width="30px"
+													src="{
+		 												parts: ['affected_version', 'affected_version_confirmed', 'traced', 'traced_confirmed'],
+		 												formatter: 'model.Formatter.vulnTraced'
+		 												}">
+												</Image>
+											</template>
+										</Column>
+									</columns>
+								</Table>
+							</IconTabFilter>
+							<!-- visibleRowCount="{path: '/', formatter: 'model.Formatter.getListLength'}" -->
+							<IconTabFilter text="{i18n>Archives}" icon="sap-icon://database" id="id_compArch">
+
+								<m:MatrixLayout columns="1">
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="archiveTotal" xmlns="sap.m" text="None" />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="archiveTraced" xmlns="sap.m" text="None" />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="archiveTotalTraces" xmlns="sap.m" text="None" />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+								</m:MatrixLayout>
+
+
+								<Table xmlns="sap.ui.table" id="idArchivesList"
+									rows="{ path: '/', sorter: { path: 'filename'} }"
+									selectionMode="None">
+									<Column xmlns="sap.ui.table" width="30%" sorted="true"
+										filtered="true" sortProperty="filename" filterProperty="filename">
+										<Label text="Archive Filename&#13;&#10;(Digest)" xmlns="sap.ui.commons" />
+										<template>
+											<ObjectIdentifier title="{filename}" text="{lib/digest}"
+												xmlns="sap.m" titleActive="true" titlePress="onArchiveListItemTap" />
+										</template>
+									</Column>
+									<Column xmlns="sap.ui.table" width="14%" sorted="true"
+										sortProperty="scope">
+										<Label text="Dependency Scope" xmlns="sap.ui.commons" />
+										<template>
+											<TextView xmlns="sap.ui.commons" text="{scope}"></TextView>
+										</template>
+									</Column>
+									<Column xmlns="sap.ui.table" width="14%" sorted="true"
+										sortProperty="transitive">
+										<Label text="Direct / Transitive" xmlns="sap.ui.commons" />
+										<template>
+											<TextView xmlns="sap.ui.commons"
+												text="{
+		 												path: 'transitive',
+		 												formatter: 'model.Formatter.directTransitive'}"></TextView>
+										</template>
+									</Column>
+									<Column xmlns="sap.ui.table" width="14%" sorted="true"
+										sortProperty="lib/wellknownDigest">
+										<multiLabels>
+											<Label text="{i18n>wellknownDigest}" xmlns="sap.ui.commons" />
+										</multiLabels>
+										<template>
+											<commons:TextView text="{lib/wellknownDigest}"
+												semanticColor="{ path: 'lib/wellknownDigest', 
+	             								    formatter: 'model.Formatter.booleanToSemantic'}">
+											</commons:TextView>
+										</template>
+									</Column>
+									<Column xmlns="sap.ui.table" width="14%" sorted="true"
+										sortProperty="declared">
+										<multiLabels>
+											<Label text="{i18n>declaredDependency}" xmlns="sap.ui.commons" />
+										</multiLabels>
+										<template>
+											<commons:TextView text="{declared}"
+												semanticColor="{ path: 'declared', 
+	             								    formatter: 'model.Formatter.booleanToSemantic'}">
+											</commons:TextView>
+										</template>
+									</Column>
+									<Column xmlns="sap.ui.table" width="14%" sorted="true"
+										sortProperty="reachExecConstructsCounter">
+										<!-- Text text="App potentially executes library code" / -->
+										<multiLabels>
+											<Label text="Library constructs" xmlns="sap.ui.commons" />
+											<Label text="potentially executable" xmlns="sap.ui.commons" />
+										</multiLabels>
+										<template>
+											<TextView xmlns="sap.ui.commons"
+												text="{reachExecConstructsCounter}"></TextView>
+										</template>
+									</Column>
+									<Column xmlns="sap.ui.table" width="14%" sorted="true"
+										sortProperty="tracedExecConstructsCounter">
+										<multiLabels>
+											<Label text="Library constructs " xmlns="sap.ui.commons" />
+											<Label text="actually executed" xmlns="sap.ui.commons" />
+										</multiLabels>
+										<template>
+											<TextView xmlns="sap.ui.commons" text="{tracedExecConstructsCounter}"></TextView>
+										</template>
+										<!-- Text text="App actually executes library code" / -->
+									</Column>
+								</Table>
+							</IconTabFilter>
+
+							<IconTabFilter text="{i18n>testCoverage}" icon="sap-icon://pie-chart" id="id_compTest">
+
+								<m:MatrixLayout columns="1">
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="depCounter" xmlns="sap.m" text="Dependencies (excluding scopes TEST and PROVIDED): loading ..." />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+								</m:MatrixLayout>
+								
+								<Table xmlns="sap.ui.table" id="idRatioList"
+									selectionMode="None"
+									rows="{
+										path: '/',
+										sorter: {
+											path: 'name'
+										}
+									}">
+									<columns>
+										<Column xmlns="sap.ui.table" width="40%" sorted="true" sortProperty="name">
+											<Label text="{i18n>ratioConstructType}" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{name}" />
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="20%">
+											<Label text="{i18n>ratioConstructApp}" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{count}" />
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="20%">
+											<Label text="{i18n>ratioConstructDeps}" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{total}" />
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="20%">
+											<Label text="{i18n>ratioConstructRatio}" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{ratio}" />
+											</template>
+										</Column>
+									</columns>
+								</Table>
+								
+								<m:MatrixLayout columns="1">
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text xmlns="sap.m" text=" " />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="execConstructTotal" xmlns="sap.m" text="Executable application constructs (total): loading ..." />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="execConstructTraced" xmlns="sap.m" text="Executable application constructs (traced): loading ..." />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+								</m:MatrixLayout>
+
+								<Table xmlns="sap.ui.table" id="idPackagesList"
+									selectionMode="None"
+									rows="{
+										path: '/',
+										sorter: {
+											path: 'name'
+										}
+									}">
+									<columns>
+										<Column xmlns="sap.ui.table" width="40%" sorted="true"
+											sortProperty="name" filterProperty="name">
+											<Label text="{i18n>packages}" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{name}" />
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="15%" sortProperty="constructors"
+											filterProperty="constructors">
+											<Label text="{i18n>constructors}" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{constructorsTested}	/	{constructors}" />
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="15%" sortProperty="methods"
+											filterProperty="methods">
+											<Label text="{i18n>methods}" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{methodsTested}	/	{methods}" />
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="15%" sortProperty="modules"
+											filterProperty="modules">
+											<Label text="{i18n>modules}" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{modulesTested}	/	{modules}" />
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="15%" sortProperty="functions"
+											filterProperty="functions">
+											<Label text="{i18n>functions}" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{functionsTested}	/	{functions}" />
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="15%" sortProperty="static_inits"
+											filterProperty="static_inits">
+											<Label text="{i18n>static_inits}" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{static_initsTested}	/	{static_inits}" />
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="15%" sortProperty="coverage"
+											filterProperty="coverage">
+											<Label text="{i18n>coverage}" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{testcoverage}" />
+											</template>
+										</Column>
+									</columns>
+								</Table>
+								
+							</IconTabFilter>
+
+							<IconTabFilter text="{i18n>GoalExecutions}" icon="sap-icon://workflow-tasks" id="id_compExe">
+								<Table xmlns="sap.ui.table" id="idExecutionsList" rows="{ path: '/' }"
+									cellClick="onExecutionListItemTap" selectionMode="None">
+									<columns>
+										<Column xmlns="sap.ui.table" width="10%" sortProperty="exception" filterProperty="exception">
+											<Label text="Status" xmlns="sap.ui.commons" />
+											<template>
+												<Image xmlns="sap.m" decorative="true"
+													src="{
+ 												path: 'exception',
+ 												formatter: 'model.Formatter.executionStatus'
+ 												}">
+												</Image>
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="10%" sortProperty="goal" filterProperty="goal">
+											<Label text="Goal" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{goal}"></Text>
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="15%" sortProperty="startedAtClient" filterProperty="startedAtClient">
+											<Label text="Started At (GMT)" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{startedAtClient}"></Text>
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" hAlign="right" width="10%" sortProperty="runtimeNano">
+											<Label text="Runtime" xmlns="sap.ui.commons" />
+											<template textAlign="right">
+												<Text xmlns="sap.m" text="{runtimeNanoFormatted}"></Text>
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="15%" sortProperty="memMax">
+											<Label text="JVM Max. Memory (GB)" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{memMax}"></Text>
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="15%" sortProperty="memUsedMax">
+											<Label text="Max. Memory Used (MB)" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{memUsedMax}"></Text>
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="15%" sortProperty="memUsedAvg">
+											<Label text="Avg. Memory Used (MB)" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{memUsedAvg}"></Text>
+											</template>
+										</Column>
+										<Column xmlns="sap.ui.table" width="10%" sortProperty="clientVersion" filterProperty="clientVersion">
+											<Label text="Vulas Release" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{clientVersion}"></Text>
+											</template>
+										</Column>
+									</columns>
+								</Table>
+							</IconTabFilter>
+
+							<IconTabFilter text="{i18n>search_tab}" icon="sap-icon://inspection" id="id_compSearch">
+							
+								<m:MatrixLayout columns="2" width="80%">
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell colSpan="2">
+											<Text xmlns="sap.m" text=" " />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell width="25%" hAlign="Right">
+											<Text xmlns="sap.m" text="Search string" />
+										</m:MatrixLayoutCell>
+										<m:MatrixLayoutCell>
+											<commons:TextField id="idSearchString" value="Enter search string for the construct name..." width="75%"/>
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text xmlns="sap.m" text=" " />
+										</m:MatrixLayoutCell>
+										<m:MatrixLayoutCell>
+											<commons:RadioButton id="idSearchWildcard" text="{i18n>search_wildcard}" groupName="wildcard" selected="true"  width="50%" tooltip="Wildcard search with * as placeholder for one or more characters"/>
+											<commons:RadioButton id="idSearchExact"    text="{i18n>search_exact}"    groupName="wildcard" selected="false" width="50%" tooltip="Search for exact matches including, e.g., parameters"/>
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<!-- m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text xmlns="sap.m" text="Construct Type(s): " />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text xmlns="sap.m" text="Exact/Wildcard: " />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow-->
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text xmlns="sap.m" text=" " />
+										</m:MatrixLayoutCell>
+										<m:MatrixLayoutCell>
+											<Button id="search_button" text="{i18n>search_button}"
+												press="onSearchButtonPress"
+												tooltip="{i18n>search_button_tooltip}"
+												icon="sap-icon://inspection"/>
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell colSpan="2">
+											<Text xmlns="sap.m" text=" " />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+								</m:MatrixLayout>
+								
+								<m:MatrixLayout columns="1">
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="idSearchResultCounter" xmlns="sap.m" text="Result count: N/a" />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+								</m:MatrixLayout>
+								
+								<Table xmlns="sap.ui.table" id="idSearchResultTable" cellClick="onSearchResultItemTap"
+									selectionMode="None" enableGrouping="false" filter="filterEvent"
+									rows="{
+										path: '/'	
+										}">
+
+									<columns>
+										<Column width="45%" sorted="true" sortProperty="constructId/qname"
+											filtered="true" filterProperty="constructId/qname" filter="filterEvent">
+											<Label text="Construct" xmlns="sap.ui.commons" />
+											<template>
+												<l:VerticalLayout class="sapUiNoMargin">
+													<Text xmlns="sap.m" text="{constructId/qname}"></Text>
+												</l:VerticalLayout>
+											</template>
+										</Column>
+										<Column width="10%" sorted="true" sortProperty="constructId/type"
+											filtered="true" filterProperty="constructId/type" filter="filterEvent">
+											<Label text="Construct Type" xmlns="sap.ui.commons" />
+											<template>
+												<l:VerticalLayout class="sapUiNoMargin">
+													<Text xmlns="sap.m" text="{constructId/type}"></Text>
+												</l:VerticalLayout>
+											</template>
+										</Column>
+										<Column width="15%" sorted="true" sortProperty="dependency/scope">
+											<multiLabels>
+												<Label text="Dependency Scope&#13;&#10;" xmlns="sap.ui.commons" />
+												<Label text="(Direct / Transitive)" xmlns="sap.ui.commons" />
+											</multiLabels>
+											<template>
+												<ObjectIdentifier title="{dependency/scope}"
+													text="{
+		 												path: 'dependency/transitive',
+		 												formatter: 'model.Formatter.directTransitive'
+		 												}"
+													xmlns="sap.m" />
+											</template>
+										</Column>
+										<Column width="30%" sorted="true" sortProperty="dependency/filename"
+											filtered="false" filterProperty="dependency/filename" filter="filterEvent">
+											<Label text="Archive Filename&#13;&#10;(Digest)" xmlns="sap.ui.commons" />
+											<template>
+												<ObjectIdentifier title="{dependency/filename}"
+													text="{dependency/lib/digest}" xmlns="sap.m" />
+											</template>
+										</Column>
+									</columns>
+								</Table>
+								
+							</IconTabFilter>
+							
+							<IconTabFilter text="{i18n>mitigation}" icon="sap-icon://wounds-doc" id="id_compRem">
+								<Table xmlns="sap.ui.table" id="idLibraryList" cellClick="onDigestListItemTap"
+									selectionMode="None" enableGrouping="false" filter="filterEvent"
+									rows="{
+										path: '/'	
+										}">
+
+									<columns>
+										<Column width="10%" sorted="true" sortProperty="dep/scope">
+											<multiLabels>
+												<Label text="Dependency Scope&#13;&#10;" xmlns="sap.ui.commons" />
+												<Label text="(Direct / Transitive)" xmlns="sap.ui.commons" />
+											</multiLabels>
+											<template>
+												<ObjectIdentifier title="{dep/scope}"
+													text="{
+		 												path: 'dep/transitive',
+		 												formatter: 'model.Formatter.directTransitive'
+		 												}"
+													xmlns="sap.m" />
+											</template>
+										</Column>
+										<Column width="30%" sorted="true" sortProperty="dep/filename"
+											filtered="true" filterProperty="dep/filename" filter="filterEvent">
+											<Label text="Archive Filename&#13;&#10;(Digest)" xmlns="sap.ui.commons" />
+											<template>
+												<m:MatrixLayout columns="1">
+													<m:MatrixLayoutRow>
+														<m:MatrixLayoutCell>
+															<ObjectIdentifier title="{dep/filename}"
+																text="{dep/lib/digest}" xmlns="sap.m" />
+														</m:MatrixLayoutCell>
+													</m:MatrixLayoutRow>
+													<m:MatrixLayoutRow>
+														<m:MatrixLayoutCell>
+															<Text xmlns="sap.m" text="{
+		 														path: 'dep/lib',
+		 														formatter: 'model.Formatter.libraryId'}"></Text>
+		 														</m:MatrixLayoutCell>
+													</m:MatrixLayoutRow>
+												</m:MatrixLayout>
+											</template>
+										</Column>
+										<Column width="5%" sorted="true" sortProperty="count"
+											filtered="true" filterProperty="count" filter="filterEvent">
+											<Label text="Count vulnerabilities" xmlns="sap.ui.commons" />
+											<template>
+												<l:VerticalLayout class="sapUiNoMargin">
+													<Text xmlns="sap.m" text="{count}"></Text>
+												</l:VerticalLayout>
+											</template>
+										</Column>
+										<Column width="25%" sorted="true" sortProperty="latest">
+											<multiLabels>
+												<Label text="Latest release published (date/time based)." xmlns="sap.ui.commons" />
+												<Label text="Click on version for alternatives." xmlns="sap.ui.commons" />
+											</multiLabels>	
+											<template>
+												<l:VerticalLayout class="sapUiNoMargin">
+													<Text xmlns="sap.m" text="{latest}"></Text>
+												</l:VerticalLayout>
+											</template>
+										</Column>
+									</columns>
+								</Table>
+								<m:MatrixLayout columns="1">
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<TextView xmlns="sap.ui.commons" id="id-legend"></TextView>
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<TextView xmlns="sap.ui.commons" id="id-legend1"></TextView>
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+								</m:MatrixLayout>
+							</IconTabFilter>
+							
+						</items>
+					</IconTabBar>
+				</l:content>
+			</l:VerticalLayout>
+		</content>
+	</Page>
+</mvc:View>
+
+
+
+

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core">
+  <BusyDialog
+    title="Loading Data"
+    text="This operation requires interacting with the OSS' versioning control system, including the checkout of possibly many files in different revisions. This can take several minutes, please be patient..."
+    showCancelButton="false" />
+</core:FragmentDefinition>

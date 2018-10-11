@@ -1,0 +1,7 @@
+{
+	"exposed": true,
+	"authentication": [{"method":"Basic"}],
+	"cors" : {
+ 		"enabled" : true
+ 	} 
+}

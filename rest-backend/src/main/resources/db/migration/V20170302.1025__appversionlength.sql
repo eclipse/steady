@@ -1,0 +1,1 @@
+ALTER TABLE app ALTER COLUMN version TYPE CHARACTER varying(96);

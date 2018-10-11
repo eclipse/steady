@@ -1,0 +1,207 @@
+{
+  "group": "com.acme",
+  "artifact": "vulas-testapp",
+  "version": "0.0.9-SNAPSHOT",
+  "constructs": [
+    {
+      "lang": "JAVA",
+      "type": "PACK",
+      "qname": "com.acme"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "com.acme.ArchivePrinter"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "com.acme.ArchivePrinter$1"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "com.acme.ArchivePrinter$1$1Bar"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchivePrinter$1$1Bar.compress()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchivePrinter$1.foo()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "com.acme.ArchivePrinter$2"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchivePrinter$2.checkClientTrusted(X509Certificate[],String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchivePrinter$2.checkServerTrusted(X509Certificate[],String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchivePrinter$2.getAcceptedIssuers()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "com.acme.ArchivePrinter$InnerNonStaticClass"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "com.acme.ArchivePrinter$InnerNonStaticClass(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "com.acme.ArchivePrinter$InnerStaticClass"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "com.acme.ArchivePrinter$InnerStaticClass(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "com.acme.ArchivePrinter(InputStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "com.acme.ArchivePrinter(Path)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchivePrinter.compressArchive()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchivePrinter.compressExploitability(Path,Path)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchivePrinter.countEntries()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchivePrinter.httpRequest2(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchivePrinter.main(String[])"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchivePrinter.openSpreadsheet(Path)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchivePrinter.printEntries(PrintStream)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchivePrinter.testGenericsAsParameters(Set,int,Map)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchivePrinter.testInnerClassesAsParameters(InnerNonStaticClass,InnerStaticClass)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "com.acme.ArchiveServlet"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchiveServlet.doPost(HttpServletRequest,HttpServletResponse)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchiveServlet.processRequest(HttpServletRequest,HttpServletResponse)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.ArchiveServlet.saveNote(String)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "com.acme.HelloWorldAction"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.HelloWorldAction.execute()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.HelloWorldAction.getMessageStore()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.HelloWorldAction.setMessageStore(MessageStore)"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "com.acme.MessageStore"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "com.acme.MessageStore()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.MessageStore.getMessage()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.MessageStore.printStacktrace()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "com.acme.MessageStore.setMessage(String)"
+    }
+  ],
+  "dependencies": [
+    {
+      "scope": "COMPILE",
+      "transitive": false,
+      "declared": true,
+      "lib": "1E48256A2341047E7D729217ADEEC8217F6E3A1A",
+      "filename": "commons-fileupload-1.2.2.jar",
+      "path":null
+    }
+  ]
+}

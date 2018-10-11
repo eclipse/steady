@@ -1,0 +1,83 @@
+<mvc:View controllerName="view.LibDetail" xmlns="sap.m"
+          xmlns:c="sap.suite.ui.commons" xmlns:form="sap.ui.layout.form"
+          xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+    <Page id="idLibDetailPage" showNavButton='true' navButtonPress='handleNavBack'>
+<!--         <headerContent> -->
+<!--             <Button icon="sap-icon://email"  press="writeEmail" tooltip="Provide feedback on vulnerable archive releases" text="Feedback" /> -->
+<!--         </headerContent> -->
+        <content>
+            <l:VerticalLayout width="100%" class="marginVerticalContent">
+                <l:content>
+                    <l:HorizontalLayout width="100%">
+                        <l:content>
+                            <Label design="Bold" text="Archive SHA1: " class="marginVerticalContent" />
+                            <Text id="idArchiveIdText" xmlns="sap.m" 
+                                  class="marginVerticalContent"
+                                  text="{/sha1}">
+                            </Text>
+                        </l:content>
+                    </l:HorizontalLayout>
+                    <Label design="Bold" text="Archive Properties:" class="marginVerticalContent" />
+                    <Table xmlns="sap.ui.table" selectionMode="None"
+                           editable="false" allowColumnReordering="false" rows="{/properties}"
+                           visibleRowCount="{path: '/properties', formatter: 'model.Formatter.getListLength'}">
+                        <Column xmlns="sap.ui.table" sorted="true" sortProperty="name">
+                            <Label text="Property Name" xmlns="sap.ui.commons" />
+                            <template>
+                                <TextView xmlns="sap.ui.commons" wrapping="true" text="{name}">
+                                </TextView>
+                            </template>
+                        </Column>
+                        <Column xmlns="sap.ui.table" sorted="true" sortProperty="value">
+                            <Label text="Property Value" xmlns="sap.ui.commons" />
+                            <template>
+                                <TextView xmlns="sap.ui.commons" wrapping="true" text="{value}">
+                                </TextView>
+                            </template>
+                        </Column>
+                    </Table>
+                    <Label design="Bold" text="Used by Applications:" class="marginVerticalContent" />
+                    <Table id="idLibAppsPage" xmlns="sap.ui.table" selectionMode="None" cellClick="onAppListTap"
+                           editable="false" allowColumnReordering="false" rows="{/}"
+                           visibleRowCount="{path: '/', formatter: 'model.Formatter.getListLength'}">
+                        <Column xmlns="sap.ui.table" sorted="true" sortProperty="group">
+                            <Label text="Application Group" xmlns="sap.ui.commons" />
+                            <template>
+                                <TextView xmlns="sap.ui.commons" wrapping="true" text="{group}">
+                                </TextView>
+                            </template>
+                        </Column>
+                        <Column xmlns="sap.ui.table" sorted="true" sortProperty="artifact">
+                            <Label text="Application Artifact" xmlns="sap.ui.commons" />
+                            <template>
+                                <TextView xmlns="sap.ui.commons" wrapping="true" text="{artifact}">
+                                </TextView>
+                            </template>
+                        </Column>
+                        <Column xmlns="sap.ui.table" sorted="true" sortProperty="version">
+                            <Label text="Application Version" xmlns="sap.ui.commons" />
+                            <template>
+                                <TextView xmlns="sap.ui.commons" wrapping="true" text="{version}">
+                                </TextView>
+                            </template>
+                        </Column>
+                        <Column xmlns="sap.ui.table" sorted="true" sortProperty="depFilename">
+                            <Label text="Dependency Filename" xmlns="sap.ui.commons" />
+                            <template>
+                                <TextView xmlns="sap.ui.commons" wrapping="true" text="{depFilename}">
+                                </TextView>
+                            </template>
+                        </Column>
+                         <Column xmlns="sap.ui.table" sorted="true" sortProperty="createdAt">
+                            <Label text="Application Created At" xmlns="sap.ui.commons" />
+                            <template>
+                                <TextView xmlns="sap.ui.commons" wrapping="true" text="{createdAt}">
+                                </TextView>
+                            </template>
+                        </Column>
+                    </Table>
+                </l:content>
+            </l:VerticalLayout>
+        </content>
+    </Page>
+</mvc:View>

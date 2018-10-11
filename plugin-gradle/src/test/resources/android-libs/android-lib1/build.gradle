@@ -1,0 +1,19 @@
+plugins {
+    id 'vulas'
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion Integer.valueOf(androidCompileSdkVersion)
+    buildToolsVersion androidBuildToolsVersion
+    defaultConfig {
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
+    }
+}
+
+dependencies {
+    api "net.zetetic:android-database-sqlcipher:3.5.9"
+    implementation "log4j:log4j:1.2.17"
+}

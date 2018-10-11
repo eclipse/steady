@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core">
+  <BusyDialog
+    title="Uploading Data"
+    text="This operation uploads the changes to the central assessment system as to check whether vulnerable code lines are executed in SAP application tests."
+    showCancelButton="false" />
+</core:FragmentDefinition>
