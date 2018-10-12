@@ -41,6 +41,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -195,6 +196,37 @@ public class ApplicationControllerTest {
                 .andExpect(jsonPath("$.group", is(APP_GROUP)))
                 .andExpect(jsonPath("$.artifact", is(APP_ARTIFACT)))
                 .andExpect(jsonPath("$.version", is(APP_VERSION)));
+       	
+    	assertEquals(1, this.appRepository.count());
+    }
+    
+    /**
+     * Repo-save and JSON export.
+     * @throws Exception
+     */
+    @Test
+    public void testExportApp() throws Exception {
+    	libRepository.customSave(this.createExampleLibrary());
+       	final Application app = this.createExampleApplication();
+    	this.appRepository.customSave(app);
+    	
+    	String f = "jSOn";
+    	MockHttpServletRequestBuilder get_builder = get(getAppExportUri(app, f));
+    	MvcResult result = mockMvc.perform(get_builder)	
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andReturn();
+    	
+    	System.out.println(result.getResponse().getContentAsString());
+    	
+    	f = "foo";
+    	get_builder = get(getAppExportUri(app, f));
+    	result = mockMvc.perform(get_builder)	
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andReturn();
+    	
+    	System.out.println(result.getResponse().getContentAsString());
        	
     	assertEquals(1, this.appRepository.count());
     }
@@ -585,6 +617,10 @@ public class ApplicationControllerTest {
 	
 	public static String getAppUri(Application _app) {
 		return "/apps/" + _app.getMvnGroup()+ "/" + _app.getArtifact() + "/" + _app.getVersion();
+	}
+	
+	public static String getAppExportUri(Application _app, String _format) {
+		return "/apps/" + _app.getMvnGroup()+ "/" + _app.getArtifact() + "/" + _app.getVersion() + "/csv?format=" + _format;
 	}
 	
 	

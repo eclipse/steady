@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.GoalExecution;
-import com.sap.psr.vulas.backend.model.VulnerableDependency;
 import com.sap.psr.vulas.backend.repo.ApplicationRepository;
 import com.sap.psr.vulas.backend.repo.GoalExecutionRepository;
+import com.sap.psr.vulas.shared.enums.ExportFormat;
+import com.sap.psr.vulas.shared.json.JsonBuilder;
 import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.StringUtil;
 
@@ -55,6 +55,8 @@ public class ApplicationExporterThread implements Runnable {
 
 	private List<Application> apps = null;
 
+	private ExportFormat format = null;
+	
 	public ApplicationExporterThread setSeparator(String separator) {
 		this.separator = separator;
 		return this;
@@ -92,6 +94,14 @@ public class ApplicationExporterThread implements Runnable {
 	public ApplicationExporterThread setAffectedApps(HashMap<Long, HashMap<String, Boolean>> affectedApps) {
 		this.affectedApps = affectedApps;
 		return this;
+	}	
+
+	public ExportFormat getFormat() {
+		return format;
+	}
+
+	public void setFormat(ExportFormat format) {
+		this.format = format;
 	}
 
 	public StringBuffer getBuffer() {
@@ -101,60 +111,90 @@ public class ApplicationExporterThread implements Runnable {
 	@Transactional(readOnly=true, propagation=Propagation.REQUIRED) // Needed in order to lazy load properties when called async
 	public void run() {
 		// Show progress
-		final StopWatch sw = new StopWatch("Worker thread: Produce CSV for [" + apps.size() + "] apps");
+		final StopWatch sw = new StopWatch("Worker thread: Produce [" + this.format + "] for [" + apps.size() + "] apps");
 		sw.setTotal(this.apps.size());
 		sw.start();
-
+		
 		for(Application a: this.apps) {
-			final StringBuffer entry = new StringBuffer();
+			
+			// Always produce both and decide at the end
+			final StringBuffer csv = new StringBuffer();
+			final JsonBuilder json = new JsonBuilder().startObject();
+			
 			try {
 				// Space
-				entry.append(a.getSpace().getSpaceToken()).append(separator).append(a.getSpace().getSpaceName()).append(separator).append(a.getSpace().getSpaceOwners()).append(separator);
+				csv.append(a.getSpace().getSpaceToken()).append(separator).append(a.getSpace().getSpaceName()).append(separator).append(a.getSpace().getSpaceOwners()).append(separator);
+				json.startObjectProperty("workspace");
+				json.appendObjectProperty("token", a.getSpace().getSpaceToken())
+				    .appendObjectProperty("name", a.getSpace().getSpaceName());
+				json.startArrayProperty("owners");
+				if(a.getSpace().getSpaceOwners()!=null && a.getSpace().getSpaceOwners().size()>0) {
+					for(String o: a.getSpace().getSpaceOwners())
+						json.appendToArray(o);
+				}
+				json.endArray();
+				json.endObject();
+								    
 				if(includeSpaceProperties!=null && includeSpaceProperties.length>0) {
 					for(String p: includeSpaceProperties) {
 						final String value = a.getSpace().getPropertyValue(p);
-						if(value!=null)
-							entry.append(value).append(separator);
-						else
-							entry.append("").append(separator);
+						csv.append(value==null?"":value).append(separator);
+						json.appendObjectProperty(p, value);
 					}
 				}
 
-				entry.append(a.getId()).append(separator).append(a.getMvnGroup()).append(separator).append(a.getArtifact()).append(separator).append(a.getVersion()).append(separator);
-				entry.append(ApplicationExporterThread.DATE_FORMAT.format(a.getCreatedAt().getTime()));
+				// Application
+				csv.append(a.getId()).append(separator).append(a.getMvnGroup()).append(separator).append(a.getArtifact()).append(separator).append(a.getVersion()).append(separator);
+				csv.append(ApplicationExporterThread.DATE_FORMAT.format(a.getCreatedAt().getTime()));
 				//entry.append(separator).append(a.countDependencies()).append(separator).append(a.countConstructs());
-
+				json.startObjectProperty("app");
+				json.appendObjectProperty("id", a.getId().toString())
+			    	.appendObjectProperty("group", a.getMvnGroup())
+			    	.appendObjectProperty("artifact", a.getArtifact())
+			    	.appendObjectProperty("version", a.getVersion())
+			    	.appendObjectProperty("createdAt", ApplicationExporterThread.DATE_FORMAT.format(a.getCreatedAt().getTime()));
+				json.endObject();
+				
 				// Bugs
 				if(!StringUtil.isEmptyOrContainsEmptyString(this.bugs) && this.affectedApps!=null) {
+					json.startObjectProperty("vulns");
 					final HashMap<String, Boolean> affected_app = this.affectedApps.get(a.getId());
 					for(String b: this.bugs) {
 						Boolean affected = false;
 						if(affected_app!=null && affected_app.containsKey(b)) {
 							affected = affected_app.get(b); // Can be true or null
 						}
-						if(affected==null)
-							entry.append(separator).append("unconfirmed");
-						else if(affected==true)
-							entry.append(separator).append("affected");
-						else
-							entry.append(separator).append("not affected");
+						if(affected==null) {
+							csv.append(separator).append("unconfirmed");
+							json.appendObjectProperty(b, "unconfirmed");
+						}
+						else if(affected==true) {
+							csv.append(separator).append("affected");
+							json.appendObjectProperty(b, "affected");
+						}
+						else {
+							csv.append(separator).append("not affected");
+							json.appendObjectProperty(b, "not affected");
+						}
 					}
+					json.endObject();
 				}
 
 				// Stuff from goal execution
 				final GoalExecution latest_goal_exe = gexeRepository.findLatestGoalExecution(a, null);
 				if(latest_goal_exe!=null) {
-					entry.append(separator).append(DATE_FORMAT.format(latest_goal_exe.getCreatedAt().getTime())).append(separator).append(latest_goal_exe.getClientVersion());
-
+					csv.append(separator).append(DATE_FORMAT.format(latest_goal_exe.getCreatedAt().getTime())).append(separator).append(latest_goal_exe.getClientVersion());
+					json.startObjectProperty("lastGoalExecution");
+					json.appendObjectProperty("timestamp", DATE_FORMAT.format(latest_goal_exe.getCreatedAt().getTime()))
+					    .appendObjectProperty("client", latest_goal_exe.getClientVersion());
+					
 					// Goal config
 					if(!StringUtil.isEmptyOrContainsEmptyString(this.includeGoalConfiguration)) {
 						//log.info("Get goal configuration for " + latest_goal_exe); //TODO: Delete
 						for(String p: includeGoalConfiguration) {
 							final String prop = latest_goal_exe.getConfiguration(p);
-							if(prop!=null)
-								entry.append(separator).append(prop);
-							else
-								entry.append(separator).append("");
+							csv.append(separator).append(prop==null?"":prop);
+							json.appendObjectProperty(p, prop);
 						}
 					}
 
@@ -163,31 +203,38 @@ public class ApplicationExporterThread implements Runnable {
 						//log.info("Get system info for " + latest_goal_exe); //TODO: Delete
 						for(String p: includeGoalSystemInfo) {
 							final String prop = latest_goal_exe.getSystemInfo(p);
-							if(prop!=null)
-								entry.append(separator).append(prop);
-							else
-								entry.append(separator).append("");
+							csv.append(separator).append(prop==null?"":prop);
+							json.appendObjectProperty(p, prop);
 						}
 					}
+					json.endObject();
 				} else {
-					entry.append(separator).append("").append(separator).append("").append(separator).append("");
-
+					csv.append(separator).append("").append(separator).append("").append(separator).append("");
+					json.appendObjectProperty("lastGoalExecution", (String)null);
+					
 					// Goal config
 					if(!StringUtil.isEmptyOrContainsEmptyString(this.includeGoalConfiguration))
 						for(String p: includeGoalConfiguration)
-							entry.append(separator).append("");
+							csv.append(separator).append("");
 
 					// Sys info
 					if(!StringUtil.isEmptyOrContainsEmptyString(includeGoalSystemInfo))
 						for(String p: includeGoalSystemInfo)
-							entry.append(separator).append("");
+							csv.append(separator).append("");
 				}
 
-				entry.append(lb);
-				buffer.append(entry);
+				csv.append(lb);
+				json.endObject();
+				
+				// Append to buffer according to format
+				if(ExportFormat.CSV.equals(this.format))
+					buffer.append(csv);
+				else
+					buffer.append(buffer.length()==0?"":",").append(json.toString());
+				
 				sw.progress();
 			} catch (Exception e) {
-				log.error("[" + e.getClass().getName() + "] while appending data for app " + a + ", entry [" + entry.toString() + "] will not be appended to CSV: " + e.getMessage());
+				log.error("[" + e.getClass().getName() + "] while appending data for app " + a + ", entry [" + csv.toString() + "] will not be appended to [" + this.format + "]: " + e.getMessage());
 			}
 		}
 		sw.stop();

@@ -79,6 +79,7 @@ import com.sap.psr.vulas.backend.util.Message;
 import com.sap.psr.vulas.backend.util.ServiceWrapper;
 import com.sap.psr.vulas.shared.connectivity.ServiceConnectionException;
 import com.sap.psr.vulas.shared.enums.ConstructType;
+import com.sap.psr.vulas.shared.enums.ExportFormat;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.json.model.diff.JarDiffResult;
@@ -430,6 +431,7 @@ public class ApplicationController {
 			@RequestParam(value="includeGoalSystemInfo", required=false, defaultValue="") final String[] includeGoalSystemInfo,
 			@RequestParam(value="vuln", required=false, defaultValue="") final String[] vuln,
 			@RequestParam(value="to", required=false, defaultValue="") final String[] to,
+			@RequestParam(value="format", required=false, defaultValue="csv") final String format,
 			@RequestHeader(value="X-Vulas-Tenant", required=false) final String tenant,
 			HttpServletRequest request,
 			HttpServletResponse response) {
@@ -447,7 +449,10 @@ public class ApplicationController {
 			throw new RuntimeException("Tenant [" + tenant + "] not found");
 		}
 		
-		// Send CSV per email
+		// Export format
+		final ExportFormat exp_format = ExportFormat.parseFormat(format, ExportFormat.CSV);
+		
+		// Send export per email
 		if(to!=null && to.length>0) {
 			try {			
 				final String req = request.getQueryString(); 
@@ -461,23 +466,23 @@ public class ApplicationController {
 					msg.addRecipient(recipient);
 				
 				// Write apps to CSV and send email (async)
-				this.appExporter.produceCsvAsync(t, separator, includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, vuln, msg);
+				this.appExporter.produceExportAsync(t, separator, includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, vuln, msg, exp_format);
 								
 				// Short response				
-				response.setContentType("text/plain;charset=UTF-8");      
+				response.setContentType(ExportFormat.getHttpContentType(exp_format));      
 				final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
 				writer.write("Result of request [" + req + "] will be sent to [" + StringUtil.join(to, ", ") + "]");
 				writer.newLine();
 				writer.flush();
 				response.flushBuffer();
 			} catch (FileNotFoundException e) {
-				log.error("Error while reading all tenant apps (as CSV): " + e.getMessage(), e);
+				log.error("Error while reading all tenant apps (as [" + exp_format + "]): " + e.getMessage(), e);
 				throw new RuntimeException("IOError writing file to output stream");
 			} catch (IOException e) {
-				log.error("Error while reading all tenant apps (as CSV): " + e.getMessage(), e);
+				log.error("Error while reading all tenant apps (as [" + exp_format + "]): " + e.getMessage(), e);
 				throw new RuntimeException("IOError writing file to output stream");
 			} catch (Exception e) {
-				log.error("Error while reading all tenant apps (as CSV): " + e.getMessage(), e);
+				log.error("Error while reading all tenant apps (as [" + exp_format + "]): " + e.getMessage(), e);
 				throw new RuntimeException("IOError writing file to output stream");
 			}
 		}
@@ -485,10 +490,10 @@ public class ApplicationController {
 		else {
 			try {
 				// Write apps to CSV
-				final java.nio.file.Path csv = this.appExporter.produceCsv(t, separator, includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, vuln);
+				final java.nio.file.Path csv = this.appExporter.produceExport(t, separator, includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, vuln, exp_format);
 				
 				// Headers
-				response.setContentType("text/csv;charset=UTF-8");      
+				response.setContentType(ExportFormat.getHttpContentType(exp_format));      
 				response.setHeader("Content-Disposition", "attachment; filename=" + csv.getFileName().toString()); 
 				final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(csv.toFile())));
 				String line = null;
@@ -504,13 +509,13 @@ public class ApplicationController {
 				writer.flush();
 				response.flushBuffer();
 			} catch (FileNotFoundException e) {
-				log.error("Error while reading all tenant apps (as CSV): " + e.getMessage(), e);
+				log.error("Error while reading all tenant apps (as [" + exp_format + "]): " + e.getMessage(), e);
 				throw new RuntimeException("IOError writing file to output stream");
 			} catch (IOException e) {
-				log.error("Error while reading all tenant apps (as CSV): " + e.getMessage(), e);
+				log.error("Error while reading all tenant apps (as [" + exp_format + "]): " + e.getMessage(), e);
 				throw new RuntimeException("IOError writing file to output stream");
 			} catch (Exception e) {
-				log.error("Error while reading all tenant apps (as CSV): " + e.getMessage(), e);
+				log.error("Error while reading all tenant apps (as [" + exp_format + "]): " + e.getMessage(), e);
 				throw new RuntimeException("IOError writing file to output stream");
 			}
 		}
