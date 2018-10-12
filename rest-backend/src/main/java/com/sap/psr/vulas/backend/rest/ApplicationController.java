@@ -424,7 +424,7 @@ public class ApplicationController {
 	 * @return sorted set of all {@link Application}s of the respective tenant and space (as CSV attachment) 
 	 */
 	@RequestMapping(value = "/csv", method = RequestMethod.GET)
-	public void getApplicationsAsCsv(
+	public void exportApplications(
 			@RequestParam(value="separator", required=false, defaultValue=";") final String separator, 
 			@RequestParam(value="includeSpaceProperties", required=false, defaultValue="") final String[] includeSpaceProperties, 
 			@RequestParam(value="includeGoalConfiguration", required=false, defaultValue="") final String[] includeGoalConfiguration,
