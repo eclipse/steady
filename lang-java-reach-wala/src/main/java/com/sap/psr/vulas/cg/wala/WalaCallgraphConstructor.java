@@ -117,6 +117,10 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
             WalaCallgraphConstructor.log.error(e.getMessage());
             throw new IllegalStateException("Could not build class hierarchy", e);
         }
+        catch (Error e){
+            WalaCallgraphConstructor.log.error(e.getMessage());
+            throw new CallgraphConstructException("Could not set entrypoints", e);
+        }
 
         // If no entrypoints found to be set, set the main method as entrypoint
         if (_constructs.isEmpty()) {
