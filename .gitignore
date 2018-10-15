@@ -22,4 +22,5 @@ gradle.zip
 **/docs/site
 /docker/**/*.*ar
 /docker/.env
+/docker/data
 /.vscode
