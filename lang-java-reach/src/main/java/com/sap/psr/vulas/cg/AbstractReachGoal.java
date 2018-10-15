@@ -154,7 +154,7 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
         this.setEntryPoints(ra);
 
         //set the call graph constructor, based on the configured framework
-        ra.setCallgraphConstructor(VulasConfiguration.getGlobal().getConfiguration().getString(ReachabilityConfiguration.REACH_FWK, "wala"), this.getGoalClient()== GoalClient.CLI);
+        ra.setCallgraphConstructor(VulasConfiguration.getGlobal().getConfiguration().getString(ReachabilityConfiguration.REACH_FWK, "wala"), this.getGoalClient() == GoalClient.CLI);
 
         ra.setTargetConstructs(VulasConfiguration.getGlobal().getConfiguration().getString(ReachabilityConfiguration.REACH_BUGS, null));
         ra.setExcludePackages(VulasConfiguration.getGlobal().getConfiguration().getString(ReachabilityConfiguration.REACH_EXCL_PACK, null));
@@ -181,9 +181,19 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
     @Override
     protected final void cleanAfterExecution() {
         if (VulasConfiguration.getGlobal().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_PREPROCESS, true)) {
-            for (Path p : this.preparedDepClasspath) {
+            // only remove files that are rewritten by vulas, for these files new jars have been created. Thus, their path differs to the original jar.
+            Set<Path> declaredDependencies = this.getKnownDependencies().keySet();
+            Set<Path> usedDepJars = this.preparedDepClasspath;
+            Set<Path> rewrittenJars = new HashSet<>();
+            rewrittenJars.addAll(usedDepJars);
+            rewrittenJars.removeAll(declaredDependencies);
+
+            for (Path p : rewrittenJars) {
                 try {
-                    p.toFile().delete();
+                    boolean ret = p.toFile().delete();
+                    if (!ret) {
+                        log.error("Cannot delete temporary (pre-processed) dependency [" + p + "] ");
+                    }
                 } catch (Exception ioe) {
                     log.error("Cannot delete temporary (pre-processed) dependency [" + p + "]: " + ioe.getMessage());
                 }
