@@ -79,6 +79,8 @@ None.
 
 Use the following link to [Stack Overflow](https://stackoverflow.com/questions/tagged/vulas) to search for FAQs or to request help.
 
+Bug reports shall be submitted as GitHub issues, please refer to the next section for more details.
+
 ## Contributing
 
 Our aim is to build a lively community, hence, we welcome any exchange and collaboration with individuals and organizations interested in the use, support and extension of the open-source vulnerability assessment tool.
