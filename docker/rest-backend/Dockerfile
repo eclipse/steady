@@ -4,12 +4,12 @@ LABEL maintainer="Antonino Sabetta antonino.sabetta@sap.com"
 
 ARG VULAS_RELEASE
 
-COPY rest-backend-$VULAS_RELEASE.jar /vulas/vulas-backend.jar
-COPY vulas-backend.sh /vulas/vulas-backend.sh
+COPY rest-backend-$VULAS_RELEASE.jar /vulas/rest-backend.jar
+COPY run.sh /vulas/run.sh
 RUN touch /$VULAS_RELEASE
 
 EXPOSE 8091
 
-RUN chmod +x /vulas/vulas-backend.sh
+RUN chmod +x /vulas/run.sh
 
-CMD ["/vulas/vulas-backend.sh"]
+CMD ["/vulas/run.sh"]
