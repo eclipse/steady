@@ -20,4 +20,4 @@ java \
     -Dvulas.jira.pwd=$JIRA_PASSWORD \
     $FLYWAY_OPTS \
     -Dspring.profiles.active=docker \
-	-jar /vulas/vulas-backend.jar
+	-jar /vulas/rest-backend.jar
