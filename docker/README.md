@@ -37,7 +37,7 @@ At this point, you are ready to perform the actual build with the following comm
 
 ```
 docker build --tag vulas-build-img -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy=  . 
-docker run -it --rm -v $(pwd):/vulas --env-file ./docker/.env vulas-build-img
+docker run -it --rm -v ${PWD}:/vulas --env-file ./docker/.env vulas-build-img
 ```
 
 In case you are running behind a proxy you need to configure it in the `--build-arg` arguments.
