@@ -3,11 +3,6 @@ language: java
 jdk:
   - openjdk8
 
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer # Updates JDK 8 to the latest available.
-
 branches:
   except:
     - gh-pages
