@@ -1,5 +1,12 @@
+# Taken from https://github.com/alexkaratarakis/gitattributes/blob/master/LICENSE.md - Copyright (c) 2015 Alexander Karatarakis
+
+# Handle line endings automatically for files detected as text
+# and leave all files detected as binary untouched.
 * text=auto
 
+#
+# The above will handle all files NOT found below
+#
 # These files are text and should be normalized (Convert crlf => lf)
 *.css           text
 *.df            text
@@ -21,6 +28,7 @@
 *.yml           text
 
 # These files are binary and should be left untouched
+# (binary is a macro for -text -diff)
 *.class         binary
 *.dll           binary
 *.ear           binary
