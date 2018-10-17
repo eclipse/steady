@@ -1,6 +1,6 @@
 FROM haproxy:alpine
 
-LABEL maintainer="Antonino Sabetta antonino.sabetta@sap.com"
+LABEL maintainer="Vulas vulas-dev@listserv.sap.com"
 
 ADD conf/haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 
