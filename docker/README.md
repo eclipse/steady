@@ -42,22 +42,12 @@ At this point, you are ready to perform the actual build with the following comm
 
 ```sh
 docker build --tag vulas-build-img -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy=  .
-docker run -it --rm -v ${PWD}:/vulas --env-file ./docker/.env vulas-build-img
+docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env vulas-build-img
 ```
 
 In case you are running behind a proxy you need to configure it in the `--build-arg` arguments.
 
-As a result, the folders `<component-name>/target` will contain compiled JARs (or WARs, depending on the component).
-You need to copy the following ones into the corresponding folders inside the `docker/` folder.
-
-- `frontend-apps-<version>.war`
-- `frontend-bugs-<version>.war`
-- `rest-backend-<version>.jar`
-- `rest-lib-utils-<version>.jar`
-- `patch-lib-analyzer-<version>-jar-with-dependencies.jar`
-
-For example, assuming you are in the top-level folder of the source tree, you can use a command like
-`cp frontend-apps/target/frontend-apps-3.0.10-SNAPSHOT.war docker/frontend-apps/`
+As a result, the folders `docker/<component-name>` will contain compiled JARs (or WARs, depending on the component).
 
 Finally, you may want to make all artifacts available to the developers of your organization (e.g., through an internal Nexus or other artifact distribution system).
 
