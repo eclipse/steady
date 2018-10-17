@@ -85,7 +85,7 @@ services:
     ports:
       - "8032:5432"
     volumes:
-      - "./data/postgresql:/var/lib/postgresql/data"
+      - vulas-os-postgres-data:/var/lib/postgresql/data
 
   rest-backend:
     container_name: vulas-os-rest-backend
@@ -126,3 +126,6 @@ services:
         - "8092"
     volumes:
       - "./data/rest-lib-utils:/root/"
+  
+volumes:
+  vulas-os-postgres-data:
