@@ -1,9 +1,9 @@
 # Trying out Vulas (with Docker)
 
-**IMPORTANT REMARK**
-
-The setup obtained following these instructions is meant for demonstration purposes.
-It **shall not** be used in productive scenarios (both for security and scalability concerns).
+> **IMPORTANT REMARK**
+> 
+> The setup obtained following these instructions is meant for demonstration purposes.
+> It **shall not** be used in productive scenarios (both for security and scalability concerns).
 
 ## Pre-requisites
 
@@ -13,30 +13,35 @@ It **shall not** be used in productive scenarios (both for security and scalabil
 ## Installation
 
 ### Clone the Vulas repository from GitHub
-```
+
+```sh
 git clone https://github.com/SAP/vulnerability-assessment-tool
 ```
 
 ### Build Vulas
 
+> Vulas was successfully built against 
+> - Ubuntu 16.04 - Docker version 17.03.2-ce, build f5ec1e2
+> - Win10 noWSL - Docker version 18.01.0-ce, build 03596f5
+
 All the following commands are supposed to be executed from the root folder of the project.
 Before proceeding, be sure to move to move there with:
 
-```
+```sh
 cd vulnerability-assessment-tool
 ```
 
 Make a copy of the sample configuration:
 
-```
+```sh
 cp docker/.env.sample docker/.env
 ```
 
 Edit the file `docker/.env` to match your needs.
 At this point, you are ready to perform the actual build with the following command:
 
-```
-docker build --tag vulas-build-img -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy=  . 
+```sh
+docker build --tag vulas-build-img -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy=  .
 docker run -it --rm -v ${PWD}:/vulas --env-file ./docker/.env vulas-build-img
 ```
 
@@ -45,11 +50,11 @@ In case you are running behind a proxy you need to configure it in the `--build-
 As a result, the folders `<component-name>/target` will contain compiled JARs (or WARs, depending on the component).
 You need to copy the following ones into the corresponding folders inside the `docker/` folder.
 
-* `frontend-apps-<version>.war`
-* `frontend-bugs-<version>.war`
-* `rest-backend-<version>.jar`
-* `rest-lib-utils-<version>.jar`
-* `patch-lib-analyzer-<version>-jar-with-dependencies.jar`
+- `frontend-apps-<version>.war`
+- `frontend-bugs-<version>.war`
+- `rest-backend-<version>.jar`
+- `rest-lib-utils-<version>.jar`
+- `patch-lib-analyzer-<version>-jar-with-dependencies.jar`
 
 For example, assuming you are in the top-level folder of the source tree, you can use a command like
 `cp frontend-apps/target/frontend-apps-3.0.10-SNAPSHOT.war docker/frontend-apps/`
@@ -60,7 +65,7 @@ Finally, you may want to make all artifacts available to the developers of your 
 
 You are now ready to run the system:
 
-```
+```sh
 (cd docker && docker-compose up -d --build)
 ```
 
@@ -84,6 +89,7 @@ To do so, please follow the instructions mentioned [here](readme-pages/Vulnerabi
 You may want to replace `localhost` with the actual hostname of your machine.
 
 Get going:
+
 1. Setup your [workspace](readme-pages/Workspace.md) (if you don't have one)
 2. Become familiar with the various analysis [goals](readme-pages/Goals.md) (first time users)
 3. Analyze your [Java](readme-pages/Java.md) or [Python](readme-pages/Python.md) application (on a regular basis)
@@ -91,10 +97,7 @@ Get going:
 5. [Assess](readme-pages/Assessment-and-Mitigation.md) findings using the apps Web frontend (following every analysis)
 
 Further links:
+
 - [Automate](readme-pages/Automation.md) with Jenkins
 - [Configure](readme-pages/Configuration.md) the client-side analysis
 - [Get help](readme-pages/Help.md) if you run into troubles
-
-
-
-
