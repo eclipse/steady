@@ -16,4 +16,4 @@ notifications:
 
 sudo: false
 
-script: mvn -DskipTests -B clean install
+script: mvn -Dtest=AllExceptSlowTests -B clean install
