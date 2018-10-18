@@ -2,6 +2,7 @@ import com.sap.psr.vulas.cg.ReachabilityAnalyzer;
 import com.sap.psr.vulas.cg.soot.SootCallgraphConstructor;
 import com.sap.psr.vulas.cg.spi.CallgraphConstructorFactory;
 import com.sap.psr.vulas.cg.spi.ICallgraphConstructor;
+import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.java.JavaId;
 import com.sap.psr.vulas.shared.enums.PathSource;
@@ -23,6 +24,10 @@ import static org.junit.Assert.assertTrue;
 
 public class SootCallGraphTest {
 
+	static{
+		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.OFFLINE.toString());
+	}
+	
     private GoalContext getGoalContext() {
         final GoalContext ctx = new GoalContext();
         ctx.setApplication(new Application("foo", "bar", "0.0"));
