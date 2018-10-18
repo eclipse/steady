@@ -153,7 +153,7 @@ public class NexusWrapper implements RepositoryWrapper {
 		
 		Set<Artifact> result = new TreeSet<Artifact>();
 		
-		if(nexusResp.getData()!=null && nexusResp.getData().getArtifactList()!=null ){
+		if(nexusResp!=null && nexusResp.getData()!=null && nexusResp.getData().getArtifactList()!=null ){
 			for(NexusArtifact a : nexusResp.getData().getArtifactList()){
 				//TODO (2018-04-19): To get the timestamp we would need an additional get for each artifact (the same done in getArtifactVersion)
 				result.add(new Artifact(a.getGroupId(), a.getArtifactId(), a.getVersion()));
