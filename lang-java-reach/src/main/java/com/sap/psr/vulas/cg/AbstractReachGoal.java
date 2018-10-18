@@ -28,6 +28,9 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
     private Set<Path> preparedDepClasspath = new HashSet<Path>();
 
     private Set<Path> preparedAppClasspath = new HashSet<Path>();
+    
+    /** Rewritten Java archives to be deleted after goal execution. */
+    private Set<Path> rewrittenJars = new HashSet<Path>();
 
     private Set<com.sap.psr.vulas.shared.json.model.ConstructId> appConstructs = null;
 
@@ -67,26 +70,23 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
 
         final StringList exclude_jars = new StringList(VulasConfiguration.getGlobal().getConfiguration().getStringArray(ReachabilityConfiguration.REACH_EXCL_JARS));
 
-        // Loop all dep dirs
-		/*for(Path dep_dir: this.getDepPaths()) {
-			// Search for JAR files
-			jar_search.clear();
-			
-			// Add them one by one to the classpath (except those excluded through configuration)
-			final Set<Path> paths = jar_search.search(dep_dir);*/
+        // Append known dependencies to classpath (can be none in case of CLI)
         for (Path p : this.getKnownDependencies().keySet()) {
+        	Path appended_path = null;
             if (exclude_jars.isEmpty())
-                JarWriter.appendToClasspath(this.preparedDepClasspath, p, preprocess);
+            	appended_path = JarWriter.appendToClasspath(this.preparedDepClasspath, p, preprocess);
             else if (!exclude_jars.contains(p.getFileName().toString(), ComparisonMode.PATTERN, CaseSensitivity.CASE_INSENSITIVE))
-                JarWriter.appendToClasspath(this.preparedDepClasspath, p, preprocess);
+            	appended_path = JarWriter.appendToClasspath(this.preparedDepClasspath, p, preprocess);
             else
                 log.info("[" + p + "] excluded from reachability analysis");
+            
+            if(appended_path!=null && !appended_path.equals(p))
+            	this.rewrittenJars.add(appended_path);
         }
-        //}
 
         ClassPoolUpdater.getInstance().appendToClasspath(this.preparedDepClasspath);
 
-        // Loop all app dirs
+        // Find JARs in all source paths (can contain app code and dependencies in case of the CLI)
         for (Path app_dir : this.getAppPaths()) {
             // Search for JAR files
             jar_search.clear();
@@ -94,12 +94,16 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
             // Add them one by one to the classpath (except those excluded through configuration)
             final Set<Path> paths = jar_search.search(app_dir);
             for (Path p : paths) {
-                if (exclude_jars.isEmpty())
-                    JarWriter.appendToClasspath(this.preparedAppClasspath, p, preprocess);
+            	Path appended_path = null;
+            	if (exclude_jars.isEmpty())
+            		appended_path = JarWriter.appendToClasspath(this.preparedAppClasspath, p, preprocess);
                 else if (!exclude_jars.contains(p.getFileName().toString(), ComparisonMode.PATTERN, CaseSensitivity.CASE_INSENSITIVE))
-                    JarWriter.appendToClasspath(this.preparedAppClasspath, p, preprocess);
+                	appended_path = JarWriter.appendToClasspath(this.preparedAppClasspath, p, preprocess);
                 else
                     log.info("[" + p + "] excluded from reachability analysis");
+            	
+            	if(appended_path!=null && !appended_path.equals(p))
+                	this.rewrittenJars.add(appended_path);
             }
 
             // Search for class files
@@ -110,6 +114,8 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
         }
 
         ClassPoolUpdater.getInstance().appendToClasspath(preparedAppClasspath);
+        
+        log.info("Rewrote [" + this.rewrittenJars.size() + "] dependencies");
     }
 
     /**
@@ -181,21 +187,16 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
     @Override
     protected final void cleanAfterExecution() {
         if (VulasConfiguration.getGlobal().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_PREPROCESS, true)) {
-            // only remove files that are rewritten by vulas, for these files new jars have been created. Thus, their path differs to the original jar.
-            Set<Path> declaredDependencies = this.getKnownDependencies().keySet();
-            Set<Path> usedDepJars = this.preparedDepClasspath;
-            Set<Path> rewrittenJars = new HashSet<>();
-            rewrittenJars.addAll(usedDepJars);
-            rewrittenJars.removeAll(declaredDependencies);
-
-            for (Path p : rewrittenJars) {
+        	log.info("Deleting [" + this.rewrittenJars.size() + "] temporary (pre-processed) dependencies...");
+            for (Path p : this.rewrittenJars) {
                 try {
                     boolean ret = p.toFile().delete();
-                    if (!ret) {
-                        log.error("Cannot delete temporary (pre-processed) dependency [" + p + "] ");
-                    }
+                    if(ret)
+                        log.info("    Deleted temporary (pre-processed) dependency [" + p + "] ");
+                    else
+                        log.warn("    Cannot delete temporary (pre-processed) dependency [" + p + "]");
                 } catch (Exception ioe) {
-                    log.error("Cannot delete temporary (pre-processed) dependency [" + p + "]: " + ioe.getMessage());
+                    log.error("    Cannot delete temporary (pre-processed) dependency [" + p + "]: " + ioe.getMessage());
                 }
             }
         }

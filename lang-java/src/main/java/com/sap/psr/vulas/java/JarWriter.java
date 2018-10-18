@@ -483,7 +483,22 @@ public class JarWriter {
 			appendToClasspath(_classpath, p, _preprocess);
 	}
 
-	public final static void appendToClasspath(Set<Path> _classpath, Path _to_append, boolean _preprocess) {
+	/**
+	 * Appends the given {@link Path} to the given set. In case of Java archives, it is checked whether it contains
+	 * a manifest entry "Class-Path", in which case the archive is re-written to a temporary file w/o this entry.
+	 * The method returns the path that has been appended, which is identical to the given path unless an archive
+	 * has been rewritten.
+	 * 
+	 * TODO: Maybe add a parameter to specify problematic entries, rather than hardcoding "Class-Path" here.
+	 * 
+	 * @param _classpath
+	 * @param _to_append
+	 * @param _preprocess
+	 * @return
+	 */
+	public final static Path appendToClasspath(Set<Path> _classpath, Path _to_append, boolean _preprocess) {
+		Path appended_path = _to_append;
+		
 		// Add w/o preprocessing
 		if(!_preprocess || _to_append.toFile().isDirectory()) {
 			_classpath.add(_to_append);
@@ -498,7 +513,8 @@ public class JarWriter {
 				if(jw.hasManifestEntry("Class-Path")) {
 					jw.skipManifestEntry("Class-Path");
 					jw.setClassifier(jw.getSHA1());
-					_classpath.add(jw.rewrite(VulasConfiguration.getGlobal().getTmpDir()));
+					appended_path = jw.rewrite(VulasConfiguration.getGlobal().getTmpDir());
+					_classpath.add(appended_path);
 				}
 				// Entry not present: Just add to classpath
 				else {
@@ -512,5 +528,7 @@ public class JarWriter {
 				JarWriter.log.error("Error while preprocessing JAR [" + _to_append + "], original JAR appended to classpath: " + e.getMessage());
 			}
 		}
+		
+		return appended_path;
 	}
 }

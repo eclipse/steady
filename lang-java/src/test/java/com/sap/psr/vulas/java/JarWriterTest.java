@@ -117,13 +117,15 @@ public class JarWriterTest implements JarEntryWriter {
 
 			// Needs rewriting
 			final Path with_mf_entry = Paths.get("./src/test/resources/org.apache.servicemix.bundles.jaxb-xjc-2.2.4_1.jar");
-			JarWriter.appendToClasspath(cp, with_mf_entry, true);
+			Path appended_path = JarWriter.appendToClasspath(cp, with_mf_entry, true);
 			assertTrue(!cp.contains(with_mf_entry));
+			assertTrue(!with_mf_entry.equals(appended_path));
 			
 			// Does not need rewriting
 			final Path without_mf_entry = Paths.get("./src/test/resources/junit-4.12.jar");
-			JarWriter.appendToClasspath(cp, without_mf_entry, true);
+			appended_path = JarWriter.appendToClasspath(cp, without_mf_entry, true);
 			assertTrue(cp.contains(without_mf_entry));
+			assertTrue(without_mf_entry.equals(appended_path));
 		} catch(Exception e) {
 			e.printStackTrace();
 			assertTrue(false);
