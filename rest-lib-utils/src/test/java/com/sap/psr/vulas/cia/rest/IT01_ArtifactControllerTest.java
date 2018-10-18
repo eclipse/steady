@@ -121,10 +121,11 @@ public class IT01_ArtifactControllerTest {
 		
 		NexusWrapper r = new NexusWrapper();
 		try {
-			Artifact response = r.getArtifactVersion("commons-fileupload", "commons-fileupload", "1.2.2", null, null, ProgrammingLanguage.JAVA);
-			System.out.println(response.toString());
-			assertTrue(response.getLibId().getVersion().equals("1.2.2"));
-			
+			if(r.isConfigured()){
+				Artifact response = r.getArtifactVersion("commons-fileupload", "commons-fileupload", "1.2.2", null, null, ProgrammingLanguage.JAVA);
+				System.out.println(response.toString());
+				assertTrue(response.getLibId().getVersion().equals("1.2.2"));
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
