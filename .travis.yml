@@ -16,4 +16,4 @@ notifications:
 
 sudo: false
 
-script: mvn -X -e -B clean install
+script: mvn -e -B clean install
