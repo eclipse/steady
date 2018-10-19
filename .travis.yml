@@ -11,6 +11,9 @@ cache:
   directories:
   - $HOME/.m2
 
+before_cache:
+ - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
+
 notifications:
   email: false
 
