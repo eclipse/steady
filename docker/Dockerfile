@@ -31,4 +31,8 @@ RUN wget -O ./plugin-gradle/gradle/wrapper/gradle.zip http://downloads.gradle.or
 
 RUN pip install requests
 
-CMD sh -c "mvn -U -e -Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_PORT} -Dhttps.proxyHost=${HTTPS_PROXY_HOST} -Dhttps.proxyPort=${HTTPS_PROXY_PORT} -DskipTests clean install && sleep 2"
+ADD docker/run.sh run.sh
+
+RUN chmod +x run.sh
+
+CMD ./run.sh
