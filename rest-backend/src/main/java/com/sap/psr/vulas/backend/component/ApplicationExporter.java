@@ -201,8 +201,10 @@ public class ApplicationExporter {
 				}
 				
 				// Close JSON array
-				if(ExportFormat.JSON.equals(_format))
+				if(ExportFormat.JSON.equals(_format)) {
 					writer.write("]");
+					writer.flush();
+				}
 			} catch (InterruptedException e) {
 				log.error("Interrupt exception", e);
 			}			

@@ -91,10 +91,12 @@ import com.sap.psr.vulas.shared.util.StopWatch;
 @ActiveProfiles("test")
 public class ApplicationControllerTest {
 	
-	private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
+	private MediaType contentTypeJson = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
             Charset.forName("utf8"));
 
+	private MediaType contentTypeCsv = new MediaType("text", "csv", Charset.forName("utf8"));
+	
     private MockMvc mockMvc;
     private HttpMessageConverter<?> mappingJackson2HttpMessageConverter;
     
@@ -192,10 +194,10 @@ public class ApplicationControllerTest {
        	final MockHttpServletRequestBuilder get_builder = get(getAppUri(app));
     	mockMvc.perform(get_builder)	
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(contentType))
+                .andExpect(content().contentType(contentTypeJson))
                 .andExpect(jsonPath("$.group", is(APP_GROUP)))
                 .andExpect(jsonPath("$.artifact", is(APP_ARTIFACT)))
-                .andExpect(jsonPath("$.version", is(APP_VERSION)));
+                .andExpect(jsonPath("$.version", is(app.getVersion())));
        	
     	assertEquals(1, this.appRepository.count());
     }
@@ -205,30 +207,47 @@ public class ApplicationControllerTest {
      * @throws Exception
      */
     @Test
-    public void testExportApp() throws Exception {
+    public void testExportApps() throws Exception {
     	libRepository.customSave(this.createExampleLibrary());
+    	
+    	// App 1
        	final Application app = this.createExampleApplication();
     	this.appRepository.customSave(app);
+    	this.gexeRepository.customSave(app, this.createExampleGoalExecution(app, GoalType.CLEAN));
+    	this.gexeRepository.customSave(app, this.createExampleGoalExecution(app, GoalType.APP));
     	
-    	String f = "jSOn";
-    	MockHttpServletRequestBuilder get_builder = get(getAppExportUri(app, f));
+    	// App 2
+    	final Application app2 = this.createExampleApplication();
+    	this.appRepository.customSave(app2);
+    	
+    	String f = "jsOn";
+    	MockHttpServletRequestBuilder get_builder = get(getAppsExportUri(f));
     	MvcResult result = mockMvc.perform(get_builder)	
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(contentType))
+                .andExpect(content().contentType(contentTypeJson))
                 .andReturn();
     	
     	System.out.println(result.getResponse().getContentAsString());
     	
-    	f = "foo";
-    	get_builder = get(getAppExportUri(app, f));
+    	f = "csv";
+    	get_builder = get(getAppsExportUri(f));
     	result = mockMvc.perform(get_builder)	
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(contentType))
+                .andExpect(content().contentType(contentTypeCsv))
                 .andReturn();
     	
     	System.out.println(result.getResponse().getContentAsString());
        	
-    	assertEquals(1, this.appRepository.count());
+    	f = "foo";
+    	get_builder = get(getAppsExportUri(f));
+    	result = mockMvc.perform(get_builder)	
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentTypeCsv))
+                .andReturn();
+    	
+    	System.out.println(result.getResponse().getContentAsString());
+    	
+    	assertEquals(2, this.appRepository.count());
     }
     
     /**
@@ -252,10 +271,10 @@ public class ApplicationControllerTest {
 				.accept(MediaType.APPLICATION_JSON);
     	mockMvc.perform(post_builder)	
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(contentType))
+                .andExpect(content().contentType(contentTypeJson))
                 .andExpect(jsonPath("$.group", is(APP_GROUP)))
                 .andExpect(jsonPath("$.artifact", is(APP_ARTIFACT)))
-                .andExpect(jsonPath("$.version", is(APP_VERSION)));
+                .andExpect(jsonPath("$.version", is("0.0.1"))); // Value used in the JSON file
     	
     	// Repo must contain 1
     	assertEquals(1, this.appRepository.count());
@@ -272,19 +291,19 @@ public class ApplicationControllerTest {
 				.header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE);
     	mockMvc.perform(post_builder2)	
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(contentType));
+                .andExpect(content().contentType(contentTypeJson));
     	
     	// Repo must contain 2
     	assertEquals(2, this.appRepository.count());
     	
-    	// Rest-get  without header
+    	// Rest-get without header
     	final MockHttpServletRequestBuilder get_builder = get("/apps/" + app.getMvnGroup()+ "/" + app.getArtifact()+"/"+app.getVersion());
     	mockMvc.perform(get_builder)	
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(contentType))
+                .andExpect(content().contentType(contentTypeJson))
                 .andExpect(jsonPath("$.group", is(APP_GROUP)))
                 .andExpect(jsonPath("$.artifact", is(APP_ARTIFACT)))
-                .andExpect(jsonPath("$.version", is(APP_VERSION)))
+                .andExpect(jsonPath("$.version", is(app.getVersion() )))
                 //.andExpect(jsonPath("$.dependencies[0].lib.sha1", is("sha1")))
                 ;
     	
@@ -308,10 +327,10 @@ public class ApplicationControllerTest {
 				.accept(MediaType.APPLICATION_JSON);
     	mockMvc.perform(post_builder)	
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(contentType))
+                .andExpect(content().contentType(contentTypeJson))
                 .andExpect(jsonPath("$.group", is(APP_GROUP)))
                 .andExpect(jsonPath("$.artifact", is(APP_ARTIFACT)))
-                .andExpect(jsonPath("$.version", is(APP_VERSION)));
+                .andExpect(jsonPath("$.version", is("0.0.1"))); // Version used in the JSON file
     	
     	// Repo must contain 1
     	assertEquals(1, this.appRepository.count());
@@ -336,7 +355,7 @@ public class ApplicationControllerTest {
 				.accept(MediaType.APPLICATION_JSON);
     	mockMvc.perform(post_builder)	
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(contentType))
+                .andExpect(content().contentType(contentTypeJson))
                 .andExpect(jsonPath("$.digest", is("1E48256A2341047E7D729217ADEEC8217F6E3A1A")));
     
     	Application app = (Application)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/apps-testapp-fileupload-1.2.2.json")), Application.class);
@@ -346,7 +365,7 @@ public class ApplicationControllerTest {
 				.accept(MediaType.APPLICATION_JSON);
     	mockMvc.perform(post_builder)	
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(contentType))
+                .andExpect(content().contentType(contentTypeJson))
                 .andExpect(jsonPath("$.group", is("com.acme")))
                 .andExpect(jsonPath("$.artifact", is("vulas-testapp")));
     	
@@ -367,18 +386,18 @@ public class ApplicationControllerTest {
     	.header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
     	.header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(contentType));
+        .andExpect(content().contentType(contentTypeJson));
     	
     	// Read all apps for a non-existing token
     	mockMvc.perform(get("/apps")
      	    	  .header(Constants.HTTP_SPACE_HEADER, "does-not-exist"))
                   .andExpect(status().isNotFound())
-                  .andExpect(content().contentType(contentType));
+                  .andExpect(content().contentType(contentTypeJson));
     	
     	// Read all apps for a non-existing token
     	mockMvc.perform(get("/apps"))
                   .andExpect(status().isOk())
-                  .andExpect(content().contentType(contentType));
+                  .andExpect(content().contentType(contentTypeJson));
     }
     
     /**
@@ -411,7 +430,7 @@ public class ApplicationControllerTest {
     	System.out.println("Gexe: " + JacksonUtil.asJsonString(gexe));
     	mockMvc.perform(post_builder)	
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(contentType));
+                .andExpect(content().contentType(contentTypeJson));
     	
     	// Repo must contain 1
     	assertEquals(1, this.gexeRepository.count());
@@ -451,7 +470,7 @@ public class ApplicationControllerTest {
 				.accept(MediaType.APPLICATION_JSON);
     	mockMvc.perform(post_builder)	
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(contentType));
+                .andExpect(content().contentType(contentTypeJson));
     	
     	// Repo must contain 1
     	assertEquals(1, this.appRepository.count());
@@ -499,7 +518,7 @@ public class ApplicationControllerTest {
                 .andExpect(jsonPath("$.bugId", is("CVE-2015-5262")));*/
     	
     	//Rest-post app using http-client
-    	final Application app = new Application(APP_GROUP, APP_ARTIFACT,APP_VERSION);
+    	final Application app = new Application(APP_GROUP, APP_ARTIFACT, "0.0." + APP_VERSION);
 
 		//Dependencies
 		final Set<Dependency> app_dependency = new HashSet<Dependency>(); 
@@ -511,7 +530,7 @@ public class ApplicationControllerTest {
     	// Repo must not contain vulnerableDependencies
     	final StopWatch sw = new StopWatch("Query vulnerable dependencies " + app).start();
    // 	Application app_1 = ApplicationRepository.FILTER.findOne(appRepository.findByGAV(APP_GROUP, APP_ARTIFACT,APP_VERSION));
-    	TreeSet<VulnerableDependency> vd = this.appRepository.findJPQLVulnerableDependenciesByGAV(APP_GROUP, APP_ARTIFACT,APP_VERSION,app.getSpace());
+    	TreeSet<VulnerableDependency> vd = this.appRepository.findJPQLVulnerableDependenciesByGAV(app.getMvnGroup(), app.getArtifact(), app.getVersion(), app.getSpace());
     //	List<VulnerableDependency> vd = this.appRepository.findVulnerableDependenciesByApp(app_1);
     	sw.stop();
     	System.out.println("====================================");
@@ -532,15 +551,12 @@ public class ApplicationControllerTest {
     
     private static final String APP_GROUP = "com.acme";
     private static final String APP_ARTIFACT = "vulas";
-    private static final String APP_VERSION = "0.0.1";
+    private static int APP_VERSION = 1; // Used to create unique apps
     
-	private final Application createExampleApplication() {
-		
-		final Application app = new Application(APP_GROUP, APP_ARTIFACT,APP_VERSION);
-		
+	private final Application createExampleApplication() {		
+		final Application app = new Application(APP_GROUP, APP_ARTIFACT, "0.0." + APP_VERSION++);
 		app.setSpace(spaceRepository.getDefaultSpace(null));
 		
-
 		//Dependencies
 		final Set<Dependency> app_dependency = new HashSet<Dependency>(); 
 		//app_dependency.add(new Dependency(LibraryRepository.FILTER.findOne(libRepository.findBySha1("sha1")), "compile", false, "MAVEN", "common-filename.jar"));
@@ -550,8 +566,7 @@ public class ApplicationControllerTest {
     	// Constructs
     	final Set<ConstructId> app_constructs = new HashSet<ConstructId>();
     	app_constructs.add(new ConstructId(ProgrammingLanguage.JAVA, ConstructType.CLAS, "com.acme.Vulas.method"));
-    	app.setConstructs(app_constructs);
-    	    	
+    	app.setConstructs(app_constructs);    	
      	
     	return app;
 	}
@@ -619,8 +634,8 @@ public class ApplicationControllerTest {
 		return "/apps/" + _app.getMvnGroup()+ "/" + _app.getArtifact() + "/" + _app.getVersion();
 	}
 	
-	public static String getAppExportUri(Application _app, String _format) {
-		return "/apps/" + _app.getMvnGroup()+ "/" + _app.getArtifact() + "/" + _app.getVersion() + "/csv?format=" + _format;
+	public static String getAppsExportUri(String _format) {
+		return "/apps/csv?format=" + _format;
 	}
 	
 	

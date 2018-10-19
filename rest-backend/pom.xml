@@ -243,7 +243,7 @@
 					<!--
 						Maintain admin credentials for vulas-tomcat-server @ {host:port} in settings.xml
 						Build WAR
-						Run "mvn -Dmaven.tomcat.url={host:port}/manager/text tomcat7:deploy-only"
+						Run "mvn -Dmaven.tomcat.url={host:port}/manager/text -P container package tomcat7:deploy-only"
 						Point browser to {host:port}/apps
 					-->			
 					<plugin>

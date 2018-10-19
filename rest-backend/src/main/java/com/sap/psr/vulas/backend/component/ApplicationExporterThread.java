@@ -133,8 +133,7 @@ public class ApplicationExporterThread implements Runnable {
 						json.appendToArray(o);
 				}
 				json.endArray();
-				json.endObject();
-								    
+				
 				if(includeSpaceProperties!=null && includeSpaceProperties.length>0) {
 					for(String p: includeSpaceProperties) {
 						final String value = a.getSpace().getPropertyValue(p);
@@ -142,6 +141,8 @@ public class ApplicationExporterThread implements Runnable {
 						json.appendObjectProperty(p, value);
 					}
 				}
+				
+				json.endObject();
 
 				// Application
 				csv.append(a.getId()).append(separator).append(a.getMvnGroup()).append(separator).append(a.getArtifact()).append(separator).append(a.getVersion()).append(separator);
@@ -151,8 +152,11 @@ public class ApplicationExporterThread implements Runnable {
 				json.appendObjectProperty("id", a.getId().toString())
 			    	.appendObjectProperty("group", a.getMvnGroup())
 			    	.appendObjectProperty("artifact", a.getArtifact())
-			    	.appendObjectProperty("version", a.getVersion())
-			    	.appendObjectProperty("createdAt", ApplicationExporterThread.DATE_FORMAT.format(a.getCreatedAt().getTime()));
+			    	.appendObjectProperty("version", a.getVersion());
+				if(a.getCreatedAt()!=null)
+					json.appendObjectProperty("createdAt", ApplicationExporterThread.DATE_FORMAT.format(a.getCreatedAt().getTime()));
+				else
+					json.appendObjectProperty("createdAt", (String)null);
 				json.endObject();
 				
 				// Bugs
