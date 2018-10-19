@@ -77,12 +77,12 @@
                         <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}"
                                 proxyuser="${proxy.user}" proxypassword="${proxy.pass}"/>
                     </target> -->
-                    <!-- <target>
+                    <target>
                         <get src="${gradle.distribution.url}"
                              dest="gradle/wrapper/gradle.zip"
                              verbose="off"
                              usetimestamp="true"/>
-                    </target> -->
+                    </target>
                 </configuration>
             </plugin>
             
