@@ -20,4 +20,7 @@ notifications:
 
 sudo: false
 
+install:
+  - "echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'"
+
 script: mvn -e -B clean install
