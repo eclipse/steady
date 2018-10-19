@@ -1,6 +1,6 @@
 FROM postgres:11-alpine
 
-LABEL maintainer="Antonino Sabetta antonino.sabetta@sap.com"
+LABEL maintainer="Vulas vulas-dev@listserv.sap.com"
 
 COPY docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
 

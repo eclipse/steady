@@ -1,6 +1,6 @@
 FROM tomcat:9-slim
 
-LABEL maintainer="Antonino Sabetta antonino.sabetta@sap.com"
+LABEL maintainer="Vulas vulas-dev@listserv.sap.com"
 
 ARG VULAS_RELEASE
 
