@@ -11,14 +11,6 @@ ARG https_proxy
 
 RUN apk update && apk add ca-certificates wget && update-ca-certificates
 
-RUN wget -P /tmp https://services.gradle.org/distributions/gradle-4.10.2-bin.zip && \
-    mkdir -p /opt/gradle && \
-    unzip -d /opt/gradle /tmp/gradle-4.10.2-bin.zip && \
-    chmod +x /opt/gradle/gradle-4.10.2/bin/gradle && \
-    ln -s /opt/gradle/gradle-4.10.2/bin/gradle /usr/bin/gradle
-RUN mkdir -p plugin-gradle/.gradle_home ; \
-    chmod +x plugin-gradle/gradlew
-
 RUN apk add --no-cache python3 git && \
     python3 -m ensurepip && \
     rm -r /usr/lib/python*/ensurepip && \
@@ -28,8 +20,6 @@ RUN apk add --no-cache python3 git && \
     rm -r /root/.cache
 
 ENV ANT_OPTS="-Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_PORT}"
-
-RUN wget -O ./plugin-gradle/gradle/wrapper/gradle.zip http://downloads.gradle.org/distributions/gradle-4.4-bin.zip 
 
 RUN pip install requests
 
