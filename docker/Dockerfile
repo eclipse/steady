@@ -1,8 +1,10 @@
 FROM maven:3-jdk-8-alpine
 
+LABEL maintainer="Vulas vulas-dev@listserv.sap.com"
+
 WORKDIR /vulas
 
-ADD . .
+COPY . .
 
 ARG http_proxy
 ARG https_proxy
@@ -31,7 +33,7 @@ RUN wget -O ./plugin-gradle/gradle/wrapper/gradle.zip http://downloads.gradle.or
 
 RUN pip install requests
 
-ADD docker/run.sh run.sh
+COPY docker/run.sh run.sh
 
 RUN chmod +x run.sh
 
