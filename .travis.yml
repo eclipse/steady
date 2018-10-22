@@ -2,24 +2,25 @@ language: java
 
 jdk:
   - openjdk8
+  - oraclejdk8
 
 branches:
   except:
     - gh-pages
 
-cache:
-  timeout: 1000
-  directories:
-  - $HOME/.m2
+# cache:
+#   timeout: 1000
+#   directories:
+#   - $HOME/.m2
 
-before_cache:
- - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
+# before_cache:
+#  - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
 
 notifications:
   email: false
 
 sudo: false
-
+ 
 install:
   - "echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'"
 
