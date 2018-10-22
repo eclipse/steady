@@ -73,7 +73,7 @@ Other limitations:
 
 ## Known Issues
 
-None.
+The list of current issues is available [here](https://github.com/SAP/vulnerability-assessment-tool/issues)
 
 ## How to obtain support
 
