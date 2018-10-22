@@ -8,6 +8,8 @@ branches:
   except:
     - gh-pages
 
+cache: false
+
 # cache:
 #   timeout: 1000
 #   directories:
