@@ -14,7 +14,6 @@ services:
       - "8080"
     security_opt:
       - "no-new-privileges:true"
-    pids_limit: 100
 
   frontend-bugs:
     container_name: vulas-os-frontend-bugs
@@ -29,7 +28,6 @@ services:
       - "8080"
     security_opt:
       - "no-new-privileges:true"
-    pids_limit: 100
 
   haproxy:
     container_name: vulas-os-haproxy
@@ -56,7 +54,6 @@ services:
       - rest-lib-utils
     security_opt:
       - "no-new-privileges:true"
-    pids_limit: 100
 
   patch-lib-analyzer:
     container_name: vulas-os-patch-lib-analyzer
@@ -83,7 +80,6 @@ services:
       - vulas.patchEval.onlyAddNewResults=true
     security_opt:
       - "no-new-privileges:true"
-    pids_limit: 100
   
   postgresql:
     container_name: vulas-os-postgresql
@@ -100,7 +96,6 @@ services:
       - vulas-os-postgres-data:/var/lib/postgresql/data
     security_opt:
       - "no-new-privileges:true"
-    pids_limit: 100
 
   rest-backend:
     container_name: vulas-os-rest-backend
@@ -127,7 +122,6 @@ services:
       - "./data/db-dump/flyway-callbacks:/flyway-callbacks"
     security_opt:
       - "no-new-privileges:true"
-    pids_limit: 100
 
   rest-lib-utils:
     container_name: vulas-os-rest-lib-utils
@@ -146,7 +140,6 @@ services:
       - "./data/rest-lib-utils:/root/"
     security_opt:
       - "no-new-privileges:true"
-    pids_limit: 100
   
 volumes:
   vulas-os-postgres-data:
