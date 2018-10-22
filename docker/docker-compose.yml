@@ -12,6 +12,9 @@ services:
         - VULAS_RELEASE=${VULAS_RELEASE}
     expose:
       - "8080"
+    security_opt:
+      - "no-new-privileges:true"
+    pids_limit: 100
 
   frontend-bugs:
     container_name: vulas-os-frontend-bugs
@@ -24,6 +27,9 @@ services:
         - VULAS_RELEASE=${VULAS_RELEASE}
     expose:
       - "8080"
+    security_opt:
+      - "no-new-privileges:true"
+    pids_limit: 100
 
   haproxy:
     container_name: vulas-os-haproxy
@@ -48,6 +54,9 @@ services:
       - frontend-bugs
       - rest-backend
       - rest-lib-utils
+    security_opt:
+      - "no-new-privileges:true"
+    pids_limit: 100
 
   patch-lib-analyzer:
     container_name: vulas-os-patch-lib-analyzer
@@ -72,6 +81,9 @@ services:
       - vulas.shared.cia.serviceUrl=http://cia:8092/cia
       - vulas.shared.backend.serviceUrl=http://backend:8091/backend
       - vulas.patchEval.onlyAddNewResults=true
+    security_opt:
+      - "no-new-privileges:true"
+    pids_limit: 100
   
   postgresql:
     container_name: vulas-os-postgresql
@@ -86,6 +98,9 @@ services:
       - "8032:5432"
     volumes:
       - vulas-os-postgres-data:/var/lib/postgresql/data
+    security_opt:
+      - "no-new-privileges:true"
+    pids_limit: 100
 
   rest-backend:
     container_name: vulas-os-rest-backend
@@ -110,6 +125,9 @@ services:
       - rest-lib-utils:cia
     volumes:
       - "./data/db-dump/flyway-callbacks:/flyway-callbacks"
+    security_opt:
+      - "no-new-privileges:true"
+    pids_limit: 100
 
   rest-lib-utils:
     container_name: vulas-os-rest-lib-utils
@@ -126,6 +144,9 @@ services:
         - "8092"
     volumes:
       - "./data/rest-lib-utils:/root/"
+    security_opt:
+      - "no-new-privileges:true"
+    pids_limit: 100
   
 volumes:
   vulas-os-postgres-data:
