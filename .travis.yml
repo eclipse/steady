@@ -22,8 +22,5 @@ notifications:
   email: false
 
 sudo: false
- 
-install:
-  - "echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'"
 
-script: mvn -e -B -P soot,gradle clean install
+script: mvn -e -B -P soot,gradle clean install --settings settings.xml
