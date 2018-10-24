@@ -4,8 +4,6 @@ LABEL maintainer="Vulas vulas-dev@listserv.sap.com"
 
 WORKDIR /vulas
 
-COPY . .
-
 ARG http_proxy
 ARG https_proxy
 
@@ -22,6 +20,8 @@ RUN apk add --no-cache python3 git && \
 ENV ANT_OPTS="-Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_PORT}"
 
 RUN pip install requests
+
+COPY . .
 
 COPY docker/run.sh run.sh
 
