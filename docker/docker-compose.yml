@@ -73,6 +73,8 @@ services:
     links:
       - rest-backend:backend
       - rest-lib-utils:cia
+    depends_on: 
+      - rest-backend
     environment:
       - PATCHEVAL_OPTS=-bug "" -folder /patcheval-data -j -h 0 -p 6
       - vulas.shared.cia.serviceUrl=http://cia:8092/cia
