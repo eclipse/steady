@@ -13,7 +13,7 @@ services:
     expose:
       - "8080"
     security_opt:
-      - "no-new-privileges:true"
+      - no-new-privileges
 
   frontend-bugs:
     container_name: vulas-os-frontend-bugs
@@ -27,7 +27,7 @@ services:
     expose:
       - "8080"
     security_opt:
-      - "no-new-privileges:true"
+      - no-new-privileges
 
   haproxy:
     container_name: vulas-os-haproxy
@@ -53,7 +53,7 @@ services:
       - rest-backend
       - rest-lib-utils
     security_opt:
-      - "no-new-privileges:true"
+      - no-new-privileges
 
   patch-lib-analyzer:
     container_name: vulas-os-patch-lib-analyzer
@@ -81,7 +81,7 @@ services:
       - vulas.shared.backend.serviceUrl=http://backend:8091/backend
       - vulas.patchEval.onlyAddNewResults=true
     security_opt:
-      - "no-new-privileges:true"
+      - no-new-privileges
   
   postgresql:
     container_name: vulas-os-postgresql
@@ -97,7 +97,7 @@ services:
     volumes:
       - vulas-os-postgres-data:/var/lib/postgresql/data
     security_opt:
-      - "no-new-privileges:true"
+      - no-new-privileges
 
   rest-backend:
     container_name: vulas-os-rest-backend
@@ -125,7 +125,7 @@ services:
     depends_on: 
       - postgresql
     security_opt:
-      - "no-new-privileges:true"
+      - no-new-privileges
 
   rest-lib-utils:
     container_name: vulas-os-rest-lib-utils
@@ -143,7 +143,7 @@ services:
     volumes:
       - "./data/rest-lib-utils:/root/"
     security_opt:
-      - "no-new-privileges:true"
+      - no-new-privileges
   
 volumes:
   vulas-os-postgres-data:
