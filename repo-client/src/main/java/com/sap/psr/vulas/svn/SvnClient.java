@@ -129,8 +129,8 @@ public class SvnClient implements IVCSClient {
 				}
 				SvnClient.log.info("Couldn't connect to " + url + ". Retrying now");
 			}
+			return repo;
 		}
-		return repo;
 	}
 
 	private void updateCommitLog(Date _as_of) throws SVNException {
