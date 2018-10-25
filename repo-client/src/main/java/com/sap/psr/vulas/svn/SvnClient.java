@@ -133,7 +133,7 @@ public class SvnClient implements IVCSClient {
 		}
 	}
 
-	private void updateCommitLog(Date _as_of) throws SVNException {
+	private void updateCommitLog(Date _as_of) throws SVNException,Exception {
 		int count = 0;
 		int maxTries = 5;
 		while(true) {
@@ -250,7 +250,7 @@ public class SvnClient implements IVCSClient {
 		return rev_dir;
 	}
 
-	public Map<String, String> listEntries(String _path, String _asof, String _until) {
+	public Map<String, String> listEntries(String _path, String _asof, String _until) throws Exception {
 		Map<String, String> l = new HashMap<String, String>();
 		//String rel_path = url.toString().replace(rootRepo.getDir("", -1, null, (Collection<SVNDirEntry>)null).iterator().next(), "");
 		int count = 0;
@@ -291,7 +291,7 @@ public class SvnClient implements IVCSClient {
 		}
 	}
 
-	public File checkoutFile(String _rev, String _rel_path) {
+	public File checkoutFile(String _rev, String _rel_path) throws Exception {
 		final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
 		File f = null;
 		SVNURL url = null;
@@ -423,7 +423,7 @@ public class SvnClient implements IVCSClient {
 	//		return rootRepo.getDir(path, -1, null,(Collection<SVNDirEntry>) null);
 	//	}
 
-	public long  getRevisionTimeStamp(String revision){
+	public long  getRevisionTimeStamp(String revision) throws Exception {
 		long revisionTimeStampMilliSecond = 0;
 		int count = 0;
 		int maxTries = 5;
