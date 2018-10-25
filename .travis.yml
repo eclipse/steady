@@ -26,7 +26,4 @@ sudo: false
 install:
   - "echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'"
 
-env:
-  - skip_tests="-Dtest=!IT01_PatchAnalyzerIT#testSvnRepo"
-
-script: mvn -e -B -P soot,gradle ${skip_tests} clean install --settings settings.xml
+script: mvn -e -B -P soot,gradle -Dtest=!IT01_PatchAnalyzerIT#testSvnRepo clean install --settings settings.xml
