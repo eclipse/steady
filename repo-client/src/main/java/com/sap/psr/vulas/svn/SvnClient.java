@@ -128,7 +128,7 @@ public class SvnClient implements IVCSClient {
 					e.printStackTrace();
 					throw new RepoMismatchException(this, tmp, e); // "Cannot create SVN repository from URL '" + tmp + "': " + e.getMessage());
 				}
-				SvnClient.log.info("Couldn't connect to " + url + ". Retrying now")
+				SvnClient.log.info("Couldn't connect to " + url + ". Retrying now");
 			}
 		}
 		return repo;
