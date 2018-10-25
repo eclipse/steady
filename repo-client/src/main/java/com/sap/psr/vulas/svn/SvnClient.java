@@ -108,20 +108,28 @@ public class SvnClient implements IVCSClient {
 		else
 			tmp = this.url.toString() + (this.url.toString().endsWith("/") ? "" : "/") + _path;
 
+		int count = 0;
+		int maxTries = 5;
 		SVNRepository repo = null;
-		try {
-			SVNURL url = SVNURL.parseURIEncoded(tmp);
+		while(true) {
+			try {
+				SVNURL url = SVNURL.parseURIEncoded(tmp);
 
-			//SVN2Client.log.debug("Environment proxy (host:port): " + System.getProperty("http.proxyHost") + ":" + System.getProperty("http.proxyPort"));
-			SvnClient.log.info("SVNKIT proxy configuration (host:port): " + authManager.getProxyManager(url).getProxyHost() + ":" + authManager.getProxyManager(url).getProxyPort());
+				//SVN2Client.log.debug("Environment proxy (host:port): " + System.getProperty("http.proxyHost") + ":" + System.getProperty("http.proxyPort"));
+				SvnClient.log.info("SVNKIT proxy configuration (host:port): " + authManager.getProxyManager(url).getProxyHost() + ":" + authManager.getProxyManager(url).getProxyPort());
 
-			repo =  SVNRepositoryFactory.create(url);
-			repo.setAuthenticationManager(authManager);
-			repo.testConnection();
-		}
-		catch(SVNException e) {
-			e.printStackTrace();
-			throw new RepoMismatchException(this, tmp, e); // "Cannot create SVN repository from URL '" + tmp + "': " + e.getMessage());
+				repo =  SVNRepositoryFactory.create(url);
+				repo.setAuthenticationManager(authManager);
+				repo.testConnection();
+			}
+			catch(Exception e) {
+				Thread.sleep(2000);
+				if (++count == maxTries) {
+					e.printStackTrace();
+					throw new RepoMismatchException(this, tmp, e); // "Cannot create SVN repository from URL '" + tmp + "': " + e.getMessage());
+				}
+				SvnClient.log.info("Couldn't connect to " + url + ". Retrying now")
+			}
 		}
 		return repo;
 	}
