@@ -42,7 +42,7 @@ At this point, you are ready to perform the actual build with the following comm
 
 ```sh
 docker build --tag vulas-build-img -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
-docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e "mvn_flags=-DskipTests" vulas-build-img
+docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e "mvn_flags=-DexcludedGroups='com.sap.psr.vulas.shared.categories.Slow'" vulas-build-img
 ```
 
 In case you are running behind a proxy you need to configure it in the `--build-arg` arguments.
