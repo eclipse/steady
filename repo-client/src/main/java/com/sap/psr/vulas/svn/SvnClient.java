@@ -123,12 +123,17 @@ public class SvnClient implements IVCSClient {
 				repo.testConnection();
 			}
 			catch(Exception e) {
-				Thread.sleep(2000);
-				if (++count == maxTries) {
-					e.printStackTrace();
-					throw new RepoMismatchException(this, tmp, e); // "Cannot create SVN repository from URL '" + tmp + "': " + e.getMessage());
+				try {
+					Thread.sleep(2000);
+					if (++count == maxTries) {
+						e.printStackTrace();
+						throw new RepoMismatchException(this, tmp, e); // "Cannot create SVN repository from URL '" + tmp + "': " + e.getMessage());
+					}
+					SvnClient.log.info("Couldn't connect to " + url + ". Retrying now");
 				}
-				SvnClient.log.info("Couldn't connect to " + url + ". Retrying now");
+				catch(InterruptedException ex) {
+					Thread.currentThread().interrupt();
+				}
 			}
 		}
 		return repo;
