@@ -1,22 +1,55 @@
 import com.sap.psr.vulas.core.util.CoreConfiguration;
+import com.sap.psr.vulas.shared.connectivity.PathBuilder;
+import com.sap.psr.vulas.shared.connectivity.Service;
+import com.sap.psr.vulas.shared.json.JacksonUtil;
+import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import junit.framework.TestCase;
 import org.apache.maven.it.Verifier;
 import org.apache.maven.it.util.ResourceExtractor;
+import org.glassfish.grizzly.http.util.HttpStatus;
+import org.junit.After;
+import org.junit.Before;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+import static com.jayway.restassured.RestAssured.expect;
+import static com.xebialabs.restito.builder.stub.StubHttp.whenHttp;
+import static com.xebialabs.restito.semantics.Action.*;
+import static com.xebialabs.restito.semantics.Action.status;
+import static com.xebialabs.restito.semantics.Condition.post;
 
 public class VulasMavenPluginTests extends TestCase {
 
-    static {
-        VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.OFFLINE.toString());
+
+    private StubServerSetup stubServer;
+
+
+    public void startServer() {
+        stubServer = new StubServerSetup("foo.bar", "sampletest", "1.0.0");
+        stubServer.configureBackendServiceUrl(stubServer.server);
+        stubServer.setupMockServices(stubServer.testApp);
+        System.out.println("/backend" + PathBuilder.app(stubServer.testApp));
+    }
+
+
+    public void stopServer() {
+        stubServer.stop();
     }
 
 
     public void testMavenPlugin()
             throws Exception {
+
+
+        startServer();
+
+       /* while (true){
+            System.out.println("wait");
+        }*/
 
         // set the maven project to test
         File testDir = ResourceExtractor.simpleExtractResources(getClass(), "/testproject");
@@ -29,8 +62,14 @@ public class VulasMavenPluginTests extends TestCase {
 
 
         // execute the goals
-
         List cliOptions = new ArrayList();
+        // pass the backendURL to the mvn invoke command
+
+        Properties properties = new Properties();
+        properties.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), stubServer.getBackendURL());
+        verifier.setSystemProperties(properties);
+        String backendUrl = "-Dvulas.shared.backend.serviceUrl" + "=" + "'" + stubServer.getBackendURL().replace("http://", "http:///") + "'";
+//        cliOptions.add(backendUrl);
         // do not recurse into sub-projects
         cliOptions.add("-N");
         verifier.setCliOptions(cliOptions);
@@ -44,13 +83,18 @@ public class VulasMavenPluginTests extends TestCase {
 
         // check if jacoco has been executed
         verifier.assertFilePresent("target/jacoco.exec");
-        verifier.assertFilePresent("target/vulas/upload");
+
+        //check if vulas has been executed
+        verifier.assertFilePresent("target/vulas/tmp");
 
         verifier.verifyErrorFreeLog();
 
+        //check prepare-vulas-agent has been executed
+        verifier.verifyTextInLog("prepare-vulas-agent");
+
+
         // reset the stream b
         verifier.resetStreams();
-
-
+        stopServer();
     }
 }

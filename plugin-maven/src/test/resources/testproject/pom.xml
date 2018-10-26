@@ -10,7 +10,6 @@
 
     <properties>
         <vulas.version>3.0.10-SNAPSHOT</vulas.version>
-        <vulas.shared.backend.serviceUrl>http://localhost:8033/backend</vulas.shared.backend.serviceUrl>
         <vulas.core.appContext.group>${project.groupId}</vulas.core.appContext.group>
         <vulas.core.appContext.artifact>${project.artifactId}</vulas.core.appContext.artifact>
         <vulas.core.appContext.version>${project.version}</vulas.core.appContext.version>
@@ -63,8 +62,6 @@
                 <configuration>
                     <layeredConfiguration>
                         <vulas.reach.fwk>wala</vulas.reach.fwk>
-                        <vulas.shared.backend.serviceUrl>${vulas.shared.backend.serviceUrl}
-                        </vulas.shared.backend.serviceUrl>
                         <vulas.shared.tmpDir>${project.build.directory}/vulas/tmp</vulas.shared.tmpDir>
                         <vulas.core.appContext.group>${vulas.core.appContext.group}</vulas.core.appContext.group>
                         <vulas.core.appContext.artifact>${vulas.core.appContext.artifact}
