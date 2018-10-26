@@ -26,4 +26,4 @@ sudo: false
 install:
   - "echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'"
 
-script: mvn -e -B -P soot,gradle -Dtest='!IT01_PatchAnalyzerIT, *Test, Test*, *Tests, *TestCase, IT*, *IT, *ITCase' clean install --settings .travis/settings.xml
+script: mvn -e -B -P soot,gradle -Dtest='!IT01_PatchAnalyzerIT, *Test, Test*, *Tests, *TestCase, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install 
