@@ -8,15 +8,13 @@ branches:
   except:
     - gh-pages
 
-cache: false
+cache:
+  timeout: 1000
+  directories:
+  - $HOME/.m2
 
-# cache:
-#   timeout: 1000
-#   directories:
-#   - $HOME/.m2
-
-# before_cache:
-#  - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
+before_cache:
+ - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
 
 notifications:
   email: false
