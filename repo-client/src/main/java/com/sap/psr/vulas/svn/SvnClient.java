@@ -108,60 +108,38 @@ public class SvnClient implements IVCSClient {
 		else
 			tmp = this.url.toString() + (this.url.toString().endsWith("/") ? "" : "/") + _path;
 
-		int count = 0;
-		int maxTries = 5;
 		SVNRepository repo = null;
-		while(true) {
-			try {
-				SVNURL url = SVNURL.parseURIEncoded(tmp);
+		try {
+			SVNURL url = SVNURL.parseURIEncoded(tmp);
 
-				//SVN2Client.log.debug("Environment proxy (host:port): " + System.getProperty("http.proxyHost") + ":" + System.getProperty("http.proxyPort"));
-				SvnClient.log.info("SVNKIT proxy configuration (host:port): " + authManager.getProxyManager(url).getProxyHost() + ":" + authManager.getProxyManager(url).getProxyPort());
+			//SVN2Client.log.debug("Environment proxy (host:port): " + System.getProperty("http.proxyHost") + ":" + System.getProperty("http.proxyPort"));
+			SvnClient.log.info("SVNKIT proxy configuration (host:port): " + authManager.getProxyManager(url).getProxyHost() + ":" + authManager.getProxyManager(url).getProxyPort());
 
-				repo =  SVNRepositoryFactory.create(url);
-				repo.setAuthenticationManager(authManager);
-				repo.testConnection();
-				return repo;
-			}
-			catch(Exception e) {
-				if (++count == maxTries) {
-					e.printStackTrace();
-					throw new RepoMismatchException(this, tmp, e); // "Cannot create SVN repository from URL '" + tmp + "': " + e.getMessage());
-				}
-				SvnClient.log.info("Couldn't connect to " + url + ". Retrying now");
-			}
+			repo =  SVNRepositoryFactory.create(url);
+			repo.setAuthenticationManager(authManager);
+			repo.testConnection();
 		}
+		catch(SVNException e) {
+			e.printStackTrace();
+			throw new RepoMismatchException(this, tmp, e); // "Cannot create SVN repository from URL '" + tmp + "': " + e.getMessage());
+		}
+		return repo;
 	}
 
-	private void updateCommitLog(Date _as_of) throws SVNException,Exception {
-		int count = 0;
-		int maxTries = 5;
-		while(true) {
-			try {
-				// In all of the following cases, no further log entries must be collected
-				if(this.logEntries!=null && (this.asOf==null || (_as_of!=null && this.asOf.before(_as_of))))
-					return;
+	private void updateCommitLog(Date _as_of) throws SVNException {
+		// In all of the following cases, no further log entries must be collected
+		if(this.logEntries!=null && (this.asOf==null || (_as_of!=null && this.asOf.before(_as_of))))
+			return;
 
-				// Retrieve the log
-				this.asOf = _as_of;
-				final long latest_rev = this.rootRepo.getLatestRevision();
+		// Retrieve the log
+		this.asOf = _as_of;
+		final long latest_rev = this.rootRepo.getLatestRevision();
 
-				// Search as of ...
-				long first_rev = 0;
-				if(this.asOf!=null) first_rev = this.rootRepo.getDatedRevision(this.asOf);
+		// Search as of ...
+		long first_rev = 0;
+		if(this.asOf!=null) first_rev = this.rootRepo.getDatedRevision(this.asOf);
 
-				this.logEntries = rootRepo.log(new String[] { "" }, null, first_rev, latest_rev, true, true);
-				return;
-			}
-			catch(Exception e) {
-				if (++count == maxTries) {
-					SvnClient.log.info("Couldn't updateCommitLog, giving up.");
-					e.printStackTrace();
-					throw new Exception(e);
-				}
-				SvnClient.log.info("Couldn't updateCommitLog, retrying now.");
-			}
-		}
+		this.logEntries = rootRepo.log(new String[] { "" }, null, first_rev, latest_rev, true, true);
 	}
 
 	/**
@@ -250,91 +228,74 @@ public class SvnClient implements IVCSClient {
 		return rev_dir;
 	}
 
-	public Map<String, String> listEntries(String _path, String _asof, String _until) throws Exception {
+	public Map<String, String> listEntries(String _path, String _asof, String _until) {
 		Map<String, String> l = new HashMap<String, String>();
 		//String rel_path = url.toString().replace(rootRepo.getDir("", -1, null, (Collection<SVNDirEntry>)null).iterator().next(), "");
-		int count = 0;
-		int maxTries = 5;
-		while(true) {
-			try {
-				Collection<SVNDirEntry> entries = this.rootRepo.getDir(_path, -1, null,(Collection<SVNDirEntry>) null); //this.getDirEntries(path);
-				Iterator<SVNDirEntry> iterator = entries.iterator();
-				String name = null, path = null;
+		try {
+			Collection<SVNDirEntry> entries = this.rootRepo.getDir(_path, -1, null,(Collection<SVNDirEntry>) null); //this.getDirEntries(path);
+			Iterator<SVNDirEntry> iterator = entries.iterator();
+			String name = null, path = null;
 
-				long rev = -1;
-				// Use an iterator to get all directory entries in a certain path ("tags/")
+			long rev = -1;
+			// Use an iterator to get all directory entries in a certain path ("tags/")
 
-				int asof  = (_asof==null?-1:Integer.parseInt(_asof));
-				int until = (_until==null?-1:Integer.parseInt(_until));
+			int asof  = (_asof==null?-1:Integer.parseInt(_asof));
+			int until = (_until==null?-1:Integer.parseInt(_until));
 
-				while (iterator.hasNext()) {
-					SVNDirEntry entry = (SVNDirEntry) iterator.next();
+			while (iterator.hasNext()) {
+				SVNDirEntry entry = (SVNDirEntry) iterator.next();
 
-					SvnClient.log.debug( "Path mess: " + entry.getPath() + " | " + entry.getRelativePath() + " | " + entry.getRepositoryRoot() + " | " + entry.getExternalParentUrl() + " | "  + entry.getURL());
+				SvnClient.log.debug( "Path mess: " + entry.getPath() + " | " + entry.getRelativePath() + " | " + entry.getRepositoryRoot() + " | " + entry.getExternalParentUrl() + " | "  + entry.getURL());
 
-					name = entry.getName();
-					rev = entry.getRevision();
-					path = entry.getURL().toString().substring(entry.getRepositoryRoot().toString().length());
-					if( asof<rev && (_until==null || rev<until) )
-						l.put(path, Long.toString(rev));
-				}
-				// return the tag name and the corresponding revision number
-				return l;
-			} catch (Exception e) {
-				if (++count == maxTries) {
-					SvnClient.log.info("Couldn't get directory entries, giving up.");
-					e.printStackTrace();
-					throw new Exception(e);
-				}
-				SvnClient.log.error( "Error while getting directory entries: " + e.getMessage() );
+				name = entry.getName();
+				rev = entry.getRevision();
+				path = entry.getURL().toString().substring(entry.getRepositoryRoot().toString().length());
+				if( asof<rev && (_until==null || rev<until) )
+					l.put(path, Long.toString(rev));
 			}
+		} catch (Exception e) {
+			SvnClient.log.error( "Error while getting directory entries: " + e.getMessage() );
 		}
+
+		// return the tag name and the corresponding revision number
+		return l;
 	}
 
-	public File checkoutFile(String _rev, String _rel_path) throws Exception {
+	public File checkoutFile(String _rev, String _rel_path) {
 		final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
 		File f = null;
 		SVNURL url = null;
-		int count = 0;
-		int maxTries = 5;
-		while(true) {
-			try {
-				// Create subdir for given rev
-				final String rel_dir = _rel_path.substring(0, _rel_path.lastIndexOf('/'));
-				final Path rev_dir = Paths.get(this.workDir.toString(), _rev, rel_dir);
-				Path p = Files.createDirectories(rev_dir);
+		try {
+			// Create subdir for given rev
+			final String rel_dir = _rel_path.substring(0, _rel_path.lastIndexOf('/'));
+			final Path rev_dir = Paths.get(this.workDir.toString(), _rev, rel_dir);
+			Path p = Files.createDirectories(rev_dir);
 
-				// Create SVNURL for specific file
-				url = SVNURL.parseURIEncoded(this.rootRepo.getRepositoryRoot(false) + "/" + rel_dir);
+			// Create SVNURL for specific file
+			url = SVNURL.parseURIEncoded(this.rootRepo.getRepositoryRoot(false) + "/" + rel_dir);
 
-				// Perform checkout
-				SVNRevision revision = SVNRevision.create(Long.valueOf(_rev));
+			// Perform checkout
+			SVNRevision revision = SVNRevision.create(Long.valueOf(_rev));
 
-				SVNUpdateClient clnt = new SVNUpdateClient((ISVNAuthenticationManager)this.authManager, null);
-				clnt.doCheckout(url, p.toFile(), revision, revision, SVNDepth.FILES, false); //IMMEDIATES, FILES, INFINITY
+			SVNUpdateClient clnt = new SVNUpdateClient((ISVNAuthenticationManager)this.authManager, null);
+			clnt.doCheckout(url, p.toFile(), revision, revision, SVNDepth.FILES, false); //IMMEDIATES, FILES, INFINITY
 
-				//
-				//			final SvnCheckout checkout = svnOperationFactory.createCheckout();
-				//			checkout.setSingleTarget(SvnTarget.fromFile(p.toFile()));
-				//			checkout.setSource(SvnTarget.fromURL(url));
-				//			checkout.setDepth(SVNDepth.IMMEDIATES); //INFINITY
-				//			checkout.setRevision(revision);
-				//
-				//			// Checkout and get file
-				//			checkout.run();
-				f = Paths.get(this.workDir.toString(), _rev, _rel_path).toFile();
-				return f;
-			} catch (Exception e) {
-				if (++count == maxTries) {
-					SvnClient.log.info("Couldn't check out URL " + url + ", revision "+ _rev + ". Giving up.");
-					e.printStackTrace();
-					throw new Exception(e);
-				}
-				SvnClient.log.error("Error while checking out URL '" + url + "', revision "+ _rev + ": " + e.getMessage());
-			} finally {
-				svnOperationFactory.dispose();
-			}
+			//
+			//			final SvnCheckout checkout = svnOperationFactory.createCheckout();
+			//			checkout.setSingleTarget(SvnTarget.fromFile(p.toFile()));
+			//			checkout.setSource(SvnTarget.fromURL(url));
+			//			checkout.setDepth(SVNDepth.IMMEDIATES); //INFINITY
+			//			checkout.setRevision(revision);
+			//
+			//			// Checkout and get file
+			//			checkout.run();
+			f = Paths.get(this.workDir.toString(), _rev, _rel_path).toFile();
+		} catch (Exception e) {
+			SvnClient.log.error("Error while checking out URL '" + url + "', revision "+ _rev + ": " + e.getMessage());
+		} finally {
+			svnOperationFactory.dispose();
 		}
+		return f;
 	}
 
 	/**
@@ -423,30 +384,22 @@ public class SvnClient implements IVCSClient {
 	//		return rootRepo.getDir(path, -1, null,(Collection<SVNDirEntry>) null);
 	//	}
 
-	public long  getRevisionTimeStamp(String revision) throws Exception {
+	public long  getRevisionTimeStamp(String revision){
 		long revisionTimeStampMilliSecond = 0;
-		int count = 0;
-		int maxTries = 5;
-		while(true) {
-			try {
-				//An "svn:date" revision property that is a date & time stamp representing the time when the revision was created.
-				SVNPropertyValue propertyValue = rootRepo.getRevisionPropertyValue(Long.parseLong(revision),SVNRevisionProperty.DATE);
-				String stringValue = SVNPropertyValue.getPropertyAsString(propertyValue);
-				//SVNDate date = SVNDate.parseDate(stringValue);
-				revisionTimeStampMilliSecond  = SVNDate.parseDateAsMilliseconds(stringValue);
-				//revisionTimeStampMicroSecond = date.getTimeInMicros();
-				return revisionTimeStampMilliSecond;
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
-				if (++count == maxTries) {
-					SvnClient.log.info("Couldn't updateCommitLog, giving up.");
-					e.printStackTrace();
-					throw new Exception(e);
-				}
-				SvnClient.log.error("Error when retrieving time stamp for revision : " + revision + " "+ e.getMessage());
-			}
+
+		try {
+			//An "svn:date" revision property that is a date & time stamp representing the time when the revision was created.
+			SVNPropertyValue propertyValue = rootRepo.getRevisionPropertyValue(Long.parseLong(revision),SVNRevisionProperty.DATE);
+			String stringValue = SVNPropertyValue.getPropertyAsString(propertyValue);
+			//SVNDate date = SVNDate.parseDate(stringValue);
+			revisionTimeStampMilliSecond  = SVNDate.parseDateAsMilliseconds(stringValue);
+			//revisionTimeStampMicroSecond = date.getTimeInMicros();
+		} catch (SVNException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			SvnClient.log.error("Error when retrieving time stamp for revision : " + revision + " "+ e.getMessage());
 		}
+		return revisionTimeStampMilliSecond;
 	}
 
 }

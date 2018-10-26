@@ -482,7 +482,7 @@ public class GitClient implements IVCSClient {
 	/**
 	 * TODO: To be implemented
 	 */
-	public Map<String, String> listEntries(String path, String _asof, String _until) throws Exception {
+	public Map<String, String> listEntries(String path, String _asof, String _until) {
 		Map<String, String> l = new HashMap<String, String>();
 		return l;
 	}
@@ -564,7 +564,7 @@ public class GitClient implements IVCSClient {
 	 *
 	 * @return File file object
 	 */
-	public File checkoutFile( String _rev_branch, String _path ) throws IllegalStateException,Exception {
+	public File checkoutFile( String _rev_branch, String _path ) throws IllegalStateException {
 		if ( _path.equals( "/dev/null" ) )
 			return null;
 
@@ -657,7 +657,7 @@ public class GitClient implements IVCSClient {
 		return url.toString().replace(repository.toString(), "");
 	}
 
-	public long getRevisionTimeStamp(String _rev) throws Exception{
+	public long getRevisionTimeStamp(String _rev){
 		if(_rev.contains(":")){
 			_rev= _rev.substring(0,_rev.indexOf(":")-1);
 		}

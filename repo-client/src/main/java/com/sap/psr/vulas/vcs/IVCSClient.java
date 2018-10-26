@@ -74,7 +74,7 @@ public interface IVCSClient {
 	 * @param path
 	 * @return
 	 */
-	public Map<String, String> listEntries(String path, String _asof, String _until) throws Exception;
+	public Map<String, String> listEntries(String path, String _asof, String _until);
 
     /**
      *  Performs a checkout of a whole directory
@@ -83,7 +83,7 @@ public interface IVCSClient {
      * @param _rel_path
      * @return
      */
-    public File checkoutFile(String _rev, String _rel_path) throws Exception;
+    public File checkoutFile(String _rev, String _rel_path);
 
 	/**
 	 * Deletes temp. files created in the course of the analysis.
@@ -95,5 +95,5 @@ public interface IVCSClient {
 	 * @param revision
 	 * @return time stamp for a commit/revision
 	 */
-	public long  getRevisionTimeStamp(String revision) throws Exception;
+	public long  getRevisionTimeStamp(String revision);
 }
