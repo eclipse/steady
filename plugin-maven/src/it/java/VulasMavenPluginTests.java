@@ -27,15 +27,15 @@ public class VulasMavenPluginTests extends TestCase {
 
     private StubServerSetup stubServer;
 
-
+    @Before
     public void startServer() {
         stubServer = new StubServerSetup("foo.bar", "sampletest", "1.0.0");
         stubServer.configureBackendServiceUrl(stubServer.server);
         stubServer.setupMockServices(stubServer.testApp);
-        System.out.println("/backend" + PathBuilder.app(stubServer.testApp));
     }
 
 
+    @After
     public void stopServer() {
         stubServer.stop();
     }
@@ -43,58 +43,52 @@ public class VulasMavenPluginTests extends TestCase {
 
     public void testMavenPlugin()
             throws Exception {
-
-
+        // setup the stubserver to emulate communication with vulas's backend
         startServer();
 
-       /* while (true){
-            System.out.println("wait");
-        }*/
+        try {
+            // set the maven project to test
+            File testDir = ResourceExtractor.simpleExtractResources(getClass(), "/testproject");
 
-        // set the maven project to test
-        File testDir = ResourceExtractor.simpleExtractResources(getClass(), "/testproject");
+            Verifier verifier = new Verifier(testDir.getAbsolutePath());
 
-        Verifier verifier;
+            // remove artifacts created by this test from the m2 repository
+            verifier.deleteArtifact("foo.bar", "sampletest", "1.0.0", "pom");
 
-        // remove artifacts created by this test from the m2 repository
-        verifier = new Verifier(testDir.getAbsolutePath());
-        verifier.deleteArtifact("foo.bar", "sampletest", "1.0.0", "pom");
+            // execute the goals
+            List cliOptions = new ArrayList();
+            // pass the backendURL to the mvn invoke command
+            Properties properties = new Properties();
+            properties.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), stubServer.getBackendURL());
+            verifier.setSystemProperties(properties);
 
+            // do not recurse into sub-projects
+            cliOptions.add("-N");
+            verifier.setCliOptions(cliOptions);
+            List goals = new ArrayList();
+            goals.add("clean");
+            goals.add("compile");
+            goals.add("vulas:app");
+            goals.add("test");
 
-        // execute the goals
-        List cliOptions = new ArrayList();
-        // pass the backendURL to the mvn invoke command
+            verifier.executeGoals(goals);
 
-        Properties properties = new Properties();
-        properties.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), stubServer.getBackendURL());
-        verifier.setSystemProperties(properties);
-        String backendUrl = "-Dvulas.shared.backend.serviceUrl" + "=" + "'" + stubServer.getBackendURL().replace("http://", "http:///") + "'";
-//        cliOptions.add(backendUrl);
-        // do not recurse into sub-projects
-        cliOptions.add("-N");
-        verifier.setCliOptions(cliOptions);
-        List goals = new ArrayList();
-        goals.add("clean");
-        goals.add("compile");
-        goals.add("vulas:app");
-        goals.add("test");
+            // check if jacoco has been executed
+            verifier.assertFilePresent("target/jacoco.exec");
 
-        verifier.executeGoals(goals);
+            //check if vulas has been executed
+            verifier.assertFilePresent("target/vulas/tmp");
 
-        // check if jacoco has been executed
-        verifier.assertFilePresent("target/jacoco.exec");
+            verifier.verifyErrorFreeLog();
 
-        //check if vulas has been executed
-        verifier.assertFilePresent("target/vulas/tmp");
+            //check prepare-vulas-agent has been executed
+            verifier.verifyTextInLog("prepare-vulas-agent");
 
-        verifier.verifyErrorFreeLog();
-
-        //check prepare-vulas-agent has been executed
-        verifier.verifyTextInLog("prepare-vulas-agent");
-
-
-        // reset the stream b
-        verifier.resetStreams();
-        stopServer();
+            // reset the stream b
+            verifier.resetStreams();
+        } finally {
+            // stop the stubserver
+            stubServer.stop();
+        }
     }
 }
