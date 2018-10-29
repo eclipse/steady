@@ -1,6 +1,7 @@
 package com.sap.psr.vulas.shared.cache;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -21,6 +22,7 @@ public class Cache<S, T> {
 
 	private long refreshMilli = -1;
 	private int maxSize = -1;
+	private LinkedList<S> keys = new LinkedList<S>(); // Used to delete oldest entry if cache size is limited (maxSize!=-1)
 	private ObjectFetcher<S, T> reader = null;
 	private Map<S,CacheEntry<T>> entries = new HashMap<S,CacheEntry<T>>();
 	
@@ -51,6 +53,13 @@ public class Cache<S, T> {
 	 * @param _refresh_min
 	 */
 	public Cache(ObjectFetcher<S, T> _reader, long _refresh_min, int _max_size) {
+		if(_reader==null)
+			throw new IllegalArgumentException("Object fetcher cannot be [null]");
+		if(_refresh_min<=0)
+			throw new IllegalArgumentException("Refresh period must be greater than [0]");
+		if(_max_size!=-1 && _max_size<1)
+			throw new IllegalArgumentException("Cache size limit must be [-1] (unbounded) or greater than [0]");
+			
 		this.reader = _reader;
 		this.refreshMilli = _refresh_min * MILLI_IN_MIN;
 		this.maxSize = _max_size;
@@ -97,6 +106,7 @@ public class Cache<S, T> {
 				sw.stop();
 				cacheFetchDuration += sw.getRuntimeMillis();
 				this.entries.put(_key,  e);
+				this.keys.add(_key);
 			} catch (CacheException e1) {
 				sw.stop(e1);
 				cacheFetchDuration += sw.getRuntimeMillis();
@@ -106,18 +116,7 @@ public class Cache<S, T> {
 			
 			// Delete oldest entry if max cache size reached
 			if(this.maxSize!=-1 && this.entries.size() > this.maxSize) {
-				S to_del=null;
-				long age_milli =-1;
-				
-				// Find oldest entry (can be done in a more performant way)
-				for(Entry<S, CacheEntry<T>> e2:this.entries.entrySet()){
-					if(current_time-e2.getValue().getCreatedAt()>age_milli){
-						age_milli=current_time - e2.getValue().getCreatedAt();
-						to_del=e2.getKey();
-					}
-				}
-				
-				// Delete
+				final S to_del = this.keys.poll();				
 				if(to_del!=null){
 					this.cacheDeleteCount++;
 					this.entries.remove(to_del);
