@@ -139,7 +139,7 @@ sap.ui.controller("view.Master", {
 			                    				"Cannot create/edit space with distribution list; corresponding properties not configured in the backend"
 			                    			);
 			                    	}
-			                    	else if(model.Config.getEnforceSwId()=="true" && sap.ui.getCore().byId('idSpaceDL').getValue()=="" && sap.ui.getCore().byId('idSw').getValue()=="")
+			                    	else if(model.Config.getSwIdMandatory()=="true" && sap.ui.getCore().byId('idSpaceDL').getValue()=="" && sap.ui.getCore().byId('idSw').getValue()=="")
 			                    		sap.m.MessageBox.warning(
 			                    				"Please provide a valid " + model.Config.getSwIdLabel()+ " or a valid distribution list. Other mandatory fields are: name, description, export mode and public/private mode."
 			                    			);
