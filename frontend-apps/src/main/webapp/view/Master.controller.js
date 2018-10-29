@@ -139,6 +139,10 @@ sap.ui.controller("view.Master", {
 			                    				"Cannot create/edit space with distribution list; corresponding properties not configured in the backend"
 			                    			);
 			                    	}
+			                    	else if(model.Config.getEnforceSwId()=="true" && sap.ui.getCore().byId('idSpaceDL').getValue()=="" && sap.ui.getCore().byId('idSw').getValue()=="")
+			                    		sap.m.MessageBox.warning(
+			                    				"Please provide a valid " + model.Config.getSwIdLabel()+ " or a valid distribution list. Other mandatory fields are: name, description, export mode and public/private mode."
+			                    			);
 			                    	else if(sap.ui.getCore().byId('idSpaceName').getValue() ==null || sap.ui.getCore().byId('idSpaceName').getValue()==""
 			                    		|| sap.ui.getCore().byId('idSpaceDescription').getValue() ==null || sap.ui.getCore().byId('idSpaceDescription').getValue()==""
 			                    			|| sap.ui.getCore().byId('idSpaceExport').getSelectedItem() ==null || sap.ui.getCore().byId('idSpaceExport').getSelectedKey()=="")
@@ -167,7 +171,7 @@ sap.ui.controller("view.Master", {
 			                    			body = body + ', "spaceOwners": [ "' + sap.ui.getCore().byId("idSpaceDL").getValue()+'" ]';
 			                    		}
 			                    		if(sap.ui.getCore().byId('idSw').getValue()!=null && sap.ui.getCore().byId('idSw').getValue()!=""){
-			                    			body = body + ', "properties":[{"source":"USER","name":"'+model.Config.getSwIdDb ()+'","value":"' + sap.ui.getCore().byId("idSw").getValue()+'"}]';
+			                    			body = body + ', "properties":[{"source":"USER","name":"'+model.Config.getSwIdDb()+'","value":"' + sap.ui.getCore().byId("idSw").getValue()+'"}]';
 			                    		}
 			                    		else{ //alert that SwId id was not provided and they should do it by editing the space
 			                    			sap.m.MessageBox.warning(
