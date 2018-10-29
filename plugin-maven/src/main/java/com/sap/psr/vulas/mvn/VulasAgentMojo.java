@@ -18,6 +18,7 @@ import org.apache.tools.ant.types.Environment;
 
 import java.io.File;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.String.format;
@@ -167,13 +168,27 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 
             //remove any javaagent with the same file name from the arguments
             final String[] args = Commandline.translateCommandline(arguments);
-            final String regexForVulasAgent = format("-javaagent:(\"?)%s(\"?)", Pattern.quote(agentJarFile.toString()));
+            // the new javaagent, as used by the prepare-vulas-agent goal
+            final String regexForCurrentVulasAgent = format("-javaagent:(\"?)%s(\"?)", Pattern.quote(agentJarFile.toString()));
+            // the default name of the original javaagent
+            final String regexForOldVulasAgent = format("-javaagent:(\"?).*%s(\"?)", Pattern.quote("/vulas/lib/vulas-core-latest-jar-with-dependencies.jar"));
 
-            for (String arg : args) {
-                if (arg.matches(regexForVulasAgent)) {
-                    continue;
+            ArrayList<String> patterns = new ArrayList<>();
+            patterns.add(regexForCurrentVulasAgent);
+            patterns.add(regexForOldVulasAgent);
+            // go through the arguments to check for existing javaagents
+            argprocess: for (String arg : args) {
+
+                // check if one of vulas's agents is already defined as an arg
+                // if yes ignore the arg
+                for (String regExExp : patterns) {
+                    if (arg.matches(regExExp)) {
+                        continue argprocess;
+                    }
+
                 }
                 commandlineJava.createArgument().setLine(arg);
+
             }
             //add my properties
             for (final String key : this.agentOptions.keySet()) {
@@ -213,7 +228,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
     File getAgentJarFile() throws MojoExecutionException {
         final Artifact vulasAgentArtifact = pluginArtifactMap
                 .get(VULAS_AGENT_ARTIFACT_NAME);
-        if (vulasAgentArtifact==null || !vulasAgentArtifact.hasClassifier() || !vulasAgentArtifact.getClassifier().equals(VULAS_AGENT_ARTIFACT_CLASSIFIER)) {
+        if (vulasAgentArtifact == null || !vulasAgentArtifact.hasClassifier() || !vulasAgentArtifact.getClassifier().equals(VULAS_AGENT_ARTIFACT_CLASSIFIER)) {
             throw new MojoExecutionException("Could not found " + VULAS_AGENT_ARTIFACT_NAME + ":" + VULAS_AGENT_ARTIFACT_CLASSIFIER);
         }
         return vulasAgentArtifact.getFile();
