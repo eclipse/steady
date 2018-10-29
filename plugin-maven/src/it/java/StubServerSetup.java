@@ -54,6 +54,8 @@ public class StubServerSetup {
 
     public void stop() {
         server.stop();
+        System.out.println("Stopped Server:" + this.backendURL);
+
     }
 
     protected Tenant buildTestTenant() {

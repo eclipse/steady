@@ -35,9 +35,89 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.3-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- copy vulas into folder /vulas/lib/ .. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                    <execution>
+                        <id>copy-vulas</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.sap.research.security.vulas</groupId>
+                                    <artifactId>lang-java</artifactId>
+                                    <version>${vulas.version}</version>
+                                    <type>jar</type>
+                                    <classifier>jar-with-dependencies</classifier>
+                                    <outputDirectory>${project.build.directory}/vulas/lib</outputDirectory>
+                                    <destFileName>vulas-core-latest-jar-with-dependencies.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.sap.research.security.vulas</groupId>
+                                    <artifactId>lang-java</artifactId>
+                                    <version>${vulas.version}</version>
+                                    <type>jar</type>
+                                    <classifier>jar-with-dependencies</classifier>
+                                    <outputDirectory>${project.build.directory}/vulas/include</outputDirectory>
+                                    <destFileName>vulas-core-latest-jar-with-dependencies.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.0</version>
+                <configuration>
+
+                    <forkCount>1</forkCount>
+                    <forkedProcessTimeoutInSeconds>0</forkedProcessTimeoutInSeconds>
+                    <argLine>
+                        -javaagent:"${project.build.directory}/vulas/lib/vulas-core-latest-jar-with-dependencies.jar"
+                        -Dvulas.shared.tmpDir=${project.build.directory}/vulas/tmp
+                        -Dvulas.core.dummy=dummy
+                        -Dvulas.core.backendConnection=READ_ONLY
+                        -Dvulas.core.uploadDir=${project.build.directory}/vulas/upload
+                        -Dvulas.core.monitor.periodicUpload.enabled=false
+                        -Dvulas.core.appContext.group=${project.groupId}
+                        -Dvulas.core.appContext.artifact=${project.artifactId}
+                        -Dvulas.core.appContext.version=${project.version}
+                        -Dvulas.core.instr.writeCode=false
+                        -Dvulas.core.instr.maxStacktraces=10
+                        -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.StackTraceInstrumentor,com.sap.psr.vulas.monitor.touch.TouchPointInstrumentor
+                        -noverify
+                    </argLine>
+
+                </configuration>
+            </plugin>
+
+
+            <plugin>
                 <groupId>com.sap.research.security.vulas</groupId>
                 <artifactId>plugin-maven</artifactId>
                 <version>3.0.10-SNAPSHOT</version>
+
                 <executions>
                     <execution>
                         <id>pre-unit-test</id>

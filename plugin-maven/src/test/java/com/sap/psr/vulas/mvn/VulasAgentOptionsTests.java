@@ -84,6 +84,29 @@ public class VulasAgentOptionsTests {
 
     }
 
+    @Test
+    public void testRemoveOriginalAgentCommandLineArgs() throws Exception {
+
+        TestProjectStub stub = new TestProjectStub("/target/test-classes/unitTestPom/", "pom2.xml");
+
+        VulasAgentMojo myMojo = (VulasAgentMojo) rule.lookupConfiguredMojo(stub, "prepare-vulas-agent");
+        assertNotNull(myMojo);
+
+        VulasAgentMojo.VulasAgentOptions vulasAgentOptions = myMojo.new VulasAgentOptions();
+        assertNotNull(vulasAgentOptions);
+
+        String finalArg = vulasAgentOptions.prependVMArguments("-javaagent:/mnt/folder/myproject/vulas/lib/vulas-core-latest-jar-with-dependencies.jar -DfooProp=bar", new File("myaggent"));
+
+        assertNotNull(finalArg);
+
+        assertTrue(finalArg.contains("-javaagent:myaggent"));
+        assertTrue(!finalArg.contains("/vulas/lib/vulas-core-latest-jar-with-dependencies.jar"));
+
+        assertTrue(finalArg.contains("-noverify"));
+
+
+    }
+
 
 
 
