@@ -115,6 +115,9 @@ public class ApplicationExporterThread implements Runnable {
 		sw.setTotal(this.apps.size());
 		sw.start();
 		
+		// Separate emails by ; unless it is the CSV column separator
+		final String email_separator = separator.equals(";") ? "," : ";";
+		
 		for(Application a: this.apps) {
 			
 			// Always produce both and decide at the end
@@ -123,16 +126,22 @@ public class ApplicationExporterThread implements Runnable {
 			
 			try {
 				// Space
-				csv.append(a.getSpace().getSpaceToken()).append(separator).append(a.getSpace().getSpaceName()).append(separator).append(a.getSpace().getSpaceOwners()).append(separator);
+				csv.append(a.getSpace().getSpaceToken()).append(separator).append(a.getSpace().getSpaceName()).append(separator);
 				json.startObjectProperty("workspace");
 				json.appendObjectProperty("token", a.getSpace().getSpaceToken())
 				    .appendObjectProperty("name", a.getSpace().getSpaceName());
 				json.startArrayProperty("owners");
 				if(a.getSpace().getSpaceOwners()!=null && a.getSpace().getSpaceOwners().size()>0) {
-					for(String o: a.getSpace().getSpaceOwners())
+					int i = 0;
+					for(String o: a.getSpace().getSpaceOwners()) {
 						json.appendToArray(o);
+						// Email addresses in CSV (comma or semicolon-separated)
+						if(i++>0) csv.append(email_separator);
+						csv.append(o);
+					}
 				}
 				json.endArray();
+				csv.append(separator);
 				
 				if(includeSpaceProperties!=null && includeSpaceProperties.length>0) {
 					for(String p: includeSpaceProperties) {
