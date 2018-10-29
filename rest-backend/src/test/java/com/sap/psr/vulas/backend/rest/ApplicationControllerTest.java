@@ -635,7 +635,7 @@ public class ApplicationControllerTest {
 	}
 	
 	public static String getAppsExportUri(String _format) {
-		return "/apps/csv?format=" + _format;
+		return "/apps/export?format=" + _format;
 	}
 	
 	
