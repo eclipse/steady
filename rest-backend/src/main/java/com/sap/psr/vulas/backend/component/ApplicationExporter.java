@@ -53,6 +53,9 @@ public class ApplicationExporter {
 	private ApplicationRepository appRepository;
 
 	public synchronized void produceExportAsync(final Tenant _tenant, final String separator, final String[] includeSpaceProperties, final String[] includeGoalConfiguration, final String[] includeGoalSystemInfo, final String[] _bugs, final Message _msg, final ExportFormat _format) {
+		// Check whether SMTP is properly configured (throws ISE if not)
+		SmtpClient.getSmtpProperties(VulasConfiguration.getGlobal().getConfiguration());
+		
 		final Thread thread = new Thread(new Runnable() {
 			public void run() {
 				try {

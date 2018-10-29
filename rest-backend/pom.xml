@@ -187,6 +187,7 @@
 	</dependencies>
 
 	<profiles>
+		<!-- To start locally with H2 and Hibernate, run "java -Dspring.profiles.active=test -jar rest-backend/target/rest-backend-<version>.jar" -->
 		<profile>
 			<id>standalone</id>
 			<activation>

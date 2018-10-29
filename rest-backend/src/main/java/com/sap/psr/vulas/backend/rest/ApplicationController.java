@@ -423,7 +423,7 @@ public class ApplicationController {
 	/**
 	 * @return sorted set of all {@link Application}s of the respective tenant and space (as CSV attachment) 
 	 */
-	@RequestMapping(value = "/csv", method = RequestMethod.GET)
+	@RequestMapping(value = "/export", method = RequestMethod.GET)
 	public void exportApplications(
 			@RequestParam(value="separator", required=false, defaultValue=";") final String separator, 
 			@RequestParam(value="includeSpaceProperties", required=false, defaultValue="") final String[] includeSpaceProperties, 
@@ -469,12 +469,15 @@ public class ApplicationController {
 				this.appExporter.produceExportAsync(t, separator, includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, vuln, msg, exp_format);
 								
 				// Short response				
-				response.setContentType(ExportFormat.getHttpContentType(exp_format));      
+				response.setContentType(ExportFormat.TXT_PLAIN);      
 				final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
 				writer.write("Result of request [" + req + "] will be sent to [" + StringUtil.join(to, ", ") + "]");
 				writer.newLine();
 				writer.flush();
 				response.flushBuffer();
+			} catch (IllegalStateException e) {
+				log.error(e.getMessage());
+				throw new RuntimeException(e.getMessage());
 			} catch (FileNotFoundException e) {
 				log.error("Error while reading all tenant apps (as [" + exp_format + "]): " + e.getMessage(), e);
 				throw new RuntimeException("IOError writing file to output stream");

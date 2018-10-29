@@ -53,7 +53,7 @@ public class Property implements Serializable {
 	@Column(nullable = false,columnDefinition = "text")
 	//@Lob
 	@JsonProperty("value") 
-	private String propertyValue; //HCP: propertyValue
+	private String propertyValue;
 	
 	@Column(nullable = false)
 	@JsonIgnore

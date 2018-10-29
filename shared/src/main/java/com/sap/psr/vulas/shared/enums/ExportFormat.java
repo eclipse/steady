@@ -15,6 +15,10 @@ public enum ExportFormat {
 	CSV, JSON;
 
 	private static Log log = LogFactory.getLog(ExportFormat.class);
+	
+	public static final String TXT_CSV   = "text/csv;charset=UTF-8";
+	public static final String APP_JSON  = "application/json;charset=UTF-8";
+	public static final String TXT_PLAIN = "text/plain;charset=UTF-8";
 
 	public static ExportFormat parseFormat(String _format, @NotNull ExportFormat _default) {
 		if(_format==null || _format.equals("")) {
@@ -36,9 +40,9 @@ public enum ExportFormat {
 	 */
 	public static String getHttpContentType(@NotNull ExportFormat _f) {
 		switch(_f) {
-			case CSV: return "text/csv;charset=UTF-8";
-			case JSON: return "application/json;charset=UTF-8";
-			default: return "text/plain;charset=UTF-8";
+			case CSV: return TXT_CSV;
+			case JSON: return APP_JSON;
+			default: return TXT_PLAIN;
 		}
 	}
 }
