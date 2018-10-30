@@ -374,10 +374,10 @@ public class ApplicationController {
 						return new ResponseEntity<Collection<Application>>(HttpStatus.BAD_REQUEST);
 					results = new ArrayList<Application>();
 					for(Application app : all){
-						if (this.appVulDepRepository.isAppVulnerableCC(app.getMvnGroup(),app.getArtifact(),app.getVersion())){
+						if (this.appVulDepRepository.isAppVulnerableCC(space,app.getMvnGroup(),app.getArtifact(),app.getVersion())){
 							app.setHasVulnerabilities(true);
 						}
-						else if (this.appVulDepRepository.isAppVulnerableConfig(app.getMvnGroup(),app.getArtifact(),app.getVersion())){
+						else if (this.appVulDepRepository.isAppVulnerableConfig(space,app.getMvnGroup(),app.getArtifact(),app.getVersion())){
 							app.setHasVulnerabilities(true);
 						}
 						else
