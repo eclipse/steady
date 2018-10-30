@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>foo.bar</groupId>
+    <artifactId>sampletest</artifactId>
+    <version>1.0.0</version>
+
+
+    <properties>
+        <vulas.version>3.0.10-SNAPSHOT</vulas.version>
+        <vulas.core.appContext.group>${project.groupId}</vulas.core.appContext.group>
+        <vulas.core.appContext.artifact>${project.artifactId}</vulas.core.appContext.artifact>
+        <vulas.core.appContext.version>${project.version}</vulas.core.appContext.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.1.3</version>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+
+            <!-- copy vulas into folder /vulas/lib/ .. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                    <execution>
+                        <id>copy-vulas</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.sap.research.security.vulas</groupId>
+                                    <artifactId>lang-java</artifactId>
+                                    <version>${vulas.version}</version>
+                                    <type>jar</type>
+                                    <classifier>jar-with-dependencies</classifier>
+                                    <outputDirectory>${project.build.directory}/vulas/lib</outputDirectory>
+                                    <destFileName>vulas-core-latest-jar-with-dependencies.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.sap.research.security.vulas</groupId>
+                                    <artifactId>lang-java</artifactId>
+                                    <version>${vulas.version}</version>
+                                    <type>jar</type>
+                                    <classifier>jar-with-dependencies</classifier>
+                                    <outputDirectory>${project.build.directory}/vulas/include</outputDirectory>
+                                    <destFileName>vulas-core-latest-jar-with-dependencies.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.0</version>
+                <configuration>
+
+                    <forkCount>1</forkCount>
+                    <forkedProcessTimeoutInSeconds>0</forkedProcessTimeoutInSeconds>
+                    <argLine>
+                        -javaagent:"${project.build.directory}/vulas/lib/vulas-core-latest-jar-with-dependencies.jar"
+                        -Dvulas.shared.backend.serviceUrl=REPLACE_WITH_BACKENDURL
+                        -Dvulas.shared.tmpDir=${project.build.directory}/vulas/tmp
+                        -Dvulas.core.dummy=dummy
+                        -Dvulas.core.backendConnection=READ_ONLY
+                        -Dvulas.core.uploadDir=${project.build.directory}/vulas/upload
+                        -Dvulas.core.monitor.periodicUpload.enabled=false
+                        -Dvulas.core.appContext.group=${project.groupId}
+                        -Dvulas.core.appContext.artifact=${project.artifactId}
+                        -Dvulas.core.appContext.version=${project.version}
+                        -Dvulas.core.instr.writeCode=false
+                        -Dvulas.core.instr.maxStacktraces=10
+                        -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.StackTraceInstrumentor,com.sap.psr.vulas.monitor.touch.TouchPointInstrumentor
+                        -noverify
+                    </argLine>
+
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>com.sap.research.security.vulas</groupId>
+                <artifactId>plugin-maven</artifactId>
+                <version>3.0.10-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>pre-unit-test</id>
+                        <goals>
+                            <goal>prepare-vulas-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <layeredConfiguration>
+                        <vulas.reach.fwk>wala</vulas.reach.fwk>
+                        <vulas.shared.tmpDir>${project.build.directory}/vulas/tmp</vulas.shared.tmpDir>
+                        <vulas.core.appContext.group>${vulas.core.appContext.group}</vulas.core.appContext.group>
+                        <vulas.core.appContext.artifact>${vulas.core.appContext.artifact}
+                        </vulas.core.appContext.artifact>
+                        <vulas.core.appContext.version>${vulas.core.appContext.version}</vulas.core.appContext.version>
+                        <vulas.core.noThreads>1</vulas.core.noThreads>
+
+                        <vulas.core.uploadDir>${project.build.directory}/vulas/upload</vulas.core.uploadDir>
+
+                        <vulas.core.app.sourceDir>
+                            ${project.build.directory}/classes,${project.basedir}/src/main/java,${project.basedir}/src/main/python
+                        </vulas.core.app.sourceDir>
+
+                        <vulas.core.instr.sourceDir>${project.build.directory}</vulas.core.instr.sourceDir>
+                        <vulas.core.instr.targetDir>${project.build.directory}/vulas/target</vulas.core.instr.targetDir>
+                        <vulas.core.instr.includeDir>${project.build.directory}/vulas/include
+                        </vulas.core.instr.includeDir>
+                        <vulas.core.instr.libDir>${project.build.directory}/vulas/lib</vulas.core.instr.libDir>
+                        <vulas.core.instr.writeCode>false</vulas.core.instr.writeCode>
+                        <vulas.core.instr.instrumentorsChoosen>
+                            com.sap.psr.vulas.monitor.trace.StackTraceInstrumentor,com.sap.psr.vulas.monitor.touch.TouchPointInstrumentor
+                        </vulas.core.instr.instrumentorsChoosen>
+                        <vulas.core.instr.searchRecursive>false</vulas.core.instr.searchRecursive>
+
+                        <vulas.reach.wala.callgraph.reflection>NO_FLOW_TO_CASTS_NO_METHOD_INVOKE
+                        </vulas.reach.wala.callgraph.reflection>
+                        <vulas.reach.timeout>15</vulas.reach.timeout>
+
+
+                        <vulas.report.reportDir>${project.build.directory}/vulas/report</vulas.report.reportDir>
+                        <vulas.report.sap.scv></vulas.report.sap.scv>
+                    </layeredConfiguration>
+                </configuration>
+            </plugin>
+
+        </plugins>
+
+
+    </build>
+
+</project>
