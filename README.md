@@ -76,6 +76,7 @@ Other limitations:
 
 - Static and dynamic analyses are not implemented for Python
 - Static analysis for Java is only supported until Java 8
+- Java 9 multi-release are not supported (classes below `META-INF/versions` are simply ignored)
 
 ## Known Issues
 
