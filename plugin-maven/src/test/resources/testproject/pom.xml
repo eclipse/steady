@@ -35,6 +35,19 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.3-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>com.sap.research.security.vulas</groupId>
                 <artifactId>plugin-maven</artifactId>
                 <version>3.0.10-SNAPSHOT</version>

@@ -34,18 +34,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.3-SNAPSHOT</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
             <!-- copy vulas into folder /vulas/lib/ .. -->
             <plugin>
@@ -95,6 +83,7 @@
                     <forkedProcessTimeoutInSeconds>0</forkedProcessTimeoutInSeconds>
                     <argLine>
                         -javaagent:"${project.build.directory}/vulas/lib/vulas-core-latest-jar-with-dependencies.jar"
+                        -Dvulas.shared.backend.serviceUrl=REPLACE_WITH_BACKENDURL
                         -Dvulas.shared.tmpDir=${project.build.directory}/vulas/tmp
                         -Dvulas.core.dummy=dummy
                         -Dvulas.core.backendConnection=READ_ONLY
@@ -117,7 +106,6 @@
                 <groupId>com.sap.research.security.vulas</groupId>
                 <artifactId>plugin-maven</artifactId>
                 <version>3.0.10-SNAPSHOT</version>
-
                 <executions>
                     <execution>
                         <id>pre-unit-test</id>

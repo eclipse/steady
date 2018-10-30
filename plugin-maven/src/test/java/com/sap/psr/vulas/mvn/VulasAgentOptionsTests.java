@@ -95,7 +95,7 @@ public class VulasAgentOptionsTests {
         VulasAgentMojo.VulasAgentOptions vulasAgentOptions = myMojo.new VulasAgentOptions();
         assertNotNull(vulasAgentOptions);
 
-        String finalArg = vulasAgentOptions.prependVMArguments("-javaagent:/mnt/folder/myproject/vulas/lib/vulas-core-latest-jar-with-dependencies.jar -DfooProp=bar", new File("myaggent"));
+        String finalArg = vulasAgentOptions.prependVMArguments("-javaagent:/mnt/c/Users/myuser/testproject/vulas/lib/vulas-core-latest-jar-with-dependencies.jar -DfooProp=bar", new File("myaggent"));
 
         assertNotNull(finalArg);
 
