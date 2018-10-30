@@ -94,10 +94,12 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		
-		<!-- Specify as system property (-D) -->
+		<!-- Repos to which Vulas artifacts will be deployed, must be provided as system property (-D) (no defaults)  -->
 		<snapshots.repo></snapshots.repo>
-		<milestones.repo></milestones.repo>
 		<releases.repo></releases.repo>
+		
+		<!-- Repos used for resolving dependencies, specify as system property (-D) to change the defaults -->
+		<gradle.repo>https://maven.google.com/</gradle.repo>
 	</properties>
 
 	<profiles>
@@ -128,7 +130,7 @@
 			<repositories>
 				<repository>
 					<id>google</id>
-					<url>https://maven.google.com/</url>
+					<url>${gradle.repo}</url>
 				</repository>
 			</repositories>
 		</profile>
@@ -138,13 +140,13 @@
         <snapshotRepository>
             <uniqueVersion>false</uniqueVersion>
             <id>build.snapshots.repo</id>
-            <name>Internal Snapshots</name>
+            <name>snapshots</name>
             <url>${snapshots.repo}</url>
         </snapshotRepository>
         <repository>
             <id>build.releases.repo</id>
-            <name>Internal Releases</name>
-            <url>${milestones.repo}</url>
+            <name>releases</name>
+            <url>${releases.repo}</url>
         </repository>
         <site>
             <id>vulas.website</id>
