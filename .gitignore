@@ -24,3 +24,5 @@ gradle.zip
 /docker/.env
 /docker/data
 /.vscode
+lang-java-reach-soot-init/lib/*.jar
+

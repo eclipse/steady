@@ -1,10 +1,11 @@
 <p align="center"><img height="64" src="./docs/media/images/logo/vulas.png"></p>
 
-# Open-source vulnerability assessment tool [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) <!-- [![Build Status](https://<host>/job/<name>/job/<job-name>/lastBuild/badge/icon)](https://<host>/job/<name>/job/<job-name>/lastBuild/)-->
+# Open-source vulnerability assessment tool [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![Build Status](https://travis-ci.org/SAP/vulnerability-assessment-tool.svg?branch=master)](https://travis-ci.org/SAP/vulnerability-assessment-tool)
 
 **Discover, assess and mitigate known vulnerabilities in your Java and Python projects.**
 
 The open-source vulnerability assessment tool supports software development organizations in regards to the secure use of open-source components during application development. The tool analyzes **Java** and **Python** applications in order to
+
 - detect whether they depend on open-source components with known vulnerabilities,
 - collect evidence regarding the execution of vulnerable code in a given application context (through the combination of static and dynamic analysis techniques), and
 - support developers in the mitigation of such dependencies.
@@ -18,12 +19,14 @@ In comparison to other tools, the detection is code-centric and usage-based, whi
 Originally developed by SAP Security Research [[2]](https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html)[[3]](https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en), the tool has become the officially recommended open-source scan tool for Java applications at SAP. Since the beginning of 2017, it has been used to perform 20K+ scans of more than 600+ Java development projects.
 
 The tool approach is best described in the following scientific papers, please cite if you use the tool for scientific works/papers:
+
 - Serena Ponta, Henrik Plate, Antonino Sabetta, [Beyond Metadata: Code-centric and Usage-based Analysis of Known Vulnerabilities in Open-source Software](https://arxiv.org/abs/1806.05893), 34th International Conference on Software Maintenance and Evolution (ICSME), 2018
 - Henrik Plate, Serena Ponta, Antonino Sabetta, [Impact Assessment for Vulnerabilities in Open-Source Software Libraries](https://arxiv.org/pdf/1504.04971.pdf), 31st International Conference on Software Maintenance and Evolution (ICSME), 2015
 
 ## Features
 
 In the following a couple of example features:
+
 - **Detection of vulnerable code** is realized by discovering method signatures in Java archives and comparing their source and byte code with the vulnerable and fixed version (as known from the fix commit). As such, the detection is more acurate than for approaches based on meta-data (less false-positives and false-negatives). In particular, it is robust against rebundling, a very common practice in the Java ecosystem.
 - **Assessment of vulnerable dependencies** by application developers and security experts is supported by information about the potential and actual execution of vulnerable code. This information is based on call graph analysis and trace information collected during JUnit and integration tests. Going down to the granularity of single methods, application developers are presented with the potential and actual call stack from application code till vulnerable code.
 - The addition of new vulnerabilities to the knowledge base does not require the re-scan of applications. In other words, right after  an addition to the knowledge base, it is immediately known whether previously scanned applications are affected or not.
@@ -40,10 +43,12 @@ The open-source vulnerability assessment tool has a distributed architecture com
 <p align="center"><img src="./docs/media/images/components-2.png" height="200"/></p>
 
 You need **[Docker](https://www.docker.com/)**
+
 - to build all artifacts and
 - operate the various server-side components.
 
 You need the **[Java 8 JRE](https://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)** and the following to run the various client-side scanners/plugins:
+
 - **[Maven 3.3+](https://maven.apache.org/download.cgi)** for the analysis of Maven projects using the `plugin-maven`,
 - **[Python 3](https://www.python.org/downloads/)** as well as the packages **pip, virtualenv and setuptools** (`pip install <name>`) for the analysis of Python applications using the `cli-scanner`, and
 - **[Gradle 4](https://gradle.org/install/)** for the analysis of Gradle projects using the `plugin-gradle`.
@@ -57,7 +62,7 @@ in a few easy steps. Detailed instructions are available [here](docker/README.md
 
 Even though the default configuration works out of the box, you may want to configure the various components to adapt the tool to your needs and organization. See below for a some examples and refer to the Wiki for detailed configuration instructions.
 
-The client-side scan tools (`plugin-maven`, `plugin-gradle`, `cli-scanner`) can be configured to integrate and align with organization-specific development and security policies. For instance, it is configurable whether build exceptions are thrown as soon as dependencies with vulnerable code exist, or only if the execution of such vulnerable code is observed during JUnit or integration tests. 
+The client-side scan tools (`plugin-maven`, `plugin-gradle`, `cli-scanner`) can be configured to integrate and align with organization-specific development and security policies. For instance, it is configurable whether build exceptions are thrown as soon as dependencies with vulnerable code exist, or only if the execution of such vulnerable code is observed during JUnit or integration tests.
 
 The microservices and Web frontends can be configured to integrate with an organization-specific build and development infrastructure. For instance, private Nexus or PyPI repositories can be configured to provide information about non-public components.
 
@@ -68,12 +73,14 @@ The tool was originally built to manage publicly known vulnerabilities in open-s
 **Important**: Due to the current lack of an authentication and authorization mechanism, it is NOT recommended to run the Web frontends and server-side microservices on systems accessible from the Internet.
 
 Other limitations:
+
 - Static and dynamic analyses are not implemented for Python
 - Static analysis for Java is only supported until Java 8
+- Java 9 multi-release archives are not supported (classes below `META-INF/versions` are simply ignored)
 
 ## Known Issues
 
-None.
+The list of current issues is available [here](https://github.com/SAP/vulnerability-assessment-tool/issues)
 
 ## How to obtain support
 
@@ -86,25 +93,29 @@ Bug reports shall be submitted as GitHub issues, please refer to the next sectio
 Our aim is to build a lively community, hence, we welcome any exchange and collaboration with individuals and organizations interested in the use, support and extension of the open-source vulnerability assessment tool.
 
 Please read [this document](CONTRIBUTING.md) to read more about your options:
- * [Help Others](CONTRIBUTING.md#help-others) on [Stack Overflow](https://stackoverflow.com/questions/tagged/vulas)
- * [Report Bugs](CONTRIBUTING.md#report-an-issue) as GitHub issues
- * [Analyze Bugs](CONTRIBUTING.md#analyze-issues)
- * [Contribute Code](CONTRIBUTING.md#contribute-code) (fixes and features)
- * [Contribute to the Vulnerability Knowledge Base](CONTRIBUTING.md#knowledge-base): The fuel driving the open-source vulnerability assessment tool is its vulnerability database. We plan to use a dedicated GitHub repository to organize the sharing and joint maintenance of information about publicly known vulnerabilities in open-source components. In the majority of the cases, such information essentially consists of a bug identifier and references to one or more commits (created by the developers of the vulnerable component in order to fix the vulnerability). 
+
+- [Help Others](CONTRIBUTING.md#help-others) on [Stack Overflow](https://stackoverflow.com/questions/tagged/vulas)
+- [Report Bugs](CONTRIBUTING.md#report-an-issue) as GitHub issues
+- [Analyze Bugs](CONTRIBUTING.md#analyze-issues)
+- [Contribute Code](CONTRIBUTING.md#contribute-code) (fixes and features)
+- [Contribute to the Vulnerability Knowledge Base](CONTRIBUTING.md#knowledge-base): The fuel driving the open-source vulnerability assessment tool is its vulnerability database. We plan to use a dedicated GitHub repository to organize the sharing and joint maintenance of information about publicly known vulnerabilities in open-source components. In the majority of the cases, such information essentially consists of a bug identifier and references to one or more commits (created by the developers of the vulnerable component in order to fix the vulnerability). 
 
 ## To-Do (upcoming changes)
 
 The following is a subset of pending feature requests:
+
 - Static and dynamic analysis for Python
 - Support of JavaScript (client- and server-side)
 - UI dashboards for workspaces
 
 ## License
+
 Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
 
 This project is licensed under the Apache Software License, v.2 except as noted otherwise in the [LICENSE file](LICENSE.txt).
 
 ## References
+
 \[1\] [https://snyk.io/blog/owasp-top-10-breaches/](https://snyk.io/blog/owasp-top-10-breaches/)
 
 \[2\] [https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html](https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html)

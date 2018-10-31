@@ -21,6 +21,7 @@ model.Config.settings = {
 		swIdLink : "", 
 		swIdRegex : "",
 		swIdDb : "",
+		swIdMandatory : "",
 		wikiUrl : ""
 	};
 
@@ -45,6 +46,7 @@ model.Config.loadPropertiesFromBackend = function(){
 			model.Config.settings.swIdRegex="";
 			model.Config.settings.wikiUrl="";
 			model.Config.settings.swIdDb="";
+			model.Config.settings.swIdMandatory="";
 		}
 		for (var i in configs){
 			if(configs[i].key=="dl.regex")
@@ -61,6 +63,8 @@ model.Config.loadPropertiesFromBackend = function(){
 				model.Config.settings.wikiUrl=configs[i].value[0];
 			if(configs[i].key=="sw.id.db.key")
 				model.Config.settings.swIdDb=configs[i].value[0];		
+			if(configs[i].key=="sw.id.mandatory")
+				model.Config.settings.swIdMandatory=configs[i].value[0];		
 		}
 	});
 	
@@ -176,6 +180,9 @@ model.Config.getSwIdDb = function() {
 	return model.Config.settings.swIdDb;
 }
 
+model.Config.getSwIdMandatory = function() {
+	return model.Config.settings.swIdMandatory;
+}
 
 
 //********* SECTION : FUNCTIONS TO POPULATE JSONMODELS WITH JSON RETURNED BY THE BACKEND REQUESTS *********\\

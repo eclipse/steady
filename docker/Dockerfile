@@ -19,7 +19,7 @@ RUN apk add --no-cache python3 git && \
 
 ENV ANT_OPTS="-Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_PORT}"
 
-RUN pip install requests
+RUN pip install requests virtualenv
 
 COPY . .
 

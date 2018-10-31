@@ -5,7 +5,7 @@
 
 	<groupId>com.sap.research.security.vulas</groupId>
 	<artifactId>root</artifactId>
-	<version>3.0.10-SNAPSHOT</version>
+	<version>3.0.11-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Vulas</name>

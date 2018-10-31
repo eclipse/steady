@@ -1,125 +1,229 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>com.sap.research.security.vulas</groupId>
-		<artifactId>root</artifactId>
-		<version>3.0.10-SNAPSHOT</version>
-	</parent>
-	<artifactId>plugin-maven</artifactId>
-	<packaging>maven-plugin</packaging>
+    <parent>
+        <groupId>com.sap.research.security.vulas</groupId>
+        <artifactId>root</artifactId>
+        <version>3.0.11-SNAPSHOT</version>
+    </parent>
+    <artifactId>plugin-maven</artifactId>
+    <packaging>maven-plugin</packaging>
 
-	<name>Plugin for Maven</name>
-	<description></description>
+    <name>Plugin for Maven</name>
+    <description></description>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
-			<artifactId>lang</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
-			<artifactId>lang-java-reach</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope> <!-- Compile until all goals and the signature creation is service-enabled -->
-		</dependency>
-		<!-- Use Wala as a default call graph constructor service-->
-		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
-			<artifactId>lang-java-reach-wala</artifactId>
-			<version>${project.version}</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.maven</groupId>
-			<artifactId>maven-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.maven</groupId>
-			<artifactId>maven-plugin-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.maven.plugin-tools</groupId>
-			<artifactId>maven-plugin-annotations</artifactId>
-			<version>3.5.2</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.plexus</groupId>
-			<artifactId>plexus-utils</artifactId>
-			<version>3.1.0</version>
-		</dependency>
-	</dependencies>
+    <!-- maven plugins should use the same version in order to work properly -->
+    <properties>
+        <maven.version>3.5.4</maven.version>
+    </properties>
 
-	<build>
-		<plugins>		
-			<!-- Create plugin descriptor and help -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-plugin-plugin</artifactId>
-				<version>3.5.2</version>
-				<configuration>
-					<goalPrefix>vulas</goalPrefix>
-					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-				</configuration>
-				<executions>
-					<execution>
-						<id>help-goal</id>
-						<goals>
-							<goal>helpmojo</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-	<profiles>
-		<profile>
-			<id>run-its</id>
-			<build>
+    <dependencies>
+        <dependency>
+            <groupId>com.sap.research.security.vulas</groupId>
+            <artifactId>lang</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sap.research.security.vulas</groupId>
+            <artifactId>lang-java-reach</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope> <!-- Compile until all goals and the signature creation is service-enabled -->
+        </dependency>
+        <!-- Use Wala as a default call graph constructor service-->
+        <dependency>
+            <groupId>com.sap.research.security.vulas</groupId>
+            <artifactId>lang-java-reach-wala</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-core</artifactId>
+            <version>${maven.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>${maven.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugin-tools</groupId>
+            <artifactId>maven-plugin-annotations</artifactId>
+            <version>3.5.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <!-- use ant's commandline parser -->
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.10.5</version>
+        </dependency>
 
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-invoker-plugin</artifactId>
-						<version>1.7</version>
-						<configuration>
-							<debug>true</debug>
-							<cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
-							<pomIncludes>
-								<pomInclude>*/pom.xml</pomInclude>
-							</pomIncludes>
-							<postBuildHookScript>verify</postBuildHookScript>
-							<localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
-							<settingsFile>src/it/settings.xml</settingsFile>
-							<goals>
-								<goal>clean</goal>
-								<goal>test-compile</goal>
-							</goals>
-						</configuration>
-						<executions>
-							<execution>
-								<id>integration-test</id>
-								<goals>
-									<goal>install</goal>
-									<goal>integration-test</goal>
-									<goal>verify</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
+        <!--instrumentation agent dependency -->
+        <dependency>
+            <groupId>com.sap.research.security.vulas</groupId>
+            <artifactId>lang-java</artifactId>
+            <version>${project.version}</version>
+            <classifier>jar-with-dependencies</classifier>
+        </dependency>
 
-				</plugins>
+        <!-- testing dependency -->
+        <dependency>
+            <groupId>org.apache.maven.plugin-testing</groupId>
+            <artifactId>maven-plugin-testing-harness</artifactId>
+            <version>3.3.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-compat</artifactId>
+            <version>${maven.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-aether-provider</artifactId>
+            <version>3.3.9</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.sonatype.aether</groupId>
+            <artifactId>aether-api</artifactId>
+            <version>1.13.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-verifier</artifactId>
+            <version>1.2</version>
+            <scope>test</scope>
+        </dependency>
 
-			</build>
-		</profile>
-	</profiles>
+        <!-- Used to mock REST services -->
+        <dependency>
+            <groupId>com.xebialabs.restito</groupId>
+            <artifactId>restito</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.restassured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Create plugin descriptor and help -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>3.5.2</version>
+                <configuration>
+                    <goalPrefix>vulas</goalPrefix>
+                    <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>help-goal</id>
+                        <goals>
+                            <goal>helpmojo</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+
+    <profiles>
+        <profile>
+            <id>run-its</id>
+            <build>
+                <plugins>
+                    <!-- Integration Tests for the maven-plugin -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>add-test-source</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>add-test-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>src/it/java</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.22.1</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-invoker-plugin</artifactId>
+                        <version>1.7</version>
+                        <configuration>
+                            <debug>true</debug>
+                            <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+                            <pomIncludes>
+                                <pomInclude>*/pom.xml</pomInclude>
+                            </pomIncludes>
+                            <postBuildHookScript>verify</postBuildHookScript>
+                            <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
+                            <settingsFile>src/it/settings.xml</settingsFile>
+                            <goals>
+                                <goal>clean</goal>
+                                <goal>test-compile</goal>
+                            </goals>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>integration-test</id>
+                                <goals>
+                                    <goal>install</goal>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+
 </project>

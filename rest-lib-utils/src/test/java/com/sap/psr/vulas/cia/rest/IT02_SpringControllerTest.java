@@ -240,7 +240,7 @@ public class IT02_SpringControllerTest {
 		
 		final MockHttpServletRequestBuilder get_builder = get(getConstructUri("org.apache.cxf",
 				"cxf-rt-rs-extension-providers",
-				"2.6.2-sap-02","METH","org.apache.cxf.jaxrs.provider.atom.AbstractAtomProvider.readFrom(Class,Type,Annotation[],MediaType,MultivaluedMap,InputStream)"));
+				"2.6.2","METH","org.apache.cxf.jaxrs.provider.atom.AbstractAtomProvider.readFrom(Class,Type,Annotation[],MediaType,MultivaluedMap,InputStream)"));
     	mockMvc.perform(get_builder)	
                 .andExpect(status().isOk());
     	

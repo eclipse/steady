@@ -21,6 +21,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,12 +39,8 @@ public class SmtpClient {
 	
 	private Properties props = null;
 	
-	public SmtpClient() {
-		props = new Properties();
-		props.put("mail.smtp.auth", "true");
-		//props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.host", VulasConfiguration.getGlobal().getConfiguration().getString(SMTP_HOST));
-		props.put("mail.smtp.port", VulasConfiguration.getGlobal().getConfiguration().getString(SMTP_PORT));
+	public SmtpClient() throws IllegalStateException {
+		this.props = SmtpClient.getSmtpProperties(VulasConfiguration.getGlobal().getConfiguration());
 	}
 		
 	public void send(@NotNull com.sap.psr.vulas.backend.util.Message _msg) throws MessagingException {
@@ -110,5 +107,27 @@ public class SmtpClient {
 			}
 		}
 		return recipients.toArray(new InternetAddress[recipients.size()]);
+	}
+	
+	/**
+	 * Returns {@link Properties} with all SMTP settings. Throws an {@link IllegalStateException} if
+	 * {@link #SMTP_HOST} or {@link SMTP_PORT} are not set.
+	 * 
+	 * @param _cfg
+	 * @return
+	 */
+	public static Properties getSmtpProperties(Configuration _cfg) throws IllegalStateException {
+		final String host = _cfg.getString(SMTP_HOST);
+		final String port = _cfg.getString(SMTP_PORT);
+		if(host==null || port==null)
+			throw new IllegalStateException("Cannot setup SMTP client, configuration settings [" + SMTP_HOST + "] and/or [" + SMTP_PORT + "] are not present");
+		
+		final Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		//props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", host);
+		props.put("mail.smtp.port", port);
+		
+		return props;
 	}
 }

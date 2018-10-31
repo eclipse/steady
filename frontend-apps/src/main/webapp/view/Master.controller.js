@@ -35,24 +35,23 @@ sap.ui.controller("view.Master", {
 	onExit : function() {
 	},
 	
-	reloadData: function(){
+	reloadData: function() {
 		var list = this.getView().byId('idListApplications');
 		var label = this.getView().byId('app-label');
 		label.setText("Applications for space [" + model.Config.getSpace() + "]");
 		list.setBusy(true);
-		var data =[];
-		var oldmodel=list.getModel();
-		if(oldmodel!=undefined){
+		var data = [];
+		var oldmodel = list.getModel();
+		if (oldmodel != undefined) {
 			oldmodel.setData(data,false);
 			oldmodel.refresh();
 		}
 
-
 		if (!model.Config.isMock) {
 			var sUrl = model.Config.getMyAppsServiceUrl(false);
-			
 			var newModel = new sap.ui.model.json.JSONModel();
-			model.Config.loadData (newModel,sUrl, 'GET');
+			document.dispatchEvent(new Event('applicationListReload'));
+			model.Config.loadData(newModel, sUrl, 'GET');
 			var that = this;
 			newModel.attachRequestCompleted(function() {
 				list.setModel(newModel);
@@ -62,17 +61,23 @@ sap.ui.controller("view.Master", {
 				}
 			});
 		}
-
 	},
 	
-	loadVulnerabilityIcons: function (){
+	loadVulnerabilityIcons: function() {
 		var list = this.getView().byId('idListApplications');
+		var reloadCancelled = false
+	
 		if (!model.Config.isMock) {
+			document.addEventListener('applicationListReload', function (e) {
+				reloadCancelled = true
+			}, false)
 			var sUrl = model.Config.getMyAppsServiceUrl(true);
 			var newModel = new sap.ui.model.json.JSONModel();
-			model.Config.loadData (newModel,sUrl, 'GET');
+			model.Config.loadData(newModel, sUrl, 'GET');
 			newModel.attachRequestCompleted(function() {
-				list.setModel(newModel);				
+				if (!reloadCancelled) {
+					list.setModel(newModel);
+				}
 			});
 		}
 	},
@@ -139,6 +144,10 @@ sap.ui.controller("view.Master", {
 			                    				"Cannot create/edit space with distribution list; corresponding properties not configured in the backend"
 			                    			);
 			                    	}
+			                    	else if(model.Config.getSwIdMandatory()=="true" && sap.ui.getCore().byId('idSpaceDL').getValue()=="" && sap.ui.getCore().byId('idSw').getValue()=="")
+			                    		sap.m.MessageBox.warning(
+			                    				"Please provide a valid " + model.Config.getSwIdLabel()+ " or a valid distribution list. Other mandatory fields are: name, description, export mode and public/private mode."
+			                    			);
 			                    	else if(sap.ui.getCore().byId('idSpaceName').getValue() ==null || sap.ui.getCore().byId('idSpaceName').getValue()==""
 			                    		|| sap.ui.getCore().byId('idSpaceDescription').getValue() ==null || sap.ui.getCore().byId('idSpaceDescription').getValue()==""
 			                    			|| sap.ui.getCore().byId('idSpaceExport').getSelectedItem() ==null || sap.ui.getCore().byId('idSpaceExport').getSelectedKey()=="")
@@ -167,7 +176,7 @@ sap.ui.controller("view.Master", {
 			                    			body = body + ', "spaceOwners": [ "' + sap.ui.getCore().byId("idSpaceDL").getValue()+'" ]';
 			                    		}
 			                    		if(sap.ui.getCore().byId('idSw').getValue()!=null && sap.ui.getCore().byId('idSw').getValue()!=""){
-			                    			body = body + ', "properties":[{"source":"USER","name":"'+model.Config.getSwIdDb ()+'","value":"' + sap.ui.getCore().byId("idSw").getValue()+'"}]';
+			                    			body = body + ', "properties":[{"source":"USER","name":"'+model.Config.getSwIdDb()+'","value":"' + sap.ui.getCore().byId("idSw").getValue()+'"}]';
 			                    		}
 			                    		else{ //alert that SwId id was not provided and they should do it by editing the space
 			                    			sap.m.MessageBox.warning(

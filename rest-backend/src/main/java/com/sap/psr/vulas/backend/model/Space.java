@@ -93,8 +93,8 @@ public class Space {
 	@CollectionTable(name="SpaceOwners")
 	private Set<String> spaceOwners;
 	
-	/**^M
-	 * Used to store additional space properties, e.g., PPMS_ID.
+	/**
+	 * Used to store additional space properties, e.g., software identifiers used in other management tools.
 	 */
 	@ManyToMany(cascade = {}, fetch = FetchType.EAGER)
 	private Collection<Property> properties;
