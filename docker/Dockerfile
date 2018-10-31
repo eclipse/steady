@@ -29,7 +29,7 @@ ENV ANT_OPTS="-Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_
 
 RUN wget -O ./plugin-gradle/gradle/wrapper/gradle.zip http://downloads.gradle.org/distributions/gradle-4.4-bin.zip 
 
-RUN pip install requests
+RUN pip install requests virtualenv
 
 ADD docker/run.sh run.sh
 
