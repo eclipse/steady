@@ -12,6 +12,8 @@ services:
         - VULAS_RELEASE=${VULAS_RELEASE}
     expose:
       - "8080"
+    security_opt:
+      - no-new-privileges
 
   frontend-bugs:
     container_name: vulas-os-frontend-bugs
@@ -24,6 +26,8 @@ services:
         - VULAS_RELEASE=${VULAS_RELEASE}
     expose:
       - "8080"
+    security_opt:
+      - no-new-privileges
 
   haproxy:
     container_name: vulas-os-haproxy
@@ -48,6 +52,8 @@ services:
       - frontend-bugs
       - rest-backend
       - rest-lib-utils
+    security_opt:
+      - no-new-privileges
 
   patch-lib-analyzer:
     container_name: vulas-os-patch-lib-analyzer
@@ -67,11 +73,15 @@ services:
     links:
       - rest-backend:backend
       - rest-lib-utils:cia
+    depends_on: 
+      - rest-backend
     environment:
       - PATCHEVAL_OPTS=-bug "" -folder /patcheval-data -j -h 0 -p 6
       - vulas.shared.cia.serviceUrl=http://cia:8092/cia
       - vulas.shared.backend.serviceUrl=http://backend:8091/backend
       - vulas.patchEval.onlyAddNewResults=true
+    security_opt:
+      - no-new-privileges
   
   postgresql:
     container_name: vulas-os-postgresql
@@ -86,6 +96,8 @@ services:
       - "8032:5432"
     volumes:
       - vulas-os-postgres-data:/var/lib/postgresql/data
+    security_opt:
+      - no-new-privileges
 
   rest-backend:
     container_name: vulas-os-rest-backend
@@ -101,7 +113,7 @@ services:
     expose:
       - "8091"
     environment:
-      - DELAY_STARTUP=20
+      - DELAY_STARTUP=5
       - vulas.shared.cia.serviceUrl=http://cia:8092/cia
       - vulas.backend.coverageService.langConfidenceThreshold=0.2
       - vulas.backend.coverageService.licenseConfidenceThreshold=0.2
@@ -110,6 +122,10 @@ services:
       - rest-lib-utils:cia
     volumes:
       - "./data/db-dump/flyway-callbacks:/flyway-callbacks"
+    depends_on: 
+      - postgresql
+    security_opt:
+      - no-new-privileges
 
   rest-lib-utils:
     container_name: vulas-os-rest-lib-utils
@@ -126,6 +142,8 @@ services:
         - "8092"
     volumes:
       - "./data/rest-lib-utils:/root/"
+    security_opt:
+      - no-new-privileges
   
 volumes:
   vulas-os-postgres-data:
