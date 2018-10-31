@@ -129,7 +129,7 @@
 			</modules>
 			<repositories>
 				<repository>
-					<id>google</id>
+					<id>gradle</id>
 					<url>${gradle.repo}</url>
 				</repository>
 			</repositories>
