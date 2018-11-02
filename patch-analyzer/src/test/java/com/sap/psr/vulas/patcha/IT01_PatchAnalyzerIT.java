@@ -19,7 +19,8 @@ public class IT01_PatchAnalyzerIT {
 
 	// Disable upload for JUnit tests
 	static {
-		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.UPLOAD_ENABLED, Boolean.valueOf(false));
+		//VulasConfiguration.getGlobal().setProperty(CoreConfiguration.UPLOAD_ENABLED, Boolean.valueOf(false));
+		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.OFFLINE);
 	}
 
 	/**

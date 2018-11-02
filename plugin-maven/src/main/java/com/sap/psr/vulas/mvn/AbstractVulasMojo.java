@@ -42,6 +42,8 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     private static final String EXCLUDES = "vulas.maven.excludes";
 
     private static final String IGNORE_POMS = "vulas.maven.ignorePoms";
+    
+    protected static final String PLUGIN_CFG_LAYER = "Plugin configuration";
 
     @Parameter(defaultValue = "${project}", property = "project", required = true, readonly = true)
     protected MavenProject project;
@@ -77,7 +79,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
             getLog().info("Transient configuration settings deleted");
 
         // Get the configuration layer from the plugin configuration (can be null)
-        VulasConfiguration.getGlobal().addAfterSystemProperties("Plugin configuration", this.layeredConfiguration, null, true);
+        VulasConfiguration.getGlobal().addLayerAfterSysProps(PLUGIN_CFG_LAYER, this.layeredConfiguration, null, true);
 
         // Check whether the application context can be established
         Application app = null;
@@ -162,7 +164,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
      * @param _prj
      * @return
      */
-    private boolean isPassingFilter(MavenProject _prj) {
+    protected boolean isPassingFilter(MavenProject _prj) {
         boolean do_process = true;
 
         // Only included ones

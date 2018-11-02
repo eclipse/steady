@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
+import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.patcheval.representation.ConstructPathLibResult2;
 import com.sap.psr.vulas.patcheval.representation.OverallConstructChange;
 import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
@@ -58,7 +59,8 @@ public class CiaTest {
 	
 	//@Test
 	public void getConstructsThreadTest () throws BackendConnectionException {
-		VulasConfiguration.getGlobal().setProperty("vulas.core.uploadEnabled", true);    
+		//VulasConfiguration.getGlobal().setProperty(CoreConfiguration.UPLOAD_ENABLED, true);
+		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.READ_ONLY);
 		ConstructId a = new ConstructId(ProgrammingLanguage.JAVA,ConstructType.METH,"org.apache.catalina.startup.ContextConfig.createWebXmlDigester(boolean,boolean)");
 		OverallConstructChange cc = new OverallConstructChange(null, null, null, null, a);
 		LinkedList<OverallConstructChange> l = new LinkedList<OverallConstructChange>();
