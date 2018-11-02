@@ -243,7 +243,7 @@ public class VulasConfiguration {
 
 	/**
 	 * Rebuilds the composite configuration from the list of individual configurations.
-	 * Called after {@link VulasConfiguration#addAfterSystemProperties(String, Map, String, boolean)}, which adds
+	 * Called after {@link VulasConfiguration#addLayerAfterSysProps(String, Map, String, boolean)}, which adds
 	 * a configuration in the middle of the list rather than appending it to the end.
 	 * Rebuilding is necessary, since {@link CompositeConfiguration} only appends to the end.
 	 */
@@ -265,7 +265,7 @@ public class VulasConfiguration {
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	public void addAfterSystemProperties(@NotNull String _layer_name, @NotNull Map<?,?> _map, String _ignore_value, boolean _ignore_null) {
+	public void addLayerAfterSysProps(@NotNull String _layer_name, @NotNull Map<?,?> _map, String _ignore_value, boolean _ignore_null) {
 		final Map<String,Object> map = new HashMap<String,Object>();
 		Configuration config = null;
 
@@ -302,6 +302,20 @@ public class VulasConfiguration {
 
 		if(_map!=null || removed_existing)
 			rebuild();
+	}
+	
+	/**
+	 * Returns the {@link Configuration} layer with the given name. If multiple layers with that name exist, the top-most layer will be returned.
+	 * @param _layer_name
+	 * @return
+	 */
+	public Configuration getConfigurationLayer(String _layer_name) {
+		for(Configuration c: this.individualConfigurations.keySet()) {
+			if(this.individualConfigurations.get(c).equals(_layer_name)) {
+				return c;
+			}
+		}
+		return null;
 	}
 
 	protected boolean appendConfigurationsFromJarPath(String _jar_path) {

@@ -60,7 +60,7 @@ public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
 			getLog().info("Transient configuration settings deleted");
 
 		// Get the configuration layer from the plugin configuration (can be null)
-		VulasConfiguration.getGlobal().addAfterSystemProperties("Plugin configuration", this.layeredConfiguration, null, true);
+		VulasConfiguration.getGlobal().addLayerAfterSysProps("Plugin configuration", this.layeredConfiguration, null, true);
 
 		// Check whether the application context can be established
 		Application app = null;

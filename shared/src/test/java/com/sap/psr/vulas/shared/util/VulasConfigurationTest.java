@@ -48,7 +48,7 @@ public class VulasConfigurationTest {
 		final Map<Integer,String> map1 = new HashMap<Integer,String>();
 		map1.put(1, "test-value");
 		map1.put(2, "-1");
-		VulasConfiguration.getGlobal().addAfterSystemProperties("foo", map1, "-1", false);
+		VulasConfiguration.getGlobal().addLayerAfterSysProps("foo", map1, "-1", false);
 		assertEquals("test-value", VulasConfiguration.getGlobal().getConfiguration().getString("1"));
 		assertTrue(VulasConfiguration.getGlobal().isEmpty("2")); // Must not have been added
 		
@@ -56,7 +56,7 @@ public class VulasConfigurationTest {
 		final Map<String,String> map2 = new HashMap<String,String>();
 		map2.put("vulas.test-key-1", "test-value");
 		map2.put("vulas.test-key-2", null);
-		VulasConfiguration.getGlobal().addAfterSystemProperties("foo", map2, null, true);
+		VulasConfiguration.getGlobal().addLayerAfterSysProps("foo", map2, null, true);
 		assertEquals("test-value", VulasConfiguration.getGlobal().getConfiguration().getString("vulas.test-key-1"));
 	}
 	

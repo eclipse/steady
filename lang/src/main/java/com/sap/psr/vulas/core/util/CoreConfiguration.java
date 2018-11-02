@@ -44,9 +44,7 @@ public class CoreConfiguration {
 	// General
 	public enum ConnectType { OFFLINE, READ_ONLY, READ_WRITE };
 	public final static String BACKEND_CONNECT  = "vulas.core.backendConnection";
-
-	public final static String UPLOAD_ENABLED   = "vulas.core.uploadEnabled";
-
+	
 	public final static String UPLOAD_DIR       = "vulas.core.uploadDir";
 	public final static String UPLOAD_DEL_AFTER = "vulas.core.upload.deleteAfterSuccess";
 
@@ -125,16 +123,6 @@ public class CoreConfiguration {
 	public static boolean isBackendReadWrite() { return ConnectType.READ_WRITE.equals(getBackendConnectType()); }
 
 	private static ConnectType getBackendConnectType() {
-		// The old setting takes precedence
-		final Boolean upload_enabled = VulasConfiguration.getGlobal().getConfiguration().getBoolean(UPLOAD_ENABLED, null);
-		if(upload_enabled!=null) {
-			if(upload_enabled)
-				return ConnectType.READ_WRITE;
-			else
-				return ConnectType.READ_ONLY; 
-		}
-
-		// Check the new setting
 		final String value = VulasConfiguration.getGlobal().getConfiguration().getString(BACKEND_CONNECT, null);
 		if("READ_WRITE".equalsIgnoreCase(value))
 			return ConnectType.READ_WRITE;
