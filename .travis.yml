@@ -29,12 +29,17 @@ matrix:
       services:
         - docker
       before_install:
+        - docker -v
+        - docker-compose -v
         - cp .travis/.env docker/.env
         - docker build --tag vulas-travis -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
         - docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags=-DskipTests vulas-travis
-        - (cd docker && docker-compose up -d --build)
       script:
-        sh .travis/check.sh
+        - (cd docker && docker-compose up -d --build)
+        - sh .travis/check.sh
+      after_failure:
+        - (cd docker && docker-compose logs)
+
 
 branches:
   except:
