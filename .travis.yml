@@ -33,14 +33,16 @@ matrix:
         - docker-compose -v
         - wget -qO- 'https://github.com/tianon/pgp-happy-eyeballs/raw/master/hack-my-builds.sh' | bash
         - cp .travis/.env docker/.env
+      install:
         - docker build --tag vulas-travis -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
         - docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags=-DskipTests vulas-travis
       script:
         - (cd docker && docker-compose up -d --build)
         - sh .travis/check.sh
       after_failure:
+        - docker images
+        - docker ps -as
         - (cd docker && docker-compose logs)
-
 
 branches:
   except:
