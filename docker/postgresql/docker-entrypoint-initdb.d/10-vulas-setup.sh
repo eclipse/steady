@@ -1,10 +1,11 @@
 #!/bin/sh
 set -e
 
-#psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL_A
-#    CREATE DATABASE vulas;
-#    GRANT ALL PRIVILEGES ON DATABASE vulas TO postgres;
-#EOSQL_A
+if [ -z ${POSTGRES_PASSWORD} ] || [ -z ${POSTGRES_USER} ]
+then 
+    echo 'POSTGRES_USER or POSTGRES_PASSWORD cannot be empty'
+    exit 1
+fi
 
 psql --dbname=vulas -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL_B
 CREATE TABLE schema_version (

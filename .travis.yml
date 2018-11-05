@@ -1,27 +1,52 @@
-language: java
+matrix:
+  include:
+    - language: java
+      jdk: openjdk8
+      cache:
+        timeout: 1000
+        directories:
+        - $HOME/.m2
+      before_cache:
+        - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
+      install:
+        - "echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'"
+      script: mvn -e -B -P soot,gradle -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
 
-jdk:
-  - openjdk8
-  - oraclejdk8
+    - language: java
+      jdk: oraclejdk8
+      cache:
+        timeout: 1000
+        directories:
+        - $HOME/.m2
+      before_cache:
+        - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
+      install:
+        - "echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'"
+      script: mvn -e -B -P soot,gradle -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
+
+    - language: bash
+      sudo: required
+      services:
+        - docker
+      before_install:
+        - docker -v
+        - docker-compose -v
+        - wget -qO- 'https://github.com/tianon/pgp-happy-eyeballs/raw/master/hack-my-builds.sh' | bash
+        - cp .travis/.env docker/.env
+      install:
+        - docker build --tag vulas-travis -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
+        - docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags=-DskipTests vulas-travis
+      script:
+        - (cd docker && docker-compose up -d --build)
+        - sh .travis/check.sh
+      after_failure:
+        - docker images
+        - docker ps -as
+        - (cd docker && docker-compose logs)
 
 branches:
   except:
     - gh-pages
 
-cache:
-  timeout: 1000
-  directories:
-  - $HOME/.m2
-
-before_cache:
- - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
-
 notifications:
   email: false
-
-sudo: false
- 
-install:
-  - "echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'"
-
-script: mvn -e -B -P soot,gradle -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install 
