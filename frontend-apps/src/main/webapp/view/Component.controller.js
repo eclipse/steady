@@ -73,9 +73,9 @@ sap.ui.controller("view.Component", {
 		that = this;
 		oLastScanModel.attachRequestCompleted(function() {
 			model.Config.remFromQueue(oLastScanModel);			
-			var _date = oLastScanModel.getObject("/createdAt");
+			var _date = oLastScanModel.getObject("/startedAtClient");
 			_date = _date.substring(0,19);
-			_date = _date.replace("T", " - ");
+			_date = _date.replace("T", ", ");
 			var lastScanDate = that.getView().byId("lastScanDate");
 			lastScanDate.setText("Date of last scan (APP goal): " + _date );
 		}

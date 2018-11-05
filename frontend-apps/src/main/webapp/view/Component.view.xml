@@ -432,7 +432,7 @@
 											</template>
 										</Column>
 										<Column xmlns="sap.ui.table" width="15%" sortProperty="startedAtClient" filterProperty="startedAtClient">
-											<Label text="Started At (GMT)" xmlns="sap.ui.commons" />
+											<Label text="Started At (client timezone)" xmlns="sap.ui.commons" />
 											<template>
 												<Text xmlns="sap.m" text="{startedAtClient}"></Text>
 											</template>
