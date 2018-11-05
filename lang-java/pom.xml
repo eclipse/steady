@@ -73,6 +73,18 @@
 			<artifactId>commons-compress</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- Used to mock REST services -->
+		<dependency>
+			<groupId>com.xebialabs.restito</groupId>
+			<artifactId>restito</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.jayway.restassured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

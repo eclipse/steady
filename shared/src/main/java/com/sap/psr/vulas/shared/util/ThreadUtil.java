@@ -44,5 +44,4 @@ public class ThreadUtil {
 	public static int getNoThreads() {
 		return getNoThreads(1);
 	}
-
 }

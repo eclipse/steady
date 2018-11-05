@@ -53,10 +53,7 @@ public class ClassVisitor {
 			ClassVisitor.log = LogFactory.getLog(ClassVisitor.class);
 		return ClassVisitor.log;
 	}
-	private static boolean WRITE_CODE_TO_TMP = false;
-	static {
-		WRITE_CODE_TO_TMP = VulasConfiguration.getGlobal().getConfiguration().getBoolean(CoreConfiguration.INSTR_WRITE_CODE, false);
-	}
+	private boolean writeCodeToTmp = false;
 
 	// ====================================== INSTANCE MEMBERS
 
@@ -108,6 +105,8 @@ public class ClassVisitor {
 			if(!Modifier.isStatic(this.c.getModifiers()))
 				ClassVisitor.getLog().warn("No declaring class found for non-static inner class [" + this.javaId.getQualifiedName() + "]");//: " + e.getMessage());
 		}
+		
+		writeCodeToTmp = VulasConfiguration.getGlobal().getConfiguration().getBoolean(CoreConfiguration.INSTR_WRITE_CODE, false);
 	}
 
 	/**
@@ -251,7 +250,7 @@ public class ClassVisitor {
 		}
 
 		// The catch clause of the above try clause
-		source_code.append("} catch(Throwable e) { System.err.println(e.getClass().getName() + \" occured during execution of instrumentation code in " + _jid.toString() + ": \" + e.getMessage()); }");
+		source_code.append("} catch(Throwable e) { System.err.println(e.getClass().getName() + \" occurred during execution of instrumentation code in " + _jid.toString() + ": \" + e.getMessage()); }");
 
 		// Inject the code		
 		try {
@@ -264,7 +263,7 @@ public class ClassVisitor {
 		}
 
 		// Write source and byte code to tmp
-		if(source_code.length()>0 && (ClassVisitor.WRITE_CODE_TO_TMP || cce!=null)) {
+		if(source_code.length()>0 && (this.writeCodeToTmp || cce!=null)) {
 			Path p = null;
 			try {
 				p = Paths.get(VulasConfiguration.getGlobal().getTmpDir().toString(), _jid.getJavaPackageId().getQualifiedName().replace('.','/'), _jid.getDefinitionContext().getName() + "." + _jid.getName().replace('<', '_').replace('>','_') + ".java");
@@ -337,7 +336,7 @@ public class ClassVisitor {
 
 		this.c.detach(); // Removes the CtClass from the ClassPool
 
-		if(ClassVisitor.WRITE_CODE_TO_TMP) {
+		if(this.writeCodeToTmp) {
 			Path p = null;
 			try {
 				p = Paths.get(VulasConfiguration.getGlobal().getTmpDir().toString(), this.javaId.getJavaPackageId().getQualifiedName().replace('.','/'), this.javaId.getName().replace('<', '_').replace('>','_') + ".class");

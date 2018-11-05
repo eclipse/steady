@@ -230,13 +230,15 @@ public class JavaFileAnalyzer2Test {
 			final JavaClassId cl = JavaId.parseClassQName("com.sap.psr.vulas.java.test.Vanilla");
 			final JavaConstructorId cons = JavaId.parseConstructorQName("com.sap.psr.vulas.java.test.Vanilla(String)");
 			final JavaMethodId meth = JavaId.parseMethodQName("com.sap.psr.vulas.java.test.Vanilla.foo(String)");
+			final JavaMethodId meth2 = JavaId.parseMethodQName("com.sap.psr.vulas.java.test.Vanilla.vuln(String)");
 
 			// Assertions
-			assertEquals(4, constructs.size());
+			assertEquals(5, constructs.size());
 			assertTrue(constructs.containsKey(p));
 			assertTrue(constructs.containsKey(cl));
 			assertTrue(constructs.containsKey(cons));
 			assertTrue(constructs.containsKey(meth));
+			assertTrue(constructs.containsKey(meth2));
 		} catch (FileAnalysisException e) {
 			e.printStackTrace();
 			assertTrue(false);

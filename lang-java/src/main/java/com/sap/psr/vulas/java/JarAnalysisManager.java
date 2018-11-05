@@ -194,7 +194,7 @@ public class JarAnalysisManager extends SimpleFileVisitor<Path> {
 					ja.setInstrument(this.instrument);
 				} 
 				else {
-					JarAnalysisManager.log.warn("File extension not supported (only JAR and WAR): " + p);
+					JarAnalysisManager.log.warn("File extension not supported (only JAR, WAR, AAR): " + p);
 					continue;
 				}
 				if(parent!=null)
@@ -222,7 +222,7 @@ public class JarAnalysisManager extends SimpleFileVisitor<Path> {
 			JarAnalysisManager.log.error("Interrupt exception");
 		}
 
-		JarAnalysisManager.log.info("A total of [" + this.count + " JARs] analyzed");
+		JarAnalysisManager.log.info("A total of [" + this.count + "] archives analyzed");
 	}
 
 	public Set<JarAnalyzer> getAnalyzers() {

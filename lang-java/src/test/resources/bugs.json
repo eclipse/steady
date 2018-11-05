@@ -1,0 +1,44 @@
+[
+  {
+    "bugId": "CVE-foo-bar",
+    "bugIdAlt": null,
+    "maturity": "DRAFT",
+    "origin": "PUBLIC",
+    "description": "Dummy bug for dummy method",
+    "descriptionAlt": null,
+    "cvssScore": null,
+    "cvssVersion": null,
+    "cvssVector": null,
+    "reference": [],
+    "constructChanges": [
+      {
+        "repo": "https://github.com/requests/requests/",
+        "commit": "c45d7c49ea75133e52ab22a8e9e13173938e36ff",
+        "repoPath": "requests/sessions.py",
+        "constructId": {
+          "lang": "JAVA",
+          "type": "METH",
+          "qname": "com.sap.psr.vulas.java.test.Vanilla.vuln(String)"
+        },
+        "committedAt": "2018-09-14T12:08:04.000+0000",
+        "constructChangeType": "MOD"
+      }
+    ],
+    "createdAt": "2018-10-11T12:01:52.041+0000",
+    "createdBy": null,
+    "modifiedAt": "2018-10-23T06:12:43.582+0000",
+    "modifiedBy": null,
+    "cvssDisplayString": "n/a",
+    "countAffLibIds": {
+      "ratios": null,
+      "percentages": null,
+      "counters": [
+        {
+          "name": "MANUAL",
+          "count": 132
+        }
+      ]
+    },
+    "countConstructChanges": 10
+  }
+]

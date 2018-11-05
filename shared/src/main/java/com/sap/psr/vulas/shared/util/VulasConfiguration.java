@@ -118,6 +118,12 @@ public class VulasConfiguration {
 	 * Regex used to discover configurations in the folder BOOT-INF/classes/ of executable Spring JARs.
 	 */
 	private static final String propertiesRegexSpring = "BOOT-INF/classes/vulas-.*\\.properties";
+	
+	public static final String SYS_PROP_CFG_LAYER = "System-Properties";
+	
+	public static final String TRANSIENT_CFG_LAYER = "Transient-Config-Layer";
+	
+	public static final String ENV_CFG_LAYER = "Environment-Variables";
 
 	/**
 	 * Returns the mutable configuration object for read/write access.
@@ -140,10 +146,10 @@ public class VulasConfiguration {
 		final Set<Path> paths = fs.search(Paths.get("."));
 
 		// Add: Writable map (takes all settings coming through setProperty)
-		addConfiguration(writableConfiguration, "Transient layer (writable, not persisted)");
+		addConfiguration(writableConfiguration, TRANSIENT_CFG_LAYER);
 
 		// Add: System properties
-		addConfiguration(new SystemConfiguration(), "-D system properties");
+		addConfiguration(new SystemConfiguration(), SYS_PROP_CFG_LAYER);
 
 		// Add: Properties in file system
 		String pathToFileAsString = null;
@@ -163,7 +169,7 @@ public class VulasConfiguration {
 		// Add: Environment variables
 		final Map<String, String> env = System.getenv();
 		Configuration env_config = new MapConfiguration(env);
-		addConfiguration(env_config, "Environment variables");
+		addConfiguration(env_config, ENV_CFG_LAYER);
 
 		// Add: Properties in JAR files contained in classpath
 		final ClassLoader cl = VulasConfiguration.class.getClassLoader();
