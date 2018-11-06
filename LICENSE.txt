@@ -222,7 +222,7 @@ Additional Notices: N.a.
 Component: Dependency Finder
 Licensor: Jean Tessier
 Website: https://github.com/jeantessier/dependency-finder
-License: Custom license (https://github.com/jeantessier/dependency-finder/blob/master/license.txt, a copy is included below)
+License: BSD-like (https://github.com/jeantessier/dependency-finder/blob/master/license.txt, a copy is included below)
 Additional Notices: N.a.
 
 ------------------------------------------------------------------------------
