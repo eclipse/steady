@@ -1,4 +1,4 @@
-package com.sap.psr.vulas.goals;
+package com.sap.psr.vulas.java.goals;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -9,8 +9,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
+import com.sap.psr.vulas.goals.AbstractAppGoal;
+import com.sap.psr.vulas.goals.AbstractGoal;
+import com.sap.psr.vulas.goals.GoalConfigurationException;
+import com.sap.psr.vulas.java.JarAnalysisManager;
 import com.sap.psr.vulas.shared.enums.GoalType;
+import com.sap.psr.vulas.shared.json.model.Application;
+import com.sap.psr.vulas.shared.util.FileSearch;
 import com.sap.psr.vulas.shared.util.FileUtil;
+import com.sap.psr.vulas.shared.util.ThreadUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 public class InstrGoal extends AbstractAppGoal {
@@ -127,21 +134,12 @@ public class InstrGoal extends AbstractAppGoal {
 
 	@Override
 	protected void executeTasks() throws Exception {
-		/*final Application app = this.getApplicationContext();
+		final Application app = this.getApplicationContext();
 
-<<<<<<< HEAD
-		final JarAnalysisManager mgr = new JarAnalysisManager(VulasConfiguration.getSingleton().getConfiguration().getInt(CoreConfiguration.JAR_POOLSIZE, 4), true, app);
-=======
-		// The type of archives to be instrumented
-		String[] ext = null;
-		if(app.getPackaging()!=null)
-			ext = new String[] { app.getPackaging() };
-		else
-			ext = new String[] { "jar", "war" };
+		//TODO: Check how to use packaging information from the Maven plugin
 
-		final int no_threads = CoreConfiguration.getNoThreads(2);
+		final int no_threads = ThreadUtil.getNoThreads(2);
 		final JarAnalysisManager mgr = new JarAnalysisManager(no_threads, true, app);
->>>>>>> origin/refactoring2
 		mgr.setRename(true);
 
 		// Set the different lib, include and work directories (if any)
@@ -156,34 +154,22 @@ public class InstrGoal extends AbstractAppGoal {
 
 		// Search source archives and go
 		final FileSearch vis = new FileSearch(AbstractGoal.JAR_WAR_EXT);
-		final int search_depth = VulasConfiguration.getSingleton().getConfiguration().getBoolean(CoreConfiguration.INSTR_SEARCH_RECURSIVE, false) ? Integer.MAX_VALUE : 1;
+		final int search_depth = VulasConfiguration.getGlobal().getConfiguration().getBoolean(CoreConfiguration.INSTR_SEARCH_RECURSIVE, false) ? Integer.MAX_VALUE : 1;
 		mgr.startAnalysis(vis.search(getInstrPaths(), search_depth), null);
 
-		// Add goal config
-<<<<<<< HEAD
-		this.addGoalConfig("instr.poolSize", new Integer(VulasConfiguration.getSingleton().getConfiguration().getInt(CoreConfiguration.JAR_POOLSIZE, 4)).toString());
-=======
-		this.addGoalConfig("instr.poolSize", new Integer(no_threads).toString());
->>>>>>> origin/refactoring2
-		//		this.addGoalConfig("instr.includeDir", includeDir.getPath());
-		//		this.addGoalConfig("instr.libDir", libDir.getPath());
-		//		this.addGoalConfig("instr.srcDir", srcDir.getPath());
-		//		this.addGoalConfig("instr.targetDir", targetDir.getPath());
-		this.addGoalConfig("instr.suffix", StringUtil.join(AbstractGoal.JAR_WAR_EXT, ", "));
-
 		// Add goal stats
-		this.addGoalStats("instr.archivesAnalyzed", mgr.countArchivesAnalyzed());
-		this.addGoalStats("instr.archivesOriginalFileSizeTotal", mgr.getFileSize());
-		this.addGoalStats("instr.archivesInstrumentedFileSizeTotal", mgr.getInstrumentedFileSize());
+		//this.addGoalStats("instr.archivesAnalyzed", mgr.countArchivesAnalyzed());
+		//this.addGoalStats("instr.archivesOriginalFileSizeTotal", mgr.getFileSize());
+		//this.addGoalStats("instr.archivesInstrumentedFileSizeTotal", mgr.getInstrumentedFileSize());
 		// The following probably makes no sense, since we always instrument one JAR or WAR in the context of this Maven goal
 		//			this.addGoalStats("instr.archivesFileSizeMax", ...);
 		//			this.addGoalStats("instr.archivesFileSizeAvg", ...);
 
 		// Number of classes in the JAR or WAR. For WARs, also the libs in WB/INF/lib are considered. 
-		this.addGoalStats("instr.classesInstrumentedTotal", mgr.countClassesTotal());
-		this.addGoalStats("instr.classesInstrumentedAlready", mgr.countClassesInstrumentedAlready());
-		this.addGoalStats("instr.classesInstrumentedSuccess", mgr.countClassesInstrumentedSuccess());
-		this.addGoalStats("instr.classesInstrumentedFailure", mgr.countClassesInstrumentedFailure());
+		//this.addGoalStats("instr.classesInstrumentedTotal", mgr.countClassesTotal());
+		//this.addGoalStats("instr.classesInstrumentedAlready", mgr.countClassesInstrumentedAlready());
+		//this.addGoalStats("instr.classesInstrumentedSuccess", mgr.countClassesInstrumentedSuccess());
+		//this.addGoalStats("instr.classesInstrumentedFailure", mgr.countClassesInstrumentedFailure());
 
 		//TODO: Keep track of single constructs instrumented
 		//exe.addGoalStats("instr.noDepConstructs", mgr.countConstructsIdentified());*/

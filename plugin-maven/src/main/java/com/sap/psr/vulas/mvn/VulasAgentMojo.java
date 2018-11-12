@@ -24,6 +24,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Environment;
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
+import com.sap.psr.vulas.core.util.CoreConfiguration.ConnectType;
 import com.sap.psr.vulas.goals.GoalExecutionException;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.util.StringUtil;
@@ -72,26 +73,57 @@ public class VulasAgentMojo extends AbstractVulasMojo {
                 e.printStackTrace();
             }*/
 
-			final Configuration configuration = VulasConfiguration.getGlobal().getConfigurationLayer(PLUGIN_CFG_LAYER);
+			// Add settings from plugin configuration
+			Configuration configuration = VulasConfiguration.getGlobal().getConfigurationLayer(PLUGIN_CFG_LAYER);
 			if(configuration!=null) {
+				getLog().info("The following settings are taken from layer [" + PLUGIN_CFG_LAYER + "]:");
 				final Iterator<String> iter = configuration.getKeys(); 
 				while(iter.hasNext()) {
 					final String key = iter.next();
 					final Object val = configuration.getProperty(key);
+					String val_str = null;
 					if(val instanceof String[]) {
-						this.agentOptions.put(key, StringUtil.join((String[])val, ","));
+						val_str = StringUtil.join((String[])val, ",");
 					}
 					else if(val instanceof ArrayList<?>) {
-						this.agentOptions.put(key, StringUtil.join((ArrayList<String>)val, ","));
+						val_str = StringUtil.join((ArrayList<String>)val, ",");
 					}
 					else {
-						this.agentOptions.put(key, val.toString());
+						val_str = val.toString();
+					}
+					this.agentOptions.put(key, val_str);
+					getLog().info("    [" + key + "=" + val + "]");
+				}
+			}
+			
+			// Add settings from sys properties
+			configuration = VulasConfiguration.getGlobal().getConfigurationLayer(VulasConfiguration.SYS_PROP_CFG_LAYER);
+			if(configuration!=null) {
+				getLog().info("The following settings are taken from layer [" + VulasConfiguration.SYS_PROP_CFG_LAYER + "]:");
+				final Iterator<String> iter = configuration.getKeys(); 
+				while(iter.hasNext()) {
+					final String key = iter.next();
+					final Object val = configuration.getProperty(key);
+					String val_str = null;
+					if(key.startsWith("vulas.")) {
+						if(val instanceof String[]) {
+							val_str = StringUtil.join((String[])val, ",");
+						}
+						else if(val instanceof ArrayList<?>) {
+							val_str = StringUtil.join((ArrayList<String>)val, ",");
+						}
+						else {
+							val_str = val.toString();
+						}
+						this.agentOptions.put(key, val_str);
+						getLog().info("    [" + key + "=" + val + "]");
 					}
 				}
 			}
-
+			
 			// Always READ_ONLY so that traces, paths, etc. will be rewritten to disk
 			this.agentOptions.put(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.READ_ONLY.toString());
+			getLog().info("Setting [" + CoreConfiguration.BACKEND_CONNECT + "] set to [" + CoreConfiguration.ConnectType.READ_ONLY + "] (hard-coded, no matter the configured value)");
 		}
 
 

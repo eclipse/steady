@@ -15,13 +15,14 @@ public abstract class AbstractInstrumentor implements IInstrumentor {
 	 * This information is available in the Java variables vul_cls_res and vul_cls_ldr.
 	 */
 	protected synchronized void injectUrlAndLoader(StringBuffer _buffer, JavaId _jid, CtBehavior _behavior) { 
-
-		// Contains the source code
+		// Only add the following if not yet existing
 		final StringBuffer buffer = new StringBuffer();
-
-		// Different techniques will be used to determine the current method's class
-		buffer.append("Class vul_cls = null;");
-
+		buffer.append("Class vul_cls = null;"); // Different techniques will be used to determine the current method's class
+		buffer.append("ClassLoader vul_cls_ldr = null;");
+		buffer.append("java.net.URL vul_cls_res = null;");
+		if(_buffer.length()==0 || _buffer.indexOf(buffer.toString())==-1)
+			_buffer.insert(0, buffer);
+		
 		// Get the class object of the current class
 		int m = _behavior.getModifiers();
 		if(Modifier.isStatic(m)) {
@@ -29,14 +30,14 @@ public abstract class AbstractInstrumentor implements IInstrumentor {
 			// Also see https://jboss-javassist.github.io/javassist/tutorial/tutorial2.html
 
 			// Use MethodHandles.lookup().lookupClass()
-			buffer.append("if(vul_cls==null) { try { vul_cls=java.lang.invoke.MethodHandles.lookup().lookupClass(); } catch(Exception e) {} }");
+			_buffer.append("if(vul_cls==null) { try { vul_cls=java.lang.invoke.MethodHandles.lookup().lookupClass(); } catch(Exception e) {} }");
 
 			// Option 3) Use fully-qualified class name --> fails for static methods in anonymous classes
 			//buffer.append("final Class vul_cls=").append(_jid.getDefinitionContext().getQualifiedName().replace('$', '.')).append(".class;");
 
 			// Results in the runtime call of "javassist.runtime.Desc.getClazz(String)"
 			// See https://jboss-javassist.github.io/javassist/tutorial/tutorial2.html
-			buffer.append("if(vul_cls==null) { try { vul_cls=$class; } catch(Exception e) {} }");
+			_buffer.append("if(vul_cls==null) { try { vul_cls=$class; } catch(Exception e) {} }");
 
 			// Results as is in a compile exception, commented out
 			//buffer.append("if(vul_cls==null) { try { vul_cls=new Object(){}.getClass().getEnclosingClass(); } catch(Exception e) {} }");
@@ -46,26 +47,20 @@ public abstract class AbstractInstrumentor implements IInstrumentor {
 			// The lack of the method causes a compile exception, which can be avoided by checking for its presence.
 			// Example: [pool-2-thread-1] INFO  com.sap.psr.vulas.monitor.ClassVisitor  - Exception while instrumenting JAVA METH [org.apache.struts2.views.jsp.ParamTag.getBean(ValueStack,HttpServletRequest,HttpServletResponse)]: [source error] getClass() not found in org.apache.struts2.views.jsp.ParamTag
 			if(this.hasGetClassMethod(_behavior.getDeclaringClass()))
-				buffer.append("if(vul_cls==null) { try { vul_cls=$0.getClass(); } catch(Exception e) {} }");
+				_buffer.append("if(vul_cls==null) { try { vul_cls=$0.getClass(); } catch(Exception e) {} }");
 
 			// Use MethodHandles.lookup().lookupClass()
-			buffer.append("if(vul_cls==null) { try { vul_cls=java.lang.invoke.MethodHandles.lookup().lookupClass(); } catch(Exception e) {} }");
+			_buffer.append("if(vul_cls==null) { try { vul_cls=java.lang.invoke.MethodHandles.lookup().lookupClass(); } catch(Exception e) {} }");
 
 			// Results in the runtime call of "javassist.runtime.Desc.getClazz(String)"
-			buffer.append("if(vul_cls==null) { try { vul_cls=$class; } catch(Exception e) {} }");
+			_buffer.append("if(vul_cls==null) { try { vul_cls=$class; } catch(Exception e) {} }");
 		}
 
-		buffer.append("ClassLoader vul_cls_ldr = null;");
-		buffer.append("java.net.URL vul_cls_res = null;");
-		buffer.append("if(vul_cls!=null) {");
-		buffer.append("vul_cls_ldr = vul_cls.getClassLoader();");
-		buffer.append("if(vul_cls_ldr!=null)");
-		buffer.append("vul_cls_res=vul_cls_ldr.getResource(vul_cls.getName().replace('.', '/') + \".class\");");
-		buffer.append("}");
-
-		// Only add the source code if not yet existing
-		if(_buffer.length()==0 || _buffer.indexOf(buffer.toString())==-1)
-			_buffer.append(buffer);
+		_buffer.append("if(vul_cls!=null && vul_cls_ldr==null && vul_cls_res==null) {");
+		_buffer.append("  vul_cls_ldr = vul_cls.getClassLoader();");
+		_buffer.append("  if(vul_cls_ldr!=null)");
+		_buffer.append("    vul_cls_res = vul_cls_ldr.getResource(vul_cls.getName().replace('.', '/') + \".class\");");
+		_buffer.append("}");
 	}
 
 	/**
@@ -73,15 +68,10 @@ public abstract class AbstractInstrumentor implements IInstrumentor {
 	 * This information is available in the Java variable vul_st.
 	 */
 	protected synchronized void injectStacktrace(StringBuffer _buffer, JavaId _jid, CtBehavior _behavior) {
-
-		// Contains the source code
-		final StringBuffer buffer = new StringBuffer();
-
-		buffer.append("final StackTraceElement[] vul_st = new Throwable().getStackTrace();");
-
-		// Only add the source code if not yet existing
-		if(_buffer.length()==0 || _buffer.indexOf(buffer.toString())==-1)
-			_buffer.append(buffer);
+		final String decl = "StackTraceElement[] vul_st = null;";
+		if(_buffer.length()==0 || _buffer.indexOf(decl.toString())==-1)
+			_buffer.insert(0, decl);
+		_buffer.append("if(vul_st==null) { vul_st = new Throwable().getStackTrace(); }");
 	}
 	
 	private boolean hasGetClassMethod(CtClass _c) {

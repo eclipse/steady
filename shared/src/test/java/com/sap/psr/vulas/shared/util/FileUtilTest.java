@@ -3,7 +3,10 @@ package com.sap.psr.vulas.shared.util;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.Test;
 
@@ -29,5 +32,17 @@ public class FileUtilTest {
 		VulasConfiguration.getGlobal().setProperty(VulasConfiguration.CHARSET, "foo");
 		final Charset cs = FileUtil.getCharset();
 		assertEquals("UTF-8", cs.name());
+	}
+	
+	@Test
+	public void testCopyFile() {
+		try {
+			final Path source_file = Paths.get("./src/test/resources/Outer.jar");
+			final Path target_file = FileUtil.copyFile(source_file, VulasConfiguration.getGlobal().getTmpDir());
+			assertEquals(FileUtil.getDigest(source_file.toFile(), DigestAlgorithm.SHA1), FileUtil.getDigest(target_file.toFile(), DigestAlgorithm.SHA1));
+		} catch (IOException e) {
+			e.printStackTrace();
+			assertEquals(true, false);
+		}
 	}
 }

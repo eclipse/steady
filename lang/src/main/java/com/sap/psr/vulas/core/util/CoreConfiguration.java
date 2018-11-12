@@ -39,7 +39,6 @@ public class CoreConfiguration {
 	public final static String APP_CTX_GROUP = "vulas.core.appContext.group";
 	public final static String APP_CTX_ARTIF = "vulas.core.appContext.artifact";
 	public final static String APP_CTX_VERSI = "vulas.core.appContext.version";
-	//public final static String APP_CTX_PACKA = "vulas.core.appContext.packaging";
 
 	// General
 	public enum ConnectType { OFFLINE, READ_ONLY, READ_WRITE };

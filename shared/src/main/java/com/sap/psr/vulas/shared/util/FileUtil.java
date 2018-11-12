@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -193,6 +194,18 @@ public class FileUtil {
 			log.error("Defaulting to UTF-8 since charset with name [" + cs + "] cannot be created: " + unused.getMessage());
 			return StandardCharsets.UTF_8;
 		}
+	}
+	
+	public static Path copyFile(Path _source_file, Path _target_dir) throws IOException {
+		final Path to = _target_dir.resolve(_source_file.getFileName());
+		try (final InputStream is = new FileInputStream(_source_file.toFile());
+				final OutputStream os = new FileOutputStream(to.toFile())) {
+			final byte[] byte_buffer = new byte[1024];
+			int len = 0;
+			while((len = is.read(byte_buffer)) != -1)
+				os.write(byte_buffer,0,len);
+		}
+		return to;
 	}
 
 	// Reading files

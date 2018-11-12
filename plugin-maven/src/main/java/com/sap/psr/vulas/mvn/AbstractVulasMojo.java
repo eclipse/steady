@@ -43,7 +43,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
 
     private static final String IGNORE_POMS = "vulas.maven.ignorePoms";
     
-    protected static final String PLUGIN_CFG_LAYER = "Plugin configuration";
+    protected static final String PLUGIN_CFG_LAYER = "Maven-Plugin-Config";
 
     @Parameter(defaultValue = "${project}", property = "project", required = true, readonly = true)
     protected MavenProject project;

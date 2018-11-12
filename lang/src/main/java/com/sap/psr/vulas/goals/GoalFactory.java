@@ -46,7 +46,17 @@ public class GoalFactory {
 			}
 		}
 		else if(_type.equals(GoalType.INSTR)) {
-			goal = new InstrGoal();
+			final String clazzname = "com.sap.psr.vulas.java.goals.InstrGoal";
+			try {
+				final Class clazz = Class.forName(clazzname);
+				goal = (AbstractGoal)clazz.newInstance();
+			} catch (ClassNotFoundException e) {
+				throw new IllegalStateException("Cannot create instance of class [" + clazzname + "]: " + e.getMessage());
+			} catch (InstantiationException e) {
+				throw new IllegalStateException("Cannot create instance of class [" + clazzname + "]: " + e.getMessage());
+			} catch (IllegalAccessException e) {
+				throw new IllegalStateException("Cannot create instance of class [" + clazzname + "]: " + e.getMessage());
+			}
 		}
 		else if(_type.equals(GoalType.REPORT)) {
 			goal = new ReportGoal();
