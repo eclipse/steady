@@ -3,12 +3,15 @@ package com.sap.psr.vulas.cia.rest;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import java.io.FileNotFoundException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -254,6 +257,18 @@ public class IT02_SpringControllerTest {
 				"1.9.1","METH","org.apache.batik.dom.util.SAXDocumentFactory.createDocument(InputSource)"));
     	mockMvc.perform(get_builder)	
                 .andExpect(status().isOk());
+	}
+	
+	
+	@Test
+	public void intersectNotExistingArtifactTest() throws Exception{
+		
+		final MockHttpServletRequestBuilder get_builder = post(getArtifactUri("corg.eclipse.jetty.aggregate", "jetty-all", "9.4.13.v20181111").concat("/jar/constructIds/intersect?lang=JAVA")).content("[]")
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(get_builder)	
+                .andExpect(status().isNotFound());
+	
 	}
 	
 }
