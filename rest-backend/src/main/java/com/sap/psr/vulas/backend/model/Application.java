@@ -22,6 +22,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -74,6 +75,21 @@ public class Application implements Serializable, Comparable {
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	@JsonIgnoreProperties(value = { "createdAt" }, allowGetters=true)
 	private java.util.Calendar createdAt;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
+	@JsonIgnoreProperties(value = { "modifiedAt" }, allowGetters=true)
+	private java.util.Calendar modifiedAt;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
+	@JsonIgnoreProperties(value = { "lastScan" }, allowGetters=true) //TODO: to remove if the value should be given by the client
+	private java.util.Calendar lastScan;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
+	@JsonIgnoreProperties(value = { "lastVulnChange" }, allowGetters=true)
+	private java.util.Calendar lastVulnChange;
 
 	@ManyToMany(cascade = {}, fetch = FetchType.LAZY)
 	@JsonView(Views.Never.class)
@@ -196,7 +212,16 @@ public class Application implements Serializable, Comparable {
 	
 	public java.util.Calendar getCreatedAt() { return createdAt; }
 	public void setCreatedAt(java.util.Calendar createdAt) { this.createdAt = createdAt; }
+	
+	public java.util.Calendar getModifiedAt() { return modifiedAt; }
+	public void setModifiedAt(java.util.Calendar modifiedAt) { this.modifiedAt = modifiedAt; }
 
+	public java.util.Calendar getLastScan() { return lastScan; }
+	public void setLastScan(java.util.Calendar lastScan) { this.lastScan = lastScan; }
+	
+	public java.util.Calendar getLastVulnChange() { return lastVulnChange; }
+	public void setLastVulnChange(java.util.Calendar lastVulnChange) { this.lastVulnChange = lastVulnChange; }
+	
 	/**
 	 * Removes all application {@link ConstructId}s and {@link Dependency}s.
 	 */
@@ -252,6 +277,14 @@ public class Application implements Serializable, Comparable {
 		if(this.getCreatedAt()==null) {
 			this.setCreatedAt(Calendar.getInstance());
 		}
+		this.setModifiedAt(Calendar.getInstance());
+		this.setLastScan(Calendar.getInstance());
+		this.setLastVulnChange(Calendar.getInstance());
+	}
+	
+	@PreUpdate
+	public void preUpdate() {
+		this.setModifiedAt(Calendar.getInstance());
 	}
 
 	@Override

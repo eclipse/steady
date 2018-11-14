@@ -2,11 +2,13 @@ package com.sap.psr.vulas.backend.repo;
 
 
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.sap.psr.vulas.backend.model.Application;
+import com.sap.psr.vulas.backend.model.ConstructChange;
 import com.sap.psr.vulas.backend.model.VulnerableDependency;
 
 
@@ -27,4 +29,6 @@ public interface ApplicationRepositoryCustom {
 	public TreeSet<VulnerableDependency> findAppVulnerableDependencies(Application _app, boolean _add_excemption_info, boolean _log);
 	
 	public HashMap<Long, HashMap<String, Boolean>> findAffectedApps(String[] _bugs);
+	
+	public void refreshVulnChangebyChangeList(Collection<ConstructChange> _listOfConstructChanges);
 }

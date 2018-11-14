@@ -2,6 +2,7 @@ package com.sap.psr.vulas.backend.rest;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -11,6 +12,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -25,6 +27,7 @@ import java.util.function.Predicate;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+
 
 import org.junit.After;
 import org.junit.Assert;
@@ -48,6 +51,8 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.Bug;
+import com.sap.psr.vulas.backend.model.ConstructChange;
+import com.sap.psr.vulas.backend.model.ConstructChangeType;
 import com.sap.psr.vulas.backend.model.ConstructId;
 import com.sap.psr.vulas.backend.model.Dependency;
 import com.sap.psr.vulas.backend.model.GoalExecution;
@@ -537,6 +542,39 @@ public class ApplicationControllerTest {
     	System.out.println("Vulnerable Dependency list size: "+vd.size());
        	System.out.println("====================================");
     	assertEquals(0, vd.size());
+    }
+    
+    /**
+     * Tests application lastVulnChange update when bug construct changes are saved 
+     * @return
+     */
+    @Test
+    public void testRefreshAppsByCC() throws Exception {
+    	final Library lib = this.createExampleLibrary();
+    	Library managed_lib = this.libRepository.customSave(lib);
+    	final Application app = this.createExampleApplication();
+    	Application managed_app = this.appRepository.customSave(app);    	
+    	
+    	Calendar originalLastVulnChange = managed_app.getLastVulnChange();
+    	System.out.println("Modified at after creation [" + managed_app.getModifiedAt().getTimeInMillis() + "]");
+    	    	
+    	//Get the application by CC
+    	List<Application> appFromJPQL = this.appRepository.findAppsByCC((List<ConstructId>)managed_lib.getConstructs());
+    	assertTrue(appFromJPQL.contains(managed_app));
+    	
+    	//create Construct change for the already existing construct
+    	ConstructId cid =null;
+    	for(ConstructId c: managed_lib.getConstructs()){
+    		cid = c;
+    	}
+    	final ConstructChange cc1 = new ConstructChange("svn.apache.org", "123456", "/trunk/src/main/java/com/acme/Bar.java", cid, Calendar.getInstance(), ConstructChangeType.MOD);
+    	List<ConstructChange> listOfConstructChanges = new ArrayList<ConstructChange>();
+    	listOfConstructChanges.add(cc1);
+    	
+    	this.appRepository.refreshVulnChangebyChangeList(listOfConstructChanges);
+    	
+    	managed_app = this.appRepository.findOne(managed_app.getId());
+    	System.out.println("Modified at before update is [" + originalLastVulnChange.getTimeInMillis() + "], after update is [" + managed_app.getLastVulnChange().getTimeInMillis() + "]");
     }
     
     public static String asJsonString(final Object obj) {

@@ -37,6 +37,9 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 
 	@Autowired
 	ConstructChangeRepository ccRepository;
+	
+	@Autowired
+	ApplicationRepository appRepository;
 
 	/**
 	 * Saves the given {@link Bug} together with all the nested {@link ConstructId}s.
@@ -68,9 +71,15 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 			_bug = this.saveNestedConstructIds(_bug);
 		sw.lap("Updated refs to nested constructs");
 
+		
 		// Save
 		try {
 			managed_bug = this.bugRepository.save(_bug);
+			
+			//Update vulnChange timestamp for apps with construct changes among its dependencies' constructs
+			//this needs to be done after the bug has been created as we need the construct changes to exist in the database to avoid querying by fields (lang, type, qname)
+			appRepository.refreshVulnChangebyChangeList(managed_bug.getConstructChanges());
+			
 			sw.stop();
 		} catch (Exception e) {
 			sw.stop(e);

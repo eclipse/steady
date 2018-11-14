@@ -112,6 +112,9 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 		_app.setId(managed_app.getId());
 		_app.setCreatedAt(managed_app.getCreatedAt());
+		_app.setModifiedAt(managed_app.getModifiedAt());
+		_app.setLastScan(managed_app.getLastScan());
+		_app.setLastVulnChange(managed_app.getLastVulnChange());
 		
 		// Update refs to independent entities
 		_app.setConstructs(refUpdater.saveNestedConstructIds(_app.getConstructs()));
@@ -561,5 +564,21 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			}
 		}
 		return affected_apps;		
+	}
+	
+	public void refreshVulnChangebyChangeList(Collection<ConstructChange> _listOfConstructChanges){
+		
+		List<ConstructId> listOfConstructs = new ArrayList<ConstructId>();
+		for(ConstructChange cc : _listOfConstructChanges){
+			listOfConstructs.add(cc.getConstructId());
+		}
+		List<Application> apps = appRepository.findAppsByCC(listOfConstructs); 
+		
+		for (Application a: apps){
+			//Application managed_app = appRepository.findOne(a.getId());
+			appRepository.save(a);
+		}
+		
+		
 	}
 }

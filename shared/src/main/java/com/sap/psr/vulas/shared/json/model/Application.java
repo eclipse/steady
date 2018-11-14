@@ -34,6 +34,15 @@ public class Application implements Serializable, Comparable {
 	
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	private java.util.Calendar createdAt;
+	
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
+	private java.util.Calendar modifiedAt;
+	
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
+	private java.util.Calendar lastScan;
+	
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
+	private java.util.Calendar lastVulnChange;
 
 	private Collection<ConstructId> constructs = new HashSet<ConstructId>();
 	
@@ -135,6 +144,30 @@ public class Application implements Serializable, Comparable {
 	public java.util.Calendar getCreatedAt() { return createdAt; }
 	public void setCreatedAt(java.util.Calendar createdAt) { this.createdAt = createdAt; }
 	
+	public java.util.Calendar getModifiedAt() {
+		return modifiedAt;
+	}
+
+	public void setModifiedAt(java.util.Calendar modifiedAt) {
+		this.modifiedAt = modifiedAt;
+	}
+
+	public java.util.Calendar getLastScan() {
+		return lastScan;
+	}
+
+	public void setLastScan(java.util.Calendar lastScan) {
+		this.lastScan = lastScan;
+	}
+
+	public java.util.Calendar getLastVulnChange() {
+		return lastVulnChange;
+	}
+
+	public void setLastVulnChange(java.util.Calendar lastVulnChange) {
+		this.lastVulnChange = lastVulnChange;
+	}
+
 	/**
 	 * Removes all application {@link ConstructId}s and {@link Dependency}s.
 	 */

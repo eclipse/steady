@@ -59,7 +59,7 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 	/**
 	 * 
 	 * @param bug
-	 * @return the saved bug
+	 * @return the saved affected libraries
 	 */
 	public List<AffectedLibrary> customSave(Bug _bug, AffectedLibrary[] _aff_libs) throws PersistenceException {
 		
@@ -98,6 +98,8 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 			provided_aff_lib = this.updateConstructChanges(provided_aff_lib,_bug);
 			
 			log.debug(provided_aff_lib.toString(true));
+			
+			//TODO update the applications having the affected libraries as application dependencies
 			
 			// Save
 			try {

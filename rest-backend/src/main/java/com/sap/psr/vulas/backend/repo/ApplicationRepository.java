@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.Bug;
+import com.sap.psr.vulas.backend.model.ConstructId;
 import com.sap.psr.vulas.backend.model.ConstructSearchResult;
 import com.sap.psr.vulas.backend.model.Dependency;
 import com.sap.psr.vulas.backend.model.Space;
@@ -156,7 +157,7 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 			+ "   AND a.space = :space"
 			+ "   AND lc = cc.constructId"		
 			+ "   AND (NOT lc.type='PACK' "                        // Java + Python exception
-			+ "   OR NOT EXISTS (SELECT 1 FROM ConstructChange cc1 JOIN cc1.constructId c1 WHERE cc1.bug=cc.bug AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%' AND NOT c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') ) "     
+			+ "   OR NOT EXISTS (SELECT 1 FROM ConstructChange cc1 JOIN cc1.constructId c1 WHERE cc1.bug=cc.bug AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%' AND NOT c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') ) "      //select bug if all other cc of the same bug are PACK, ADD or Test changes
 			+ "   AND NOT (lc.type='MODU' AND lc.qname='setup')" // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs
 			)
 	TreeSet<VulnerableDependency> findJPQLVulnerableDependenciesByGAV(@Param("mvnGroup") String group, @Param("artifact") String artifact, @Param("version") String version, @Param("space") Space space);
@@ -308,4 +309,24 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 		+ "   AND vd.version = :version"
 		)
 	List<VulnerableDependency> findJPQLVulnerableDependenciesByGAVView(@Param("mvnGroup") String group, @Param("artifact") String artifact,@Param("version") String version);*/
+	
+	/**
+	 * Counts the number of {@link Dependency}s of the given {@link Application} (excluding those having the provided scopes).
+	 * @param group
+	 * @param artifact
+	 * @param version
+	 * @param type
+	 * @return
+	 */
+	@Query("SELECT distinct d.app FROM Dependency d "
+			+ "	  JOIN "
+			+ "   d.lib l"
+			+ "   JOIN "
+			+ "   l.constructs lc "
+			+ "	  WHERE lc IN :listOfConstructs "		
+			+ "   AND (NOT lc.type='PACK' "                        // Java + Python exception
+			+ "   OR NOT EXISTS (SELECT 1 FROM ConstructChange cc1 JOIN cc1.constructId c1 WHERE c1 IN :listOfConstructs AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%' AND NOT c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') ) "     
+			+ "   AND NOT (lc.type='MODU' AND lc.qname='setup')"
+			)
+	List<Application> findAppsByCC(@Param("listOfConstructs") List<ConstructId> listOfConstructs);
 }
