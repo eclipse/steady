@@ -343,11 +343,10 @@ public class ArtifactController {
 				if(response==null)
 					return new ResponseEntity<List<ConstructId>>(HttpStatus.NOT_FOUND);
 				else{
-					
-					Artifact a = new Artifact(mvnGroup,artifact,version);
-					a.setPackaging(packaging);
-					a.setProgrammingLanguage(lang);
-					
+					 Artifact a = new Artifact(mvnGroup,artifact,version);
+					 a.setPackaging(packaging);
+					 a.setProgrammingLanguage(lang);
+										
 					//FileAnalyzer fa = fileAnalyzerCache.get(a);
 					FileAnalyzer fa = FileAnalyzerFetcher.read(a);
 					
@@ -369,10 +368,16 @@ public class ArtifactController {
 				}
 				
 			} catch (Exception e) {
-				ArtifactController.log.error(e.getMessage(), e);
+				// there exists cases (e.g., jetty-all) where getArtifactVersion returns 200 but the artifact cannot be downloaded
+				// so we return 404
+				if(e.getCause() instanceof FileNotFoundException){
+					ArtifactController.log.error("Cannot download artifact ["+mvnGroup+":"+artifact+":"+version+":"+packaging+"]: does not exist");
+					return new ResponseEntity<List<ConstructId>>(HttpStatus.NOT_FOUND);
+				}
 				// IllegalArgumentException is thrown by the check on the packaging to be download. 
 				if(e.getCause() instanceof IllegalArgumentException)
 					return new ResponseEntity<List<ConstructId>>(HttpStatus.BAD_REQUEST);
+				ArtifactController.log.error(e.getMessage(), e);
 				//we print (for now) the stack trace to understand where we may go wrong
 				return new ResponseEntity<List<ConstructId>>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
