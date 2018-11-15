@@ -311,12 +311,9 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 	List<VulnerableDependency> findJPQLVulnerableDependenciesByGAVView(@Param("mvnGroup") String group, @Param("artifact") String artifact,@Param("version") String version);*/
 	
 	/**
-	 * Counts the number of {@link Dependency}s of the given {@link Application} (excluding those having the provided scopes).
-	 * @param group
-	 * @param artifact
-	 * @param version
-	 * @param type
-	 * @return
+	 * Finds the applications whose dependencies include constructs from the given list.
+	 * @param listOfConstructs list of {@link ConstructId}
+	 * @return list of {@link Application}
 	 */
 	@Query("SELECT distinct d.app FROM Dependency d "
 			+ "	  JOIN "
@@ -329,4 +326,44 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 			+ "   AND NOT (lc.type='MODU' AND lc.qname='setup')"
 			)
 	List<Application> findAppsByCC(@Param("listOfConstructs") List<ConstructId> listOfConstructs);
+	
+	/**
+	 * Finds the applications whose dependencies include {@link LibraryId}s from the given list.
+	 * @param listOfConstructs list of {@link ConstructId}
+	 * @return list of {@link Application}
+	 */
+//	@Query("SELECT distinct d.app FROM Dependency d "
+//			+ "	  JOIN "
+//			+ "   d.lib l"
+//			+ "   JOIN "
+//			+ "   l.constructs lc "
+//			+ "	  WHERE lc IN :listOfConstructs "		
+//			+ "   AND (NOT lc.type='PACK' "                        // Java + Python exception
+//			+ "   OR NOT EXISTS (SELECT 1 FROM ConstructChange cc1 JOIN cc1.constructId c1 WHERE c1 IN :listOfConstructs AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%' AND NOT c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') ) "     
+//			+ "   AND NOT (lc.type='MODU' AND lc.qname='setup')"
+//			
+//			@Query("SELECT"
+//					+ "   DISTINCT new com.sap.psr.vulas.backend.model.VulnerableDependency(d,b) FROM"
+//					+ "	  Dependency d "
+//					+ "   JOIN "
+//					+ "   d.app a "
+//					+ "	  JOIN "
+//					+ "   d.lib l"
+//					+ "   JOIN "
+//					+ "   l.libraryId dep_libid,"
+//					+ "	  Bug b"
+//					+ "   JOIN "
+//					+ "   b.affectedVersions av "
+//					+ "   JOIN "
+//					+ "   av.libraryId av_libid"
+//					+ "   LEFT OUTER JOIN "
+//					+ "   b.constructChanges as cc"
+//					+ "	  WHERE a.mvnGroup = :mvnGroup "
+//					+ "   AND a.artifact = :artifact "
+//					+ "   AND a.version = :version"
+//					+ "   AND a.space = :space"
+//					+ "   AND dep_libid = av_libid" 
+//					+ "   AND cc IS NULL"
+//			)
+//	List<Application> findAppsByAffLib(@Param("listOfConstructs") List<ConstructId> listOfConstructs);
 }
