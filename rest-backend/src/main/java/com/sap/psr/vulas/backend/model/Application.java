@@ -282,10 +282,10 @@ public class Application implements Serializable, Comparable {
 		this.setLastVulnChange(Calendar.getInstance());
 	}
 	
-	@PreUpdate
-	public void preUpdate() {
-		this.setModifiedAt(Calendar.getInstance());
-	}
+//	@PreUpdate
+//	public void preUpdate() {
+//		this.setModifiedAt(Calendar.getInstance());
+//	}
 
 	@Override
 	public int hashCode() {

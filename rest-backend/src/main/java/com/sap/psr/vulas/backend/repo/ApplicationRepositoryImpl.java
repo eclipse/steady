@@ -2,6 +2,7 @@ package com.sap.psr.vulas.backend.repo;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +16,7 @@ import java.util.TreeSet;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
@@ -88,6 +90,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	@Autowired
 	ReferenceUpdater refUpdater;
 
+	@Transactional
 	public Application customSave(Application _app) {
 		final StopWatch sw = new StopWatch("Save app " + _app).start();
 
@@ -100,6 +103,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		
 		try {
 			managed_app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(group, artifact, version, _app.getSpace()));
+			managed_app.setModifiedAt(Calendar.getInstance());
 			_app = this.updateDependencies(managed_app, _app);
 			sw.lap("Updated refs to nested deps of existing application' dependencies");
 		} catch (EntityNotFoundException e1) {
@@ -112,7 +116,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 		_app.setId(managed_app.getId());
 		_app.setCreatedAt(managed_app.getCreatedAt());
-		_app.setModifiedAt(managed_app.getModifiedAt());
+		_app.setModifiedAt(managed_app.getModifiedAt());	
 		_app.setLastScan(managed_app.getLastScan());
 		_app.setLastVulnChange(managed_app.getLastVulnChange());
 		

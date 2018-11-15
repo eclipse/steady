@@ -556,7 +556,9 @@ public class ApplicationControllerTest {
     	Application managed_app = this.appRepository.customSave(app);    	
     	
     	Calendar originalLastVulnChange = managed_app.getLastVulnChange();
-    	System.out.println("Modified at after creation [" + managed_app.getModifiedAt().getTimeInMillis() + "]");
+    	Calendar originalModifiedAt = managed_app.getModifiedAt();
+    	Calendar originalCreatedAt = managed_app.getCreatedAt();
+    	assertTrue(originalModifiedAt.getTimeInMillis()==originalCreatedAt.getTimeInMillis());
     	    	
     	//Get the application by CC
     	List<Application> appFromJPQL = this.appRepository.findAppsByCC((List<ConstructId>)managed_lib.getConstructs());
@@ -575,6 +577,10 @@ public class ApplicationControllerTest {
     	
     	managed_app = this.appRepository.findOne(managed_app.getId());
     	System.out.println("Modified at before update is [" + originalLastVulnChange.getTimeInMillis() + "], after update is [" + managed_app.getLastVulnChange().getTimeInMillis() + "]");
+    	assertTrue(managed_app.getLastVulnChange().getTimeInMillis()>originalLastVulnChange.getTimeInMillis());
+    	assertTrue(managed_app.getModifiedAt().getTimeInMillis()>originalModifiedAt.getTimeInMillis());
+    	assertTrue(managed_app.getCreatedAt().getTimeInMillis()==originalCreatedAt.getTimeInMillis());
+    	
     }
     
     public static String asJsonString(final Object obj) {

@@ -3,6 +3,7 @@ package com.sap.psr.vulas.backend.repo;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
@@ -50,6 +51,7 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 	 */
 	@CacheEvict(value="bug",key="#_bug.bugId")
 	@Override
+	@Transactional
 	public Bug customSave(Bug _bug, Boolean _considerCC) throws PersistenceException {
 		final StopWatch sw = new StopWatch("Save bug " + _bug.getBugId()).start();
 
