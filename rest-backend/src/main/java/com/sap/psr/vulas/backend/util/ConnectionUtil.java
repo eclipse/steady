@@ -19,7 +19,12 @@ public class ConnectionUtil {
 	public static RequestConfig getProxyConfig() {
 		RequestConfig config = null;
 		final String phost = System.getProperty("http.proxyHost", null);
-		final int pport = new Integer(System.getProperty("http.proxyPort", "-1")).intValue();
+		int pport=-1;
+		try{
+			pport = Integer.parseInt(System.getProperty("http.proxyPort", "-1"));
+		} catch (NumberFormatException e){
+			log.warn("The configured proxy port is not valid, the request will be executed without proxy");
+		}
 		if(phost!=null && pport!=-1) {
 			final HttpHost http_proxy = new HttpHost(phost, pport, "http");
 	        config = RequestConfig.custom().setProxy(http_proxy).build();
