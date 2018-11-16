@@ -9,16 +9,22 @@ public class ConnectionUtilTest {
 	@Test
 	public void testsBuildMaps() {
 		
-		RequestConfig g = ConnectionUtil.getProxyConfig();
-		assertEquals(g,null);
+		String host = System.getProperty("http.proxyHost");
+		String port = System.getProperty("http.proxyPort");
 		
-		System.setProperty("http.proxyPort", "");
-		g = ConnectionUtil.getProxyConfig();
-		assertEquals(g,null);
+		RequestConfig g = ConnectionUtil.getProxyConfig();
 		
 		System.setProperty("http.proxyHost", "proxy");
 		System.setProperty("http.proxyPort", "80");
 		g = ConnectionUtil.getProxyConfig();
 		assertEquals(g.getProxy().toString(), "http://proxy:80");
+			
+		System.setProperty("http.proxyPort", "");
+		g = ConnectionUtil.getProxyConfig();
+		assertEquals(g,null);
+		//System.out.println(g.getProxy());
+	
+		System.setProperty("http.proxyHost", host);
+		System.setProperty("http.proxyPort", port);
 	}
 }

@@ -20,6 +20,6 @@ installed_on timestamp without time zone DEFAULT now() NOT NULL,
 execution_time integer NOT NULL,
 success boolean NOT NULL
 );
-ALTER TABLE schema_version OWNER TO postgres;
+ALTER TABLE schema_version OWNER TO ${POSTGRES_USER};
 INSERT INTO schema_version VALUES (1, '20161206.1800', 'Base version', 'BASELINE', 'Base version', NULL, 'postgres', '2016-12-06 18:00:00.000000', 0, true);
 EOSQL_B
