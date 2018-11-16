@@ -20,6 +20,5 @@ public class ConnectionUtilTest {
 		System.setProperty("http.proxyPort", "80");
 		g = ConnectionUtil.getProxyConfig();
 		assertEquals(g.getProxy().toString(), "http://proxy:80");
-		System.out.println(g.getProxy());
 	}
 }
