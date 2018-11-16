@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 public class ConnectionUtilTest {
 
 	@Test
-	public void testsBuildMaps() {
+	public void testGetProxy() {
 		
 		String host = System.getProperty("http.proxyHost");
 		String port = System.getProperty("http.proxyPort");
@@ -24,7 +24,9 @@ public class ConnectionUtilTest {
 		assertEquals(g,null);
 		//System.out.println(g.getProxy());
 	
-		System.setProperty("http.proxyHost", host);
-		System.setProperty("http.proxyPort", port);
+		if(host!=null)
+			System.setProperty("http.proxyHost", host);
+		if(port!=null)
+			System.setProperty("http.proxyPort", port);
 	}
 }
