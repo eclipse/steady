@@ -481,7 +481,7 @@
 									</m:MatrixLayoutRow>
 									<m:MatrixLayoutRow>
 										<m:MatrixLayoutCell width="25%" hAlign="Right">
-											<Text xmlns="sap.m" text="Search string" />
+											<Text xmlns="sap.m" text="Search string for the construct name" />
 										</m:MatrixLayoutCell>
 										<m:MatrixLayoutCell>
 											<commons:TextField id="idSearchString" placeholder="Enter search string for the construct name..." width="75%"/>
