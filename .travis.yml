@@ -59,7 +59,7 @@ matrix:
         - cp .travis/.env docker/.env
       install:
         - docker build --tag vulas-travis -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
-        - docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags=$'-P soot,gradle -Dit.test=\'!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase\' -DfailIfNoTests=false --settings .travis/settings.xml' vulas-travis
+        - docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags='-P soot,gradle -Dit.test=!IT01_PatchAnalyzerIT,IT*,*IT,*ITCase -DfailIfNoTests=false --settings .travis/settings.xml' vulas-travis
       script:
         - (cd docker && docker-compose up -d --build)
         - sh .travis/check.sh
