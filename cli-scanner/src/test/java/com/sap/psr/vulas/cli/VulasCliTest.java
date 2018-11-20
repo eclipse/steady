@@ -7,8 +7,10 @@ import static com.xebialabs.restito.semantics.Action.charset;
 import static com.xebialabs.restito.semantics.Action.contentType;
 import static com.xebialabs.restito.semantics.Action.status;
 import static com.xebialabs.restito.semantics.Action.stringContent;
+import static com.xebialabs.restito.semantics.Condition.composite;
 import static com.xebialabs.restito.semantics.Condition.method;
 import static com.xebialabs.restito.semantics.Condition.post;
+import static com.xebialabs.restito.semantics.Condition.put;
 import static com.xebialabs.restito.semantics.Condition.uri;
 
 import java.nio.file.Path;
@@ -35,18 +37,38 @@ public class VulasCliTest extends AbstractGoalTest {
 	 */
 	private void setupMockServices(Application _a) {
 		final String s_json = JacksonUtil.asJsonString(_a);
+		
+		// Options app: 200
 		whenHttp(server).
-		match(post("/backend" + PathBuilder.apps())).
+				match(composite(method(Method.OPTIONS), uri("/backend" + PathBuilder.app(_a)))).
+			then(
+				stringContent(s_json),
+				contentType("application/json"),
+				charset("UTF-8"),
+				status(HttpStatus.OK_200));
+				
+		// Put app: 200
+		whenHttp(server).
+		match(put("/backend" + PathBuilder.apps())).
 		then(
 				stringContent(s_json),
 				contentType("application/json"),
 				charset("UTF-8"),
-				status(HttpStatus.CREATED_201));
+				status(HttpStatus.OK_200));
 
-		expect()
-		.statusCode(201).
-		when()
-		.post("/backend" + PathBuilder.apps());
+		// Post app: 200 (for clean goal)
+		whenHttp(server).
+		match(post("/backend" + PathBuilder.app(_a))).
+		then(
+				stringContent(s_json),
+				contentType("application/json"),
+				charset("UTF-8"),
+				status(HttpStatus.OK_200));
+		
+//		expect()
+//		.statusCode(201).
+//		when()
+//		.post("/backend" + PathBuilder.apps());
 
 		whenHttp(server).
 		match(post("/backend" + PathBuilder.goalExcecutions(null, null, _a))).
@@ -56,10 +78,10 @@ public class VulasCliTest extends AbstractGoalTest {
 				charset("UTF-8"),
 				status(HttpStatus.CREATED_201));
 
-		expect()
-		.statusCode(201).
-		when()
-		.post("/backend" + PathBuilder.goalExcecutions(null, null, _a));
+//		expect()
+//		.statusCode(201).
+//		when()
+//		.post("/backend" + PathBuilder.goalExcecutions(null, null, _a));
 	}
 
 	/**
@@ -79,8 +101,8 @@ public class VulasCliTest extends AbstractGoalTest {
 		// Check the HTTP calls made
 		verifyHttp(server).times(1, 
 				method(Method.POST),
-				uri("/backend" + PathBuilder.apps()));
-		verifyHttp(server).times(1, 
+				uri("/backend" + PathBuilder.app(testApp)));
+		verifyHttp(server).times(2, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}
@@ -114,9 +136,9 @@ public class VulasCliTest extends AbstractGoalTest {
 		VulasCli.main(args);
 
 		// Check the HTTP calls made
-		verifyHttp(server).times(2, 
-				method(Method.POST),
-				uri("/backend" + PathBuilder.apps()));
+		verifyHttp(server).times(1, 
+				method(Method.PUT),
+				uri("/backend" + PathBuilder.app(this.testApp)));
 		verifyHttp(server).times(2, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
@@ -139,7 +161,7 @@ public class VulasCliTest extends AbstractGoalTest {
 		VulasCli.main(args);
 
 		// Check the HTTP calls made
-		verifyHttp(server).times(2, 
+		verifyHttp(server).times(1, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.apps()));
 		verifyHttp(server).times(2, 
@@ -163,9 +185,9 @@ public class VulasCliTest extends AbstractGoalTest {
 		VulasCli.main(args);
 
 		// Check the HTTP calls made
-		verifyHttp(server).times(2, 
-				method(Method.POST),
-				uri("/backend" + PathBuilder.apps()));
+		verifyHttp(server).times(1, 
+				method(Method.PUT),
+				uri("/backend" + PathBuilder.app(this.testApp)));
 		verifyHttp(server).times(2, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));

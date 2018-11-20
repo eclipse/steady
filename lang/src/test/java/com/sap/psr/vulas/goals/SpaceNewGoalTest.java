@@ -41,12 +41,12 @@ public class SpaceNewGoalTest extends AbstractGoalTest {
 				charset("UTF-8"),
 				status(HttpStatus.CREATED_201));
 
-		expect()
-			.statusCode(201).
-			and().
-			body("spaceName", equalTo(_s.getSpaceName())).
-			when()
-			.post("/backend/spaces");
+//		expect()
+//			.statusCode(201).
+//			and().
+//			body("spaceName", equalTo(_s.getSpaceName())).
+//			when()
+//			.post("/backend/spaces");
 
 		whenHttp(server).
 		match(post("/backend" + PathBuilder.goalExcecutions(null, _s, null))).
@@ -56,10 +56,10 @@ public class SpaceNewGoalTest extends AbstractGoalTest {
 				charset("UTF-8"),
 				status(HttpStatus.CREATED_201));
 		
-		expect()
-		.statusCode(201).
-		when()
-		.post("/backend" + PathBuilder.goalExcecutions(null, _s, null));
+//		expect()
+//		.statusCode(201).
+//		when()
+//		.post("/backend" + PathBuilder.goalExcecutions(null, _s, null));
 	}
 
 	/**
@@ -114,10 +114,10 @@ public class SpaceNewGoalTest extends AbstractGoalTest {
 		assertEquals(testSpace, new_space);
 
 		// Check the HTTP calls made
-		verifyHttp(server).times(2, 
+		verifyHttp(server).times(1, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.spaces()));
-		verifyHttp(server).times(2,
+		verifyHttp(server).times(0,
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, testSpace, null)));
 	}

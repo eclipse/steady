@@ -86,6 +86,11 @@ public abstract class AbstractAppGoal extends AbstractGoal {
 			//if(this.appPaths.size()==1 && FileUtil.hasFileExtension(this.appPaths.get(0), WAR_EXT)) {
 			//this.handleAppWars();
 			//}
+			
+			// Upload before actual analysis
+			final boolean created = this.upload();
+			if(!created)
+				throw new GoalConfigurationException("Upload of goal execution failed, aborting the goal execution...");
 		}
 		// Thrown by all methods related to updating/adding paths
 		catch (IllegalArgumentException e) {

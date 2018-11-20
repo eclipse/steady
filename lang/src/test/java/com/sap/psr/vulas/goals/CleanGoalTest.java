@@ -1,6 +1,5 @@
 package com.sap.psr.vulas.goals;
 
-import static com.jayway.restassured.RestAssured.expect;
 import static com.xebialabs.restito.builder.stub.StubHttp.whenHttp;
 import static com.xebialabs.restito.builder.verify.VerifyHttp.verifyHttp;
 import static com.xebialabs.restito.semantics.Action.charset;
@@ -10,6 +9,7 @@ import static com.xebialabs.restito.semantics.Action.stringContent;
 import static com.xebialabs.restito.semantics.Condition.composite;
 import static com.xebialabs.restito.semantics.Condition.method;
 import static com.xebialabs.restito.semantics.Condition.post;
+import static com.xebialabs.restito.semantics.Condition.put;
 import static com.xebialabs.restito.semantics.Condition.uri;
 
 import org.glassfish.grizzly.http.Method;
@@ -32,21 +32,41 @@ public class CleanGoalTest extends AbstractGoalTest {
 	private void setupMockServices(Application _a) {
 		final String s_json = JacksonUtil.asJsonString(_a);
 		
-		// Create app
+		// Options app: 200
 		whenHttp(server).
-		match(post("/backend" + PathBuilder.apps())).
+				match(composite(method(Method.OPTIONS), uri("/backend" + PathBuilder.app(_a)))).
+			then(
+				stringContent(s_json),
+				contentType("application/json"),
+				charset("UTF-8"),
+				status(HttpStatus.OK_200));
+		
+		// Put app: 201
+		whenHttp(server).
+		match(put("/backend" + PathBuilder.app(_a))).
 		then(
 				stringContent(s_json),
 				contentType("application/json"),
 				charset("UTF-8"),
 				status(HttpStatus.CREATED_201));
 		
-		expect()
-			.statusCode(201).
-			when()
-			.post("/backend" + PathBuilder.apps());
+		// Post app: 200 (for clean goal)
+		whenHttp(server).
+		match(post("/backend" + PathBuilder.app(_a))).
+		then(
+				stringContent(s_json),
+				contentType("application/json"),
+				charset("UTF-8"),
+				status(HttpStatus.OK_200));
+				
+//		expect()
+//			.statusCode(201).
+//			when()
+//			.post("/backend" + PathBuilder.apps());
+		
+		// Options goal exe: 404 (default, no need to implement, results in 4 goal execution uploads in total)
 
-		// Create goal exe
+		// Post goal exe: 201
 		whenHttp(server).
 		match(post("/backend" + PathBuilder.goalExcecutions(null, null, _a))).
 		then(
@@ -55,19 +75,10 @@ public class CleanGoalTest extends AbstractGoalTest {
 				charset("UTF-8"),
 				status(HttpStatus.CREATED_201));
 		
-		expect()
-			.statusCode(201).
-			when()
-			.post("/backend" + PathBuilder.goalExcecutions(null, null, _a));
-
-		// Options app
-		whenHttp(server).
-				match(composite(method(Method.OPTIONS), uri("/backend" + PathBuilder.goalExcecutions(null, null, _a)))).
-			then(
-				stringContent(s_json),
-				contentType("application/json"),
-				charset("UTF-8"),
-				status(HttpStatus.OK_200));
+//		expect()
+//			.statusCode(201).
+//			when()
+//			.post("/backend" + PathBuilder.goalExcecutions(null, null, _a));
 	}
 	
 	/**
@@ -95,11 +106,14 @@ public class CleanGoalTest extends AbstractGoalTest {
 		goal = GoalFactory.create(GoalType.CLEAN, GoalClient.CLI);
 		goal.setConfiguration(cfg).executeSync();
 		
-		// Check the HTTP calls made
-		verifyHttp(server).times(2, 
+		// Check the HTTP calls made (1 app PUT, 1 app POST, 4 goal exe POST)
+		verifyHttp(server).times(1, 
+				method(Method.PUT),
+				uri("/backend" + PathBuilder.app(this.testApp)));
+		verifyHttp(server).times(1, 
 				method(Method.POST),
-				uri("/backend" + PathBuilder.apps()));
-		verifyHttp(server).times(2, 
+				uri("/backend" + PathBuilder.app(this.testApp)));
+		verifyHttp(server).times(4, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}

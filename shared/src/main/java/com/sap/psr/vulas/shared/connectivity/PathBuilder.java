@@ -60,6 +60,16 @@ public class PathBuilder {
 			b.append(space(_s)).append("/goals");
 		return b.toString();
 	}
+	
+	public static final String goalExcecution(@NotNull Tenant _t, Space _s, Application _a, String _gexe_id) {
+		final StringBuilder b = new StringBuilder();
+		if(_a!=null)
+			b.append(app(_a)).append("/goals");
+		else if(_s!=null)
+			b.append(space(_s)).append("/goals");
+		b.append("/").append(_gexe_id);
+		return b.toString();
+	}
 
 	public static final String appConstructIds(@NotNull Application _app) {
 		final StringBuilder b = new StringBuilder();

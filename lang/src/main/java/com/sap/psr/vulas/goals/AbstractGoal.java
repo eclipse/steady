@@ -388,10 +388,6 @@ public abstract class AbstractGoal implements Runnable {
 	 * @throws IllegalStateException
 	 */
 	public String toJson() throws IllegalStateException {
-		// Still running?
-		if(this.stopWatch.isRunning())
-			throw new IllegalStateException("Goal execution not yet finished");
-
 		final StringBuilder b = new StringBuilder();
 		b.append("{\"executionId\":\"").append(this.getId()).append("\"");
 		b.append(",\"goal\":\"").append(this.goalType).append("\"");
@@ -403,7 +399,10 @@ public abstract class AbstractGoal implements Runnable {
 			b.append(",\"exception\":").append(JsonBuilder.escape(this.exception.getMessage().substring(0, Math.min(this.exception.getMessage().length(), 255))));
 
 		// Runtime in nano secs
-		b.append(",\"runtimeNano\":").append(this.stopWatch.getRuntime());
+		if(this.stopWatch.isRunning())
+			b.append(",\"runtimeNano\":-1");
+		else
+			b.append(",\"runtimeNano\":").append(this.stopWatch.getRuntime());
 
 		// Memory info (can be -1 if not monitored)
 		if(this.memoThread!=null) {
@@ -450,14 +449,17 @@ public abstract class AbstractGoal implements Runnable {
 
 	/**
 	 * Uploads the JSON presentation of this goal execution to the Vulas backend.
+	 * Returns true of everything went fine (upload succeeded or is not necessary), false otherwise.
 	 */
-	public void upload() {
+	public boolean upload() {
+		boolean ret = false;
 		try {
 			AbstractGoal.log.info("Uploading goal execution info ...");
-			BackendConnector.getInstance().uploadGoalExecution(this.getGoalContext(), this.toJson());
+			ret = BackendConnector.getInstance().uploadGoalExecution(this.getGoalContext(), this);
 			AbstractGoal.log.info("Uploaded goal execution info");
 		} catch (Exception e) {
 			AbstractGoal.log.error("Error while uploading goal execution info: " + e.getMessage());
 		}
+		return ret;
 	}
 }

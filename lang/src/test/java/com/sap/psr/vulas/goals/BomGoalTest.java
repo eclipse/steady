@@ -10,6 +10,7 @@ import static com.xebialabs.restito.semantics.Action.stringContent;
 import static com.xebialabs.restito.semantics.Condition.composite;
 import static com.xebialabs.restito.semantics.Condition.method;
 import static com.xebialabs.restito.semantics.Condition.post;
+import static com.xebialabs.restito.semantics.Condition.put;
 import static com.xebialabs.restito.semantics.Condition.uri;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -36,21 +37,32 @@ public class BomGoalTest extends AbstractGoalTest {
 	private void setupMockServices(Application _a) {
 		final String s_json = JacksonUtil.asJsonString(_a);
 		
-		// Create app
+		// Options app: 200
 		whenHttp(server).
-		match(post("/backend" + PathBuilder.apps())).
+				match(composite(method(Method.OPTIONS), uri("/backend" + PathBuilder.app(_a)))).
+			then(
+				stringContent(s_json),
+				contentType("application/json"),
+				charset("UTF-8"),
+				status(HttpStatus.OK_200));
+		
+		// Put app: 200
+		whenHttp(server).
+		match(put("/backend" + PathBuilder.apps())).
 		then(
 				stringContent(s_json),
 				contentType("application/json"),
 				charset("UTF-8"),
-				status(HttpStatus.CREATED_201));
+				status(HttpStatus.OK_200));
 		
-		expect()
-			.statusCode(201).
-			when()
-			.post("/backend" + PathBuilder.apps());
+//		expect()
+//			.statusCode(201).
+//			when()
+//			.post("/backend" + PathBuilder.apps());
 
-		// Create goal exe
+		// Options goal exe: 404 (default, no impl needed)
+		
+		// Post goal exe: 201
 		whenHttp(server).
 		match(post("/backend" + PathBuilder.goalExcecutions(null, null, _a))).
 		then(
@@ -59,19 +71,11 @@ public class BomGoalTest extends AbstractGoalTest {
 				charset("UTF-8"),
 				status(HttpStatus.CREATED_201));
 		
-		expect()
-			.statusCode(201).
-			when()
-			.post("/backend" + PathBuilder.goalExcecutions(null, null, _a));
+//		expect()
+//			.statusCode(201).
+//			when()
+//			.post("/backend" + PathBuilder.goalExcecutions(null, null, _a));
 
-		// Options app
-		whenHttp(server).
-				match(composite(method(Method.OPTIONS), uri("/backend" + PathBuilder.goalExcecutions(null, null, _a)))).
-			then(
-				stringContent(s_json),
-				contentType("application/json"),
-				charset("UTF-8"),
-				status(HttpStatus.OK_200));
 	}
 
 	/**
@@ -99,7 +103,7 @@ public class BomGoalTest extends AbstractGoalTest {
 	}
 
 	/**
-	 * No HTTP requests shall be made, as the app is empty
+	 * One app PUT will be made, as the app is said to exist in the backend.
 	 * 
 	 * @throws GoalConfigurationException
 	 * @throws GoalExecutionException
@@ -123,9 +127,9 @@ public class BomGoalTest extends AbstractGoalTest {
 
 		// Check the HTTP calls made
 		verifyHttp(server).times(1, 
-				method(Method.POST),
-				uri("/backend" + PathBuilder.apps()));
-		verifyHttp(server).times(1, 
+				method(Method.PUT),
+				uri("/backend" + PathBuilder.app(this.testApp)));
+		verifyHttp(server).times(2, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}
@@ -154,10 +158,10 @@ public class BomGoalTest extends AbstractGoalTest {
 		final AbstractGoal goal = GoalFactory.create(GoalType.APP, GoalClient.CLI);
 		goal.setConfiguration(cfg).executeSync();
 		
-		// Check the HTTP calls made
-		verifyHttp(server).times(2, 
-				method(Method.POST),
-				uri("/backend" + PathBuilder.apps()));
+		// Check the HTTP calls made (1 app PUT, 2 goal exe POST)
+		verifyHttp(server).times(1, 
+				method(Method.PUT),
+				uri("/backend" + PathBuilder.app(this.testApp)));
 		verifyHttp(server).times(2, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
