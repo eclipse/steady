@@ -80,7 +80,8 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 			
 			//Update vulnChange timestamp for apps with construct changes among its dependencies' constructs
 			//this needs to be done after the bug has been created as we need the construct changes to exist in the database to avoid querying by fields (lang, type, qname)
-			appRepository.refreshVulnChangebyChangeList(managed_bug.getConstructChanges());
+			if(managed_bug.getConstructChanges()!=null)
+				appRepository.refreshVulnChangebyChangeList(managed_bug.getConstructChanges());
 			
 			sw.stop();
 		} catch (Exception e) {

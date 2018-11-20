@@ -56,6 +56,8 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 	@Autowired
 	AffectedLibraryRepository affLibRepository;
 
+	@Autowired
+	ApplicationRepository appRepository;
 	/**
 	 * 
 	 * @param bug
@@ -105,6 +107,11 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 			try {
 				managed_aff_lib = this.affLibRepository.save(provided_aff_lib);
 				libs.add(managed_aff_lib);
+				
+				//Update vulnChange timestamp for apps with construct changes among its dependencies' constructs
+				//this needs to be done after the bug has been created as we need the construct changes to exist in the database to avoid querying by fields (lang, type, qname)
+				appRepository.refreshVulnChangebyAffLib(managed_aff_lib);
+				
 			} catch (Exception e) {
 				throw new PersistenceException("Error while saving lib " + provided_aff_lib + ": " + e.getMessage());
 			}

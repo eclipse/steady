@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.sap.psr.vulas.backend.model.AffectedLibrary;
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.ConstructChange;
 import com.sap.psr.vulas.backend.model.VulnerableDependency;
@@ -31,4 +32,6 @@ public interface ApplicationRepositoryCustom {
 	public HashMap<Long, HashMap<String, Boolean>> findAffectedApps(String[] _bugs);
 	
 	public void refreshVulnChangebyChangeList(Collection<ConstructChange> _listOfConstructChanges);
+	
+	public void refreshVulnChangebyAffLib(AffectedLibrary _affLib);
 }

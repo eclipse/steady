@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sap.psr.vulas.backend.model.AffectedConstructChange;
+import com.sap.psr.vulas.backend.model.AffectedLibrary;
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.Bug;
 import com.sap.psr.vulas.backend.model.ConstructChange;
@@ -580,6 +581,25 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		
 		for (Application a: apps){
 			//Application managed_app = appRepository.findOne(a.getId());
+			//a.setModifiedAt(Calendar.getInstance());	
+			a.setLastVulnChange(Calendar.getInstance());
+			appRepository.save(a);
+		}
+		
+		
+	}
+	
+	public void refreshVulnChangebyAffLib(AffectedLibrary _affLib){
+		
+		List<Application> apps = new ArrayList<Application>();
+		if(_affLib!=null && _affLib.getLibraryId()!=null){
+			if(_affLib.getAffected())
+				apps.addAll(appRepository.findAppsByAffLib(_affLib.getLibraryId()));
+		}
+		
+		for (Application a: apps){
+			//a.setModifiedAt(Calendar.getInstance());	
+			a.setLastVulnChange(Calendar.getInstance());
 			appRepository.save(a);
 		}
 		

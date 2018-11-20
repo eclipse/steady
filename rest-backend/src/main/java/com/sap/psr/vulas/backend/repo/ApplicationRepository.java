@@ -15,6 +15,7 @@ import com.sap.psr.vulas.backend.model.Bug;
 import com.sap.psr.vulas.backend.model.ConstructId;
 import com.sap.psr.vulas.backend.model.ConstructSearchResult;
 import com.sap.psr.vulas.backend.model.Dependency;
+import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.backend.model.Space;
 import com.sap.psr.vulas.backend.model.Tenant;
 import com.sap.psr.vulas.backend.model.VulnerableDependency;
@@ -332,38 +333,12 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 	 * @param listOfConstructs list of {@link ConstructId}
 	 * @return list of {@link Application}
 	 */
-//	@Query("SELECT distinct d.app FROM Dependency d "
-//			+ "	  JOIN "
-//			+ "   d.lib l"
-//			+ "   JOIN "
-//			+ "   l.constructs lc "
-//			+ "	  WHERE lc IN :listOfConstructs "		
-//			+ "   AND (NOT lc.type='PACK' "                        // Java + Python exception
-//			+ "   OR NOT EXISTS (SELECT 1 FROM ConstructChange cc1 JOIN cc1.constructId c1 WHERE c1 IN :listOfConstructs AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%' AND NOT c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') ) "     
-//			+ "   AND NOT (lc.type='MODU' AND lc.qname='setup')"
-//			
-//			@Query("SELECT"
-//					+ "   DISTINCT new com.sap.psr.vulas.backend.model.VulnerableDependency(d,b) FROM"
-//					+ "	  Dependency d "
-//					+ "   JOIN "
-//					+ "   d.app a "
-//					+ "	  JOIN "
-//					+ "   d.lib l"
-//					+ "   JOIN "
-//					+ "   l.libraryId dep_libid,"
-//					+ "	  Bug b"
-//					+ "   JOIN "
-//					+ "   b.affectedVersions av "
-//					+ "   JOIN "
-//					+ "   av.libraryId av_libid"
-//					+ "   LEFT OUTER JOIN "
-//					+ "   b.constructChanges as cc"
-//					+ "	  WHERE a.mvnGroup = :mvnGroup "
-//					+ "   AND a.artifact = :artifact "
-//					+ "   AND a.version = :version"
-//					+ "   AND a.space = :space"
-//					+ "   AND dep_libid = av_libid" 
-//					+ "   AND cc IS NULL"
-//			)
-//	List<Application> findAppsByAffLib(@Param("listOfConstructs") List<ConstructId> listOfConstructs);
+	@Query("SELECT distinct d.app FROM Dependency d "
+			+ "	  JOIN "
+			+ "   d.lib l"
+			+ "   JOIN "
+			+ "   l.libraryId dep_libid"
+			+ "	  WHERE dep_libid = :affLibId "	
+			)
+	List<Application> findAppsByAffLib(@Param("affLibId") LibraryId affLibId);
 }
