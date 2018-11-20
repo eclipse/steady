@@ -226,7 +226,13 @@ public class Application implements Serializable, Comparable {
 	public void setLastVulnChange(java.util.Calendar lastVulnChange) { this.lastVulnChange = lastVulnChange; }
 		
 	@JsonProperty(value = "lastChange")
-	public java.util.Calendar getLastChange() { return ( this.getLastVulnChange().after(this.getLastScan())?  this.getLastVulnChange() : this.getLastScan()); }
+	public java.util.Calendar getLastChange() { 
+		if(this.getLastVulnChange()==null)
+			return this.getLastScan();
+		else if (this.getLastScan()==null)
+			return this.getLastVulnChange();
+		else
+			return ( this.getLastVulnChange().after(this.getLastScan())?  this.getLastVulnChange() : this.getLastScan()); }
 	
 	/**
 	 * Removes all application {@link ConstructId}s and {@link Dependency}s.

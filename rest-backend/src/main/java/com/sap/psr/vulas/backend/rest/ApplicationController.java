@@ -766,6 +766,7 @@ public class ApplicationController {
 	public ResponseEntity<GoalExecution> createGoalExecution(@PathVariable String mvnGroup, 
 			@PathVariable String artifact, @PathVariable String version, 
 			@RequestBody GoalExecution goalExecution,
+			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
@@ -793,7 +794,10 @@ public class ApplicationController {
 		}
 
 		// Save and return
-		return new ResponseEntity<GoalExecution>(gexe, HttpStatus.CREATED);
+		if(skipResponseBody)
+			return new ResponseEntity<GoalExecution>(HttpStatus.CREATED);
+		else
+			return new ResponseEntity<GoalExecution>(gexe, HttpStatus.CREATED);
 	}
 	
 	/**
@@ -806,6 +810,7 @@ public class ApplicationController {
 			@PathVariable String artifact, @PathVariable String version, 
 			@PathVariable String executionId,
 			@RequestBody GoalExecution goalExecution,
+			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
@@ -824,7 +829,10 @@ public class ApplicationController {
 			GoalExecutionRepository.FILTER.findOne(this.gexeRepository.findByExecutionId(executionId));
 			GoalExecution managed_gexe = this.gexeRepository.customSave(app, goalExecution);
 			
-			return new ResponseEntity<GoalExecution>(managed_gexe, HttpStatus.OK);
+			if(skipResponseBody)
+				return new ResponseEntity<GoalExecution>(HttpStatus.OK);
+			else
+				return new ResponseEntity<GoalExecution>(managed_gexe, HttpStatus.OK);
 		}
 		catch (EntityNotFoundException e) {
 			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);

@@ -212,8 +212,8 @@ public class ApplicationControllerTest {
                 .andExpect(content().contentType(contentTypeJson))
                 .andExpect(jsonPath("$.group", is(APP_GROUP)))
                 .andExpect(jsonPath("$.artifact", is(APP_ARTIFACT)))
-                .andExpect(jsonPath("$.lastVulnChange", is(String.class)))
-                .andExpect(jsonPath("$.lastChange", is(String.class)))
+                .andExpect(jsonPath("$.lastVulnChange").exists())
+                .andExpect(jsonPath("$.lastChange").exists())
                 .andExpect(jsonPath("$.version", is(app.getVersion())));
     	
        	
@@ -591,7 +591,7 @@ public class ApplicationControllerTest {
     	managed_app = this.appRepository.findOne(managed_app.getId());
     	System.out.println("Modified at before update is [" + originalLastVulnChange.getTimeInMillis() + "], after update is [" + managed_app.getLastVulnChange().getTimeInMillis() + "]");
     	assertTrue(managed_app.getLastVulnChange().getTimeInMillis()>originalLastVulnChange.getTimeInMillis());
-    	assertTrue(managed_app.getModifiedAt().getTimeInMillis()>originalModifiedAt.getTimeInMillis());
+    	assertTrue(managed_app.getModifiedAt().getTimeInMillis()==originalModifiedAt.getTimeInMillis());
     	assertTrue(managed_app.getCreatedAt().getTimeInMillis()==originalCreatedAt.getTimeInMillis());
     	
     }
@@ -642,7 +642,7 @@ public class ApplicationControllerTest {
     	managed_app = this.appRepository.findOne(managed_app.getId());
     	System.out.println("Modified at before update is [" + originalLastVulnChange.getTimeInMillis() + "], after update is [" + managed_app.getLastVulnChange().getTimeInMillis() + "]");
     	assertTrue(managed_app.getLastVulnChange().getTimeInMillis()>originalLastVulnChange.getTimeInMillis());
-    	assertTrue(managed_app.getModifiedAt().getTimeInMillis()>originalModifiedAt.getTimeInMillis());
+    	assertTrue(managed_app.getModifiedAt().getTimeInMillis()==originalModifiedAt.getTimeInMillis());
     	assertTrue(managed_app.getCreatedAt().getTimeInMillis()==originalCreatedAt.getTimeInMillis());
     	
     }
