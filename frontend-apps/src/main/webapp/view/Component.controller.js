@@ -242,7 +242,6 @@ sap.ui.controller("view.Component", {
 		var resultTable = this.getView().byId("idSearchResultTable");
 		resultTable.setModel(this.getEmptyModel());
 		resultTable.setVisibleRowCount(0);
-		this.getView().byId("idSearchString").setValue("Enter search string for the construct name...");
 		this.getView().byId("idSearchResultCounter").setText("Result count: N/a");
 	
 		this.getView().byId("id-legend").setText("");
