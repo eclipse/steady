@@ -23,7 +23,7 @@ drop view v_app_vulndep_config;
 
 create or replace view v_app_vulndep_cc as 
 (select distinct s.space_token, a.id as app_id, a.mvn_group as app_group,a.artifact as app_artifact,a.version as app_version,d.id as dep_id, 
-d.filename,d.scope,d.transitive,l.id as lib_id, l.digest,cc.bug,lid.id as lid_id,lid.mvn_group, lid.artifact,lid.version,al.affected, a.modified_at, a.lastScan, a.lastVulnChange
+d.filename,d.scope,d.transitive,l.id as lib_id, l.digest,cc.bug,lid.id as lid_id,lid.mvn_group, lid.artifact,lid.version,al.affected, a.modified_at, a.last_scan, a.last_vuln_change
 from app a join app_dependency d on a.id=d.app
 join space s on a.space=s.id
 join lib l on d.lib=l.digest
@@ -37,7 +37,7 @@ where not lid.id is null and  (not c.type='PACK'
  and not (c.type='MODU' AND c.qname='setup'))
 UNION
 (select distinct s.space_token, a.id as app_id, a.mvn_group as app_group,a.artifact as app_artifact,a.version as app_version,d.id as dep_id, 
-d.filename,d.scope,d.transitive,l.id as lib_id, l.digest,cc.bug,lid.id as lid_id,lid.mvn_group,lid.artifact,lid.version,aldigest.affected, a.modified_at, a.lastScan, a.lastVulnChange
+d.filename,d.scope,d.transitive,l.id as lib_id, l.digest,cc.bug,lid.id as lid_id,lid.mvn_group,lid.artifact,lid.version,aldigest.affected, a.modified_at, a.last_scan, a.last_vuln_change
 from app a join app_dependency d on a.id=d.app
 join space s on a.space=s.id
 join lib l on d.lib=l.digest
@@ -53,7 +53,7 @@ where lid.id is null and (not c.type='PACK'
 --Vulnerable dependencies for the current applications (with priority applied) FOR configuration bugs
 create or replace view v_app_vulndep_config as  
 select distinct s.space_token,  a.id as app_id, a.mvn_group as app_group,a.artifact as app_artifact,a.version as app_version,d.id as dep_id, 
-d.filename,d.scope,d.transitive,l.id as lib_id, l.digest,al.bug_id,lid.id as lid_id,lid.mvn_group,lid.artifact,lid.version,al.affected, a.modified_at, a.lastScan, a.lastVulnChange
+d.filename,d.scope,d.transitive,l.id as lib_id, l.digest,al.bug_id,lid.id as lid_id,lid.mvn_group,lid.artifact,lid.version,al.affected, a.modified_at, a.last_scan, a.last_vuln_change
 from app a join app_dependency d on a.id=d.app
 join space s on a.space=s.id
 join lib l on d.lib=l.digest

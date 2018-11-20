@@ -235,6 +235,9 @@ public class Library implements Serializable {
 		if(this.getCreatedAt()==null) {
 			this.setCreatedAt(Calendar.getInstance());
 		}
+		if(this.getModifiedAt()==null) {
+			this.setModifiedAt(Calendar.getInstance());
+		}
 		if(this.getWellknownDigest()==null) {
 			this.verifyDigest();
 		}
@@ -245,11 +248,6 @@ public class Library implements Serializable {
 		}
 	}
 
-	@PreUpdate
-	public void preUpdate() {
-		this.setModifiedAt(Calendar.getInstance());
-	}
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
