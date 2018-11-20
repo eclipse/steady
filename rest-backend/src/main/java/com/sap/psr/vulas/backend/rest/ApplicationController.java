@@ -286,42 +286,42 @@ public class ApplicationController {
 		}
 	}
 	
-	/**
-	 * Re-creates the {@link Application} with a given GAV.
-	 * @param digest
-	 * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given digest does not exist,
-	 * 		   422 {@link HttpStatus.UNPROCESSABLE_ENTITY} if the value of path variable (digest) does not equal the corresponding field in the body
-	 *		   400 {@link HttpStatus.BAD_REQUEST} if the set of application dependencies is not valid (contains duplicated entries or the parent are not listed in the main set)
-	 * 		   200 {@link HttpStatus#OK} if the library was successfully re-created
-	 */
-	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/lastscan", method = RequestMethod.PUT, produces = {"application/json;charset=UTF-8"})
-	@JsonView(Views.Default.class)
-	public ResponseEntity<Application> updateApplicationLastScan(
-			@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version,
-			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
-		Space s = null;
-		try {
-			s = this.spaceRepository.getSpace(space);
-		} catch (Exception e){
-			log.error("Error retrieving space: " + e);
-			return new ResponseEntity<Application>(HttpStatus.NOT_FOUND);
-		}
-		try{
-			final Application existing_app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup, artifact, version, s));
-			existing_app.setLastScan(Calendar.getInstance());
-			Application managed_app = appRepository.save(existing_app);
-			if(skipResponseBody){
-				return new ResponseEntity<Application>(HttpStatus.OK);
-			}
-			else
-				return new ResponseEntity<Application>(managed_app, HttpStatus.OK);
-		} catch (EntityNotFoundException e) {
-			return new ResponseEntity<Application>(HttpStatus.NOT_FOUND);
-		} catch (PersistenceException e) {
-			return new ResponseEntity<Application>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+//	/**
+//	 * Re-creates the {@link Application} with a given GAV.
+//	 * @param digest
+//	 * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given digest does not exist,
+//	 * 		   422 {@link HttpStatus.UNPROCESSABLE_ENTITY} if the value of path variable (digest) does not equal the corresponding field in the body
+//	 *		   400 {@link HttpStatus.BAD_REQUEST} if the set of application dependencies is not valid (contains duplicated entries or the parent are not listed in the main set)
+//	 * 		   200 {@link HttpStatus#OK} if the library was successfully re-created
+//	 */
+//	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/lastscan", method = RequestMethod.PUT, produces = {"application/json;charset=UTF-8"})
+//	@JsonView(Views.Default.class)
+//	public ResponseEntity<Application> updateApplicationLastScan(
+//			@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version,
+//			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
+//			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+//		Space s = null;
+//		try {
+//			s = this.spaceRepository.getSpace(space);
+//		} catch (Exception e){
+//			log.error("Error retrieving space: " + e);
+//			return new ResponseEntity<Application>(HttpStatus.NOT_FOUND);
+//		}
+//		try{
+//			final Application existing_app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup, artifact, version, s));
+//			existing_app.setLastScan(Calendar.getInstance());
+//			Application managed_app = appRepository.save(existing_app);
+//			if(skipResponseBody){
+//				return new ResponseEntity<Application>(HttpStatus.OK);
+//			}
+//			else
+//				return new ResponseEntity<Application>(managed_app, HttpStatus.OK);
+//		} catch (EntityNotFoundException e) {
+//			return new ResponseEntity<Application>(HttpStatus.NOT_FOUND);
+//		} catch (PersistenceException e) {
+//			return new ResponseEntity<Application>(HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
 
 	/**
 	 * Re-creates the {@link Application} with a given GAV.
@@ -760,7 +760,7 @@ public class ApplicationController {
 	/**
 	 * 
 	 * @param 
-	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @return 404 {@link HttpStatus#NOT_FOUND} if application group artifact version of the goal execution is do not exist, 201 {@link HttpStatus#CREATED} if the bug was successfully created
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<GoalExecution> createGoalExecution(@PathVariable String mvnGroup, 
@@ -794,6 +794,74 @@ public class ApplicationController {
 
 		// Save and return
 		return new ResponseEntity<GoalExecution>(gexe, HttpStatus.CREATED);
+	}
+	
+	/**
+	 * 
+	 * @param 
+	 * @return 404 {@link HttpStatus#NOT_FOUND} if application group artifact version of the goal execution is do not exist, 200 {@link HttpStatus#OK} if the goal execution was successfully updates
+	 */
+	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals/{executionId}", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
+	public ResponseEntity<GoalExecution> updateGoalExecution(@PathVariable String mvnGroup, 
+			@PathVariable String artifact, @PathVariable String version, 
+			@PathVariable String executionId,
+			@RequestBody GoalExecution goalExecution,
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+
+		Space s = null;
+		try {
+			s = this.spaceRepository.getSpace(space);
+		} catch (Exception e){
+			log.error("Error retrieving space: " + e);
+			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
+		}
+		// Ensure that app exists
+		Application app = null;
+		try { app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s)); }
+		catch (EntityNotFoundException e) { return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND); }
+
+		try {
+			GoalExecutionRepository.FILTER.findOne(this.gexeRepository.findByExecutionId(executionId));
+			GoalExecution managed_gexe = this.gexeRepository.customSave(app, goalExecution);
+			
+			return new ResponseEntity<GoalExecution>(managed_gexe, HttpStatus.OK);
+		}
+		catch (EntityNotFoundException e) {
+			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
+			
+		}
+	}
+	
+	/**
+	 * 
+	 * @param application group, artifact,version and goal executionId
+	 * @return  404 {@link HttpStatus#NOT_FOUND} if application with given GAV or the given executionId do not exist, 200 {@link HttpStatus#OK} if the executionId for the given Application is found
+	 */
+	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals/{executionId}", method = RequestMethod.OPTIONS)
+	public ResponseEntity<GoalExecution> isGoalExecutionExisting(@PathVariable String mvnGroup, 
+			@PathVariable String artifact, @PathVariable String version, 
+			@PathVariable String executionId,
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+
+		Space s = null;
+		try {
+			s = this.spaceRepository.getSpace(space);
+		} catch (Exception e){
+			log.error("Error retrieving space: " + e);
+			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
+		}
+		// Ensure that app exists
+		Application app = null;
+		try { app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s)); }
+		catch (EntityNotFoundException e) { return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND); }
+
+		try {
+			GoalExecutionRepository.FILTER.findOne(this.gexeRepository.findByExecutionId(executionId));
+			return new ResponseEntity<GoalExecution>(HttpStatus.OK);
+		}
+		catch(EntityNotFoundException enfe) {
+			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	/**

@@ -76,16 +76,19 @@ public class Application implements Serializable, Comparable {
 	@JsonIgnoreProperties(value = { "createdAt" }, allowGetters=true)
 	private java.util.Calendar createdAt;
 	
+	// timestamp of the last application modification (customSave operation on the Application entity to store application constructs and/or dependencies)
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	@JsonIgnoreProperties(value = { "modifiedAt" }, allowGetters=true)
 	private java.util.Calendar modifiedAt;
 	
+	// timestamp of the last application scan (customSave operation on the GoalExecution entity to store the details about a starting/completed scan--triggered by the client)
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	@JsonIgnoreProperties(value = { "lastScan" }, allowGetters=true) //TODO: to remove if the value should be given by the client
 	private java.util.Calendar lastScan;
 	
+	// timestamp of the last change on the vulnerabilities that may affect the application results, i.e., a change either in the bugs or affected libraries, thus vulndeps for the application needs to be queried to get updated results
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	@JsonIgnoreProperties(value = { "lastVulnChange" }, allowGetters=true)

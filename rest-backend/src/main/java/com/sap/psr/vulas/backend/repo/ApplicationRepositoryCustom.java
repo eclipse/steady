@@ -34,4 +34,6 @@ public interface ApplicationRepositoryCustom {
 	public void refreshVulnChangebyChangeList(Collection<ConstructChange> _listOfConstructChanges);
 	
 	public void refreshVulnChangebyAffLib(AffectedLibrary _affLib);
+	
+	public void refreshLastScanbyApp(Application _app);
 }

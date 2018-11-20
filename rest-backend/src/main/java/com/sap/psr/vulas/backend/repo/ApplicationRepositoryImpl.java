@@ -593,7 +593,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		
 		List<Application> apps = new ArrayList<Application>();
 		if(_affLib!=null && _affLib.getLibraryId()!=null){
-			if(_affLib.getAffected())
+			if(_affLib.getAffected()!=null)
 				apps.addAll(appRepository.findAppsByAffLib(_affLib.getLibraryId()));
 		}
 		
@@ -602,7 +602,10 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			a.setLastVulnChange(Calendar.getInstance());
 			appRepository.save(a);
 		}
-		
-		
+	}
+	
+	public void refreshLastScanbyApp(Application _app){
+		_app.setLastScan(Calendar.getInstance());
+		appRepository.save(_app);
 	}
 }

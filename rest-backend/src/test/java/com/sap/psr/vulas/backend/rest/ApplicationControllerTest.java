@@ -664,17 +664,45 @@ public class ApplicationControllerTest {
     	Calendar originalCreatedAt = managed_app.getCreatedAt();
     	assertTrue(originalModifiedAt.getTimeInMillis()==originalCreatedAt.getTimeInMillis());
     	
-    	final MockHttpServletRequestBuilder put_builder = put(getAppUri(managed_app)+"/lastscan");
-    			//.content(JacksonUtil.asJsonString(affArray).getBytes())
-				//.contentType(MediaType.APPLICATION_JSON)
-				//.accept(MediaType.APPLICATION_JSON);
-    	mockMvc.perform(put_builder)	
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(contentTypeJson)) ;
-              //  .andExpect(jsonPath("$.lastChange", is(String.class)));
+    	final GoalExecution gexe = this.createExampleGoalExecution(app, GoalType.APP);
+    	
+    	// post
+    	final MockHttpServletRequestBuilder post_builder = post(getAppUri(app) + "/goals")
+    			.content(JacksonUtil.asJsonString(gexe).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	System.out.println("Gexe: " + JacksonUtil.asJsonString(gexe));
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(contentTypeJson));
     	
     	Application after_update = ApplicationRepository.FILTER.findOne(this.appRepository.findById(managed_app.getId()));
+    	Calendar lastScanAfterPost = managed_app.getLastScan();
     	assertTrue(originalLastScan.getTimeInMillis()<after_update.getLastScan().getTimeInMillis());
+    	assertTrue(after_update.getLastScan().getTimeInMillis()==after_update.getLastChange().getTimeInMillis());
+    	assertTrue(after_update.getLastScan().getTimeInMillis()>after_update.getLastVulnChange().getTimeInMillis());
+    	assertTrue(originalLastVulnChange.getTimeInMillis()==after_update.getLastVulnChange().getTimeInMillis());
+    	
+    	//re-post
+    	final MockHttpServletRequestBuilder put_builder = put(getAppUri(app) + "/goals/"+ gexe.getExecutionId())
+    			.content(JacksonUtil.asJsonString(gexe).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(put_builder)	
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentTypeJson));
+    	
+//    	final MockHttpServletRequestBuilder put_builder = put(getAppUri(managed_app)+"/lastscan");
+//    			//.content(JacksonUtil.asJsonString(affArray).getBytes())
+//				//.contentType(MediaType.APPLICATION_JSON)
+//				//.accept(MediaType.APPLICATION_JSON);
+//    	mockMvc.perform(put_builder)	
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentType(contentTypeJson)) ;
+//              //  .andExpect(jsonPath("$.lastChange", is(String.class)));
+    	
+    	after_update = ApplicationRepository.FILTER.findOne(this.appRepository.findById(managed_app.getId()));
+    	assertTrue(lastScanAfterPost.getTimeInMillis()<after_update.getLastScan().getTimeInMillis());
     	assertTrue(after_update.getLastScan().getTimeInMillis()==after_update.getLastChange().getTimeInMillis());
     	assertTrue(after_update.getLastScan().getTimeInMillis()>after_update.getLastVulnChange().getTimeInMillis());
     	assertTrue(originalLastVulnChange.getTimeInMillis()==after_update.getLastVulnChange().getTimeInMillis());
