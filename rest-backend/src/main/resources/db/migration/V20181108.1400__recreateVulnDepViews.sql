@@ -14,7 +14,7 @@ alter table app add column last_vuln_change timestamp;
 update app set last_vuln_change = now();
 alter table app alter column last_vuln_change set not null;
 
-alter table app_goal_exe add constraint UK7s8ypigxbpwjf8sj3fxh2gra0 unique (execution_id)
+alter table app_goal_exe add constraint UK7s8ypigxbpwjf8sj3fxh2gra0 unique (execution_id);
 
 -- drop views
 drop view v_app_vulndep;
