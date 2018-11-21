@@ -389,7 +389,7 @@ public class ApplicationController {
 	@JsonView(Views.Default.class)
 	public ResponseEntity<Collection<Application>> getApplications(
 			@RequestParam(value="skipEmpty", required=false, defaultValue="false") Boolean skipEmpty,
-			@RequestParam(value="includeVulnerableFlag", required=false, defaultValue="false") Boolean includeVulnerableFlag,
+//			@RequestParam(value="includeVulnerableFlag", required=false, defaultValue="false") Boolean includeVulnerableFlag,
 			@RequestParam(value="group", required=false, defaultValue="*") String g,
 			@RequestParam(value="artifact", required=false, defaultValue="*") String a,
 			@RequestParam(value="version", required=false, defaultValue="*") String v,
@@ -405,27 +405,26 @@ public class ApplicationController {
 
 		try{
 			if(g.equals("*") && a.equals("*") && v.equals("*")) {
-				Collection<Application> results = null;
-				Collection<Application> all =  this.appRepository.getApplications(skipEmpty, s.getSpaceToken());
-				if(includeVulnerableFlag){
-					if(s.isDefault())
-						return new ResponseEntity<Collection<Application>>(HttpStatus.BAD_REQUEST);
-					results = new ArrayList<Application>();
-					for(Application app : all){
-						if (this.appVulDepRepository.isAppVulnerableCC(space,app.getMvnGroup(),app.getArtifact(),app.getVersion())){
-							app.setHasVulnerabilities(true);
-						}
-						else if (this.appVulDepRepository.isAppVulnerableConfig(space,app.getMvnGroup(),app.getArtifact(),app.getVersion())){
-							app.setHasVulnerabilities(true);
-						}
-						else
-							app.setHasVulnerabilities(false);
-						results.add(app);
-					}
-				}
-				else {
-					results = all;
-				}
+				Collection<Application> results =  this.appRepository.getApplications(skipEmpty, s.getSpaceToken());
+//				if(includeVulnerableFlag){
+//					if(s.isDefault())
+//						return new ResponseEntity<Collection<Application>>(HttpStatus.BAD_REQUEST);
+//					results = new ArrayList<Application>();
+//					for(Application app : all){
+//						if (this.appVulDepRepository.isAppVulnerableCC(space,app.getMvnGroup(),app.getArtifact(),app.getVersion())){
+//							app.setHasVulnerabilities(true);
+//						}
+//						else if (this.appVulDepRepository.isAppVulnerableConfig(space,app.getMvnGroup(),app.getArtifact(),app.getVersion())){
+//							app.setHasVulnerabilities(true);
+//						}
+//						else
+//							app.setHasVulnerabilities(false);
+//						results.add(app);
+//					}
+//				}
+//				else {
+//					results = all;
+//				}
 				return new ResponseEntity<Collection<Application>>(results, HttpStatus.OK);
 			}else {
 				String search_string_g = g.replace('*', '%');

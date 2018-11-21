@@ -105,9 +105,6 @@ public class Application implements Serializable, Comparable {
 
 	@Transient
 	private PackageStatistics packageStats = null;
-	
-	@Transient
-	private Boolean hasVulnerabilities = null;
 
 	/**
 	 * Only set when single applications are returned by {@link ApplicationController#getApplication(String, String, String)}.
@@ -372,14 +369,6 @@ public class Application implements Serializable, Comparable {
 			builder.append(this.getMvnGroup()).append(":").append(this.getArtifact()).append(":").append(this.getVersion()).append("]");
 		}
 		return builder.toString();
-	}
-
-	public Boolean getHasVulnerabilities() {
-		return hasVulnerabilities;
-	}
-
-	public void setHasVulnerabilities(Boolean hasVulnerabilities) {
-		this.hasVulnerabilities = hasVulnerabilities;
 	}
 	
 	public boolean equalsIgnoreSpace(Object obj) {
