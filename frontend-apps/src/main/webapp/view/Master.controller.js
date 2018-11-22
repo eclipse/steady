@@ -64,22 +64,7 @@ sap.ui.controller("view.Master", {
 	},
 	
 	loadVulnerabilityIcons: function() {
-		var list = this.getView().byId('idListApplications');
-		var reloadCancelled = false
-	
-		if (!model.Config.isMock) {
-			document.addEventListener('applicationListReload', function (e) {
-				reloadCancelled = true
-			}, false)
-			var sUrl = model.Config.getMyAppsServiceUrl(true);
-			var newModel = new sap.ui.model.json.JSONModel();
-			model.Config.loadData(newModel, sUrl, 'GET');
-			newModel.attachRequestCompleted(function() {
-				if (!reloadCancelled) {
-					list.setModel(newModel);
-				}
-			});
-		}
+		console.log('suppress')
 	},
 	
 	validateEmail: function (email) {
@@ -345,10 +330,14 @@ sap.ui.controller("view.Master", {
 
 
 	onListItemTap: function(oEvent) {
-		group = oEvent.getParameter("listItem").getBindingContext().getObject().group;
-		artifact = oEvent.getParameter("listItem").getBindingContext().getObject().artifact;
-		version = oEvent.getParameter("listItem").getBindingContext().getObject().version;
-		this.router.navTo("component", {group : group,
+		let object = oEvent.getParameter("listItem").getBindingContext().getObject()
+		group = object.group;
+		artifact = object.artifact;
+		version = object.version;
+		lastChange = new Date(object.lastChange).getTime()
+		console.log('tap ' + lastChange)
+		this.router.navTo("component", {
+			group : group,
 			artifact : artifact,
 			version : version
 		});

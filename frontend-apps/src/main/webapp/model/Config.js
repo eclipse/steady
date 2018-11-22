@@ -282,14 +282,6 @@ model.Config.getMyAppsServiceUrl = function(_loadVulnerabityIcons) {
 		url =  model.Config.getHost()+"/apps?skipEmpty=true";
 	else
 		url =  model.Config.getHost()+"/apps?skipEmpty=false";
-
-	// the fact of checking whether the module is vulnerable or not is decided by the caller
-	// we only force the check to "false" when the default workspace is used
-	if (model.Config.getSpace() == model.Config.getDefaultSpace()) {
-		_loadVulnerabityIcons = false
-	}
-	url = url + "&includeVulnerableFlag=" + _loadVulnerabityIcons;
-
 	return url;
 };
 
@@ -317,20 +309,32 @@ model.Config.getUpdateChangesUrl = function(g,a,v,sha1) {
 /**
  * the service url for archives
  */
-model.Config.getArchivesServiceUrl = function(g,a,v) {
-	return model.Config.getHost()+"/apps/"+ g + "/" + a + "/" + v +"/deps";
-};
+model.Config.getArchivesServiceUrl = function(g, a, v, lastChange) {
+	let archiveServiceUrl = model.Config.getHost() + "/apps/" + g + "/" + a + "/" + v + "/deps"
+	if (lastChange) {
+		archiveServiceUrl += "?lastChange=" + lastChange
+	}
+	return archiveServiceUrl
+}
 
 /**
  * the service url for goal executions
  */
-model.Config.getGoalExecutionsServiceUrl = function(g,a,v) {
-	return model.Config.getHost()+"/apps/"+ g + "/" + a + "/" + v +"/goals";
-};
+model.Config.getGoalExecutionsServiceUrl = function(g, a, v, lastChange) {
+	let goalExecutionServiceUrl = model.Config.getHost() + "/apps/" + g + "/" + a + "/" + v + "/goals"
+	if (lastChange) {
+		goalExecutionServiceUrl += "?lastChange=" + lastChange
+	}
+	return goalExecutionServiceUrl
+}
 
-model.Config.getLatestGoalExecutionServiceUrl = function(g,a,v) {
-	return model.Config.getHost()+"/apps/"+ g + "/" + a + "/" + v +"/goals/latest?type=APP";
-};
+model.Config.getLatestGoalExecutionServiceUrl = function(g, a, v, lastChange) {
+	let latestGoalExecutionServiceUrl = model.Config.getHost() + "/apps/"+ g + "/" + a + "/" + v + "/goals/latest?type=APP"
+	if (lastChange) {
+		latestGoalExecutionServiceUrl += "&lastChange=" + lastChange
+	}
+	return latestGoalExecutionServiceUrl
+}
 
 /**
  * the service url for goal execution details
@@ -350,9 +354,13 @@ model.Config.getArchivePropertiesServiceUrl = function(g,a,v,sha1) {
 /**
  * the service url for used vulnerabilities
  */
-model.Config.getUsedVulnerabilitiesServiceUrl = function(g, a, v, _incl_historical, _incl_unconfirmed, _add_excemption_info) {
-	return model.Config.getHost()+"/apps/"+ g + "/" + a + "/" + v +"/vulndeps?includeHistorical=" + _incl_historical + "&includeAffected=true&includeAffectedUnconfirmed=" + _incl_unconfirmed + "&addExcemptionInfo=" + _add_excemption_info;
-};
+model.Config.getUsedVulnerabilitiesServiceUrl = function(g, a, v, _incl_historical, _incl_unconfirmed, _add_excemption_info, lastChange) {
+	let usedVulnerabilitiesServiceUrl = model.Config.getHost() + "/apps/" + g + "/" + a + "/" + v + "/vulndeps?includeHistorical=" + _incl_historical + "&includeAffected=true&includeAffectedUnconfirmed=" + _incl_unconfirmed + "&addExcemptionInfo=" + _add_excemption_info
+	if (lastChange) {
+		usedVulnerabilitiesServiceUrl += "&lastChange=" + lastChange
+	}
+	return usedVulnerabilitiesServiceUrl
+}
 
 
 model.Config.getSpaceServiceUrl = function(_token) {
@@ -374,16 +382,24 @@ model.Config.getReachabilityGraphServiceUrl = function(g,a,v,sha1,bug,cid) {
 /**
  * the service url for packages including test coverage
  */
-model.Config.getPackagesWithTestCoverageServiceUrl = function(g,a,v) {
-	return model.Config.getHost()+"/apps/"+ g + "/" + a + "/" + v;
-};
+model.Config.getPackagesWithTestCoverageServiceUrl = function(g,a,v, lastChange) {
+	let packagesWithTestCoverageServiceUrl = model.Config.getHost() + "/apps/"+ g + "/" + a + "/" + v
+	if (lastChange) {
+		packagesWithTestCoverageServiceUrl += "?lastChange=" + lastChange
+	}
+	return packagesWithTestCoverageServiceUrl
+}
 
 /**
  * the service url for packages including test coverage
  */
-model.Config.getAppDepRatios = function(g,a,v) {
-	return model.Config.getHost()+"/apps/"+ g + "/" + a + "/" + v + "/metrics?excludedScopes=PROVIDED&excludedScopes=TEST";
-};
+model.Config.getAppDepRatios = function(g, a, v, lastChange) {
+	let appDepRatios = model.Config.getHost() + "/apps/" + g + "/" + a + "/" + v + "/metrics?excludedScopes=PROVIDED&excludedScopes=TEST"
+	if (lastChange) {
+		appDepRatios += "&lastChange=" + lastChange
+	}
+	return appDepRatios
+}
 
 model.Config.openWiki = function(href){
 	if(model.Config.getWikiUrl()==""){
