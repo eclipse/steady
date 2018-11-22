@@ -521,7 +521,7 @@ public class Report {
 			else
 				throw new IllegalArgumentException();
 
-			final int filename_comparison = this.filename.compareTo(other.filename);
+			final int filename_comparison = this.filename==null || other.filename==null ? 0 : this.filename.compareTo(other.filename);
 			final int bugid_comparison = this.bug.compareTo(other.getBug());
 
 			if(filename_comparison!=0)

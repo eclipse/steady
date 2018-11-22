@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,8 +18,10 @@ import com.sap.psr.vulas.python.ProcessWrapperException;
 import com.sap.psr.vulas.python.pip.PipInstalledPackage;
 import com.sap.psr.vulas.python.pip.PipWrapper;
 import com.sap.psr.vulas.python.pip.PyWrapper;
+import com.sap.psr.vulas.python.utils.PythonConfiguration;
 import com.sap.psr.vulas.shared.util.DirUtil;
 import com.sap.psr.vulas.shared.util.FileUtil;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 public class VirtualenvWrapper {
 
@@ -118,7 +119,12 @@ public class VirtualenvWrapper {
 			log.info("Create virtualenv in [" + _path_to_virtual_env + "]");
 			
 			// Create the virtual env inside this temp directory
-			final ProcessBuilder pb = new ProcessBuilder(this.pathToVirtualenvExecutable.toString(), _path_to_virtual_env.toString());
+			ProcessBuilder pb = null;
+			if(VulasConfiguration.getGlobal().isEmpty(PythonConfiguration.PY_PY_PATH)) {
+				pb = new ProcessBuilder(this.pathToVirtualenvExecutable.toString(), _path_to_virtual_env.toString());
+			} else {
+				pb = new ProcessBuilder(this.pathToVirtualenvExecutable.toString(), "--python", VulasConfiguration.getGlobal().getConfiguration().getString(PythonConfiguration.PY_PY_PATH), _path_to_virtual_env.toString());
+			}
 
 			// Create temp. directory for out and err streams
 			final Path out = Paths.get(_path_to_virtual_env.toString(), "virtualenv-out.txt");
