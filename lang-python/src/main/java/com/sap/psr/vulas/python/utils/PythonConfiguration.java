@@ -38,5 +38,8 @@ public class PythonConfiguration {
 
 	public final static String PY_BOM_IGNORE_PACKS = "vulas.core.bom.python.ignorePacks";
 	
-	public final static String PY_PIP_PATH = "vulas.core.bom.python.pip";	
+	public final static String PY_PIP_PATH = "vulas.core.bom.python.pip";
+	
+	public final static String PY_PY_PATH = "vulas.core.bom.python.python";
 }
+
