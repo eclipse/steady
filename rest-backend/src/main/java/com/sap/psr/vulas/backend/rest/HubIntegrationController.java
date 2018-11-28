@@ -4,6 +4,7 @@ package com.sap.psr.vulas.backend.rest;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -98,6 +99,7 @@ public class HubIntegrationController {
 			@RequestParam(value="skipEmpty", required=false, defaultValue="false") Boolean skipEmpty, 
 			@RequestParam(value="separator", required=false, defaultValue=":") String separator, 
 			@RequestParam(value="max", required=false, defaultValue="-1") Integer max,
+			@RequestParam(value="asOf", required=false, defaultValue="0") String asOfTimestamp,
 			@RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
 
 		// Get the tenant
@@ -123,15 +125,24 @@ public class HubIntegrationController {
 		for(Space s: spaces) {
 			// Export will be aggregated (one item only, corresponding to the space)
 			if(s.getExportConfiguration()==ExportConfiguration.AGGREGATED) {
-				final ExportItem item = new ExportItem(s, null);
-				if(max==-1 || items.size()<max)
-					items.add(item.toString(separator));
-				else
-					break outerloop;
+				//if asOfTimestamp has been specified, we check if at least 1 application in the space has lastChange>asOfTimestamp
+				Boolean toAdd=true;
+				if(Long.parseLong(asOfTimestamp)>0){
+					final Set<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
+					if(apps.isEmpty())
+						toAdd=false;
+				}
+				if(toAdd){
+					final ExportItem item = new ExportItem(s, null);
+					if(max==-1 || items.size()<max)
+						items.add(item.toString(separator));
+					else
+						break outerloop;
+				}
 			}
 			// Export will be individual (one item per space application)
 			else if(s.getExportConfiguration()==ExportConfiguration.DETAILED) {
-				final Set<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken());
+				final Set<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
 				for(Application app: apps) {
 					final ExportItem item = new ExportItem(s, app);
 					if(max==-1 || items.size()<max)
@@ -191,7 +202,7 @@ public class HubIntegrationController {
 			// Export of space statistics
 			else {
 				final Space space = item.getSpace();
-				final List<Application> apps = this.appRepository.findAllApps(space.getSpaceToken());
+				final List<Application> apps = this.appRepository.findAllApps(space.getSpaceToken(),0);
 				for(Application app: apps) {
 					vd_list.addAll(this.getVulnerableItemDependencies(app, excludedScopes, true));
 				}

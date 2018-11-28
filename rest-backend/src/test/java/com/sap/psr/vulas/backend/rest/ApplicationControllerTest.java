@@ -395,8 +395,8 @@ public class ApplicationControllerTest {
     
     @Test
     public void readAllApplications() throws Exception {
-    	//libRepository.customSave(this.createExampleLibrary());
-    	//appRepository.customSave(this.createExampleApplication());
+    	libRepository.customSave(this.createExampleLibrary());
+    	appRepository.customSave(this.createExampleApplication());
     	//TODO perform check on the returned value
     	    	
     	// Read all public apps
@@ -404,6 +404,7 @@ public class ApplicationControllerTest {
     	.header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
     	.header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
         .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].group", is("com.acme")))
         .andExpect(content().contentType(contentTypeJson));
     	
     	// Read all apps for a non-existing token
@@ -416,6 +417,14 @@ public class ApplicationControllerTest {
     	mockMvc.perform(get("/apps"))
                   .andExpect(status().isOk())
                   .andExpect(content().contentType(contentTypeJson));
+    	
+    	Long now = Calendar.getInstance().getTimeInMillis();
+    	// Read all public apps asOf now()
+    	mockMvc.perform(get("/apps?asOf="+now)
+    	.header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
+    	.header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
+        .andExpect(status().isOk())
+        .andExpect(content().string("[]"));
     }
     
     /**
@@ -662,6 +671,7 @@ public class ApplicationControllerTest {
     	Calendar originalLastScan = managed_app.getLastScan();
     	Calendar originalModifiedAt = managed_app.getModifiedAt();
     	Calendar originalCreatedAt = managed_app.getCreatedAt();
+    	System.out.println("mod: " + originalModifiedAt.getTimeInMillis() + " crt: " + originalCreatedAt.getTimeInMillis());
     	assertTrue(originalModifiedAt.getTimeInMillis()==originalCreatedAt.getTimeInMillis());
     	
     	final GoalExecution gexe = this.createExampleGoalExecution(app, GoalType.APP);

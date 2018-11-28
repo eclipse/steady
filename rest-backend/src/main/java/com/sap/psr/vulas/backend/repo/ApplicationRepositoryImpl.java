@@ -288,14 +288,14 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	 * @param _skip_empty if true, applications having neither constructs nor dependencies will be skipped
 	 */
 	@Override
-	public SortedSet<Application> getApplications(boolean _skip_empty, String _space) {
+	public SortedSet<Application> getApplications(boolean _skip_empty, String _space, long _asOfTimestamp) {
 		final StopWatch w = new StopWatch("Read all apps of space [" + _space + "]").start();
 		final SortedSet<Application> sorted_apps = new TreeSet<Application>();
 		List<Application> result = null;
 		if(_skip_empty)
-			result = this.appRepository.findNonEmptyApps(_space);
+			result = this.appRepository.findNonEmptyApps(_space, _asOfTimestamp);
 		else 
-			result = this.appRepository.findAllApps(_space);
+			result = this.appRepository.findAllApps(_space, _asOfTimestamp);
 		w.stop();
 		sorted_apps.addAll(result);
 		return sorted_apps;

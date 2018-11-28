@@ -2,6 +2,7 @@ package com.sap.psr.vulas.backend.repo;
 
 
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.SortedSet;
@@ -23,7 +24,7 @@ public interface ApplicationRepositoryCustom {
 
 	public void updateFlags(VulnerableDependency _vuldep, Boolean _withChangeList);
 
-	public SortedSet<Application> getApplications(boolean _skip_empty, String _space);
+	public SortedSet<Application> getApplications(boolean _skip_empty, String _space, long _asOfTimestamp);
 
 	public void deleteAnalysisResults(Application _app, boolean _clean_goal_history);
 

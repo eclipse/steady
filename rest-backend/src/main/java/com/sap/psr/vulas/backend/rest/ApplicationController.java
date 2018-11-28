@@ -393,6 +393,7 @@ public class ApplicationController {
 			@RequestParam(value="group", required=false, defaultValue="*") String g,
 			@RequestParam(value="artifact", required=false, defaultValue="*") String a,
 			@RequestParam(value="version", required=false, defaultValue="*") String v,
+			@RequestParam(value="asOf", required=false, defaultValue="0") String   asOfTimestamp,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER,  required=false)  String space) {
 
 		Space s = null;
@@ -405,7 +406,7 @@ public class ApplicationController {
 
 		try{
 			if(g.equals("*") && a.equals("*") && v.equals("*")) {
-				Collection<Application> results =  this.appRepository.getApplications(skipEmpty, s.getSpaceToken());
+				Collection<Application> results =  this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
 //				if(includeVulnerableFlag){
 //					if(s.isDefault())
 //						return new ResponseEntity<Collection<Application>>(HttpStatus.BAD_REQUEST);
@@ -437,7 +438,7 @@ public class ApplicationController {
 				if(skipEmpty){
 					result = new ArrayList<Application>();
 					//TODO 16-03-2018: this search was implemented in refactoring2 to enable the pull from SVM. To check whther and how it works with spaces
-					Collection<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken());
+					Collection<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
 					for(Application f:search)
 						if(apps.contains(f))
 							result.add(f);
