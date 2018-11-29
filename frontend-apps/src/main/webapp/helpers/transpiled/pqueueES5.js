@@ -150,16 +150,6 @@ var PQueue = (function() {
       );
     }
 
-    if (!(Number.isFinite(options.interval) && options.interval >= 0)) {
-      throw new TypeError(
-        "Expected `interval` to be a finite number >= 0, got `" +
-          options.interval +
-          "` (" +
-          _typeof(options.interval) +
-          ")"
-      );
-    }
-
     this._carryoverConcurrencyCount = options.carryoverConcurrencyCount;
     this._isIntervalIgnored =
       options.intervalCap === Infinity || options.interval === 0;
