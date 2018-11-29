@@ -406,11 +406,11 @@ public class BackendConnector {
 		return cacheAppDependencies.get(_app);
 	}
 
-	public Set<VulnerableDependency> getAppVulnDeps(GoalContext _ctx, Application _app) throws BackendConnectionException {
+	public Set<VulnerableDependency> getAppVulnDeps(GoalContext _ctx, Application _app, boolean _include_historical, boolean _include_affected, boolean _include_affected_unconfirmed) throws BackendConnectionException {
 		final Set<VulnerableDependency> vuln_deps = new HashSet<VulnerableDependency>();
 		final boolean app_exists = this.isAppExisting(_ctx, _app);
 		if(app_exists) {
-			final String json = new BasicHttpRequest(HttpMethod.GET, PathBuilder.appVulnDeps(_app), null)
+			final String json = new BasicHttpRequest(HttpMethod.GET, PathBuilder.appVulnDeps(_app, _include_historical, _include_affected, _include_affected_unconfirmed), null)
 					.setGoalContext(_ctx)
 					.send()
 					.getBody();

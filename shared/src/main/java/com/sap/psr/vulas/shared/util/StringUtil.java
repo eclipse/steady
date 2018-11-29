@@ -98,20 +98,20 @@ public class StringUtil {
 		return StringUtil.join(Arrays.asList(_strings), _sep);
 	}
 
-	public static String join(List<String> _paths, String _sep) {
+	public static String join(List<String> _strings, String _sep) {
 		final StringBuilder b = new StringBuilder();
 		int i = 0;
-		for(String p: _paths) {
+		for(String p: _strings) {
 			if(i++>0) b.append(_sep);
 			b.append(p.toString());
 		}
 		return b.toString();
 	}
 
-	public static String join(Set<String> _paths, String _sep) {
+	public static String join(Set<String> _strings, String _sep) {
 		final StringBuilder b = new StringBuilder();
 		int i = 0;
-		for(String p: _paths) {
+		for(String p: _strings) {
 			if(i++>0) b.append(_sep);
 			b.append(p.toString());
 		}

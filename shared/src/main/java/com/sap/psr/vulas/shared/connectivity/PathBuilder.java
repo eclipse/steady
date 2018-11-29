@@ -95,9 +95,12 @@ public class PathBuilder {
 	 * @param _bugId
 	 * @return
 	 */
-	public static final String appVulnDeps(@NotNull Application _app) {
+	public static final String appVulnDeps(@NotNull Application _app, boolean _include_historical, boolean _include_affected, boolean _include_affected_unconfirmed) {
 		final StringBuilder b = new StringBuilder();
 		b.append(app(_app)).append("/vulndeps");
+		b.append("?").append("includeHistorical=").append(_include_historical);
+		b.append("&").append("includeAffected=").append(_include_affected);
+		b.append("&").append("includeAffectedUnconfirmed=").append(_include_affected_unconfirmed);
 		return b.toString();
 	}
 	

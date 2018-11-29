@@ -4,19 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Test;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.sap.psr.vulas.ConstructId;
-import com.sap.psr.vulas.java.JavaClassId;
-import com.sap.psr.vulas.java.JavaId;
-import com.sap.psr.vulas.java.JavaMethodId;
-import com.sap.psr.vulas.java.JavaPackageId;
 
 /**
  * Basic tests related to JavaId and its subclasses.
