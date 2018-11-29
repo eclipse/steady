@@ -72,9 +72,9 @@ sap.ui.core.UIComponent.extend("vulasfrontend.Component", {
 		// 1. some very generic requires
 		jQuery.sap.require("sap.m.routing.RouteMatchedHandler");
 		jQuery.sap.require("sap.ui.core.routing.Router");
+		jQuery.sap.require("model.Version");
 		jQuery.sap.require("model.Config");
 		jQuery.sap.require("model.Formatter");
-		jQuery.sap.require("model.Version");
 		
 		// 2. call overwritten init (calls createContent)
 		sap.ui.core.UIComponent.prototype.init.apply(this, arguments);

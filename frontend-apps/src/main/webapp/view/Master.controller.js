@@ -57,14 +57,51 @@ sap.ui.controller("view.Master", {
 				list.setModel(newModel);
 				list.setBusy(false);
 				if (model.Config.getSpace() != model.Config.getDefaultSpace()) {
-					that.loadVulnerabilityIcons();
+					that.loadVulnerabilityIcons(list);
 				}
 			});
 		}
 	},
 	
-	loadVulnerabilityIcons: function() {
-		console.log('suppress')
+	loadVulnerabilityIcon: function(app, index, listModel) {
+		return new Promise(function(resolve, reject) {
+			let url = model.Config.getUsedVulnerabilitiesServiceUrl(app.group, app.artifact, app.version, false, true, true, app.lastChange)
+			$.ajax({
+				url: url,
+				headers: model.Config.defaultHeaders()
+			}).done(function(deps) {
+				if (deps.some(function(dep) {
+					return dep.affected_version
+				})) {
+					listModel.oData[index].hasVulnerabilities = true
+				} else {
+					listModel.oData[index].hasVulnerabilities = false
+				}
+				listModel.refresh()
+				resolve()
+			}).fail(function(err) {
+				listModel.oData[index].fetchingError = true
+				listModel.refresh()
+				reject()
+			})
+		})
+	},
+
+	vulnerabilityIconQueue: new PQueue({concurrency: 15, queueClass: BasePriorityQueue}),
+
+	loadVulnerabilityIcons: function(list) {
+		let listModel = list.getModel()
+
+		listModel.oData.forEach(function(app, index){
+			if (index <= 99) {
+				this.vulnerabilityIconQueue.add(function() { 
+					return this.loadVulnerabilityIcon(app, index, listModel)
+				}.bind(this), {
+					priority: 1,
+					id: index
+				})
+			}
+		}.bind(this))
 	},
 	
 	validateEmail: function (email) {
@@ -334,8 +371,7 @@ sap.ui.controller("view.Master", {
 		group = object.group;
 		artifact = object.artifact;
 		version = object.version;
-		lastChange = new Date(object.lastChange).getTime()
-		console.log('tap ' + lastChange)
+		model.lastChange = new Date(object.lastChange).getTime()
 		this.router.navTo("component", {
 			group : group,
 			artifact : artifact,
@@ -361,9 +397,27 @@ sap.ui.controller("view.Master", {
             filters.push(filter);
         }
 		var list = this.getView().byId("idListApplications");
-        var binding = list.getBinding("items");
-        binding.filter(filters);
+		var binding = list.getBinding("items");
+		let listModel = list.getModel()
+		binding.filter(filters);
+		if (query.length >= 1) {
+			this.updateFilteredVulnerabilityIcons(binding, listModel)
+		}
 	},
+
+	updateFilteredVulnerabilityIcons: _.debounce(function(binding, listModel) {
+		console.log('update triggered')
+		binding.aIndices.forEach(function(id) {
+			if (!this.vulnerabilityIconQueue.queue.isInserted(id)) {
+				this.vulnerabilityIconQueue.add(function() { 
+					return this.loadVulnerabilityIcon(binding.oModel.oData[id], id, listModel)
+				}.bind(this), {
+					priority: 2,
+					id: id
+				})
+			}
+		}.bind(this))
+	}, 600),
 
 	clone: function(obj) {
 		if (null == obj || "object" != typeof obj) return obj;

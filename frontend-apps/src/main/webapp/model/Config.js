@@ -144,7 +144,9 @@ model.Config.getTenant = function(_force) {
 		var url = model.Config.getHost()+"/tenants/default";
 		var oModel = new sap.ui.model.json.JSONModel();
 		//3rd param is 'asynch', set to false as the value is required to continue
-		oModel.loadData(url, null,false,"GET",false,true,{'X-Vulas-Component':'appfrontend'});
+		oModel.loadData(url, null,false,"GET",false,true, {
+			'X-Vulas-Component':'appfrontend'
+		});
 		model.Config.setTenant(oModel.getObject('/tenantToken'));
 	}
 		
@@ -187,6 +189,20 @@ model.Config.getSwIdMandatory = function() {
 
 //********* SECTION : FUNCTIONS TO POPULATE JSONMODELS WITH JSON RETURNED BY THE BACKEND REQUESTS *********\\
 
+model.Config.authz = function() {
+	return 'Basic ' + btoa(model.Config.settings.user + ':' + model.Config.settings.pwd)
+}
+
+model.Config.defaultHeaders = function () {
+	return {
+		'Authorization': model.Config.authz(),
+		'X-Vulas-Version': model.Version.version,
+		'X-Vulas-Component': 'appfrontend',
+		'X-Vulas-Tenant': model.Config.getTenant(),
+		'X-Vulas-Space': model.Config.getSpace()
+	}
+}
+
 model.Config.loadSpaces = function(_t){
 	var sUrl = model.Config.getSpacesServiceUrl();
 	var oSpaceModel = new sap.ui.model.json.JSONModel();
@@ -195,11 +211,8 @@ model.Config.loadSpaces = function(_t){
 	sap.ui.getCore().byId('idSpace').setModel(oSpaceModel);
 }
 
-
 model.Config.loadData = function(oModel,sUrl, method) {
-	var authz = 'Basic '+ btoa(model.Config.settings.user + ":" + model.Config.settings.pwd);
-	oModel.loadData(sUrl, null,true,method,false,true,{'Authorization': authz,'X-Vulas-Version':model.Version.version,
-		'X-Vulas-Component':'appfrontend','X-Vulas-Tenant':model.Config.getTenant(),'X-Vulas-Space':model.Config.getSpace()});
+	oModel.loadData(sUrl, null,true,method,false,true, model.Config.defaultHeaders());
 	oModel.attachRequestFailed(function(oControlEvent){
 		console.log(oControlEvent.getParameters().statusCode);
 		if(oControlEvent.getParameters().statusCode=="503"){
@@ -212,11 +225,12 @@ model.Config.loadData = function(oModel,sUrl, method) {
 
 model.Config.loadDataSync = function(oModel,sUrl, method, tenant) {
 	var t = model.Config.getTenant();
-	if(tenant!=null)
-		t = tenant;
-	var authz = 'Basic '+ btoa(model.Config.settings.user + ":" + model.Config.settings.pwd);
-	oModel.loadData(sUrl, null,false,method,false,false,{'Authorization': authz,'X-Vulas-Version':model.Version.version,
-		'X-Vulas-Component':'appfrontend','X-Vulas-Tenant':t,'X-Vulas-Space':model.Config.getSpace()});
+	var headers = model.Config.defaultHeaders()
+	if(tenant != null) {
+		t = tenant
+	}
+	headers['X-Vulas-Tenant'] = t
+	oModel.loadData(sUrl, null, false, method, false, false, headers);
 	oModel.attachRequestFailed(function(oControlEvent){
 		console.log(oControlEvent.getParameters().statusCode);
 		if(oControlEvent.getParameters().statusCode=="503"){
@@ -225,7 +239,6 @@ model.Config.loadDataSync = function(oModel,sUrl, method, tenant) {
 			);
 		}
 	});
-
 }
 
 //********* END SECTION : FUNCTIONS TO POPULATE JSONMODELS WITH JSON RETURNED BY THE BACKEND REQUESTS *********\\
