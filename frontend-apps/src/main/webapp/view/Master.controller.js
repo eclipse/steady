@@ -50,7 +50,14 @@ sap.ui.controller("view.Master", {
 		if (!model.Config.isMock) {
 			var sUrl = model.Config.getMyAppsServiceUrl(false);
 			var newModel = new sap.ui.model.json.JSONModel();
-			document.dispatchEvent(new Event('applicationListReload'));
+			var event;
+			if (typeof(Event) === 'function') {
+				event = new Event('customevent')
+			} else {
+				event = document.createEvent('customevent');
+				event.initEvent('submit', true, true);
+			}
+			document.dispatchEvent(event);
 			model.Config.loadData(newModel, sUrl, 'GET');
 			var that = this;
 			newModel.attachRequestCompleted(function() {
@@ -68,7 +75,7 @@ sap.ui.controller("view.Master", {
 		var reloadCancelled = false
 	
 		if (!model.Config.isMock) {
-			document.addEventListener('applicationListReload', function (e) {
+			document.addEventListener('customevent', function (e) {
 				reloadCancelled = true
 			}, false)
 			var sUrl = model.Config.getMyAppsServiceUrl(true);
