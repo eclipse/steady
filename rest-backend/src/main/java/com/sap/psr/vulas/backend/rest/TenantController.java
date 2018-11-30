@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.sap.psr.vulas.backend.model.Tenant;
+import com.sap.psr.vulas.backend.model.view.Views;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
 import com.sap.psr.vulas.backend.util.TokenUtil;
 import com.sap.psr.vulas.shared.util.StopWatch;
@@ -37,6 +39,7 @@ public class TenantController {
 	 * Returns all existing {@link Tenant}s.
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
+	@JsonView(Views.Default.class)
 	public ResponseEntity<Iterable<Tenant>> getAllTenants() {
 		try {
 			// Load existing tenant
@@ -57,6 +60,7 @@ public class TenantController {
 	 * Returns the default {@link Tenant}.
 	 */
 	@RequestMapping(value = "default", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
+	@JsonView(Views.Default.class)
 	public ResponseEntity<Tenant> getDefaultTenant() {
 		try {
 			try {
@@ -81,6 +85,7 @@ public class TenantController {
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if tenant with given token does not exist, 200 {@link HttpStatus#OK} if the tenant is found
 	 */
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.OPTIONS)
+	@JsonView(Views.Default.class)
 	public ResponseEntity<Tenant> isTenantExisting(@PathVariable String token) {
 		try {
 			TenantRepository.FILTER.findOne(tenantRepository.findBySecondaryKey(token));
@@ -95,6 +100,7 @@ public class TenantController {
 	 * Creates a new {@link Tenant} with a new, random token in the database and returns it to the client.
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
+	@JsonView(Views.Default.class)
 	public ResponseEntity<Tenant> createTenant(@RequestBody Tenant tenant) {
 		final StopWatch sw = new StopWatch("Create tenant [" + (tenant==null?null:tenant.getTenantName()) + "]").start();
 		try {
@@ -124,6 +130,7 @@ public class TenantController {
 	 * Gets an existing {@link Tenant} and returns it to the client.
 	 */
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
+	@JsonView(Views.Default.class)
 	public ResponseEntity<Tenant> getTenant(@PathVariable String token) {
 		try {
 			// Load existing tenant
@@ -144,6 +151,7 @@ public class TenantController {
 	 * Modifies an existing {@link Tenant} and returns it to the client.
 	 */
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
+	@JsonView(Views.Default.class)
 	public ResponseEntity<Tenant> modifyTenant(@PathVariable String token, @RequestBody Tenant new_tenant) {
 		try {
 			if(!this.tenantRepository.isTenantComplete(new_tenant)){
@@ -185,6 +193,7 @@ public class TenantController {
 	 * Deletes a given {@link Tenant}.
 	 */
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.DELETE)
+	@JsonView(Views.Default.class)
 	public ResponseEntity<Tenant> deleteTenant(@PathVariable String token) {
 		try {
 //			// Check arguments
