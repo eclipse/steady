@@ -23,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.sap.psr.vulas.backend.model.view.Views;
 
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown=true, value = { "createdAt", "lastModified" }, allowGetters=true) // On allowGetters: https://github.com/FasterXML/jackson-databind/issues/95
@@ -56,6 +58,7 @@ public class Tenant {
 
 	@OneToMany(cascade = { CascadeType.REMOVE }, fetch = FetchType.EAGER, mappedBy = "tenant", orphanRemoval=true)
 	@JsonManagedReference
+	@JsonView(Views.Never.class)
 	private Collection<Space> spaces;
 	
 	public String getTenantToken() { return this.tenantToken; }

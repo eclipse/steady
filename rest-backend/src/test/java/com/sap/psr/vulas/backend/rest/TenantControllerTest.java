@@ -143,8 +143,9 @@ public class TenantControllerTest {
 				.accept(MediaType.APPLICATION_JSON);
 		mockMvc.perform(get_builder).andExpect(status().isOk())
 				.andExpect(content().contentType(contentType))
-				.andExpect(content().json(JacksonUtil.asJsonString(default_tenant)))
+			//	.andExpect(content().json(JacksonUtil.asJsonString(default_tenant))) //the deserialized tenant does not match the one read from the db as the spaces are not transfered
 				.andExpect(jsonPath("$.default", is(true)))
+				.andExpect(jsonPath("$.spaces").doesNotExist())
 				.andExpect(jsonPath("$.tenantToken", is(TEST_DEFAULT_TENANT)))
 				.andExpect(jsonPath("$.tenantName", is(TEST_DEFAULT_TENANT)));
 	}
