@@ -89,17 +89,12 @@ function toggle(_btn, _div) {
 	<p>Generated for:</p>
 	<table>
 		<tr>
-			<th>GroupId</th><th>ArtifactId</th><th>Version</th><th>Packaging</th>
+			<th>GroupId</th><th>ArtifactId</th><th>Version</th>
 		</tr>
 		<tr>
 			<td>$app.getMvnGroup()</td>
 			<td>$app.getArtifact()</td>
 			<td>$app.getVersion()</td>
-			<td>
-			#if( $app.getPackaging() )
-				$app.getPackaging()
-			#end
-			</td>
 		</tr>
 	</table>
 	<p>Aggregated report: $isAggregated</p>
@@ -108,14 +103,13 @@ function toggle(_btn, _div) {
 		<div id="projects" style="display: none;">
 			<table>
 			<tr>
-				<th>GroupId</th><th>ArtifactId</th><th>Version</th><th>Packaging</th>
+				<th>GroupId</th><th>ArtifactId</th><th>Version</th>
 			</tr>
 			#foreach( $prj in $projects)
 			<tr>
 				<td>$prj.getMvnGroup()</td>
 				<td>$prj.getArtifact()</td>
 				<td>$prj.getVersion()</td>
-				<td>$prj.getPackaging()</td>
 			</tr>
 			#end
 			</table>
@@ -154,13 +148,16 @@ function toggle(_btn, _div) {
 		<tr>
 			<td>exceptionExcludedBugs</td>
 			<td>$exceptionExcludedBugs</td>
-			<td>List of security vulnerabilities that will be ignored when deciding whether to throw a build exception<br/><br/>Example: CVE-2014-0050<br/>Default: none</td>
+			<td>
+				List of security vulnerabilities that will be ignored (exempted) when deciding whether to throw a build exception
+				<br/><br/>Example: CVE-2014-0050
+				<br/>Default: none
+				#if( $obsoleteExemptionsHistorical || $obsoleteExemptionsSignatureNotPresent )
+					<br/><br/>Obsolete exemptions (historical vulnerabilities): $obsoleteExemptionsHistorical
+					<br/>Obsolete exemptions (signatures of vulnerable code not present): $obsoleteExemptionsSignatureNotPresent
+				#end
+			</td>
 		</tr>
-		<!-- <tr>
-			<td>exceptionExcludeTransitive</td>
-			<td>$exceptionExcludeTransitive</td>
-			<td>If true, security vulnerabilities in transitive dependencies will be ignored when deciding whether to throw a build exception<br/><br/>Possible values: true, false<br/>Default: [false]</td>
-		</tr> -->
 	</table>	
 </div>
 

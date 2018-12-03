@@ -1,6 +1,7 @@
 package com.sap.psr.vulas.shared.util;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Set;
  * List items are trimmed by default, unless otherwise specified using the methods
  * {@link StringList#add(String, boolean)} or {@link StringList#addAll(String[], boolean)}.
  */
-public class StringList {
+public class StringList implements Iterable<String> {
 
 	public enum ComparisonMode { EQUALS, STARTSWITH, ENDSWITH, PATTERN };
 	
@@ -88,6 +89,10 @@ public class StringList {
 		if(_item!=null && !_item.equals(""))
 			this.itemlist.add( (_trim ? _item.trim() : _item) );
 		return this;
+	}
+	
+	public Iterator<String> iterator() {
+		return this.itemlist.iterator();
 	}
 	
 	/**

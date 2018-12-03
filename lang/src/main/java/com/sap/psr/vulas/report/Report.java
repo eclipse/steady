@@ -37,6 +37,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringList;
 import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
 import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
+import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 public class Report {
@@ -93,6 +94,10 @@ public class Report {
 	private Set<Application> modules = null;
 
 	private Set<AggregatedVuln> vulns = new TreeSet<AggregatedVuln>();
+	
+	// The following are used to inform about obsolete exemptions
+	private Set<String> historicalVulns = new HashSet<String>();
+	private Set<String> relevantVulns = new HashSet<String>();
 
 	private Set<AggregatedVuln> vulnsAboveThreshold = new HashSet<AggregatedVuln>();
 
@@ -189,8 +194,17 @@ public class Report {
 		this.vulns = gson.fromJson(vulnsJson, AggregatedVuln[].class);*/
 		for(Application prj: this.modules) {
 			try {
-				final Set<VulnerableDependency> vuln_deps = BackendConnector.getInstance().getAppVulnDeps(this.goalContext, prj);
+				// Fetch and collect historical vulns
+				final Set<VulnerableDependency> historical_vuln_deps = BackendConnector.getInstance().getAppVulnDeps(this.goalContext, prj, true, false, true);
+				for(VulnerableDependency v: historical_vuln_deps) {
+					this.historicalVulns.add(v.getBug().getBugId());
+				}
+			
+				// Fetch and prepare relevant vulns
+				final Set<VulnerableDependency> vuln_deps = BackendConnector.getInstance().getAppVulnDeps(this.goalContext, prj, false, true, true);
 				for(VulnerableDependency v: vuln_deps) {
+					this.relevantVulns.add(v.getBug().getBugId());					
+					
 					v.setApp(prj);
 					final AggregatedVuln new_av   = new AggregatedVuln(v.getDep().getLib().getDigest(), v.getDep().getFilename(), v.getBug());
 					final AggregatedVuln added_av = this.update(this.vulns, new_av);
@@ -224,10 +238,27 @@ public class Report {
 		long scope_in = 0, scope_out = 0;
 		long vulns_incl = 0, vulns_reach = 0, vulns_traced = 0;
 		long vulns_traced_not_reach = 0; // A particularly interesting case: Static analysis says it is not reachable, however, we collected a trace
+		
+		// Collect obsolete exemptions
+		final Set<String> obsolHistorical = new HashSet<String>();
+		final Set<String> obsolSignNotPresent = new HashSet<String>();
+		for(String v: this.excludedBugs) {
+			if(this.historicalVulns.contains(v) && !relevantVulns.contains(v)) {
+				obsolHistorical.add(v);
+			}
+			else if(!this.historicalVulns.contains(v) && !relevantVulns.contains(v)) {
+				obsolSignNotPresent.add(v);
+			}
+		}		
+		if(!obsolHistorical.isEmpty())
+			log.warn("Exemptions for the following vulnerabilities are obsolete, because they concern previous version(s) of the respective application dependency(ies) (historical vulnerability): [" + StringUtil.join(obsolHistorical, ", ") + "]");
+		if(!obsolSignNotPresent.isEmpty())
+			log.warn("Exemptions for the following vulnerabilities are obsolete, because none of the application dependencies contain potentially affected code signatures: [" + StringUtil.join(obsolSignNotPresent, ", ") + "]");
 
+		// Process all vuln dependencies
 		for(AggregatedVuln v: this.vulns) {
 			for(VulnerableDependency analysis: v.getAnalyses()) {
-
+				
 				// Overall counters
 				if(analysis.isAffectedVersion()) vulns_total_incl++;
 				if(analysis.isReachable()) vulns_total_reach++;
@@ -287,6 +318,9 @@ public class Report {
 		this.context.put("vulns", vulns);
 		this.context.put("vulnsToReport", vulnsToReport);
 		this.context.put("vulnsAboveTreshold", vulnsAboveThreshold);
+		
+		this.context.put("obsoleteExemptionsHistorical", StringUtil.join(obsolHistorical, ", "));
+		this.context.put("obsoleteExemptionsSignatureNotPresent", StringUtil.join(obsolSignNotPresent, ", "));
 
 		// Basic info
 		this.context.put("vulas-backend-serviceUrl", VulasConfiguration.getGlobal().getServiceUrl(Service.BACKEND));

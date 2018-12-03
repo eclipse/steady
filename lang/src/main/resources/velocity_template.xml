@@ -7,8 +7,6 @@
 		<groupId>$app.getMvnGroup()</groupId>
 		<artifactId>$app.getArtifact()</artifactId>
 		<version>$app.getVersion()</version>
-		#if( $app.getPackaging() )<packaging>$app.getPackaging()</packaging>
-		#end
 	</generatedFor>
 	
 	<!-- Aggregation info -->
@@ -20,7 +18,6 @@
 			<groupId>$prj.getMvnGroup()</groupId>
 			<artifactId>$prj.getArtifact()</artifactId>
 			<version>$prj.getVersion()</version>
-			<packaging>$prj.getPackaging()</packaging>
 		#end
 		</aggregatedModules>
 	#else
