@@ -100,6 +100,7 @@ public class HubIntegrationController {
 			@RequestParam(value="separator", required=false, defaultValue=":") String separator, 
 			@RequestParam(value="max", required=false, defaultValue="-1") Integer max,
 			@RequestParam(value="asOf", required=false, defaultValue="0") String asOfTimestamp,
+			@RequestParam(value="aggregate", required=false, defaultValue="true") Boolean aggregate,
 			@RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
 
 		// Get the tenant
@@ -124,7 +125,7 @@ public class HubIntegrationController {
 		outerloop:
 		for(Space s: spaces) {
 			// Export will be aggregated (one item only, corresponding to the space)
-			if(s.getExportConfiguration()==ExportConfiguration.AGGREGATED) {
+			if(aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) {
 				//if asOfTimestamp has been specified, we check if at least 1 application in the space has lastChange>asOfTimestamp
 				Boolean toAdd=true;
 				if(Long.parseLong(asOfTimestamp)>0){
@@ -141,7 +142,7 @@ public class HubIntegrationController {
 				}
 			}
 			// Export will be individual (one item per space application)
-			else if(s.getExportConfiguration()==ExportConfiguration.DETAILED) {
+			else if((!aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) || s.getExportConfiguration()==ExportConfiguration.DETAILED) {
 				final Set<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
 				for(Application app: apps) {
 					final ExportItem item = new ExportItem(s, app);
@@ -197,14 +198,14 @@ public class HubIntegrationController {
 			// Export of app statistics
 			if(item.hasApplication()) {
 				final Application app = item.getApplication();
-				vd_list.addAll(this.getVulnerableItemDependencies(app, excludedScopes, false));
+				vd_list.addAll(this.getVulnerableItemDependencies(item.getSpace(), app, excludedScopes, false));
 			}
 			// Export of space statistics
 			else {
 				final Space space = item.getSpace();
 				final List<Application> apps = this.appRepository.findAllApps(space.getSpaceToken(),0);
 				for(Application app: apps) {
-					vd_list.addAll(this.getVulnerableItemDependencies(app, excludedScopes, true));
+					vd_list.addAll(this.getVulnerableItemDependencies(space, app, excludedScopes, true));
 				}
 			}
 
@@ -220,7 +221,7 @@ public class HubIntegrationController {
 		}
 	}
 
-	private TreeSet<VulnerableItemDependency> getVulnerableItemDependencies(Application _app, Scope[] _excluded_scopes, boolean _include_app_gav) {
+	private TreeSet<VulnerableItemDependency> getVulnerableItemDependencies(Space _s, Application _app, Scope[] _excluded_scopes, boolean _include_app_gav) {
 		final TreeSet<VulnerableItemDependency> vd_list = new TreeSet<VulnerableItemDependency>();
 
 		// Get latest goal execution date
@@ -238,9 +239,9 @@ public class HubIntegrationController {
 				// Create vulnerable hub dependency
 				VulnerableItemDependency vhd = null;
 				if(_include_app_gav)
-					vhd = new VulnerableItemDependency(_app, vd, snapshot_date);
+					vhd = new VulnerableItemDependency(_s.getSpaceToken(), _app, vd, snapshot_date);
 				else
-					vhd = new VulnerableItemDependency(vd, snapshot_date);
+					vhd = new VulnerableItemDependency(_s.getSpaceToken(), vd, snapshot_date);
 
 				// Set to null if among excluded scopes
 				if(_excluded_scopes!=null && _excluded_scopes.length>0) {
@@ -364,6 +365,9 @@ public class HubIntegrationController {
 		private String type;
 		
 		private String scope = null;
+		
+		private String spaceToken = null;
+		
 
 		@JsonIgnore
 		private VulnerableDependency vulnerableDependency = null;
@@ -375,11 +379,11 @@ public class HubIntegrationController {
 		@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="GMT")
 		private java.util.Calendar snapshotDate; 
 
-		private VulnerableItemDependency(VulnerableDependency _vd, Calendar _date) {
-			this(null, _vd, _date);
+		private VulnerableItemDependency(String _spaceToken, VulnerableDependency _vd, Calendar _date) {
+			this(_spaceToken, null, _vd, _date);
 		}
 
-		private VulnerableItemDependency(Application _app, VulnerableDependency _vd, Calendar _date) {
+		private VulnerableItemDependency(String _spaceToken, Application _app, VulnerableDependency _vd, Calendar _date) {
 			// Only filename
 			if(_app==null)
 				this.projectId = _vd.getDep().getFilename();
@@ -392,6 +396,7 @@ public class HubIntegrationController {
 			this.type = _vd.getBug().getBugId();
 			this.snapshotDate = _date;
 			this.scope = _vd.getDep().getScope()==null ? null : _vd.getDep().getScope().toString();
+			this.spaceToken = _spaceToken;
 
 			// Scope excluded: State to 1 (False Positive: Secure by design)
 			// Bug excluded: State to 4 (False Positive: Sufficient mitigation in place)
@@ -416,6 +421,8 @@ public class HubIntegrationController {
 		public String getExemptionReason() { return this.exemptionReason; }
 		
 		public String getScope() { return this.scope; }
+		
+		public String getSpaceToken() { return this.spaceToken; }
 
 		public String getProjectId() { return projectId; }
 
