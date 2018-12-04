@@ -94,7 +94,7 @@ sap.ui.controller("view.Master", {
 		})
 	},
 
-	vulnerabilityIconQueue: new PQueue({concurrency: 15, queueClass: BasePriorityQueue}),
+	vulnerabilityIconQueue: new PQueue({concurrency: 10, queueClass: BasePriorityQueue}),
 
 	loadVulnerabilityIcons: function(list) {
 		let listModel = list.getModel()
@@ -118,7 +118,7 @@ sap.ui.controller("view.Master", {
 		
 		for(var i in re){
 			var regex = new RegExp(re[i]);
-			var t = regex.test(to_test);
+			var t = regex.tezst(to_test);
 			if(t)
 				return true;
 		}
