@@ -597,6 +597,7 @@ public class BackendConnector {
 				
 				// The request depending on whose result either POST or PUT will be called
 				final BasicHttpRequest cond_req = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.goalExcecution(null, _ctx.getSpace(), app, _gexe.getId()), null);
+				cond_req.setGoalContext(_ctx);
 
 				final HttpRequestList req_list = new HttpRequestList();
 				final Map<String,String> params = new HashMap<String,String>();
@@ -605,12 +606,14 @@ public class BackendConnector {
 						new ConditionalHttpRequest(HttpMethod.POST, PathBuilder.goalExcecutions(null, _ctx.getSpace(), app), params)
 						.setConditionRequest(cond_req)
 						.addCondition(new StatusCondition(HttpURLConnection.HTTP_NOT_FOUND))
+						.setGoalContext(_ctx)
 						.setPayload(_gexe.toJson(), null, false)
 						);
 				req_list.addRequest(
 						new ConditionalHttpRequest(HttpMethod.PUT, PathBuilder.goalExcecution(null, _ctx.getSpace(), app, _gexe.getId()), params)
 						.setConditionRequest(cond_req)
 						.addCondition(new StatusCondition(HttpURLConnection.HTTP_OK))
+						.setGoalContext(_ctx)
 						.setPayload(_gexe.toJson(), null, false)
 						);
 				
