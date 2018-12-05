@@ -38,7 +38,8 @@ sap.ui.controller("view.Master", {
 	reloadData: function() {
 		var list = this.getView().byId('idListApplications');
 		var label = this.getView().byId('app-label');
-		label.setText("Applications for space [" + model.Config.getSpace() + "]");
+		label.setText("Space " + model.Config.getSpace());
+		var labelCount = this.getView().byId('app-count');
 		list.setBusy(true);
 		var data = [];
 		var oldmodel = list.getModel();
@@ -50,36 +51,73 @@ sap.ui.controller("view.Master", {
 		if (!model.Config.isMock) {
 			var sUrl = model.Config.getMyAppsServiceUrl(false);
 			var newModel = new sap.ui.model.json.JSONModel();
-			document.dispatchEvent(new Event('applicationListReload'));
+			var event;
+			if (typeof(Event) === 'function') {
+				event = new Event('customevent')
+			} else {
+				event = document.createEvent('customevent');
+				event.initEvent('submit', true, true);
+			}
+			document.dispatchEvent(event);
 			model.Config.loadData(newModel, sUrl, 'GET');
 			var that = this;
 			newModel.attachRequestCompleted(function() {
+				newListApplicationsSize = newModel.oData.length
+				labelCount.setText(Math.min(newListApplicationsSize, 50) + ' displayed out of ' + newListApplicationsSize);
 				list.setModel(newModel);
 				list.setBusy(false);
 				if (model.Config.getSpace() != model.Config.getDefaultSpace()) {
-					that.loadVulnerabilityIcons();
+					that.loadVulnerabilityIcons(list);
 				}
 			});
 		}
 	},
 	
-	loadVulnerabilityIcons: function() {
-		var list = this.getView().byId('idListApplications');
-		var reloadCancelled = false
-	
-		if (!model.Config.isMock) {
-			document.addEventListener('applicationListReload', function (e) {
-				reloadCancelled = true
-			}, false)
-			var sUrl = model.Config.getMyAppsServiceUrl(true);
-			var newModel = new sap.ui.model.json.JSONModel();
-			model.Config.loadData(newModel, sUrl, 'GET');
-			newModel.attachRequestCompleted(function() {
-				if (!reloadCancelled) {
-					list.setModel(newModel);
+	loadVulnerabilityIcon: function(workspace, backendUrl, skipEmpty, app, index, listModel) {
+		return new Promise(function(resolve, reject) {
+			let url = model.Config.getUsedVulnerabilitiesServiceUrl(app.group, app.artifact, app.version, false, true, true, app.lastChange)
+			$.ajax({
+				url: url,
+				headers: model.Config.defaultHeaders()
+			}).done(function(deps) {
+				if (workspace === model.Config.getSpace() && backendUrl === model.Config.getHost() && skipEmpty === model.Config.getSkipEmpty()) {
+					if (deps.some(function(dep) {
+						return dep.affected_version
+					})) {
+						listModel.oData[index].hasVulnerabilities = true
+					} else {
+						listModel.oData[index].hasVulnerabilities = false
+					}
+					listModel.refresh()
 				}
-			});
-		}
+				resolve()
+			}).fail(function(err) {
+				listModel.oData[index].fetchingError = true
+				listModel.refresh()
+				reject()
+			})
+		})
+	},
+
+	// To access the queue from the window: sap.ui.getCore().byId("__xmlview0").getController().vulnerabilityIconQueue
+	vulnerabilityIconQueue: new PQueue({concurrency: 5, queueClass: BasePriorityQueue}),
+
+	loadVulnerabilityIcons: function(list) {
+		let workspace = model.Config.getSpace()
+		let backendUrl = model.Config.getHost()
+		let skipEmpty = model.Config.getSkipEmpty()
+		let listModel = list.getModel()
+		listModel.refresh()
+		listModel.oData.forEach(function(app, index){
+			if (index <= 49) {
+				this.vulnerabilityIconQueue.add(function() {
+					return this.loadVulnerabilityIcon(workspace, backendUrl, skipEmpty, app, index, listModel)
+				}.bind(this), {
+					priority: 1,
+					id: index
+				})
+			}
+		}.bind(this))
 	},
 	
 	validateEmail: function (email) {
@@ -89,7 +127,7 @@ sap.ui.controller("view.Master", {
 		
 		for(var i in re){
 			var regex = new RegExp(re[i]);
-			var t = regex.test(to_test);
+			var t = regex.tezst(to_test);
 			if(t)
 				return true;
 		}
@@ -345,10 +383,13 @@ sap.ui.controller("view.Master", {
 
 
 	onListItemTap: function(oEvent) {
-		group = oEvent.getParameter("listItem").getBindingContext().getObject().group;
-		artifact = oEvent.getParameter("listItem").getBindingContext().getObject().artifact;
-		version = oEvent.getParameter("listItem").getBindingContext().getObject().version;
-		this.router.navTo("component", {group : group,
+		let object = oEvent.getParameter("listItem").getBindingContext().getObject()
+		group = object.group;
+		artifact = object.artifact;
+		version = object.version;
+		model.lastChange = new Date(object.lastChange).getTime()
+		this.router.navTo("component", {
+			group : group,
 			artifact : artifact,
 			version : version
 		});
@@ -372,9 +413,32 @@ sap.ui.controller("view.Master", {
             filters.push(filter);
         }
 		var list = this.getView().byId("idListApplications");
-        var binding = list.getBinding("items");
-        binding.filter(filters);
+		var binding = list.getBinding("items");
+		let listModel = list.getModel()
+		var labelCount = this.getView().byId('app-count');
+		binding.filter(filters);
+		labelCount.setText(Math.min(binding.aIndices.length, 50) + ' displayed out of ' + listModel.oData.length);
+		if (query.length >= 1) {
+			this.updateFilteredVulnerabilityIcons(binding, listModel)
+		}
 	},
+
+	updateFilteredVulnerabilityIcons: _.debounce(function(binding, listModel) {
+		let workspace = model.Config.getSpace()
+		let backendUrl = model.Config.getHost()
+		let skipEmpty = model.Config.getSkipEmpty()
+		binding.aIndices.forEach(function(id) {
+			if (!this.vulnerabilityIconQueue.queue.isInserted(id)) {
+				this.vulnerabilityIconQueue.add(function() { 
+					return this.loadVulnerabilityIcon(workspace , backendUrl, skipEmpty, binding.oModel.oData[id], id, listModel)
+				}.bind(this), {
+					priority: 2,
+					id: id
+				})
+			}
+		}.bind(this))
+		console.log('update triggered')
+	}, 1000),
 
 	clone: function(obj) {
 		if (null == obj || "object" != typeof obj) return obj;
@@ -413,178 +477,193 @@ sap.ui.controller("view.Master", {
 	
 
 	
-	handleSettings: function(oEvent){
+	handleSettings: function (oEvent) {
 		this.buttonSource = oEvent.getSource();
-		
+
 		// create popover
-        if (!this.oPopoverSettings) {
-            this.oPopoverSettings = new sap.m.Popover("settings_popover", {
-	            title: "Settings", 
-		         //   placement: sap.m.PlacementType.Top, 
-		            footer: new sap.m.Bar({
-		                contentRight: [
-		                    new sap.m.Button({
-						    text: "Edit Space",
-						    icon: "sap-icon://edit",
-						    press: function () {
-						    	
-						    		if(sap.ui.getCore().byId('idSpace').getSelectedKey()=="A5344E8A6D26617C92A0CAD02F10C89C")
-						    			sap.m.MessageBox.warning(
-			                    				"The public space cannot be modified."
-			                    			);
-						    		else
-						    			this.editSpace(false,this.buttonSource);						    		
-						    
-						    	}.bind(this)
-							}),
-		                               
-		                    new sap.m.Button({
-		                    text: "Save",
-		                    icon: "sap-icon://save",
-		                    press: function () {
-		                    	if(sap.ui.getCore().byId('idSpace').getSelectedItem()==null && sap.ui.getCore().byId('idSpace')._lastValue=="")
-		                    		sap.m.MessageBox.warning(
-		                    				"No space selected, the default will be used."
-		                    			);
-		                    	
-	                    	
-		                    	if(sap.ui.getCore().byId('idHostURL').getValue() !=null && sap.ui.getCore().byId('idHostURL').getValue() !="" &&  sap.ui.getCore().byId('idHostURL').getValue() != model.Config.getHost())
-		                    		model.Config.setHost(sap.ui.getCore().byId('idHostURL').getValue());
-		                    	if(sap.ui.getCore().byId('idTenant')!=undefined && sap.ui.getCore().byId('idTenant').getValue() !=null && sap.ui.getCore().byId('idTenant').getValue() !="" &&  sap.ui.getCore().byId('idTenant').getValue() != model.Config.getTenant())
-		                    		model.Config.setTenant(sap.ui.getCore().byId('idTenant').getValue());
-		                    	if(sap.ui.getCore().byId('idSpace').getSelectedItem() !=null && sap.ui.getCore().byId('idSpace').getSelectedKey() !="" && sap.ui.getCore().byId('idSpace').getSelectedKey()!= model.Config.getSpace()){
-		                    		model.Config.setSpace(sap.ui.getCore().byId('idSpace').getSelectedKey());
-		                    	}else if(sap.ui.getCore().byId('idSpace').getSelectedItem()==null && sap.ui.getCore().byId('idSpace')._lastValue!="" && sap.ui.getCore().byId('idSpace')._lastValue != model.Config.getSpace()){
-		                    		model.Config.setSpace(sap.ui.getCore().byId('idSpace')._lastValue);
-		                    	}
-		                    	if(sap.ui.getCore().byId('idCiaURL').getValue() !=null && sap.ui.getCore().byId('idCiaURL').getValue() !="" && sap.ui.getCore().byId('idCiaURL').getValue() != model.Config.getCiaHost())
-		                    		model.Config.setCiaHost(sap.ui.getCore().byId('idCiaURL').getValue());
-		                    	if(sap.ui.getCore().byId('idSkipEmpty').getState() !=model.Config.getSkipEmpty())
-		                    		model.Config.setSkipEmpty(sap.ui.getCore().byId('idSkipEmpty').getState());
-		                    	
-		                    	
-		                    	//************* clean Component and reset router 
-		                    	//TODO: how to get (or set) Component.view.xml id?
-		                    	sap.ui.getCore().byId("splitApp").removeDetailPage("__xmlview1");
-		                    	//TODO: how to reset router?
-		                    	//window.history.go(-1);
-		                    	//this.router = sap.ui.core.UIComponent.getRouterFor(this);
-		                    	//this.router.initialize();
-		                		// ************* 
-		                    	
-		                    	window.location.hash = '';
-		                    	this.reloadData();
-		                    	sap.ui.getCore().byId('settings_popover').close();}
-	                    	.bind(this)
-		                    })],
-		                    contentLeft: [ new sap.m.Button({
-		                        text: "Close",
-		                        icon: "sap-icon://close",
-		                        press: function () {
-		                        	sap.ui.getCore().byId('settings_popover').close();
-		                        }
-		                      })]
-		            }), 
-		            content: [
-		            new sap.m.InputListItem({
-		            	label: "Space",
-			            content:  new sap.m.ComboBox("idSpace",
-			            		{
-			            	showSecondaryValues : true,
-			            	filterSecondaryValues : true,
-			            	items:{path: "/",
-                            template: new sap.ui.core.ListItem({key: '{spaceToken}', 
-                            	text:'{spaceName}',
-                            	additionalText:'{spaceToken}'})
-			            } })
-		            }),
-		            new sap.m.InputListItem({
-		            	label: "Backend URL",
-			            content: new sap.m.Input({
-		            
-			            	  id: "idHostURL",
-			            	  type: sap.m.InputType.Text,
-			            	//  placeholder: 'Enter host address (default: 127.0.0.1) ...',
-			            	//  width: "100%",
-			            	  value: model.Config.getHost()
-			        		})
-		            }),
-		            new sap.m.InputListItem({
-		            	label: "Artifact Analyzer URL",
-			            content: new sap.m.Input({
-		            
-			            	  id: "idCiaURL",
-			            	  type: sap.m.InputType.Text,
-			            	//  placeholder: 'Enter host address (default: 127.0.0.1) ...',
-			            	//  width: "100%",
-			            	  value: model.Config.getCiaHost()
-			        		})
-		            }),
-		            new sap.m.InputListItem({
-		            	label:"Skip Empty Apps",
-			            content: new sap.m.Switch({
-			            		id : "idSkipEmpty",
-		        	    	  state: model.Config.getSkipEmpty()
-		        	    //	  width: "100%",
-		        	      })
-		            })
-		            
-		            ] 
-		        });
-            if(model.Config.settings.dev==true){
-            	var oTenantInput = new sap.m.InputListItem({
-	            	label: "Tenant",
-		            content: new sap.m.Input({
-		            	  id: "idTenant",
-		            	  type: sap.m.InputType.Text,
-		            	  value: model.Config.getTenant(),
-		            	  liveChange : function() {model.Config.loadSpaces(sap.ui.getCore().byId('idTenant').getValue());}
-		        		})
-	            });
-            	this.oPopoverSettings.addContent(oTenantInput);
-            }
-            this.getView().addDependent(this.oPopoverSettings);
-        }
-        //refresh form with configured values
+		if (!this.oPopoverSettings) {
+			this.oPopoverSettings = new sap.m.Popover("settings_popover", {
+				title: "Settings",
+				//   placement: sap.m.PlacementType.Top, 
+				footer: new sap.m.Bar({
+					contentRight: [
+						new sap.m.Button({
+							text: "Edit Space",
+							icon: "sap-icon://edit",
+							press: function () {
+
+								if (sap.ui.getCore().byId('idSpace').getSelectedKey() == "A5344E8A6D26617C92A0CAD02F10C89C")
+									sap.m.MessageBox.warning(
+										"The public space cannot be modified."
+									);
+								else
+									this.editSpace(false, this.buttonSource);
+
+							}.bind(this)
+						}),
+
+						new sap.m.Button({
+							text: "Save",
+							icon: "sap-icon://save",
+							press: function () {
+								let config = model.Config
+								let core = sap.ui.getCore()
+								if (core.byId('idSpace').getSelectedItem() == null && core.byId('idSpace')._lastValue == "") {
+									sap.m.MessageBox.warning("No space selected, the default will be used.");
+								}
+
+								if (core.byId('idHostURL').getValue() != null && core.byId('idHostURL').getValue() != "" && core.byId('idHostURL').getValue() != config.getHost()) {
+									config.setHost(core.byId('idHostURL').getValue());
+								}
+								if (core.byId('idTenant') != undefined && core.byId('idTenant').getValue() != null && core.byId('idTenant').getValue() != "" && core.byId('idTenant').getValue() != config.getTenant()) {
+									config.setTenant(core.byId('idTenant').getValue());
+								}
+								if (core.byId('idSpace').getSelectedItem() != null && core.byId('idSpace').getSelectedKey() != "" && core.byId('idSpace').getSelectedKey() != config.getSpace()) {
+									config.setSpace(core.byId('idSpace').getSelectedKey());
+								} else if (core.byId('idSpace').getSelectedItem() == null && core.byId('idSpace')._lastValue != "" && core.byId('idSpace')._lastValue != config.getSpace()) {
+									config.setSpace(core.byId('idSpace')._lastValue);
+								}
+								if (core.byId('idCiaURL').getValue() != null && core.byId('idCiaURL').getValue() != "" && core.byId('idCiaURL').getValue() != config.getCiaHost()) {
+									config.setCiaHost(core.byId('idCiaURL').getValue());
+								}
+								if (core.byId('idSkipEmpty').getState() != config.getSkipEmpty()) {
+									config.setSkipEmpty(core.byId('idSkipEmpty').getState());
+								}
+
+
+								//************* clean Component and reset router 
+								//TODO: how to get (or set) Component.view.xml id?
+								core.byId("splitApp").removeDetailPage("__xmlview1");
+								//TODO: how to reset router?
+								//window.history.go(-1);
+								//this.router = sap.ui.core.UIComponent.getRouterFor(this);
+								//this.router.initialize();
+								// ************* 
+
+								// Clear the vulnerability icon's queue of possible ongoing calls
+								this.vulnerabilityIconQueue.clear()
+
+								window.location.hash = '';
+								this.reloadData();
+								core.byId('settings_popover').close();
+							}.bind(this)
+						})
+					],
+					contentLeft: [new sap.m.Button({
+						text: "Close",
+						icon: "sap-icon://close",
+						press: function () {
+							sap.ui.getCore().byId('settings_popover').close();
+						}
+					})]
+				}),
+				content: [
+					new sap.m.InputListItem({
+						label: "Space",
+						content: new sap.m.ComboBox("idSpace", {
+							showSecondaryValues: true,
+							filterSecondaryValues: true,
+							items: {
+								path: "/",
+								template: new sap.ui.core.ListItem({
+									key: '{spaceToken}',
+									text: '{spaceName}',
+									additionalText: '{spaceToken}'
+								})
+							}
+						})
+					}),
+					new sap.m.InputListItem({
+						label: "Backend URL",
+						content: new sap.m.Input({
+
+							id: "idHostURL",
+							type: sap.m.InputType.Text,
+							//  placeholder: 'Enter host address (default: 127.0.0.1) ...',
+							//  width: "100%",
+							value: model.Config.getHost()
+						})
+					}),
+					new sap.m.InputListItem({
+						label: "Artifact Analyzer URL",
+						content: new sap.m.Input({
+
+							id: "idCiaURL",
+							type: sap.m.InputType.Text,
+							//  placeholder: 'Enter host address (default: 127.0.0.1) ...',
+							//  width: "100%",
+							value: model.Config.getCiaHost()
+						})
+					}),
+					new sap.m.InputListItem({
+						label: "Skip Empty Apps",
+						content: new sap.m.Switch({
+							id: "idSkipEmpty",
+							state: model.Config.getSkipEmpty()
+							//	  width: "100%",
+						})
+					})
+
+				]
+			});
+			if (model.Config.settings.dev == true) {
+				var oTenantInput = new sap.m.InputListItem({
+					label: "Tenant",
+					content: new sap.m.Input({
+						id: "idTenant",
+						type: sap.m.InputType.Text,
+						value: model.Config.getTenant(),
+						liveChange: function () {
+							model.Config.loadSpaces(sap.ui.getCore().byId('idTenant').getValue());
+						}
+					})
+				});
+				this.oPopoverSettings.addContent(oTenantInput);
+			}
+			this.getView().addDependent(this.oPopoverSettings);
+		}
+		//refresh form with configured values
 		sap.ui.getCore().byId('idHostURL').setValue(model.Config.getHost());
 		sap.ui.getCore().byId('idCiaURL').setValue(model.Config.getCiaHost());
-		if(sap.ui.getCore().byId('idTenant')!= undefined) 
+		if (sap.ui.getCore().byId('idTenant') != undefined)
 			sap.ui.getCore().byId('idTenant').setValue(model.Config.getTenant());
 		sap.ui.getCore().byId('idSkipEmpty').setState(model.Config.getSkipEmpty());
-		
+
 		//retrieve current spaces
 		model.Config.loadSpaces();
-        
-		var items =sap.ui.getCore().byId('idSpace').getItems();
+
+		var items = sap.ui.getCore().byId('idSpace').getItems();
 		var publicSpace = false;
-		for(var i in items){
-			if(items[i].getKey()==model.Config.getSpace()){
+		for (var i in items) {
+			if (items[i].getKey() == model.Config.getSpace()) {
 				sap.ui.getCore().byId('idSpace').setSelectedItem(items[i]);
 				sap.ui.getCore().byId('idSpace').setSelectedKey(items[i].getKey());
 				publicSpace = true;
 				break;
 			}
 		}
-		if(!publicSpace){
-//			sap.m.MessageBox.warning(
-//    				"The configured space is NOT public and is not shown in the list."
-//    			);
-			var privSpace = new sap.ui.core.ListItem({key: model.Config.getSpace(), 
-            	text:'*private space configured*',
-            	additionalText : model.Config.getSpace()});
+		if (!publicSpace) {
+			//			sap.m.MessageBox.warning(
+			//    				"The configured space is NOT public and is not shown in the list."
+			//    			);
+			var privSpace = new sap.ui.core.ListItem({
+				key: model.Config.getSpace(),
+				text: '*private space configured*',
+				additionalText: model.Config.getSpace()
+			});
 			sap.ui.getCore().byId('idSpace').addItem(privSpace);
 			sap.ui.getCore().byId('idSpace').setSelectedItem(privSpace);
 			sap.ui.getCore().byId('idSpace').setSelectedKey(privSpace.getKey());
 			sap.ui.getCore().byId('idSpace').setShowSecondaryValues(true);
 			sap.ui.getCore().byId('idSpace').setFilterSecondaryValues(true);
-			
+
 		}
-        if (this.oPopoverSettings.isOpen()) {
-            this.oPopoverSettings.close();
-        } else {
-            this.oPopoverSettings.openBy(this.buttonSource);
-        }
-   	},
+		if (this.oPopoverSettings.isOpen()) {
+			this.oPopoverSettings.close();
+		} else {
+			this.oPopoverSettings.openBy(this.buttonSource);
+		}
+	},
 	
 	openDoc: function(){
 		model.Config.openWiki("Apps-Web-Frontend");

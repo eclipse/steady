@@ -295,7 +295,7 @@ public class SpaceController {
 				
 				if(clean) {
 					// Find all applications in the space
-					final List<Application> apps = this.appRepository.findAllApps(token);
+					final List<Application> apps = this.appRepository.findAllApps(token,0);
 	
 					// The deleted apps
 					final List<Application> deleted_apps = new ArrayList<Application>();
@@ -370,7 +370,7 @@ public class SpaceController {
 				}
 				
 				// Find all applications in the space
-				final List<Application> apps = this.appRepository.findAllApps(token);
+				final List<Application> apps = this.appRepository.findAllApps(token,0);
 
 				// The deleted apps
 				final List<Application> deleted_apps = new ArrayList<Application>();

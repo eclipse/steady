@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.validation.constraints.NotNull;
 
@@ -33,6 +34,9 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 	GoalExecutionRepository gexeRepository;
 
 	@Autowired
+	ApplicationRepository appRepository;
+	
+	@Autowired
 	ReferenceUpdater refUpdater;
 
 	//@CacheEvict(value="gexe", key="#_app")
@@ -40,11 +44,21 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 	public GoalExecution customSave(Application _app, GoalExecution _provided_gexe) {
 		GoalExecution managed_gexe = null;
 
+		try{
+			managed_gexe = GoalExecutionRepository.FILTER.findOne(this.gexeRepository.findByExecutionId(_provided_gexe.getExecutionId()));
+			_provided_gexe.setId(managed_gexe.getId());
+			_provided_gexe.setCreatedAt(managed_gexe.getCreatedAt());
+		} catch (EntityNotFoundException e1) {}
+		
+		
 		// Update refs to independent entities
 		_provided_gexe.setApp(_app);
 		_provided_gexe.setConfiguration(refUpdater.saveNestedProperties(_provided_gexe.getConfiguration()));
 		_provided_gexe.setSystemInfo(refUpdater.saveNestedProperties(_provided_gexe.getSystemInfo()));
 
+		//update the lastScan timestamp of the application (we already have a managed application here)
+		appRepository.refreshLastScanbyApp(_app);
+		
 		// Save
 		try {
 			managed_gexe = this.gexeRepository.save(_provided_gexe);

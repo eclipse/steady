@@ -2,6 +2,7 @@ package com.sap.psr.vulas.backend.rest;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -11,6 +12,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.function.Predicate;
 
 import org.junit.Assert;
@@ -121,7 +123,7 @@ public class LibraryControllerTest {
     	// Repo must contain 1
     	assertEquals(1, this.libRepository.count());
     	
-    	// Rest-post 1.3.1
+
     	lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_commons-fileupload-1.3.1.json")), Library.class);
     	post_builder = post("/libs/")
     			.content(JacksonUtil.asJsonString(lib).getBytes())
@@ -132,7 +134,13 @@ public class LibraryControllerTest {
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.digest", is("C621B54583719AC0310404463D6D99DB27E1052C")));
     	
-    	// Repo must contain 1
+
     	assertEquals(2, this.libRepository.count());
+    	
+    	//check that modifiedAt does not get updated on GET
+    	Library managed_lib = LibraryRepository.FILTER.findOne(libRepository.findByDigest("1E48256A2341047E7D729217ADEEC8217F6E3A1A"));
+    	Calendar modifiedAt = managed_lib.getModifiedAt();
+    	managed_lib = LibraryRepository.FILTER.findOne(libRepository.findByDigest("1E48256A2341047E7D729217ADEEC8217F6E3A1A"));
+    	assertTrue(modifiedAt.getTimeInMillis()==managed_lib.getModifiedAt().getTimeInMillis());
     }
 }

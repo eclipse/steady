@@ -36,6 +36,14 @@ public interface GoalExecutionRepository extends CrudRepository<GoalExecution, L
 	List<GoalExecution> findByApp(@Param("app") Application app);
 	
 	/**
+	 * Returns the {@link GoalExecution}s for the given executionId.
+	 * @param executionId
+	 * @return
+	 */
+	@Query("SELECT goal FROM GoalExecution AS goal WHERE goal.executionId = :execId")
+	List<GoalExecution> findByExecutionId(@Param("execId") String execId);
+	
+	/**
 	 * Returns the latest {@link GoalExecution} for the given {@link Application}, or null if no executions exist.
 	 * @param app
 	 * @return

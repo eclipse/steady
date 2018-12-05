@@ -96,14 +96,16 @@ public class BomGoal extends AbstractAppGoal {
 			}
 		}
 
-		// Upload app
 		final boolean upload_empty = this.getConfiguration().getConfiguration().getBoolean(CoreConfiguration.APP_UPLOAD_EMPTY, false);
-		if(!a.isEmpty() || upload_empty) {
+		final boolean app_exists_in_backend = BackendConnector.getInstance().isAppExisting(this.getGoalContext(), a);
+		
+		// Upload if non-empty or already exists in backend or empty ones shall be uploaded
+		if(!a.isEmpty() || app_exists_in_backend || upload_empty) {
 			log.info("Save app " + a + " with [" + a.getDependencies().size() + "] dependencies and [" + a.getConstructs().size() + "] constructs (uploadEmpty=" + upload_empty + ")");
 			BackendConnector.getInstance().uploadApp(this.getGoalContext(), a);
 		}
 		else {
-			log.warn("Skip save of empty app " + this.getApplicationContext() + " (uploadEmpty=" + upload_empty + ")");
+			log.warn("Skip save of empty app " + this.getApplicationContext() + " (uploadEmpty=" + upload_empty + ", existsInBackend=" + app_exists_in_backend + ")");
 			this.skipGoalUpload();
 		}
 	}

@@ -22,12 +22,12 @@ import org.apache.http.HttpStatus;
 
 import com.sap.psr.vulas.backend.requests.BasicHttpRequest;
 import com.sap.psr.vulas.backend.requests.ConditionalHttpRequest;
-import com.sap.psr.vulas.backend.requests.ContentCondition;
 import com.sap.psr.vulas.backend.requests.HttpRequest;
 import com.sap.psr.vulas.backend.requests.HttpRequestList;
 import com.sap.psr.vulas.backend.requests.PutLibraryCondition;
 import com.sap.psr.vulas.backend.requests.StatusCondition;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
+import com.sap.psr.vulas.goals.AbstractGoal;
 import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.shared.connectivity.PathBuilder;
 import com.sap.psr.vulas.shared.connectivity.Service;
@@ -577,12 +577,61 @@ public class BackendConnector {
 	
 	// ==================== Others
 	
-	public void uploadGoalExecution(GoalContext _ctx, String _json) throws BackendConnectionException {
-		//TODO: Allow saving of workspace-specific goal executions (e.g., cleanspace)
-		final BasicHttpRequest req = new BasicHttpRequest(HttpMethod.POST, PathBuilder.goalExcecutions(null, _ctx.getSpace(), _ctx.getApplication()));
-		req.setGoalContext(_ctx);
-		req.setPayload(_json,  null,  true);
-		req.send();
+	/**
+	 * Returns true if the upload succeeded or the upload cannot be performed (because the application does not exist), false otherwise.
+	 * @param _ctx
+	 * @param _json
+	 * @param _gexe_id
+	 * @return
+	 * @throws BackendConnectionException
+	 */
+	public boolean uploadGoalExecution(GoalContext _ctx, AbstractGoal _gexe) throws BackendConnectionException {
+		boolean ret = false;
+		
+		// Application goal
+		if(_ctx.getApplication()!=null) {
+			
+			// Make sure the app exists in the backend
+			final Application app = _ctx.getApplication();
+			if(this.isAppExisting(_ctx, app)) {
+				
+				// The request depending on whose result either POST or PUT will be called
+				final BasicHttpRequest cond_req = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.goalExcecution(null, _ctx.getSpace(), app, _gexe.getId()), null);
+				cond_req.setGoalContext(_ctx);
+
+				final HttpRequestList req_list = new HttpRequestList();
+				final Map<String,String> params = new HashMap<String,String>();
+				params.put("skipResponseBody", "true");
+				req_list.addRequest(
+						new ConditionalHttpRequest(HttpMethod.POST, PathBuilder.goalExcecutions(null, _ctx.getSpace(), app), params)
+						.setConditionRequest(cond_req)
+						.addCondition(new StatusCondition(HttpURLConnection.HTTP_NOT_FOUND))
+						.setGoalContext(_ctx)
+						.setPayload(_gexe.toJson(), null, false)
+						);
+				req_list.addRequest(
+						new ConditionalHttpRequest(HttpMethod.PUT, PathBuilder.goalExcecution(null, _ctx.getSpace(), app, _gexe.getId()), params)
+						.setConditionRequest(cond_req)
+						.addCondition(new StatusCondition(HttpURLConnection.HTTP_OK))
+						.setGoalContext(_ctx)
+						.setPayload(_gexe.toJson(), null, false)
+						);
+				
+				final HttpResponse response = req_list.send();
+				ret = response.isCreated() || response.isOk();
+			}
+			else {
+				BackendConnector.log.info("App " + _ctx.getApplication() + " does not exist in backend, upload of goal execution [" + _gexe.getId() + "] skipped");
+				ret = true;
+			}
+		}
+		// Space goal
+		else {
+			//TODO: Allow saving of workspace-specific goal executions (e.g., cleanspace)
+			BackendConnector.log.warn("Upload of space goals not yet implemented");
+			ret = false;
+		}
+		return ret;
 	}
 
 	public void uploadTraces(GoalContext _ctx, Application _app, String _json) throws BackendConnectionException {

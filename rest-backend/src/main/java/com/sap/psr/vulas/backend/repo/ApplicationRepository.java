@@ -12,8 +12,10 @@ import org.springframework.stereotype.Repository;
 
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.Bug;
+import com.sap.psr.vulas.backend.model.ConstructId;
 import com.sap.psr.vulas.backend.model.ConstructSearchResult;
 import com.sap.psr.vulas.backend.model.Dependency;
+import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.backend.model.Space;
 import com.sap.psr.vulas.backend.model.Tenant;
 import com.sap.psr.vulas.backend.model.VulnerableDependency;
@@ -40,8 +42,12 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 	List<Application> findByGAV(@Param("mvnGroup") String group, @Param("artifact") String artifact,@Param("version") String version, @Param("space") Space space);
 	
 
-	@Query("SELECT DISTINCT app FROM Application AS app JOIN FETCH app.space s WHERE s.spaceToken=:spaceToken ORDER BY app.mvnGroup, app.artifact, app.version")
-	List<Application> findAllApps(@Param("spaceToken") String spaceToken);
+	//@Query("SELECT DISTINCT app FROM Application AS app JOIN FETCH app.space s WHERE s.spaceToken=:spaceToken AND app.lastVulnChange >  :timestamp ORDER BY app.mvnGroup, app.artifact, app.version")
+	@Query(value="select distinct a.id, a.artifact, a.created_at, a.modified_at, a.last_vuln_change, a.last_scan, "
+			+ " a.mvn_group, a.space, a.version "
+			+ " from app a  inner join space s on a.space=s.id "
+			+ " where s.space_token= :spaceToken and (extract(epoch from last_vuln_change) > :timestamp OR extract(epoch from last_scan) > :timestamp)", nativeQuery=true)
+	List<Application> findAllApps(@Param("spaceToken") String spaceToken, @Param("timestamp") long timestamp);
 
 	/**
 	 * Returns all {@link Application}s of the given {@link Tenant}, no matter the {@link Space}. Note that the JPQL query cannot use distinct, as the applications
@@ -59,18 +65,18 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 //	@Query("SELECT DISTINCT app FROM Application AS app JOIN app.dependencies order by app.mvnGroup,app.artifact,app.version")
 //	Iterable<Application> findAppsWithDep();
 
-	@Query(value="(select distinct applicatio0_.id, applicatio0_.artifact, applicatio0_.created_at, "
+	@Query(value="(select distinct applicatio0_.id, applicatio0_.artifact, applicatio0_.created_at,  applicatio0_.modified_at, applicatio0_.last_vuln_change, applicatio0_.last_scan, "
 			+ " applicatio0_.mvn_group, applicatio0_.space, applicatio0_.version "
 			+ " from app applicatio0_  inner join space space3_ on applicatio0_.space=space3_.id "
-			+ " where space3_.space_token= :spaceToken and applicatio0_.id in (select application_id from app_constructs) "
+			+ " where space3_.space_token= :spaceToken and (extract(epoch from applicatio0_.last_vuln_change) > :timestamp OR extract(epoch from applicatio0_.last_scan) > :timestamp) and applicatio0_.id in (select application_id from app_constructs) "
 			+ " order by applicatio0_.mvn_group, applicatio0_.artifact, applicatio0_.version )"
 			+ " UNION "
 			+ " (select distinct applicatio0_.id, applicatio0_.artifact, applicatio0_.created_at, "
 			+ " applicatio0_.mvn_group, applicatio0_.space, applicatio0_.version "
 			+ " from app applicatio0_ inner join app_dependency dependenci1_ on applicatio0_.id=dependenci1_.app "
-			+ " inner join space space2_ on applicatio0_.space=space2_.id where space2_.space_token= :spaceToken"
+			+ " inner join space space2_ on applicatio0_.space=space2_.id where space2_.space_token= :spaceToken and (extract(epoch from applicatio0_.last_vuln_change) > :timestamp OR extract(epoch from applicatio0_.last_scan) > :timestamp)"
 			+ " order by applicatio0_.mvn_group, applicatio0_.artifact, applicatio0_.version )", nativeQuery=true)
-	List<Application> findNonEmptyApps(@Param("spaceToken") String spaceToken);
+	List<Application> findNonEmptyApps(@Param("spaceToken") String spaceToken, @Param("timestamp") long timestamp );
 	
 	@Query("SELECT DISTINCT app FROM Application AS app JOIN FETCH app.dependencies d where d.lib.digest=:digest")
 	List<Application> findAppsWithDigest(@Param("digest") String digest);
@@ -156,7 +162,7 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 			+ "   AND a.space = :space"
 			+ "   AND lc = cc.constructId"		
 			+ "   AND (NOT lc.type='PACK' "                        // Java + Python exception
-			+ "   OR NOT EXISTS (SELECT 1 FROM ConstructChange cc1 JOIN cc1.constructId c1 WHERE cc1.bug=cc.bug AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%' AND NOT c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') ) "     
+			+ "   OR NOT EXISTS (SELECT 1 FROM ConstructChange cc1 JOIN cc1.constructId c1 WHERE cc1.bug=cc.bug AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%' AND NOT c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') ) "      //select bug if all other cc of the same bug are PACK, ADD or Test changes
 			+ "   AND NOT (lc.type='MODU' AND lc.qname='setup')" // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs
 			)
 	TreeSet<VulnerableDependency> findJPQLVulnerableDependenciesByGAV(@Param("mvnGroup") String group, @Param("artifact") String artifact, @Param("version") String version, @Param("space") Space space);
@@ -308,4 +314,35 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 		+ "   AND vd.version = :version"
 		)
 	List<VulnerableDependency> findJPQLVulnerableDependenciesByGAVView(@Param("mvnGroup") String group, @Param("artifact") String artifact,@Param("version") String version);*/
+	
+	/**
+	 * Finds the applications whose dependencies include constructs from the given list.
+	 * @param listOfConstructs list of {@link ConstructId}
+	 * @return list of {@link Application}
+	 */
+	@Query("SELECT distinct d.app FROM Dependency d "
+			+ "	  JOIN "
+			+ "   d.lib l"
+			+ "   JOIN "
+			+ "   l.constructs lc "
+			+ "	  WHERE lc IN :listOfConstructs "		
+			+ "   AND (NOT lc.type='PACK' "                        // Java + Python exception
+			+ "   OR NOT EXISTS (SELECT 1 FROM ConstructChange cc1 JOIN cc1.constructId c1 WHERE c1 IN :listOfConstructs AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%' AND NOT c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') ) "     
+			+ "   AND NOT (lc.type='MODU' AND lc.qname='setup')"
+			)
+	List<Application> findAppsByCC(@Param("listOfConstructs") List<ConstructId> listOfConstructs);
+	
+	/**
+	 * Finds the applications whose dependencies include {@link LibraryId}s from the given list.
+	 * @param listOfConstructs list of {@link ConstructId}
+	 * @return list of {@link Application}
+	 */
+	@Query("SELECT distinct d.app FROM Dependency d "
+			+ "	  JOIN "
+			+ "   d.lib l"
+			+ "   JOIN "
+			+ "   l.libraryId dep_libid"
+			+ "	  WHERE dep_libid = :affLibId "	
+			)
+	List<Application> findAppsByAffLib(@Param("affLibId") LibraryId affLibId);
 }

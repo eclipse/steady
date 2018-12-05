@@ -1,6 +1,7 @@
 package com.sap.psr.vulas.backend.repo;
 
 import java.nio.file.Path;
+import java.util.Calendar;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
@@ -63,6 +64,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 			managed_lib = LibraryRepository.FILTER.findOne(this.libRepository.findByDigest(digest));
 			_lib.setId(managed_lib.getId());
 			_lib.setCreatedAt(managed_lib.getCreatedAt());
+			_lib.setModifiedAt(Calendar.getInstance());
 			
 			//	Re-create wellknownDigest if it is null in our current db (this part should be removed once it is created for all)
 			if(managed_lib.getWellknownDigest()==null) {

@@ -3,6 +3,7 @@ package com.sap.psr.vulas.backend.repo;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
@@ -37,6 +38,9 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 
 	@Autowired
 	ConstructChangeRepository ccRepository;
+	
+	@Autowired
+	ApplicationRepository appRepository;
 
 	/**
 	 * Saves the given {@link Bug} together with all the nested {@link ConstructId}s.
@@ -47,6 +51,7 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 	 */
 	@CacheEvict(value="bug",key="#_bug.bugId")
 	@Override
+	@Transactional
 	public Bug customSave(Bug _bug, Boolean _considerCC) throws PersistenceException {
 		final StopWatch sw = new StopWatch("Save bug " + _bug.getBugId()).start();
 
@@ -68,9 +73,16 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 			_bug = this.saveNestedConstructIds(_bug);
 		sw.lap("Updated refs to nested constructs");
 
+		
 		// Save
 		try {
 			managed_bug = this.bugRepository.save(_bug);
+			
+			//Update vulnChange timestamp for apps with construct changes among its dependencies' constructs
+			//this needs to be done after the bug has been created as we need the construct changes to exist in the database to avoid querying by fields (lang, type, qname)
+			if(managed_bug.getConstructChanges()!=null)
+				appRepository.refreshVulnChangebyChangeList(managed_bug.getConstructChanges());
+			
 			sw.stop();
 		} catch (Exception e) {
 			sw.stop(e);

@@ -66,7 +66,7 @@ sap.ui.controller("view.Component", {
 
 	// Vulnerabilities tab: Sets date for last scan
 	loadAndSetLastScanDate:function() {
-		var sUrl = model.Config.getLatestGoalExecutionServiceUrl(groupId, artifactId, versionId);
+		var sUrl = model.Config.getLatestGoalExecutionServiceUrl(groupId, artifactId, versionId, model.lastChange);
 		var oLastScanModel = this.getEmptyModel();
 		model.Config.addToQueue(oLastScanModel);
 		model.Config.loadData (oLastScanModel, sUrl, 'GET');
@@ -96,7 +96,7 @@ sap.ui.controller("view.Component", {
 		var incl_hist = this.getView().byId("includeHistorical").getSelected();
 		var incl_unconfirmed = this.getView().byId("includeUnconfirmed").getSelected();
 		var add_excemption_info = true;
-		var sUrl = model.Config.getUsedVulnerabilitiesServiceUrl(groupId, artifactId, versionId, incl_hist, incl_unconfirmed, add_excemption_info);
+		var sUrl = model.Config.getUsedVulnerabilitiesServiceUrl(groupId, artifactId, versionId, incl_hist, incl_unconfirmed, add_excemption_info, model.lastChange);
 		
 		model.Config.addToQueue(oVulnModel);
 		model.Config.loadData (oVulnModel, sUrl, 'GET');
@@ -264,18 +264,17 @@ sap.ui.controller("view.Component", {
 		
 		// Archive-Tab All
 		if (!model.Config.isMock) {
-			sUrl = model.Config.getArchivesServiceUrl(groupId,artifactId,versionId);
+			sUrl = model.Config.getArchivesServiceUrl(groupId,artifactId,versionId, model.lastChange);
 
-			
 			var archiveTotal = this.getView().byId("archiveTotal");
 			var archiveTraced = this.getView().byId("archiveTraced");
 			var archiveTotalTraces = this.getView().byId("archiveTotalTraces");
-			archiveTotal.setText("Archives Total: " );
-			archiveTraced.setText("Archives Traced: " );
-			archiveTotalTraces.setText("Total Number of Traces: " );
+			archiveTotal.setText("Archives Total: ");
+			archiveTraced.setText("Archives Traced: ");
+			archiveTotalTraces.setText("Total Number of Traces: ");
 			
 			model.Config.addToQueue(oArchiveModel);
-			model.Config.loadData(oArchiveModel,sUrl, 'GET');
+			model.Config.loadData(oArchiveModel, sUrl, 'GET');
 			
 			oArchiveModel.attachRequestCompleted(function() {
 				model.Config.remFromQueue(oArchiveModel);
@@ -303,7 +302,7 @@ sap.ui.controller("view.Component", {
 		
 		// Goal-Executions-Tab
 		if (!model.Config.isMock) {
-			sUrl = model.Config.getGoalExecutionsServiceUrl(groupId,artifactId,versionId);
+			sUrl = model.Config.getGoalExecutionsServiceUrl(groupId,artifactId,versionId, model.lastChange);
 			
 			model.Config.addToQueue(oExecutionsModel);
 			model.Config.loadData (oExecutionsModel,sUrl, 'GET');
@@ -370,7 +369,7 @@ sap.ui.controller("view.Component", {
 			var execConstructTraced = this.getView().byId("execConstructTraced");
 			
 			// Coverage of app packages
-			sUrl = model.Config.getPackagesWithTestCoverageServiceUrl(groupId,artifactId,versionId);
+			sUrl = model.Config.getPackagesWithTestCoverageServiceUrl(groupId,artifactId,versionId, model.lastChange);
 
 			model.Config.addToQueue(oPackagesModel);
 			model.Config.loadData (oPackagesModel,sUrl, 'GET');
@@ -450,7 +449,7 @@ sap.ui.controller("view.Component", {
 			// App Dep Ratio
 			var depCounter = this.getView().byId("depCounter");
 			
-			sUrl = model.Config.getAppDepRatios(groupId, artifactId, versionId);			
+			sUrl = model.Config.getAppDepRatios(groupId, artifactId, versionId, model.lastChange);			
 			
 			model.Config.addToQueue(oAppDepRatioModel);
 			model.Config.loadData(oAppDepRatioModel, sUrl, 'GET');

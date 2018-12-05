@@ -41,7 +41,7 @@ import com.sap.psr.vulas.shared.enums.PropertySource;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown=true, value={ "createdAt"}, allowGetters=true)
 @Entity
-@Table( name="AppGoalExe", uniqueConstraints=@UniqueConstraint( columnNames = { "app", "goal", "startedAtClient"} ) )
+@Table( name="AppGoalExe", uniqueConstraints={@UniqueConstraint( columnNames = { "app", "goal", "startedAtClient"} ),@UniqueConstraint( columnNames = { "executionId"})} )
 public class GoalExecution implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

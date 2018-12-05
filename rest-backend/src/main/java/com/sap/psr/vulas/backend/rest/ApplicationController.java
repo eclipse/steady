@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -284,6 +285,43 @@ public class ApplicationController {
 			return new ResponseEntity<List<Application>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+//	/**
+//	 * Re-creates the {@link Application} with a given GAV.
+//	 * @param digest
+//	 * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given digest does not exist,
+//	 * 		   422 {@link HttpStatus.UNPROCESSABLE_ENTITY} if the value of path variable (digest) does not equal the corresponding field in the body
+//	 *		   400 {@link HttpStatus.BAD_REQUEST} if the set of application dependencies is not valid (contains duplicated entries or the parent are not listed in the main set)
+//	 * 		   200 {@link HttpStatus#OK} if the library was successfully re-created
+//	 */
+//	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/lastscan", method = RequestMethod.PUT, produces = {"application/json;charset=UTF-8"})
+//	@JsonView(Views.Default.class)
+//	public ResponseEntity<Application> updateApplicationLastScan(
+//			@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version,
+//			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
+//			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+//		Space s = null;
+//		try {
+//			s = this.spaceRepository.getSpace(space);
+//		} catch (Exception e){
+//			log.error("Error retrieving space: " + e);
+//			return new ResponseEntity<Application>(HttpStatus.NOT_FOUND);
+//		}
+//		try{
+//			final Application existing_app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup, artifact, version, s));
+//			existing_app.setLastScan(Calendar.getInstance());
+//			Application managed_app = appRepository.save(existing_app);
+//			if(skipResponseBody){
+//				return new ResponseEntity<Application>(HttpStatus.OK);
+//			}
+//			else
+//				return new ResponseEntity<Application>(managed_app, HttpStatus.OK);
+//		} catch (EntityNotFoundException e) {
+//			return new ResponseEntity<Application>(HttpStatus.NOT_FOUND);
+//		} catch (PersistenceException e) {
+//			return new ResponseEntity<Application>(HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
 
 	/**
 	 * Re-creates the {@link Application} with a given GAV.
@@ -351,10 +389,11 @@ public class ApplicationController {
 	@JsonView(Views.Default.class)
 	public ResponseEntity<Collection<Application>> getApplications(
 			@RequestParam(value="skipEmpty", required=false, defaultValue="false") Boolean skipEmpty,
-			@RequestParam(value="includeVulnerableFlag", required=false, defaultValue="false") Boolean includeVulnerableFlag,
+//			@RequestParam(value="includeVulnerableFlag", required=false, defaultValue="false") Boolean includeVulnerableFlag,
 			@RequestParam(value="group", required=false, defaultValue="*") String g,
 			@RequestParam(value="artifact", required=false, defaultValue="*") String a,
 			@RequestParam(value="version", required=false, defaultValue="*") String v,
+			@RequestParam(value="asOf", required=false, defaultValue="0") String   asOfTimestamp,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER,  required=false)  String space) {
 
 		Space s = null;
@@ -367,27 +406,26 @@ public class ApplicationController {
 
 		try{
 			if(g.equals("*") && a.equals("*") && v.equals("*")) {
-				Collection<Application> results = null;
-				Collection<Application> all =  this.appRepository.getApplications(skipEmpty, s.getSpaceToken());
-				if(includeVulnerableFlag){
-					if(s.isDefault())
-						return new ResponseEntity<Collection<Application>>(HttpStatus.BAD_REQUEST);
-					results = new ArrayList<Application>();
-					for(Application app : all){
-						if (this.appVulDepRepository.isAppVulnerableCC(space,app.getMvnGroup(),app.getArtifact(),app.getVersion())){
-							app.setHasVulnerabilities(true);
-						}
-						else if (this.appVulDepRepository.isAppVulnerableConfig(space,app.getMvnGroup(),app.getArtifact(),app.getVersion())){
-							app.setHasVulnerabilities(true);
-						}
-						else
-							app.setHasVulnerabilities(false);
-						results.add(app);
-					}
-				}
-				else {
-					results = all;
-				}
+				Collection<Application> results =  this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
+//				if(includeVulnerableFlag){
+//					if(s.isDefault())
+//						return new ResponseEntity<Collection<Application>>(HttpStatus.BAD_REQUEST);
+//					results = new ArrayList<Application>();
+//					for(Application app : all){
+//						if (this.appVulDepRepository.isAppVulnerableCC(space,app.getMvnGroup(),app.getArtifact(),app.getVersion())){
+//							app.setHasVulnerabilities(true);
+//						}
+//						else if (this.appVulDepRepository.isAppVulnerableConfig(space,app.getMvnGroup(),app.getArtifact(),app.getVersion())){
+//							app.setHasVulnerabilities(true);
+//						}
+//						else
+//							app.setHasVulnerabilities(false);
+//						results.add(app);
+//					}
+//				}
+//				else {
+//					results = all;
+//				}
 				return new ResponseEntity<Collection<Application>>(results, HttpStatus.OK);
 			}else {
 				String search_string_g = g.replace('*', '%');
@@ -400,7 +438,7 @@ public class ApplicationController {
 				if(skipEmpty){
 					result = new ArrayList<Application>();
 					//TODO 16-03-2018: this search was implemented in refactoring2 to enable the pull from SVM. To check whther and how it works with spaces
-					Collection<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken());
+					Collection<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
 					for(Application f:search)
 						if(apps.contains(f))
 							result.add(f);
@@ -722,12 +760,13 @@ public class ApplicationController {
 	/**
 	 * 
 	 * @param 
-	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @return 404 {@link HttpStatus#NOT_FOUND} if application group artifact version of the goal execution is do not exist, 201 {@link HttpStatus#CREATED} if the bug was successfully created
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<GoalExecution> createGoalExecution(@PathVariable String mvnGroup, 
 			@PathVariable String artifact, @PathVariable String version, 
 			@RequestBody GoalExecution goalExecution,
+			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
@@ -755,7 +794,82 @@ public class ApplicationController {
 		}
 
 		// Save and return
-		return new ResponseEntity<GoalExecution>(gexe, HttpStatus.CREATED);
+		if(skipResponseBody)
+			return new ResponseEntity<GoalExecution>(HttpStatus.CREATED);
+		else
+			return new ResponseEntity<GoalExecution>(gexe, HttpStatus.CREATED);
+	}
+	
+	/**
+	 * 
+	 * @param 
+	 * @return 404 {@link HttpStatus#NOT_FOUND} if application group artifact version of the goal execution is do not exist, 200 {@link HttpStatus#OK} if the goal execution was successfully updates
+	 */
+	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals/{executionId}", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
+	public ResponseEntity<GoalExecution> updateGoalExecution(@PathVariable String mvnGroup, 
+			@PathVariable String artifact, @PathVariable String version, 
+			@PathVariable String executionId,
+			@RequestBody GoalExecution goalExecution,
+			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+
+		Space s = null;
+		try {
+			s = this.spaceRepository.getSpace(space);
+		} catch (Exception e){
+			log.error("Error retrieving space: " + e);
+			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
+		}
+		// Ensure that app exists
+		Application app = null;
+		try { app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s)); }
+		catch (EntityNotFoundException e) { return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND); }
+
+		try {
+			GoalExecutionRepository.FILTER.findOne(this.gexeRepository.findByExecutionId(executionId));
+			GoalExecution managed_gexe = this.gexeRepository.customSave(app, goalExecution);
+			
+			if(skipResponseBody)
+				return new ResponseEntity<GoalExecution>(HttpStatus.OK);
+			else
+				return new ResponseEntity<GoalExecution>(managed_gexe, HttpStatus.OK);
+		}
+		catch (EntityNotFoundException e) {
+			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
+			
+		}
+	}
+	
+	/**
+	 * 
+	 * @param application group, artifact,version and goal executionId
+	 * @return  404 {@link HttpStatus#NOT_FOUND} if application with given GAV or the given executionId do not exist, 200 {@link HttpStatus#OK} if the executionId for the given Application is found
+	 */
+	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals/{executionId}", method = RequestMethod.OPTIONS)
+	public ResponseEntity<GoalExecution> isGoalExecutionExisting(@PathVariable String mvnGroup, 
+			@PathVariable String artifact, @PathVariable String version, 
+			@PathVariable String executionId,
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+
+		Space s = null;
+		try {
+			s = this.spaceRepository.getSpace(space);
+		} catch (Exception e){
+			log.error("Error retrieving space: " + e);
+			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
+		}
+		// Ensure that app exists
+		Application app = null;
+		try { app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s)); }
+		catch (EntityNotFoundException e) { return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND); }
+
+		try {
+			GoalExecutionRepository.FILTER.findOne(this.gexeRepository.findByExecutionId(executionId));
+			return new ResponseEntity<GoalExecution>(HttpStatus.OK);
+		}
+		catch(EntityNotFoundException enfe) {
+			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	/**

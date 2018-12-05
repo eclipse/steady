@@ -22,6 +22,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -74,6 +75,24 @@ public class Application implements Serializable, Comparable {
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	@JsonIgnoreProperties(value = { "createdAt" }, allowGetters=true)
 	private java.util.Calendar createdAt;
+	
+	// timestamp of the last application modification (customSave operation on the Application entity to store application constructs and/or dependencies)
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
+	@JsonIgnoreProperties(value = { "modifiedAt" }, allowGetters=true)
+	private java.util.Calendar modifiedAt;
+	
+	// timestamp of the last application scan (customSave operation on the GoalExecution entity to store the details about a starting/completed scan--triggered by the client)
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
+	@JsonIgnoreProperties(value = { "lastScan" }, allowGetters=true) //TODO: to remove if the value should be given by the client
+	private java.util.Calendar lastScan;
+	
+	// timestamp of the last change on the vulnerabilities that may affect the application results, i.e., a change either in the bugs or affected libraries, thus vulndeps for the application needs to be queried to get updated results
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
+	@JsonIgnoreProperties(value = { "lastVulnChange" }, allowGetters=true)
+	private java.util.Calendar lastVulnChange;
 
 	@ManyToMany(cascade = {}, fetch = FetchType.LAZY)
 	@JsonView(Views.Never.class)
@@ -86,9 +105,6 @@ public class Application implements Serializable, Comparable {
 
 	@Transient
 	private PackageStatistics packageStats = null;
-	
-	@Transient
-	private Boolean hasVulnerabilities = null;
 
 	/**
 	 * Only set when single applications are returned by {@link ApplicationController#getApplication(String, String, String)}.
@@ -196,7 +212,25 @@ public class Application implements Serializable, Comparable {
 	
 	public java.util.Calendar getCreatedAt() { return createdAt; }
 	public void setCreatedAt(java.util.Calendar createdAt) { this.createdAt = createdAt; }
+	
+	public java.util.Calendar getModifiedAt() { return modifiedAt; }
+	public void setModifiedAt(java.util.Calendar modifiedAt) { this.modifiedAt = modifiedAt; }
 
+	public java.util.Calendar getLastScan() { return lastScan; }
+	public void setLastScan(java.util.Calendar lastScan) { this.lastScan = lastScan; }
+	
+	public java.util.Calendar getLastVulnChange() { return lastVulnChange; }
+	public void setLastVulnChange(java.util.Calendar lastVulnChange) { this.lastVulnChange = lastVulnChange; }
+		
+	@JsonProperty(value = "lastChange")
+	public java.util.Calendar getLastChange() { 
+		if(this.getLastVulnChange()==null)
+			return this.getLastScan();
+		else if (this.getLastScan()==null)
+			return this.getLastVulnChange();
+		else
+			return ( this.getLastVulnChange().after(this.getLastScan())?  this.getLastVulnChange() : this.getLastScan()); }
+	
 	/**
 	 * Removes all application {@link ConstructId}s and {@link Dependency}s.
 	 */
@@ -252,7 +286,15 @@ public class Application implements Serializable, Comparable {
 		if(this.getCreatedAt()==null) {
 			this.setCreatedAt(Calendar.getInstance());
 		}
+		this.setModifiedAt(Calendar.getInstance());
+		this.setLastScan(Calendar.getInstance());
+		this.setLastVulnChange(Calendar.getInstance());
 	}
+	
+//	@PreUpdate
+//	public void preUpdate() {
+//		this.setModifiedAt(Calendar.getInstance());
+//	}
 
 	@Override
 	public int hashCode() {
@@ -327,14 +369,6 @@ public class Application implements Serializable, Comparable {
 			builder.append(this.getMvnGroup()).append(":").append(this.getArtifact()).append(":").append(this.getVersion()).append("]");
 		}
 		return builder.toString();
-	}
-
-	public Boolean getHasVulnerabilities() {
-		return hasVulnerabilities;
-	}
-
-	public void setHasVulnerabilities(Boolean hasVulnerabilities) {
-		this.hasVulnerabilities = hasVulnerabilities;
 	}
 	
 	public boolean equalsIgnoreSpace(Object obj) {

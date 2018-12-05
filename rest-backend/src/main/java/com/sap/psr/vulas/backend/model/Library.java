@@ -18,6 +18,7 @@ import javax.persistence.Index;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -79,6 +80,11 @@ public class Library implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	private java.util.Calendar createdAt;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
+	@JsonIgnoreProperties(value = { "modifiedAt" }, allowGetters=true)
+	private java.util.Calendar modifiedAt;
 
 	/**
 	 * Used to store additional library properties, e.g., the Java manifest file entries.
@@ -165,6 +171,9 @@ public class Library implements Serializable {
 
 	public java.util.Calendar getCreatedAt() { return createdAt; }
 	public void setCreatedAt(java.util.Calendar createdAt) { this.createdAt = createdAt; }
+	
+	public java.util.Calendar getModifiedAt() { return modifiedAt; }
+	public void setModifiedAt(java.util.Calendar modifiedAt) { this.modifiedAt = modifiedAt; }
 
 	public Collection<Property> getProperties() { return properties; }
 	public void setProperties(Collection<Property> properties) { this.properties = properties; }
@@ -225,6 +234,9 @@ public class Library implements Serializable {
 	public void prePersist() {
 		if(this.getCreatedAt()==null) {
 			this.setCreatedAt(Calendar.getInstance());
+		}
+		if(this.getModifiedAt()==null) {
+			this.setModifiedAt(Calendar.getInstance());
 		}
 		if(this.getWellknownDigest()==null) {
 			this.verifyDigest();

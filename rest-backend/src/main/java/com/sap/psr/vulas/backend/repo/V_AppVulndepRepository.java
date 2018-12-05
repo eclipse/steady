@@ -150,12 +150,12 @@ public interface V_AppVulndepRepository  extends CrudRepository<V_AppVulndep, Lo
 	ArrayList<String> getVulnDepsLatestGroupArtifacts();
 	
 	
-	@Query(value = "select exists (select 1 from v_app_vulndep_cc where space_token=:space_token and app_group=:group and app_artifact=:artifact and app_version=:version and not affected='false')", nativeQuery = true)
-	Boolean isAppVulnerableCC(@Param("space_token") String space_token, @Param("group") String group,  @Param("artifact") String artifact,@Param("version") String version);
-	
-	@Query(value = "select exists (select 1 from v_app_vulndep_config where space_token=:space_token and app_group=:group and app_artifact=:artifact and app_version=:version and not affected='false')", nativeQuery = true)
-	Boolean isAppVulnerableConfig(@Param("space_token") String space_token, @Param("group") String group,  @Param("artifact") String artifact,@Param("version") String version);
-	
+//	@Query(value = "select exists (select 1 from v_app_vulndep_cc where space_token=:space_token and app_group=:group and app_artifact=:artifact and app_version=:version and not affected='false')", nativeQuery = true)
+//	Boolean isAppVulnerableCC(@Param("space_token") String space_token, @Param("group") String group,  @Param("artifact") String artifact,@Param("version") String version);
+//	
+//	@Query(value = "select exists (select 1 from v_app_vulndep_config where space_token=:space_token and app_group=:group and app_artifact=:artifact and app_version=:version and not affected='false')", nativeQuery = true)
+//	Boolean isAppVulnerableConfig(@Param("space_token") String space_token, @Param("group") String group,  @Param("artifact") String artifact,@Param("version") String version);
+//	
 	
 	@Query(value = "select distinct dep_id,bug from v_app_vulndep where affected is null", nativeQuery = true)
 	List<Entry<BigInteger,String>> findUnconfirmedVulnDeps();

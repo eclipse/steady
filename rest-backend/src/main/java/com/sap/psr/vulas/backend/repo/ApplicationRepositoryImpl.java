@@ -2,6 +2,7 @@ package com.sap.psr.vulas.backend.repo;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +16,7 @@ import java.util.TreeSet;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sap.psr.vulas.backend.model.AffectedConstructChange;
+import com.sap.psr.vulas.backend.model.AffectedLibrary;
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.Bug;
 import com.sap.psr.vulas.backend.model.ConstructChange;
@@ -88,6 +91,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	@Autowired
 	ReferenceUpdater refUpdater;
 
+	@Transactional
 	public Application customSave(Application _app) {
 		final StopWatch sw = new StopWatch("Save app " + _app).start();
 
@@ -100,6 +104,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		
 		try {
 			managed_app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(group, artifact, version, _app.getSpace()));
+			managed_app.setModifiedAt(Calendar.getInstance());
 			_app = this.updateDependencies(managed_app, _app);
 			sw.lap("Updated refs to nested deps of existing application' dependencies");
 		} catch (EntityNotFoundException e1) {
@@ -112,6 +117,9 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 		_app.setId(managed_app.getId());
 		_app.setCreatedAt(managed_app.getCreatedAt());
+		_app.setModifiedAt(managed_app.getModifiedAt());	
+		_app.setLastScan(managed_app.getLastScan());
+		_app.setLastVulnChange(managed_app.getLastVulnChange());
 		
 		// Update refs to independent entities
 		_app.setConstructs(refUpdater.saveNestedConstructIds(_app.getConstructs()));
@@ -280,14 +288,14 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	 * @param _skip_empty if true, applications having neither constructs nor dependencies will be skipped
 	 */
 	@Override
-	public SortedSet<Application> getApplications(boolean _skip_empty, String _space) {
+	public SortedSet<Application> getApplications(boolean _skip_empty, String _space, long _asOfTimestamp) {
 		final StopWatch w = new StopWatch("Read all apps of space [" + _space + "]").start();
 		final SortedSet<Application> sorted_apps = new TreeSet<Application>();
 		List<Application> result = null;
 		if(_skip_empty)
-			result = this.appRepository.findNonEmptyApps(_space);
+			result = this.appRepository.findNonEmptyApps(_space, _asOfTimestamp);
 		else 
-			result = this.appRepository.findAllApps(_space);
+			result = this.appRepository.findAllApps(_space, _asOfTimestamp);
 		w.stop();
 		sorted_apps.addAll(result);
 		return sorted_apps;
@@ -561,5 +569,43 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			}
 		}
 		return affected_apps;		
+	}
+	
+	public void refreshVulnChangebyChangeList(Collection<ConstructChange> _listOfConstructChanges){
+		
+		List<ConstructId> listOfConstructs = new ArrayList<ConstructId>();
+		for(ConstructChange cc : _listOfConstructChanges){
+			listOfConstructs.add(cc.getConstructId());
+		}
+		List<Application> apps = appRepository.findAppsByCC(listOfConstructs); 
+		
+		for (Application a: apps){
+			//Application managed_app = appRepository.findOne(a.getId());
+			//a.setModifiedAt(Calendar.getInstance());	
+			a.setLastVulnChange(Calendar.getInstance());
+			appRepository.save(a);
+		}
+		
+		
+	}
+	
+	public void refreshVulnChangebyAffLib(AffectedLibrary _affLib){
+		
+		List<Application> apps = new ArrayList<Application>();
+		if(_affLib!=null && _affLib.getLibraryId()!=null){
+			if(_affLib.getAffected()!=null)
+				apps.addAll(appRepository.findAppsByAffLib(_affLib.getLibraryId()));
+		}
+		
+		for (Application a: apps){
+			//a.setModifiedAt(Calendar.getInstance());	
+			a.setLastVulnChange(Calendar.getInstance());
+			appRepository.save(a);
+		}
+	}
+	
+	public void refreshLastScanbyApp(Application _app){
+		_app.setLastScan(Calendar.getInstance());
+		appRepository.save(_app);
 	}
 }

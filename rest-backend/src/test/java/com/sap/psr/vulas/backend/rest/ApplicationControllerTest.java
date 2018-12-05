@@ -2,8 +2,10 @@ package com.sap.psr.vulas.backend.rest;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -11,6 +13,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -25,6 +28,7 @@ import java.util.function.Predicate;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+
 
 import org.junit.After;
 import org.junit.Assert;
@@ -46,8 +50,11 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sap.psr.vulas.backend.model.AffectedLibrary;
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.Bug;
+import com.sap.psr.vulas.backend.model.ConstructChange;
+import com.sap.psr.vulas.backend.model.ConstructChangeType;
 import com.sap.psr.vulas.backend.model.ConstructId;
 import com.sap.psr.vulas.backend.model.Dependency;
 import com.sap.psr.vulas.backend.model.GoalExecution;
@@ -59,6 +66,7 @@ import com.sap.psr.vulas.backend.model.Property;
 import com.sap.psr.vulas.backend.model.Space;
 import com.sap.psr.vulas.backend.model.Tenant;
 import com.sap.psr.vulas.backend.model.VulnerableDependency;
+import com.sap.psr.vulas.backend.repo.AffectedLibraryRepository;
 import com.sap.psr.vulas.backend.repo.ApplicationRepository;
 import com.sap.psr.vulas.backend.repo.BugRepository;
 import com.sap.psr.vulas.backend.repo.ConstructIdRepository;
@@ -67,7 +75,9 @@ import com.sap.psr.vulas.backend.repo.LibraryRepository;
 import com.sap.psr.vulas.backend.repo.SpaceRepository;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
 import com.sap.psr.vulas.shared.categories.RequiresNetwork;
+import com.sap.psr.vulas.shared.enums.BugOrigin;
 import com.sap.psr.vulas.shared.enums.ConstructType;
+import com.sap.psr.vulas.shared.enums.ContentMaturityLevel;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.ExportConfiguration;
 import com.sap.psr.vulas.shared.enums.GoalType;
@@ -131,6 +141,10 @@ public class ApplicationControllerTest {
 
     @Autowired
     private SpaceRepository spaceRepository;
+    
+
+    @Autowired
+    private AffectedLibraryRepository affLibRepository;
 
 
     @Autowired
@@ -163,6 +177,7 @@ public class ApplicationControllerTest {
     public void reset() throws Exception {
     	this.gexeRepository.deleteAll();
     	this.appRepository.deleteAll();
+    	this.affLibRepository.deleteAll();
         this.libRepository.deleteAll();
         this.bugRepository.deleteAll();
         this.cidRepository.deleteAll();
@@ -197,7 +212,10 @@ public class ApplicationControllerTest {
                 .andExpect(content().contentType(contentTypeJson))
                 .andExpect(jsonPath("$.group", is(APP_GROUP)))
                 .andExpect(jsonPath("$.artifact", is(APP_ARTIFACT)))
+                .andExpect(jsonPath("$.lastVulnChange").exists())
+                .andExpect(jsonPath("$.lastChange").exists())
                 .andExpect(jsonPath("$.version", is(app.getVersion())));
+    	
        	
     	assertEquals(1, this.appRepository.count());
     }
@@ -377,8 +395,8 @@ public class ApplicationControllerTest {
     
     @Test
     public void readAllApplications() throws Exception {
-    	//libRepository.customSave(this.createExampleLibrary());
-    	//appRepository.customSave(this.createExampleApplication());
+    	libRepository.customSave(this.createExampleLibrary());
+    	appRepository.customSave(this.createExampleApplication());
     	//TODO perform check on the returned value
     	    	
     	// Read all public apps
@@ -386,6 +404,7 @@ public class ApplicationControllerTest {
     	.header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
     	.header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
         .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].group", is("com.acme")))
         .andExpect(content().contentType(contentTypeJson));
     	
     	// Read all apps for a non-existing token
@@ -398,6 +417,14 @@ public class ApplicationControllerTest {
     	mockMvc.perform(get("/apps"))
                   .andExpect(status().isOk())
                   .andExpect(content().contentType(contentTypeJson));
+    	
+    	Long now = Calendar.getInstance().getTimeInMillis();
+    	// Read all public apps asOf now()
+    	mockMvc.perform(get("/apps?asOf="+now)
+    	.header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
+    	.header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
+        .andExpect(status().isOk())
+        .andExpect(content().string("[]"));
     }
     
     /**
@@ -539,6 +566,157 @@ public class ApplicationControllerTest {
     	assertEquals(0, vd.size());
     }
     
+    /**
+     * Tests application lastVulnChange update when bug construct changes are saved 
+     * @return
+     */
+    @Test
+    public void testRefreshAppsByCC() throws Exception {
+    	final Library lib = this.createExampleLibrary();
+    	Library managed_lib = this.libRepository.customSave(lib);
+    	final Application app = this.createExampleApplication();
+    	Application managed_app = this.appRepository.customSave(app);    	
+    	
+    	Calendar originalLastVulnChange = managed_app.getLastVulnChange();
+    	Calendar originalModifiedAt = managed_app.getModifiedAt();
+    	Calendar originalCreatedAt = managed_app.getCreatedAt();
+    	assertTrue(originalModifiedAt.getTimeInMillis()==originalCreatedAt.getTimeInMillis());
+    	    	
+    	//Get the application by CC
+    	List<Application> appFromJPQL = this.appRepository.findAppsByCC((List<ConstructId>)managed_lib.getConstructs());
+    	assertTrue(appFromJPQL.contains(managed_app));
+    	
+    	//create Construct change for the already existing construct
+    	ConstructId cid =null;
+    	for(ConstructId c: managed_lib.getConstructs()){
+    		cid = c;
+    	}
+    	final ConstructChange cc1 = new ConstructChange("svn.apache.org", "123456", "/trunk/src/main/java/com/acme/Bar.java", cid, Calendar.getInstance(), ConstructChangeType.MOD);
+    	List<ConstructChange> listOfConstructChanges = new ArrayList<ConstructChange>();
+    	listOfConstructChanges.add(cc1);
+    	
+    	this.appRepository.refreshVulnChangebyChangeList(listOfConstructChanges);
+    	
+    	managed_app = this.appRepository.findOne(managed_app.getId());
+    	System.out.println("Modified at before update is [" + originalLastVulnChange.getTimeInMillis() + "], after update is [" + managed_app.getLastVulnChange().getTimeInMillis() + "]");
+    	assertTrue(managed_app.getLastVulnChange().getTimeInMillis()>originalLastVulnChange.getTimeInMillis());
+    	assertTrue(managed_app.getModifiedAt().getTimeInMillis()==originalModifiedAt.getTimeInMillis());
+    	assertTrue(managed_app.getCreatedAt().getTimeInMillis()==originalCreatedAt.getTimeInMillis());
+    	
+    }
+    
+    /**
+     * Tests application lastVulnChange update when affected Library is saved 
+     * @return
+     */
+    @Test
+    public void testRefreshAppsByAffLib() throws Exception {
+    	final Library lib = this.createExampleLibrary();
+    	Library managed_lib = this.libRepository.customSave(lib);
+    	final Application app = this.createExampleApplication();
+    	Application managed_app = this.appRepository.customSave(app);    
+    	final Bug bug = this.createBugWithOutCC();
+    	Bug managed_bug = this.bugRepository.customSave(bug, false);
+    	
+    	Calendar originalLastVulnChange = managed_app.getLastVulnChange();
+    	Calendar originalModifiedAt = managed_app.getModifiedAt();
+    	Calendar originalCreatedAt = managed_app.getCreatedAt();
+    	assertTrue(originalModifiedAt.getTimeInMillis()==originalCreatedAt.getTimeInMillis());
+    	
+    	
+    	//Application app = (Application)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/apps-testapp-fileupload-1.2.2.json")), Application.class);
+    	AffectedLibrary affLib = (AffectedLibrary)JacksonUtil.asObject(AFF_LIB_JSON, AffectedLibrary.class);
+    	AffectedLibrary[] affArray = new AffectedLibrary[1];
+    	affArray[0]=affLib;
+    	final MockHttpServletRequestBuilder post_builder = post("/bugs/"+bug.getBugId()+"/affectedLibIds?source=MANUAL")
+    			.content(JacksonUtil.asJsonString(affArray).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentTypeJson))
+                .andExpect(jsonPath("$[0].libraryId.group", is("com.acme")))
+                .andExpect(jsonPath("$[0].affected", is(true)));
+    	
+    	AffectedLibrary managed_afflib = AffectedLibraryRepository.FILTER.findOne(this.affLibRepository.findByBug(managed_bug));
+    	
+     	    	
+    	//Get the application by AffLib
+    	List<Application> appFromJPQL = this.appRepository.findAppsByAffLib(managed_afflib.getLibraryId());
+    	assertTrue(appFromJPQL.contains(managed_app));
+    	
+    	//create Construct change for the already existing construct  	
+    	this.appRepository.refreshVulnChangebyAffLib(managed_afflib);
+    	
+    	managed_app = this.appRepository.findOne(managed_app.getId());
+    	System.out.println("Modified at before update is [" + originalLastVulnChange.getTimeInMillis() + "], after update is [" + managed_app.getLastVulnChange().getTimeInMillis() + "]");
+    	assertTrue(managed_app.getLastVulnChange().getTimeInMillis()>originalLastVulnChange.getTimeInMillis());
+    	assertTrue(managed_app.getModifiedAt().getTimeInMillis()==originalModifiedAt.getTimeInMillis());
+    	assertTrue(managed_app.getCreatedAt().getTimeInMillis()==originalCreatedAt.getTimeInMillis());
+    	
+    }
+    
+    /**
+     * Tests application lastScan update from rest api 
+     * @return
+     */
+    @Test
+    public void testRefreshAppsByLastScan() throws Exception {
+    	final Library lib = this.createExampleLibrary();
+    	this.libRepository.customSave(lib);
+    	final Application app = this.createExampleApplication();
+    	Application managed_app = this.appRepository.customSave(app);    
+    	
+    	Calendar originalLastVulnChange = managed_app.getLastVulnChange();
+    	Calendar originalLastScan = managed_app.getLastScan();
+    	Calendar originalModifiedAt = managed_app.getModifiedAt();
+    	Calendar originalCreatedAt = managed_app.getCreatedAt();
+    	System.out.println("mod: " + originalModifiedAt.getTimeInMillis() + " crt: " + originalCreatedAt.getTimeInMillis());
+    	assertTrue(originalModifiedAt.getTimeInMillis()==originalCreatedAt.getTimeInMillis());
+    	
+    	final GoalExecution gexe = this.createExampleGoalExecution(app, GoalType.APP);
+    	
+    	// post
+    	final MockHttpServletRequestBuilder post_builder = post(getAppUri(app) + "/goals")
+    			.content(JacksonUtil.asJsonString(gexe).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	System.out.println("Gexe: " + JacksonUtil.asJsonString(gexe));
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(contentTypeJson));
+    	
+    	Application after_update = ApplicationRepository.FILTER.findOne(this.appRepository.findById(managed_app.getId()));
+    	Calendar lastScanAfterPost = managed_app.getLastScan();
+    	assertTrue(originalLastScan.getTimeInMillis()<after_update.getLastScan().getTimeInMillis());
+    	assertTrue(after_update.getLastScan().getTimeInMillis()==after_update.getLastChange().getTimeInMillis());
+    	assertTrue(after_update.getLastScan().getTimeInMillis()>after_update.getLastVulnChange().getTimeInMillis());
+    	assertTrue(originalLastVulnChange.getTimeInMillis()==after_update.getLastVulnChange().getTimeInMillis());
+    	
+    	//re-post
+    	final MockHttpServletRequestBuilder put_builder = put(getAppUri(app) + "/goals/"+ gexe.getExecutionId())
+    			.content(JacksonUtil.asJsonString(gexe).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(put_builder)	
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentTypeJson));
+    	
+//    	final MockHttpServletRequestBuilder put_builder = put(getAppUri(managed_app)+"/lastscan");
+//    			//.content(JacksonUtil.asJsonString(affArray).getBytes())
+//				//.contentType(MediaType.APPLICATION_JSON)
+//				//.accept(MediaType.APPLICATION_JSON);
+//    	mockMvc.perform(put_builder)	
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentType(contentTypeJson)) ;
+//              //  .andExpect(jsonPath("$.lastChange", is(String.class)));
+    	
+    	after_update = ApplicationRepository.FILTER.findOne(this.appRepository.findById(managed_app.getId()));
+    	assertTrue(lastScanAfterPost.getTimeInMillis()<after_update.getLastScan().getTimeInMillis());
+    	assertTrue(after_update.getLastScan().getTimeInMillis()==after_update.getLastChange().getTimeInMillis());
+    	assertTrue(after_update.getLastScan().getTimeInMillis()>after_update.getLastVulnChange().getTimeInMillis());
+    	assertTrue(originalLastVulnChange.getTimeInMillis()==after_update.getLastVulnChange().getTimeInMillis());
+    }
     public static String asJsonString(final Object obj) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
@@ -676,6 +854,19 @@ public class ApplicationControllerTest {
 	}
 	
 	
+	private static final String AFF_LIB_JSON = "{\"libraryId\": { \"group\":\"com.acme\",\"artifact\":\"Foo\",\"version\":\"1.0.0\" },\"source\":\"MANUAL\",\"affected\":\"true\" }";
 
+        
+    /**
+     * Creates a transient bug.
+     * @return
+     */
+    private final Bug createBugWithOutCC() {
+    	final Bug b = new Bug("CVE-2014-0050");
+    	b.setDescription("MultipartStream.java in Apache Commons FileUpload before 1.3.1, as used in Apache Tomcat, JBoss Web, and other products, allows remote attackers to cause a denial of service (infinite loop and CPU consumption) via a crafted Content-Type header that bypasses a loop&#039;s intended exit conditions.");
+    	b.setOrigin(BugOrigin.PUBLIC);
+    	b.setMaturity(ContentMaturityLevel.READY);
+    	return b;
+    }
 
 }
