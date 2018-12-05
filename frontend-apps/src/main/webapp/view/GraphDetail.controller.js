@@ -602,7 +602,7 @@ sap.ui.controller("view.GraphDetail", {
 	
 	openWiki : function(evt){
 		
-		model.Config.openWiki("Vulnerable-Code-Call-Graph");
+		model.Config.openWiki("user/manuals/frontend/#vulnerable-code-call-graph");
 		
 	},
 	
