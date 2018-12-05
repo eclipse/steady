@@ -268,7 +268,7 @@ sap.ui.controller("view.BugDetail", {
 	},
 	openWiki : function(evt){
 
-		model.Config.openWiki("Vulnerabilities-Details");
+		model.Config.openWiki("user/manuals/frontend/#vulnerabilities-details");
 
 	},
 

@@ -587,11 +587,11 @@ sap.ui.controller("view.Master", {
    	},
 	
 	openDoc: function(){
-		model.Config.openWiki("Apps-Web-Frontend");
+		model.Config.openWiki("user/manuals/frontend/#start-page");
 	},
 	
 	openHelp : function(oEvent) {
-    	model.Config.openWiki("Help");
+    	model.Config.openWiki("user/support/Help");
 	},
 	
 	onHomePress: function(){

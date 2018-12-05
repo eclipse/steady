@@ -782,19 +782,19 @@ sap.ui.controller("view.Component", {
 		
 		var key = this.getView().byId("id_tabBar").getSelectedKey();
 		if(key==this.getView().byId("id_compVuln").getId())
-			model.Config.openWiki("Vulnerabilities");
+			model.Config.openWiki("user/manuals/frontend/#vulnerabilities");
 		else if(key==this.getView().byId("id_compArch").getId())
-			model.Config.openWiki("Dependencies");
+			model.Config.openWiki("user/manuals/frontend/#dependencies");
 		else if(key==this.getView().byId("id_compTest").getId())
-			model.Config.openWiki("Application-Statistics");
+			model.Config.openWiki("user/manuals/frontend/#application-statistics");
 		else if(key==this.getView().byId("id_compExe").getId())
-			model.Config.openWiki("History");
+			model.Config.openWiki("user/manuals/frontend/#history");
 		else if(key==this.getView().byId("id_compSearch").getId())
-			model.Config.openWiki("Search");
+			model.Config.openWiki("user/manuals/frontend/#search");
 		else if(key==this.getView().byId("id_compRem").getId())
-			model.Config.openWiki("Mitigation");
+			model.Config.openWiki("user/manuals/frontend/#mitigation");
 		else
-			model.Config.openWiki("Vulas-FrontEnd");
+			model.Config.openWiki("user/manuals/frontend/#start-page");
 	
 		
 	},

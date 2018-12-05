@@ -124,7 +124,7 @@ sap.ui.controller("view.UpdateDetail", {
 	
 	openWiki : function(evt){
 		
-		model.Config.openWiki("Callers-to-be-modified");
+		model.Config.openWiki("user/manuals/frontend/#callers-to-be-modified");
 		
 	},
 	

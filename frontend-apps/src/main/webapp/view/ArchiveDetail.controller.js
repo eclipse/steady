@@ -345,7 +345,7 @@ sap.ui.controller("view.ArchiveDetail", {
 
 	openWiki : function(evt){
 		
-		model.Config.openWiki("Dependencies-Details");
+		model.Config.openWiki("user/manuals/frontend/#dependencies-details");
 		
 	},
 	

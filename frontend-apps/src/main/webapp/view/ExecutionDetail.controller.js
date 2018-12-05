@@ -70,7 +70,7 @@ sap.ui.controller("view.ExecutionDetail", {
 	
 	openWiki : function(evt){
 		
-		model.Config.openWiki("History-Details");
+		model.Config.openWiki("user/manuals/frontend/#history-details");
 		
 	},
 
