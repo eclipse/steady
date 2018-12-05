@@ -67,20 +67,24 @@ model.Config.loadPropertiesFromBackend = function(){
 				model.Config.settings.swIdMandatory=configs[i].value[0];		
 		}
 	});
-	
 }
 
 
 // populates the settings with the data read from the cookie
 // called in the init of Master.controller
 model.Config.setModel = function(_m){
-	if(_m!=undefined)
-		model.Config.settings.cookie = JSON.parse(_m);
+	if(_m !== undefined) {
+		if (typeof _m === 'string') {
+			model.Config.settings.cookie = JSON.parse(_m)
+		} else {
+			model.Config.settings.cookie = _m
+		}
+	}
 }
 
 model.Config.setHost = function(_host) {
 	model.Config.settings.cookie.host=_host;
-	oStore.put("vulas-frontend-settings", JSON.stringify(model.Config.settings.cookie));
+	oStore.put("vulas-frontend-settings", model.Config.settings.cookie)
 	//also update the tenant and space tokens to match the new backend host (calling get with flag force=true will trigger the request)
 	// note that the order of the calls MUST NOT be modified (tenant is needed to query for space etc.)
 	model.Config.getTenant(true);
@@ -94,7 +98,7 @@ model.Config.getHost = function() {
 
 model.Config.setSpace = function(_token) {
 	model.Config.settings.cookie.space=_token;
-	oStore.put("vulas-frontend-settings", JSON.stringify(model.Config.settings.cookie));
+	oStore.put("vulas-frontend-settings", model.Config.settings.cookie)
 }
 model.Config.getSpace = function(_force) {
 	if(_force || model.Config.settings.cookie.space=="" || model.Config.settings.cookie.space ==null || model.Config.settings.cookie.space == undefined){		
@@ -119,7 +123,7 @@ model.Config.getDefaultSpace = function(_force) {
 
 model.Config.setCiaHost = function(_host) {
 	model.Config.settings.cookie.ciaHost=_host;
-	oStore.put("vulas-frontend-settings", JSON.stringify(model.Config.settings.cookie));
+	oStore.put("vulas-frontend-settings", model.Config.settings.cookie)
 }
 model.Config.getCiaHost = function() {
 	return model.Config.settings.cookie.ciaHost;
@@ -127,7 +131,7 @@ model.Config.getCiaHost = function() {
 
 model.Config.setSkipEmpty = function(_skipEmpty){
 	model.Config.settings.cookie.skipEmpty=_skipEmpty;
-	oStore.put("vulas-frontend-settings", JSON.stringify(model.Config.settings.cookie));
+	oStore.put("vulas-frontend-settings", model.Config.settings.cookie)
 }
 model.Config.getSkipEmpty = function(){
 	return model.Config.settings.cookie.skipEmpty;
@@ -136,7 +140,7 @@ model.Config.getSkipEmpty = function(){
 model.Config.setTenant = function(_token) {
 	model.Config.settings.tenant=_token;
 	//we do not store the tenant in the cookies as it's always retrieved from the backend based on the configured host
-//	oStore.put("vulas-frontend-settings", JSON.stringify(model.Config.settings.cookie));
+//	oStore.put("vulas-frontend-settings", model.Config.settings.cookie)
 }
 model.Config.getTenant = function(_force) {
 	if((_force!=undefined && _force) || model.Config.settings.tenant=="" || model.Config.settings.tenant ==null || model.Config.settings.tenant == undefined){
