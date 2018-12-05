@@ -73,7 +73,7 @@ model.Config.loadPropertiesFromBackend = function(){
 // populates the settings with the data read from the cookie
 // called in the init of Master.controller
 model.Config.setModel = function(_m){
-	if(_m !== undefined) {
+	if(_m) {
 		if (typeof _m === 'string') {
 			model.Config.settings.cookie = JSON.parse(_m)
 		} else {
