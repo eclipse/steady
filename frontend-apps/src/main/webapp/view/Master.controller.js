@@ -38,7 +38,8 @@ sap.ui.controller("view.Master", {
 	reloadData: function() {
 		var list = this.getView().byId('idListApplications');
 		var label = this.getView().byId('app-label');
-		label.setText("Applications for space [" + model.Config.getSpace() + "]");
+		label.setText("Space " + model.Config.getSpace());
+		var labelCount = this.getView().byId('app-count');
 		list.setBusy(true);
 		var data = [];
 		var oldmodel = list.getModel();
@@ -61,6 +62,8 @@ sap.ui.controller("view.Master", {
 			model.Config.loadData(newModel, sUrl, 'GET');
 			var that = this;
 			newModel.attachRequestCompleted(function() {
+				newListApplicationsSize = newModel.oData.length
+				labelCount.setText(Math.min(newListApplicationsSize, 50) + ' displayed out of ' + newListApplicationsSize);
 				list.setModel(newModel);
 				list.setBusy(false);
 				if (model.Config.getSpace() != model.Config.getDefaultSpace()) {
@@ -70,14 +73,14 @@ sap.ui.controller("view.Master", {
 		}
 	},
 	
-	loadVulnerabilityIcon: function(workspace, app, index, listModel) {
+	loadVulnerabilityIcon: function(workspace, backendUrl, skipEmpty, app, index, listModel) {
 		return new Promise(function(resolve, reject) {
 			let url = model.Config.getUsedVulnerabilitiesServiceUrl(app.group, app.artifact, app.version, false, true, true, app.lastChange)
 			$.ajax({
 				url: url,
 				headers: model.Config.defaultHeaders()
 			}).done(function(deps) {
-				if (workspace === model.Config.getSpace()) {
+				if (workspace === model.Config.getSpace() && backendUrl === model.Config.getHost() && skipEmpty === model.Config.getSkipEmpty()) {
 					if (deps.some(function(dep) {
 						return dep.affected_version
 					})) {
@@ -101,19 +104,20 @@ sap.ui.controller("view.Master", {
 
 	loadVulnerabilityIcons: function(list) {
 		let workspace = model.Config.getSpace()
+		let backendUrl = model.Config.getHost()
+		let skipEmpty = model.Config.getSkipEmpty()
 		let listModel = list.getModel()
 		listModel.refresh()
 		listModel.oData.forEach(function(app, index){
-			if (index <= 29) {
+			if (index <= 49) {
 				this.vulnerabilityIconQueue.add(function() {
-					return this.loadVulnerabilityIcon(workspace, app, index, listModel)
+					return this.loadVulnerabilityIcon(workspace, backendUrl, skipEmpty, app, index, listModel)
 				}.bind(this), {
 					priority: 1,
 					id: index
 				})
 			}
 		}.bind(this))
-		console.log('stop')
 	},
 	
 	validateEmail: function (email) {
@@ -411,7 +415,9 @@ sap.ui.controller("view.Master", {
 		var list = this.getView().byId("idListApplications");
 		var binding = list.getBinding("items");
 		let listModel = list.getModel()
+		var labelCount = this.getView().byId('app-count');
 		binding.filter(filters);
+		labelCount.setText(Math.min(binding.aIndices.length, 50) + ' displayed out of ' + listModel.oData.length);
 		if (query.length >= 1) {
 			this.updateFilteredVulnerabilityIcons(binding, listModel)
 		}
@@ -419,10 +425,12 @@ sap.ui.controller("view.Master", {
 
 	updateFilteredVulnerabilityIcons: _.debounce(function(binding, listModel) {
 		let workspace = model.Config.getSpace()
+		let backendUrl = model.Config.getHost()
+		let skipEmpty = model.Config.getSkipEmpty()
 		binding.aIndices.forEach(function(id) {
 			if (!this.vulnerabilityIconQueue.queue.isInserted(id)) {
 				this.vulnerabilityIconQueue.add(function() { 
-					return this.loadVulnerabilityIcon(workspace, binding.oModel.oData[id], id, listModel)
+					return this.loadVulnerabilityIcon(workspace , backendUrl, skipEmpty, binding.oModel.oData[id], id, listModel)
 				}.bind(this), {
 					priority: 2,
 					id: id

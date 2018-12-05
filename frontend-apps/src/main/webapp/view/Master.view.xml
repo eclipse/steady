@@ -15,12 +15,15 @@
 			</Bar>
 		</subHeader>
 		<content>
-			<Table items="{/}" id="idListApplications" visible="true"
+			<Table items="{path: '/', length: 50}" id="idListApplications" visible="true"
 				select="onListItemTap" mode="SingleSelectMaster">
 				<columns>
 				    <Column mergeDuplicates="false">
 						<header>
-							<Label id="app-label" />
+							<l:VerticalLayout class="sapUiNoMargin" >
+								<Label id="app-label" class="letterSpacingShrink"/>
+								<Text id="app-count" />
+							</l:VerticalLayout>
 						</header>
 					</Column>
 					<!--Column mergeDuplicates="true">
