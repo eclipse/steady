@@ -591,7 +591,7 @@ sap.ui.controller("view.Master", {
 	},
 	
 	openHelp : function(oEvent) {
-    	model.Config.openWiki("user/support/Help");
+    	model.Config.openWiki("user/support/");
 	},
 	
 	onHomePress: function(){
