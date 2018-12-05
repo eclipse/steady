@@ -71,7 +71,7 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 			+ " where space3_.space_token= :spaceToken and (extract(epoch from applicatio0_.last_vuln_change) > :timestamp OR extract(epoch from applicatio0_.last_scan) > :timestamp) and applicatio0_.id in (select application_id from app_constructs) "
 			+ " order by applicatio0_.mvn_group, applicatio0_.artifact, applicatio0_.version )"
 			+ " UNION "
-			+ " (select distinct applicatio0_.id, applicatio0_.artifact, applicatio0_.created_at, "
+			+ " (select distinct applicatio0_.id, applicatio0_.artifact, applicatio0_.created_at, applicatio0_.modified_at, applicatio0_.last_vuln_change, applicatio0_.last_scan, "
 			+ " applicatio0_.mvn_group, applicatio0_.space, applicatio0_.version "
 			+ " from app applicatio0_ inner join app_dependency dependenci1_ on applicatio0_.id=dependenci1_.app "
 			+ " inner join space space2_ on applicatio0_.space=space2_.id where space2_.space_token= :spaceToken and (extract(epoch from applicatio0_.last_vuln_change) > :timestamp OR extract(epoch from applicatio0_.last_scan) > :timestamp)"
