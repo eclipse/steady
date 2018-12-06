@@ -100,7 +100,7 @@ sap.ui.controller("view.Master", {
 	},
 
 	// To access the queue from the window: sap.ui.getCore().byId("__xmlview0").getController().vulnerabilityIconQueue
-	vulnerabilityIconQueue: new PQueue({concurrency: 5, queueClass: BasePriorityQueue}),
+	vulnerabilityIconQueue: new PQueue({concurrency: 1, queueClass: BasePriorityQueue}),
 
 	loadVulnerabilityIcons: function(list) {
 		let workspace = model.Config.getSpace()
