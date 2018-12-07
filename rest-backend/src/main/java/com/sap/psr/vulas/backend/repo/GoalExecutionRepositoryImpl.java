@@ -1,30 +1,25 @@
 package com.sap.psr.vulas.backend.repo;
 
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Iterator;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
-import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.GoalExecution;
 import com.sap.psr.vulas.backend.model.Property;
 import com.sap.psr.vulas.backend.util.ReferenceUpdater;
 import com.sap.psr.vulas.shared.enums.GoalType;
-import com.sap.psr.vulas.shared.enums.PropertySource;
-import com.sap.psr.vulas.shared.enums.Scope;
+import com.sap.psr.vulas.shared.util.StringList;
+import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
+import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCustom {
 
@@ -50,11 +45,10 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 			_provided_gexe.setCreatedAt(managed_gexe.getCreatedAt());
 		} catch (EntityNotFoundException e1) {}
 		
-		
 		// Update refs to independent entities
 		_provided_gexe.setApp(_app);
-		_provided_gexe.setConfiguration(refUpdater.saveNestedProperties(_provided_gexe.getConfiguration()));
-		_provided_gexe.setSystemInfo(refUpdater.saveNestedProperties(_provided_gexe.getSystemInfo()));
+		_provided_gexe.setConfiguration(refUpdater.saveNestedProperties(_provided_gexe.getConfiguration()));	
+		_provided_gexe.setSystemInfo(refUpdater.saveNestedProperties(this.filterSystemInfo(_provided_gexe.getSystemInfo())));
 
 		//update the lastScan timestamp of the application (we already have a managed application here)
 		appRepository.refreshLastScanbyApp(_app);
@@ -81,5 +75,22 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 			return this.gexeRepository.findOne(id);
 		else
 			return null;
+	}
+	
+	/**
+	 * Only keeps system info properties whose name matches the configured whitelist.
+	 * @param _in
+	 * @return
+	 */
+	private Collection<Property> filterSystemInfo(Collection<Property> _in) {
+		final StringList whitelist = VulasConfiguration.getGlobal().getWhitelist();
+		final Collection<Property> out = new HashSet<Property>();
+		final Iterator<Property> iter = _in.iterator();
+		while(iter.hasNext()) {
+			final Property p = iter.next();
+			if(whitelist.contains(p.getName(), ComparisonMode.STARTSWITH, CaseSensitivity.CASE_SENSITIVE))
+				out.add(p);
+		}
+		return out;
 	}
 }

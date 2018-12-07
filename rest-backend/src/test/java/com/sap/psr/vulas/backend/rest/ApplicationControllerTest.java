@@ -29,7 +29,6 @@ import java.util.function.Predicate;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -89,6 +88,10 @@ import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StopWatch;
+import com.sap.psr.vulas.shared.util.StringList;
+import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
+import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MainController.class,webEnvironment= SpringBootTest.WebEnvironment.MOCK)
@@ -99,6 +102,7 @@ import com.sap.psr.vulas.shared.util.StopWatch;
 //@SpringApplicationConfiguration(classes = MainController.class) 
 @WebAppConfiguration
 @ActiveProfiles("test")
+@Transactional // To extend the session for lazily loaded collections, cf. testPostGoalExe
 public class ApplicationControllerTest {
 	
 	private MediaType contentTypeJson = new MediaType(MediaType.APPLICATION_JSON.getType(),
@@ -112,9 +116,10 @@ public class ApplicationControllerTest {
     
     public static final String TEST_DEFAULT_SPACE = "public";
     public static final String TEST_DEFAULT_TENANT = "default";
-
-   
-
+    
+    public static final String SYS_VARS = "PROCESSOR_IDENTIFIER, NUMBER_OF_PROCESSORS, PROCESSOR_LEVEL, PROCESSOR_ARCHITECTURE, PROCESSOR_REVISION, JAVA_HOME, COMPUTERNAME, MAVEN_PROJECTBASEDIR, MAVEN_HOME, MAVEN_CONFIG, MAVEN_OPTS, BUILD_URL, BUILD_TAG, BUILD_TIMESTAMP, BUILD_DISPLAY_NAME, BUILD_ID, BUILD_NUMBER, BUILD_VERSION, user., os., java., runtime., maven., sun.";
+    public static final StringList SYS_WL = new StringList();
+    
     @Autowired
     private ApplicationRepository appRepository;
     
@@ -171,6 +176,10 @@ public class ApplicationControllerTest {
         this.cidRepository.deleteAll();
         
     	createDefaultTenantandSpace();
+    	
+    	// Set sys info whitelist
+    	System.setProperty(VulasConfiguration.SYS_VARS, SYS_VARS);
+    	SYS_WL.addAll(SYS_VARS, ",", true);
     }
     
     @After
@@ -181,7 +190,6 @@ public class ApplicationControllerTest {
         this.libRepository.deleteAll();
         this.bugRepository.deleteAll();
         this.cidRepository.deleteAll();
-       
     }
     
     /**
@@ -216,7 +224,6 @@ public class ApplicationControllerTest {
                 .andExpect(jsonPath("$.lastChange").exists())
                 .andExpect(jsonPath("$.version", is(app.getVersion())));
     	
-       	
     	assertEquals(1, this.appRepository.count());
     }
     
@@ -469,6 +476,16 @@ public class ApplicationControllerTest {
     	// Get latest goal execution (any type)
     	latest_gexe = this.gexeRepository.findLatestGoalExecution(app, null);
     	assertEquals(gexe, latest_gexe);
+    	
+    	// Check that only whitelisted environment variables and system properties are contained
+    	for(Property p: latest_gexe.getSystemInfo()) {
+    		if(SYS_WL.contains(p.getName(), ComparisonMode.STARTSWITH, CaseSensitivity.CASE_SENSITIVE)) {
+    			System.out.println("Sys info [" + p.getName() + "] is whitelisted");
+    		} else {
+    			System.err.println("Sys info [" + p.getName() + "] is not whitelisted, it should not have been saved");
+    			assertTrue(false);
+    		}
+    	}
     	
     	// Goal exe of type REPORT has not been created, hence, should be null
     	latest_gexe = this.gexeRepository.findLatestGoalExecution(app, GoalType.REPORT);
@@ -770,7 +787,7 @@ public class ApplicationControllerTest {
     private final GoalExecution createExampleGoalExecution(Application _app, GoalType _goal_type) {
     	final GoalExecution gexe = new GoalExecution(_app, _goal_type, Calendar.getInstance());
     	gexe.setConfiguration(this.createExampleProperties(PropertySource.GOAL_CONFIG, "entry", "value"));
-    	gexe.setSystemInfo(this.createExampleProperties(PropertySource.GOAL_CONFIG, "entry", "value"));
+    	gexe.setSystemInfo(this.createExampleProperties(PropertySource.SYSTEM_INFO, "entry", "value"));
     	gexe.setExecutionException("ExampleException");
     	gexe.setMemMax(11111L);
     	gexe.setMemUsedAvg(22222L);
@@ -786,7 +803,20 @@ public class ApplicationControllerTest {
     
     private final Collection<Property> createExampleProperties(PropertySource source, String name, String value) {
     	final Collection<Property> props = new HashSet<Property>();
-    	props.add(new Property(source, name, value));
+    	if(source.equals(PropertySource.SYSTEM_INFO)) {
+    		// Env
+    		final Map<String, String> env = System.getenv();    		
+    		for(String k: env.keySet())
+    			props.add(new Property(source, k, env.get(k)));
+    		// Sys props
+    		for(Object key : System.getProperties().keySet()) {
+    			final String key_string = (String)key;
+    			props.add(new Property(source, key_string, System.getProperty(key_string)));
+    		}
+    	}
+    	else {
+    		props.add(new Property(source, name, value));
+    	}
     	return props;
     }
     

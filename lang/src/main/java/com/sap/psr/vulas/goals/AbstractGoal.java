@@ -19,6 +19,9 @@ import com.sap.psr.vulas.shared.json.model.Space;
 import com.sap.psr.vulas.shared.json.model.Tenant;
 import com.sap.psr.vulas.shared.util.MemoryMonitor;
 import com.sap.psr.vulas.shared.util.StopWatch;
+import com.sap.psr.vulas.shared.util.StringList;
+import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
+import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
@@ -60,7 +63,7 @@ public abstract class AbstractGoal implements Runnable {
 	 * The goal-specific configuration.
 	 */
 	private VulasConfiguration configuration;
-	
+
 	/**
 	 * The context in which the goal is going to be executed.
 	 */
@@ -111,11 +114,20 @@ public abstract class AbstractGoal implements Runnable {
 		if(_monitor_mem)
 			this.memoThread = new MemoryMonitor();
 
-		// System info
-		this.systemInfo.putAll(System.getenv());
-		for(Object key : System.getProperties().keySet())
-			this.systemInfo.put((String)key, System.getProperty((String)key));
-		this.systemInfo.put("runtime.available_processors", Integer.toString(Runtime.getRuntime().availableProcessors()));
+		final StringList whitelist = VulasConfiguration.getGlobal().getWhitelist();
+		
+		// A subset of environment variables
+		this.systemInfo.putAll(whitelist.filter(System.getenv(), true, ComparisonMode.STARTSWITH, CaseSensitivity.CASE_SENSITIVE));
+
+		// A subset of system properties
+		for(Object key : System.getProperties().keySet()) {
+			final String key_string = (String)key;
+			if(whitelist.contains(key_string, ComparisonMode.STARTSWITH, CaseSensitivity.CASE_SENSITIVE))
+				this.systemInfo.put(key_string, System.getProperty(key_string));
+		}
+		
+		// Number of processors
+		this.systemInfo.put("runtime.availableProcessors", Integer.toString(Runtime.getRuntime().availableProcessors()));
 	}
 
 	public synchronized String getId() {
@@ -188,7 +200,7 @@ public abstract class AbstractGoal implements Runnable {
 				this.upload();
 		}
 	}
-	
+
 	/**
 	 * Returns the configuration of this goal execution. If the configuration has not been set before, a new instance of
 	 * {@link VulasConfiguration} is created and returned. As such, the configuration settings of different goal executions
@@ -202,7 +214,7 @@ public abstract class AbstractGoal implements Runnable {
 	}
 
 	public final AbstractGoal setConfiguration(VulasConfiguration _c) { this.configuration = _c; return this;}
-	
+
 	/**
 	 * Returns the context of this goal execution. If the context has not been set before, it is constructed
 	 * by reading tenant, space and app information from the configuration obtained from {@link AbstractGoal#getConfiguration()}.
@@ -212,18 +224,18 @@ public abstract class AbstractGoal implements Runnable {
 		if(this.goalContext==null) {
 			final Configuration c = this.getConfiguration().getConfiguration();
 			this.goalContext = new GoalContext();
-			
+
 			// Tenant
 			if(!this.getConfiguration().isEmpty(CoreConfiguration.TENANT_TOKEN))
 				this.goalContext.setTenant(new Tenant(c.getString(CoreConfiguration.TENANT_TOKEN)));
-			
+
 			// Space
 			if(!this.getConfiguration().isEmpty(CoreConfiguration.SPACE_TOKEN)) {
 				final Space space = new Space();
 				space.setSpaceToken(c.getString(CoreConfiguration.SPACE_TOKEN));
 				this.goalContext.setSpace(space);
 			}
-			
+
 			// App
 			if(Application.canBuildApplication(c.getString(CoreConfiguration.APP_CTX_GROUP), c.getString(CoreConfiguration.APP_CTX_ARTIF), c.getString(CoreConfiguration.APP_CTX_VERSI))) {
 				final Application a = new Application(c.getString(CoreConfiguration.APP_CTX_GROUP), c.getString(CoreConfiguration.APP_CTX_ARTIF), c.getString(CoreConfiguration.APP_CTX_VERSI));
@@ -235,7 +247,7 @@ public abstract class AbstractGoal implements Runnable {
 		}		
 		return this.goalContext;
 	}
-	
+
 	public final void setGoalContext(GoalContext _ctx) {
 		this.goalContext = _ctx;
 	}
@@ -271,7 +283,7 @@ public abstract class AbstractGoal implements Runnable {
 	 * CAN be overridden in subclasses in order to perform goal-specific clean-up.
 	 */
 	protected void cleanAfterExecution() {}
-	
+
 	/**
 	 * Empty implementation.
 	 */
@@ -442,7 +454,7 @@ public abstract class AbstractGoal implements Runnable {
 		b.append("]}");
 		return b.toString();
 	}
-	
+
 	protected final void skipGoalUpload() {
 		this.goalUploadEnabled = false;
 	}

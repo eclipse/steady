@@ -481,6 +481,10 @@ public class VulasConfiguration {
 	public final static String VULAS_JIRA_PWD = "vulas.jira.pwd";
 
 	public final static String M2_DIR = "vulas.shared.m2Dir";
+	
+	public final static String SYS_VARS = "vulas.shared.sys";
+	
+	public final static String SYS_VARS_CUSTOM = "vulas.shared.sys.custom";
 
 	/**
 	 * Checks mandatory and optional settings and, where provided, the format.
@@ -786,5 +790,16 @@ public class VulasConfiguration {
 				if(!isEmpty(_prefix[i] + "." + key))
 					getLog().info((_indent==null?"":_indent) + _prefix[i] + "." + key + "=" + config.getProperty(key).toString());
 		}
+	}
+	
+	/**
+	 * Returns a {@link StringList} containing all items of the configuration settings 'vulas.shared.env' and 'vulas.shared.env.custom'.
+	 * @return
+	 */
+	public StringList getWhitelist() {
+		final StringList l = new StringList(this.getStringArray(SYS_VARS, new String[] {} ));
+		if(!this.isEmpty(SYS_VARS_CUSTOM))
+			l.addAll(this.getStringArray(SYS_VARS_CUSTOM, new String[] {}), true);
+		return l;
 	}
 }

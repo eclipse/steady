@@ -1,7 +1,9 @@
 package com.sap.psr.vulas.shared.util;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -145,5 +147,29 @@ public class StringList implements Iterable<String> {
 			b.append(item);
 		}
 		return b.toString();
+	}
+	
+	/**
+	 * If matches are to be kept (argument _keep_matches equals true), the method returns a new {@link HashMap} containing all keys of the given map that are contained in this {@link StringList}.
+	 * If matches are to be dropped (argument _keep_matches equals false), the method returns a new {@link HashMap} containing all keys of the given map NOT contained in this {@link StringList}.
+	 * 
+	 * @param _in the input map whose keys will be checked
+	 * @param _keep_matches decides whether keys are to be kept or dropped
+	 * @param _mode
+	 * @param _case_sensitivity
+	 * @return
+	 */
+	public HashMap<String, String> filter(Map<String, String> _in, boolean _keep_matches, ComparisonMode _mode, CaseSensitivity _case_sensitivity) {
+		final HashMap<String, String> out = new HashMap<String, String>();
+		for(String key: _in.keySet()) {
+			if(this.contains(key, _mode, _case_sensitivity)) {
+				if(_keep_matches)
+					out.put(key, _in.get(key));
+			}
+			else if(!_keep_matches) {
+				out.put(key, _in.get(key));
+			}
+		}
+		return out;
 	}
 }
