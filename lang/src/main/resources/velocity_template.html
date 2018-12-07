@@ -210,11 +210,23 @@ function toggle(_btn, _div) {
 			<tr>		
 				
 				#if( $vul.hasFindingsAboveThreshold() )
-				<td class="above_threshold"><b>$vul.filename</b><br/>$vul.archiveid</td>
-				<td class="above_threshold"><a href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=$vul.bug.getBugId()" target="_blank">$vul.bug.getBugId()</a><br/>$vul.bug.getCvssDisplayString()</td>
+					<td class="above_threshold"><b>$vul.filename</b><br/>$vul.archiveid</td>
+					<td class="above_threshold">
+						#if( $vul.bug.getReference().isEmpty() )
+							<a href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=$vul.bug.getBugId()" target="_blank">$vul.bug.getBugId()</a><br/>$vul.bug.getCvssDisplayString()
+						#else			
+							<a href="$vul.bug.getReference().iterator().next()" target="_blank">$vul.bug.getBugId()</a><br/>$vul.bug.getCvssDisplayString()
+						#end
+					</td>
 				#else
-				<td><b>$vul.filename</b><br/>$vul.archiveid</td>
-				<td><a href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=$vul.bug.getBugId()" target="_blank">$vul.bug.getBugId()</a><br/>$vul.bug.getCvssDisplayString()</td>
+					<td><b>$vul.filename</b><br/>$vul.archiveid</td>
+					<td>
+						#if( $vul.bug.getReference().isEmpty() )
+							<a href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=$vul.bug.getBugId()" target="_blank">$vul.bug.getBugId()</a><br/>$vul.bug.getCvssDisplayString()
+						#else
+							<a href="$vul.bug.getReference().iterator().next()" target="_blank">$vul.bug.getBugId()</a><br/>$vul.bug.getCvssDisplayString()
+						#end
+					</td>
 				#end
 				
 				<td class="apps">

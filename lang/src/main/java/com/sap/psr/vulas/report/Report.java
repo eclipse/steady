@@ -443,7 +443,7 @@ public class Report {
 			pw = new PrintWriter(file, FileUtil.getCharsetName());
 			template.merge(context, pw);
 
-			Report.log.info("Report with analysis results has been written to [" + file.toPath().toAbsolutePath() + "]");
+			Report.log.info("Report with analysis results has been written to [" + file.toPath().toAbsolutePath().normalize() + "]");
 		} catch (Exception e) {
 			Report.log.error("Exception while creating report [" + file + "] with template [" + _template + "]: " + e.getMessage());
 		}
