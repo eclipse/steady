@@ -3,7 +3,7 @@ package com.sap.psr.vulas.backend.repo;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
-import javax.transaction.Transactional;
+
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sap.psr.vulas.backend.cve.Cve;
 import com.sap.psr.vulas.backend.cve.CveReader;
@@ -154,13 +155,30 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 				
 				// Read cache
 				Cve cve = CveReader.read(cve_id);
+				
 				if(cve!=null) {
-					_b.setDescription(cve.getSummary());
-					_b.setCvssScore(cve.getCvssScore());
-					_b.setCvssVersion(cve.getCvssVersion());
-					_b.setCvssVector(cve.getCvssVector());
-					this.customSave(_b, false);
-					update_happened = true;
+					boolean toSave=false; 
+					if(cve.getSummary()!=null && (_b.getDescription()==null || !(cve.getSummary().equals(_b.getDescription())))){
+						_b.setDescription(cve.getSummary());
+						toSave=true;
+						
+					}
+					if(cve.getCvssScore()!=null && (_b.getCvssScore()==null || !(cve.getCvssScore().equals(_b.getCvssScore())))){
+						_b.setCvssScore(cve.getCvssScore());
+						toSave=true;
+					}
+					if(cve.getCvssVersion()!=null && (_b.getCvssVersion()==null || !(cve.getCvssVersion().equals(_b.getCvssVersion())))){
+						_b.setCvssVersion(cve.getCvssVersion());
+						toSave=true;
+					}
+					if(cve.getCvssVector()!=null && (_b.getCvssVector()==null || !(cve.getCvssVector().equals(_b.getCvssVector())))){
+						_b.setCvssVector(cve.getCvssVector());
+						toSave=true;
+					}
+					if(toSave){
+						this.customSave(_b, false);
+						update_happened = true;
+					}
 				}
 			} catch (CacheException e) {
 				log.error("Cache exception when refreshing CVE data of bug [" + _b.getBugId() + "]: " + e.getMessage());

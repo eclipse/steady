@@ -25,6 +25,7 @@ import com.sap.psr.vulas.backend.util.ReferenceUpdater;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.enums.PropertySource;
 import com.sap.psr.vulas.shared.enums.Scope;
+import com.sap.psr.vulas.shared.util.StopWatch;
 
 public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCustom {
 
@@ -42,6 +43,7 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 	//@CacheEvict(value="gexe", key="#_app")
 	@Override
 	public GoalExecution customSave(Application _app, GoalExecution _provided_gexe) {
+		final StopWatch sw = new StopWatch("Save goal execution for app " + _app).start();
 		GoalExecution managed_gexe = null;
 
 		try{
@@ -58,14 +60,14 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 
 		//update the lastScan timestamp of the application (we already have a managed application here)
 		appRepository.refreshLastScanbyApp(_app);
-		
+
 		// Save
 		try {
 			managed_gexe = this.gexeRepository.save(_provided_gexe);
 		} catch (Exception e) {
 			throw new PersistenceException("Error while saving goal execution [" + _provided_gexe + "]: " + e.getMessage());
 		}
-
+		sw.stop();
 		return managed_gexe;
 	}
 

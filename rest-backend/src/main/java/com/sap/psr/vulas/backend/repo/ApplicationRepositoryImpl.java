@@ -16,13 +16,15 @@ import java.util.TreeSet;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
-import javax.transaction.Transactional;
+
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
 import com.sap.psr.vulas.backend.model.AffectedConstructChange;
 import com.sap.psr.vulas.backend.model.AffectedLibrary;
 import com.sap.psr.vulas.backend.model.Application;
@@ -91,7 +93,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	@Autowired
 	ReferenceUpdater refUpdater;
 
-	@Transactional
+	
 	public Application customSave(Application _app) {
 		final StopWatch sw = new StopWatch("Save app " + _app).start();
 
@@ -571,41 +573,44 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		return affected_apps;		
 	}
 	
+	@Transactional
 	public void refreshVulnChangebyChangeList(Collection<ConstructChange> _listOfConstructChanges){
-		
+		final StopWatch sw = new StopWatch("Started refresh app vulnChange by CC list").start();
 		List<ConstructId> listOfConstructs = new ArrayList<ConstructId>();
 		for(ConstructChange cc : _listOfConstructChanges){
 			listOfConstructs.add(cc.getConstructId());
 		}
 		List<Application> apps = appRepository.findAppsByCC(listOfConstructs); 
-		
-		for (Application a: apps){
-			//Application managed_app = appRepository.findOne(a.getId());
-			//a.setModifiedAt(Calendar.getInstance());	
-			a.setLastVulnChange(Calendar.getInstance());
-			appRepository.save(a);
-		}
+		sw.lap("LastVulnChange by CC, [" +apps.size()+"] apps to be refreshed",true);
+
+		//we partition the list to work around the PostgreSQL's limit of 32767 bind variables per statement
+		for(List<Application> sub: Lists.partition(apps, 30000))
+			appRepository.updateAppLastVulnChange(sub);
+		sw.stop();
 		
 		
 	}
 	
+	@Transactional
 	public void refreshVulnChangebyAffLib(AffectedLibrary _affLib){
-		
+		final StopWatch sw = new StopWatch("Started refresh app vulnChange by addLib").start();
 		List<Application> apps = new ArrayList<Application>();
 		if(_affLib!=null && _affLib.getLibraryId()!=null){
 			if(_affLib.getAffected()!=null)
 				apps.addAll(appRepository.findAppsByAffLib(_affLib.getLibraryId()));
 		}
-		
-		for (Application a: apps){
-			//a.setModifiedAt(Calendar.getInstance());	
-			a.setLastVulnChange(Calendar.getInstance());
-			appRepository.save(a);
-		}
+		sw.lap("LastVulnChange by AffLib, [" +apps.size()+"] apps to be refreshed", true);
+		//we partition the list to work around the PostgreSQL's limit of 32767 bind variables per statement
+		for(List<Application> sub: Lists.partition(apps, 30000))
+			appRepository.updateAppLastVulnChange(sub);
+		sw.stop();
 	}
 	
+	
 	public void refreshLastScanbyApp(Application _app){
+		final StopWatch sw = new StopWatch("Started refresh app lastScan" + _app).start();
 		_app.setLastScan(Calendar.getInstance());
 		appRepository.save(_app);
+		sw.stop();
 	}
 }

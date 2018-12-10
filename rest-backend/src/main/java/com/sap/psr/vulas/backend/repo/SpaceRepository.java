@@ -26,7 +26,7 @@ public interface SpaceRepository extends CrudRepository<Space, Long>, SpaceRepos
 	 * @param token
 	 * @return
 	 */
-	@Query("SELECT s FROM Space AS s WHERE s.tenant.tenantToken = :tenant")
+	@Query("SELECT s FROM Space AS s LEFT JOIN FETCH s.spaceOwners WHERE s.tenant.tenantToken = :tenant")
 	List<Space> findAllTenantSpaces(@Param("tenant") String tenant);
 	
 	/**
@@ -35,7 +35,7 @@ public interface SpaceRepository extends CrudRepository<Space, Long>, SpaceRepos
 	 * @param token
 	 * @return
 	 */
-	@Query("SELECT s FROM Space AS s WHERE s.tenant.tenantToken = :tenant and s.isPublic = :p")
+	@Query("SELECT s FROM Space AS s LEFT JOIN FETCH s.spaceOwners WHERE s.tenant.tenantToken = :tenant and s.isPublic = :p")
 	List<Space> findAllTenantSpaces(@Param("tenant") String tenant, @Param("p") boolean p);
 	
 	/**
@@ -43,7 +43,7 @@ public interface SpaceRepository extends CrudRepository<Space, Long>, SpaceRepos
 	 * @param token
 	 * @return
 	 */
-	@Query("SELECT s FROM Space AS s WHERE s.spaceToken = :token")
+	@Query("SELECT s FROM Space AS s LEFT JOIN FETCH s.spaceOwners WHERE s.spaceToken = :token")
 	List<Space> findBySecondaryKey(@Param("token") String token);
 	
 	/**
@@ -52,7 +52,7 @@ public interface SpaceRepository extends CrudRepository<Space, Long>, SpaceRepos
 	 * @param token
 	 * @return
 	 */
-	@Query("SELECT s FROM Space AS s WHERE s.tenant = :tenant and s.spaceToken = :token")
+	@Query("SELECT s FROM Space AS s LEFT JOIN FETCH s.spaceOwners WHERE s.tenant = :tenant and s.spaceToken = :token")
 	List<Space> findBySecondaryKey(@Param("tenant") Tenant tenant, @Param("token") String token);
 
 	/**
@@ -61,7 +61,7 @@ public interface SpaceRepository extends CrudRepository<Space, Long>, SpaceRepos
 	 * @param token
 	 * @return
 	 */
-	@Query("SELECT s FROM Space AS s JOIN FETCH  s.tenant t WHERE t.tenantToken = :tenant and s.spaceToken = :token")
+	@Query("SELECT s FROM Space AS s LEFT JOIN FETCH  s.tenant t WHERE t.tenantToken = :tenant and s.spaceToken = :token")
 	List<Space> findBySecondaryKey(@Param("tenant") String tenant, @Param("token") String token);
 	
 	/**
@@ -69,6 +69,6 @@ public interface SpaceRepository extends CrudRepository<Space, Long>, SpaceRepos
 	 * @param tenant as String
 	 * @return
 	 */
-	@Query("SELECT s FROM Space AS s WHERE s.tenant.tenantToken = :tenant and s.isDefault = true")
+	@Query("SELECT s FROM Space AS s LEFT JOIN FETCH s.spaceOwners WHERE s.tenant.tenantToken = :tenant and s.isDefault = true")
 	Space  findDefault(@Param("tenant") String tenant);
 }
