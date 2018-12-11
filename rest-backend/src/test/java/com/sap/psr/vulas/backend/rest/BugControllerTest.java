@@ -39,12 +39,20 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.sap.psr.vulas.backend.model.AffectedConstructChange;
+import com.sap.psr.vulas.backend.model.AffectedLibrary;
 import com.sap.psr.vulas.backend.model.Bug;
 import com.sap.psr.vulas.backend.model.ConstructChange;
 import com.sap.psr.vulas.backend.model.ConstructChangeType;
 import com.sap.psr.vulas.backend.model.ConstructId;
+import com.sap.psr.vulas.backend.model.Library;
+import com.sap.psr.vulas.backend.model.LibraryId;
+import com.sap.psr.vulas.backend.repo.AffectedLibraryRepository;
 import com.sap.psr.vulas.backend.repo.BugRepository;
 import com.sap.psr.vulas.backend.repo.ConstructChangeRepository;
+import com.sap.psr.vulas.backend.repo.ConstructIdRepository;
+import com.sap.psr.vulas.backend.repo.LibraryIdRepository;
+import com.sap.psr.vulas.backend.repo.LibraryRepository;
 import com.sap.psr.vulas.shared.enums.BugOrigin;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.ContentMaturityLevel;
@@ -68,7 +76,20 @@ public class BugControllerTest {
     private BugRepository bugRepository;
 
     @Autowired
+    private ConstructIdRepository cidRepository;
+    
+    @Autowired
     private ConstructChangeRepository ccRepository;
+    
+    @Autowired
+    private LibraryRepository libRepository;
+    
+    @Autowired
+    private LibraryIdRepository libIdRepository;
+    
+    @Autowired
+    private AffectedLibraryRepository afflibRepository;
+    
     
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -91,6 +112,7 @@ public class BugControllerTest {
     @Before
     public void setup() throws Exception {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
+        this.afflibRepository.deleteAll();
         this.bugRepository.deleteAll();
     }
     
@@ -361,6 +383,72 @@ public class BugControllerTest {
     	
     	// Repo must contain 1
     	assertEquals(0, this.bugRepository.count());
+    }
+    
+    @Test
+    public void testAffectedLibrary() throws Exception {
+    	final Bug bug = this.createExampleBug();
+    	
+    	MockHttpServletRequestBuilder post_builder = post("/bugs/")
+    			.content(JacksonUtil.asJsonString(bug).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.bugId", is(BUG_ID)))
+                .andExpect(jsonPath("$.reference[0]", is(BUG_URL1)))
+                .andExpect(jsonPath("$.reference[1]", is(BUG_URL2)))
+                .andExpect(jsonPath("$.description", is(BUG_DESCR)));
+    	
+    	// Repo must contain 1
+    	assertEquals(1, this.bugRepository.count());
+    	
+    	Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_commons-fileupload-1.2.2.json")), Library.class);
+    	post_builder = post("/libs/")
+    			.content(JacksonUtil.asJsonString(lib).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.wellknownDigest", is(true)))
+                .andExpect(jsonPath("$.digest", is("1E48256A2341047E7D729217ADEEC8217F6E3A1A")));
+    	
+
+    	// Repo must contain 1
+    	assertEquals(1, this.libRepository.count());
+    	
+    	LibraryId lid = new LibraryId("com.foo", "bar", "0.0.1");
+    	
+    	libIdRepository.save(lid);
+    	
+    	ConstructId cid = cidRepository.FILTER.findOne(cidRepository.findConstructId(ProgrammingLanguage.JAVA, ConstructType.CLAS, "com.acme.Foo"));
+    	ConstructChange cc = ccRepository.FILTER.findOne(ccRepository.findByRepoPathCommitCidBug("svn.apache.org", "/trunk/src/main/java/com/acme/Foo.java", "123456", cid, bug));
+    	
+    	
+    	AffectedLibrary[] afl = (AffectedLibrary[])JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/affectedLib-propagate.json")), AffectedLibrary[].class);
+    	
+    	post_builder = post("/bugs/CVE-2014-0050/affectedLibIds?source=PROPAGATE_MANUAL")
+    			.content(JacksonUtil.asJsonString(afl).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.length()", is(2)));
+    	
+    	
+    	AffectedConstructChange acc = new AffectedConstructChange(cc, afl[0], true, true, true, null);
+    	Collection<AffectedConstructChange> accList = new ArrayList<AffectedConstructChange>();
+    	accList.add(acc);
+    	afl[0].setAffectedcc(accList);
+    	
+    	
+    	MockHttpServletRequestBuilder put_builder = put("/bugs/CVE-2014-0050/affectedLibIds?source=PROPAGATE_MANUAL")
+    			.content(JacksonUtil.asJsonString(bug).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
     }
     	
     /*@Test

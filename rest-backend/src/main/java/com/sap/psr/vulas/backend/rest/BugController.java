@@ -301,10 +301,10 @@ public class BugController {
 	public ResponseEntity<List<AffectedLibrary>> addAffectedLibrary(@PathVariable String bugid, @RequestParam(value="source", required=true) AffectedVersionSource source, @RequestBody AffectedLibrary[] affectedLibraries) {
 		//Ensure that PUT is only used by CHECK_VERSION or PATCH EVAL results
 		final StopWatch sw = new StopWatch("PUT affected libraries for source: " + source).start();
-		if(!source.equals(AffectedVersionSource.CHECK_VERSION)&&!source.equals(AffectedVersionSource.AST_EQUALITY)&&!source.equals(AffectedVersionSource.GREATER_RELEASE)&&!source.equals(AffectedVersionSource.INTERSECTION)&&!source.equals(AffectedVersionSource.MINOR_EQUALITY)&&!source.equals(AffectedVersionSource.MAJOR_EQUALITY)&&!source.equals(AffectedVersionSource.TO_REVIEW) &&!source.equals(AffectedVersionSource.PROPAGATE_MANUAL)){
-			sw.lap("not allowed",true);
-			return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.UNPROCESSABLE_ENTITY);
-		}
+//		if(!source.equals(AffectedVersionSource.CHECK_VERSION)&&!source.equals(AffectedVersionSource.AST_EQUALITY)&&!source.equals(AffectedVersionSource.GREATER_RELEASE)&&!source.equals(AffectedVersionSource.INTERSECTION)&&!source.equals(AffectedVersionSource.MINOR_EQUALITY)&&!source.equals(AffectedVersionSource.MAJOR_EQUALITY)&&!source.equals(AffectedVersionSource.TO_REVIEW) &&!source.equals(AffectedVersionSource.PROPAGATE_MANUAL)){
+//			sw.lap("not allowed",true);
+//			return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.UNPROCESSABLE_ENTITY);
+//		}
 		
 		// Ensure that bug exists
 		Bug bug = null;

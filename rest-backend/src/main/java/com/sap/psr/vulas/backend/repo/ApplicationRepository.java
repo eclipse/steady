@@ -329,7 +329,7 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Transactional
 	@Query("select a from Application a where a in"
-			+ "( SELECT  d.app FROM Dependency d "
+			+ "( SELECT distinct d.app FROM Dependency d "
 			+ "	  JOIN "
 			+ "   d.lib l"
 			+ "   JOIN "
