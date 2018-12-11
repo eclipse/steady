@@ -49,6 +49,7 @@ sap.ui.controller("view.Master", {
 		}
 
 		if (!model.Config.isMock) {
+			this.vulnerabilityIconQueue.clear()
 			var sUrl = model.Config.getMyAppsServiceUrl(false);
 			var newModel = new sap.ui.model.json.JSONModel();
 			var event;
@@ -80,7 +81,7 @@ sap.ui.controller("view.Master", {
 				url: url,
 				headers: model.Config.defaultHeaders()
 			}).done(function(deps) {
-				if (workspace === model.Config.getSpace() && backendUrl === model.Config.getHost() && skipEmpty === model.Config.getSkipEmpty()) {
+				if (listModel.oData.length > 0 && workspace === model.Config.getSpace() && backendUrl === model.Config.getHost() && skipEmpty === model.Config.getSkipEmpty()) {
 					if (deps.some(function(dep) {
 						return dep.affected_version
 					})) {
