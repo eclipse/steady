@@ -82,6 +82,10 @@ public class AffectedLibrary implements Serializable {
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	private java.util.Calendar createdAt;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
+	private java.util.Calendar modifiedAt;
+	
 	@Column
 	private String createdBy;
 	
@@ -160,6 +164,9 @@ public class AffectedLibrary implements Serializable {
 
 	public java.util.Calendar getCreatedAt() { return createdAt; }
 	public void setCreatedAt(java.util.Calendar createdAt) { this.createdAt = createdAt; }
+	
+	public java.util.Calendar getModifiedAt() { return modifiedAt; }
+	public void setModifiedAt(java.util.Calendar modifiedAt) { this.modifiedAt = modifiedAt; }
 
 	public String getCreatedBy() { return createdBy; }
 	public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
@@ -218,6 +225,9 @@ public class AffectedLibrary implements Serializable {
 	public void prePersist() {
 		if(this.getCreatedAt()==null) {
 			this.setCreatedAt(Calendar.getInstance());
+		}
+		if(this.getModifiedAt()==null) {
+			this.setModifiedAt(Calendar.getInstance());
 		}
 	}
 	

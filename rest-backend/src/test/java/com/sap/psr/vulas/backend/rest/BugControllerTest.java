@@ -1,6 +1,7 @@
 package com.sap.psr.vulas.backend.rest;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import org.hamcrest.core.IsNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -446,9 +448,30 @@ public class BugControllerTest {
     	
     	
     	MockHttpServletRequestBuilder put_builder = put("/bugs/CVE-2014-0050/affectedLibIds?source=PROPAGATE_MANUAL")
-    			.content(JacksonUtil.asJsonString(bug).getBytes())
+    			.content(JacksonUtil.asJsonString(afl).getBytes())
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(put_builder)	
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType));
+    	
+//  TOD: REturns 0 affectedcc
+//    	MockHttpServletRequestBuilder get_builder = get("/bugs/CVE-2014-0050/affectedLibIds/bar/bar/0.0.1?source=PROPAGATE_MANUAL");
+//    	mockMvc.perform(get_builder)	
+//        .andExpect(status().isOk())
+//        .andExpect(content().contentType(contentType))
+//        .andExpect(jsonPath("$.[0].affectedcc.length()", is(1)));
+    	
+    	afl[0].setAffected(null);
+    	
+    	put_builder = put("/bugs/CVE-2014-0050/affectedLibIds?source=PROPAGATE_MANUAL")
+    			.content(JacksonUtil.asJsonString(afl).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(put_builder)	
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType))
+        .andExpect(jsonPath("$.[0].affected").value(IsNull.nullValue()));
     }
     	
     /*@Test

@@ -1,0 +1,47 @@
+[
+    {
+        "libraryId": {
+            "artifact": "bar",
+            "version": "0.0.1",
+            "group": "bar"
+        },
+        "lib": null,
+        "source": "PROPAGATE_MANUAL",
+        "affected": true,
+        "sourcesAvailable": null,
+        "explanation": "Generated automatically by DigestAnalyzer on 2018/11/09 14:44:10",
+        "overallConfidence": null,
+        "pathConfidence": null,
+        "lastVulnerable": null,
+        "firstFixed": null,
+        "fromIntersection": null,
+        "toIntersection": null,
+        "adfixed": null,
+        "adpathFixed": null
+    },
+    {
+        "libraryId": null,
+        "lib": {
+            "digest": "1E48256A2341047E7D729217ADEEC8217F6E3A1A",
+            "sha1": "1E48256A2341047E7D729217ADEEC8217F6E3A1A",
+            "digestAlgorithm": "SHA1",
+            "createdAt": "2018-12-04T10:27:24.160+0000",
+            "modifiedAt": "2018-12-06T12:38:38.496+0000",
+            "libraryId": null,
+            "wellknownDigest": false,
+            "digestVerificationUrl": null
+        },
+        "source": "PROPAGATE_MANUAL",
+        "affected": false,
+        "sourcesAvailable": null,
+        "explanation": "Generated automatically by DigestAnalyzer on 2018/12/05 08:17:44",
+        "overallConfidence": null,
+        "pathConfidence": null,
+        "lastVulnerable": null,
+        "firstFixed": null,
+        "fromIntersection": null,
+        "toIntersection": null,
+        "adfixed": null,
+        "adpathFixed": null
+    }
+]

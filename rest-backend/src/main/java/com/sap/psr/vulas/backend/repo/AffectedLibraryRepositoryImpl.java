@@ -2,6 +2,7 @@ package com.sap.psr.vulas.backend.repo;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
@@ -82,15 +83,19 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 					
 				}
 				// (SP, 10.12.2018: in case the assessment flag is not equal to the existing, we skip the saving of the affected app and keep the existing one.
-				if(provided_aff_lib.getAffected().equals(managed_aff_lib.getAffected()))
+				if(provided_aff_lib.getAffected()!=null && managed_aff_lib.getAffected()!=null && provided_aff_lib.getAffected().equals(managed_aff_lib.getAffected())
+						|| (provided_aff_lib.getAffected()==null && managed_aff_lib.getAffected()==null))
 					continue;
 				else
-					provided_aff_lib.setId(managed_aff_lib.getId()); 
+					provided_aff_lib.setId(managed_aff_lib.getId());
+				
+				provided_aff_lib.setCreatedAt(managed_aff_lib.getCreatedAt());
 			} catch (EntityNotFoundException e1) {
 				// Create
 				log.info("Creating new affected library  " + provided_aff_lib);
 			}
-
+			provided_aff_lib.setModifiedAt(Calendar.getInstance());
+			
 			// Update refs to independent entities 
 			provided_aff_lib = this.saveNestedLibraryId(provided_aff_lib);
 
@@ -157,7 +162,6 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 				ConstructChange provided_cc = aff_cc.getCc();
 				try{
 					ConstructId managed_cid = ConstructIdRepository.FILTER.findOne(this.cidRepository.findConstructId(provided_cc.getConstructId().getLang(), provided_cc.getConstructId().getType(), provided_cc.getConstructId().getQname()));
-					//final StopWatch sw = new StopWatch("Query cc: " + managed_cid.getId() +  " " +provided_cc.getRepo() +  " " + provided_cc.getRepoPath() + " " +provided_cc.getCommit(), true);
 					managed_cc = ConstructChangeRepository.FILTER.findOne(this.ccRepository.findByRepoPathCommitCidBug(provided_cc.getRepo(), provided_cc.getRepoPath(),provided_cc.getCommit(),managed_cid,_bug));
 				}catch (EntityNotFoundException e) {
 					throw new PersistenceException("Error while saving affected construct change " + provided_cc + ": " + e.getMessage());
