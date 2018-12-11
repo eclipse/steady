@@ -482,10 +482,14 @@ public class VulasConfiguration {
 
 	public final static String M2_DIR = "vulas.shared.m2Dir";
 	
-	public final static String SYS_VARS = "vulas.shared.sys";
+	public final static String SYS_PROPS = "vulas.shared.sys";
 	
-	public final static String SYS_VARS_CUSTOM = "vulas.shared.sys.custom";
+	public final static String SYS_PROPS_CUSTOM = "vulas.shared.sys.custom";
 
+	public final static String ENV_VARS = "vulas.shared.env";
+	
+	public final static String ENV_VARS_CUSTOM = "vulas.shared.env.custom";
+	
 	/**
 	 * Checks mandatory and optional settings and, where provided, the format.
 	 * @throws ConfigurationException
@@ -793,13 +797,17 @@ public class VulasConfiguration {
 	}
 	
 	/**
-	 * Returns a {@link StringList} containing all items of the configuration settings 'vulas.shared.env' and 'vulas.shared.env.custom'.
+	 * Returns a {@link StringList} containing items taken from the given configuration settings. Each configuration settings is
+	 * expected to contain one or more values (comma-separated), which are trimmed and added to the {@link StringList}.
 	 * @return
 	 */
-	public StringList getWhitelist() {
-		final StringList l = new StringList(this.getStringArray(SYS_VARS, new String[] {} ));
-		if(!this.isEmpty(SYS_VARS_CUSTOM))
-			l.addAll(this.getStringArray(SYS_VARS_CUSTOM, new String[] {}), true);
+	public final StringList getStringList(String... _config_names) {
+		final StringList l = new StringList();
+		if(_config_names!=null && _config_names.length>0) {
+			for(String config_name: _config_names) {
+				l.addAll(this.getStringArray(config_name, new String[] {}), true);
+			}
+		}
 		return l;
 	}
 }

@@ -83,12 +83,14 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 	 * @return
 	 */
 	private Collection<Property> filterSystemInfo(Collection<Property> _in) {
-		final StringList whitelist = VulasConfiguration.getGlobal().getWhitelist();
+		final StringList env_whitelist = VulasConfiguration.getGlobal().getStringList(VulasConfiguration.ENV_VARS, VulasConfiguration.ENV_VARS_CUSTOM);
+		final StringList sys_whitelist = VulasConfiguration.getGlobal().getStringList(VulasConfiguration.SYS_PROPS, VulasConfiguration.SYS_PROPS_CUSTOM);
 		final Collection<Property> out = new HashSet<Property>();
 		final Iterator<Property> iter = _in.iterator();
 		while(iter.hasNext()) {
 			final Property p = iter.next();
-			if(whitelist.contains(p.getName(), ComparisonMode.STARTSWITH, CaseSensitivity.CASE_SENSITIVE))
+			if(sys_whitelist.contains(p.getName(), ComparisonMode.STARTSWITH, CaseSensitivity.CASE_INSENSITIVE) ||
+					env_whitelist.contains(p.getName(), ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE) )
 				out.add(p);
 		}
 		return out;

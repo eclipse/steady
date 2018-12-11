@@ -117,7 +117,9 @@ public class ApplicationControllerTest {
     public static final String TEST_DEFAULT_SPACE = "public";
     public static final String TEST_DEFAULT_TENANT = "default";
     
-    public static final String SYS_VARS = "PROCESSOR_IDENTIFIER, NUMBER_OF_PROCESSORS, PROCESSOR_LEVEL, PROCESSOR_ARCHITECTURE, PROCESSOR_REVISION, JAVA_HOME, COMPUTERNAME, MAVEN_PROJECTBASEDIR, MAVEN_HOME, MAVEN_CONFIG, MAVEN_OPTS, BUILD_URL, BUILD_TAG, BUILD_TIMESTAMP, BUILD_DISPLAY_NAME, BUILD_ID, BUILD_NUMBER, BUILD_VERSION, user., os., java., runtime., maven., sun.";
+    public static final String ENV_VARS   = "PROCESSOR_IDENTIFIER, NUMBER_OF_PROCESSORS, PROCESSOR_LEVEL, PROCESSOR_ARCHITECTURE, PROCESSOR_REVISION, JAVA_HOME, COMPUTERNAME, MAVEN_PROJECTBASEDIR, MAVEN_HOME, MAVEN_CONFIG, MAVEN_OPTS, BUILD_URL, BUILD_TAG, BUILD_TIMESTAMP, BUILD_DISPLAY_NAME, BUILD_ID, BUILD_NUMBER, BUILD_VERSION";
+    public static final String SYS_PROPS  = "user., os., java., runtime., maven., sun.";
+    public static final StringList ENV_WL = new StringList();
     public static final StringList SYS_WL = new StringList();
     
     @Autowired
@@ -178,8 +180,10 @@ public class ApplicationControllerTest {
     	createDefaultTenantandSpace();
     	
     	// Set sys info whitelist
-    	System.setProperty(VulasConfiguration.SYS_VARS, SYS_VARS);
-    	SYS_WL.addAll(SYS_VARS, ",", true);
+    	System.setProperty(VulasConfiguration.ENV_VARS, ENV_VARS);
+    	System.setProperty(VulasConfiguration.SYS_PROPS, SYS_PROPS);
+    	ENV_WL.addAll(ENV_VARS, ",", true);
+    	SYS_WL.addAll(SYS_PROPS, ",", true);
     }
     
     @After
@@ -479,7 +483,8 @@ public class ApplicationControllerTest {
     	
     	// Check that only whitelisted environment variables and system properties are contained
     	for(Property p: latest_gexe.getSystemInfo()) {
-    		if(SYS_WL.contains(p.getName(), ComparisonMode.STARTSWITH, CaseSensitivity.CASE_SENSITIVE)) {
+    		if(ENV_WL.contains(p.getName(), ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE) ||
+    				SYS_WL.contains(p.getName(), ComparisonMode.STARTSWITH, CaseSensitivity.CASE_INSENSITIVE) ) {
     			System.out.println("Sys info [" + p.getName() + "] is whitelisted");
     		} else {
     			System.err.println("Sys info [" + p.getName() + "] is not whitelisted, it should not have been saved");
