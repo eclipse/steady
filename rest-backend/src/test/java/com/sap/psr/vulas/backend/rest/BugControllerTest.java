@@ -431,6 +431,11 @@ public class BugControllerTest {
     	
     	AffectedLibrary[] afl = (AffectedLibrary[])JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/affectedLib-propagate.json")), AffectedLibrary[].class);
     	
+    	AffectedConstructChange acc = new AffectedConstructChange(cc, afl[0], true, true, true, null);
+    	Collection<AffectedConstructChange> accList = new ArrayList<AffectedConstructChange>();
+    	accList.add(acc);
+    	afl[0].setAffectedcc(accList);
+    	
     	post_builder = post("/bugs/CVE-2014-0050/affectedLibIds?source=PROPAGATE_MANUAL")
     			.content(JacksonUtil.asJsonString(afl).getBytes())
 				.contentType(MediaType.APPLICATION_JSON)
@@ -441,12 +446,6 @@ public class BugControllerTest {
                 .andExpect(jsonPath("$.length()", is(2)));
     	
     	
-    	AffectedConstructChange acc = new AffectedConstructChange(cc, afl[0], true, true, true, null);
-    	Collection<AffectedConstructChange> accList = new ArrayList<AffectedConstructChange>();
-    	accList.add(acc);
-    	afl[0].setAffectedcc(accList);
-    	
-    	
     	MockHttpServletRequestBuilder put_builder = put("/bugs/CVE-2014-0050/affectedLibIds?source=PROPAGATE_MANUAL")
     			.content(JacksonUtil.asJsonString(afl).getBytes())
 				.contentType(MediaType.APPLICATION_JSON)
@@ -455,12 +454,12 @@ public class BugControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(contentType));
     	
-//  TOD: REturns 0 affectedcc
-//    	MockHttpServletRequestBuilder get_builder = get("/bugs/CVE-2014-0050/affectedLibIds/bar/bar/0.0.1?source=PROPAGATE_MANUAL");
-//    	mockMvc.perform(get_builder)	
-//        .andExpect(status().isOk())
-//        .andExpect(content().contentType(contentType))
-//        .andExpect(jsonPath("$.[0].affectedcc.length()", is(1)));
+
+    	MockHttpServletRequestBuilder get_builder = get("/bugs/CVE-2014-0050/affectedLibIds/bar/bar/0.0.1?source=PROPAGATE_MANUAL");
+    	mockMvc.perform(get_builder)	
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType))
+        .andExpect(jsonPath("$.[0].affectedcc.length()", is(1)));
     	
     	afl[0].setAffected(null);
     	
