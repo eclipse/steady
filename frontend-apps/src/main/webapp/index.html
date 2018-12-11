@@ -1,53 +1,53 @@
 <!DOCTYPE HTML>
 <html>
+
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=11,edge" />
-<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=11,edge" />
+	<meta charset="UTF-8">
 
-<title>Vulas Application Analysis Frontend</title>
+	<title>Vulas Application Analysis Frontend</title>
 
-<link rel="stylesheet" type="text/css" href="css/style.css">
-<link href="img/icon.png" rel="shortcut icon" type="image/x-icon" />
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link href="img/icon.png" rel="shortcut icon" type="image/x-icon" />
 
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js" integrity="sha256-7/yoZS3548fXSRXqc/xYzjsmuW3sFKzuvOCHd06Pmps=" crossorigin="anonymous"></script>
-<script defer id="sap-ui-bootstrap" type="text/javascript"
-	src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js"
-	data-sap-ui-theme="sap_belize"
-	data-sap-ui-compatVersion="edge"
-	data-sap-ui-libs='sap.m, sap.ui.layout, sap.ui.commons'
-	data-sap-ui-xx-bindingSyntax="complex"
-	data-sap-ui-resourceroots='{
+	<script defer src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js" integrity="sha256-7/yoZS3548fXSRXqc/xYzjsmuW3sFKzuvOCHd06Pmps="
+	 crossorigin="anonymous"></script>
+	<script defer id="sap-ui-bootstrap" type="text/javascript" src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js"
+	 data-sap-ui-theme="sap_belize" data-sap-ui-compatVersion="edge" data-sap-ui-libs='sap.m, sap.ui.layout, sap.ui.commons'
+	 data-sap-ui-xx-bindingSyntax="complex" data-sap-ui-resourceroots='{
 		"vulasfrontend": "./",
 		"view" : "./view",
 		"model" : "./model",
 		"util" : "./util"
 	}'>
-</script>
-<script src="https://cdn.jsdelivr.net/npm/d3@3.5.17/d3.min.js" integrity="sha256-dsOXGNHAo/syFnazt+KTBsCQeRmlcW1XKL0bCK4Baec=" crossorigin="anonymous"></script>
+	</script>
+	<script defer src="https://cdn.jsdelivr.net/npm/d3@3.5.17/d3.min.js" integrity="sha256-dsOXGNHAo/syFnazt+KTBsCQeRmlcW1XKL0bCK4Baec="
+	 crossorigin="anonymous"></script>
 
-<!-- <script defer src="./helpers/basePriorityQueue.js"></script>
-<script defer src="./helpers/pqueue.js"></script> -->
-<script defer src="./helpers/transpiled/basePriorityQueueES5.js"></script>
-<script defer src="./helpers/transpiled/pqueueES5.js"></script>
+	<!-- <script defer src="./helpers/basePriorityQueue.js"></script>
+	<script defer src="./helpers/pqueue.js"></script> -->
+	<script defer src="./helpers/transpiled/basePriorityQueueES5.js"></script>
+	<script defer src="./helpers/transpiled/pqueueES5.js"></script>
 
-<script async type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/1173_RC01/embed_loader.js"></script>  
-
-<script>
-	document.addEventListener('DOMContentLoaded', function() {
-		new sap.m.Shell("Shell", {
-			title : "VULAS",
-			logo:"img/icon.png",
-			showLogout : false,
-			app : new sap.ui.core.ComponentContainer({
-				name : 'vulasfrontend'
-			}),
-			appWidthLimited: false
-		}).placeAt('content');
-	})
-</script>
+	<script async type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/1173_RC01/embed_loader.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			new sap.m.Shell("Shell", {
+				title: "VULAS",
+				logo: "img/icon.png",
+				showLogout: false,
+				app: new sap.ui.core.ComponentContainer({
+					name: 'vulasfrontend'
+				}),
+				appWidthLimited: false
+			}).placeAt('content')
+			
+		})
+	</script>
 </head>
 
 <body class="sapUiBody">
-    <div id="content"></div>
+	<div id="content"></div>
 </body>
+
 </html>
