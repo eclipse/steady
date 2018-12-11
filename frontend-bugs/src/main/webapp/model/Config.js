@@ -268,50 +268,86 @@ model.Config.uploadManualAssessment = function(data, pbugid ){
     }
     // delete before post
     
+    
     $.ajax({
-        type: "DELETE",
-        url: fullUrl,
+        type: "PUT",
+        url : fullUrl,
         headers : {'content-type': "application/json",'cache-control': "no-cache" },
-        success: function(msg){
-            $.ajax({
-                type: "POST",
-                url : fullUrl,
-                headers : {'content-type': "application/json",'cache-control': "no-cache" },
-                data : JSON.stringify(elementArray),
-                success : function(msg){
-                    sap.ui.commons.MessageBox.alert("Data correctly updated");
-                    sap.ui.core.BusyIndicator.hide();
-                },
-                error : function(msg){
-                    sap.ui.commons.MessageBox.alert("error POST");
-                    sap.ui.core.BusyIndicator.hide();
-                }
-            });
-        }, 
+        data : JSON.stringify(elementArray),
+        success : function(msg){
+            sap.ui.commons.MessageBox.alert("Data correctly updated via PUT");
+            sap.ui.core.BusyIndicator.hide();
+        },
         error : function(msg){
-            if ( msg['status']==404 ){
-                console.log("404");
-                console.log(data);
-                $.ajax({
-                    type: "POST",
-                    url : fullUrl,
-                    headers : {'content-type': "application/json",'cache-control': "no-cache" },
-                    data : JSON.stringify(elementArray),
-                    success : function(msg){
-                        sap.ui.commons.MessageBox.alert("Data correctly updated");
-                        sap.ui.core.BusyIndicator.hide();
-                    },
-                    error : function(msg){
-                        sap.ui.commons.MessageBox.alert("error PUT");
-                        sap.ui.core.BusyIndicator.hide();
-                    }
-                });
-            } else {
-                sap.ui.commons.MessageBox.alert("error DELETE");
-                sap.ui.core.BusyIndicator.hide();
-            }
-        }
+        	  if ( msg['status']==404 ){
+                  console.log("404");
+                  console.log(data);
+                  $.ajax({
+                      type: "POST",
+                      url : fullUrl,
+                      headers : {'content-type': "application/json",'cache-control': "no-cache" },
+                      data : JSON.stringify(elementArray),
+                      success : function(msg){
+                          sap.ui.commons.MessageBox.alert("Data correctly updated via POST");
+                          sap.ui.core.BusyIndicator.hide();
+                      },
+                      error : function(msg){
+                          sap.ui.commons.MessageBox.alert("error POST");
+                          sap.ui.core.BusyIndicator.hide();
+                      }
+                  });
+              } else {
+                  sap.ui.commons.MessageBox.alert("error PUT");
+                  sap.ui.core.BusyIndicator.hide();
+              }
+       }
     });
+    
+   //old mechanisma via DELETE-POST
+//    $.ajax({
+//        type: "DELETE",
+//        url: fullUrl,
+//        headers : {'content-type': "application/json",'cache-control': "no-cache" },
+//        success: function(msg){
+//            $.ajax({
+//                type: "POST",
+//                url : fullUrl,
+//                headers : {'content-type': "application/json",'cache-control': "no-cache" },
+//                data : JSON.stringify(elementArray),
+//                success : function(msg){
+//                    sap.ui.commons.MessageBox.alert("Data correctly updated");
+//                    sap.ui.core.BusyIndicator.hide();
+//                },
+//                error : function(msg){
+//                    sap.ui.commons.MessageBox.alert("error POST");
+//                    sap.ui.core.BusyIndicator.hide();
+//                }
+//            });
+//        }, 
+//        error : function(msg){
+//            if ( msg['status']==404 ){
+//                console.log("404");
+//                console.log(data);
+//                $.ajax({
+//                    type: "POST",
+//                    url : fullUrl,
+//                    headers : {'content-type': "application/json",'cache-control': "no-cache" },
+//                    data : JSON.stringify(elementArray),
+//                    success : function(msg){
+//                        sap.ui.commons.MessageBox.alert("Data correctly updated");
+//                        sap.ui.core.BusyIndicator.hide();
+//                    },
+//                    error : function(msg){
+//                        sap.ui.commons.MessageBox.alert("error PUT");
+//                        sap.ui.core.BusyIndicator.hide();
+//                    }
+//                });
+//            } else {
+//                sap.ui.commons.MessageBox.alert("error DELETE");
+//                sap.ui.core.BusyIndicator.hide();
+//            }
+//        }
+//    });
     
     //console.log(JSON.stringify(elementArray));
 };
