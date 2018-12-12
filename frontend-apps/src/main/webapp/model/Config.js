@@ -7,7 +7,7 @@ model.Config.settings = {
 		cookie : {  host : "/backend",
 					space : "",
 					ciaHost : "/cia",
-					skipEmpty : false
+					//skipEmpty : false
 		},
 		defaultSpace :  "",
 		tenant : "",
@@ -129,12 +129,13 @@ model.Config.getCiaHost = function() {
 	return model.Config.settings.cookie.ciaHost;
 }
 
-model.Config.setSkipEmpty = function(_skipEmpty){
-	model.Config.settings.cookie.skipEmpty=_skipEmpty;
-	oStore.put("vulas-frontend-settings", model.Config.settings.cookie)
-}
+//model.Config.setSkipEmpty = function(_skipEmpty){
+//	model.Config.settings.cookie.skipEmpty=_skipEmpty;
+//	oStore.put("vulas-frontend-settings", model.Config.settings.cookie)
+//}
 model.Config.getSkipEmpty = function(){
-	return model.Config.settings.cookie.skipEmpty;
+	//return model.Config.settings.cookie.skipEmpty;
+	return false;
 }
 
 model.Config.setTenant = function(_token) {
