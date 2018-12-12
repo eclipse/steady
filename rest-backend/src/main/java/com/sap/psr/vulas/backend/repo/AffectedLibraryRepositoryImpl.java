@@ -2,6 +2,7 @@ package com.sap.psr.vulas.backend.repo;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
@@ -75,20 +76,25 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 				provided_aff_lib.setBugId(_bug);
 				if(provided_aff_lib.getLibraryId()!=null){
 					managed_aff_lib = AffectedLibraryRepository.FILTER.findOne(this.affLibRepository.findByBugAndLibraryIdAndSource(provided_aff_lib.getBugId(), provided_aff_lib.getLibraryId().getMvnGroup(), provided_aff_lib.getLibraryId().getArtifact(), provided_aff_lib.getLibraryId().getVersion(), provided_aff_lib.getSource()));
-					// (SP, 13.03.2018: inc ase an automated assessment approach (patchEval) puts again a result for a certain libid, we keep the old one instead of throwing an exception and stopping
-					//throw new PersistenceException("Affected library " +  managed_aff_lib + " already exists");
-					continue;
-					//this would update to the new one but it's not needed now because for the same source patchEval must always send the same result. this will be required to also use PUT for source MANUAL
-					//provided_aff_lib.setId(managed_aff_lib.getId()); 
+					
 					}
 				else if (provided_aff_lib.getLib()!=null){
 					managed_aff_lib = AffectedLibraryRepository.FILTER.findOne(this.affLibRepository.findByBugAndLibAndSource(provided_aff_lib.getBugId(), provided_aff_lib.getLib(), provided_aff_lib.getSource()));
-					provided_aff_lib.setId(managed_aff_lib.getId());
+					
 				}
+				// (SP, 10.12.2018: in case the assessment flag is equal to the existing, we skip the saving of the affected app and keep the existing one.
+				if(provided_aff_lib.getAffected()!=null && managed_aff_lib.getAffected()!=null && provided_aff_lib.getAffected().equals(managed_aff_lib.getAffected())
+						|| (provided_aff_lib.getAffected()==null && managed_aff_lib.getAffected()==null))
+					continue;
+				else
+					provided_aff_lib.setId(managed_aff_lib.getId());
+				
+				provided_aff_lib.setCreatedAt(managed_aff_lib.getCreatedAt());
 			} catch (EntityNotFoundException e1) {
 				// Create
 				log.info("Creating new affected library  " + provided_aff_lib);
 			}
+			provided_aff_lib.setModifiedAt(Calendar.getInstance());
 			
 			// Update refs to independent entities 
 			provided_aff_lib = this.saveNestedLibraryId(provided_aff_lib);
@@ -100,9 +106,7 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 			provided_aff_lib = this.updateConstructChanges(provided_aff_lib,_bug);
 			
 			log.debug(provided_aff_lib.toString(true));
-			
-			//TODO update the applications having the affected libraries as application dependencies
-			
+					
 			// Save
 			try {
 				managed_aff_lib = this.affLibRepository.save(provided_aff_lib);
@@ -158,7 +162,6 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 				ConstructChange provided_cc = aff_cc.getCc();
 				try{
 					ConstructId managed_cid = ConstructIdRepository.FILTER.findOne(this.cidRepository.findConstructId(provided_cc.getConstructId().getLang(), provided_cc.getConstructId().getType(), provided_cc.getConstructId().getQname()));
-					//final StopWatch sw = new StopWatch("Query cc: " + managed_cid.getId() +  " " +provided_cc.getRepo() +  " " + provided_cc.getRepoPath() + " " +provided_cc.getCommit(), true);
 					managed_cc = ConstructChangeRepository.FILTER.findOne(this.ccRepository.findByRepoPathCommitCidBug(provided_cc.getRepo(), provided_cc.getRepoPath(),provided_cc.getCommit(),managed_cid,_bug));
 				}catch (EntityNotFoundException e) {
 					throw new PersistenceException("Error while saving affected construct change " + provided_cc + ": " + e.getMessage());
@@ -182,6 +185,8 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 				}
 			}
 		}
+		else
+			_aff_lib.setAffectedcc(new ArrayList<AffectedConstructChange>());
 		return _aff_lib;
 	}
 	

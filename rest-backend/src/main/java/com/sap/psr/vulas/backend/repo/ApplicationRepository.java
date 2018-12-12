@@ -5,10 +5,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
 
+import javax.persistence.LockModeType;
+
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.Bug;
@@ -35,10 +40,10 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 	
 	List<Application> findById(@Param("id") Long id);
 		
-	@Query("SELECT app FROM Application AS app WHERE app.mvnGroup = :mvnGroup AND app.artifact = :artifact AND app.space = :space")
+	@Query("SELECT app FROM Application AS app JOIN FETCH app.space s WHERE app.mvnGroup = :mvnGroup AND app.artifact = :artifact AND app.space = :space")
 	List<Application> findByGA(@Param("mvnGroup") String group, @Param("artifact") String artifact, @Param("space") Space space);
 	
-	@Query("SELECT app FROM Application AS app WHERE app.mvnGroup = :mvnGroup AND app.artifact = :artifact AND app.version = :version AND app.space = :space")
+	@Query("SELECT app FROM Application AS app JOIN FETCH app.space s WHERE app.mvnGroup = :mvnGroup AND app.artifact = :artifact AND app.version = :version AND app.space = :space")
 	List<Application> findByGAV(@Param("mvnGroup") String group, @Param("artifact") String artifact,@Param("version") String version, @Param("space") Space space);
 	
 
@@ -59,7 +64,7 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 	@Query("SELECT app FROM Application AS app JOIN FETCH app.space s WHERE s.tenant = :tenant ORDER BY app.mvnGroup, app.artifact, app.version")
 	ArrayList<Application> findAllApps(@Param("tenant") Tenant tenant);
 	
-	@Query("SELECT app FROM Application AS app WHERE app.mvnGroup LIKE :mvnGroup AND app.artifact LIKE :artifact AND app.version LIKE :version")
+	@Query("SELECT app FROM Application AS app JOIN FETCH app.space s WHERE app.mvnGroup LIKE :mvnGroup AND app.artifact LIKE :artifact AND app.version LIKE :version")
 	Collection<Application> searchByGAV(@Param("mvnGroup") String group, @Param("artifact") String artifact,@Param("version") String version);
 	
 //	@Query("SELECT DISTINCT app FROM Application AS app JOIN app.dependencies order by app.mvnGroup,app.artifact,app.version")
@@ -317,10 +322,14 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 	
 	/**
 	 * Finds the applications whose dependencies include constructs from the given list.
+	 * Note: the outer select a was added because the lock does not allow the use of "distinct" and we want to avoid to update the same application multiple times in the subsequent update query
 	 * @param listOfConstructs list of {@link ConstructId}
 	 * @return list of {@link Application}
 	 */
-	@Query("SELECT distinct d.app FROM Dependency d "
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Transactional
+	@Query("select a from Application a where a in"
+			+ "( SELECT distinct d.app FROM Dependency d "
 			+ "	  JOIN "
 			+ "   d.lib l"
 			+ "   JOIN "
@@ -328,21 +337,32 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 			+ "	  WHERE lc IN :listOfConstructs "		
 			+ "   AND (NOT lc.type='PACK' "                        // Java + Python exception
 			+ "   OR NOT EXISTS (SELECT 1 FROM ConstructChange cc1 JOIN cc1.constructId c1 WHERE c1 IN :listOfConstructs AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%' AND NOT c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') ) "     
-			+ "   AND NOT (lc.type='MODU' AND lc.qname='setup')"
+			+ "   AND NOT (lc.type='MODU' AND lc.qname='setup') )"
 			)
 	List<Application> findAppsByCC(@Param("listOfConstructs") List<ConstructId> listOfConstructs);
 	
 	/**
 	 * Finds the applications whose dependencies include {@link LibraryId}s from the given list.
+	 * Note: the outer select a was added because the lock does not allow the use of "distinct" and we want to avoid to update the same application multiple times in the subsequent update query
 	 * @param listOfConstructs list of {@link ConstructId}
 	 * @return list of {@link Application}
 	 */
-	@Query("SELECT distinct d.app FROM Dependency d "
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Transactional
+	@Query("select a from Application a where a in"
+			+ "( SELECT distinct d.app FROM Dependency d "
 			+ "	  JOIN "
 			+ "   d.lib l"
 			+ "   JOIN "
 			+ "   l.libraryId dep_libid"
-			+ "	  WHERE dep_libid = :affLibId "	
+			+ "	  WHERE dep_libid = :affLibId )"	
 			)
 	List<Application> findAppsByAffLib(@Param("affLibId") LibraryId affLibId);
+	
+	@Modifying(flushAutomatically = true, clearAutomatically = true)
+	@Query(value="UPDATE Application app SET last_vuln_change=CURRENT_TIMESTAMP where app in :listOfApp " 
+			)
+	void updateAppLastVulnChange(@Param("listOfApp") List<Application> listOfApp);
+	
+	
 }

@@ -1,4 +1,4 @@
-<mvc:View controllerName="view.Component" xmlns="sap.m"
+<mvc:View controllerName="view.Component" xmlns="sap.m" xmlns:ce="sap.ui.codeeditor"
           xmlns:c="sap.suite.ui.commons" xmlns:form="sap.ui.layout.form"
           xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:m="sap.ui.commons.layout" xmlns:commons="sap.ui.commons" xmlns:mm="sap.m">
     <Page id="componentPage">
@@ -106,6 +106,34 @@
                                 />
                                     </items>
                                     </FlexBox>
+						<l:VerticalLayout>
+							<Text
+								text="'Save' only POST/PUT affectedLibraries having MANUAL assessment TRUE/FALSE. Thus, once you save an assessment, the UI cannot be used to put it back to UNKNOWN (?). This can be done by using PUT request via postman." />
+							<Text text="PUT http:/host:port/backend/bugs/bugid/affectedLibIds?source=MANUAL  (See Comments in frontend/bugs/src/main/webapp/view/Component.view.xml for a snippet of the request body to be provided)" />
+<!-- 							<ce:CodeEditor -->
+<!-- 								value= -->
+<!-- 									"[{ -->
+<!-- 									"libraryId": { -->
+<!-- 									"group": "bla", -->
+<!-- 									"artifact": "bla", -->
+<!-- 									"version": "0" -->
+<!-- 									}, -->
+<!-- 									"lib": null, -->
+<!-- 									"source": "MANUAL", -->
+<!-- 									"affected": null, -->
+<!-- 									"sourcesAvailable": null, -->
+<!-- 									"explanation": "Manually assessed ...", -->
+<!-- 									"overallConfidence": null, -->
+<!-- 									"pathConfidence": null, -->
+<!-- 									"lastVulnerable": null, -->
+<!-- 									"firstFixed": null, -->
+<!-- 									"fromIntersection": null, -->
+<!-- 									"toIntersection": null, -->
+<!-- 									"adfixed": null, -->
+<!-- 									"adpathFixed": null -->
+<!-- 									}]"  -->
+<!-- 								 type="json" /> -->
+						</l:VerticalLayout>   
                         <Table xmlns="sap.ui.table" id="idBugAnalysisList" width="99%" selectionMode = "None" editable="false"
                                 rows="{/affectedVersions}" allowColumnReordering="false" 
                                 cellClick="onBugListItemTap" 

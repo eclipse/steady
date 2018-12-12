@@ -16,10 +16,12 @@ import com.sap.psr.vulas.backend.model.GoalExecution;
 import com.sap.psr.vulas.backend.model.Property;
 import com.sap.psr.vulas.backend.util.ReferenceUpdater;
 import com.sap.psr.vulas.shared.enums.GoalType;
+
 import com.sap.psr.vulas.shared.util.StringList;
 import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
 import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
+
 
 public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCustom {
 
@@ -52,14 +54,13 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 
 		//update the lastScan timestamp of the application (we already have a managed application here)
 		appRepository.refreshLastScanbyApp(_app);
-		
+
 		// Save
 		try {
 			managed_gexe = this.gexeRepository.save(_provided_gexe);
 		} catch (Exception e) {
 			throw new PersistenceException("Error while saving goal execution [" + _provided_gexe + "]: " + e.getMessage());
 		}
-
 		return managed_gexe;
 	}
 
