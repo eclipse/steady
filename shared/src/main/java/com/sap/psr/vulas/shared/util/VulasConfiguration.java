@@ -481,7 +481,15 @@ public class VulasConfiguration {
 	public final static String VULAS_JIRA_PWD = "vulas.jira.pwd";
 
 	public final static String M2_DIR = "vulas.shared.m2Dir";
+	
+	public final static String SYS_PROPS = "vulas.shared.sys";
+	
+	public final static String SYS_PROPS_CUSTOM = "vulas.shared.sys.custom";
 
+	public final static String ENV_VARS = "vulas.shared.env";
+	
+	public final static String ENV_VARS_CUSTOM = "vulas.shared.env.custom";
+	
 	/**
 	 * Checks mandatory and optional settings and, where provided, the format.
 	 * @throws ConfigurationException
@@ -786,5 +794,20 @@ public class VulasConfiguration {
 				if(!isEmpty(_prefix[i] + "." + key))
 					getLog().info((_indent==null?"":_indent) + _prefix[i] + "." + key + "=" + config.getProperty(key).toString());
 		}
+	}
+	
+	/**
+	 * Returns a {@link StringList} containing items taken from the given configuration settings. Each configuration settings is
+	 * expected to contain one or more values (comma-separated), which are trimmed and added to the {@link StringList}.
+	 * @return
+	 */
+	public final StringList getStringList(String... _config_names) {
+		final StringList l = new StringList();
+		if(_config_names!=null && _config_names.length>0) {
+			for(String config_name: _config_names) {
+				l.addAll(this.getStringArray(config_name, new String[] {}), true);
+			}
+		}
+		return l;
 	}
 }

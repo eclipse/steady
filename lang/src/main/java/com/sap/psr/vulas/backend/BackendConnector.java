@@ -231,6 +231,9 @@ public class BackendConnector {
 				.setGoalContext(_goal_context)
 				);
 		req_list.send();
+		
+		// Clean app existance cache
+		this.cleanCache();
 	}
 
 	public boolean uploadReachableConstructs(GoalContext _goal_context, Application _app, String _lib_digest, String _json) throws BackendConnectionException {
