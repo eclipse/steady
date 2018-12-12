@@ -157,25 +157,25 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 				Cve cve = CveReader.read(cve_id);
 				
 				if(cve!=null) {
-					boolean toSave=false; 
+					boolean to_save=false; 
 					if(cve.getSummary()!=null && (_b.getDescription()==null || !(cve.getSummary().equals(_b.getDescription())))){
 						_b.setDescription(cve.getSummary());
-						toSave=true;
+						to_save=true;
 						
 					}
 					if(cve.getCvssScore()!=null && (_b.getCvssScore()==null || !(cve.getCvssScore().equals(_b.getCvssScore())))){
 						_b.setCvssScore(cve.getCvssScore());
-						toSave=true;
+						to_save=true;
 					}
 					if(cve.getCvssVersion()!=null && (_b.getCvssVersion()==null || !(cve.getCvssVersion().equals(_b.getCvssVersion())))){
 						_b.setCvssVersion(cve.getCvssVersion());
-						toSave=true;
+						to_save=true;
 					}
 					if(cve.getCvssVector()!=null && (_b.getCvssVector()==null || !(cve.getCvssVector().equals(_b.getCvssVector())))){
 						_b.setCvssVector(cve.getCvssVector());
-						toSave=true;
+						to_save=true;
 					}
-					if(toSave){
+					if(to_save){
 						this.customSave(_b, false);
 						update_happened = true;
 					}

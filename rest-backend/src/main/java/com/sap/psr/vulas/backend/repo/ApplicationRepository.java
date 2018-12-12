@@ -359,8 +359,8 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 			)
 	List<Application> findAppsByAffLib(@Param("affLibId") LibraryId affLibId);
 	
-	@Modifying
-	@Query(value="UPDATE Application app SET last_vuln_change=now() where app in :listOfApp " 
+	@Modifying(flushAutomatically = true, clearAutomatically = true)
+	@Query(value="UPDATE Application app SET last_vuln_change=CURRENT_TIMESTAMP where app in :listOfApp " 
 			)
 	void updateAppLastVulnChange(@Param("listOfApp") List<Application> listOfApp);
 	
