@@ -587,8 +587,6 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		for(List<Application> sub: Lists.partition(apps, 30000))
 			appRepository.updateAppLastVulnChange(sub);
 		sw.stop();
-		
-		
 	}
 	
 	@Transactional
@@ -608,9 +606,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	
 	
 	public void refreshLastScanbyApp(Application _app){
-		final StopWatch sw = new StopWatch("Started refresh app lastScan" + _app).start();
 		_app.setLastScan(Calendar.getInstance());
 		appRepository.save(_app);
-		sw.stop();
 	}
 }

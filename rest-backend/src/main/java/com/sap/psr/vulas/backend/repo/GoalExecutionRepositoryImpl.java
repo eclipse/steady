@@ -43,7 +43,6 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 	//@CacheEvict(value="gexe", key="#_app")
 	@Override
 	public GoalExecution customSave(Application _app, GoalExecution _provided_gexe) {
-		final StopWatch sw = new StopWatch("Save goal execution for app " + _app).start();
 		GoalExecution managed_gexe = null;
 
 		try{
@@ -67,7 +66,6 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 		} catch (Exception e) {
 			throw new PersistenceException("Error while saving goal execution [" + _provided_gexe + "]: " + e.getMessage());
 		}
-		sw.stop();
 		return managed_gexe;
 	}
 

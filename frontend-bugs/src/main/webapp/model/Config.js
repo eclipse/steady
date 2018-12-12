@@ -266,7 +266,6 @@ model.Config.uploadManualAssessment = function(data, pbugid ){
             elementArray.push(jo);
         }
     }
-    // delete before post
     
     
     $.ajax({
