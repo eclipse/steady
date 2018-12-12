@@ -3,6 +3,7 @@ package com.sap.psr.vulas.backend.rest;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -436,6 +437,8 @@ public class BugControllerTest {
     	accList.add(acc);
     	afl[0].setAffectedcc(accList);
     	
+    	
+    	//Post affected libraries
     	post_builder = post("/bugs/CVE-2014-0050/affectedLibIds?source=PROPAGATE_MANUAL")
     			.content(JacksonUtil.asJsonString(afl).getBytes())
 				.contentType(MediaType.APPLICATION_JSON)
@@ -445,7 +448,9 @@ public class BugControllerTest {
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.length()", is(2)));
     	
+    	AffectedLibrary createdAffLib =AffectedLibraryRepository.FILTER.findOne(this.afflibRepository.findByLibraryId("bar", "bar", "0.0.1"));
     	
+    	//Put the same affected libraries, no saving backend side
     	MockHttpServletRequestBuilder put_builder = put("/bugs/CVE-2014-0050/affectedLibIds?source=PROPAGATE_MANUAL")
     			.content(JacksonUtil.asJsonString(afl).getBytes())
 				.contentType(MediaType.APPLICATION_JSON)
@@ -454,15 +459,25 @@ public class BugControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(contentType));
     	
+    	AffectedLibrary afterPutAffLib =AffectedLibraryRepository.FILTER.findOne(this.afflibRepository.findByLibraryId("bar", "bar", "0.0.1"));
+    	
+    	assertTrue(createdAffLib.getModifiedAt().getTimeInMillis()==afterPutAffLib.getModifiedAt().getTimeInMillis());
 
+    	// Get affected library with affectedcc
     	MockHttpServletRequestBuilder get_builder = get("/bugs/CVE-2014-0050/affectedLibIds/bar/bar/0.0.1?source=PROPAGATE_MANUAL");
     	mockMvc.perform(get_builder)	
         .andExpect(status().isOk())
         .andExpect(content().contentType(contentType))
         .andExpect(jsonPath("$.[0].affectedcc.length()", is(1)));
     	
+    	AffectedLibrary afterGetAffLib =AffectedLibraryRepository.FILTER.findOne(this.afflibRepository.findByLibraryId("bar", "bar", "0.0.1"));
+    	
+    	assertTrue(afterGetAffLib.getModifiedAt().getTimeInMillis()==afterPutAffLib.getModifiedAt().getTimeInMillis());
+
+    	
     	afl[0].setAffected(null);
     	
+    	//put affected library removing affected cc
     	put_builder = put("/bugs/CVE-2014-0050/affectedLibIds?source=PROPAGATE_MANUAL")
     			.content(JacksonUtil.asJsonString(afl).getBytes())
 				.contentType(MediaType.APPLICATION_JSON)
@@ -471,6 +486,10 @@ public class BugControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(contentType))
         .andExpect(jsonPath("$.[0].affected").value(IsNull.nullValue()));
+    	
+    	AffectedLibrary afterLastPutAffLib =AffectedLibraryRepository.FILTER.findOne(this.afflibRepository.findByLibraryId("bar", "bar", "0.0.1"));
+    	
+    	assertTrue(afterGetAffLib.getModifiedAt().getTimeInMillis()<afterLastPutAffLib.getModifiedAt().getTimeInMillis());
     }
     	
     /*@Test

@@ -82,7 +82,7 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 					managed_aff_lib = AffectedLibraryRepository.FILTER.findOne(this.affLibRepository.findByBugAndLibAndSource(provided_aff_lib.getBugId(), provided_aff_lib.getLib(), provided_aff_lib.getSource()));
 					
 				}
-				// (SP, 10.12.2018: in case the assessment flag is not equal to the existing, we skip the saving of the affected app and keep the existing one.
+				// (SP, 10.12.2018: in case the assessment flag is equal to the existing, we skip the saving of the affected app and keep the existing one.
 				if(provided_aff_lib.getAffected()!=null && managed_aff_lib.getAffected()!=null && provided_aff_lib.getAffected().equals(managed_aff_lib.getAffected())
 						|| (provided_aff_lib.getAffected()==null && managed_aff_lib.getAffected()==null))
 					continue;
