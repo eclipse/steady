@@ -527,9 +527,9 @@ sap.ui.controller("view.Master", {
 								if (core.byId('idCiaURL').getValue() != null && core.byId('idCiaURL').getValue() != "" && core.byId('idCiaURL').getValue() != config.getCiaHost()) {
 									config.setCiaHost(core.byId('idCiaURL').getValue());
 								}
-								if (core.byId('idSkipEmpty').getState() != config.getSkipEmpty()) {
-									config.setSkipEmpty(core.byId('idSkipEmpty').getState());
-								}
+//								if (core.byId('idSkipEmpty').getState() != config.getSkipEmpty()) {
+//									config.setSkipEmpty(core.byId('idSkipEmpty').getState());
+//								}
 
 
 								//************* clean Component and reset router 
@@ -595,15 +595,16 @@ sap.ui.controller("view.Master", {
 							//  width: "100%",
 							value: model.Config.getCiaHost()
 						})
-					}),
-					new sap.m.InputListItem({
-						label: "Skip Empty Apps",
-						content: new sap.m.Switch({
-							id: "idSkipEmpty",
-							state: model.Config.getSkipEmpty()
-							//	  width: "100%",
-						})
 					})
+//					,
+//					new sap.m.InputListItem({
+//						label: "Skip Empty Apps",
+//						content: new sap.m.Switch({
+//							id: "idSkipEmpty",
+//							state: model.Config.getSkipEmpty()
+//							//	  width: "100%",
+//						})
+//					})
 
 				]
 			});
@@ -628,7 +629,7 @@ sap.ui.controller("view.Master", {
 		sap.ui.getCore().byId('idCiaURL').setValue(model.Config.getCiaHost());
 		if (sap.ui.getCore().byId('idTenant') != undefined)
 			sap.ui.getCore().byId('idTenant').setValue(model.Config.getTenant());
-		sap.ui.getCore().byId('idSkipEmpty').setState(model.Config.getSkipEmpty());
+	//	sap.ui.getCore().byId('idSkipEmpty').setState(model.Config.getSkipEmpty());
 
 		//retrieve current spaces
 		model.Config.loadSpaces();
