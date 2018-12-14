@@ -128,7 +128,7 @@ sap.ui.controller("view.Master", {
 		
 		for(var i in re){
 			var regex = new RegExp(re[i]);
-			var t = regex.tezst(to_test);
+			var t = regex.test(to_test);
 			if(t)
 				return true;
 		}
