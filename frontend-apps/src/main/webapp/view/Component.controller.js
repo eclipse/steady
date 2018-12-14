@@ -55,11 +55,11 @@ sap.ui.controller("view.Component", {
 		var archiveCount = this.getView().byId("archiveCount");
 		var vulnCount = this.getView().byId("vulnCount");
 		if(_archives===null && _vulns===null) {
-			archiveCount.setText("Vulnerable Archives (distinct SHA1): loading..." );
+			archiveCount.setText("Vulnerable Archives (distinct digest): loading..." );
 			vulnCount.setText("Vulnerabilities: loading..." );
 		}
 		else {
-			archiveCount.setText("Vulnerable Archives (distinct SHA1): " + _archives);
+			archiveCount.setText("Vulnerable Archives (distinct digest): " + _archives);
 			vulnCount.setText("Vulnerabilities: " + _vulns);
 		}
 	},
