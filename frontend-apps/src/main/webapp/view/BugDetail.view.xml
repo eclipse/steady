@@ -3,11 +3,9 @@
 	xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:mm="sap.m" id="component-view">
 	<Page id="idBugDetailPage" showNavButton='true' navButtonPress='handleNavBack'>
 	    <headerContent>
-<!-- 	        <Button icon="sap-icon://email"  press="writeEmail" tooltip="Provide feedback on vulnerable archive releases" text="Feedback" /> -->
 	        <Button icon="sap-icon://action" press="openNVD" tooltip="National Vulnerability Database" text="NVD" />
 			<Button icon="sap-icon://action" press="openExploitDb" tooltip="Exploit Database" text="Exploit DB" />
 			<Button icon="sap-icon://sys-help" press="openWiki" tooltip="Open help in wiki page" />
-			<!--<Button id="idButtonOpenSmash" icon="sap-icon://action" press="openSmash" tooltip="Social Media Analysis for Security on HANA" text="SMASH" type="{path: '/smash/result', formatter: 'model.Formatter.getSmashButtonType'}" />-->
 	    </headerContent>
 		<content>
 			<l:VerticalLayout width="100%" class="marginVerticalContent">
