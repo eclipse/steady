@@ -643,7 +643,7 @@ public class ApplicationControllerTest {
     	Calendar originalLastVulnChange = managed_app.getLastVulnChange();
     	Calendar originalModifiedAt = managed_app.getModifiedAt();
     	Calendar originalCreatedAt = managed_app.getCreatedAt();
-    	assertTrue(originalModifiedAt.getTimeInMillis()==originalCreatedAt.getTimeInMillis());
+    	assertTrue(originalModifiedAt.getTimeInMillis()>=originalCreatedAt.getTimeInMillis());
     	
     	
     	//Application app = (Application)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/apps-testapp-fileupload-1.2.2.json")), Application.class);
@@ -694,7 +694,7 @@ public class ApplicationControllerTest {
     	Calendar originalModifiedAt = managed_app.getModifiedAt();
     	Calendar originalCreatedAt = managed_app.getCreatedAt();
     	System.out.println("mod: " + originalModifiedAt.getTimeInMillis() + " crt: " + originalCreatedAt.getTimeInMillis());
-    	assertTrue(originalModifiedAt.getTimeInMillis()==originalCreatedAt.getTimeInMillis());
+    	assertTrue(originalModifiedAt.getTimeInMillis()>=originalCreatedAt.getTimeInMillis());
     	
     	final GoalExecution gexe = this.createExampleGoalExecution(app, GoalType.APP);
     	
