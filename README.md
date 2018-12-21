@@ -18,7 +18,7 @@ In comparison to other tools, the detection is code-centric and usage-based, whi
 
 Originally developed by SAP Security Research [[2]](https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html)[[3]](https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en), the tool has become the officially recommended open-source scan tool for Java applications at SAP. Since the beginning of 2017, it has been used to perform 20K+ scans of more than 600+ Java development projects.
 
-The tool approach is best described in the following scientific papers, please cite if you use the tool for scientific works/papers:
+The tool approach is best described in the following scientific papers, please cite these if you use the tool for your research work:
 
 - Serena Ponta, Henrik Plate, Antonino Sabetta, [Beyond Metadata: Code-centric and Usage-based Analysis of Known Vulnerabilities in Open-source Software](https://arxiv.org/abs/1806.05893), 34th International Conference on Software Maintenance and Evolution (ICSME), 2018
 - Henrik Plate, Serena Ponta, Antonino Sabetta, [Impact Assessment for Vulnerabilities in Open-Source Software Libraries](https://arxiv.org/pdf/1504.04971.pdf), 31st International Conference on Software Maintenance and Evolution (ICSME), 2015
