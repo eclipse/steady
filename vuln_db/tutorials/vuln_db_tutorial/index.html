@@ -1,0 +1,1192 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="vulnerability-assessment-tool Documentation">
+      
+      
+        <link rel="canonical" href="https://sap.github.io/vulnerability-assessment-tool/vuln_db/tutorials/vuln_db_tutorial/">
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../../images/vulas.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-3.1.0">
+    
+    
+      
+        <title>Tutorial - vulnerability-assessment-tool</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/application.11e41852.css">
+      
+        <link rel="stylesheet" href="../../../assets/stylesheets/application-palette.22915126.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#2196f3">
+      
+    
+    
+      <script src="../../../assets/javascripts/modernizr.20ef595d.js"></script>
+    
+    
+    <!-- Suppress Material fonts -->
+
+    <link rel="stylesheet" href="../../../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="../../../css/faq.css">
+    
+      <link rel="stylesheet" href="../../../css/override.css">
+    
+      <link rel="stylesheet" href="../../../css/scrollTop.css">
+    
+    
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery.js@1.1.1/dist/css/lightgallery.min.css" integrity="sha256-oPZ2OUkKul2aJQeDwKoO1p+DpvFR+w17n7YXydvFRWU=" crossorigin="anonymous">
+
+    <script async defer src="https://cdnjs.cloudflare.com/ajax/libs/turbolinks/5.2.0/turbolinks.js" integrity="sha256-iM4Yzi/zLj/IshPWMC1IluRxTtRjMqjPGd97TZ9yYpU=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery.js@1.1.1/dist/js/lightgallery.min.js" integrity="sha256-UJv7RCncYk0JrZPTdF4z/n9/16gyZM9HLjdw8pfyax0=" crossorigin="anonymous"></script>
+
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#getting-started-with-the-vulnerability-database" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+    <script>
+        var page_base_name = window.location.pathname
+        page_base_name_split = page_base_name.split('/').filter(function(token) { return token != ''})
+        document.querySelector('body').classList.add(...page_base_name_split)
+    </script>
+    <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                vulnerability-assessment-tool
+              </span>
+              <span class="md-header-nav__topic">
+                Tutorial
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      sap/vulnerability-assessment-tool
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+
+    <div class="md-container">
+      
+        
+      
+      
+        
+
+  
+
+<nav class="md-tabs md-tabs--active" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../.." title="Home" class="md-tabs__link">
+          Home
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../user/" title="Docs" class="md-tabs__link">
+          Docs
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../admin/" title="DevOps" class="md-tabs__link">
+          DevOps
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../contributor/" title="Contribute" class="md-tabs__link">
+          Contribute
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../" title="Vulnerability database" class="md-tabs__link md-tabs__link--active">
+          Vulnerability database
+        </a>
+      
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    vulnerability-assessment-tool
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      sap/vulnerability-assessment-tool
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1">
+    
+    <label class="md-nav__link" for="nav-1">
+      Home
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        Home
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../about/" title="About" class="md-nav__link">
+      About
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      Docs
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Docs
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/" title="Docs" class="md-nav__link">
+      Docs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2">
+    
+    <label class="md-nav__link" for="nav-2-2">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-2">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/tutorials/" title="Getting started" class="md-nav__link">
+      Getting started
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/tutorials/workspace_howto/" title="Workspace" class="md-nav__link">
+      Workspace
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/tutorials/workspace_howto_advanced/" title="Workspaces (advanced)" class="md-nav__link">
+      Workspaces (advanced)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/tutorials/java_maven/" title="Scanning Java (Maven)" class="md-nav__link">
+      Scanning Java (Maven)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/tutorials/java_gradle/" title="Scanning Java (Gradle)" class="md-nav__link">
+      Scanning Java (Gradle)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/tutorials/java_cli/" title="Scanning Java (CLI)" class="md-nav__link">
+      Scanning Java (CLI)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/tutorials/java_maven_advanced/" title="Reachability analysis (Java/Maven)" class="md-nav__link">
+      Reachability analysis (Java/Maven)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/tutorials/python_cli/" title="Scanning Python (CLI)" class="md-nav__link">
+      Scanning Python (CLI)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/tutorials/jenkins_howto/" title="Jenkins automation" class="md-nav__link">
+      Jenkins automation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/tutorials/reports/" title="Understanding reports" class="md-nav__link">
+      Understanding reports
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-3" type="checkbox" id="nav-2-3">
+    
+    <label class="md-nav__link" for="nav-2-3">
+      Manual
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-3">
+        Manual
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/manuals/" title="Intro" class="md-nav__link">
+      Intro
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/manuals/setup/" title="Configuration" class="md-nav__link">
+      Configuration
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/manuals/analysis/" title="Analysis" class="md-nav__link">
+      Analysis
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/manuals/frontend/" title="Frontend" class="md-nav__link">
+      Frontend
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/manuals/report/" title="Report" class="md-nav__link">
+      Report
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/manuals/assess_and_mitigate/" title="Assessment and Mitigation" class="md-nav__link">
+      Assessment and Mitigation
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-4" type="checkbox" id="nav-2-4">
+    
+    <label class="md-nav__link" for="nav-2-4">
+      Support
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-4">
+        Support
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/support/" title="Getting help" class="md-nav__link">
+      Getting help
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../user/support/faq/" title="FAQ" class="md-nav__link">
+      FAQ
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      DevOps
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        DevOps
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../admin/" title="DevOps" class="md-nav__link">
+      DevOps
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Contribute
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Contribute
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../contributor/" title="Contribute" class="md-nav__link">
+      Contribute
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-2" type="checkbox" id="nav-4-2">
+    
+    <label class="md-nav__link" for="nav-4-2">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-4-2">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../contributor/tutorials/project_structure/" title="Project structure" class="md-nav__link">
+      Project structure
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
+    
+    <label class="md-nav__link" for="nav-5">
+      Vulnerability database
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        Vulnerability database
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../" title="Vulnerability database" class="md-nav__link">
+      Vulnerability database
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Tutorial
+      </label>
+    
+    <a href="./" title="Tutorial" class="md-nav__link md-nav__link--active">
+      Tutorial
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#patch-analyzer" title="Patch Analyzer" class="md-nav__link">
+    Patch Analyzer
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#patch-lib-analyzer" title="Patch Lib Analyzer" class="md-nav__link">
+    Patch Lib Analyzer
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-3" type="checkbox" id="nav-5-3">
+    
+    <label class="md-nav__link" for="nav-5-3">
+      Manual
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-5-3">
+        Manual
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../manuals/" title="Intro" class="md-nav__link">
+      Intro
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../manuals/patch_analyzer/" title="Patch Analyzer" class="md-nav__link">
+      Patch Analyzer
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../manuals/patch_lib_analyzer/" title="Patch Lib Analyzer" class="md-nav__link">
+      Patch Lib Analyzer
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../manuals/manual_assessment/" title="Manual Assessment" class="md-nav__link">
+      Manual Assessment
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#patch-analyzer" title="Patch Analyzer" class="md-nav__link">
+    Patch Analyzer
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#patch-lib-analyzer" title="Patch Lib Analyzer" class="md-nav__link">
+    Patch Lib Analyzer
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/sap/vulnerability-assessment-tool/edit/master/docs/vuln_db/tutorials/vuln_db_tutorial.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="getting-started-with-the-vulnerability-database">Getting started with the Vulnerability Database<a class="headerlink" href="#getting-started-with-the-vulnerability-database" title="Permanent link">&para;</a></h1>
+<p>Vulnerabilities in vulnerability-assessment-tool are represented at code level. This tutorial will guide you through the creation of the following vulnerabilities in the vulnerability database:</p>
+<ul>
+<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-7525">CVE-2017-7525</a> (Jackson Databind)</li>
+<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2018-5382">CVE-2018-5382</a> (BouncyCastle)</li>
+<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2018-11039">CVE-2018-11039</a> (Spring)</li>
+<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2014-0050">CVE-2014-0050</a> (Apache Commons FileUpload)</li>
+<li><a href="https://issues.jboss.org/browse/JBDS-3560?attachmentViewMode=list&amp;_sscc=t">COLLECTIONS-580</a> (Apache Commons Collections)</li>
+</ul>
+<p>If you have a working installation of the vulnerability-assessment-tool backend services you will need
+to import vulnerability data before you can actually perform scans.</p>
+<div class="admonition tip">
+<p class="admonition-title">Installing the vulnerability-assessment-tool backend services</p>
+<p>Instructions on how to setup backend services are available <a href="../../../admin/tutorials/">here</a>.</p>
+</div>
+<p>It is possible to add new vulnerabilities to the database using the <code>patch-analyzer</code> module of the vulnerability-assessment-tool project.</p>
+<h2 id="patch-analyzer">Patch Analyzer<a class="headerlink" href="#patch-analyzer" title="Permanent link">&para;</a></h2>
+<p>Run the following commands to create the change list for the vulnerability and upload it to the backend</p>
+<div class="codehilite"><pre><span></span>java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend -jar ./patch-analyzer/target/patch-analyzer-3.0.12-jar-with-dependencies.jar com.sap.psr.vulas.PatchAnalyzer -r https://github.com/FasterXML/jackson-databind -b CVE-2017-7525 -e e8f043d1aac9b82eee907e0f0c3abbdea723a935,ddfddfba6414adbecaff99684ef66eebd3a92e92,60d459cedcf079c6106ae7da2ac562bc32dcabe1 -links https://github.com/FasterXML/jackson-databind/issues/1599,https://github.com/FasterXML/jackson-databind/issues/1680,https://github.com/FasterXML/jackson-databind/issues/1737  -descr <span class="s2">&quot;When configured to enable default typing, Jackson contained a deserialization vulnerability that could lead to arbitrary code execution. Jackson fixed this vulnerability by blacklisting known &#39;deserialization gadgets&#39;. This vulnerability solves an incomplete fix for CVE-2017-4995-JK (main description at: https://github.com/FasterXML/jackson-databind/issues/1599 Issues not addressed by the incomplete fix of CVE-2017-4995-JK: https://github.com/FasterXML/jackson-databind/issues/1680 and https://github.com/FasterXML/jackson-databind/issues/1737) &quot;</span> -u
+
+java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend -jar ./patch-analyzer/target/patch-analyzer-3.0.12-jar-with-dependencies.jar com.sap.psr.vulas.PatchAnalyzer -r https://github.com/bcgit/bc-java/ -b CVE-2018-5382 -e 81b00861cd5711e85fe8dce2a0e119f684120255 -links https://snyk.io/vuln/SNYK-JAVA-ORGBOUNCYCASTLE-31659,https://www.kb.cert.org/vuls/id/306792 -u
+
+java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend -jar ./patch-analyzer/target/patch-analyzer-3.0.12-jar-with-dependencies.jar com.sap.psr.vulas.patcha.PatchAnalyzer -r https://github.com/spring-projects/spring-framework/ -b CVE-2018-11039 -e dac97f1b7dac3e70ff603fb6fc9f205b95dd6b01,f2694a8ed93f1f63f87ce45d0bb638478b426acd -links https://pivotal.io/security/cve-2018-11039,https://jira.spring.io/browse/SPR-16836 -descr <span class="s2">&quot;Cross Site Tracing (XST) with Spring Framework. Description: Spring Framework (versions 5.0.x prior to 5.0.7, versions 4.3.x prior to 4.3.18, and older unsupported versions) allow web applications to change the HTTP request method to any HTTP method (including TRACE) using the HiddenHttpMethodFilter in Spring MVC. If an application has a pre-existing XSS vulnerability, a malicious user (or attacker) can use this filter to escalate to an XST (Cross Site Tracing) attack. Affected Pivotal Products and Versions: Spring Framework 5.0 to 5.0.6, Spring Framework 4.3 to 4.3.17, Older unsupported versions are also affected. Mitigation: Users of affected versions should apply the following mitigation: \n 5.0.x users should upgrade to 5.0.7. \n- 4.3.x users should upgrade to 4.3.18. - Older versions should upgrade to a supported branch. \nThere are no other mitigation steps necessary. This attack applies to applications that: \n1/ Use the HiddenHttpMethodFilter (it is enabled by default in Spring Boot). \n2/ Allow HTTP TRACE requests to be handled by the application server. \nThis attack is not exploitable directly because an attacker would have to make a cross-domain request via HTTP POST, which is forbidden by the Same Origin Policy. This is why a pre-existing XSS (Cross Site Scripting) vulnerability in the web application itself is necessary to enable an escalation to XST.&quot;</span> -u
+
+java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend -jar ./patch-analyzer/target/patch-analyzer-3.0.12-jar-with-dependencies.jar com.sap.psr.vulas.PatchAnalyzer -r https://github.com/apache/commons-fileupload -b CVE-2014-0050 -e c61ff05b3241cb14d989b67209e57aa71540417a -u
+
+java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend -jar ./patch-analyzer/target/patch-analyzer-3.0.12-jar-with-dependencies.jar com.sap.psr.vulas.PatchAnalyzer -r https://github.com/apache/commons-collections -b COLLECTIONS-580 -e 3eee44cf63b1ebb0da6925e98b3dcc6ef1e4d610,78d47d4d098ab814a7a00a0b1c81646b27f050cf,e585cd0433ae4cfbc56e58572b9869bd0c86b611,b2b8f4adc557e4ef1ee2fe5e0ab46866c06ec55b,da1a5fe00d79e1840b7e52317933e9eb56e88246,1642b00d67b96de87cad44223efb9ab5b4fb7be5:3_2_X,5ec476b0b756852db865b2e442180f091f8209ee:3_2_X,bce4d022f27a723fa0e0b7484dcbf0afa2dd210a:3_2_X,d9a00134f16d685bea11b2b12de824845e6473e3:3_2_X -descr <span class="s2">&quot;Arbitrary remote code execution with InvokerTransformer. With InvokerTransformer serializable collections can be build that execute arbitrary Java code. sun.reflect.annotation.AnnotationInvocationHandler#readObject invokes #entrySet and #get on a deserialized collection. If you have an endpoint that accepts serialized Java objects (JMX, RMI, remote EJB, ...) you can combine the two to create arbitrary remote code execution vulnerability. Fixed in versions 3.2.2, 4.1&quot;</span> -links https://issues.apache.org/jira/browse/COLLECTIONS-580,https://commons.apache.org/proper/commons-collections/security-reports.html -u
+</pre></div>
+
+<p>To run such commands in your own environment, you may need to adapt:</p>
+<ul>
+<li>the path to the patch analyzer artifact and the artifact version, '-jar ./patch-analyzer/target/patch-analyzer-3.0.12-jar-with-dependencies.jar'</li>
+<li>the url of the vulnerability-assessment-tool backend, <code>-Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend</code></li>
+<li>the proxy settings; the proxy is not configured in the example but you can do so using the following configurations:</li>
+</ul>
+<div class="codehilite"><pre><span></span>-Dhttp.proxyHost<span class="o">=</span>
+-Dhttp.proxyPort<span class="o">=</span>
+-Dhttps.proxyHost<span class="o">=</span>
+-Dhttps.proxyPort<span class="o">=</span>
+-Dhttp.nonProxyHosts<span class="o">=</span>
+</pre></div>
+
+<h2 id="patch-lib-analyzer">Patch Lib Analyzer<a class="headerlink" href="#patch-lib-analyzer" title="Permanent link">&para;</a></h2>
+<p>Once vulnerabilities are created in the vulnerability database, the patch lib analyzer must run periodically to assess whether all versions of the library known by the backend contain the vulnerable or fixed version of the construct.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>To get the best of the tutorial, we recommend to proceed to the next step only after having analyzed at least one application (see <a href="../../../user/tutorials/">tutorial page</a>).</p>
+</div>
+<p>Run for all bugs</p>
+<div class="codehilite"><pre><span></span>java -Dvulas.patchEval.uploadResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.onlyAddNewResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.basefolder<span class="o">=</span>&lt;csv_folder&gt; -Dvulas.patchEval.bugId<span class="o">=</span>&lt;comma_separated_list_of_bugs&gt; -Dvulas.shared.cia.serviceUrl<span class="o">=</span>http://localhost:8033/cia -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend -Xmx6G -Xms6G -jar patch-lib-analyzer-3.0.10-jar-with-dependencies.jar
+</pre></div>
+
+<p>To check how to run it as a job, check <a href="../../manuals/patch_lib_analyzer">here</a></p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>In case the application results still shows orange hourglasses after running the patch lib analyser, the manual assessment is required, see <a href="../../manuals/manual_assessment/">here</a></p>
+</div>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+    <div class='custom-scroll-top hidden md-icon'></div>
+    
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../../" title="Vulnerability database" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Vulnerability database
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../../manuals/" title="Intro" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Intro
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+          </div>
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="../../../assets/fonts/font-awesome.css">
+    
+      <a href="https://github.com/sap/vulnerability-assessment-tool" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+      
+    </div>
+  </div>
+</footer>
+    <script>
+        Array.from(document.getElementsByClassName('expandable')).forEach(function(item) {
+            lightGallery(item, {
+                controls: false,
+                counter: false
+            })
+        })
+    </script>
+
+    </div>
+    
+      <script src="../../../assets/javascripts/application.9e1f3b71.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"../../.."}})</script>
+      
+        <script src="../../../js/scrollTop.js"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>

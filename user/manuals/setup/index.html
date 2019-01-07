@@ -1,0 +1,1594 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="vulnerability-assessment-tool Documentation">
+      
+      
+        <link rel="canonical" href="https://sap.github.io/vulnerability-assessment-tool/user/manuals/setup/">
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../../images/vulas.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-3.1.0">
+    
+    
+      
+        <title>Configuration - vulnerability-assessment-tool</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/application.11e41852.css">
+      
+        <link rel="stylesheet" href="../../../assets/stylesheets/application-palette.22915126.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#2196f3">
+      
+    
+    
+      <script src="../../../assets/javascripts/modernizr.20ef595d.js"></script>
+    
+    
+    <!-- Suppress Material fonts -->
+
+    <link rel="stylesheet" href="../../../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="../../../css/faq.css">
+    
+      <link rel="stylesheet" href="../../../css/override.css">
+    
+      <link rel="stylesheet" href="../../../css/scrollTop.css">
+    
+    
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery.js@1.1.1/dist/css/lightgallery.min.css" integrity="sha256-oPZ2OUkKul2aJQeDwKoO1p+DpvFR+w17n7YXydvFRWU=" crossorigin="anonymous">
+
+    <script async defer src="https://cdnjs.cloudflare.com/ajax/libs/turbolinks/5.2.0/turbolinks.js" integrity="sha256-iM4Yzi/zLj/IshPWMC1IluRxTtRjMqjPGd97TZ9yYpU=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery.js@1.1.1/dist/js/lightgallery.min.js" integrity="sha256-UJv7RCncYk0JrZPTdF4z/n9/16gyZM9HLjdw8pfyax0=" crossorigin="anonymous"></script>
+
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#setup-and-configuration-manual" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+    <script>
+        var page_base_name = window.location.pathname
+        page_base_name_split = page_base_name.split('/').filter(function(token) { return token != ''})
+        document.querySelector('body').classList.add(...page_base_name_split)
+    </script>
+    <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                vulnerability-assessment-tool
+              </span>
+              <span class="md-header-nav__topic">
+                Configuration
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      sap/vulnerability-assessment-tool
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+
+    <div class="md-container">
+      
+        
+      
+      
+        
+
+  
+
+<nav class="md-tabs md-tabs--active" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../.." title="Home" class="md-tabs__link">
+          Home
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../" title="Docs" class="md-tabs__link md-tabs__link--active">
+          Docs
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../admin/" title="DevOps" class="md-tabs__link">
+          DevOps
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../contributor/" title="Contribute" class="md-tabs__link">
+          Contribute
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../../vuln_db/" title="Vulnerability database" class="md-tabs__link">
+          Vulnerability database
+        </a>
+      
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    vulnerability-assessment-tool
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      sap/vulnerability-assessment-tool
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1">
+    
+    <label class="md-nav__link" for="nav-1">
+      Home
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        Home
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../about/" title="About" class="md-nav__link">
+      About
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+    
+    <label class="md-nav__link" for="nav-2">
+      Docs
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Docs
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../" title="Docs" class="md-nav__link">
+      Docs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2">
+    
+    <label class="md-nav__link" for="nav-2-2">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-2">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/" title="Getting started" class="md-nav__link">
+      Getting started
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/workspace_howto/" title="Workspace" class="md-nav__link">
+      Workspace
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/workspace_howto_advanced/" title="Workspaces (advanced)" class="md-nav__link">
+      Workspaces (advanced)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/java_maven/" title="Scanning Java (Maven)" class="md-nav__link">
+      Scanning Java (Maven)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/java_gradle/" title="Scanning Java (Gradle)" class="md-nav__link">
+      Scanning Java (Gradle)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/java_cli/" title="Scanning Java (CLI)" class="md-nav__link">
+      Scanning Java (CLI)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/java_maven_advanced/" title="Reachability analysis (Java/Maven)" class="md-nav__link">
+      Reachability analysis (Java/Maven)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/python_cli/" title="Scanning Python (CLI)" class="md-nav__link">
+      Scanning Python (CLI)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/jenkins_howto/" title="Jenkins automation" class="md-nav__link">
+      Jenkins automation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/reports/" title="Understanding reports" class="md-nav__link">
+      Understanding reports
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-3" type="checkbox" id="nav-2-3" checked>
+    
+    <label class="md-nav__link" for="nav-2-3">
+      Manual
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-3">
+        Manual
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../" title="Intro" class="md-nav__link">
+      Intro
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Configuration
+      </label>
+    
+    <a href="./" title="Configuration" class="md-nav__link md-nav__link--active">
+      Configuration
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#workspace" title="Workspace" class="md-nav__link">
+    Workspace
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-workspaces-once" title="Create workspace(s) (once)" class="md-nav__link">
+    Create workspace(s) (once)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-the-generated-token-during-application-analysis" title="Use the generated token (during application analysis)" class="md-nav__link">
+    Use the generated token (during application analysis)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-a-workspace-in-the-apps-web-frontend" title="Choose a workspace (in the apps Web frontend)" class="md-nav__link">
+    Choose a workspace (in the apps Web frontend)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edit-a-workspace-in-the-apps-web-frontend" title="Edit a workspace (in the apps Web frontend)" class="md-nav__link">
+    Edit a workspace (in the apps Web frontend)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workspace-rest-api" title="Workspace REST API" class="md-nav__link">
+    Workspace REST API
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" title="Setup" class="md-nav__link">
+    Setup
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maven" title="Maven" class="md-nav__link">
+    Maven
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradle" title="Gradle" class="md-nav__link">
+    Gradle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-interface" title="Command-line interface" class="md-nav__link">
+    Command-line interface
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" title="Configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layered-configuration-principle" title="Layered configuration principle" class="md-nav__link">
+    Layered configuration principle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#general-settings" title="General settings" class="md-nav__link">
+    General settings
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-setup" title="Check setup" class="md-nav__link">
+    Check setup
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../analysis/" title="Analysis" class="md-nav__link">
+      Analysis
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../frontend/" title="Frontend" class="md-nav__link">
+      Frontend
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../report/" title="Report" class="md-nav__link">
+      Report
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../assess_and_mitigate/" title="Assessment and Mitigation" class="md-nav__link">
+      Assessment and Mitigation
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-4" type="checkbox" id="nav-2-4">
+    
+    <label class="md-nav__link" for="nav-2-4">
+      Support
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-4">
+        Support
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../support/" title="Getting help" class="md-nav__link">
+      Getting help
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../support/faq/" title="FAQ" class="md-nav__link">
+      FAQ
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      DevOps
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        DevOps
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../admin/" title="DevOps" class="md-nav__link">
+      DevOps
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Contribute
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Contribute
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../contributor/" title="Contribute" class="md-nav__link">
+      Contribute
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-2" type="checkbox" id="nav-4-2">
+    
+    <label class="md-nav__link" for="nav-4-2">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-4-2">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../contributor/tutorials/project_structure/" title="Project structure" class="md-nav__link">
+      Project structure
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      Vulnerability database
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        Vulnerability database
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../vuln_db/" title="Vulnerability database" class="md-nav__link">
+      Vulnerability database
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../vuln_db/tutorials/vuln_db_tutorial/" title="Tutorial" class="md-nav__link">
+      Tutorial
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5-3" type="checkbox" id="nav-5-3">
+    
+    <label class="md-nav__link" for="nav-5-3">
+      Manual
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-5-3">
+        Manual
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../vuln_db/manuals/" title="Intro" class="md-nav__link">
+      Intro
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../vuln_db/manuals/patch_analyzer/" title="Patch Analyzer" class="md-nav__link">
+      Patch Analyzer
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../vuln_db/manuals/patch_lib_analyzer/" title="Patch Lib Analyzer" class="md-nav__link">
+      Patch Lib Analyzer
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../vuln_db/manuals/manual_assessment/" title="Manual Assessment" class="md-nav__link">
+      Manual Assessment
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#workspace" title="Workspace" class="md-nav__link">
+    Workspace
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-workspaces-once" title="Create workspace(s) (once)" class="md-nav__link">
+    Create workspace(s) (once)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-the-generated-token-during-application-analysis" title="Use the generated token (during application analysis)" class="md-nav__link">
+    Use the generated token (during application analysis)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-a-workspace-in-the-apps-web-frontend" title="Choose a workspace (in the apps Web frontend)" class="md-nav__link">
+    Choose a workspace (in the apps Web frontend)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edit-a-workspace-in-the-apps-web-frontend" title="Edit a workspace (in the apps Web frontend)" class="md-nav__link">
+    Edit a workspace (in the apps Web frontend)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workspace-rest-api" title="Workspace REST API" class="md-nav__link">
+    Workspace REST API
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" title="Setup" class="md-nav__link">
+    Setup
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maven" title="Maven" class="md-nav__link">
+    Maven
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradle" title="Gradle" class="md-nav__link">
+    Gradle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-interface" title="Command-line interface" class="md-nav__link">
+    Command-line interface
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" title="Configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layered-configuration-principle" title="Layered configuration principle" class="md-nav__link">
+    Layered configuration principle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#general-settings" title="General settings" class="md-nav__link">
+    General settings
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-setup" title="Check setup" class="md-nav__link">
+    Check setup
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/sap/vulnerability-assessment-tool/edit/master/docs/user/manuals/setup.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="setup-and-configuration-manual">Setup and Configuration Manual<a class="headerlink" href="#setup-and-configuration-manual" title="Permanent link">&para;</a></h1>
+<h2 id="workspace">Workspace<a class="headerlink" href="#workspace" title="Permanent link">&para;</a></h2>
+<p>A workspace acts as a container to group the results of several application analyses. In that context, please note that each module of a multi-module Maven project appears as a separate application in the vulnerability-assessment-tool Web frontend.</p>
+<p>Before using workspaces, you need to create one using the vulnerability-assessment-tool Web frontend (see below); you will obtain a token that you will need to pass as a configuration parameter when performing scans.</p>
+<h3 id="create-workspaces-once">Create workspace(s) (once)<a class="headerlink" href="#create-workspaces-once" title="Permanent link">&para;</a></h3>
+<p>You need to create a workspace once using the vulnerability-assessment-tool Web frontend. Use the "create workspace" icon in the lower-left corner toolbar of the apps Web frontend to do so.</p>
+<p><center>
+<img alt="Setup workspace button" src="../../tutorials/img/frontend_toolbar_create_workspace.png" />
+</center></p>
+<p>A workspace has the following properties:</p>
+<ul>
+<li><strong>Name</strong>: Must be provided. Note that the name is not unique, thus, there can be several workspaces having the same name.</li>
+<li><strong>Description</strong>: Must be provided.</li>
+<li><strong>Contact</strong>: Please provide the email address of a distribution list (DL).</li>
+<li>
+<p><strong>Export results</strong>:</p>
+<ul>
+<li><code>AGGREGATED</code>: Findings are aggregated on workspace-level, one item for the entire workspace will be exported</li>
+<li><code>DETAILED</code>: Findings are aggregated on application-level, one item for every application of the workspace will be exported</li>
+<li><code>OFF</code>: No export of findings</li>
+</ul>
+</li>
+<li>
+<p><strong>Public</strong>: A public workspace appears in the drop-down box of the apps Web frontend, a private one does not</p>
+</li>
+</ul>
+<p>Once the fields have been filled, press the "Save" button. The system then returns with a pop-up containing the random <strong>token</strong> generated upon workspace creation. Do not forget to note down this token, it will be needed later on for each scan of your application(s).</p>
+<h3 id="use-the-generated-token-during-application-analysis">Use the generated token (during application analysis)<a class="headerlink" href="#use-the-generated-token-during-application-analysis" title="Permanent link">&para;</a></h3>
+<p>The workspace token generated at previous step has to be used as value for the configuration setting <code>vulas.core.space.token</code>. This information is mandatory during the scans as it allows the user's data to be uploaded to the correct place/workspace in the vulnerability-assessment-tool backend. See <a href="#configuration">here</a> for more information regarding the configuration of vulnerability-assessment-tool clients.</p>
+<h3 id="choose-a-workspace-in-the-apps-web-frontend">Choose a workspace (in the apps Web frontend)<a class="headerlink" href="#choose-a-workspace-in-the-apps-web-frontend" title="Permanent link">&para;</a></h3>
+<p>Use the configuration icon in the lower-left corner in order to select a workspace.</p>
+<p><center><img alt="Setup workspace button" src="../../tutorials/img/frontend_toolbar_choose_workspace.png" /></center></p>
+<p>You can search for <em>public</em> workspaces by typing their name in the "Space" field. You can copy&amp;paste the token of a <em>private</em> workspace into the input field in order to select it.</p>
+<p>Additional fields "Backend URL" and "Artifact Analyzer URL" can be used to connect the frontend to another backend (than the default running on the same host). Generally, this must not be changed by the users.</p>
+<p>Once you have selected a workspace, press "Save" button. The list of applications of that workspace will be automatically loaded on the left list menu of the frontend.</p>
+<h3 id="edit-a-workspace-in-the-apps-web-frontend">Edit a workspace (in the apps Web frontend)<a class="headerlink" href="#edit-a-workspace-in-the-apps-web-frontend" title="Permanent link">&para;</a></h3>
+<p>In order to edit a workspace, press the same button as to choose a workspace and perform the following steps:</p>
+<ul>
+<li>Enter the name/token id of the workspace to edit in the "Space" field and eventually select one of the entries provided in the drop down list.</li>
+<li>press the "Edit Space" button at the bottom.</li>
+</ul>
+<p>Once this button is clicked, all the editable property-fields of the workspace are displayed.</p>
+<ul>
+<li>update/change the data of your workspace as per your expectations.</li>
+<li>Press the "Save" button to save your modifications, press the "close" button to revert your changes.</li>
+</ul>
+<h3 id="workspace-rest-api">Workspace REST API<a class="headerlink" href="#workspace-rest-api" title="Permanent link">&para;</a></h3>
+<p>The REST API can be used to export findings in a machine-readable fashion. Calling HTTP GET on the following URL, for instance, returns all vulnerable dependencies of an aggregated workspace:</p>
+<p><code>http://localhost:8033/backend/hubIntegration/apps/&lt;workspace-name&gt;%20(&lt;workspace-token&gt;)/vulndeps</code></p>
+<p>The API returns an array of JSON elements having the following data model:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>projectId</td>
+<td>Identifies the affected application and dependency (<code>&lt;app-GAV&gt; &gt; &lt;dep-filename&gt;</code>)</td>
+<td></td>
+</tr>
+<tr>
+<td>type</td>
+<td>Identifier of vulnerability in vulnerability-assessment-tool knowledge base</td>
+<td></td>
+</tr>
+<tr>
+<td>scope</td>
+<td>Scope of the dependency</td>
+<td>see <a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Dependency_Scope">official Maven documentation</a></td>
+</tr>
+<tr>
+<td>priority</td>
+<td>Priority of the finding</td>
+<td>3 in case of dependencies with scope TEST and PROVIDED, 1 otherwise</td>
+</tr>
+<tr>
+<td>exemptionReason</td>
+<td>Assessment description (if any), see <a href="../analysis/#create-result-report-report">report goal</a> for more information on how-to assess and exempt findings</td>
+<td></td>
+</tr>
+<tr>
+<td>state</td>
+<td>Assessment result (if any)</td>
+<td>1 (secure-by-design) in case of dependencies with scope TEST and PROVIDED, 4 (mitigated) in case the bug has been exempted, 2 (true-positive) otherwise</td>
+</tr>
+<tr>
+<td>status</td>
+<td>Indicates whether the finding has been assessed</td>
+<td>1 (audited) in case state is 1 or 4, -1 (non-audited) otherwise</td>
+</tr>
+<tr>
+<td>count</td>
+<td>Number of findings of type <code>type</code> in project</td>
+<td>Always 1</td>
+</tr>
+<tr>
+<td>snapshotDate</td>
+<td>Date of most recent goal execution of the application (any goal)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
+<h3 id="maven">Maven<a class="headerlink" href="#maven" title="Permanent link">&para;</a></h3>
+<p>The plugin for Maven can be used with or without adding a <code>&lt;profile&gt;</code> section to the <code>pom.xml</code>.</p>
+<ul>
+<li>
+<p><strong>With profile</strong>, the execution of goals is more concise (readable), e.g., <code>mvn -Dvulas compile vulas:app</code>. A sample profile can be found <a href="../../tutorials/java_maven/#setup">here</a>, just copy&amp;paste it into the <code>&lt;profiles&gt;</code> section of your <code>pom.xml</code>. In case of aggregated, multi-module Maven projects with modules inheriting from their parent, it is sufficient to include the profile in the top-level (parent) <code>pom.xml</code>. If a module does not inherit from the parent, the profile has to be added to its POM file. Once added, run <code>mvn -Dvulas versions:display-property-updates</code> every now and then to check whether there are new plugin versions available. If so, manually update the property <code>vulas.version</code> in the vulnerability-assessment-tool profile.</p>
+</li>
+<li>
+<p><strong>Without profile</strong>, the execution of goals requires the use of the plugin's fully qualified name, e.g., <code>mvn compile com.sap.research.security.vulas:plugin-maven:3.0.12:app</code>. Moreover, you need to specify the following mandatory configuration settings. As described <a href="#configuration">here</a>, there are several ways of doing so, however, a file as follows is very common:</p>
+<p><strong>vulas-custom.properties</strong></p>
+<div class="codehilite"><pre><span></span>vulas.core.space.token = &lt;YOUR WORKSPACE TOKEN&gt;
+vulas.shared.backend.serviceUrl = http://localhost:8033/backend
+</pre></div>
+
+</li>
+</ul>
+<p>It is possible to include/exclude modules of a multi-module Maven project using the following configuration parameters:</p>
+<div class="codehilite"><pre><span></span><span class="c1"># Options to include and exclude Maven artifacts (modules) during the processing of an aggregator project.</span>
+<span class="c1"># If includes is provided, the other parameters are ignored. In other words, excludes and ignorePoms will</span>
+<span class="c1"># only be evaluated if includes is empty.</span>
+<span class="c1">#</span>
+<span class="c1"># Important: Those options are ignored in case of the report goal, thus, report will be run on all modules.</span>
+<span class="c1"># In particular, running report on a module with packaging POM will create an aggregated report for all its</span>
+<span class="c1"># submodules.</span>
+<span class="c1">#</span>
+<span class="c1"># One has to provide the artifactId (not the module name), and multiple values for includes and excludes must</span>
+<span class="c1"># be separated by comma.</span>
+<span class="c1">#</span>
+<span class="c1"># Defaults:</span>
+<span class="c1">#   includes = -</span>
+<span class="c1">#   excludes = -</span>
+<span class="c1">#   ignorePoms = false</span>
+<span class="na">vulas.maven.includes</span> <span class="o">=</span>
+<span class="na">vulas.maven.excludes</span> <span class="o">=</span>
+<span class="na">vulas.maven.ignorePoms</span> <span class="o">=</span> <span class="s">false</span>
+</pre></div>
+
+<h3 id="gradle">Gradle<a class="headerlink" href="#gradle" title="Permanent link">&para;</a></h3>
+<p>The plugin for Gradle requires changes of the following files:</p>
+<p><strong>build.gradle</strong></p>
+<div class="codehilite"><pre><span></span>    buildscript {
+        repositories {
+            maven { url &#39;&lt;PACKAGE-REPO&gt;&#39; }
+            mavenCentral()
+        }
+
+        dependencies {
+            classpath(&#39;com.sap.research.security.vulas:plugin-gradle:3.0.12&#39;) { changing = true }
+        }
+    }
+
+    allprojects {
+        apply plugin: &quot;vulas&quot;
+    }
+</pre></div>
+
+<p><strong>gradle.properties</strong></p>
+<div class="codehilite"><pre><span></span>    // Used to identify the scan in the apps Web frontend
+    group = ### group - EDIT THIS ###
+    version = ### version - EDIT THIS ###
+
+    // Replace token of test space
+    vulas.core.space.token = ### workspace token - EDIT THIS ###
+
+    vulas.shared.backend.serviceUrl = http://localhost:8033/backend
+</pre></div>
+
+<p>Note: Rather than adding configuration settings to <code>gradle.properties</code>, they can also be passed as project properties in the command line, e.g., <code>-Pvulas.report.exceptionThreshold=noException</code>. The use of <code>-D</code> system properties for changing configuration settings is discouraged (because of the cache of the Gradle daemon).</p>
+<p>The configuration is correct if the analysis goals <code>vulasApp</code>, <code>vulasA2C</code> etc. are listed among "Other tasks" when running the following command:</p>
+<div class="codehilite"><pre><span></span>    ./gradlew tasks -all
+</pre></div>
+
+<p>The Gradle plugin only works with later releases of Gradle. How to upgrade is described <a href="https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:upgrading_wrapper">here</a>.</p>
+<h3 id="command-line-interface">Command-line interface<a class="headerlink" href="#command-line-interface" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create a new folder, download the ZIP archive <code>/cli-scanner/target</code> and extract it into the newly created folder. This folder will then contain the following items:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Folder/File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>./app/</code></td>
+<td>Put the application code (java, class or JAR files) and all application dependencies (JAR files) into this folder. It will be searched recursively, thus, it is possible to just copy the entire installation directory of an application into the folder. <strong>Important</strong>: (1) Single java and class files are always considered as application code, no matter the package prefix configured with <code>vulas.core.app.appPrefixes</code>. (2) JARs are always considered as application dependency unless they only contain methods starting with the configured package prefix. (3) Nested JARs must be extracted, WARs can stay as-is.</td>
+</tr>
+<tr>
+<td><code>./vulas-cli-&lt;version&gt;-jar-with-dependencies.jar</code></td>
+<td>An executable JAR used to run the different vulnerability-assessment-tool goals.</td>
+</tr>
+<tr>
+<td><code>./instr/lang-java-&lt;version&gt;-jar-with-dependencies.jar</code></td>
+<td>Used to instrument Java runtimes.</td>
+</tr>
+<tr>
+<td><code>./vulas-custom.properties.sample</code></td>
+<td>Configuration settings for vulnerability-assessment-tool. <strong>Important</strong>: (1) Rename the file to <code>vulas-custom.properties</code>. (2) Specify <code>&lt;GROUP&gt;</code>, <code>&lt;ARTIFACT&gt;</code> and <code>&lt;VERSION&gt;</code> of the application to be analyzed. (3) Specify how vulnerability-assessment-tool identifies your application code (either using <code>vulas.core.app.appPrefixes</code> or <code>vulas.core.app.appJarNames</code>, see below for more information). (4) Specify the workspace token <code>vulas.core.space.token</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Identification of application code</strong>: You can use <code>vulas.core.app.appPrefixes</code> or <code>vulas.core.app.appJarNames</code> to tell vulnerability-assessment-tool how to identify the code of your application, which is important for the call graph construction during the <code>a2c</code> reachability analysis. This analysis is not complete if not all the relevant application methods are used as entry points for the call graph construction. As such, the potential execution of vulnerable open-source methods may be missed. A good indicator to see whether specification is correct is to see whether there are items in the Dependencies tab that are created by you (or your organization), or whether there are open-source packages mentioned in the table on the Statistics tab.</p>
+<div class="codehilite"><pre><span></span><span class="c1"># Package prefix(es) of application code (multiple values to be separated by comma), only relevant for CLI</span>
+<span class="na">vulas.core.app.appPrefixes</span> <span class="o">=</span>
+
+<span class="c1"># Regex that identifies JARs with application code (multiple values to be separated by comma), only relevant for CLI</span>
+<span class="na">vulas.core.app.appJarNames</span> <span class="o">=</span>
+</pre></div>
+
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<h3 id="layered-configuration-principle">Layered configuration principle<a class="headerlink" href="#layered-configuration-principle" title="Permanent link">&para;</a></h3>
+<p>The client-side analysis tools can be configured in different ways. At runtime, the following layers are combined in order to establish the effective configuration (which is printed to console upon goal execution).</p>
+<ul>
+<li><strong>Java system properties</strong>: Can be specified when running <code>java</code> or <code>mvn</code>, each setting must be prefixed with <code>-D</code></li>
+<li><strong>Property files in file system</strong>: Can be specified by adding property file(s) in the folder where vulnerability-assessment-tool is executed (or any of its subfolders). The file name must adhere to the format <code>vulas-*.properties</code>, and its entries must be specified according to the <a href="https://en.wikipedia.org/wiki/.properties">Java spec</a></li>
+<li><strong>Plugin configuration</strong>:<ul>
+<li>Maven: Can be specified in the <code>&lt;layeredConfiguration&gt;</code> section of the Maven plugin</li>
+<li>Gradle: <strong>todo</strong></li>
+</ul>
+</li>
+<li><strong>Environment variables</strong>: Can be specified using <code>export</code> (nix) and <code>set</code> (Windows)</li>
+<li><strong>Property files in JAR files</strong>: Default values for many settings are set within vulnerability-assessment-tool JAR files</li>
+</ul>
+<h3 id="general-settings">General settings<a class="headerlink" href="#general-settings" title="Permanent link">&para;</a></h3>
+<!--Many settings are specific to the individual goals and are explained in the respective [Java](Java) and [Python](Python) sections.-->
+
+<p>The following settings, however, have to be present for every goal execution:</p>
+<ul>
+<li><code>vulas.core.space.token</code>: The token of the workspace to be used for the analysis</li>
+<li><code>vulas.core.appContext.group</code>, <code>vulas.core.appContext.artifact</code> and <code>vulas.core.appContext.version</code>: Altogether, they uniquely identify an application within a space. Depending on the client used, one or more of them are automatically inferred, e.g., using data from <code>pom.xml</code> or <code>build.gradle</code>.</li>
+<li><code>vulas.shared.backend.serviceUrl</code>: The URL of the backend service to which clients upload analysis results.</li>
+</ul>
+<h2 id="check-setup">Check setup<a class="headerlink" href="#check-setup" title="Permanent link">&para;</a></h2>
+<p>Proceed as follows to check whether the vulnerability-assessment-tool setup and goal execution works:</p>
+<p><strong>On the client</strong>, after executing a specific vulnerability-assessment-tool goal on your application, a log entry similar to the one below should be printed to the console. It is used to upload goal-related information to the vulnerability-assessment-tool backend, e.g., the vulnerability-assessment-tool version used or the average memory consumption. In this example, information related to a goal execution for an application with GAV <code>com.acme.foo:vulas-testapp-webapp:3.0.9-MVN</code> was uploaded to <code>http://localhost:8033/backend</code>, workspace <code>123456789</code>. The successful upload is indicated by the HTTP response code <code>201</code>.</p>
+<div class="codehilite"><pre><span></span>[main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST [uri=http://localhost:8033/backend/apps/com.acme.foo/vulas-testapp-webapp/3.0.9-MVN/goals, size=23,50 KB, tenant=123456789, space=123456789]
+[main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST completed with response code [201] in [03.019 ms] (proxy=false)
+</pre></div>
+
+<p><strong>In the apps Web frontend</strong> at <code>https://localhost/apps</code>, there are several tabs to be checked:</p>
+<ul>
+<li>On the <a href="../../manuals/frontend/#dependencies">Dependencies</a> tab, one should see all application dependencies. In particular, there should be no archives belonging to the application under analysis (which can happen if the CLI is not configured to properly separate application code and dependency code, see <a href="../../manuals/setup/#command-line-interface">here</a> for more information).</li>
+<li>On the <a href="../../manuals/frontend/#application-statistics">Statistics</a> tab, one should see all packages belonging to the application. In particular, there should be no packages belonging to 3<sup>rd</sup> party / open-source libraries (which can happen if the CLI is not configured to properly separate application code and dependency code, see <a href="#command-line-interface">here</a> for more information).</li>
+<li>On the <a href="../../manuals/frontend/#history">History</a> tab, one should see table entries for all goal executions that happened on the client.</li>
+</ul>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+    <div class='custom-scroll-top hidden md-icon'></div>
+    
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../" title="Intro" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Intro
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../analysis/" title="Analysis" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Analysis
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+          </div>
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="../../../assets/fonts/font-awesome.css">
+    
+      <a href="https://github.com/sap/vulnerability-assessment-tool" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+      
+    </div>
+  </div>
+</footer>
+    <script>
+        Array.from(document.getElementsByClassName('expandable')).forEach(function(item) {
+            lightGallery(item, {
+                controls: false,
+                counter: false
+            })
+        })
+    </script>
+
+    </div>
+    
+      <script src="../../../assets/javascripts/application.9e1f3b71.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"../../.."}})</script>
+      
+        <script src="../../../js/scrollTop.js"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>
