@@ -1,0 +1,109 @@
+margin: 1.6rem 0;
+
+span.toctitle {
+    font-size: 1.8rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+div.toc>ul {
+    margin: 0;
+}
+
+div.toc>ul>li {
+    margin: 10px;
+    list-style: none;
+    font-weight: 800;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+    margin: 1.5625em 0;
+    padding: 0 1.2rem;
+    border-left: 0.4rem solid rgb(187, 239, 253);
+    border-radius: 0.2rem;
+    font-size: 15px;
+}
+
+div.toc>ul>li>a:before {
+    font-weight: 600;
+    display: block;
+    float: left;
+    width: 1.2em;
+    margin-right: 3px;
+    font-size: 24px;
+    color: #488afe;
+    content: "\E8FD";
+    font-family: "Material Icons";
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    line-height: 1;
+    text-transform: none;
+    white-space: nowrap;
+    speak: none;
+    word-wrap: normal;
+    direction: ltr;
+}
+
+div.toc>ul>li>a {
+    margin: 0 -1.2rem;
+    padding: 0.8rem 1.2rem 0.8rem 1.3rem;
+    border-bottom: 0.1rem solid rgba(68, 138, 255, 0.1);
+    background-color: rgba(68, 138, 255, 0.1);
+    font-weight: 700;
+    color: inherit !important
+}
+
+div.toc>ul>li>ul {
+    margin: 0.5em 0 0.5em 0;
+}
+
+div.toc>ul>li>ul>li {
+    list-style: none;
+    font-weight: 400;
+    margin: 1em 0px;
+}
+
+div.toc>ul>li>ul>li:last-child { 
+    margin-bottom: 12px;
+}
+
+div.toc>ul>li>ul>li>a {
+    color: #505050 !important;
+    background-color: unset !important;
+    border-bottom: unset !important;
+}
+
+div.toc>ul>li>ul>li>a:hover {
+    color: black !important;
+}
+
+body.faq .md-sidebar--secondary, body.faq_enterprise .md-sidebar--secondary {
+    display: none;
+}
+
+body.faq .md-content h2, body.faq_enterprise .md-content h2 {
+    margin-top: 50px;
+    padding-top: 50px;
+    border-top: 1px solid #939393;
+}
+
+body.faq .md-content .md-typeset h3:before, body.faq div.toc>ul>li>ul>li>a:before, body.faq_enterprise .md-content .md-typeset h3:before, body.faq_enterprise div.toc>ul>li>ul>li>a:before {
+    display: unset;
+    margin: unset;
+    content: '•';
+    margin-right: 6px;
+    color: #83cdf9;
+}
+
+@media only screen and (min-width: 60em) {
+    body.faq .md-content, body.faq_enterprise .md-content {
+        margin-right: 0rem !important;
+    }
+}
+
+@media only screen and (min-width: 60em) {
+    body.faq .custom-scroll-top, body.faq_enterprise .custom-scroll-top {
+        right: 15px !important;
+    }
+}

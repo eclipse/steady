@@ -1,0 +1,127 @@
+site_name: vulnerability-assessment-tool
+site_description: vulnerability-assessment-tool Documentation
+site_url: https://sap.github.io/vulnerability-assessment-tool/
+dev_addr: localhost:8000
+
+# Repository
+repo_name: 'sap/vulnerability-assessment-tool'
+repo_url: 'https://github.com/sap/vulnerability-assessment-tool'
+
+docs_dir: merged
+
+nav:
+  - Home:
+    - Home: index.md
+    - About: about/index.md
+  - Docs:
+    - Docs: user/index.md
+    - Tutorials:
+      - 'Getting started': 'user/tutorials/index.md'
+      - 'Workspace': 'user/tutorials/workspace_howto.md'
+      - 'Workspaces (advanced)': 'user/tutorials/workspace_howto_advanced.md'
+      - 'Scanning Java (Maven)': 'user/tutorials/java_maven.md'
+      - 'Scanning Java (Gradle)': 'user/tutorials/java_gradle.md'
+      - 'Scanning Java (CLI)': 'user/tutorials/java_cli.md'
+      - 'Reachability analysis (Java/Maven)': 'user/tutorials/java_maven_advanced.md'
+      - 'Scanning Python (CLI)': 'user/tutorials/python_cli.md'
+      - 'Jenkins automation':   'user/tutorials/jenkins_howto.md'
+      - 'Understanding reports':   'user/tutorials/reports.md'
+    - Manual:
+      - 'Intro': 'user/manuals/index.md'
+      - 'Configuration': 'user/manuals/setup.md'
+      - 'Analysis': 'user/manuals/analysis.md'
+      - 'Frontend': 'user/manuals/frontend.md'
+      - 'Report': 'user/manuals/report.md'
+      - 'Assessment and Mitigation': 'user/manuals/assess_and_mitigate.md'
+    - Support:
+      - 'Getting help': user/support/index.md
+      - 'FAQ': user/support/faq.md
+  - DevOps:
+    - DevOps: admin/index.md
+  - Contribute:
+    - Contribute: contributor/index.md
+    # - Tutorials:
+    #   - 'Setting up Vulas (Server)': 'admin/tutorials/tutorial_server.md'
+    # - Manual: admin/manuals/index.md
+    # - Support:
+    #   - 'Getting help': admin/support/getting_help.md
+    #   - 'General FAQ': admin/support/faq.md
+    - Tutorials:
+      - 'Project structure': 'contributor/tutorials/project_structure.md'
+#      - 'Support new language': 'contributor/tutorials/new_lang.md'
+#    - Code documentation: contributor/manuals/index.md
+#    - Support:
+#      - 'Getting help': contributor/support/getting_help.md
+#      - 'Dev. FAQ': contributor/support/faq.md
+  - Vulnerability database:
+    - 'Vulnerability database' : vuln_db/index.md
+    - Tutorial: vuln_db/tutorials/vuln_db_tutorial.md
+    - Manual:
+      - 'Intro': vuln_db/manuals/index.md
+      - 'Patch Analyzer' : vuln_db/manuals/patch_analyzer.md
+      - 'Patch Lib Analyzer' : vuln_db/manuals/patch_lib_analyzer.md
+      - 'Manual Assessment' : vuln_db/manuals/manual_assessment.md
+  # - Blog:
+  #   - blog/2018/index.md
+
+# Copyright
+copyright: 'Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.'
+
+# Extensions
+markdown_extensions:
+  - markdown.extensions.admonition
+  - markdown.extensions.attr_list
+  - markdown.extensions.codehilite:
+      guess_lang: false
+  - markdown.extensions.def_list
+  - markdown.extensions.footnotes
+  - markdown.extensions.meta
+  - markdown_include.include:
+      base_path: merged-docs
+  - markdown.extensions.toc:
+      permalink: true
+      toc_depth: 3
+      baselevel: 1
+      # title: 'List of questions'
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+
+# Customization
+extra:
+  social:
+    - type: 'github'
+      link: 'https://github.com/sap/vulnerability-assessment-tool'
+
+theme:
+  name: 'material'
+  custom_dir: './public/custom_theme/'
+  language: en
+  favicon: 'images/vulas.png'
+  # logo: 'images/vulas-white.png'
+  palette:
+    primary: 'blue'
+    accent: 'blue'
+  feature:
+    tabs: true
+
+extra_css:
+  - css/faq.css
+  - css/override.css
+  - css/scrollTop.css
+
+extra_javascript:
+  - js/scrollTop.js

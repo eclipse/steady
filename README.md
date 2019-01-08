@@ -1,4 +1,4 @@
-<p align="center"><img height="64" src="./docs/media/images/logo/vulas.png"></p>
+<p align="center"><img height="64" src="docs/public/content/images/vulas.png"></p>
 
 # Open-source vulnerability assessment tool [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![Build Status](https://travis-ci.org/SAP/vulnerability-assessment-tool.svg?branch=master)](https://travis-ci.org/SAP/vulnerability-assessment-tool)
 
@@ -27,7 +27,7 @@ The tool approach is best described in the following scientific papers, please c
 
 In the following a couple of example features:
 
-- **Detection of vulnerable code** is realized by discovering method signatures in Java archives and comparing their source and byte code with the vulnerable and fixed version (as known from the fix commit). As such, the detection is more acurate than for approaches based on meta-data (less false-positives and false-negatives). In particular, it is robust against rebundling, a very common practice in the Java ecosystem.
+- **Detection of vulnerable code** is realized by discovering method signatures in Java archives and comparing their source and byte code with the vulnerable and fixed version (as known from the fix commit). As such, the detection is more accurate than for approaches based on meta-data (less false-positives and false-negatives). In particular, it is robust against rebundling, a very common practice in the Java ecosystem.
 - **Assessment of vulnerable dependencies** by application developers and security experts is supported by information about the potential and actual execution of vulnerable code. This information is based on call graph analysis and trace information collected during JUnit and integration tests. Going down to the granularity of single methods, application developers are presented with the potential and actual call stack from application code till vulnerable code.
 - The addition of new vulnerabilities to the knowledge base does not require the re-scan of applications. In other words, right after  an addition to the knowledge base, it is immediately known whether previously scanned applications are affected or not.
 - **Mitigation proposals** consider the _reachable_ share of dependencies, i.e., the set of methods that can be potentially reached from application code union the actual executions observed during tests. This information is used to compute several metrics aiming to let developers chose the best non-vulnerable replacement of a vulnerable dependency (best in regards to non-breaking and with least regression likelihood).
@@ -40,7 +40,7 @@ Visit the Wiki in order to get a better understanding of the various features an
 
 The open-source vulnerability assessment tool has a distributed architecture composed of a couple of Spring Boot microservices, two Web frontends and a number of client-side scanners/plugins, which perform the actual analysis of application and dependency code on build systems or developer workstations.
 
-<p align="center"><img src="./docs/media/images/components-2.png" height="200"/></p>
+<p align="center"><img src="docs/public/content/images/components-2.png" height="200"/></p>
 
 You need **[Docker](https://www.docker.com/)**
 
@@ -66,7 +66,7 @@ The client-side scan tools (`plugin-maven`, `plugin-gradle`, `cli-scanner`) can 
 
 The microservices and Web frontends can be configured to integrate with an organization-specific build and development infrastructure. For instance, private Nexus or PyPI repositories can be configured to provide information about non-public components.
 
-The tool was originally built to manage publicly known vulnerabilities in open-source components, however, the knowledge base can also (in parallel) comprise non-public vulnerabilities. This possibility is particularly useful for larger development organiations with many internal re-use components. As for open-source components, thanks to the integration with private Nexus and PyPI repositories, the tool can suggest the latest non-vulnerable version of such internal re-use components.
+The tool was originally built to manage publicly known vulnerabilities in open-source components, however, the knowledge base can also (in parallel) comprise non-public vulnerabilities. This possibility is particularly useful for larger development organizations with many internal re-use components. As for open-source components, thanks to the integration with private Nexus and PyPI repositories, the tool can suggest the latest non-vulnerable version of such internal re-use components.
 
 ## Limitations
 

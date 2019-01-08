@@ -1,0 +1,6 @@
+mkdocs
+pymdown-extensions
+mkdocs-material
+markdown-include
+GitPython
+fire
