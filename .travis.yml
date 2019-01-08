@@ -76,9 +76,12 @@ matrix:
       before_install:
         - docker -v
         - docker-compose -v
+      install:
+        - docker build --tag docs ./docs
+        - docker network create docs
       script:
-        - docker run -d --rm -v ${PWD}/docs:/tmp:ro -p 8000:8000 python:3-alpine sh -c "pip install -r requirements.txt && python docs.py public --mkserve"
-        - docker run -it --rm -v ${PWD}/docs/checklinks.sh:/tmp/checklinks.sh:ro raviqqe/muffet bash /tmp/checklinks.sh
+        - docker run -d --network=docs --rm --name docs --hostname docs -p 8000:8000 docs
+        - docker run -it --rm --network=docs raviqqe/muffet -e .*/edit/.* -e .*/f2895a6e-ca7c-0010-82c7-eda71af511fa.html -e .*exploit-db\.com -e .*corp[/:].* -e .*:8033/.* -e .*/apps.* -e .*/bugs.* -e .*maven\.apache\.org.* -e .*docs\.oracle\.com.* -e .*wala\.sourceforge\.net.* -t 20 http://docs:8000
       after_failure:
         - docker images
         - docker ps -as
