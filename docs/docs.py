@@ -148,9 +148,9 @@ def handle_mkdocs_build(to_build, kind):
             config_file=select_config(kind),
         ))
 
-def handle_mkdocs_serve(to_serve, kind):
+def handle_mkdocs_serve(to_serve, kind, dev_addr):
     if to_serve:
-        serve.serve(config_file=select_config(kind))
+        serve.serve(config_file=select_config(kind), dev_addr=dev_addr)
 
 def delete_branch(branch):
     try:
@@ -171,13 +171,14 @@ def handle_mkdocs_ghdeploy(to_ghdeploy, kind, remote):
 
 class Initiator(object):
 
-    def __init__(self, mkbuild=False, mkserve=False, mkghdeploy=False, help=False):
+    def __init__(self, mkbuild=False, mkserve=False, mkghdeploy=False, dev_addr=None, help=False):
         if help:
-            print('docs.py [public|enterprise] [--mkbuild|--mkserve|--mkghdeploy|--local_repo <path>]')
+            print('docs.py [public|enterprise] [--mkbuild|--mkserve|--mkghdeploy|--local_repo <path>|--dev_addr <address>]')
             exit()
         self.mkbuild = mkbuild
         self.mkserve = mkserve
         self.mkghdeploy = mkghdeploy
+        self.dev_addr = dev_addr
 
     def enterprise(self, url, local_repo=False):
         '''
@@ -189,7 +190,7 @@ class Initiator(object):
         merge_docs(ENTERPRISE_DOCS_ROOT, PUBLIC_DOCS_ROOT, MERGED_DOCS_FOLDER, EXTENSIONS_TO_COPY)
         replace_keywords(MERGED_DOCS_FOLDER, ENTERPRISE_PREFIX)
         handle_mkdocs_build(self.mkbuild, ENTERPRISE_PREFIX)
-        handle_mkdocs_serve(self.mkserve, ENTERPRISE_PREFIX)
+        handle_mkdocs_serve(self.mkserve, ENTERPRISE_PREFIX, self.dev_addr)
         handle_mkdocs_ghdeploy(self.mkghdeploy, ENTERPRISE_PREFIX, url)
         clean()
 
@@ -200,7 +201,7 @@ class Initiator(object):
         prepare_generated_docs_tree(PUBLIC_DOCS_ROOT, MERGED_DOCS_FOLDER)
         replace_keywords(MERGED_DOCS_FOLDER, 'public')
         handle_mkdocs_build(self.mkbuild, 'public')
-        handle_mkdocs_serve(self.mkserve, 'public')
+        handle_mkdocs_serve(self.mkserve, 'public', self.dev_addr)
         handle_mkdocs_ghdeploy(self.mkghdeploy, 'public', 'origin')
 
 if __name__ == '__main__':
