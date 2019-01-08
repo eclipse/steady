@@ -1,7 +1,7 @@
 site_name: vulnerability-assessment-tool
 site_description: vulnerability-assessment-tool Documentation
 site_url: https://sap.github.io/vulnerability-assessment-tool/
-dev_addr: localhost:8000
+dev_addr: 0.0.0.0:8000
 
 # Repository
 repo_name: 'sap/vulnerability-assessment-tool'
