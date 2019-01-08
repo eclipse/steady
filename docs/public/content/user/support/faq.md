@@ -122,7 +122,7 @@ For vulnerabilities that do not come from the NVD we do provide reference links.
 ### Why is @@PROJECT_NAME@@ is not detecting all vulnerabilities of my project?
 
 - If the vulnerability is included in our knowledge base but it is not detected for your application, you can select the checkbox “Include historical vulnerabilities” in the @@PROJECT_NAME@@ frontend and hit “Reload” button: you will see all CVEs that applied to previous versions of your dependencies. The ![green exclamation mark](../../manuals/img/version_ok.png) indicates that a given CVE did apply to earlier versions, but you are currently using a non-vulnerable one.
-- Despite our best efforts to keep the @@PROJECT_NAME@@ vulnerability knowledge base continuously updated, it is possible that a particular vulnerability is not yet covered. See [here](insert_link_when_available) to check if a vulnerability is covered or not. In case it is not covered, please contact the @@PROJECT_NAME@@ team which will react accordingly.
+- Despite our best efforts to keep the @@PROJECT_NAME@@ vulnerability knowledge base continuously updated, it is possible that a particular vulnerability is not yet covered. Query `/backend/bugs` to check if a vulnerability is covered or not.
 
 ## Method-level bill of material (goal app)
 
