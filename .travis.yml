@@ -68,5 +68,21 @@ matrix:
         - docker ps -as
         - (cd docker && docker-compose logs)
 
+    - name: Docs
+      language: bash
+      sudo: required
+      services:
+        - docker
+      before_install:
+        - docker -v
+        - docker-compose -v
+      script:
+        - docker run -d --rm -v ${PWD}/docs:/tmp:ro -p 8000:8000 python:3-alpine sh -c "pip install -r requirements.txt && python docs.py public --mkserve"
+        - docker run -it --rm -v ${PWD}/docs/checklinks.sh:/tmp/checklinks.sh:ro raviqqe/muffet bash /tmp/checklinks.sh
+      after_failure:
+        - docker images
+        - docker ps -as
+        - (cd docker && docker-compose logs)
+
 notifications:
   email: false
