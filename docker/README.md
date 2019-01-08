@@ -37,7 +37,9 @@ Make a copy of the sample configuration:
 cp docker/.env.sample docker/.env
 ```
 
-Edit the file `docker/.env` to match your needs.
+Edit the file `docker/.env` and give suitable values to the configuration variables that you will find there.
+**IMPORTANT**: some settings are mandatory and must not be left blank (for example, user/password for postgresql).
+
 At this point, you are ready to perform the actual build with the following command:
 
 ```sh
