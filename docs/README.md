@@ -40,7 +40,7 @@ python docs.py public --mkghdeploy
 
 ### Enterprise docs
 
-With the `docs.py` one can augment the public docs with new pages or modified pages for their enterprise employees. In order to do such, you should create a new `git` repository in your company and point to it. You can point both to a remote private repository or to a local folder for easy debugging.
+With the `docs.py` one can create a custom version of the public docs with new private pages or modified pages for their enterprise employees. In order to do so, a new `git` repository should be created in your company. This new `git` repository will have to contain only enterprise-specific files which will overwrite public files.
 
 The enterprise repository should have in his root a:
 
@@ -52,7 +52,7 @@ _The script will merge the enterprise docs on top of the public ones. All the fi
 
 #### Build enterprise docs
 
-By default the `docs.py` script will clone the enterprise repository and merge it with the public one in order to create enterprise docs. If you want you can instead pass as as parameter a local path to the enterprise repository.
+By default the `docs.py` script will clone the enterprise repository and merge it with the public one in order to create enterprise docs. If you want you can instead pass as a parameter a local path to the enterprise repository for easier debug of the docs.
 
 ```sh
 python docs.py enterprise --url https://github.xxx/yyy/zzz.git --mkserve
@@ -67,5 +67,23 @@ The `docs.py` script is also able to publish enterprise docs to enterprise Githu
 ```sh
 python docs.py enterprise --url https://github.xxx/yyy/zzz.git --mkghdeploy
 # We recomment to always let the script clone the enterprise private repository instead of linking to a local directory
-python docs.py enterprise --url https://github.xxx/yyy/zzz.git --local_repo ../sap-docs --mkghdeploy
+python docs.py enterprise --url https://github.xxx/yyy/zzz.git --local_repo ../zzz --mkghdeploy
+```
+
+## Test
+
+A [script](./checklinks.sh) is provided in order to check if all the links in the generated documentation are pointing to existent resources.
+
+The script uses the [Muffet](https://github.com/raviqqe/muffet) library, installation instruction are provided in the library's README.
+
+The `checklinks.sh` script scrapes the generated docs and reports broken links.
+
+```sh
+# Serve the docs
+python docs.py public --mkserve
+```
+
+```sh
+# Find broken links
+sh checklinks.sh
 ```
