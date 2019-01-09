@@ -53,8 +53,7 @@ These eight requirements are the mandatory base of a good bug report:
     * give information about the used browser/device and its version, if possible also the behavior in other browsers/devices
     * if the bug is about wrong UI appearance, attach a screenshot and mark what is wrong
     * generally give as much additional information as possible. (But find the right balance: do not invest hours for a very obvious and easy to solve issue. When in doubt, give more information.)
-7. Minimal example: it is highly encouraged to provide a minimal example to reproduce in e.g. jsbin: isolate the application code which triggers the issue and strip it down as much as possible as long as the issue still occurs. If several files are required, you can create a gist. This may not always be possible and sometimes be overkill, but it always helps analyzing a bug.
-8. Only one bug per report: open different tickets for different issues
+7. Only one bug per report: open different tickets for different issues
 
 You are encouraged to use [this template](.github/ISSUE_TEMPLATE/bug_report.md).
 
@@ -108,6 +107,8 @@ We want to improve the quality of the open-source vulnerability assessment tool 
 ## Analyze Issues
 
 Analyzing issue reports can be a lot of effort. Any help is welcome! Go to [the Github issue tracker](https://github.com/SAP/open-source-vulnerability-mgmt/issues?state=open) and find an open issue which needs additional work or a bugfix.
+
+Additional work may be further information or it might be a hint that helps understanding the issue. Maybe you can even find and [contribute](#contribute-code) a bugfix?
 
 ## Contribute Code
 
@@ -175,10 +176,10 @@ If this list sounds lengthy and hard to achieve - well, that's what WE have to c
 
 4. In the commit message follow the [commit message guidelines](docs/guidelines.md#git-guidelines)
 5. If your change fixes an issue reported at GitHub, add the following line to the commit message:
-    - ```Fixes https://github.com/SAP/open-source-vulnerability-mgmt/issues/(issueNumber)```
+    - `Fixes https://github.com/SAP/vulnerability-assessment-tool/issues/(issueNumber)`
     - Do NOT add a colon after "Fixes" - this prevents automatic closing.
-	- When your pull request number is known (e.g. because you enhance a pull request after a code review), you can also add the line ```Closes https://github.com/SAP/open-source-vulnerability-mgmt/pull/(pullRequestNumber)```
-6. Create a Pull Request to https://github.com/SAP/open-source-vulnerability-mgmt
+	- When your pull request number is known (e.g. because you enhance a pull request after a code review), you can also add the line `Closes https://github.com/SAP/vulnerability-assessment-tool/pull/(pullRequestNumber)`
+6. Create a Pull Request to https://github.com/SAP/vulnerability-assessment-tool
 7. Follow the link posted by the CLA assistant to your pull request and accept it, as described in detail above.
 8. Wait for our code review and approval, possibly enhancing your change on request
     - Note that the open-source vulnerability assessment tool developers also have their regular duties, so depending on the required effort for reviewing, testing and clarification this may take a while
