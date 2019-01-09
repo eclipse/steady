@@ -7,6 +7,7 @@ sap.ui.controller("view.Master", {
 		
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		model.Config.setModel(oStore.get("vulas-frontend-settings"));
+		
 		model.Config.getTenant();
 		model.Config.getDefaultSpace();
 		model.Config.loadPropertiesFromBackend();
@@ -64,7 +65,8 @@ sap.ui.controller("view.Master", {
 			var that = this;
 			newModel.attachRequestCompleted(function() {
 				newListApplicationsSize = newModel.oData.length
-				labelCount.setText(Math.min(newListApplicationsSize, 50) + ' displayed out of ' + newListApplicationsSize);
+				newModel.setSizeLimit(Math.min(newListApplicationsSize, model.Config.getListSize()))
+				labelCount.setText(Math.min(newListApplicationsSize, model.Config.getListSize()) + ' displayed out of ' + newListApplicationsSize);
 				list.setModel(newModel);
 				list.setBusy(false);
 				if (model.Config.getSpace() != model.Config.getDefaultSpace()) {
@@ -134,6 +136,10 @@ sap.ui.controller("view.Master", {
 		}
 		return false;
 	    
+	},
+	
+	validateListSize: function (_size) {
+	    return /^\d*$/.test(_size) && _size>0 && _size <= 100 ;
 	},
 	
 	validateSwIdObjectNumber: function (number) {
@@ -512,7 +518,12 @@ sap.ui.controller("view.Master", {
 								if (core.byId('idSpace').getSelectedItem() == null && core.byId('idSpace')._lastValue == "") {
 									sap.m.MessageBox.warning("No space selected, the default will be used.");
 								}
-
+								if (!core.byId('idListSize').getValue() || (!this.validateListSize(sap.ui.getCore().byId('idListSize').getValue()))) {
+									sap.m.MessageBox.warning("Only values in the range 1-100 are allowed.");
+									return;
+								} else {
+									config.setListSize(core.byId('idListSize').getValue());
+								}
 								if (core.byId('idHostURL').getValue() != null && core.byId('idHostURL').getValue() != "" && core.byId('idHostURL').getValue() != config.getHost()) {
 									config.setHost(core.byId('idHostURL').getValue());
 								}
@@ -594,6 +605,19 @@ sap.ui.controller("view.Master", {
 							//  placeholder: 'Enter host address (default: 127.0.0.1) ...',
 							//  width: "100%",
 							value: model.Config.getCiaHost()
+						})
+					})
+					,
+					new sap.m.InputListItem({
+						label: "Application List Size",
+						content: new sap.m.Input({
+
+							id: "idListSize",
+							type: sap.m.InputType.Text,
+							//  placeholder: 'Enter host address (default: 127.0.0.1) ...',
+							//  width: "100%",
+							placeholder: "(1-100)",
+							value: model.Config.getListSize()
 						})
 					})
 //					,

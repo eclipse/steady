@@ -15,7 +15,7 @@
 			</Bar>
 		</subHeader>
 		<content>
-			<Table items="{path: '/', length: 50}" id="idListApplications" visible="true"
+			<Table items="{path: '/'}" id="idListApplications" visible="true"
 				select="onListItemTap" mode="SingleSelectMaster">
 				<columns>
 				    <Column mergeDuplicates="false">

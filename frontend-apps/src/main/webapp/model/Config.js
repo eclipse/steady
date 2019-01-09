@@ -7,6 +7,7 @@ model.Config.settings = {
 		cookie : {  host : "/backend",
 					space : "",
 					ciaHost : "/cia",
+					listSize : "50"
 					//skipEmpty : false
 		},
 		defaultSpace :  "",
@@ -70,6 +71,14 @@ model.Config.loadPropertiesFromBackend = function(){
 }
 
 
+model.Config.upgradeCookieStructure = function (_cookie){
+	if (!_cookie.hasOwnProperty('listSize')) {
+		model.Config.setListSize(50)
+	}
+	//this save should be redundant as the setXXX functions for each upgraded value are already saving the entire cookie to the local storage
+	oStore.put("vulas-frontend-settings", _cookie)
+}
+
 // populates the settings with the data read from the cookie
 // called in the init of Master.controller
 model.Config.setModel = function(_m){
@@ -80,6 +89,7 @@ model.Config.setModel = function(_m){
 			model.Config.settings.cookie = _m
 		}
 	}
+	model.Config.upgradeCookieStructure(model.Config.settings.cookie)
 }
 
 model.Config.setHost = function(_host) {
@@ -127,6 +137,14 @@ model.Config.setCiaHost = function(_host) {
 }
 model.Config.getCiaHost = function() {
 	return model.Config.settings.cookie.ciaHost;
+}
+
+model.Config.setListSize = function(_size) {
+	model.Config.settings.cookie.listSize =_size;
+	oStore.put("vulas-frontend-settings", model.Config.settings.cookie)
+}
+model.Config.getListSize = function() {
+	return model.Config.settings.cookie.listSize;
 }
 
 //model.Config.setSkipEmpty = function(_skipEmpty){
