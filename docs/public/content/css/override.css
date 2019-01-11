@@ -1,0 +1,288 @@
+/* Fill borders - start  */
+.md-grid {
+    max-width: 93% !important;
+}
+
+@media only screen and (min-width: 76.25em){
+    .md-sidebar--secondary {
+        margin: 0;
+        float: right;
+        right: -20rem;
+    }
+}
+
+@media only screen and (min-width: 60em){
+    .md-sidebar--secondary {
+        right: -22rem;
+    }
+}
+
+/* Logo - start */
+a.md-header-nav__button.md-logo {
+    height: 4.8rem;
+    width: 4.8rem;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-image: url(../images/vulas-white.png);
+    margin: 0;
+    padding: 0;
+}
+
+a.md-header-nav__button.md-logo>i {
+    display: none
+}
+
+/* Hide 'edit this page' - start */
+article.md-content__inner.md-typeset>a.md-icon.md-content__icon {
+    display: none;
+}
+
+/* Font - start */
+body, input, textarea, select, button {
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+}
+
+.md-tabs__link{
+    font-weight: 300;
+    font-size: 16px;
+    margin-top: 0.9rem !important;
+}
+
+.md-tabs__link--active {
+    font-weight: 400;
+}
+
+.md-flex__ellipsis.md-header-nav__title {
+    font-weight: 700;
+}
+
+/* Colors - start */
+.md-header, .md-tabs{
+    background-color: #20232a !important;
+}
+
+.md-typeset .admonition.todo > .admonition-title, .md-typeset details.todo > .admonition-title, .md-typeset .admonition.todo > summary, .md-typeset details.todo > summary, .md-typeset .admonition.info > .admonition-title, .md-typeset details.info > .admonition-title, .md-typeset .admonition.info > summary, .md-typeset details.info > summary {
+    background-color: rgba(187,239,253,0.3)
+}
+
+.md-typeset .admonition.todo, .md-typeset details.todo, .md-typeset .admonition.info, .md-typeset details.info {
+    border-left-color: rgb(187, 239, 253);
+}
+
+.md-sidebar .md-nav__link--active, .md-footer-nav__link .md-flex__ellipsis {
+    font-weight: 700;
+    color: inherit !important;
+}
+
+.md-nav__link:hover {
+    color: rgb(109, 109, 109) !important;
+}
+
+body.react .headerlink {
+    color: #b9b9b9b0 !important;
+}
+
+body.react .headerlink, .headerlink:hover, body.react .headerlink:focus, body.react .md-typeset:hover .headerlink:hover, body.react .md-typeset:target .headerlink, body.react .md-typeset .headerlink:focus {
+    color: #b9b9b9ed !important;
+}
+
+body.react .md-content a:not(.headerlink) {
+    color: inherit !important;
+    background-color: rgba(187,239,253,0.3);
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+.headerlink {
+    color: #b9b9b9b0 !important;
+}
+
+.headerlink, .headerlink:hover, .headerlink:focus, .md-typeset:hover .headerlink:hover, .md-typeset:target .headerlink, .md-typeset .headerlink:focus {
+    color: #b9b9b9ed !important;
+}
+
+.md-content a:not(.headerlink):not([lg-event-uid]) {
+    color: #006179 !important;
+    border-bottom: 2px solid #006179;
+}
+
+.md-typeset .admonition.caution > .admonition-title, .md-typeset details.caution > .admonition-title, .md-typeset .admonition.attention > .admonition-title, .md-typeset details.attention > .admonition-title, .md-typeset .admonition.caution > summary, .md-typeset details.caution > summary, .md-typeset .admonition.attention > summary, .md-typeset details.attention > summary, .md-typeset .admonition.warning > .admonition-title, .md-typeset details.warning > .admonition-title, .md-typeset .admonition.warning > summary, .md-typeset details.warning > summary {
+    background-color: rgba(255,229,100,0.3);
+}
+
+.md-typeset .admonition.caution, .md-typeset details.caution, .md-typeset .admonition.attention, .md-typeset details.attention, .md-typeset .admonition.warning, .md-typeset details.warning {
+    border-left-color: #ffe564;
+}
+
+.md-typeset .admonition.hint, .md-typeset details.hint, .md-typeset .admonition.important, .md-typeset details.important, .md-typeset .admonition.tip, .md-typeset details.tip {
+    border-left-color: #00bf0f !important;
+}
+
+.md-typeset .admonition.hint > .admonition-title, .md-typeset details.hint > .admonition-title, .md-typeset .admonition.important > .admonition-title, .md-typeset details.important > .admonition-title, .md-typeset .admonition.hint > summary, .md-typeset details.hint > summary, .md-typeset .admonition.important > summary, .md-typeset details.important > summary, .md-typeset .admonition.tip > .admonition-title, .md-typeset details.tip > .admonition-title, .md-typeset .admonition.tip > summary, .md-typeset details.tip > summary {
+    background-color: #00bf0f1a !important;
+}
+
+.md-typeset .admonition.hint > .admonition-title::before, .md-typeset details.hint > .admonition-title::before, .md-typeset .admonition.important > .admonition-title::before, .md-typeset details.important > .admonition-title::before, .md-typeset .admonition.hint > summary::before, .md-typeset details.hint > summary::before, .md-typeset .admonition.important > summary::before, .md-typeset details.important > summary::before, .md-typeset .admonition.tip > .admonition-title::before, .md-typeset details.tip > .admonition-title::before, .md-typeset .admonition.tip > summary::before, .md-typeset details.tip > summary::before {
+    color: #00bf0f !important;
+}
+
+@media only screen and (min-width: 60em) {
+    .md-search__input {
+        background-color: rgb(225, 225, 225)  !important;
+        border-radius: 25px;
+    }
+
+    .md-search__input::placeholder {
+        color: #20232a;
+    }
+
+    .md-search__input:hover {
+        background-color: rgb(225, 225, 225)  !important;
+    }
+
+    .md-search__icon::before {
+        color: #20232a;
+    }
+}
+
+.md-typeset pre > code::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(187,239,253,0.3) !important;
+}
+
+.md-sidebar__scrollwrap::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(187,239,253,0.3) !important;; 
+}
+
+
+/* Code formatting - start */
+.codehilite pre, code {
+    font-family: source-code-pro,Menlo,Monaco,Consolas,Courier New,monospace !important;
+    background-color: rgba(141, 141, 141, 0.1) !important
+}
+
+.md-typeset code {
+    font-size: inherit !important;
+    color: #1a1a1a;
+    background-color: rgba(141, 141, 141, 0.1) !important;
+    box-shadow: 0.29412em 0 0 rgba(141, 141, 141, 0.16), -0.29412em 0 0 rgba(141, 141, 141, 0.16);
+}
+
+.codehilite {
+    border-radius: 5px !important;
+    overflow: hidden !important;
+}
+
+.codehilite:hover .md-clipboard {
+    background-color: #f5f5f5a8;
+}
+
+.md-clipboard:hover {
+    background-color: whitesmoke !important;
+}
+
+.md-typeset .md-clipboard:hover::before, .md-typeset .md-clipboard:active::before {
+    color: rgb(82, 82, 82) !important;
+}
+
+.md-clipboard__message {
+    background-color: rgba(0, 0, 0, 0.87);
+}
+
+a>code {
+    box-shadow: unset !important;
+}
+
+.md-clipboard::before {
+    color: rgba(0, 0, 0, 0.26) !important;
+}
+
+/* Super fences */
+
+.md-typeset .superfences-tabs > label:hover {
+    color: #4adbff !important;
+}
+
+.md-typeset .superfences-tabs {
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* Tips - start */
+.md-typeset .admonition, .md-typeset details {
+    font-size: 1.38rem;
+}
+
+/* Hidden - start */
+
+.hidden {
+    display: none !important;
+}
+
+/* Footer - start */
+.md-footer-nav {
+    display: none;
+}
+
+/* Sidebars - start */
+@media only screen and (min-width: 76.25em) {
+    label.md-nav__title {
+        display: none !important;
+    }
+}
+
+.md-sidebar.md-sidebar--secondary {
+    padding: unset;
+    padding-top: 20px;
+}
+
+/* Scrollbar - start */
+::-webkit-scrollbar-track {
+	background-color: transparent;
+}
+
+::-webkit-scrollbar {
+	width: 8px;
+	background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color:#e1e1e1;
+	border-radius: 4px;
+}
+
+/* Anchors - start */
+.md-typeset h1:before, .md-typeset h2:before, .md-typeset h3:before {
+    margin-top: -6.8rem !important;
+    padding-top: 6.8rem !important;
+}
+
+/* Home link - start */
+.md-tabs.md-tabs--active .md-tabs__list>li:first-child {
+    display: none;
+}
+
+/* Headers */
+
+.md-typeset h1 {
+    font-weight: 700;
+    font-size: 65px;
+    color: rgb(32, 35, 41);
+}
+
+.md-typeset h2 {
+    font-weight: 700;
+    font-size: 35px;
+}
+
+.md-typeset h3 {
+    font-weight: 700;
+    font-size: 25px;
+}
+
+.md-typeset h4 {
+    font-weight: 600;
+    font-size: 20px;
+}

@@ -19,10 +19,12 @@ bin/
 /.metadata/
 out/
 gradle.zip
-**/docs/site
 /docker/**/*.*ar
 /docker/.env
 /docker/data
 /.vscode
 lang-java-reach-soot-init/lib/*.jar
+docs/site
+docs/merged
+docs/enterprise
 
