@@ -18,7 +18,38 @@ sap.ui.controller("view.Master", {
 			var page = this.getView().byId("page");
 			page.insertAggregation("content", bar, 0);
 		}
+		this.router.attachRouteMatched(this._handleRouteMatched, this)
+		this.adjustWorkSpace(this.router)
+		window.addEventListener("hashchange", function() {
+			this.adjustWorkSpace(this.router)
+		}.bind(this), false);
 		this.reloadData();
+	},
+
+	_handleRouteMatched : function(evt) {
+		if (evt.getParameter("name") !== "master") {
+            return;
+        }
+		const savedWorkspace = model.Config.getSpace()
+		const requestedWorkSpace = evt.getParameter("arguments").workspaceSlug
+		if (!requestedWorkSpace) {
+			this.router.navTo("master", {
+				workspaceSlug: savedWorkspace
+			})
+		}
+	},
+
+	// 
+	// 	this.adjustWorkSpace(this.router);
+	// 	this.reloadData();
+	adjustWorkSpace: function(router) {
+		
+		const savedWorkspace = model.Config.settings.cookie.space
+		const groups = window.location.hash.match(/#\/(.{32})/)
+		const requestedWorkSpace = groups ? groups[1] : undefined
+		if (savedWorkspace !== requestedWorkSpace) {
+			model.Config.setTemporaryWorkspace(requestedWorkSpace)
+		}
 	},
 	
 //	load : function() {
@@ -41,6 +72,11 @@ sap.ui.controller("view.Master", {
 		var label = this.getView().byId('app-label');
 		label.setText("Space " + model.Config.getSpace());
 		var labelCount = this.getView().byId('app-count');
+		if (model.Config.getSpace() !== model.Config.settings.cookie.space) {
+			label.addStyleClass("temporaryWorkSpace")
+		} else {
+			label.removeStyleClass("temporaryWorkSpace")
+		}
 		list.setBusy(true);
 		var data = [];
 		var oldmodel = list.getModel();
@@ -396,6 +432,7 @@ sap.ui.controller("view.Master", {
 		version = object.version;
 		model.lastChange = new Date(object.lastChange).getTime()
 		this.router.navTo("component", {
+			workspaceSlug: model.Config.getSpace(),
 			group : group,
 			artifact : artifact,
 			version : version
@@ -542,6 +579,7 @@ sap.ui.controller("view.Master", {
 //									config.setSkipEmpty(core.byId('idSkipEmpty').getState());
 //								}
 
+								config.setTemporaryWorkspace(undefined)
 
 								//************* clean Component and reset router 
 								//TODO: how to get (or set) Component.view.xml id?

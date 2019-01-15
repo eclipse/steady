@@ -12,28 +12,28 @@ sap.ui.core.UIComponent.extend("vulasfrontend.Component", {
 				transition : "slide"
 			},
 			routes : [ {
-				pattern : "",
+				pattern : ":workspaceSlug:",
 				name : "master",
 				viewPath : "view",
 				view : "Master",
 				viewLevel : 0,
 				targetAggregation : "masterPages",
 				subroutes : [ {
-					pattern : "apps/{group}/{artifact}/{version}",
+					pattern : "{workspaceSlug}/{group}/{artifact}/{version}",
 					name : "component",
 					view : "Component",
 					viewPath : "view",
 					viewLevel : 1,
 					targetAggregation : "detailPages",
 					subroutes : [ {
-						pattern : "apps/{group}/{artifact}/{version}/usedBug/{bugid}/{archiveid}",
+						pattern : "{workspaceSlug}/{group}/{artifact}/{version}/usedBug/{bugid}/{archiveid}",
 						name : "bugDetail",
 						view : "BugDetail",
 						viewPath : "view",
 						viewLevel : 2,
 						targetAggregation : "detailPages",
 						subroutes : [ {
-							pattern : "apps/{group}/{artifact}/{version}/usedBug/{bugid}/{archiveid}/{change}",
+							pattern : "{workspaceSlug}/{group}/{artifact}/{version}/usedBug/{bugid}/{archiveid}/{change}",
 							name : "graphDetail",
 							view : "GraphDetail",
 							viewPath : "view",
@@ -41,14 +41,14 @@ sap.ui.core.UIComponent.extend("vulasfrontend.Component", {
 							targetAggregation : "detailPages"
 						}]
 					},{
-						pattern : "apps/{group}/{artifact}/{version}/archive/{archiveid}",
+						pattern : "{workspaceSlug}/{group}/{artifact}/{version}/archive/{archiveid}",
 						name : "archiveDetail",
 						view : "ArchiveDetail",
 						viewPath : "view",
 						viewLevel : 2,
 						targetAggregation : "detailPages",
 						subroutes : [ {
-							pattern : "apps/{group}/{artifact}/{version}/archive/{archiveid}/{libId}",
+							pattern : "{workspaceSlug}/{group}/{artifact}/{version}/archive/{archiveid}/{libId}",
 							name : "updateDetail",
 							view : "UpdateDetail",
 							viewPath : "view",
@@ -56,7 +56,7 @@ sap.ui.core.UIComponent.extend("vulasfrontend.Component", {
 							targetAggregation : "detailPages"
 						}]
 					},{
-						pattern : "exe/{group}/{artifact}/{version}/executions/{exeid}",
+						pattern : "{workspaceSlug}/{group}/{artifact}/{version}/executions/{exeid}",
 						name : "exeDetail",
 						view : "ExecutionDetail",
 						viewPath : "view",

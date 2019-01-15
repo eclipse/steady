@@ -36,3 +36,14 @@
 .letterSpacingShrink {
 	letter-spacing: -0.5px;
 }
+
+.temporaryWorkSpace {
+	background-color: #ffab85;
+    border-radius: 2px;
+}
+
+.temporaryWorkSpace:before {
+	content: 'Non default';
+    display: block;
+    text-align: center;
+}

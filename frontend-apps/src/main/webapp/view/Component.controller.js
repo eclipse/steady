@@ -26,11 +26,13 @@ sap.ui.controller("view.Component", {
         }
 		if (groupId!=evt.getParameter("arguments").group ||
 				artifactId!=evt.getParameter("arguments").artifact ||
-				versionId!=evt.getParameter("arguments").version){
+				versionId!=evt.getParameter("arguments").version ||
+				workspaceSlug!=evt.getParameter("arguments").workspaceSlug){
 			
 			groupId = evt.getParameter("arguments").group;
 			artifactId = evt.getParameter("arguments").artifact;
 			versionId = evt.getParameter("arguments").version;
+			workspaceSlug = evt.getParameter("arguments").workspaceSlug;
 			model.Config.cleanRequests();
 			var req;
 			while(req = ajaxQueue.pop()){
@@ -599,6 +601,7 @@ sap.ui.controller("view.Component", {
 		//console.log(oEvent.getSource().getText());
 		var archiveid = oEvent.getSource().getText();
 		this.router.navTo("archiveDetail", {
+			workspaceSlug: workspaceSlug,
 			group : groupId,
 			artifact : artifactId,
 			version : versionId,
@@ -609,6 +612,7 @@ sap.ui.controller("view.Component", {
 //		var archiveid = oEvent.getParameter("listItem").getBindingContext()
 //				.getObject().lib.sha1;
 //		this.router.navTo("archiveDetail", {
+//	        workspaceSlug: workspaceSlug,
 //			group : groupId,
 //			artifact : artifactId,
 //			version : version,
@@ -679,6 +683,7 @@ sap.ui.controller("view.Component", {
 	onSearchResultItemTap : function(oEvent) {
 		var archiveid = oEvent.getParameters().rowBindingContext.getObject("dependency/lib/digest");
 		this.router.navTo("archiveDetail", {
+			workspaceSlug: workspaceSlug,
 			group : groupId,
 			artifact : artifactId,
 			version : versionId,
@@ -695,6 +700,7 @@ sap.ui.controller("view.Component", {
 			//oEvent.getParameter("listItem").getBindingContext()
 			//	.getObject().dep.lib.digest;
 		this.router.navTo("bugDetail", {
+			workspaceSlug: workspaceSlug,
 			group : groupId,
 			artifact : artifactId,
 			version : versionId,
@@ -712,6 +718,7 @@ sap.ui.controller("view.Component", {
 			//oEvent.getParameter("listItem").getBindingContext()
 			//	.getObject().dep.lib.sha1;
 		this.router.navTo("archiveDetail", {
+			workspaceSlug: workspaceSlug,
 			group : groupId,
 			artifact : artifactId,
 			version : versionId,
@@ -726,6 +733,7 @@ sap.ui.controller("view.Component", {
 		//var exe_id = oEvent.getParameter("listItem").getBindingContext().getObject().id;
 		var exe_id = oEvent.getParameters().rowBindingContext.getObject("id");
 		this.router.navTo("exeDetail", {
+			workspaceSlug: workspaceSlug,
 			group : groupId,
 			artifact : artifactId,
 			version : versionId,
