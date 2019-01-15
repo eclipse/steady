@@ -70,12 +70,17 @@ sap.ui.controller("view.Master", {
 	reloadData: function() {
 		var list = this.getView().byId('idListApplications');
 		var label = this.getView().byId('app-label');
-		label.setText("Space " + model.Config.getSpace());
+		//var workspaceListHeader = this.getView().byId('workspace-description');
+		label.setText(model.Config.getSpace());
 		var labelCount = this.getView().byId('app-count');
 		if (model.Config.getSpace() !== model.Config.settings.cookie.space) {
 			label.addStyleClass("temporaryWorkSpace")
+			label.removeStyleClass("defaultWorkSpace")
+			list.addStyleClass("warningColor")
 		} else {
 			label.removeStyleClass("temporaryWorkSpace")
+			label.addStyleClass("defaultWorkSpace")
+			list.removeStyleClass("warningColor")
 		}
 		list.setBusy(true);
 		var data = [];

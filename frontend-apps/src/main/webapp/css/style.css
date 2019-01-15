@@ -37,13 +37,22 @@
 	letter-spacing: -0.5px;
 }
 
-.temporaryWorkSpace {
+.warningColor .sapMListTblCell.sapMListTblHeaderCell.sapMTableTH {
 	background-color: #ffab85;
-    border-radius: 2px;
 }
 
 .temporaryWorkSpace:before {
-	content: 'Non default';
+	content: 'Non default space';
     display: block;
     text-align: center;
+}
+
+.defaultWorkSpace:before {
+	content: 'Default space';
+    display: block;
+    text-align: center;
+}
+
+.width100{
+	width: 100%;
 }
