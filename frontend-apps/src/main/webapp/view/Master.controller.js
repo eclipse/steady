@@ -552,6 +552,7 @@ sap.ui.controller("view.Master", {
 							press: function () {
 								let config = model.Config
 								let core = sap.ui.getCore()
+								config.setTemporaryWorkspace(undefined)
 								if (core.byId('idSpace').getSelectedItem() == null && core.byId('idSpace')._lastValue == "") {
 									sap.m.MessageBox.warning("No space selected, the default will be used.");
 								}
@@ -578,8 +579,6 @@ sap.ui.controller("view.Master", {
 //								if (core.byId('idSkipEmpty').getState() != config.getSkipEmpty()) {
 //									config.setSkipEmpty(core.byId('idSkipEmpty').getState());
 //								}
-
-								config.setTemporaryWorkspace(undefined)
 
 								//************* clean Component and reset router 
 								//TODO: how to get (or set) Component.view.xml id?
