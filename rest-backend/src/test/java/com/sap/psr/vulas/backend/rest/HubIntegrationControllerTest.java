@@ -193,7 +193,8 @@ public class HubIntegrationControllerTest {
     	String item = TEST_DEFAULT_SPACE+" ("+token+") "+app.getMvnGroup()+":"+app.getArtifact()+":"+app.getVersion();
     	// Read all public apps
     	mockMvc.perform(get("/hubIntegration/apps/"+item+"/vulndeps"))
-        .andExpect(status().isOk()).andExpect(jsonPath("$[0].spaceToken").exists());
+        .andExpect(status().isOk()).andExpect(jsonPath("$[0].spaceToken").exists())
+        .andExpect(jsonPath("$[0].appId").exists());
     	
     }
     

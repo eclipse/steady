@@ -243,6 +243,9 @@ public class HubIntegrationController {
 				else
 					vhd = new VulnerableItemDependency(_s.getSpaceToken(), vd, snapshot_date);
 
+				//add application id to ease integration
+				vhd.setAppId(_app.getId());
+				
 				// Set to null if among excluded scopes
 				if(_excluded_scopes!=null && _excluded_scopes.length>0) {
 					for(Scope scope: _excluded_scopes) {
@@ -368,6 +371,8 @@ public class HubIntegrationController {
 		
 		private String spaceToken = null;
 		
+		private Long appId = null;
+		
 
 		@JsonIgnore
 		private VulnerableDependency vulnerableDependency = null;
@@ -436,6 +441,12 @@ public class HubIntegrationController {
 		public String getType() { return type; }
 
 		public java.util.Calendar getSnapshotDate() { return snapshotDate; }
+		
+		public Long getAppId() { return this.appId; }
+		
+		public void setAppId(Long _id){
+			this.appId = _id;
+		}
 
 		/**
 		 * Delegates the comparison to {@link Application#compareTo(Application)} and {@link VulnerableDependency#compareTo(VulnerableDependency)}.
