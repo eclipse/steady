@@ -194,7 +194,9 @@ public class HubIntegrationControllerTest {
     	// Read all public apps
     	mockMvc.perform(get("/hubIntegration/apps/"+item+"/vulndeps"))
         .andExpect(status().isOk()).andExpect(jsonPath("$[0].spaceToken").exists())
-        .andExpect(jsonPath("$[0].appId").exists());
+        .andExpect(jsonPath("$[0].appId").exists())    	
+        .andExpect(jsonPath("$[0].lastScan").exists())
+        .andExpect(jsonPath("$[0].reachable").exists());
     	
     }
     

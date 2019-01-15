@@ -245,6 +245,11 @@ public class HubIntegrationController {
 
 				//add application id to ease integration
 				vhd.setAppId(_app.getId());
+				//add application id to ease integration
+				vhd.setLastScan(_app.getLastScan());
+				//add client version
+				if(latest_gexe!=null)
+					vhd.setClientVersion(latest_gexe.getClientVersion());
 				
 				// Set to null if among excluded scopes
 				if(_excluded_scopes!=null && _excluded_scopes.length>0) {
@@ -373,6 +378,12 @@ public class HubIntegrationController {
 		
 		private Long appId = null;
 		
+		private Boolean reachable = null;
+		
+		private String clientVersion = null;
+		
+		private Calendar lastScan = null;
+		
 
 		@JsonIgnore
 		private VulnerableDependency vulnerableDependency = null;
@@ -381,7 +392,7 @@ public class HubIntegrationController {
 		private Application application = null;
 
 		@Temporal(TemporalType.TIMESTAMP)
-		@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="GMT")
+		@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm", timezone="GMT")
 		private java.util.Calendar snapshotDate; 
 
 		private VulnerableItemDependency(String _spaceToken, VulnerableDependency _vd, Calendar _date) {
@@ -402,6 +413,8 @@ public class HubIntegrationController {
 			this.snapshotDate = _date;
 			this.scope = _vd.getDep().getScope()==null ? null : _vd.getDep().getScope().toString();
 			this.spaceToken = _spaceToken;
+			
+			this.reachable = (_vd.getReachable()==1 || _vd.getTraced()==1);
 
 			// Scope excluded: State to 1 (False Positive: Secure by design)
 			// Bug excluded: State to 4 (False Positive: Sufficient mitigation in place)
@@ -447,7 +460,22 @@ public class HubIntegrationController {
 		public void setAppId(Long _id){
 			this.appId = _id;
 		}
+		
+		public Boolean getReachable() { return this.reachable; }
 
+		
+		public String getClientVersion() { return this.clientVersion; }
+		
+		public void setClientVersion(String _clientVersion){
+			this.clientVersion = _clientVersion;
+		}
+		
+		public Calendar getLastScan() { return this.lastScan; }
+		
+		public void setLastScan(Calendar _lastScan){
+			this.lastScan = _lastScan;
+		}
+		
 		/**
 		 * Delegates the comparison to {@link Application#compareTo(Application)} and {@link VulnerableDependency#compareTo(VulnerableDependency)}.
 		 */
