@@ -131,6 +131,10 @@ model.Config.getSpace = function(_force) {
 	}
 }
 
+model.Config.getDefaultSavedSpace = function() {
+	return model.Config.settings.cookie.space
+}
+
 model.Config.getDefaultSpace = function(_force) {
 	if((_force!=undefined && _force)|| model.Config.settings.defaultSpace=="" || model.Config.settings.defaultSpace ==null || model.Config.settings.defaultSpace == undefined){
 		//retrieve default from backend

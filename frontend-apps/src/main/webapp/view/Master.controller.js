@@ -44,7 +44,7 @@ sap.ui.controller("view.Master", {
 	// 	this.reloadData();
 	adjustWorkSpace: function(router) {
 		
-		const savedWorkspace = model.Config.settings.cookie.space
+		const savedWorkspace = model.Config.getDefaultSavedSpace()
 		const groups = window.location.hash.match(/#\/(.{32})/)
 		const requestedWorkSpace = groups ? groups[1] : undefined
 		if (savedWorkspace !== requestedWorkSpace) {
@@ -73,7 +73,7 @@ sap.ui.controller("view.Master", {
 		//var workspaceListHeader = this.getView().byId('workspace-description');
 		label.setText(model.Config.getSpace());
 		var labelCount = this.getView().byId('app-count');
-		if (model.Config.getSpace() !== model.Config.settings.cookie.space) {
+		if (model.Config.getSpace() !== model.Config.getDefaultSavedSpace()) {
 			label.addStyleClass("temporaryWorkSpace")
 			label.removeStyleClass("defaultWorkSpace")
 			list.addStyleClass("warningColor")
@@ -613,7 +613,7 @@ sap.ui.controller("view.Master", {
 				}),
 				content: [
 					new sap.m.InputListItem({
-						label: "Space",
+						label: "Default space",
 						content: new sap.m.ComboBox("idSpace", {
 							showSecondaryValues: true,
 							filterSecondaryValues: true,
@@ -703,7 +703,7 @@ sap.ui.controller("view.Master", {
 		var items = sap.ui.getCore().byId('idSpace').getItems();
 		var publicSpace = false;
 		for (var i in items) {
-			if (items[i].getKey() == model.Config.getSpace()) {
+			if (items[i].getKey() == model.Config.getDefaultSavedSpace()) {
 				sap.ui.getCore().byId('idSpace').setSelectedItem(items[i]);
 				sap.ui.getCore().byId('idSpace').setSelectedKey(items[i].getKey());
 				publicSpace = true;
