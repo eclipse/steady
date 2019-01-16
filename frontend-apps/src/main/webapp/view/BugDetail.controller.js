@@ -19,7 +19,8 @@ sap.ui.controller("view.BugDetail", {
 				app.artifactid!=evt.getParameter("arguments").artifact ||
 				app.version!=evt.getParameter("arguments").version ||
 				bugId!=evt.getParameter("arguments").bugid ||
-				archiveId!=evt.getParameter("arguments").archiveid){
+				archiveId!=evt.getParameter("arguments").archiveid ||
+				workspaceSlug!=evt.getParameter("arguments").workspaceSlug){
 
 
 			bugId = evt.getParameter("arguments").bugid;
@@ -28,6 +29,7 @@ sap.ui.controller("view.BugDetail", {
 			app.groupid = evt.getParameter("arguments").group;
 			app.artifactid = evt.getParameter("arguments").artifact;
 			app.version = evt.getParameter("arguments").version;
+			workspaceSlug = evt.getParameter("arguments").workspaceSlug;
 
 			model.Config.cleanRequests();
 			this.loadDataIntoView();
@@ -206,7 +208,9 @@ sap.ui.controller("view.BugDetail", {
 		var change = this.getView().byId('idBugDetailPage').getModel().getData().constructList[index].constructChange.constructId.qname;
 		var group = this.getView().byId('idBugDetailPage').getModel("app").getData().groupid;
 		console.log(path + " " + index + " " + change + " " + group + app.artifactid + " " + app.version + " "+ archiveId + " " + bugId);
+		const workspaceSlug = model.Config.getSpace()
 		this.router.navTo("graphDetail", {
+			workspaceSlug: workspaceSlug,
 			group : app.groupid,
 			artifact : app.artifactid,
 			version : app.version,

@@ -18,6 +18,7 @@ sap.ui.controller("view.ArchiveDetail", {
 		groupId = evt.getParameter("arguments").group;
 		artifactId = evt.getParameter("arguments").artifact;
 		version = evt.getParameter("arguments").version;
+		workspaceSlug = evt.getParameter("arguments").workspaceSlug;
 		
 		model.Config.cleanRequests();
 		var req;
@@ -371,8 +372,9 @@ sap.ui.controller("view.ArchiveDetail", {
 						
 		//	archiveMetrics.archive=archive;
 		//	archiveMetrics.countVuln = oEvent.getParameters().rowBindingContext.getObject("countVuln");
-	
+			const workspaceSlug = model.Config.getSpace()
 			this.router.navTo("updateDetail", {
+				workspaceSlug: workspaceSlug,
 				group : groupId,
 				artifact : artifactId,
 				version : version,

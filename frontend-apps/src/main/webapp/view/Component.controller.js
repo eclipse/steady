@@ -600,6 +600,7 @@ sap.ui.controller("view.Component", {
 	onArchiveListItemTap : function(oEvent) {
 		//console.log(oEvent.getSource().getText());
 		var archiveid = oEvent.getSource().getText();
+		const workspaceSlug = model.Config.getSpace()
 		this.router.navTo("archiveDetail", {
 			workspaceSlug: workspaceSlug,
 			group : groupId,
@@ -682,6 +683,7 @@ sap.ui.controller("view.Component", {
 	
 	onSearchResultItemTap : function(oEvent) {
 		var archiveid = oEvent.getParameters().rowBindingContext.getObject("dependency/lib/digest");
+		const workspaceSlug = model.Config.getSpace()
 		this.router.navTo("archiveDetail", {
 			workspaceSlug: workspaceSlug,
 			group : groupId,
@@ -699,6 +701,7 @@ sap.ui.controller("view.Component", {
 		var archiveid = oEvent.getParameters().rowBindingContext.getObject("dep/lib/digest");
 			//oEvent.getParameter("listItem").getBindingContext()
 			//	.getObject().dep.lib.digest;
+		const workspaceSlug = model.Config.getSpace()
 		this.router.navTo("bugDetail", {
 			workspaceSlug: workspaceSlug,
 			group : groupId,
@@ -717,6 +720,7 @@ sap.ui.controller("view.Component", {
 		var archiveid = oEvent.getParameters().rowBindingContext.getObject("dep/lib/digest");
 			//oEvent.getParameter("listItem").getBindingContext()
 			//	.getObject().dep.lib.sha1;
+		const workspaceSlug = model.Config.getSpace()
 		this.router.navTo("archiveDetail", {
 			workspaceSlug: workspaceSlug,
 			group : groupId,
@@ -732,6 +736,7 @@ sap.ui.controller("view.Component", {
 	onExecutionListItemTap : function(oEvent) {
 		//var exe_id = oEvent.getParameter("listItem").getBindingContext().getObject().id;
 		var exe_id = oEvent.getParameters().rowBindingContext.getObject("id");
+		const workspaceSlug = model.Config.getSpace()
 		this.router.navTo("exeDetail", {
 			workspaceSlug: workspaceSlug,
 			group : groupId,
