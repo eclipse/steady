@@ -112,7 +112,7 @@ sap.ui.controller("view.Master", {
 		let listModel = list.getModel()
 		listModel.refresh()
 		listModel.oData.forEach(function(app, index){
-			if (index <= 49) {
+			if (index <= (model.Config.getListSize() - 1)) {
 				this.vulnerabilityIconQueue.add(function() {
 					return this.loadVulnerabilityIcon(workspace, backendUrl, skipEmpty, app, index, listModel)
 				}.bind(this), {
@@ -424,7 +424,7 @@ sap.ui.controller("view.Master", {
 		let listModel = list.getModel()
 		var labelCount = this.getView().byId('app-count');
 		binding.filter(filters);
-		labelCount.setText(Math.min(binding.aIndices.length, 50) + ' displayed out of ' + listModel.oData.length);
+		labelCount.setText(Math.min(binding.aIndices.length, model.Config.getListSize()) + ' displayed out of ' + listModel.oData.length);
 		if (query.length >= 1) {
 			this.updateFilteredVulnerabilityIcons(binding, listModel)
 		}
