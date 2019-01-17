@@ -322,9 +322,13 @@ public class HubIntegrationController {
 			final StringBuffer b = new StringBuffer();
 			b.append(this.space.getSpaceName()).append(" (").append(this.space.getSpaceToken()).append(")");
 			if(this.app!=null)
-				b.append(" ").append(this.app.getMvnGroup()).append(_separator).append(this.app.getArtifact()).append(_separator).append(this.app.getVersion());
+				b.append(" ").append(escapeCharacters(this.app.getMvnGroup())).append(_separator).append(escapeCharacters(this.app.getArtifact())).append(_separator).append(escapeCharacters(this.app.getVersion()));
 			return b.toString();
-		}		
+		}	
+		
+		private String escapeCharacters(String _param){
+			return _param.replace("/", "%2F");
+		}
 	}
 
 	@JsonInclude(JsonInclude.Include.ALWAYS)
