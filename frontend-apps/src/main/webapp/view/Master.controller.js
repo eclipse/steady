@@ -18,7 +18,38 @@ sap.ui.controller("view.Master", {
 			var page = this.getView().byId("page");
 			page.insertAggregation("content", bar, 0);
 		}
+		this.router.attachRouteMatched(this._handleRouteMatched, this)
+		this.adjustWorkSpace(this.router)
+		window.addEventListener("hashchange", function() {
+			this.adjustWorkSpace(this.router)
+		}.bind(this), false);
 		this.reloadData();
+	},
+
+	_handleRouteMatched : function(evt) {
+		if (evt.getParameter("name") !== "master") {
+            return;
+        }
+		const savedWorkspace = model.Config.getSpace()
+		const requestedWorkSpace = evt.getParameter("arguments").workspaceSlug
+		if (!requestedWorkSpace) {
+			this.router.navTo("master", {
+				workspaceSlug: savedWorkspace
+			})
+		}
+	},
+
+	// 
+	// 	this.adjustWorkSpace(this.router);
+	// 	this.reloadData();
+	adjustWorkSpace: function(router) {
+		
+		const savedWorkspace = model.Config.getDefaultSavedSpace()
+		const groups = window.location.hash.match(/#\/(.{32})/)
+		const requestedWorkSpace = groups ? groups[1] : undefined
+		if (savedWorkspace !== requestedWorkSpace) {
+			model.Config.setTemporaryWorkspace(requestedWorkSpace)
+		}
 	},
 	
 //	load : function() {
@@ -39,8 +70,18 @@ sap.ui.controller("view.Master", {
 	reloadData: function() {
 		var list = this.getView().byId('idListApplications');
 		var label = this.getView().byId('app-label');
-		label.setText("Space " + model.Config.getSpace());
+		//var workspaceListHeader = this.getView().byId('workspace-description');
+		label.setText(model.Config.getSpace());
 		var labelCount = this.getView().byId('app-count');
+		if (model.Config.getSpace() !== model.Config.getDefaultSavedSpace()) {
+			label.addStyleClass("temporaryWorkSpace")
+			label.removeStyleClass("defaultWorkSpace")
+			list.addStyleClass("warningColor")
+		} else {
+			label.removeStyleClass("temporaryWorkSpace")
+			label.addStyleClass("defaultWorkSpace")
+			list.removeStyleClass("warningColor")
+		}
 		list.setBusy(true);
 		var data = [];
 		var oldmodel = list.getModel();
@@ -396,6 +437,7 @@ sap.ui.controller("view.Master", {
 		version = object.version;
 		model.lastChange = new Date(object.lastChange).getTime()
 		this.router.navTo("component", {
+			workspaceSlug: model.Config.getSpace(),
 			group : group,
 			artifact : artifact,
 			version : version
@@ -515,6 +557,7 @@ sap.ui.controller("view.Master", {
 							press: function () {
 								let config = model.Config
 								let core = sap.ui.getCore()
+								config.setTemporaryWorkspace(undefined)
 								if (core.byId('idSpace').getSelectedItem() == null && core.byId('idSpace')._lastValue == "") {
 									sap.m.MessageBox.warning("No space selected, the default will be used.");
 								}
@@ -541,7 +584,6 @@ sap.ui.controller("view.Master", {
 //								if (core.byId('idSkipEmpty').getState() != config.getSkipEmpty()) {
 //									config.setSkipEmpty(core.byId('idSkipEmpty').getState());
 //								}
-
 
 								//************* clean Component and reset router 
 								//TODO: how to get (or set) Component.view.xml id?
@@ -571,7 +613,7 @@ sap.ui.controller("view.Master", {
 				}),
 				content: [
 					new sap.m.InputListItem({
-						label: "Space",
+						label: "Default space",
 						content: new sap.m.ComboBox("idSpace", {
 							showSecondaryValues: true,
 							filterSecondaryValues: true,
@@ -661,7 +703,7 @@ sap.ui.controller("view.Master", {
 		var items = sap.ui.getCore().byId('idSpace').getItems();
 		var publicSpace = false;
 		for (var i in items) {
-			if (items[i].getKey() == model.Config.getSpace()) {
+			if (items[i].getKey() == model.Config.getDefaultSavedSpace()) {
 				sap.ui.getCore().byId('idSpace').setSelectedItem(items[i]);
 				sap.ui.getCore().byId('idSpace').setSelectedKey(items[i].getKey());
 				publicSpace = true;

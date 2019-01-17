@@ -20,7 +20,7 @@
 				<columns>
 				    <Column mergeDuplicates="false">
 						<header>
-							<l:VerticalLayout class="sapUiNoMargin" >
+							<l:VerticalLayout class="sapUiNoMargin width100" >
 								<Label id="app-label" class="letterSpacingShrink"/>
 								<Text id="app-count" />
 							</l:VerticalLayout>

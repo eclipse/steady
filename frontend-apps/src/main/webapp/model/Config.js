@@ -110,12 +110,29 @@ model.Config.setSpace = function(_token) {
 	model.Config.settings.cookie.space=_token;
 	oStore.put("vulas-frontend-settings", model.Config.settings.cookie)
 }
+
+model.Config.setTemporaryWorkspace = function(workSpace) {
+	model.Config.temporaryWorkspace = workSpace
+}
+
+model.Config.getTemporaryWorkspace = function() {
+	return model.Config.temporaryWorkspace
+}
+
 model.Config.getSpace = function(_force) {
-	if(_force || model.Config.settings.cookie.space=="" || model.Config.settings.cookie.space ==null || model.Config.settings.cookie.space == undefined){		
+	if(_force || !model.Config.settings.cookie.space){		
 		model.Config.setSpace(model.Config.getDefaultSpace());
 	}
-	
-	return model.Config.settings.cookie.space;
+	const temporaryWorkspace = model.Config.getTemporaryWorkspace()
+	if (temporaryWorkspace) {
+		return temporaryWorkspace
+	} else {
+		return model.Config.settings.cookie.space;
+	}
+}
+
+model.Config.getDefaultSavedSpace = function() {
+	return model.Config.settings.cookie.space
 }
 
 model.Config.getDefaultSpace = function(_force) {

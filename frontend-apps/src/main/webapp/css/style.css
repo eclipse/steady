@@ -36,3 +36,23 @@
 .letterSpacingShrink {
 	letter-spacing: -0.5px;
 }
+
+.warningColor .sapMListTblCell.sapMListTblHeaderCell.sapMTableTH {
+	background-color: #ffab85;
+}
+
+.temporaryWorkSpace:before {
+	content: 'Non default space';
+    display: block;
+    text-align: center;
+}
+
+.defaultWorkSpace:before {
+	content: 'Default space';
+    display: block;
+    text-align: center;
+}
+
+.width100{
+	width: 100%;
+}
