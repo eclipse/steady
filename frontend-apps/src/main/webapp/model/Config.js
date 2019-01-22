@@ -23,7 +23,9 @@ model.Config.settings = {
 		swIdRegex : "",
 		swIdDb : "",
 		swIdMandatory : "",
-		wikiUrl : ""
+		wikiUrl : "",
+		swIdValidationUrls : "",
+		swIdSeachUrl : ""
 	};
 
 //********* SECTION : GETTERS AND SETTERS FUNCTIONS TO POPULATE JSONMODELS WITH JSON RETURNED BY THE BACKEND REQUESTS *********\\
@@ -48,6 +50,8 @@ model.Config.loadPropertiesFromBackend = function(){
 			model.Config.settings.wikiUrl="";
 			model.Config.settings.swIdDb="";
 			model.Config.settings.swIdMandatory="";
+			model.Config.settings.swIdValidationUrlList="";
+			model.Config.settings.swIdSeachUrl="";
 		}
 		for (var i in configs){
 			if(configs[i].key=="dl.regex")
@@ -66,6 +70,10 @@ model.Config.loadPropertiesFromBackend = function(){
 				model.Config.settings.swIdDb=configs[i].value[0];		
 			if(configs[i].key=="sw.id.mandatory")
 				model.Config.settings.swIdMandatory=configs[i].value[0];		
+			if(configs[i].key=="sw.id.validation.urls")
+				model.Config.settings.swIdValidationUrlList=configs[i].value;	
+			if(configs[i].key=="sw.id.search.url")
+				model.Config.settings.swIdSeachUrl=configs[i].value[0];	
 		}
 	});
 }
@@ -224,6 +232,14 @@ model.Config.getSwIdDb = function() {
 
 model.Config.getSwIdMandatory = function() {
 	return model.Config.settings.swIdMandatory;
+}
+
+model.Config.getSwIdValidationUrlList = function() {
+	return model.Config.settings.swIdValidationUrlList;
+}
+
+model.Config.getSwIdSeachUrl = function() {
+	return model.Config.settings.swIdSeachUrl;
 }
 
 

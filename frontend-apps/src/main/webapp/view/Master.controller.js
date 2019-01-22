@@ -179,6 +179,23 @@ sap.ui.controller("view.Master", {
 	    
 	},
 	
+	validateSwIdExistence: function (swId) {
+		var urls = model.Config.getSwIdValidationUrlList();
+		var exists = false;
+		if(!urls)
+			return true;
+		for(var i in urls){
+			$.ajax({
+				url: urls[i]+swId,
+				async: false,
+				statusCode: {
+					200 : function(){ exists=true;},
+				}
+			});
+		}
+		return exists;
+	},
+	
 	validateListSize: function (_size) {
 	    return /^\d*$/.test(_size) && _size>0 && _size <= 100 ;
 	},
@@ -244,9 +261,13 @@ sap.ui.controller("view.Master", {
 			                    		sap.m.MessageBox.warning(
 			                    				"Please provide an internal distribution list as contact " + model.Config.getDlExample()
 			                    			);
-			                    	else if(sap.ui.getCore().byId('idSw').getValue()!="" && !this.validateSwIdObjectNumber(sap.ui.getCore().byId('idSw').getValue()))
+			                    	else if(sap.ui.getCore().byId('idSw').getValue()!="" && !this.validateSwIdObjectNumber(sap.ui.getCore().byId('idSw').getValue()) && !this.validateSwIdExistence(sap.ui.getCore().byId('idSw').getValue()))
 			                    		sap.m.MessageBox.warning(
 			                    				"Please provide a valid " + model.Config.getSwIdLabel()
+			                    			);
+			                    	else if(sap.ui.getCore().byId('idSw').getValue()!="" && !this.validateSwIdExistence(sap.ui.getCore().byId('idSw').getValue()))
+			                    		sap.m.MessageBox.warning(
+			                    				"The provided " + model.Config.getSwIdLabel() + " does not exists; please check the value."
 			                    			);
 			                    	else{
 			                    		
