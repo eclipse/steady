@@ -48,7 +48,7 @@ def fetch_enterprise_docs(local_repo, url):
         global ENTERPRISE_ROOT
         global ENTERPRISE_DOCS_ROOT
         ENTERPRISE_ROOT = str(Path(local_repo))
-        ENTERPRISE_DOCS_ROOT = str(Path(local_repo, 'docs'))
+        ENTERPRISE_DOCS_ROOT = str(Path(local_repo, 'content'))
     else:
         clone_enterprise_docs(url)
 
