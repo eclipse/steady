@@ -7,7 +7,7 @@ about: Create a report to help us improve
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-__IMPORTANT__: please ensure that you do not refer to any **internal or confidential information** from your company/organization here. Also, to ensure the reproducibility of bugs, please provide only references to public (open-source) projects on which the issue can be reproduced. **Please do not include in the issue description any reference or link to non-public or otherwise proprietary information**.
+__IMPORTANT__: please ensure that you do not refer to any **internal or confidential information** from your company/organization here. Also, please provide only references to public (open-source) projects on which the issue can be reproduced. **Please do not include in the issue description any reference or link to non-public or otherwise proprietary information**.
 
 **To Reproduce**
 Steps to reproduce the behavior:
