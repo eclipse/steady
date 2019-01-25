@@ -12,9 +12,10 @@ from mkdocs import config
 from mkdocs.commands import build, serve, gh_deploy
 
 CWD=os.getcwd()
-MERGED_DOCS_FOLDER=os.path.join(CWD, 'merged')
+MERGED_DOCS_FOLDER=os.path.join(CWD, '.merged')
 ENTERPRISE_PREFIX='enterprise'
-ENTERPRISE_ROOT=os.path.join(CWD, ENTERPRISE_PREFIX)
+ENTERPRISE_ROOT=os.path.join(CWD, '.tmp')
+MKDOCS_SITE_ROOT=os.path.join(CWD, 'site')
 ENTERPRISE_DOCS_ROOT=os.path.join(ENTERPRISE_ROOT, 'content')
 PUBLIC_DOCS_ROOT=os.path.join(CWD, 'public', 'content')
 EXTENSIONS_TO_COPY=('.md','.jpg','.png', '.css', '.js', '.gif')
@@ -132,11 +133,23 @@ def replace_keywords(dir_1, context):
                     fp.write(new_file_content)
                     fp.truncate()
 
+def handleRemoveReadonly(func, path, exc):
+    # https://stackoverflow.com/a/1214935/3482533
+    excvalue = exc[1]
+    if func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES:
+        os.chmod(path, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
+        func(path)
+    else:
+        raise
+
 def clean():
     print('Cleaning up')
     files = ['{}.properties'.format(ENTERPRISE_PREFIX), 'mkdocs-enterprise.yml']
     for file in files:
         os.remove(file) if os.path.exists(file) else None
+    shutil.rmtree(ENTERPRISE_ROOT, ignore_errors=True, onerror=handleRemoveReadonly)
+    shutil.rmtree(MERGED_DOCS_FOLDER, ignore_errors=True, onerror=handleRemoveReadonly)
+    shutil.rmtree(MKDOCS_SITE_ROOT, ignore_errors=True, onerror=handleRemoveReadonly)
 
 def select_config(kind):
     return 'mkdocs.yml' if kind == 'public' else 'mkdocs-enterprise.yml'
