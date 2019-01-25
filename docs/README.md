@@ -57,7 +57,7 @@ By default the `docs.py` script will clone the enterprise repository and merge i
 ```sh
 python docs.py enterprise --url https://github.xxx/yyy/zzz.git --mkserve
 # Use the command below if you dont want the script to clone the enterprise repo. Be sure to have the enterprise repo up to date
-python docs.py enterprise --url https://github.xxx/yyy/zzz.git --local_repo ../zzz --mkserve
+python docs.py enterprise --url https://github.xxx/yyy/zzz.git --local_repo ../../zzz --mkserve
 ```
 
 #### Publish enterprise docs
@@ -67,7 +67,7 @@ The `docs.py` script is also able to publish enterprise docs to enterprise Githu
 ```sh
 python docs.py enterprise --url https://github.xxx/yyy/zzz.git --mkghdeploy
 # We recomment to always let the script clone the enterprise private repository instead of linking to a local directory
-python docs.py enterprise --url https://github.xxx/yyy/zzz.git --local_repo ../zzz --mkghdeploy
+python docs.py enterprise --url https://github.xxx/yyy/zzz.git --local_repo ../../zzz --mkghdeploy
 ```
 
 ## Test
