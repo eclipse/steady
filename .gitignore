@@ -25,6 +25,6 @@ gradle.zip
 /.vscode
 lang-java-reach-soot-init/lib/*.jar
 docs/site
-docs/merged
-docs/enterprise
+docs/.merged
+docs/.tmp
 

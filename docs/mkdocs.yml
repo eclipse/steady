@@ -7,7 +7,7 @@ dev_addr: 0.0.0.0:8000
 repo_name: 'sap/vulnerability-assessment-tool'
 repo_url: 'https://github.com/sap/vulnerability-assessment-tool'
 
-docs_dir: merged
+docs_dir: .merged
 
 nav:
   - Home:
