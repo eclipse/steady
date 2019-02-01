@@ -3,7 +3,6 @@ site_description: vulnerability-assessment-tool Documentation
 site_url: https://sap.github.io/vulnerability-assessment-tool/
 dev_addr: 0.0.0.0:8000
 
-# Repository
 repo_name: 'sap/vulnerability-assessment-tool'
 repo_url: 'https://github.com/sap/vulnerability-assessment-tool'
 
@@ -61,13 +60,11 @@ nav:
       - 'Patch Analyzer' : vuln_db/manuals/patch_analyzer.md
       - 'Patch Lib Analyzer' : vuln_db/manuals/patch_lib_analyzer.md
       - 'Manual Assessment' : vuln_db/manuals/manual_assessment.md
-  # - Blog:
-  #   - blog/2018/index.md
+  - Blog: 
+    - https://blogs.sap.com/tag/vulas/
 
-# Copyright
 copyright: 'Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.'
 
-# Extensions
 markdown_extensions:
   - markdown.extensions.admonition
   - markdown.extensions.attr_list
@@ -99,8 +96,6 @@ markdown_extensions:
       custom_checkbox: true
   - pymdownx.tilde
 
-
-# Customization
 extra:
   social:
     - type: 'github'
