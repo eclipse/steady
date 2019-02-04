@@ -1026,8 +1026,8 @@
 <p>The code-level vulnerability analysis performed by vulnerability-assessment-tool is based on the so-called change list, which is a set of constructs (e.g., Java methods) changed to fix a given security vulnerability.</p>
 <p>Vulnerability detection is based on construct containment: a library is affected by a vulnerability if it contains the constructs that were changed to fix a vulnerability.</p>
 <p>Once a vulnerability's change list has been created and added to the database, every application analyzed in the past is automatically assessed with regard to the new vulnerability. In other words, application owners see immediately whether their application is affected or not, without the need to re-run the analysis.</p>
-<p>An up-to-date list of all vulnerabilities currently comprised in the database can be obtained using the following link: <code>http://localhost:8033:/backend/bugs</code></p>
-<p>Detailed information for a given vulnerability can be obtained using the following link, whereby <code>&lt;foo&gt;</code> has to be replaced by the vulnerability identifier:  <code>http://localhost:8033:/backend/bugs/&lt;foo&gt;</code></p>
+<p>An up-to-date list of all vulnerabilities currently comprised in the database can be obtained using the following link: <code>http://localhost:8033/backend/bugs</code></p>
+<p>Detailed information for a given vulnerability can be obtained using the following link, whereby <code>&lt;foo&gt;</code> has to be replaced by the vulnerability identifier:  <code>http://localhost:8033/backend/bugs/&lt;foo&gt;</code></p>
 <p>The <a href="../../vuln_db/manuals/patch_analyzer/">Patch Analyzer</a> module can be used to add vulnerabilities to the knowledge base.</p>
 <p>In the current implementation, the vulnerability detection is based on the containment of the fully-qualified name of a construct changed to fix a vulnerability in a library. The information whether the library contains the vulnerable or fixed version of the construct is computed asynchronously by the <a href="../../vuln_db/manuals/patch_lib_analyzer">Patch Lib Analyzer</a>.</p>
                 

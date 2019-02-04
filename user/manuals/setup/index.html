@@ -1333,7 +1333,7 @@
 </ul>
 <h3 id="workspace-rest-api">Workspace REST API<a class="headerlink" href="#workspace-rest-api" title="Permanent link">&para;</a></h3>
 <p>The REST API can be used to export findings in a machine-readable fashion. Calling HTTP GET on the following URL, for instance, returns all vulnerable dependencies of an aggregated workspace:</p>
-<p><code>http://localhost:8033:/backend/hubIntegration/apps/&lt;workspace-name&gt;%20(&lt;workspace-token&gt;)/vulndeps</code></p>
+<p><code>http://localhost:8033/backend/hubIntegration/apps/&lt;workspace-name&gt;%20(&lt;workspace-token&gt;)/vulndeps</code></p>
 <p>The API returns an array of JSON elements having the following data model:</p>
 <table>
 <thead>
@@ -1402,7 +1402,7 @@
 <p><strong>Without profile</strong>, the execution of goals requires the use of the plugin's fully qualified name, e.g., <code>mvn compile com.sap.research.security.vulas:plugin-maven:3.0.14-SNAPSHOT:app</code>. Moreover, you need to specify the following mandatory configuration settings. As described <a href="#configuration">here</a>, there are several ways of doing so, however, a file as follows is very common:</p>
 <p><strong>vulas-custom.properties</strong></p>
 <div class="codehilite"><pre><span></span>vulas.core.space.token = &lt;YOUR WORKSPACE TOKEN&gt;
-vulas.shared.backend.serviceUrl = http://localhost:8033:/backend
+vulas.shared.backend.serviceUrl = http://localhost:8033/backend
 </pre></div>
 
 </li>
@@ -1455,7 +1455,7 @@ vulas.shared.backend.serviceUrl = http://localhost:8033:/backend
     // Replace token of test space
     vulas.core.space.token = ### workspace token - EDIT THIS ###
 
-    vulas.shared.backend.serviceUrl = http://localhost:8033:/backend
+    vulas.shared.backend.serviceUrl = http://localhost:8033/backend
 </pre></div>
 
 <p>Note: Rather than adding configuration settings to <code>gradle.properties</code>, they can also be passed as project properties in the command line, e.g., <code>-Pvulas.report.exceptionThreshold=noException</code>. The use of <code>-D</code> system properties for changing configuration settings is discouraged (because of the cache of the Gradle daemon).</p>
@@ -1527,8 +1527,8 @@ vulas.shared.backend.serviceUrl = http://localhost:8033:/backend
 </ul>
 <h2 id="check-setup">Check setup<a class="headerlink" href="#check-setup" title="Permanent link">&para;</a></h2>
 <p>Proceed as follows to check whether the vulnerability-assessment-tool setup and goal execution works:</p>
-<p><strong>On the client</strong>, after executing a specific vulnerability-assessment-tool goal on your application, a log entry similar to the one below should be printed to the console. It is used to upload goal-related information to the vulnerability-assessment-tool backend, e.g., the vulnerability-assessment-tool version used or the average memory consumption. In this example, information related to a goal execution for an application with GAV <code>com.acme.foo:vulas-testapp-webapp:3.0.9-MVN</code> was uploaded to <code>http://localhost:8033:/backend</code>, workspace <code>123456789</code>. The successful upload is indicated by the HTTP response code <code>201</code>.</p>
-<div class="codehilite"><pre><span></span>[main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST [uri=http://localhost:8033:/backend/apps/com.acme.foo/vulas-testapp-webapp/3.0.9-MVN/goals, size=23,50 KB, tenant=123456789, space=123456789]
+<p><strong>On the client</strong>, after executing a specific vulnerability-assessment-tool goal on your application, a log entry similar to the one below should be printed to the console. It is used to upload goal-related information to the vulnerability-assessment-tool backend, e.g., the vulnerability-assessment-tool version used or the average memory consumption. In this example, information related to a goal execution for an application with GAV <code>com.acme.foo:vulas-testapp-webapp:3.0.9-MVN</code> was uploaded to <code>http://localhost:8033/backend</code>, workspace <code>123456789</code>. The successful upload is indicated by the HTTP response code <code>201</code>.</p>
+<div class="codehilite"><pre><span></span>[main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST [uri=http://localhost:8033/backend/apps/com.acme.foo/vulas-testapp-webapp/3.0.9-MVN/goals, size=23,50 KB, tenant=123456789, space=123456789]
 [main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST completed with response code [201] in [03.019 ms] (proxy=false)
 </pre></div>
 

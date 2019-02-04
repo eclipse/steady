@@ -1169,8 +1169,8 @@
 <li>JDK 7 or later</li>
 <li>URL of the package repository to download the plugin JAR (<code>&lt;PACKAGE-REPO&gt;</code>)</li>
 <li>URLs of the <strong>backend service</strong> and <strong>apps Web frontend</strong><ul>
-<li>Apps Web frontend: <a href="http://localhost:8033:/apps">http://localhost:8033:/apps</a></li>
-<li>Backend service: <a href="http://localhost:8033:/backend">http://localhost:8033:/backend</a></li>
+<li>Apps Web frontend: <a href="http://localhost:8033/apps">http://localhost:8033/apps</a></li>
+<li>Backend service: <a href="http://localhost:8033/backend">http://localhost:8033/backend</a></li>
 </ul>
 </li>
 <li>The token of a vulnerability-assessment-tool workspace</li>
@@ -1202,7 +1202,7 @@
     // Replace token of test space
     vulas.core.space.token = &lt;WORKSPACE-TOKEN&gt;
 
-    vulas.shared.backend.serviceUrl = http://localhost:8033:/backend
+    vulas.shared.backend.serviceUrl = http://localhost:8033/backend
 </pre></div>
 
 <p>Note: Rather than adding configuration settings to <code>gradle.properties</code>, they can also be passed as project properties in the command line, e.g., <code>-Pvulas.report.exceptionThreshold=noException</code>. The use of <code>-D</code> system properties for changing configuration settings is discouraged (because of the cache of the Gradle daemon).</p>
