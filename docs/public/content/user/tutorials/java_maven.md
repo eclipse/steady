@@ -18,8 +18,8 @@ HP: Not needed in my option.
 1. JDK 7 or later
 2. Apache Maven 3.x with `settings.xml` configured to download from the Maven repository hosting the @@PROJECT_NAME@@ plugin for Maven
 3. URLs of the **backend service** and **apps Web frontend**
-	- Apps Web frontend: @@ADDRESS@@:/apps
-	- Backend service: @@ADDRESS@@:/backend
+	- Apps Web frontend: @@ADDRESS@@/apps
+	- Backend service: @@ADDRESS@@/backend
 4. The token of a @@PROJECT_NAME@@ workspace
 
 {! user/tutorials/partials/create_workspace.md !}

@@ -316,7 +316,7 @@ Example:
 ```text
 [main] INFO  com.sap.psr.vulas.monitor.InstrumentationControl  - JAR [C:\Users\XXXXXX\.m2\repository\org\apache\commons\commons-lang3\3.2\commons-lang3-3.2.jar] is blacklisted: [false]
 Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in code.MainTest
-[vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP GET [uri=@@ADDRESS@@:/backend/apps/XXXXXX/XXXXXX/XXXXXX/bugs?historical=false, proxy=false]
+[vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP GET [uri=@@ADDRESS@@/backend/apps/XXXXXX/XXXXXX/XXXXXX/bugs?historical=false, proxy=false]
 [vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP GET completed with response code [200] in [0,0573 min]
 [vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.backend.BackendConnector  - [53] constructs for [7] bugs received from backend
 [vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.monitor.trace.TraceCollector  - Completed instantiation of trace collector

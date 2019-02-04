@@ -6,9 +6,9 @@ Vulnerability detection is based on construct containment: a library is affected
 
 Once a vulnerability's change list has been created and added to the database, every application analyzed in the past is automatically assessed with regard to the new vulnerability. In other words, application owners see immediately whether their application is affected or not, without the need to re-run the analysis.
 
-An up-to-date list of all vulnerabilities currently comprised in the database can be obtained using the following link: `@@ADDRESS@@:/backend/bugs`
+An up-to-date list of all vulnerabilities currently comprised in the database can be obtained using the following link: `@@ADDRESS@@/backend/bugs`
 
-Detailed information for a given vulnerability can be obtained using the following link, whereby `<foo>` has to be replaced by the vulnerability identifier:  `@@ADDRESS@@:/backend/bugs/<foo>`
+Detailed information for a given vulnerability can be obtained using the following link, whereby `<foo>` has to be replaced by the vulnerability identifier:  `@@ADDRESS@@/backend/bugs/<foo>`
 
 The [Patch Analyzer](../../vuln_db/manuals/patch_analyzer/) module can be used to add vulnerabilities to the knowledge base.
 

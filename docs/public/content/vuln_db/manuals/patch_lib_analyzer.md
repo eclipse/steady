@@ -54,17 +54,17 @@ Other useful/required configurations:
 Run as cron job
 
 ```sh
-java -Dvulas.patchEval.uploadResults=true -Dvulas.patchEval.onlyAddNewResults=true -Dvulas.patchEval.basefolder=<csv_folder> -j -p 6 -Dvulas.shared.cia.serviceUrl=@@ADDRESS@@:/cia -Dvulas.shared.backend.serviceUrl=@@ADDRESS@@:/backend -Xmx6G -Xms6G -jar patch-lib-analyzer-@@PROJECT_VERSION@@-jar-with-dependencies.jar
+java -Dvulas.patchEval.uploadResults=true -Dvulas.patchEval.onlyAddNewResults=true -Dvulas.patchEval.basefolder=<csv_folder> -j -p 6 -Dvulas.shared.cia.serviceUrl=@@ADDRESS@@/cia -Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend -Xmx6G -Xms6G -jar patch-lib-analyzer-@@PROJECT_VERSION@@-jar-with-dependencies.jar
 ```
 
 Run for all bugs
 
 ```sh
-java -Dvulas.patchEval.uploadResults=true -Dvulas.patchEval.onlyAddNewResults=true -Dvulas.patchEval.basefolder=<csv_folder> -Dvulas.patchEval.bugId=<comma_separated_list_of_bugs> -Dvulas.shared.cia.serviceUrl=@@ADDRESS@@:/cia -Dvulas.shared.backend.serviceUrl=@@ADDRESS@@:/backend -Xmx6G -Xms6G -jar patch-lib-analyzer-@@PROJECT_VERSION@@-jar-with-dependencies.jar
+java -Dvulas.patchEval.uploadResults=true -Dvulas.patchEval.onlyAddNewResults=true -Dvulas.patchEval.basefolder=<csv_folder> -Dvulas.patchEval.bugId=<comma_separated_list_of_bugs> -Dvulas.shared.cia.serviceUrl=@@ADDRESS@@/cia -Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend -Xmx6G -Xms6G -jar patch-lib-analyzer-@@PROJECT_VERSION@@-jar-with-dependencies.jar
 ```
 
 Run for CVE-2018-1111,CVE-2018-2222
 
 ```sh
-java -Dvulas.patchEval.uploadResults=true -Dvulas.patchEval.onlyAddNewResults=true -Dvulas.patchEval.basefolder=<csv_folder> -Dvulas.patchEval.bugId=CVE-2018-1111,CVE-2018-2222 -Dvulas.shared.cia.serviceUrl=@@ADDRESS@@:/cia -Dvulas.shared.backend.serviceUrl=@@ADDRESS@@:/backend -Xmx6G -Xms6G -jar patch-lib-analyzer-@@PROJECT_VERSION@@-jar-with-dependencies.jar
+java -Dvulas.patchEval.uploadResults=true -Dvulas.patchEval.onlyAddNewResults=true -Dvulas.patchEval.basefolder=<csv_folder> -Dvulas.patchEval.bugId=CVE-2018-1111,CVE-2018-2222 -Dvulas.shared.cia.serviceUrl=@@ADDRESS@@/cia -Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend -Xmx6G -Xms6G -jar patch-lib-analyzer-@@PROJECT_VERSION@@-jar-with-dependencies.jar
 ```
