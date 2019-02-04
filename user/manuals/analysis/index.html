@@ -1521,7 +1521,7 @@ mvn -Dvulas compile vulas:a2c
 <div class="superfences-tabs">
 <input name="__tabs_4" type="radio" id="__tab_4_0" checked="checked" />
 <label for="__tab_4_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nb">set</span> <span class="s2">&quot;CATALINA_OPTS=-javaagent:lang-java-3.0.14-SNAPSHOT-jar-with-dependencies.jar -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend -Dvulas.core.backendConnection=READ_WRITE -Dvulas.core.monitor.periodicUpload.enabled=true -Dvulas.core.appContext.group=&lt;GROUP&gt; -Dvulas.core.appContext.artifact=&lt;ARTIFACT&gt; -Dvulas.core.appContext.version=&lt;VERSION&gt; -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor -noverify&quot;</span>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nb">set</span> <span class="s2">&quot;CATALINA_OPTS=-javaagent:lang-java-3.0.14-SNAPSHOT-jar-with-dependencies.jar -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/-Dvulas.core.backendConnection=READ_WRITE -Dvulas.core.monitor.periodicUpload.enabled=true -Dvulas.core.appContext.group=&lt;GROUP&gt; -Dvulas.core.appContext.artifact=&lt;ARTIFACT&gt; -Dvulas.core.appContext.version=&lt;VERSION&gt; -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor -noverify&quot;</span>
 </pre></div></div>
 </div>
 <h2 id="static-instrumentation-instr">Static instrumentation (instr)<a class="headerlink" href="#static-instrumentation-instr" title="Permanent link">&para;</a></h2>
