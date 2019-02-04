@@ -4,7 +4,7 @@ This guide describe the different views of the apps Web frontend. The sections d
 
 ## Start page
 
-The start page is displayed when opening the URL of the @@PROJECT_NAME@@ Web Frontend (usually following a link looking like https://@@HOST@@/apps) in the browser:
+The start page is displayed when opening the URL of the @@PROJECT_NAME@@ Web Frontend (usually following a link looking like @@ADDRESS@@/apps) in the browser:
 
 <center class='expandable'>
     [![start_page](./img/frontend_start_page.png)](./img/frontend_start_page.png)

@@ -7,8 +7,8 @@
 1. JDK 7 or later
 2. `pip` is installed and "knows" all application dependencies (check with `pip list`)
 3. URLs of the **backend service** and **apps Web frontend**
-    - Apps Web frontend: http://@@HOST@@:@@PORT@@/apps
-    - Backend service: http://@@HOST@@:@@PORT@@/backend
+    - Apps Web frontend: @@ADDRESS@@:/apps
+    - Backend service: @@ADDRESS@@:/backend
 4. The token of a @@PROJECT_NAME@@ workspace
 
 {! user/tutorials/partials/create_workspace.md !}

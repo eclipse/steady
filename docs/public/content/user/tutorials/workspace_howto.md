@@ -4,13 +4,13 @@ A workspace acts as a container to group the results of several application anal
 
 ## Prerequisites
 
-1. URL of the apps Web frontend: https://@@HOST@@/apps
+1. URL of the apps Web frontend: @@ADDRESS@@/apps
 
 ## Create workspace
 
 Proceed as follows to create a workspace. Note that by creating a workspace, you will also generate a token to be used when performing actual application scans.
 
-1. Connect to the apps Web frontend: https://@@HOST@@/apps
+1. Connect to the apps Web frontend: @@ADDRESS@@/apps
 
 2. Click on the third button in the lower left corner:
 

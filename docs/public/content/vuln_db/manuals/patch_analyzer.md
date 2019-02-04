@@ -40,7 +40,7 @@ In case a vulnerability fix does not include any code change (e.g., only changes
 
 The first POST request creates the entry into the vulnerabilities database (in the following example we create and entry for CVE "S2-043"):
 
-`POST http://http://@@HOST@@:@@PORT@@/backend/bugs`
+`POST http://@@ADDRESS@@:/backend/bugs`
 
 ```json
 {
@@ -55,7 +55,7 @@ The first POST request creates the entry into the vulnerabilities database (in t
 
 The second POST request defines which versions to be marked as affected or not. Please notice that the id of the CVE to update ("S2-403" in the following example) has to be used/replaced in the following POST request.
 
-`POST http://http://@@HOST@@:@@PORT@@/backend/bugs/S2-043/affectedLibIds?source=MANUAL`
+`POST http://@@ADDRESS@@:/backend/bugs/S2-043/affectedLibIds?source=MANUAL`
 
 ```json
 [

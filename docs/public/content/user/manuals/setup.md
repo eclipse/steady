@@ -60,7 +60,7 @@ Once this button is clicked, all the editable property-fields of the workspace a
 
 The REST API can be used to export findings in a machine-readable fashion. Calling HTTP GET on the following URL, for instance, returns all vulnerable dependencies of an aggregated workspace:
 
-`http://@@HOST@@:@@PORT@@/backend/hubIntegration/apps/<workspace-name>%20(<workspace-token>)/vulndeps`
+`@@ADDRESS@@:/backend/hubIntegration/apps/<workspace-name>%20(<workspace-token>)/vulndeps`
 
 The API returns an array of JSON elements having the following data model:
 
@@ -90,7 +90,7 @@ The plugin for Maven can be used with or without adding a `<profile>` section to
 
     ```
     vulas.core.space.token = <YOUR WORKSPACE TOKEN>
-    vulas.shared.backend.serviceUrl = http://@@HOST@@:@@PORT@@/backend
+    vulas.shared.backend.serviceUrl = @@ADDRESS@@:/backend
     ```
 
 It is possible to include/exclude modules of a multi-module Maven project using the following configuration parameters:
@@ -149,7 +149,7 @@ The plugin for Gradle requires changes of the following files:
     // Replace token of test space
     vulas.core.space.token = ### workspace token - EDIT THIS ###
 
-    vulas.shared.backend.serviceUrl = http://@@HOST@@:@@PORT@@/backend
+    vulas.shared.backend.serviceUrl = @@ADDRESS@@:/backend
 ```
 
 Note: Rather than adding configuration settings to `gradle.properties`, they can also be passed as project properties in the command line, e.g., `-Pvulas.report.exceptionThreshold=noException`. The use of `-D` system properties for changing configuration settings is discouraged (because of the cache of the Gradle daemon).
@@ -211,14 +211,14 @@ The following settings, however, have to be present for every goal execution:
 
 Proceed as follows to check whether the @@PROJECT_NAME@@ setup and goal execution works:
 
-**On the client**, after executing a specific @@PROJECT_NAME@@ goal on your application, a log entry similar to the one below should be printed to the console. It is used to upload goal-related information to the @@PROJECT_NAME@@ backend, e.g., the @@PROJECT_NAME@@ version used or the average memory consumption. In this example, information related to a goal execution for an application with GAV `com.acme.foo:vulas-testapp-webapp:3.0.9-MVN` was uploaded to `http://@@HOST@@:@@PORT@@/backend`, workspace `123456789`. The successful upload is indicated by the HTTP response code `201`.
+**On the client**, after executing a specific @@PROJECT_NAME@@ goal on your application, a log entry similar to the one below should be printed to the console. It is used to upload goal-related information to the @@PROJECT_NAME@@ backend, e.g., the @@PROJECT_NAME@@ version used or the average memory consumption. In this example, information related to a goal execution for an application with GAV `com.acme.foo:vulas-testapp-webapp:3.0.9-MVN` was uploaded to `@@ADDRESS@@:/backend`, workspace `123456789`. The successful upload is indicated by the HTTP response code `201`.
 
 ```log
-[main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST [uri=http://@@HOST@@:@@PORT@@/backend/apps/com.acme.foo/vulas-testapp-webapp/3.0.9-MVN/goals, size=23,50 KB, tenant=123456789, space=123456789]
+[main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST [uri=@@ADDRESS@@:/backend/apps/com.acme.foo/vulas-testapp-webapp/3.0.9-MVN/goals, size=23,50 KB, tenant=123456789, space=123456789]
 [main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST completed with response code [201] in [03.019 ms] (proxy=false)
 ```
 
-**In the apps Web frontend** at `https://@@HOST@@/apps`, there are several tabs to be checked:
+**In the apps Web frontend** at `@@ADDRESS@@/apps`, there are several tabs to be checked:
 
 - On the [Dependencies](../../manuals/frontend/#dependencies) tab, one should see all application dependencies. In particular, there should be no archives belonging to the application under analysis (which can happen if the CLI is not configured to properly separate application code and dependency code, see [here](../../manuals/setup/#command-line-interface) for more information).
 - On the [Statistics](../../manuals/frontend/#application-statistics) tab, one should see all packages belonging to the application. In particular, there should be no packages belonging to 3rd party / open-source libraries (which can happen if the CLI is not configured to properly separate application code and dependency code, see [here](#command-line-interface) for more information).

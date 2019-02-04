@@ -1,6 +1,6 @@
 # Manual Assessment
 
-The manual assessment can be done from the bugs frontend https://@@HOST@@/bugs, by setting the assessment to the appropriate value in the "Assessment (Manual)" column and clicking the "Save" button.
+The manual assessment can be done from the bugs frontend @@ADDRESS@@/bugs, by setting the assessment to the appropriate value in the "Assessment (Manual)" column and clicking the "Save" button.
 
 <center class='expandable'>
     [![start_page](../img/manual_assessment.jpg)](../img/manual_assessment.jpg)
