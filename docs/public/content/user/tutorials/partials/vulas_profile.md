@@ -8,7 +8,7 @@
         </activation>
         <properties>
             <vulas.version>@@PROJECT_VERSION@@</vulas.version>
-            <vulas.shared.backend.serviceUrl>@@ADDRESS@@/backend</vulas.shared.backend.serviceUrl>
+            <vulas.shared.backend.serviceUrl>@@ADDRESS@@/backend/</vulas.shared.backend.serviceUrl>
             <vulas.core.space.token>WORKSPACE_TOKEN</vulas.core.space.token>
             <vulas.core.appContext.group>${project.groupId}</vulas.core.appContext.group>
             <vulas.core.appContext.artifact>${project.artifactId}</vulas.core.appContext.artifact>

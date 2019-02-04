@@ -36,7 +36,7 @@ java -Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend/-jar ./patch-analyzer
 To run such commands in your own environment, you may need to adapt:
 
 * the path to the patch analyzer artifact and the artifact version, '-jar ./patch-analyzer/target/patch-analyzer-@@PROJECT_VERSION@@-jar-with-dependencies.jar'
-* the url of the @@PROJECT_NAME@@ backend, `-Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend`
+* the url of the @@PROJECT_NAME@@ backend, `-Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend/`
 * the proxy settings; the proxy is not configured in the example but you can do so using the following configurations:
 
 ```sh

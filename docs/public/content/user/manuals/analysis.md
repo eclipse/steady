@@ -335,7 +335,7 @@ By registering a Java agent at JVM startup, @@PROJECT_NAME@@ changes the bytecod
 
 ```text
 -javaagent:lang-java-@@PROJECT_VERSION@@-jar-with-dependencies.jar
--Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend
+-Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend/
 -Dvulas.core.backendConnection=READ_WRITE
 -Dvulas.core.monitor.periodicUpload.enabled=true
 -Dvulas.core.appContext.group=<GROUP>

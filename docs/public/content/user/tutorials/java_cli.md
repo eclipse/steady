@@ -12,7 +12,7 @@ a Java application that is **not built with tools such as Maven or Gradle**.
 1. JDK 7 or later
 2. URLs of the **backend service** and **apps Web frontend**
     - Apps Web frontend: @@ADDRESS@@/apps
-    - Backend service: @@ADDRESS@@/backend
+    - Backend service: @@ADDRESS@@/backend/
 3. The token of a @@PROJECT_NAME@@ workspace
 
 {! user/tutorials/partials/create_workspace.md !}

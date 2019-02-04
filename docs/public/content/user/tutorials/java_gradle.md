@@ -6,7 +6,7 @@
 2. URL of the package repository to download the plugin JAR (`@@PACKAGE_REPO@@`)
 3. URLs of the **backend service** and **apps Web frontend**
     - Apps Web frontend: @@ADDRESS@@/apps
-    - Backend service: @@ADDRESS@@/backend
+    - Backend service: @@ADDRESS@@/backend/
 4. The token of a @@PROJECT_NAME@@ workspace
 
 {! user/tutorials/partials/create_workspace.md !}
@@ -44,7 +44,7 @@ The plugin for Gradle requires changes of the following two files:
     // Replace token of test space
     vulas.core.space.token = <WORKSPACE-TOKEN>
 
-    vulas.shared.backend.serviceUrl = @@ADDRESS@@/backend
+    vulas.shared.backend.serviceUrl = @@ADDRESS@@/backend/
 ```
 
 Note: Rather than adding configuration settings to `gradle.properties`, they can also be passed as project properties in the command line, e.g., `-Pvulas.report.exceptionThreshold=noException`. The use of `-D` system properties for changing configuration settings is discouraged (because of the cache of the Gradle daemon).
