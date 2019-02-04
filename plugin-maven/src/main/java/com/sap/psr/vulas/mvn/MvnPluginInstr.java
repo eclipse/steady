@@ -41,8 +41,8 @@ public class MvnPluginInstr extends AbstractVulasMojo {
 	@Override
 	protected void executeGoal() throws Exception {
 		// Copy the agent JAR into the include folder
-		final Path lib_dir = VulasConfiguration.getGlobal().getDir(CoreConfiguration.INSTR_LIB_DIR);
-		final Path incl_dir = VulasConfiguration.getGlobal().getDir(CoreConfiguration.INSTR_INCLUDE_DIR);
+		final Path lib_dir = this.vulasConfiguration.getDir(CoreConfiguration.INSTR_LIB_DIR);
+		final Path incl_dir = this.vulasConfiguration.getDir(CoreConfiguration.INSTR_INCLUDE_DIR);
 		
 		final Path incl_agent = FileUtil.copyFile(this.getAgentJarFile().toPath(), incl_dir);
 		final Path lib_agent = FileUtil.copyFile(this.getAgentJarFile().toPath(), lib_dir);

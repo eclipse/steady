@@ -1,14 +1,16 @@
 package com.sap.psr.vulas.monitor;
 
 import com.sap.psr.vulas.java.JavaId;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 import javassist.CtBehavior;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.Modifier;
-import javassist.NotFoundException;
 
 public abstract class AbstractInstrumentor implements IInstrumentor {
+	
+	protected VulasConfiguration vulasConfiguration = new VulasConfiguration();
 
 	/**
 	 * Adds Java code to determine the URL of the resource from which the given class was loaded, and the class loader which loaded it.

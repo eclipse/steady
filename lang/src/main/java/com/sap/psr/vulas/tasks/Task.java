@@ -11,6 +11,7 @@ import com.sap.psr.vulas.shared.enums.GoalClient;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Dependency;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 public interface Task {
 	
@@ -43,7 +44,7 @@ public interface Task {
 	 * Called prior to {@link Task#execute()}.
 	 * @throws GoalConfigurationException
 	 */
-	public void configure() throws GoalConfigurationException;
+	public void configure(VulasConfiguration _cfg) throws GoalConfigurationException;
 	
 	/**
 	 * Performs the actual application analysis.

@@ -7,6 +7,7 @@ import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Space;
 import com.sap.psr.vulas.shared.json.model.Tenant;
 import com.sap.psr.vulas.shared.util.Constants;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 /**
  * Represents the context of a goal execution. All its elements can be specified using
@@ -31,6 +32,8 @@ public class GoalContext implements Serializable {
 	private Space space = null;
 
 	private Application application = null;
+	
+	private VulasConfiguration vulasConfiguration = null;
 
 	public boolean hasTenant() { return this.tenant!=null; }
 	public Tenant getTenant() { return this.tenant; }
@@ -43,7 +46,10 @@ public class GoalContext implements Serializable {
 	public boolean hasApplication() { return this.application!=null; }
 	public Application getApplication() { return this.application; }
 	public void setApplication(Application _a) { this.application = _a; }
-
+	
+	public VulasConfiguration getVulasConfiguration() { return vulasConfiguration; }
+	public void setVulasConfiguration(VulasConfiguration vulasConfiguration) { this.vulasConfiguration = vulasConfiguration; }
+	
 	@Override
 	public String toString() {
 		final StringBuffer b = new StringBuffer();

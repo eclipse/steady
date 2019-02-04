@@ -1,7 +1,6 @@
 package com.sap.psr.vulas.cli;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
@@ -33,6 +32,9 @@ public class AbstractGoalTest {
 		testSpace = this.buildTestSpace();
 		testApp = this.buildTestApplication();
 		
+		// Clear and set properties
+		this.clearVulasProperties();
+		
 		// App context
 		System.setProperty(CoreConfiguration.APP_CTX_GROUP, testApp.getMvnGroup());
 		System.setProperty(CoreConfiguration.APP_CTX_ARTIF, testApp.getArtifact());
@@ -47,7 +49,17 @@ public class AbstractGoalTest {
 
 	@After
 	public void stop() {
+		this.clearVulasProperties();
 		server.stop();
+	}
+	
+	private void clearVulasProperties() {
+		final ArrayList<String> l = new ArrayList<String>();
+		for(Object k: System.getProperties().keySet())
+			if(k instanceof String && ((String)k).startsWith("vulas."))
+				l.add((String)k);
+		for(String k: l)
+			System.clearProperty(k);
 	}
 
 	protected Tenant buildTestTenant() {
@@ -68,6 +80,6 @@ public class AbstractGoalTest {
 	protected void configureBackendServiceUrl(StubServer _ss) {
 		final StringBuffer b = new StringBuffer();
 		b.append("http://localhost:").append(_ss.getPort()).append("/backend");
-		VulasConfiguration.getGlobal().setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), b.toString());
+		System.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), b.toString());
 	}
 }

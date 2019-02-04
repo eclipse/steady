@@ -11,6 +11,7 @@ import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
+import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.java.JavaId;
 import com.sap.psr.vulas.monitor.ClassVisitor;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
@@ -40,9 +41,10 @@ public class SingleStackTraceInstrumentor extends AbstractTraceInstrumentor {
 	private int maxStacktraces = -1;
 
 	public SingleStackTraceInstrumentor() {
-		this.maxStacktraces = VulasConfiguration.getGlobal().getConfiguration().getInt(CoreConfiguration.INSTR_MAX_STACKTRACES, 10);
+		final GoalContext gc = CoreConfiguration.buildGoalContextFromConfiguration(this.vulasConfiguration);
+		this.maxStacktraces = this.vulasConfiguration.getConfiguration().getInt(CoreConfiguration.INSTR_MAX_STACKTRACES, 10);
 		try {
-			final Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> bug_change_lists = BackendConnector.getInstance().getAppBugs(CoreConfiguration.buildGoalContextFromGlobalConfiguration(), CoreConfiguration.getAppContext());
+			final Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> bug_change_lists = BackendConnector.getInstance().getAppBugs(gc, CoreConfiguration.getAppContext(this.vulasConfiguration));
 			this.constructsCollectStacktrace = AbstractTraceInstrumentor.merge(bug_change_lists);
 		} catch (ConfigurationException e) {
 			SingleStackTraceInstrumentor.log.error("Error during instantiation: " + e.getMessage());

@@ -24,8 +24,9 @@ public class StringUtil {
 	public static final long MILLI_IN_MIN = 60L * 1000L;
 
 	public static final long NANOS_IN_MIN = 60L * 1000L * 1000L *1000L;
-
-	private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	
+	private static final String FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	private static final SimpleDateFormat FORMAT = new SimpleDateFormat(FORMAT_STRING);
 
 	public static final String formatMinString(double _d) { return String.format("[%7.1f min]", _d); }
 	public static final String formatMinString(long _n) { return formatMinString((double)_n/(double)MILLI_IN_MIN); }
@@ -57,7 +58,7 @@ public class StringUtil {
 	 */
 	public static final String byteToMBString(long _bytes)   { return formatMBString((double)_bytes/(double)MEGABYTE); }
 
-	public static final String formatDate(long _ms) { return FORMAT.format(new Date(_ms)); }
+	public static final synchronized String formatDate(long _ms) { return FORMAT.format(new Date(_ms)); }
 
 	/**
 	 * Use {@link StringUtil#nanoToFlexDurationString(long)} instead.

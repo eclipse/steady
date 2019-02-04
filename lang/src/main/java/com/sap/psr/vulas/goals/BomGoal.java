@@ -52,7 +52,7 @@ public class BomGoal extends AbstractAppGoal {
 				t.setSearchPaths(this.getAppPaths());
 				t.setGoalClient(this.getGoalClient());
 				t.setKnownDependencies(this.getKnownDependencies());
-				t.configure();
+				t.configure(this.getConfiguration());
 
 				// Execute
 				t.execute();
@@ -82,8 +82,8 @@ public class BomGoal extends AbstractAppGoal {
 				final Library lib = dep.getLib();
 				if(lib!=null) {
 					if(lib.hasValidDigest()) {
-						BackendConnector.getInstance().uploadLibrary(lib);
-						if(CoreConfiguration.isJarUploadEnabled())
+						BackendConnector.getInstance().uploadLibrary(this.getGoalContext(), lib);
+						if(CoreConfiguration.isJarUploadEnabled(this.getGoalContext().getVulasConfiguration()))
 							BackendConnector.getInstance().uploadLibraryFile(lib.getDigest(), Paths.get(dep.getPath()));
 					}
 					else {

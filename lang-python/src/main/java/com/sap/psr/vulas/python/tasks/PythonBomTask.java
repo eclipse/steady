@@ -44,7 +44,9 @@ public class PythonBomTask extends AbstractBomTask {
 	public Set<ProgrammingLanguage> getLanguage() { return new HashSet<ProgrammingLanguage>(Arrays.asList(new ProgrammingLanguage[] { ProgrammingLanguage.PY })); }
 
 	@Override
-	public void configure() throws GoalConfigurationException {}
+	public void configure(VulasConfiguration _cfg) throws GoalConfigurationException {
+		super.configure(_cfg);
+	}
 
 	@Override
 	public void execute() throws GoalExecutionException {
@@ -57,7 +59,7 @@ public class PythonBomTask extends AbstractBomTask {
 		//final Set<Dependency> app_deps = new HashSet<Dependency>();
 
 		// No pip installation path provided: Search for setup.py
-		if(VulasConfiguration.getGlobal().isEmpty(PythonConfiguration.PY_PIP_PATH)) {
+		if(this.vulasConfiguration.isEmpty(PythonConfiguration.PY_PIP_PATH)) {
 			log.info("Determine app dependencies by finding setup.py files below the search path(s), and installing them in virtual environments");
 
 			// Find all dirs with setup.py
@@ -87,7 +89,7 @@ public class PythonBomTask extends AbstractBomTask {
 		// Pip installation path provided: Call pip to get installed packages
 		else {
 			try {
-				final String pip_path = VulasConfiguration.getGlobal().getConfiguration().getString(PythonConfiguration.PY_PIP_PATH);
+				final String pip_path = this.vulasConfiguration.getConfiguration().getString(PythonConfiguration.PY_PIP_PATH);
 				log.info("Determine app dependencies using [" + pip_path + "]");
 				final PipWrapper pip = new PipWrapper(Paths.get(pip_path), (Path)null);
 				app_pip_packs.addAll(pip.getFreezePackages());

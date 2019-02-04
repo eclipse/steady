@@ -38,7 +38,7 @@ public class StackTraceInstrumentor extends AbstractTraceInstrumentor {
 
 	public StackTraceInstrumentor() {
 		try {
-			final Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> bug_change_lists = BackendConnector.getInstance().getAppBugs(CoreConfiguration.buildGoalContextFromGlobalConfiguration(), CoreConfiguration.getAppContext());
+			final Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> bug_change_lists = BackendConnector.getInstance().getAppBugs(CoreConfiguration.buildGoalContextFromConfiguration(this.vulasConfiguration), CoreConfiguration.getAppContext(this.vulasConfiguration));
 			this.constructsCollectStacktrace = AbstractTraceInstrumentor.merge(bug_change_lists);
 		} catch (ConfigurationException e) {
 			StackTraceInstrumentor.log.error("Error during instantiation: " + e.getMessage());

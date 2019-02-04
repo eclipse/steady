@@ -259,7 +259,8 @@ public class FileUtil {
 	 * Writes a {@link String} to the given {@link File}.
 	 */
 	public static final void writeToFile(File _f, String _content) throws IOException {
-		FileUtil.writeToFile(_f, _content.getBytes(FileUtil.getCharset()));
+		if(_content!=null)
+			FileUtil.writeToFile(_f, _content.getBytes(FileUtil.getCharset()));
 	}
 
 	/**
@@ -351,8 +352,8 @@ public class FileUtil {
 
 			// Digest preparation
 			final MessageDigest md = MessageDigest.getInstance(_alg.toString());				
-			try (final InputStream is = new FileInputStream(_file)) {
-				final DigestInputStream dis = new DigestInputStream(is, md);
+			try (final InputStream is = new FileInputStream(_file);
+				 final DigestInputStream dis = new DigestInputStream(is, md);) {
 				byte[] bytes = new byte[1024];
 				while(dis.read(bytes, 0, 1024)!=-1) {;} //read()
 				byte[] digest = md.digest();

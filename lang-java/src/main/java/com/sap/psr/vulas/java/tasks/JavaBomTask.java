@@ -63,10 +63,11 @@ public class JavaBomTask extends AbstractBomTask {
 	}
 
 	@Override
-	public void configure() throws GoalConfigurationException {
+	public void configure(VulasConfiguration _cfg) throws GoalConfigurationException {
+		super.configure(_cfg);
 
 		// App constructs identified using package prefixes
-		this.appPrefixes = VulasConfiguration.getGlobal().getStringArray(CoreConfiguration.APP_PREFIXES, null);
+		this.appPrefixes = _cfg.getStringArray(CoreConfiguration.APP_PREFIXES, null);
 
 		// Print warning message in case the setting is used as part of the Maven plugin
 		if(this.appPrefixes!=null && this.isOneOfGoalClients(pluginGoalClients)) {
@@ -75,7 +76,7 @@ public class JavaBomTask extends AbstractBomTask {
 		}
 
 		// App constructs identified using JAR file name patterns (regex)
-		final String[] app_jar_names = VulasConfiguration.getGlobal().getStringArray(CoreConfiguration.APP_JAR_NAMES, null);
+		final String[] app_jar_names = _cfg.getStringArray(CoreConfiguration.APP_JAR_NAMES, null);
 		if(app_jar_names!=null) {
 			// Print warning message in case the setting is used as part of the Maven plugin
 			if( this.isOneOfGoalClients(pluginGoalClients)) {

@@ -26,7 +26,6 @@ import com.sap.psr.vulas.backend.requests.HttpRequest;
 import com.sap.psr.vulas.backend.requests.HttpRequestList;
 import com.sap.psr.vulas.backend.requests.PutLibraryCondition;
 import com.sap.psr.vulas.backend.requests.StatusCondition;
-import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.AbstractGoal;
 import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.shared.connectivity.PathBuilder;
@@ -494,21 +493,15 @@ public class BackendConnector {
 		return count_existing;
 	}
 
-	public synchronized void uploadLibrary(Library _lib) throws BackendConnectionException {
-		this.uploadLibraryRequest(_lib);
-		//this.uploadLibraryRequest(_lib.getDigest(), JacksonUtil.asJsonString(_lib), (_lib.getConstructs()==null ? 0 : _lib.getConstructs().size()));
-	}
-	
-	private void uploadLibraryRequest(Library _lib) throws BackendConnectionException {
-	//private void uploadLibraryRequest(String _sha1, String _json, int constructs_count) throws BackendConnectionException {
-
+	public synchronized void uploadLibrary(GoalContext _ctx, Library _lib) throws BackendConnectionException {
 		final String sha1 = _lib.getDigest();
 		final String json = JacksonUtil.asJsonString(_lib);
 		// Override setting
-		final boolean override = VulasConfiguration.getGlobal().getConfiguration().getBoolean("collector.overrideArchive", false);
+		final boolean override = _ctx.getVulasConfiguration().getConfiguration().getBoolean("collector.overrideArchive", false);
 		
 		final HttpRequestList req_list = new HttpRequestList();
 		final BasicHttpRequest cond_req = new BasicHttpRequest(HttpMethod.GET, PathBuilder.lib(sha1), null);
+		cond_req.setGoalContext(_ctx);
 
 		final Map<String,String> params = new HashMap<String,String>();
 		params.put("skipResponseBody", "true");
@@ -518,6 +511,7 @@ public class BackendConnector {
 				.setConditionRequest(cond_req)
 				.addCondition(new StatusCondition(HttpURLConnection.HTTP_NOT_FOUND))
 				.setPayload(json, null, false)
+				.setGoalContext(_ctx)
 				);
 		if (override){
 			BackendConnector.log.info("collector.overrideArchive is enabled");
@@ -526,33 +520,18 @@ public class BackendConnector {
 					.setConditionRequest(cond_req)
 					.addCondition(new StatusCondition(HttpURLConnection.HTTP_OK))
 					.setPayload(json, null, false)
+					.setGoalContext(_ctx)
 					);
 		}
-		else if(!VulasConfiguration.getGlobal().getConfiguration().getBoolean("skipKnownArchive", false)){
+		else if(!_ctx.getVulasConfiguration().getConfiguration().getBoolean("skipKnownArchive", false)){
 			req_list.addRequest(
 					new ConditionalHttpRequest(HttpMethod.PUT, PathBuilder.lib(sha1), params)
 					.setConditionRequest(cond_req)
 					.addCondition(new StatusCondition(HttpURLConnection.HTTP_OK))
 					.addCondition(new PutLibraryCondition(_lib))
 					.setPayload(json, null, false)
+					.setGoalContext(_ctx)
 					);
-			
-//			req_list.addRequest(
-//					new ConditionalHttpRequest(HttpMethod.PUT, PathBuilder.lib(sha1), params)
-//					.setConditionRequest(cond_req)
-//					.addCondition(new StatusCondition(HttpURLConnection.HTTP_OK))
-//					.addCondition(new ContentCondition("\\\"countTotal\\\"\\s*:\\s*([\\d]*)", ContentCondition.Mode.LT_DOUBLE, new Integer(constructs_count).toString()))
-//					.setPayload(json, null, false)
-//					);
-//			
-//			
-//			req_list.addRequest(
-//					new ConditionalHttpRequest(HttpMethod.PUT, PathBuilder.lib(sha1), params)
-//					.setConditionRequest(cond_req)
-//					.addCondition(new StatusCondition(HttpURLConnection.HTTP_OK))
-//					.addCondition(new ContentCondition("\\\"libraryId\\\"\\s*:\\s*([a-z]*)", ContentCondition.Mode.EQ_STRING, "null"))
-//					.setPayload(_json, null, false)
-//					);
 		}
 
 		req_list.send();
@@ -765,13 +744,12 @@ public class BackendConnector {
 
 	}
 
-
 	/**
 	 * Loads all upload requests form the upload folder and 
 	 */
-	public void batchUpload() {
+	public void batchUpload(Path _upload_dir) {
 		final FileSearch fs = new FileSearch(new String[] { "obj" });
-		final Set<Path> objs = fs.search(VulasConfiguration.getGlobal().getDir(CoreConfiguration.UPLOAD_DIR));
+		final Set<Path> objs = fs.search(_upload_dir);
 		for(Path obj: objs) {
 			HttpRequest ur = null;
 			try {

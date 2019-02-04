@@ -58,7 +58,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 		private final HashMap<String, String> agentOptions = new HashMap<>();
 
 		/**
-		 * Creates the options for Vuals' Java Agent and initializes them with reasonable defaults.
+		 * Creates the options for Vulas' Java Agent and initializes them with reasonable defaults.
 		 */
 		public VulasAgentOptions() {
 			//prepare vulas configuration
@@ -74,7 +74,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
             }*/
 
 			// Add settings from plugin configuration
-			Configuration configuration = VulasConfiguration.getGlobal().getConfigurationLayer(PLUGIN_CFG_LAYER);
+			Configuration configuration = vulasConfiguration.getConfigurationLayer(PLUGIN_CFG_LAYER);
 			if(configuration!=null) {
 				getLog().info("The following settings are taken from layer [" + PLUGIN_CFG_LAYER + "]:");
 				final Iterator<String> iter = configuration.getKeys(); 
@@ -97,7 +97,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 			}
 			
 			// Add settings from sys properties
-			configuration = VulasConfiguration.getGlobal().getConfigurationLayer(VulasConfiguration.SYS_PROP_CFG_LAYER);
+			configuration = vulasConfiguration.getConfigurationLayer(VulasConfiguration.SYS_PROP_CFG_LAYER);
 			if(configuration!=null) {
 				getLog().info("The following settings are taken from layer [" + VulasConfiguration.SYS_PROP_CFG_LAYER + "]:");
 				final Iterator<String> iter = configuration.getKeys(); 
@@ -246,8 +246,8 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 	 * @return the name of the property to modify
 	 */
 	private String getEffectivePropertyName() {
-		if(!VulasConfiguration.getGlobal().isEmpty(PROPERTY_NAME)) {
-			return VulasConfiguration.getGlobal().getConfiguration().getString(PROPERTY_NAME);
+		if(!this.vulasConfiguration.isEmpty(PROPERTY_NAME)) {
+			return this.vulasConfiguration.getConfiguration().getString(PROPERTY_NAME);
 		}
 		else if(isEclipseTestPluginPackaging()) {
 			return TYCHO_ARG_LINE;

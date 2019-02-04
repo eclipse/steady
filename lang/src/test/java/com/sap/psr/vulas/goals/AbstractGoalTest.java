@@ -19,6 +19,8 @@ public class AbstractGoalTest {
 	protected Tenant testTenant;
 	protected Space testSpace;
 	protected Application testApp;
+	
+	protected VulasConfiguration vulasConfiguration = null;
 
 	/**
 	 * Before every test:
@@ -33,6 +35,8 @@ public class AbstractGoalTest {
 		testTenant = this.buildTestTenant();
 		testSpace = this.buildTestSpace();
 		testApp = this.buildTestApplication();
+		
+		this.vulasConfiguration = new VulasConfiguration();
 	}
 
 	@After
@@ -58,6 +62,6 @@ public class AbstractGoalTest {
 	protected void configureBackendServiceUrl(StubServer _ss) {
 		final StringBuffer b = new StringBuffer();
 		b.append("http://localhost:").append(_ss.getPort()).append("/backend");
-		VulasConfiguration.getGlobal().setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), b.toString());
+		vulasConfiguration.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), b.toString());
 	}
 }
