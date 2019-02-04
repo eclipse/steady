@@ -1,3 +1,15 @@
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.junit.Test;
+
 import com.sap.psr.vulas.cg.ReachabilityAnalyzer;
 import com.sap.psr.vulas.cg.soot.SootCallgraphConstructor;
 import com.sap.psr.vulas.cg.spi.CallgraphConstructorFactory;
@@ -9,21 +21,9 @@ import com.sap.psr.vulas.shared.enums.PathSource;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.ConstructId;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
-import org.junit.Test;
-import soot.SootClass;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class SootCallGraphTest {
-
+	
 	static{
 		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.OFFLINE.toString());
 	}
@@ -31,13 +31,13 @@ public class SootCallGraphTest {
     private GoalContext getGoalContext() {
         final GoalContext ctx = new GoalContext();
         ctx.setApplication(new Application("foo", "bar", "0.0"));
+        ctx.setVulasConfiguration(VulasConfiguration.getGlobal());
         return ctx;
     }
 
-
     private void runSootAnalysis() {
         final ReachabilityAnalyzer ra = new ReachabilityAnalyzer(this.getGoalContext());
-        ra.setCallgraphConstructor("soot", false);
+        ra.setCallgraphConstructor(SootCallgraphConstructor.FRAMEWORK, false);
         // Set classpaths
         final Set<Path> app_paths = new HashSet<Path>(), dep_paths = new HashSet<Path>();
         app_paths.add(Paths.get("./src/test/resources/examples.jar"));
@@ -82,8 +82,6 @@ public class SootCallGraphTest {
     public void examplesSootTestNoneEntrypointGenerator() {
         VulasConfiguration.getGlobal().setProperty("vulas.reach.soot.entrypointGenerator", "none");
         runSootAnalysis();
-
-
     }
 
     @Test
@@ -97,6 +95,4 @@ public class SootCallGraphTest {
         VulasConfiguration.getGlobal().setProperty("vulas.reach.soot.entrypointGenerator", "com.sap.psr.vulas.cg.soot.CustomEntryPointCreator");
         runSootAnalysis();
     }
-
-
 }

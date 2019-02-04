@@ -2,12 +2,13 @@ package com.sap.psr.vulas.cg.spi;
 
 import java.util.Set;
 
-import com.sap.psr.vulas.cg.CallgraphConstructException;
-import com.sap.psr.vulas.shared.json.model.Application;
 import org.apache.commons.configuration.Configuration;
 
 import com.ibm.wala.util.graph.Graph;
 import com.sap.psr.vulas.Construct;
+import com.sap.psr.vulas.cg.CallgraphConstructException;
+import com.sap.psr.vulas.shared.json.model.Application;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 /**
  * A call graph constructor builds a call graph starting from a given set of entry points. Entry points can be, for instance,
@@ -28,6 +29,8 @@ public interface ICallgraphConstructor {
      */
     public void setAppContext(Application _ctx);
 
+    public void setVulasConfiguration(VulasConfiguration _cfg);
+    
     /**
      * Sets the class path with directories and/or JAR files for the application. Individual entries must be separated by the system-specific path separator.
      *
@@ -81,9 +84,9 @@ public interface ICallgraphConstructor {
     public long getConstructionTime();
 
     /**
-     * Returns the constructor's specific configuration.
+     * Returns the constructor's specific configuration settings.
      */
-    public Configuration getConfiguration();
+    public Configuration getConstructorConfiguration();
 
     /**
      * Returns the call graph.

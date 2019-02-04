@@ -26,6 +26,7 @@ import com.sap.psr.vulas.backend.requests.HttpRequest;
 import com.sap.psr.vulas.backend.requests.HttpRequestList;
 import com.sap.psr.vulas.backend.requests.PutLibraryCondition;
 import com.sap.psr.vulas.backend.requests.StatusCondition;
+import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.AbstractGoal;
 import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.shared.connectivity.PathBuilder;
@@ -110,13 +111,30 @@ public class BackendConnector {
 	
 	// ---------------------------------- SPACE-RELATED CALLS
 	
+	/**
+	 * Returns true if the given {@link Space} exists in the backend, false otherwise.
+	 * If the client is {@link CoreConfiguration.ConnectType#OFFLINE}, the check is skipped and true is returned. 
+	 * 
+	 * @param _goal_context
+	 * @param _space
+	 * @return
+	 * @throws BackendConnectionException
+	 */
 	public boolean isSpaceExisting(GoalContext _goal_context, Space _space) throws BackendConnectionException {
 		Boolean exists = false;
 		if(!cacheSpaceExistanceCheck.containsKey(_space)) {
-			final HttpResponse response = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.space(_space), null)
-					.setGoalContext(_goal_context)
-					.send();
-			exists = response.isOk();
+			
+			// Don't check if client is OFFLINE
+			if(CoreConfiguration.isBackendOffline(_goal_context.getVulasConfiguration())) {
+				exists = true;
+			}
+			// Check whether workspace exists in backend
+			else {
+				final HttpResponse response = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.space(_space), null)
+						.setGoalContext(_goal_context)
+						.send();
+				exists = response !=null && response.isOk();
+			}
 			cacheSpaceExistanceCheck.put(_space, exists);
 		}
 		return cacheSpaceExistanceCheck.get(_space);

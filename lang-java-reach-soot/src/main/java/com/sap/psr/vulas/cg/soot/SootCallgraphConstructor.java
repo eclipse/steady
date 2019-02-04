@@ -30,8 +30,7 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
 
     private static final Log log = LogFactory.getLog(SootCallgraphConstructor.class);
 
-    private static final String FRAMEWORK = "soot";
-
+    public static final String FRAMEWORK = "soot";
 
     private long buildTimeNano = -1;
 
@@ -41,7 +40,8 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
      * The context information of the application JAR to be analyzed
      */
     private Application appContext = null;
-
+    
+    private VulasConfiguration vulasConfiguration = null;
 
     /**
      * The JAR to be analyzed.
@@ -61,18 +61,17 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
      */
     public void setAppContext(Application _ctx) {
         this.appContext = _ctx;
-
+    }
+    
+    public void setVulasConfiguration(VulasConfiguration _cfg) {
+    	this.vulasConfiguration = _cfg;
     }
 
     public Application getAppContext() {
         return this.appContext;
     }
 
-
-    public String getFramework() {
-        return SootCallgraphConstructor.FRAMEWORK;
-    }
-
+    public String getFramework() { return SootCallgraphConstructor.FRAMEWORK; }
 
     public void setDepClasspath(String _dependenciesClasspath) {
         if (this.classpath != null) {
@@ -106,8 +105,8 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
     /**
      * Returns a human-readable description of the constructor's specific configuration.
      */
-    public Configuration getConfiguration() {
-        return VulasConfiguration.getGlobal().getConfiguration().subset(SootConfiguration.SOOT_CONFIGURATION_SETTINGS);
+    public Configuration getConstructorConfiguration() {
+        return this.vulasConfiguration.getConfiguration().subset(SootConfiguration.SOOT_CONFIGURATION_SETTINGS);
     }
 
 
@@ -121,13 +120,13 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
         G.v().resetSpark();
         G.reset();
 
-        boolean verbose = VulasConfiguration.getGlobal().getConfiguration().getBoolean(SootConfiguration.SOOT_VERBOSE);
+        boolean verbose = this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_VERBOSE);
 
 
         // set default excluded list to empty list
         // Options.v().set_include_all(true);
 
-        String excludedPackages = VulasConfiguration.getGlobal().getConfiguration().getString(SootConfiguration.SOOT_EXCLUSIONS);
+        String excludedPackages = this.vulasConfiguration.getConfiguration().getString(SootConfiguration.SOOT_EXCLUSIONS);
         List<String> excludedList = Arrays.asList(excludedPackages.split(";"));
         Options.v().set_exclude(excludedList);
 
@@ -136,9 +135,9 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
         Options.v().set_prepend_classpath(true);
 
         // Read from soot-cfg.properties
-        Options.v().set_allow_phantom_refs(VulasConfiguration.getGlobal().getConfiguration().getBoolean(SootConfiguration.SOOT_ALLOW_PHANTOM));
+        Options.v().set_allow_phantom_refs(this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_ALLOW_PHANTOM));
         Options.v().set_verbose(verbose);
-        Options.v().set_app(VulasConfiguration.getGlobal().getConfiguration().getBoolean(SootConfiguration.SOOT_APP_MODE));
+        Options.v().set_app(this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_APP_MODE));
         Options.v().set_whole_program(true);
         Options.v().setPhaseOption("cg", "safe-forname:" + false);
 
@@ -154,17 +153,17 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
         Options.v().set_output_format(Options.output_format_none);
 
         // with this option we get only method signatures but not their bodies
-        Options.v().set_no_bodies_for_excluded(VulasConfiguration.getGlobal().getConfiguration().getBoolean(SootConfiguration.SOOT_NOBODY_FOR_X));
+        Options.v().set_no_bodies_for_excluded(this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_NOBODY_FOR_X));
 
-        if (VulasConfiguration.getGlobal().getConfiguration().getBoolean(SootConfiguration.SOOT_SPARK)) {
+        if (this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_SPARK)) {
             String s = "on";
-            if (VulasConfiguration.getGlobal().getConfiguration().getBoolean(SootConfiguration.SOOT_SPARK_OTF))
+            if (this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_SPARK_OTF))
                 s += ",on-fly-cg:true";
             else s += ",on-fly-cg:false";
-            if (VulasConfiguration.getGlobal().getConfiguration().getBoolean(SootConfiguration.SOOT_SPARK_VTA))
+            if (this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_SPARK_VTA))
                 s += ",vta:true";
             else s += ",vta:false";
-            if (VulasConfiguration.getGlobal().getConfiguration().getBoolean(SootConfiguration.SOOT_SPARK_RTA))
+            if (this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_SPARK_RTA))
                 s += ",rta:true";
             else s += ",rta:false";
             SootCallgraphConstructor.log.info("Enabled cg.spark with settings [" + s + "]");
@@ -300,7 +299,7 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
 
 
     private ArrayList<SootMethod> createEntryPoint4Soot(Collection<SootMethod> selectedEntrypoints) {
-        String slcEntrypointGenerator = VulasConfiguration.getGlobal().getConfiguration().getString(SootConfiguration.SOOT_ENTRYPOINT_GENERATOR);
+        String slcEntrypointGenerator = this.vulasConfiguration.getConfiguration().getString(SootConfiguration.SOOT_ENTRYPOINT_GENERATOR);
 
 
         if (slcEntrypointGenerator.toLowerCase().equals("none")) {
@@ -469,8 +468,8 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
     public void setExcludePackages(String _packages) {
         // Overwrite configuration (if requested)
         if (_packages != null && !_packages.equals(""))
-            VulasConfiguration.getGlobal().setProperty(SootConfiguration.SOOT_EXCLUSIONS, _packages);
-        SootCallgraphConstructor.log.info("Set packages to be excluded [ " + VulasConfiguration.getGlobal().getConfiguration().getString(SootConfiguration.SOOT_EXCLUSIONS) + " ]");
+            this.vulasConfiguration.setProperty(SootConfiguration.SOOT_EXCLUSIONS, _packages);
+        SootCallgraphConstructor.log.info("Set packages to be excluded [ " + this.vulasConfiguration.getConfiguration().getString(SootConfiguration.SOOT_EXCLUSIONS) + " ]");
     }
 }
 
