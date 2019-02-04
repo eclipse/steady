@@ -1,4 +1,4 @@
-<p align="center"><img height="64" src="docs/public/content/images/vulas.png"></p>
+<p align="center"><a href="https://sap.github.io/vulnerability-assessment-tool/"><img height="64" src="docs/public/content/images/vulas.png"></a></p>
 
 # Open-source vulnerability assessment tool [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![Build Status](https://travis-ci.org/SAP/vulnerability-assessment-tool.svg?branch=master)](https://travis-ci.org/SAP/vulnerability-assessment-tool)
 
@@ -13,6 +13,8 @@ The open-source vulnerability assessment tool supports software development orga
 As such, it addresses the OWASP Top 10 security risk A9, [Using Components with Known Vulnerabilities](https://www.owasp.org/index.php/Top_10-2017_A9-Using_Components_with_Known_Vulnerabilities), which is often the root cause of data breaches [[1]](https://snyk.io/blog/owasp-top-10-breaches/).
 
 In comparison to other tools, the detection is code-centric and usage-based, which allows for more accurate detection and assessment than tools relying on meta-data.  It is a collection of client-side scan tools, RESTful microservices and rich [OpenUI5](https://openui5.hana.ondemand.com/) Web frontends.
+
+Read more in our [**Docs**](https://sap.github.io/vulnerability-assessment-tool/)
 
 ## History
 
