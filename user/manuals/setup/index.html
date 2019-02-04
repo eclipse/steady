@@ -40,7 +40,7 @@
     
     
       
-        <title>Configuration - vulnerability-assessment-tool</title>
+        <title>Configuration - vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small></title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool
+                vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>
               </span>
               <span class="md-header-nav__topic">
                 Configuration
@@ -285,6 +285,19 @@
   
 
       
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="https://blogs.sap.com/tag/vulas/" title="Blog" class="md-tabs__link">
+          Blog
+        </a>
+      
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -298,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool
+    vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>
   </label>
   
     <div class="md-nav__source">
@@ -1081,6 +1094,42 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Blog
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Blog
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://blogs.sap.com/tag/vulas/" title="None" class="md-nav__link">
+      None
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -1284,7 +1333,7 @@
 </ul>
 <h3 id="workspace-rest-api">Workspace REST API<a class="headerlink" href="#workspace-rest-api" title="Permanent link">&para;</a></h3>
 <p>The REST API can be used to export findings in a machine-readable fashion. Calling HTTP GET on the following URL, for instance, returns all vulnerable dependencies of an aggregated workspace:</p>
-<p><code>http://localhost:8033/backend/hubIntegration/apps/&lt;workspace-name&gt;%20(&lt;workspace-token&gt;)/vulndeps</code></p>
+<p><code>http://localhost:8033:/backend/hubIntegration/apps/&lt;workspace-name&gt;%20(&lt;workspace-token&gt;)/vulndeps</code></p>
 <p>The API returns an array of JSON elements having the following data model:</p>
 <table>
 <thead>
@@ -1350,10 +1399,10 @@
 <p><strong>With profile</strong>, the execution of goals is more concise (readable), e.g., <code>mvn -Dvulas compile vulas:app</code>. A sample profile can be found <a href="../../tutorials/java_maven/#setup">here</a>, just copy&amp;paste it into the <code>&lt;profiles&gt;</code> section of your <code>pom.xml</code>. In case of aggregated, multi-module Maven projects with modules inheriting from their parent, it is sufficient to include the profile in the top-level (parent) <code>pom.xml</code>. If a module does not inherit from the parent, the profile has to be added to its POM file. Once added, run <code>mvn -Dvulas versions:display-property-updates</code> every now and then to check whether there are new plugin versions available. If so, manually update the property <code>vulas.version</code> in the vulnerability-assessment-tool profile.</p>
 </li>
 <li>
-<p><strong>Without profile</strong>, the execution of goals requires the use of the plugin's fully qualified name, e.g., <code>mvn compile com.sap.research.security.vulas:plugin-maven:3.0.12:app</code>. Moreover, you need to specify the following mandatory configuration settings. As described <a href="#configuration">here</a>, there are several ways of doing so, however, a file as follows is very common:</p>
+<p><strong>Without profile</strong>, the execution of goals requires the use of the plugin's fully qualified name, e.g., <code>mvn compile com.sap.research.security.vulas:plugin-maven:3.0.14-SNAPSHOT:app</code>. Moreover, you need to specify the following mandatory configuration settings. As described <a href="#configuration">here</a>, there are several ways of doing so, however, a file as follows is very common:</p>
 <p><strong>vulas-custom.properties</strong></p>
 <div class="codehilite"><pre><span></span>vulas.core.space.token = &lt;YOUR WORKSPACE TOKEN&gt;
-vulas.shared.backend.serviceUrl = http://localhost:8033/backend
+vulas.shared.backend.serviceUrl = http://localhost:8033:/backend
 </pre></div>
 
 </li>
@@ -1389,7 +1438,7 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend
         }
 
         dependencies {
-            classpath(&#39;com.sap.research.security.vulas:plugin-gradle:3.0.12&#39;) { changing = true }
+            classpath(&#39;com.sap.research.security.vulas:plugin-gradle:3.0.14-SNAPSHOT&#39;) { changing = true }
         }
     }
 
@@ -1406,7 +1455,7 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend
     // Replace token of test space
     vulas.core.space.token = ### workspace token - EDIT THIS ###
 
-    vulas.shared.backend.serviceUrl = http://localhost:8033/backend
+    vulas.shared.backend.serviceUrl = http://localhost:8033:/backend
 </pre></div>
 
 <p>Note: Rather than adding configuration settings to <code>gradle.properties</code>, they can also be passed as project properties in the command line, e.g., <code>-Pvulas.report.exceptionThreshold=noException</code>. The use of <code>-D</code> system properties for changing configuration settings is discouraged (because of the cache of the Gradle daemon).</p>
@@ -1478,12 +1527,12 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend
 </ul>
 <h2 id="check-setup">Check setup<a class="headerlink" href="#check-setup" title="Permanent link">&para;</a></h2>
 <p>Proceed as follows to check whether the vulnerability-assessment-tool setup and goal execution works:</p>
-<p><strong>On the client</strong>, after executing a specific vulnerability-assessment-tool goal on your application, a log entry similar to the one below should be printed to the console. It is used to upload goal-related information to the vulnerability-assessment-tool backend, e.g., the vulnerability-assessment-tool version used or the average memory consumption. In this example, information related to a goal execution for an application with GAV <code>com.acme.foo:vulas-testapp-webapp:3.0.9-MVN</code> was uploaded to <code>http://localhost:8033/backend</code>, workspace <code>123456789</code>. The successful upload is indicated by the HTTP response code <code>201</code>.</p>
-<div class="codehilite"><pre><span></span>[main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST [uri=http://localhost:8033/backend/apps/com.acme.foo/vulas-testapp-webapp/3.0.9-MVN/goals, size=23,50 KB, tenant=123456789, space=123456789]
+<p><strong>On the client</strong>, after executing a specific vulnerability-assessment-tool goal on your application, a log entry similar to the one below should be printed to the console. It is used to upload goal-related information to the vulnerability-assessment-tool backend, e.g., the vulnerability-assessment-tool version used or the average memory consumption. In this example, information related to a goal execution for an application with GAV <code>com.acme.foo:vulas-testapp-webapp:3.0.9-MVN</code> was uploaded to <code>http://localhost:8033:/backend</code>, workspace <code>123456789</code>. The successful upload is indicated by the HTTP response code <code>201</code>.</p>
+<div class="codehilite"><pre><span></span>[main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST [uri=http://localhost:8033:/backend/apps/com.acme.foo/vulas-testapp-webapp/3.0.9-MVN/goals, size=23,50 KB, tenant=123456789, space=123456789]
 [main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST completed with response code [201] in [03.019 ms] (proxy=false)
 </pre></div>
 
-<p><strong>In the apps Web frontend</strong> at <code>https://localhost/apps</code>, there are several tabs to be checked:</p>
+<p><strong>In the apps Web frontend</strong> at <code>http://localhost:8033/apps</code>, there are several tabs to be checked:</p>
 <ul>
 <li>On the <a href="../../manuals/frontend/#dependencies">Dependencies</a> tab, one should see all application dependencies. In particular, there should be no archives belonging to the application under analysis (which can happen if the CLI is not configured to properly separate application code and dependency code, see <a href="../../manuals/setup/#command-line-interface">here</a> for more information).</li>
 <li>On the <a href="../../manuals/frontend/#application-statistics">Statistics</a> tab, one should see all packages belonging to the application. In particular, there should be no packages belonging to 3<sup>rd</sup> party / open-source libraries (which can happen if the CLI is not configured to properly separate application code and dependency code, see <a href="#command-line-interface">here</a> for more information).</li>

@@ -78,17 +78,17 @@ div.toc>ul>li>ul>li>a:hover {
     color: black !important;
 }
 
-body.faq .md-sidebar--secondary, body.faq_sap .md-sidebar--secondary {
+body.faq .md-sidebar--secondary, body.faq_enterprise .md-sidebar--secondary {
     display: none;
 }
 
-body.faq .md-content h2, body.faq_sap .md-content h2 {
+body.faq .md-content h2, body.faq_enterprise .md-content h2 {
     margin-top: 50px;
     padding-top: 50px;
     border-top: 1px solid #939393;
 }
 
-body.faq .md-content .md-typeset h3:before, body.faq div.toc>ul>li>ul>li>a:before, body.faq_sap .md-content .md-typeset h3:before, body.faq_sap div.toc>ul>li>ul>li>a:before {
+body.faq .md-content .md-typeset h3:before, body.faq div.toc>ul>li>ul>li>a:before, body.faq_enterprise .md-content .md-typeset h3:before, body.faq_enterprise div.toc>ul>li>ul>li>a:before {
     display: unset;
     margin: unset;
     content: '•';
@@ -97,13 +97,13 @@ body.faq .md-content .md-typeset h3:before, body.faq div.toc>ul>li>ul>li>a:befor
 }
 
 @media only screen and (min-width: 60em) {
-    body.faq .md-content, body.faq_sap .md-content {
+    body.faq .md-content, body.faq_enterprise .md-content {
         margin-right: 0rem !important;
     }
 }
 
 @media only screen and (min-width: 60em) {
-    body.faq .custom-scroll-top, body.faq_sap .custom-scroll-top {
+    body.faq .custom-scroll-top, body.faq_enterprise .custom-scroll-top {
         right: 15px !important;
     }
 }

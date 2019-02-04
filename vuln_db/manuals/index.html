@@ -40,7 +40,7 @@
     
     
       
-        <title>Intro - vulnerability-assessment-tool</title>
+        <title>Intro - vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small></title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool
+                vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>
               </span>
               <span class="md-header-nav__topic">
                 Intro
@@ -285,6 +285,19 @@
   
 
       
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="https://blogs.sap.com/tag/vulas/" title="Blog" class="md-tabs__link">
+          Blog
+        </a>
+      
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -298,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool
+    vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>
   </label>
   
     <div class="md-nav__source">
@@ -943,6 +956,42 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Blog
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Blog
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://blogs.sap.com/tag/vulas/" title="None" class="md-nav__link">
+      None
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -977,10 +1026,10 @@
 <p>The code-level vulnerability analysis performed by vulnerability-assessment-tool is based on the so-called change list, which is a set of constructs (e.g., Java methods) changed to fix a given security vulnerability.</p>
 <p>Vulnerability detection is based on construct containment: a library is affected by a vulnerability if it contains the constructs that were changed to fix a vulnerability.</p>
 <p>Once a vulnerability's change list has been created and added to the database, every application analyzed in the past is automatically assessed with regard to the new vulnerability. In other words, application owners see immediately whether their application is affected or not, without the need to re-run the analysis.</p>
-<p>An up-to-date list of all vulnerabilities currently comprised in the database can be obtained using the following link: <code>http://localhost:8033/backend/bugs</code></p>
-<p>Detailed information for a given vulnerability can be obtained using the following link, whereby <code>&lt;foo&gt;</code> has to be replaced by the vulnerability identifier:  <code>http://localhost:8033/backend/bugs/&lt;foo&gt;</code></p>
-<p>The <a href="../../../vuln_db/manuals/patch_analyzer/">Patch Analyzer</a> module can be used to add vulnerabilities to the knowledge base.</p>
-<p>In the current implementation, the vulnerability detection is based on the containment of the fully-qualified name of a construct changed to fix a vulnerability in a library. The information whether the library contains the vulnerable or fixed version of the construct is computed asynchronously by the <a href="../../../vuln_db/manuals/patch_lib_analyzer">Patch Lib Analyzer</a>.</p>
+<p>An up-to-date list of all vulnerabilities currently comprised in the database can be obtained using the following link: <code>http://localhost:8033:/backend/bugs</code></p>
+<p>Detailed information for a given vulnerability can be obtained using the following link, whereby <code>&lt;foo&gt;</code> has to be replaced by the vulnerability identifier:  <code>http://localhost:8033:/backend/bugs/&lt;foo&gt;</code></p>
+<p>The <a href="../../vuln_db/manuals/patch_analyzer/">Patch Analyzer</a> module can be used to add vulnerabilities to the knowledge base.</p>
+<p>In the current implementation, the vulnerability detection is based on the containment of the fully-qualified name of a construct changed to fix a vulnerability in a library. The information whether the library contains the vulnerable or fixed version of the construct is computed asynchronously by the <a href="../../vuln_db/manuals/patch_lib_analyzer">Patch Lib Analyzer</a>.</p>
                 
                   
                 

@@ -40,7 +40,7 @@
     
     
       
-        <title>FAQ - vulnerability-assessment-tool</title>
+        <title>FAQ - vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small></title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool
+                vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>
               </span>
               <span class="md-header-nav__topic">
                 FAQ
@@ -285,6 +285,19 @@
   
 
       
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="https://blogs.sap.com/tag/vulas/" title="Blog" class="md-tabs__link">
+          Blog
+        </a>
+      
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -298,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool
+    vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>
   </label>
   
     <div class="md-nav__source">
@@ -1248,6 +1261,42 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Blog
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Blog
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://blogs.sap.com/tag/vulas/" title="None" class="md-nav__link">
+      None
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -1719,7 +1768,7 @@ how to get support.</p>
 <h3 id="why-is-vulnerability-assessment-tool-is-not-detecting-all-vulnerabilities-of-my-project">Why is vulnerability-assessment-tool is not detecting all vulnerabilities of my project?<a class="headerlink" href="#why-is-vulnerability-assessment-tool-is-not-detecting-all-vulnerabilities-of-my-project" title="Permanent link">&para;</a></h3>
 <ul>
 <li>If the vulnerability is included in our knowledge base but it is not detected for your application, you can select the checkbox “Include historical vulnerabilities” in the vulnerability-assessment-tool frontend and hit “Reload” button: you will see all CVEs that applied to previous versions of your dependencies. The <img alt="green exclamation mark" src="../../manuals/img/version_ok.png" /> indicates that a given CVE did apply to earlier versions, but you are currently using a non-vulnerable one.</li>
-<li>Despite our best efforts to keep the vulnerability-assessment-tool vulnerability knowledge base continuously updated, it is possible that a particular vulnerability is not yet covered. See <a href="insert_link_when_available">here</a> to check if a vulnerability is covered or not. In case it is not covered, please contact the vulnerability-assessment-tool team which will react accordingly.</li>
+<li>Despite our best efforts to keep the vulnerability-assessment-tool vulnerability knowledge base continuously updated, it is possible that a particular vulnerability is not yet covered. Query <code>/backend/bugs</code> to check if a vulnerability is covered or not.</li>
 </ul>
 <h2 id="method-level-bill-of-material-goal-app">Method-level bill of material (goal app)<a class="headerlink" href="#method-level-bill-of-material-goal-app" title="Permanent link">&para;</a></h2>
 <h3 id="app-notfoundexception-when-analyzing-jar-files">app : NotFoundException when analyzing JAR files?<a class="headerlink" href="#app-notfoundexception-when-analyzing-jar-files" title="Permanent link">&para;</a></h3>
@@ -1865,7 +1914,7 @@ Exception in thread &quot;main&quot;
 <p>Example:</p>
 <div class="codehilite"><pre><span></span>[main] INFO  com.sap.psr.vulas.monitor.InstrumentationControl  - JAR [C:\Users\XXXXXX\.m2\repository\org\apache\commons\commons-lang3\3.2\commons-lang3-3.2.jar] is blacklisted: [false]
 Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in code.MainTest
-[vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP GET [uri=http://localhost:8033/backend/apps/XXXXXX/XXXXXX/XXXXXX/bugs?historical=false, proxy=false]
+[vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP GET [uri=http://localhost:8033:/backend/apps/XXXXXX/XXXXXX/XXXXXX/bugs?historical=false, proxy=false]
 [vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP GET completed with response code [200] in [0,0573 min]
 [vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.backend.BackendConnector  - [53] constructs for [7] bugs received from backend
 [vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.monitor.trace.TraceCollector  - Completed instantiation of trace collector

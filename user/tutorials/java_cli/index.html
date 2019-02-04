@@ -40,7 +40,7 @@
     
     
       
-        <title>Scanning Java (CLI) - vulnerability-assessment-tool</title>
+        <title>Scanning Java (CLI) - vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small></title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool
+                vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>
               </span>
               <span class="md-header-nav__topic">
                 Scanning Java (CLI)
@@ -285,6 +285,19 @@
   
 
       
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="https://blogs.sap.com/tag/vulas/" title="Blog" class="md-tabs__link">
+          Blog
+        </a>
+      
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -298,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool
+    vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>
   </label>
   
     <div class="md-nav__source">
@@ -1027,6 +1040,42 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Blog
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Blog
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://blogs.sap.com/tag/vulas/" title="None" class="md-nav__link">
+      None
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -1140,25 +1189,25 @@ are referred to as "<strong>goals</strong>".</p>
 <ol>
 <li>JDK 7 or later</li>
 <li>URLs of the <strong>backend service</strong> and <strong>apps Web frontend</strong><ul>
-<li>Apps Web frontend: <a href="http://localhost:8033/apps">http://localhost:8033/apps</a></li>
-<li>Backend service: <a href="http://localhost:8033/backend">http://localhost:8033/backend</a></li>
+<li>Apps Web frontend: <a href="http://localhost:8033:/apps">http://localhost:8033:/apps</a></li>
+<li>Backend service: <a href="http://localhost:8033:/backend">http://localhost:8033:/backend</a></li>
 </ul>
 </li>
 <li>The token of a vulnerability-assessment-tool workspace</li>
 </ol>
 <h2 id="download">Download<a class="headerlink" href="#download" title="Permanent link">&para;</a></h2>
-<p>Please download the latest ZIP archive <code>vulas-cli-3.0.12.zip</code> from <code>/cli-scanner/target</code> and extract it into a newly created folder.
+<p>Please download the latest ZIP archive <code>vulas-cli-3.0.14-SNAPSHOT.zip</code> from <code>/cli-scanner/target</code> and extract it into a newly created folder.
 This folder will contain the following items:</p>
 <dl>
 <dt><strong><code>./app/</code></strong></dt>
 <dd>
 <p>Put the application code (java, class or JAR files) and all application dependencies (JAR files) into this folder. It will be searched recursively, thus, it is possible to just copy the entire installation directory of an application into the folder.</p>
 </dd>
-<dt><strong><code>./vulas-cli-3.0.12-jar-with-dependencies.jar</code></strong></dt>
+<dt><strong><code>./vulas-cli-3.0.14-SNAPSHOT-jar-with-dependencies.jar</code></strong></dt>
 <dd>
 <p>An executable JAR, which is the actual command-line version of the vulnerability-assessment-tool client. This is what you will use later to execute vulnerability-assessment-tool scans.</p>
 </dd>
-<dt><strong><code>./instr/lang-java-3.0.12-jar-with-dependencies.jar</code></strong></dt>
+<dt><strong><code>./instr/lang-java-3.0.14-SNAPSHOT-jar-with-dependencies.jar</code></strong></dt>
 <dd>
 <p>This is used to instrument the Java runtime when performing dynamic analysis.</p>
 </dd>
@@ -1199,7 +1248,7 @@ This folder will contain the following items:</p>
 <h3 id="app">app<a class="headerlink" href="#app" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
-<p><code>java -jar vulas-cli-3.0.12-jar-with-dependencies.jar -goal app</code></p>
+<p><code>java -jar vulas-cli-3.0.14-SNAPSHOT-jar-with-dependencies.jar -goal app</code></p>
 </li>
 <li>
 <p>Connect to the apps Web frontend, then select your workspace and application. The table in tab <a href="../../manuals/frontend/#dependencies">Dependencies</a> is populated. Dependencies with known vulnerabilities are shown in tab <a href="../../manuals/frontend/#vulnerabilities">Vulnerabilities</a>.</p>
@@ -1212,7 +1261,7 @@ This folder will contain the following items:</p>
 <h3 id="report">report<a class="headerlink" href="#report" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
-<p><code>java -jar vulas-cli-3.0.12-jar-with-dependencies.jar -goal report</code></p>
+<p><code>java -jar vulas-cli-3.0.14-SNAPSHOT-jar-with-dependencies.jar -goal report</code></p>
 </li>
 <li>
 <p>Check the console to see where the HTML, JSON and XML reports have been written to.</p>
@@ -1221,7 +1270,7 @@ This folder will contain the following items:</p>
 <h3 id="clean">clean<a class="headerlink" href="#clean" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
-<p><code>java -jar vulas-cli-3.0.12-jar-with-dependencies.jar -goal clean</code></p>
+<p><code>java -jar vulas-cli-3.0.14-SNAPSHOT-jar-with-dependencies.jar -goal clean</code></p>
 </li>
 <li>
 <p>All application-specific data in the vulnerability-assessment-tool backend are deleted.</p>

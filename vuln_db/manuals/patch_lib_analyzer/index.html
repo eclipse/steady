@@ -40,7 +40,7 @@
     
     
       
-        <title>Patch Lib Analyzer - vulnerability-assessment-tool</title>
+        <title>Patch Lib Analyzer - vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small></title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool
+                vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>
               </span>
               <span class="md-header-nav__topic">
                 Patch Lib Analyzer
@@ -285,6 +285,19 @@
   
 
       
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="https://blogs.sap.com/tag/vulas/" title="Blog" class="md-tabs__link">
+          Blog
+        </a>
+      
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -298,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool
+    vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>
   </label>
   
     <div class="md-nav__source">
@@ -972,6 +985,42 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Blog
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Blog
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://blogs.sap.com/tag/vulas/" title="None" class="md-nav__link">
+      None
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -1071,15 +1120,15 @@ However, the biggest obstacle is that vulnerability fixes are applied on source 
 <li>vulas.patchEval.bugId : comma separated list of bug identifiers to analyze (equivalent to <code>-bug</code>)</li>
 </ul>
 <p>Run as cron job</p>
-<div class="codehilite"><pre><span></span>java -Dvulas.patchEval.uploadResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.onlyAddNewResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.basefolder<span class="o">=</span>&lt;csv_folder&gt; -j -p <span class="m">6</span> -Dvulas.shared.cia.serviceUrl<span class="o">=</span>http://localhost:8033/cia -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend -Xmx6G -Xms6G -jar patch-lib-analyzer-3.0.12-jar-with-dependencies.jar
+<div class="codehilite"><pre><span></span>java -Dvulas.patchEval.uploadResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.onlyAddNewResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.basefolder<span class="o">=</span>&lt;csv_folder&gt; -j -p <span class="m">6</span> -Dvulas.shared.cia.serviceUrl<span class="o">=</span>http://localhost:8033:/cia -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033:/backend -Xmx6G -Xms6G -jar patch-lib-analyzer-3.0.14-SNAPSHOT-jar-with-dependencies.jar
 </pre></div>
 
 <p>Run for all bugs</p>
-<div class="codehilite"><pre><span></span>java -Dvulas.patchEval.uploadResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.onlyAddNewResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.basefolder<span class="o">=</span>&lt;csv_folder&gt; -Dvulas.patchEval.bugId<span class="o">=</span>&lt;comma_separated_list_of_bugs&gt; -Dvulas.shared.cia.serviceUrl<span class="o">=</span>http://localhost:8033/cia -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend -Xmx6G -Xms6G -jar patch-lib-analyzer-3.0.12-jar-with-dependencies.jar
+<div class="codehilite"><pre><span></span>java -Dvulas.patchEval.uploadResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.onlyAddNewResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.basefolder<span class="o">=</span>&lt;csv_folder&gt; -Dvulas.patchEval.bugId<span class="o">=</span>&lt;comma_separated_list_of_bugs&gt; -Dvulas.shared.cia.serviceUrl<span class="o">=</span>http://localhost:8033:/cia -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033:/backend -Xmx6G -Xms6G -jar patch-lib-analyzer-3.0.14-SNAPSHOT-jar-with-dependencies.jar
 </pre></div>
 
 <p>Run for CVE-2018-1111,CVE-2018-2222</p>
-<div class="codehilite"><pre><span></span>java -Dvulas.patchEval.uploadResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.onlyAddNewResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.basefolder<span class="o">=</span>&lt;csv_folder&gt; -Dvulas.patchEval.bugId<span class="o">=</span>CVE-2018-1111,CVE-2018-2222 -Dvulas.shared.cia.serviceUrl<span class="o">=</span>http://localhost:8033/cia -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend -Xmx6G -Xms6G -jar patch-lib-analyzer-3.0.12-jar-with-dependencies.jar
+<div class="codehilite"><pre><span></span>java -Dvulas.patchEval.uploadResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.onlyAddNewResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.basefolder<span class="o">=</span>&lt;csv_folder&gt; -Dvulas.patchEval.bugId<span class="o">=</span>CVE-2018-1111,CVE-2018-2222 -Dvulas.shared.cia.serviceUrl<span class="o">=</span>http://localhost:8033:/cia -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033:/backend -Xmx6G -Xms6G -jar patch-lib-analyzer-3.0.14-SNAPSHOT-jar-with-dependencies.jar
 </pre></div>
                 
                   

@@ -40,7 +40,7 @@
     
     
       
-        <title>Scanning Java (Gradle) - vulnerability-assessment-tool</title>
+        <title>Scanning Java (Gradle) - vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small></title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool
+                vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>
               </span>
               <span class="md-header-nav__topic">
                 Scanning Java (Gradle)
@@ -285,6 +285,19 @@
   
 
       
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="https://blogs.sap.com/tag/vulas/" title="Blog" class="md-tabs__link">
+          Blog
+        </a>
+      
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -298,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool
+    vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>
   </label>
   
     <div class="md-nav__source">
@@ -1020,6 +1033,42 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Blog
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Blog
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://blogs.sap.com/tag/vulas/" title="None" class="md-nav__link">
+      None
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -1120,8 +1169,8 @@
 <li>JDK 7 or later</li>
 <li>URL of the package repository to download the plugin JAR (<code>&lt;PACKAGE-REPO&gt;</code>)</li>
 <li>URLs of the <strong>backend service</strong> and <strong>apps Web frontend</strong><ul>
-<li>Apps Web frontend: <a href="http://localhost:8033/apps">http://localhost:8033/apps</a></li>
-<li>Backend service: <a href="http://localhost:8033/backend">http://localhost:8033/backend</a></li>
+<li>Apps Web frontend: <a href="http://localhost:8033:/apps">http://localhost:8033:/apps</a></li>
+<li>Backend service: <a href="http://localhost:8033:/backend">http://localhost:8033:/backend</a></li>
 </ul>
 </li>
 <li>The token of a vulnerability-assessment-tool workspace</li>
@@ -1136,7 +1185,7 @@
         }
 
         dependencies {
-            classpath(&#39;com.sap.research.security.vulas:plugin-gradle:3.0.12&#39;) { changing = true }
+            classpath(&#39;com.sap.research.security.vulas:plugin-gradle:3.0.14-SNAPSHOT&#39;) { changing = true }
         }
     }
 
@@ -1153,7 +1202,7 @@
     // Replace token of test space
     vulas.core.space.token = &lt;WORKSPACE-TOKEN&gt;
 
-    vulas.shared.backend.serviceUrl = http://localhost:8033/backend
+    vulas.shared.backend.serviceUrl = http://localhost:8033:/backend
 </pre></div>
 
 <p>Note: Rather than adding configuration settings to <code>gradle.properties</code>, they can also be passed as project properties in the command line, e.g., <code>-Pvulas.report.exceptionThreshold=noException</code>. The use of <code>-D</code> system properties for changing configuration settings is discouraged (because of the cache of the Gradle daemon).</p>

@@ -40,7 +40,7 @@
     
     
       
-        <title>Patch Analyzer - vulnerability-assessment-tool</title>
+        <title>Patch Analyzer - vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small></title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool
+                vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>
               </span>
               <span class="md-header-nav__topic">
                 Patch Analyzer
@@ -285,6 +285,19 @@
   
 
       
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="https://blogs.sap.com/tag/vulas/" title="Blog" class="md-tabs__link">
+          Blog
+        </a>
+      
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -298,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool
+    vulnerability-assessment-tool - <small>3.0.14-SNAPSHOT</small>
   </label>
   
     <div class="md-nav__source">
@@ -986,6 +999,42 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Blog
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Blog
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://blogs.sap.com/tag/vulas/" title="None" class="md-nav__link">
+      None
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -1082,7 +1131,7 @@
 <h2 id="vulnerabilities-without-change-list">Vulnerabilities without change list<a class="headerlink" href="#vulnerabilities-without-change-list" title="Permanent link">&para;</a></h2>
 <p>In case a vulnerability fix does not include any code change (e.g., only changes configuration parameters), it is still possible to add it to the vulnerability database  by manually creating and POSTing the initial JSON. Also the initial affected versions have to be POSTed as JSON and then assessed via the bug frontend, see [Manual Assessments] (../../vuln_db/manual_assessment).</p>
 <p>The first POST request creates the entry into the vulnerabilities database (in the following example we create and entry for CVE "S2-043"):</p>
-<p><code>POST http://http://localhost:8033/backend/bugs</code></p>
+<p><code>POST http://http://localhost:8033:/backend/bugs</code></p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
 <span class="nt">&quot;bugId&quot;</span><span class="p">:</span> <span class="s2">&quot;S2-043&quot;</span><span class="p">,</span>
 <span class="nt">&quot;constructChanges&quot;</span><span class="p">:</span> <span class="p">[],</span>
@@ -1094,7 +1143,7 @@
 </pre></div>
 
 <p>The second POST request defines which versions to be marked as affected or not. Please notice that the id of the CVE to update ("S2-403" in the following example) has to be used/replaced in the following POST request.</p>
-<p><code>POST http://http://localhost:8033/backend/bugs/S2-043/affectedLibIds?source=MANUAL</code></p>
+<p><code>POST http://http://localhost:8033:/backend/bugs/S2-043/affectedLibIds?source=MANUAL</code></p>
 <div class="codehilite"><pre><span></span><span class="p">[</span>
 <span class="p">{</span>
 <span class="nt">&quot;libraryId&quot;</span><span class="p">:{</span> <span class="nt">&quot;artifact&quot;</span><span class="p">:</span> <span class="s2">&quot;struts2-core&quot;</span><span class="p">,</span> <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0.11&quot;</span><span class="p">,</span> <span class="nt">&quot;group&quot;</span><span class="p">:</span> <span class="s2">&quot;org.apache.struts&quot;</span> <span class="p">},</span>
