@@ -340,9 +340,11 @@ Solutions:
 
 ### TEST : Incomplete app context
 
-Problem: Tests terminate with the error message `App context incomplete: [group=, artifact=, version=]` and there exists a white space in any of the parent directories of the Maven project (e.g., `C:\My Documents\projects\foo`).
+**Problem**
 
-Solutions:
+Tests terminate with the error message `App context incomplete: [group=, artifact=, version=]` and there exists a white space in any of the parent directories of the Maven project (e.g., `C:\My Documents\projects\foo`).
+
+**Solutions**
 
 - Move the Maven project to a location without whitespaces in the names of any of the parent directories.
 - Open the `pom.xml` and replace the Maven variable `${project.build.directory}` in the `<argLine>` configuration setting of the `maven-surefire-plugi`n by the relative path of the respective directory, typically `target`.
@@ -354,6 +356,25 @@ Solutions:
   <vulas.shared.tmpDir>${project.build.directory}/vulas/tmp</vulas.shared.tmpDir>
 </systemPropertyVariables>
 ```
+
+### TEST : "Error injecting: private org.eclipse.aether.spi.log.Logger org.apache.maven.repository.internal.DefaultVersionResolver.logger"
+
+**Problem**
+
+When running the @@PROJECT_NAME@@ test goal, you face an error similar to `Error injecting: private org.eclipse.aether.spi.log.Logger org.apache.maven.repository.internal.DefaultVersionResolver.logger`
+
+**Solution**
+
+This error seems to appear with certain versions of Maven. It should disappear with maven 3.5.2 or higher. Please insure which version of maven you are using.
+
+- If you locally run maven on your machine, please upgrade your local maven version to maven 3.5.2 or higher and run your scan again.
+- If you perform your scans in a CI/CD environment like Jenkins, please check which version of Maven is used there. Then validate that the issue is linked to the current maven version (see previous point). Once you validated that the current Maven version is responsible for the issue, proceed with the update/upgrade to Maven 3.5.2 or higher in your CI/CD environment.
+
+As an example in Jenkins environments you can use one of the following alternatives:
+
+- Make an upgrade request to your Jenkins administrator.
+- Install Maven "globaly": in this case you can continue using your former command ex: `mvn clean compile vulas:clean vulas:app install vulas:upload -Pvulas -Dskip.integration.tests` as it is and Jenkins will use the new version.
+- Install maven as new "Global Tool": you can do this in "Manage Jenkins" -> "Global Tool Configuration". Here you find the entry "Maven installations". Add there the new Maven installation "M360" (if you like to install maven 3.6.0) with the installer "Install from Apache" Version 3.6.0. As a consequence, you will need to change the command in your job/task so that the new Maven version is used instead of the global one (which is still the version including the bug) and your command should like like `/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/M360/bin/mvn clean compile vulas:clean vulas:app install vulas:upload -Pvulas -Dskip.integration.tests`
 
 ### JUnit tests using Powermock fail when using @@PROJECT_NAME@@
 
