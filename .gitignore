@@ -27,4 +27,4 @@ lang-java-reach-soot-init/lib/*.jar
 docs/site
 docs/.merged
 docs/.tmp
-
+/frontend-apps/src/main/webapp/model/Version.js
