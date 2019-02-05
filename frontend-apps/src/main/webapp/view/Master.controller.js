@@ -24,6 +24,7 @@ sap.ui.controller("view.Master", {
 			this.adjustWorkSpace(this.router)
 		}.bind(this), false);
 		this.reloadData();
+		this.attachMessageStrip();
 	},
 
 	_handleRouteMatched : function(evt) {
@@ -37,6 +38,35 @@ sap.ui.controller("view.Master", {
 				workspaceSlug: savedWorkspace
 			})
 		}
+	},
+
+	attachMessageStrip: function() {
+		const root = this.getView().byId('page');
+		return new Promise(function(resolve, reject) {
+			// fetch data from server
+			try {
+				const data = []
+				// const data = [{
+				// 	text: "Custom message <a target=\"_blank\" href=\"\">Link</a>",
+				// 	type: "Warning"
+				// },
+				// {
+				// 	text: "Custom message <a target=\"_blank\" href=\"\">Link</a>",
+				// 	type: "Success"
+				// }]
+				data.forEach(function(message, index) {
+					const messageStrip = new sap.m.MessageStrip("rootMessageStrip" + index, {
+						text: message.text,
+						type: message.type,
+						enableFormattedText: true
+					});
+					root.insertContent(messageStrip, index);
+				})
+				resolve()
+			} catch (e) {
+				reject(e)
+			}
+		})
 	},
 
 	// 
