@@ -49,7 +49,6 @@ import com.sap.psr.vulas.shared.util.FileSearch;
 import com.sap.psr.vulas.shared.util.StringList;
 import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
 import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 
 /**
@@ -130,9 +129,9 @@ public class BackendConnector {
 			}
 			// Check whether workspace exists in backend
 			else {
-				final HttpResponse response = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.space(_space), null)
-						.setGoalContext(_goal_context)
-						.send();
+				final BasicHttpRequest request = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.space(_space), null);
+				request.setGoalContext(_goal_context);
+				final HttpResponse response = request.send();
 				exists = response !=null && response.isOk();
 			}
 			cacheSpaceExistanceCheck.put(_space, exists);
@@ -184,9 +183,9 @@ public class BackendConnector {
 	public boolean isAppExisting(GoalContext _goal_context, Application _app) throws BackendConnectionException {
 		Boolean exists = false;
 		if(!cacheAppExistanceCheck.containsKey(_app)) {
-			final HttpResponse response = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.app(_app), null)
-					.setGoalContext(_goal_context)
-					.send();
+			final BasicHttpRequest r = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.app(_app), null);
+			r.setGoalContext(_goal_context);
+			final HttpResponse response = r.send();
 			exists = response!=null && response.isOk();
 			cacheAppExistanceCheck.put(_app, exists);
 		}
@@ -286,10 +285,9 @@ public class BackendConnector {
 			final boolean app_exists = this.isAppExisting(_ctx, _app);
 			final Set<ConstructId> constructs = new HashSet<ConstructId>();
 			if(app_exists) {
-				final String json = new BasicHttpRequest(HttpMethod.GET, PathBuilder.appConstructIds(_app), null)
-						.setGoalContext(_ctx)
-						.send()
-						.getBody();
+				final BasicHttpRequest r = new BasicHttpRequest(HttpMethod.GET, PathBuilder.appConstructIds(_app), null);
+				r.setGoalContext(_ctx);
+				final String json = r.send().getBody();
 				final ConstructId[] backend_app_construct_ids = (ConstructId[])JacksonUtil.asObject(json, ConstructId[].class);
 				for(ConstructId backend_app_construct_id: backend_app_construct_ids) {
 					try {
@@ -321,10 +319,9 @@ public class BackendConnector {
 			final Map<String,String> params = new HashMap<String,String>();
 			params.put("historical", "false");
 			if(app_exists) {
-				final String json = new BasicHttpRequest(HttpMethod.GET, PathBuilder.appBugs(_app), params)
-						.setGoalContext(_ctx)
-						.send()
-						.getBody();
+				final BasicHttpRequest r = new BasicHttpRequest(HttpMethod.GET, PathBuilder.appBugs(_app), params);
+				r.setGoalContext(_ctx);
+				final String json = r.send().getBody();
 				final Bug[] bugs = (Bug[])JacksonUtil.asObject(json, Bug[].class);
 				Set<ConstructId> changes_set = null;
 				ConstructId json_cid = null;
@@ -585,7 +582,7 @@ public class BackendConnector {
 	 * @return
 	 * @throws BackendConnectionException
 	 */
-	public boolean uploadGoalExecution(GoalContext _ctx, AbstractGoal _gexe) throws BackendConnectionException {
+	public boolean uploadGoalExecution(GoalContext _ctx, AbstractGoal _gexe, boolean _before) throws BackendConnectionException {
 		boolean ret = false;
 		
 		// Application goal
@@ -598,27 +595,33 @@ public class BackendConnector {
 				// The request depending on whose result either POST or PUT will be called
 				final BasicHttpRequest cond_req = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.goalExcecution(null, _ctx.getSpace(), app, _gexe.getId()), null);
 				cond_req.setGoalContext(_ctx);
-
-				final HttpRequestList req_list = new HttpRequestList();
+				
+				// Create a conditional request to POST or PUT
+				HttpRequest chr = null;
 				final Map<String,String> params = new HashMap<String,String>();
 				params.put("skipResponseBody", "true");
-				req_list.addRequest(
-						new ConditionalHttpRequest(HttpMethod.POST, PathBuilder.goalExcecutions(null, _ctx.getSpace(), app), params)
-						.setConditionRequest(cond_req)
-						.addCondition(new StatusCondition(HttpURLConnection.HTTP_NOT_FOUND))
-						.setGoalContext(_ctx)
-						.setPayload(_gexe.toJson(), null, false)
-						);
-				req_list.addRequest(
-						new ConditionalHttpRequest(HttpMethod.PUT, PathBuilder.goalExcecution(null, _ctx.getSpace(), app, _gexe.getId()), params)
-						.setConditionRequest(cond_req)
-						.addCondition(new StatusCondition(HttpURLConnection.HTTP_OK))
-						.setGoalContext(_ctx)
-						.setPayload(_gexe.toJson(), null, false)
-						);
-				
-				final HttpResponse response = req_list.send();
-				ret = response.isCreated() || response.isOk();
+				if(_before) {
+					chr = new ConditionalHttpRequest(HttpMethod.POST, PathBuilder.goalExcecutions(null, _ctx.getSpace(), app), params)
+							.setConditionRequest(cond_req)
+							.addCondition(new StatusCondition(HttpURLConnection.HTTP_NOT_FOUND))
+							.setPayload(_gexe.toJson(), null, false)
+							.setGoalContext(_ctx);
+				} else {
+					chr = new ConditionalHttpRequest(HttpMethod.PUT, PathBuilder.goalExcecution(null, _ctx.getSpace(), app, _gexe.getId()), params)
+							.setConditionRequest(cond_req)
+							.addCondition(new StatusCondition(HttpURLConnection.HTTP_OK))
+							.setPayload(_gexe.toJson(), null, false)
+							.setGoalContext(_ctx);
+				}						
+
+				// Send and check response code
+				final HttpResponse response = chr.send();
+				if(CoreConfiguration.isBackendReadWrite(_ctx.getVulasConfiguration())) {
+					ret = response !=null && (response.isCreated() || response.isOk());
+				}
+				else {
+					ret = true;
+				}
 			}
 			else {
 				BackendConnector.log.info("App " + _ctx.getApplication() + " does not exist in backend, upload of goal execution [" + _gexe.getId() + "] skipped");
@@ -765,15 +768,16 @@ public class BackendConnector {
 	/**
 	 * Loads all upload requests form the upload folder and 
 	 */
-	public void batchUpload(Path _upload_dir) {
-		final FileSearch fs = new FileSearch(new String[] { "obj" });
-		final Set<Path> objs = fs.search(_upload_dir);
+	public void batchUpload(GoalContext _ctx) {
+		final FileSearch fs = new FileSearch(new String[] { "obj" });		
+		final Set<Path> objs = fs.search(_ctx.getVulasConfiguration().getDir(CoreConfiguration.UPLOAD_DIR));
 		for(Path obj: objs) {
 			HttpRequest ur = null;
 			try {
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(obj.toFile()));
 				ur = (HttpRequest)ois.readObject();
 				ois.close();
+				ur.setGoalContext(_ctx); // The Vulas configuration is not serialized to disk (cf. GoalContext), hence, has to be set again
 				ur.send();
 			} catch (Exception e) {
 				BackendConnector.log.error("Exception during batch upload of [" + obj + "] to [" + ur + "]: " + e.getMessage());

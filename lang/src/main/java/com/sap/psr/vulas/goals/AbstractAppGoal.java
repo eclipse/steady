@@ -100,7 +100,7 @@ public abstract class AbstractAppGoal extends AbstractGoal {
 			}
 			
 			// Upload goal execution before actual analysis (and another time after goal completion)
-			final boolean created = this.upload();
+			final boolean created = this.upload(true);
 			if(!created)
 				throw new GoalConfigurationException("Upload of goal execution failed, aborting the goal execution...");
 		}

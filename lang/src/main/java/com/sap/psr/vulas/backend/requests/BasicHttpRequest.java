@@ -60,17 +60,14 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	private String contentType = null;
 
 	private String dir=null;
-
+	
 	/** Null in case the request does not exist on disk. */
-	private String payloadFile = null;
+	private String payloadPath = null;
 
 	/** Cached in case {@link HttpRequest#send()} is called multiple times on the same request. */
 	private transient HttpResponse response = null;
 
 	private boolean checkJson = false;
-	
-	/** Goal context, required to set the Http headers. */
-	protected GoalContext context = null;
 	
 	public BasicHttpRequest(HttpMethod _method, String _path) {
 		this(Service.BACKEND, _method, _path, null);
@@ -121,7 +118,8 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		}
 	}
 	
-	public BasicHttpRequest setGoalContext(GoalContext _ctx) {
+	@Override
+	public HttpRequest setGoalContext(GoalContext _ctx) {
 		this.context = _ctx;
 		return this;
 	}
@@ -190,7 +188,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	}
 
 	private boolean isPayloadSavedOnDisk() {
-		return this.payloadFile!=null && Paths.get(this.payloadFile).toFile().exists();
+		return this.payloadPath!=null && Paths.get(this.payloadPath).toFile().exists();
 	}
 
 	@Override
@@ -207,23 +205,12 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		return this.getFilename() + ".json";
 	}
 	
-	public Path getPayloadPath() {
-		return Paths.get(this.getVulasConfiguration().getDir(CoreConfiguration.UPLOAD_DIR).toString(), this.getPayloadFilename());
-	}
-	
-	private VulasConfiguration getVulasConfiguration() {
-		if(this.context!=null && this.context.getVulasConfiguration()!=null)
-			return this.context.getVulasConfiguration();
-		else
-			return VulasConfiguration.getGlobal();
-	}
-
 	@Override
 	public void savePayloadToDisk()  throws IOException {
 		if(this.hasPayload()) {
-			final File json_file = this.getPayloadPath().toFile();
-			// TODO: Use relative paths for the payload
-			this.payloadFile = this.getPayloadFilename();
+			final Path payload_path = Paths.get(this.getVulasConfiguration().getDir(CoreConfiguration.UPLOAD_DIR).toString(), this.getPayloadFilename());
+			this.payloadPath = payload_path.toString();
+			final File json_file = payload_path.toFile();
 			FileUtil.writeToFile(json_file, this.payload);
 			BasicHttpRequest.log.info("Request body (JSON) written to [" + json_file + "]");
 		}
@@ -231,14 +218,14 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 
 	@Override
 	public void loadPayloadFromDisk() throws IOException {
-		if(this.payloadFile!=null)
-			this.payload = FileUtil.readFile(this.getPayloadPath());
+		if(this.payloadPath!=null)
+			this.payload = FileUtil.readFile(this.payloadPath);
 	}
 
 	@Override
 	public void deletePayloadFromDisk() throws IOException {
-		if(this.payloadFile!=null)
-			this.getPayloadPath().toFile().deleteOnExit();
+		if(this.payloadPath!=null)
+			Paths.get(this.payloadPath).toFile().deleteOnExit();
 	}
 
 	private final HttpResponse sendRequest() throws BackendConnectionException {

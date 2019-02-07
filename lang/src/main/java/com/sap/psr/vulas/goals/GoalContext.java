@@ -33,7 +33,7 @@ public class GoalContext implements Serializable {
 
 	private Application application = null;
 	
-	private VulasConfiguration vulasConfiguration = null;
+	private transient VulasConfiguration vulasConfiguration = null;
 
 	public boolean hasTenant() { return this.tenant!=null; }
 	public Tenant getTenant() { return this.tenant; }

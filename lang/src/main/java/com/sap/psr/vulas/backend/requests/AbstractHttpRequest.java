@@ -12,6 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
+import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 public abstract class AbstractHttpRequest implements HttpRequest {
@@ -23,6 +24,9 @@ public abstract class AbstractHttpRequest implements HttpRequest {
 	/** Null in case the request does not exist on disk. */
 	private String objFile = null;
 
+	/** Goal context, required to set the Http headers. */
+	protected transient GoalContext context = null;
+	
 	protected AbstractHttpRequest() {
 		this.ms = System.nanoTime();
 	}
@@ -32,7 +36,25 @@ public abstract class AbstractHttpRequest implements HttpRequest {
 	}
 
 	public Path getObjectPath() {
-		return Paths.get(VulasConfiguration.getGlobal().getDir(CoreConfiguration.UPLOAD_DIR).toString(), this.getObjectFilename());
+		return Paths.get(this.getVulasConfiguration().getDir(CoreConfiguration.UPLOAD_DIR).toString(), this.getObjectFilename());
+	}
+	
+	@Override
+	public HttpRequest setGoalContext(GoalContext _ctx) {
+		this.context = _ctx;
+		return this;
+	}
+	
+	@Override
+	public GoalContext getGoalContext() {
+		return this.context;
+	}
+	
+	protected VulasConfiguration getVulasConfiguration() {
+		if(this.context!=null && this.context.getVulasConfiguration()!=null)
+			return this.context.getVulasConfiguration();
+		else
+			return VulasConfiguration.getGlobal();
 	}
 
 	/**
@@ -66,7 +88,7 @@ public abstract class AbstractHttpRequest implements HttpRequest {
 	 */
 	@Override
 	public final void deleteFromDisk() throws IOException {
-		if(VulasConfiguration.getGlobal().getConfiguration().getBoolean(CoreConfiguration.UPLOAD_DEL_AFTER, true)) {
+		if(this.getVulasConfiguration().getConfiguration().getBoolean(CoreConfiguration.UPLOAD_DEL_AFTER, true)) {
 			this.deletePayloadFromDisk();
 			if(this.objFile!=null)
 				this.getObjectPath().toFile().deleteOnExit();

@@ -127,7 +127,7 @@ public class BomGoalTest extends AbstractGoalTest {
 		verifyHttp(server).times(1, 
 				method(Method.PUT),
 				uri("/backend" + PathBuilder.app(this.testApp)));
-		verifyHttp(server).times(2, 
+		verifyHttp(server).times(1, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}
@@ -155,11 +155,11 @@ public class BomGoalTest extends AbstractGoalTest {
 		final AbstractGoal goal = GoalFactory.create(GoalType.APP, GoalClient.CLI);
 		goal.setConfiguration(this.vulasConfiguration).executeSync();
 		
-		// Check the HTTP calls made (1 app PUT, 2 goal exe POST)
+		// Check (some of) the HTTP calls made (1 app PUT, 1 goal exe POST)
 		verifyHttp(server).times(1, 
 				method(Method.PUT),
 				uri("/backend" + PathBuilder.app(this.testApp)));
-		verifyHttp(server).times(2, 
+		verifyHttp(server).times(1, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}

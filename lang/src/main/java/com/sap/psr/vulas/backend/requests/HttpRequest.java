@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.HttpResponse;
+import com.sap.psr.vulas.goals.GoalContext;
 
 /**
  * Http request that can be send and saved to (loaded from) disk.
@@ -13,6 +14,10 @@ import com.sap.psr.vulas.backend.HttpResponse;
 public interface HttpRequest extends Serializable {
 
 	public HttpResponse send() throws BackendConnectionException;
+	
+	public GoalContext getGoalContext();
+	
+	public HttpRequest setGoalContext(GoalContext _ctx);
 
 	public void saveToDisk() throws IOException;
 

@@ -14,6 +14,7 @@ import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.HttpMethod;
 import com.sap.psr.vulas.backend.HttpResponse;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
+import com.sap.psr.vulas.goals.GoalContext;
 
 public class ConditionalHttpRequest extends BasicHttpRequest {
 
@@ -36,6 +37,14 @@ public class ConditionalHttpRequest extends BasicHttpRequest {
 	 */
 	public ConditionalHttpRequest addCondition(ResponseCondition _condition) {
 		this.conditions.add(_condition);
+		return this;
+	}
+	
+	@Override
+	public HttpRequest setGoalContext(GoalContext _ctx) {
+		this.context = _ctx;
+		if(this.conditionRequest!=null)
+			this.conditionRequest.setGoalContext(_ctx);
 		return this;
 	}
 

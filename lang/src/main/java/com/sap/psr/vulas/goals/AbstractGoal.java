@@ -185,7 +185,7 @@ public abstract class AbstractGoal implements Runnable {
 		}
 		finally {
 			if(this.goalUploadEnabled)
-				this.upload();
+				this.upload(false);
 		}
 	}
 
@@ -468,11 +468,11 @@ public abstract class AbstractGoal implements Runnable {
 	 * Uploads the JSON presentation of this goal execution to the Vulas backend.
 	 * Returns true of everything went fine (upload succeeded or is not necessary), false otherwise.
 	 */
-	public boolean upload() {
+	public boolean upload(boolean _before) {
 		boolean ret = false;
 		try {
 			AbstractGoal.log.info("Uploading goal execution info ...");
-			ret = BackendConnector.getInstance().uploadGoalExecution(this.getGoalContext(), this);
+			ret = BackendConnector.getInstance().uploadGoalExecution(this.getGoalContext(), this, _before);
 			AbstractGoal.log.info("Uploaded goal execution info");
 		} catch (Exception e) {
 			AbstractGoal.log.error("Error while uploading goal execution info: " + e.getMessage());

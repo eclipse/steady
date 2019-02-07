@@ -112,7 +112,7 @@ public class CleanGoalTest extends AbstractGoalTest {
 		verifyHttp(server).times(1, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.app(this.testApp)));
-		verifyHttp(server).times(4, 
+		verifyHttp(server).times(2, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}
