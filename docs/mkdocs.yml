@@ -74,7 +74,7 @@ markdown_extensions:
   - markdown.extensions.footnotes
   - markdown.extensions.meta
   - markdown_include.include:
-      base_path: merged-docs
+      base_path: .merged
   - markdown.extensions.toc:
       permalink: true
       toc_depth: 3
