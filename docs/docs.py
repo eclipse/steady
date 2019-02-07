@@ -20,6 +20,7 @@ ENTERPRISE_DOCS_ROOT=os.path.join(ENTERPRISE_ROOT, 'content')
 PUBLIC_DOCS_ROOT=os.path.join(CWD, 'public', 'content')
 EXTENSIONS_TO_COPY=('.md','.jpg','.png', '.css', '.js', '.gif')
 KEYWORD_DELIMITER = '@@'
+IS_LOCAL_REPO=False
 
 def pretty_path(path):
     short = path.replace(CWD, '')
@@ -48,6 +49,8 @@ def fetch_enterprise_docs(local_repo, url):
     if local_repo:
         global ENTERPRISE_ROOT
         global ENTERPRISE_DOCS_ROOT
+        global IS_LOCAL_REPO
+        IS_LOCAL_REPO=True
         ENTERPRISE_ROOT = str(Path(local_repo))
         ENTERPRISE_DOCS_ROOT = str(Path(local_repo, 'content'))
     else:
@@ -146,10 +149,14 @@ def clean():
     print('Cleaning up')
     files = ['{}.properties'.format(ENTERPRISE_PREFIX), 'mkdocs-enterprise.yml']
     for file in files:
+        print('Removing {}'.format(file))
         os.remove(file) if os.path.exists(file) else None
-    shutil.rmtree(ENTERPRISE_ROOT, ignore_errors=True, onerror=handleRemoveReadonly)
-    shutil.rmtree(MERGED_DOCS_FOLDER, ignore_errors=True, onerror=handleRemoveReadonly)
-    shutil.rmtree(MKDOCS_SITE_ROOT, ignore_errors=True, onerror=handleRemoveReadonly)
+    folders = [MERGED_DOCS_FOLDER, MKDOCS_SITE_ROOT]
+    if not IS_LOCAL_REPO:
+        folders.append(ENTERPRISE_ROOT)
+    for folder in folders:
+        print('Removing {}'.format(folder))
+        shutil.rmtree(folder, ignore_errors=True)
 
 def select_config(kind):
     return 'mkdocs.yml' if kind == 'public' else 'mkdocs-enterprise.yml'
