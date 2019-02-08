@@ -45,6 +45,15 @@ public class AbstractGoalTest {
 	@After
 	public void stop() {
 		server.stop();
+		System.clearProperty(CoreConfiguration.APP_CTX_GROUP);
+		System.clearProperty(CoreConfiguration.APP_CTX_ARTIF);
+		System.clearProperty(CoreConfiguration.APP_CTX_VERSI);
+		System.clearProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND));
+		
+		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.APP_CTX_GROUP, null, null, false);
+		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.APP_CTX_ARTIF, null, null, false);
+		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.APP_CTX_VERSI, null, null, false);
+		VulasConfiguration.getGlobal().setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), null, null, false);
 	}
 
 	protected Tenant buildTestTenant() {
