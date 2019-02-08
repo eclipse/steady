@@ -21,7 +21,7 @@ This tutorial explains how to perform the static and dynamic analyses in order t
 
 ### test
 
-1. `mvn -Dvulas test vulas:upload`
+1. `mvn -Dvulas vulas:prepare-vulas-agent test vulas:upload`
 
 2. Connect to the apps Web frontend, then select your workspace and application.
 
@@ -50,7 +50,7 @@ This tutorial explains how to perform the static and dynamic analyses in order t
 2. All application-specific data in the @@PROJECT_NAME@@ backend are deleted.
 
 !!! info "Run clean whenever the application changes"
-    If you already scanned your project in the past, you should run the `clean` goal prior to new analyses in order to delete the old analysis results in the backend. Otherwise, old analysis results will be shown together with new results. For example, if you updated a dependency from a vulnerable to a non-vulnerable version, both versions will be shown in the apps Web frontend.
+    If you already scanned your project in the past, you should run the `vulas:clean` goal prior to new analyses in order to delete the old analysis results in the backend. Otherwise, old analysis results will be shown together with new results. For example, if you updated a dependency from a vulnerable to a non-vulnerable version, both versions will be shown in the apps Web frontend.
 
 ## Useful links
 
