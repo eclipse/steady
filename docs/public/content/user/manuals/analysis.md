@@ -126,7 +126,7 @@ In the @@PROJECT_NAME@@ frontend, tab "Vulnerabilities", the column "Static Anal
 
 #### How does it work
 
-@@PROJECT_NAME@@ uses Wala or Soot, both static analysis frameworks for Java, in order to construct a call graph representing all possible program executions starting from application methods. This graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.
+@@PROJECT_NAME@@ uses [Wala](http://wala.sourceforge.net/wiki/index.php/Main_Page) or [Soot](https://sable.github.io/soot/), both static analysis frameworks for Java, in order to construct a call graph representing all possible program executions starting from application methods. This graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.
 
 #### Run as follows
 
@@ -218,7 +218,55 @@ vulas.reach.wala.callgraph.reflection = NO_FLOW_TO_CASTS_NO_METHOD_INVOKE
 
 #### Soot
 
-#### TODO
+The subset of Soot configuration options that can be set through @@PROJECT_NAME@@ are as follows. For all other Soot settings, the respective defaults are taken. See [here](https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm) for a complete documentation of Soot configuration options.
+
+```ini
+# Packages that are excluded when building callgraph
+# Soot option: -exclude ...
+# https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm#section_5
+vulas.reach.soot.exclusions    = java.awt.*;javax.swing.*;sun.awt.*;sun.swing.*;org.netbeans.*;com.sun.*;org.openide.*;com.ibm.crypto.*;com.ibm.security.*;org.apache.xerces.*
+
+# Use or not use "verbose mode" when building callgraph
+# Default: false; Recommended: set it to true when debugging
+# Soot options: -verbose -debug -debug-resolver
+# https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm#phase_5_2
+vulas.reach.soot.verbose       = false
+
+# Use or not use "application mode" when building callgraph
+# Soot option: -app
+# https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm#section_2
+vulas.reach.soot.appMode       = false
+
+# Allow or not allow phantom references (Recommended: false)
+# Soot option: -allow-phantom-refs
+# https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm#section_2
+vulas.reach.soot.allowPhantom  = true
+
+# No class body for excluded packages
+# Soot option: -no-bodies-for-excluded
+# https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm#section_2
+vulas.reach.soot.nobodyForX    = true
+
+
+# Use soot spark or not;
+# if yes, three options could be set: spark.otf (default true); spark.vta (default false); spark.rta (default false).
+# Soot option: -p cg.spark ...
+# https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm#phase_5_2
+vulas.reach.soot.spark         = true
+vulas.reach.soot.spark.otf     = true
+vulas.reach.soot.spark.vta     = false
+vulas.reach.soot.spark.rta     = false
+
+
+# Whether and how to generate a 'DummyMainMethod' used as an entrypoint for the callgraph construction:
+# | Option                                                              | Consequence                                                                                          |
+# |-------------------------------------------------------------------- |------------------------------------------------------------------------------------------------------|
+# | none (default)                                                      | no 'DummyMainMethod' is generated (default)                                                          |
+# | soot.jimple.infoflow.entryPointCreators.SequentialEntryPointCreator | a 'DummyMainMethod' that invokes all entrypoints is generated                                        |
+# | soot.jimple.infoflow.entryPointCreators.DefaultEntryPointCreator    | a 'DummyMainMethod' in which all entrypoints are generated (random order)                            |
+# | com.sap.psr.vulas.cg.soot.CustomEntryPointCreator                   | same as DefaultEntryPointCreated + for abstract classes/interface a dummy implementation is generated |
+vulas.reach.soot.entrypointGenerator = none
+```
 
 ## Dynamic instrumentation (JUnit)
 
