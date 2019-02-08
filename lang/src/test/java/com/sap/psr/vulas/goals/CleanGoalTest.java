@@ -91,20 +91,19 @@ public class CleanGoalTest extends AbstractGoalTest {
 		this.setupMockServices(this.testApp);
 
 		// Set config
-		final VulasConfiguration cfg = new VulasConfiguration();
-		cfg.setProperty(CoreConfiguration.TENANT_TOKEN, "foo");
-		cfg.setProperty(CoreConfiguration.APP_CTX_GROUP, this.testApp.getMvnGroup());
-		cfg.setProperty(CoreConfiguration.APP_CTX_ARTIF, this.testApp.getArtifact());
-		cfg.setProperty(CoreConfiguration.APP_CTX_VERSI, this.testApp.getVersion());
-		cfg.setProperty(CoreConfiguration.APP_UPLOAD_EMPTY, new Boolean(true));
+		this.vulasConfiguration.setProperty(CoreConfiguration.TENANT_TOKEN, "foo");
+		this.vulasConfiguration.setProperty(CoreConfiguration.APP_CTX_GROUP, this.testApp.getMvnGroup());
+		this.vulasConfiguration.setProperty(CoreConfiguration.APP_CTX_ARTIF, this.testApp.getArtifact());
+		this.vulasConfiguration.setProperty(CoreConfiguration.APP_CTX_VERSI, this.testApp.getVersion());
+		this.vulasConfiguration.setProperty(CoreConfiguration.APP_UPLOAD_EMPTY, new Boolean(true));
 				
 		// APP
 		AbstractGoal goal = GoalFactory.create(GoalType.APP, GoalClient.CLI);
-		goal.setConfiguration(cfg).executeSync();
+		goal.setConfiguration(this.vulasConfiguration).executeSync();
 		
 		// CLEAN
 		goal = GoalFactory.create(GoalType.CLEAN, GoalClient.CLI);
-		goal.setConfiguration(cfg).executeSync();
+		goal.setConfiguration(this.vulasConfiguration).executeSync();
 		
 		// Check the HTTP calls made (1 app PUT, 1 app POST, 4 goal exe POST)
 		verifyHttp(server).times(1, 
@@ -113,7 +112,7 @@ public class CleanGoalTest extends AbstractGoalTest {
 		verifyHttp(server).times(1, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.app(this.testApp)));
-		verifyHttp(server).times(4, 
+		verifyHttp(server).times(2, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}

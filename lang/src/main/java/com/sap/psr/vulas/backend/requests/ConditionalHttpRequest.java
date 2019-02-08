@@ -14,6 +14,7 @@ import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.HttpMethod;
 import com.sap.psr.vulas.backend.HttpResponse;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
+import com.sap.psr.vulas.goals.GoalContext;
 
 public class ConditionalHttpRequest extends BasicHttpRequest {
 
@@ -38,6 +39,14 @@ public class ConditionalHttpRequest extends BasicHttpRequest {
 		this.conditions.add(_condition);
 		return this;
 	}
+	
+	@Override
+	public HttpRequest setGoalContext(GoalContext _ctx) {
+		this.context = _ctx;
+		if(this.conditionRequest!=null)
+			this.conditionRequest.setGoalContext(_ctx);
+		return this;
+	}
 
 	/**
 	 * First performs the conditional requests. Only if all the responses meets the condition, the actual request will be performed.
@@ -48,7 +57,7 @@ public class ConditionalHttpRequest extends BasicHttpRequest {
 			throw new IllegalStateException("No condition request or no conditions set");
 
 		// Conditional requests will be skipped in offline mode
-		if(CoreConfiguration.isBackendOffline()) {
+		if(CoreConfiguration.isBackendOffline(this.context.getVulasConfiguration())) {
 			ConditionalHttpRequest.log.info("Condition(s) not evaluated due to offline mode, do " + this.toString());
 			return super.send();
 		}

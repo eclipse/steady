@@ -117,12 +117,12 @@ public class CoreConfiguration {
 
 	private static String vulasRelease = null;
 
-	public static boolean isBackendOffline() { return ConnectType.OFFLINE.equals(getBackendConnectType()); }
-	public static boolean isBackendReadOnly() { return ConnectType.READ_ONLY.equals(getBackendConnectType()); }
-	public static boolean isBackendReadWrite() { return ConnectType.READ_WRITE.equals(getBackendConnectType()); }
+	public static boolean isBackendOffline(VulasConfiguration _c) { return ConnectType.OFFLINE.equals(getBackendConnectType(_c)); }
+	public static boolean isBackendReadOnly(VulasConfiguration _c) { return ConnectType.READ_ONLY.equals(getBackendConnectType(_c)); }
+	public static boolean isBackendReadWrite(VulasConfiguration _c) { return ConnectType.READ_WRITE.equals(getBackendConnectType(_c)); }
 
-	private static ConnectType getBackendConnectType() {
-		final String value = VulasConfiguration.getGlobal().getConfiguration().getString(BACKEND_CONNECT, null);
+	private static ConnectType getBackendConnectType(VulasConfiguration _c) {
+		final String value = _c.getConfiguration().getString(BACKEND_CONNECT, null);
 		if("READ_WRITE".equalsIgnoreCase(value))
 			return ConnectType.READ_WRITE;
 		else if("READ_ONLY".equalsIgnoreCase(value))
@@ -133,13 +133,8 @@ public class CoreConfiguration {
 			throw new IllegalStateException("Illegal value of configuration setting [" + BACKEND_CONNECT + "]: [" + value + "]");
 	} 
 
-	public static boolean isUploadEnabled() {
-		//return VulasConfiguration.getSingleton().getConfiguration().getBoolean(UPLOAD_ENABLED, false);
-		return isBackendReadWrite();
-	}
-
-	public static boolean isJarUploadEnabled() {
-		return VulasConfiguration.getGlobal().getConfiguration().getBoolean(APP_LIB_UPLOAD, false);
+	public static boolean isJarUploadEnabled(VulasConfiguration _vc) {
+		return _vc.getConfiguration().getBoolean(APP_LIB_UPLOAD, false);
 	}
 
 	/**
@@ -148,7 +143,11 @@ public class CoreConfiguration {
 	 * @throws ConfigurationException if the instantiation fails
 	 */
 	public static Application getAppContext() throws ConfigurationException {
-		final Configuration c = VulasConfiguration.getGlobal().getConfiguration();
+		return getAppContext(VulasConfiguration.getGlobal());
+	}
+	
+	public static Application getAppContext(VulasConfiguration _c) throws ConfigurationException {
+		final Configuration c = _c.getConfiguration();
 		Application a = null;
 		try {
 			a = new Application(c.getString(APP_CTX_GROUP), c.getString(APP_CTX_ARTIF), c.getString(APP_CTX_VERSI));
@@ -159,18 +158,29 @@ public class CoreConfiguration {
 			throw new ConfigurationException("Application incomplete: " + a.toString());
 		return a;
 	}
-
+	
 	/**
 	 * Reads the global configuration in order to instantiate a {@link GoalContext}.
 	 * @return a {@link GoalContext) built from the global configuration
 	 */
 	public static final GoalContext buildGoalContextFromGlobalConfiguration() {
-		final Configuration c = VulasConfiguration.getGlobal().getConfiguration();
+		return buildGoalContextFromConfiguration(VulasConfiguration.getGlobal());
+	}
+
+	/**
+	 * Reads the global configuration in order to instantiate a {@link GoalContext}.
+	 * @return a {@link GoalContext) built from the global configuration
+	 */
+	public static final GoalContext buildGoalContextFromConfiguration(VulasConfiguration _c) {
+		final Configuration c = _c.getConfiguration();
+		
 		final GoalContext ctx = new GoalContext();
+		
+		ctx.setVulasConfiguration(_c);
 		
 		// Tenant
 		Tenant tenant = null;
-		if(!VulasConfiguration.getGlobal().isEmpty(CoreConfiguration.TENANT_TOKEN)) {
+		if(!_c.isEmpty(CoreConfiguration.TENANT_TOKEN)) {
 			tenant = new Tenant(c.getString(CoreConfiguration.TENANT_TOKEN)); 
 			ctx.setTenant(tenant);
 //			log.info("Using tenant " + tenant);
@@ -180,7 +190,7 @@ public class CoreConfiguration {
 		}
 		
 		// Space
-		if(!VulasConfiguration.getGlobal().isEmpty(CoreConfiguration.SPACE_TOKEN)) {
+		if(!_c.isEmpty(CoreConfiguration.SPACE_TOKEN)) {
 			final Space space = new Space();
 			space.setSpaceToken(c.getString(CoreConfiguration.SPACE_TOKEN));
 			ctx.setSpace(space);

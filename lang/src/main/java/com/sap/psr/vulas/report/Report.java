@@ -323,12 +323,12 @@ public class Report {
 		this.context.put("obsoleteExemptionsSignatureNotPresent", StringUtil.join(obsolSignNotPresent, ", "));
 
 		// Basic info
-		this.context.put("vulas-backend-serviceUrl", VulasConfiguration.getGlobal().getServiceUrl(Service.BACKEND));
-		this.context.put("vulas-cia-serviceUrl", VulasConfiguration.getGlobal().getServiceUrl(Service.CIA));
+		this.context.put("vulas-backend-serviceUrl", this.goalContext.getVulasConfiguration().getServiceUrl(Service.BACKEND));
+		this.context.put("vulas-cia-serviceUrl", this.goalContext.getVulasConfiguration().getServiceUrl(Service.CIA));
 		this.context.put("app", app);
 		this.context.put("projects", modules);
 		this.context.put("generatedAt", Report.dateFormat.format(new Date()));
-		this.context.put("vulas-shared-homepage", VulasConfiguration.getGlobal().getConfiguration().getString(VulasConfiguration.HOMEPAGE, "undefined"));
+		this.context.put("vulas-shared-homepage", this.goalContext.getVulasConfiguration().getConfiguration().getString(VulasConfiguration.HOMEPAGE, "undefined"));
 		
 		// Configuration
 		this.context.put("exceptionThreshold", this.exceptionThreshold);

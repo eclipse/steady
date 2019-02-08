@@ -31,6 +31,7 @@ public class WalaCallGraphTest {
     private GoalContext getGoalContext() {
         final GoalContext ctx = new GoalContext();
         ctx.setApplication(new Application("foo", "bar", "0.0"));
+        ctx.setVulasConfiguration(new VulasConfiguration());
         return ctx;
     }
 
@@ -46,7 +47,7 @@ public class WalaCallGraphTest {
     @Test
     public void examplesWalaTest() {
         final ReachabilityAnalyzer ra = new ReachabilityAnalyzer(this.getGoalContext());
-        ra.setCallgraphConstructor("wala", false);
+        ra.setCallgraphConstructor(WalaCallgraphConstructor.FRAMEWORK, false);
 
         // Set classpaths
         final Set<Path> app_paths = new HashSet<Path>(), dep_paths = new HashSet<Path>();

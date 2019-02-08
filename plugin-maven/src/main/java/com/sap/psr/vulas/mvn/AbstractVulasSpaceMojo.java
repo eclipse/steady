@@ -46,6 +46,9 @@ public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
 
 	protected AbstractSpaceGoal goal = null;
 
+	/** The configuration used throughout the execution of the goal. */
+    protected VulasConfiguration vulasConfiguration = new VulasConfiguration();
+    
 	/**
 	 * Puts the plugin configuration element <layeredConfiguration> as a new layer into {@link VulasConfiguration}.
 	 * If no such element exists, e.g., because the POM file does not contain a plugin section for Vulas, default settings
@@ -55,39 +58,39 @@ public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
 	public final void prepareConfiguration() throws Exception {
 
 		// Delete any transient settings that remaining from a previous goal execution (if any)
-		final boolean contained_values = VulasConfiguration.getGlobal().clearTransientProperties();
+		final boolean contained_values = this.vulasConfiguration.clearTransientProperties();
 		if(contained_values)
 			getLog().info("Transient configuration settings deleted");
 
 		// Get the configuration layer from the plugin configuration (can be null)
-		VulasConfiguration.getGlobal().addLayerAfterSysProps("Plugin configuration", this.layeredConfiguration, null, true);
+		this.vulasConfiguration.addLayerAfterSysProps("Plugin configuration", this.layeredConfiguration, null, true);
 
 		// Check whether the application context can be established
 		Application app = null;
 		try {
-			app = CoreConfiguration.getAppContext();
+			app = CoreConfiguration.getAppContext(this.vulasConfiguration);
 		}
 		// In case the plugin is called w/o using the Vulas profile, project-specific settings are not set
 		// Set them using the project member
 		catch (ConfigurationException e) {
-			VulasConfiguration.getGlobal().setPropertyIfEmpty(CoreConfiguration.APP_CTX_GROUP, this.project.getGroupId());
-			VulasConfiguration.getGlobal().setPropertyIfEmpty(CoreConfiguration.APP_CTX_ARTIF, this.project.getArtifactId());
-			VulasConfiguration.getGlobal().setPropertyIfEmpty(CoreConfiguration.APP_CTX_VERSI, this.project.getVersion());
-			app = CoreConfiguration.getAppContext();
+			this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.APP_CTX_GROUP, this.project.getGroupId());
+			this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.APP_CTX_ARTIF, this.project.getArtifactId());
+			this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.APP_CTX_VERSI, this.project.getVersion());
+			app = CoreConfiguration.getAppContext(this.vulasConfiguration);
 		}
 
 		// Set defaults for all the paths
-		VulasConfiguration.getGlobal().setPropertyIfEmpty(VulasConfiguration.TMP_DIR, 			Paths.get(this.project.getBuild().getDirectory(), "vulas", "tmp").toString());
-		VulasConfiguration.getGlobal().setPropertyIfEmpty(CoreConfiguration.UPLOAD_DIR, 		Paths.get(this.project.getBuild().getDirectory(), "vulas", "upload").toString());
-		VulasConfiguration.getGlobal().setPropertyIfEmpty(CoreConfiguration.INSTR_SRC_DIR, 		Paths.get(this.project.getBuild().getDirectory()).toString());
-		VulasConfiguration.getGlobal().setPropertyIfEmpty(CoreConfiguration.INSTR_TARGET_DIR, 	Paths.get(this.project.getBuild().getDirectory(), "vulas", "target").toString());
-		VulasConfiguration.getGlobal().setPropertyIfEmpty(CoreConfiguration.INSTR_INCLUDE_DIR, 	Paths.get(this.project.getBuild().getDirectory(), "vulas", "include").toString());
-		VulasConfiguration.getGlobal().setPropertyIfEmpty(CoreConfiguration.INSTR_LIB_DIR, 		Paths.get(this.project.getBuild().getDirectory(), "vulas", "lib").toString());
-		VulasConfiguration.getGlobal().setPropertyIfEmpty(CoreConfiguration.REP_DIR, 			Paths.get(this.project.getBuild().getDirectory(), "vulas", "report").toString());
+		this.vulasConfiguration.setPropertyIfEmpty(VulasConfiguration.TMP_DIR, 			Paths.get(this.project.getBuild().getDirectory(), "vulas", "tmp").toString());
+		this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.UPLOAD_DIR, 		Paths.get(this.project.getBuild().getDirectory(), "vulas", "upload").toString());
+		this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.INSTR_SRC_DIR, 		Paths.get(this.project.getBuild().getDirectory()).toString());
+		this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.INSTR_TARGET_DIR, 	Paths.get(this.project.getBuild().getDirectory(), "vulas", "target").toString());
+		this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.INSTR_INCLUDE_DIR, 	Paths.get(this.project.getBuild().getDirectory(), "vulas", "include").toString());
+		this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.INSTR_LIB_DIR, 		Paths.get(this.project.getBuild().getDirectory(), "vulas", "lib").toString());
+		this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.REP_DIR, 			Paths.get(this.project.getBuild().getDirectory(), "vulas", "report").toString());
 
 		// Read app constructs from src/main/java and target/classes
 		final String p = Paths.get(this.project.getBuild().getOutputDirectory()).toString() + "," + Paths.get(this.project.getBuild().getSourceDirectory()).toString();
-		VulasConfiguration.getGlobal().setPropertyIfEmpty(CoreConfiguration.APP_DIRS, p);
+		this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.APP_DIRS, p);
 
 		// Test how-to get the reactor POM in a reliable manner
 
@@ -108,7 +111,7 @@ public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
 			// Create the goal
 			this.createGoal();
 			this.goal.setGoalClient(GoalClient.MAVEN_PLUGIN);
-			this.goal.setConfiguration(VulasConfiguration.getGlobal());
+			this.goal.setConfiguration(this.vulasConfiguration);
 
 			// Execute the goal
 			this.executeGoal();

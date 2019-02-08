@@ -18,10 +18,6 @@ public class RequestRepeater {
 	private long max = 50;
 	private long waitMilli = 60000;
 
-	public RequestRepeater() {
-		this(VulasConfiguration.getGlobal().getConfiguration().getLong(CoreConfiguration.REPEAT_MAX, 50), VulasConfiguration.getGlobal().getConfiguration().getLong(CoreConfiguration.REPEAT_WAIT, 60000));
-	}
-	
 	public RequestRepeater(long _max, long _milli) {
 		this.max = _max;
 		this.waitMilli = _milli;

@@ -21,7 +21,7 @@ public class A2CGoal extends AbstractReachGoal {
 	protected final Set<com.sap.psr.vulas.shared.json.model.ConstructId> getEntryPoints() {
 		if(this.entryPoints==null) {
 			// Filter app constructs (if requested)
-			final String[] filter = VulasConfiguration.getGlobal().getConfiguration().getStringArray(ReachabilityConfiguration.REACH_CONSTR_FILTER);
+			final String[] filter = this.getConfiguration().getConfiguration().getStringArray(ReachabilityConfiguration.REACH_CONSTR_FILTER);
 			if(filter!=null && filter.length>0 && !(filter.length==1 && filter[0].equals(""))) {
 				this.entryPoints = ConstructIdUtil.filterWithRegex(this.getAppConstructs(), filter);
 			} else {
@@ -35,6 +35,6 @@ public class A2CGoal extends AbstractReachGoal {
 	 * Sets the application constructs as entry points of the {@link ReachabilityAnalyzer}.
 	 */
 	protected final void setEntryPoints(ReachabilityAnalyzer _ra) {
-		_ra.setEntryPoints(this.getEntryPoints(), PathSource.A2C, VulasConfiguration.getGlobal().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_EXIT_UNKOWN_EP, false));
+		_ra.setEntryPoints(this.getEntryPoints(), PathSource.A2C, this.getConfiguration().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_EXIT_UNKOWN_EP, false));
 	}
 }

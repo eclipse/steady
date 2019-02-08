@@ -29,7 +29,8 @@ public class FileUtilTest {
 	
 	@Test
 	public void testGetCharset() {
-		VulasConfiguration.getGlobal().setProperty(VulasConfiguration.CHARSET, "foo");
+		final VulasConfiguration cfg = new VulasConfiguration();
+		cfg.setProperty(VulasConfiguration.CHARSET, "foo");
 		final Charset cs = FileUtil.getCharset();
 		assertEquals("UTF-8", cs.name());
 	}
@@ -37,8 +38,10 @@ public class FileUtilTest {
 	@Test
 	public void testCopyFile() {
 		try {
+			final VulasConfiguration cfg = new VulasConfiguration();
+			final Path tmp_dir = cfg.getTmpDir();
 			final Path source_file = Paths.get("./src/test/resources/Outer.jar");
-			final Path target_file = FileUtil.copyFile(source_file, VulasConfiguration.getGlobal().getTmpDir());
+			final Path target_file = FileUtil.copyFile(source_file, tmp_dir);
 			assertEquals(FileUtil.getDigest(source_file.toFile(), DigestAlgorithm.SHA1), FileUtil.getDigest(target_file.toFile(), DigestAlgorithm.SHA1));
 		} catch (IOException e) {
 			e.printStackTrace();

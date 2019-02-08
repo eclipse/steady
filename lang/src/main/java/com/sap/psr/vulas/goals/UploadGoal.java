@@ -9,6 +9,6 @@ public class UploadGoal extends AbstractAppGoal {
 
 	@Override
 	protected void executeTasks() throws Exception {
-		BackendConnector.getInstance().batchUpload();
+		BackendConnector.getInstance().batchUpload(this.getGoalContext());
 	}
 }

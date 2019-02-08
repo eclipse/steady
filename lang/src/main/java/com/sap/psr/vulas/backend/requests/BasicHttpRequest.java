@@ -57,15 +57,12 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	/** Will not be serialized as part of the class, but is written to dedicated file. */
 	private transient FileInputStream binPayload = null;
 
-	/** Goal context, required to set the Http headers. */
-	private GoalContext context = null;
-
 	private String contentType = null;
 
 	private String dir=null;
-
+	
 	/** Null in case the request does not exist on disk. */
-	private String payloadFile = null;
+	private String payloadPath = null;
 
 	/** Cached in case {@link HttpRequest#send()} is called multiple times on the same request. */
 	private transient HttpResponse response = null;
@@ -121,7 +118,8 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		}
 	}
 	
-	public BasicHttpRequest setGoalContext(GoalContext _ctx) {
+	@Override
+	public HttpRequest setGoalContext(GoalContext _ctx) {
 		this.context = _ctx;
 		return this;
 	}
@@ -146,8 +144,8 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 			// Make call if one of the following holds:
 			// - call is read request and connect is not offline
 			// - call is write request, exception is null and connect is read_write
-			if( (!this.isUploadRequest() && !CoreConfiguration.isBackendOffline() ) ||
-				(this.isUploadRequest() && exception==null && CoreConfiguration.isBackendReadWrite()) ) {
+			if( (!this.isUploadRequest() && !CoreConfiguration.isBackendOffline(this.context.getVulasConfiguration()) ) ||
+				(this.isUploadRequest() && exception==null && CoreConfiguration.isBackendReadWrite(this.context.getVulasConfiguration())) ) {
 				try {
 					response = this.sendRequest();
 
@@ -164,7 +162,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 					exception = e;
 					BasicHttpRequest.log.error(e.getMessage());
 					try {
-						FileUtil.writeToFile(new File(VulasConfiguration.getGlobal().getTmpDir().toFile(), this.getFilename() + ".html"), e.getHttpResponseBody());
+						FileUtil.writeToFile(new File(this.getVulasConfiguration().getTmpDir().toFile(), this.getFilename() + ".html"), e.getHttpResponseBody());
 					} catch (IOException e1) {
 						BasicHttpRequest.log.error("Error saving HTTP error message: " + e1.getMessage(), e1);
 					}
@@ -173,7 +171,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 
 			// Save to disk if
 			// - call is write request and exception is not null or connect is not read_write
-			if(this.isUploadRequest() && !this.isPayloadSavedOnDisk() && (exception!=null || !CoreConfiguration.isBackendReadWrite())) {
+			if(this.isUploadRequest() && !this.isPayloadSavedOnDisk() && (exception!=null || !CoreConfiguration.isBackendReadWrite(this.context.getVulasConfiguration()))) {
 				try {
 					this.saveToDisk();
 				} catch (IOException e) {
@@ -190,7 +188,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	}
 
 	private boolean isPayloadSavedOnDisk() {
-		return this.payloadFile!=null && Paths.get(this.payloadFile).toFile().exists();
+		return this.payloadPath!=null && Paths.get(this.payloadPath).toFile().exists();
 	}
 
 	@Override
@@ -207,16 +205,12 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		return this.getFilename() + ".json";
 	}
 	
-	public Path getPayloadPath() {
-		return Paths.get(VulasConfiguration.getGlobal().getDir(CoreConfiguration.UPLOAD_DIR).toString(), this.getPayloadFilename());
-	}
-
 	@Override
 	public void savePayloadToDisk()  throws IOException {
 		if(this.hasPayload()) {
-			final File json_file = this.getPayloadPath().toFile();
-			// TODO: Use relative paths for the payload
-			this.payloadFile = this.getPayloadFilename();
+			final Path payload_path = Paths.get(this.getVulasConfiguration().getDir(CoreConfiguration.UPLOAD_DIR).toString(), this.getPayloadFilename());
+			this.payloadPath = payload_path.toString();
+			final File json_file = payload_path.toFile();
 			FileUtil.writeToFile(json_file, this.payload);
 			BasicHttpRequest.log.info("Request body (JSON) written to [" + json_file + "]");
 		}
@@ -224,14 +218,14 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 
 	@Override
 	public void loadPayloadFromDisk() throws IOException {
-		if(this.payloadFile!=null)
-			this.payload = FileUtil.readFile(this.getPayloadPath());
+		if(this.payloadPath!=null)
+			this.payload = FileUtil.readFile(this.payloadPath);
 	}
 
 	@Override
 	public void deletePayloadFromDisk() throws IOException {
-		if(this.payloadFile!=null)
-			this.getPayloadPath().toFile().deleteOnExit();
+		if(this.payloadPath!=null)
+			Paths.get(this.payloadPath).toFile().deleteOnExit();
 	}
 
 	private final HttpResponse sendRequest() throws BackendConnectionException {
@@ -240,7 +234,8 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		int response_code = -1;
 		final URI uri = this.getUri();
 		Map<String,List<String>> request_fields = null;
-		final RequestRepeater repeater = new RequestRepeater();
+		final RequestRepeater repeater = new RequestRepeater(this.getVulasConfiguration().getConfiguration().getLong(CoreConfiguration.REPEAT_MAX, 50), this.getVulasConfiguration().getConfiguration().getLong(CoreConfiguration.REPEAT_WAIT, 60000));
+		
 		boolean is_503;
 		try {
 			do {
@@ -351,7 +346,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 						saveFilePath= dir + File.separator + fileName;
 					}
 					else
-						saveFilePath= Paths.get(VulasConfiguration.getGlobal().getTmpDir().toString()).toString()+ File.separator + fileName;
+						saveFilePath= Paths.get(this.getVulasConfiguration().getTmpDir().toString()).toString()+ File.separator + fileName;
 
 					// Opens an output stream to save into file
 					FileOutputStream outputStream = new FileOutputStream(saveFilePath);
@@ -458,19 +453,19 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	}
 
 	private URI getUri() {
-		return BasicHttpRequest.getUri(this.service, this.path, this.params);
+		return this.getUri(this.service, this.path, this.params);
 	}
 
-	public static URI getUri(Service _service, String _path, Map<String,String> _params) {
+	public URI getUri(Service _service, String _path, Map<String,String> _params) {
 
 		// Check whether URL is present
-		if(!CoreConfiguration.isBackendOffline() && !VulasConfiguration.getGlobal().hasServiceUrl(_service))
+		if(!CoreConfiguration.isBackendOffline(this.context.getVulasConfiguration()) && !this.context.getVulasConfiguration().hasServiceUrl(_service))
 			throw new IllegalStateException("URL for service [" + _service + "] is not configured");
 
 		URI uri = null;
 
 		final StringBuilder builder = new StringBuilder();
-		builder.append(VulasConfiguration.getGlobal().getServiceUrl(_service));
+		builder.append(this.context.getVulasConfiguration().getServiceUrl(_service));
 		builder.append(_path);
 		int i = 0;
 		if(_params!=null) {

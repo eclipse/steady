@@ -72,7 +72,7 @@ import com.sap.psr.vulas.shared.connectivity.ServiceConnectionException;
 public class VulasConfiguration {
 
 	private static Log log = null;
-	private static final Log getLog() {
+	private static final synchronized Log getLog() {
 		if(VulasConfiguration.log==null)
 			VulasConfiguration.log = LogFactory.getLog(VulasConfiguration.class);
 		return VulasConfiguration.log;

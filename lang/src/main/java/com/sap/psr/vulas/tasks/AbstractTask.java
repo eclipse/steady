@@ -11,6 +11,7 @@ import com.sap.psr.vulas.goals.GoalConfigurationException;
 import com.sap.psr.vulas.shared.enums.GoalClient;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Dependency;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 public abstract class AbstractTask implements Task {
 	
@@ -23,6 +24,8 @@ public abstract class AbstractTask implements Task {
 	private List<Path> searchPaths = null;
 	
 	private Map<Path, Dependency> knownDependencies = null;
+	
+	protected VulasConfiguration vulasConfiguration = null;
 	
 	// ====================  Setter methods used to passed general context information to the task
 	
@@ -61,7 +64,8 @@ public abstract class AbstractTask implements Task {
 	 * Checks the search {@link Path} and {@link GoalClient}.
 	 */
 	@Override
-	public void configure() throws GoalConfigurationException {
+	public void configure(VulasConfiguration _cfg) throws GoalConfigurationException {
+		this.vulasConfiguration = _cfg;
 		if(!this.hasSearchPath())
 			log.warn("Task " + this + ": No search path specified");
 		if(this.client==null)

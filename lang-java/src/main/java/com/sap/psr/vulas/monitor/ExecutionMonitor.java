@@ -134,7 +134,7 @@ public class ExecutionMonitor {
 				exe.addGoalStats("test." + i.getClass().getSimpleName(), i.getStatistics());
 			}
 
-			this.exe.upload();
+			this.exe.upload(false);
 		}
 	}
 

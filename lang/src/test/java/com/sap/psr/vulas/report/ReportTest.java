@@ -89,9 +89,10 @@ public class ReportTest extends AbstractGoalTest {
 			this.configureBackendServiceUrl(server);
 			this.setupMockServices(this.testApp);
 
-			final Configuration cfg = VulasConfiguration.getGlobal().getConfiguration();
+			final Configuration cfg = vulasConfiguration.getConfiguration();
 
 			final GoalContext goal_context = new GoalContext();
+			goal_context.setVulasConfiguration(vulasConfiguration);
 			goal_context.setTenant(this.testTenant);
 			goal_context.setSpace(this.testSpace);
 			goal_context.setApplication(this.testApp);

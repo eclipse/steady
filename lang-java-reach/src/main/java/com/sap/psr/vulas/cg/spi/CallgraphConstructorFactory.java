@@ -1,22 +1,22 @@
 package com.sap.psr.vulas.cg.spi;
 
-import com.sap.psr.vulas.cg.ReachabilityConfiguration;
-import com.sap.psr.vulas.shared.json.model.Application;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ServiceLoader;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.sap.psr.vulas.cg.ReachabilityConfiguration;
+import com.sap.psr.vulas.shared.json.model.Application;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 public class CallgraphConstructorFactory {
 

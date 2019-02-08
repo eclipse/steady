@@ -90,21 +90,21 @@ public class InstrGoal extends AbstractAppGoal {
 
 		try {
 			// Lib path
-			this.setLibPath(FileUtil.getPath(VulasConfiguration.getGlobal().getConfiguration().getString(CoreConfiguration.INSTR_LIB_DIR, null)));
+			this.setLibPath(FileUtil.getPath(this.getConfiguration().getConfiguration().getString(CoreConfiguration.INSTR_LIB_DIR, null)));
 
 			// Warn if there's no lib path
 			if(!this.hasLibPath())
 				log.warn("No library path");
 
 			// Include path
-			this.setInclPath(FileUtil.getPath(VulasConfiguration.getGlobal().getConfiguration().getString(CoreConfiguration.INSTR_INCLUDE_DIR, null)));
+			this.setInclPath(FileUtil.getPath(this.getConfiguration().getConfiguration().getString(CoreConfiguration.INSTR_INCLUDE_DIR, null)));
 
 			// Warn if there's no include path
 			if(!this.hasInclPath())
 				log.warn("No path with to-be-included JAR files");
 
 			// Where the instrumented archives will be written to
-			this.setTargetPath(FileUtil.getPath(VulasConfiguration.getGlobal().getConfiguration().getString(CoreConfiguration.INSTR_TARGET_DIR, null), true));
+			this.setTargetPath(FileUtil.getPath(this.getConfiguration().getConfiguration().getString(CoreConfiguration.INSTR_TARGET_DIR, null), true));
 
 			// Warn if there's no target path
 			if(!this.hasTargetPath()) {
@@ -113,7 +113,7 @@ public class InstrGoal extends AbstractAppGoal {
 			}
 			
 			// Instrumentation paths?
-			this.addInstrPaths(FileUtil.getPaths(VulasConfiguration.getGlobal().getStringArray(CoreConfiguration.INSTR_SRC_DIR, null)));
+			this.addInstrPaths(FileUtil.getPaths(this.getConfiguration().getStringArray(CoreConfiguration.INSTR_SRC_DIR, null)));
 
 			// Warn if there's no app path
 			if(!this.hasInstrPaths()) {
@@ -138,7 +138,7 @@ public class InstrGoal extends AbstractAppGoal {
 
 		//TODO: Check how to use packaging information from the Maven plugin
 
-		final int no_threads = ThreadUtil.getNoThreads(2);
+		final int no_threads = ThreadUtil.getNoThreads(this.getConfiguration(), 2);
 		final JarAnalysisManager mgr = new JarAnalysisManager(no_threads, true, app);
 		mgr.setRename(true);
 
@@ -154,7 +154,7 @@ public class InstrGoal extends AbstractAppGoal {
 
 		// Search source archives and go
 		final FileSearch vis = new FileSearch(AbstractGoal.JAR_WAR_EXT);
-		final int search_depth = VulasConfiguration.getGlobal().getConfiguration().getBoolean(CoreConfiguration.INSTR_SEARCH_RECURSIVE, false) ? Integer.MAX_VALUE : 1;
+		final int search_depth = this.getConfiguration().getConfiguration().getBoolean(CoreConfiguration.INSTR_SEARCH_RECURSIVE, false) ? Integer.MAX_VALUE : 1;
 		mgr.startAnalysis(vis.search(getInstrPaths(), search_depth), null);
 
 		// Add goal stats

@@ -10,12 +10,13 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.sap.psr.vulas.backend.BackendConnectionException;
+import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Dependency;
 import com.sap.psr.vulas.shared.util.FileUtil;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 /**
  * Represents an analysis goal executed in the context of a given {@link Application}.
@@ -87,8 +88,19 @@ public abstract class AbstractAppGoal extends AbstractGoal {
 			//this.handleAppWars();
 			//}
 			
-			// Upload before actual analysis
-			final boolean created = this.upload();
+			// Verify existance of configured space (if any)
+			if(this.getGoalContext().hasSpace()) {
+				try {
+					final boolean space_exists = BackendConnector.getInstance().isSpaceExisting(this.getGoalContext(), this.getGoalContext().getSpace());
+					if(!space_exists)
+						throw new GoalConfigurationException("Workspace [" + this.getGoalContext().getSpace() + "] cannot be verified: Not present in server");
+				} catch (BackendConnectionException e) {
+					throw new GoalConfigurationException("Workspace [" + this.getGoalContext().getSpace() + "] cannot be verified:" + e.getMessage());
+				}
+			}
+			
+			// Upload goal execution before actual analysis (and another time after goal completion)
+			final boolean created = this.upload(true);
 			if(!created)
 				throw new GoalConfigurationException("Upload of goal execution failed, aborting the goal execution...");
 		}

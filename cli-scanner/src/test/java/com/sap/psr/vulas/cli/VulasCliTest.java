@@ -1,6 +1,5 @@
 package com.sap.psr.vulas.cli;
 
-import static com.jayway.restassured.RestAssured.expect;
 import static com.xebialabs.restito.builder.stub.StubHttp.whenHttp;
 import static com.xebialabs.restito.builder.verify.VerifyHttp.verifyHttp;
 import static com.xebialabs.restito.semantics.Action.charset;
@@ -24,7 +23,6 @@ import org.junit.experimental.categories.Category;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.GoalConfigurationException;
 import com.sap.psr.vulas.goals.GoalExecutionException;
-import com.sap.psr.vulas.shared.categories.Slow;
 import com.sap.psr.vulas.shared.connectivity.PathBuilder;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.Application;
@@ -84,13 +82,8 @@ public class VulasCliTest extends AbstractGoalTest {
 //		.post("/backend" + PathBuilder.goalExcecutions(null, null, _a));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void testCleanGoal() throws GoalConfigurationException, GoalExecutionException {
-		//System.setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.OFFLINE.toString());
-
 		// Mock REST services
 		this.configureBackendServiceUrl(server);
 		this.setupMockServices(this.testApp);
@@ -102,18 +95,13 @@ public class VulasCliTest extends AbstractGoalTest {
 		verifyHttp(server).times(1, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.app(testApp)));
-		verifyHttp(server).times(2, 
+		verifyHttp(server).times(1, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void testAppGoal() throws GoalConfigurationException, GoalExecutionException {
-		//System.setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.OFFLINE.toString());
-
 		// App: Relative and absolute folders with and without spaces
 		final Path rel_app_with_space = Paths.get("src", "test", "resources", "appfolder with space");
 		final Path abs_app = Paths.get("src", "test", "resources", "appfolder").toAbsolutePath();
@@ -139,18 +127,14 @@ public class VulasCliTest extends AbstractGoalTest {
 		verifyHttp(server).times(1, 
 				method(Method.PUT),
 				uri("/backend" + PathBuilder.app(this.testApp)));
-		verifyHttp(server).times(2, 
+		verifyHttp(server).times(1, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	@Category(com.sap.psr.vulas.shared.categories.Slow.class)
 	public void testPyAppGoal() throws GoalConfigurationException, GoalExecutionException {
-		//System.setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.OFFLINE.toString());
 		System.setProperty(CoreConfiguration.APP_DIRS, "./src/test/resources/cf-helloworld");
 		
 		// Mock REST services
@@ -164,17 +148,13 @@ public class VulasCliTest extends AbstractGoalTest {
 		verifyHttp(server).times(1, 
 				method(Method.PUT),
 				uri("/backend" + PathBuilder.app(this.testApp)));
-		verifyHttp(server).times(2, 
+		verifyHttp(server).times(1, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}
 	
-	/**
-	 * 
-	 */
 	@Test
 	public void testJavaAppGoal() throws GoalConfigurationException, GoalExecutionException {
-		//System.setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.OFFLINE.toString());
 		System.setProperty(CoreConfiguration.APP_DIRS, "./src/test/resources/java-app");
 		
 		// Mock REST services
@@ -188,7 +168,7 @@ public class VulasCliTest extends AbstractGoalTest {
 		verifyHttp(server).times(1, 
 				method(Method.PUT),
 				uri("/backend" + PathBuilder.app(this.testApp)));
-		verifyHttp(server).times(2, 
+		verifyHttp(server).times(1, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}

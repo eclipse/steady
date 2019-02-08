@@ -247,8 +247,9 @@ public class ReachabilityAnalyzer implements Runnable {
         this.targetConstructs = _target_constructs;
     }
 
-    public void setCallgraphConstructor(String analysisFramework, boolean cliGoal) {
-        this.constructor = CallgraphConstructorFactory.buildCallgraphConstructor(analysisFramework, this.app_ctx, cliGoal);
+    public void setCallgraphConstructor(String analysisFramework, boolean _is_cli) {
+        this.constructor = CallgraphConstructorFactory.buildCallgraphConstructor(analysisFramework, this.app_ctx, _is_cli);
+        this.constructor.setVulasConfiguration(this.goalContext.getVulasConfiguration());
     }
 
     private Graph<ConstructId> readFromDisk(String _file) {
@@ -364,7 +365,7 @@ public class ReachabilityAnalyzer implements Runnable {
                 // Sources for the reachability analysis (= always the same, independent of the current bug)
                 final Set<com.sap.psr.vulas.shared.json.model.ConstructId> src_ep = constructor.getEntrypoints();
 
-                final boolean search_shortest = VulasConfiguration.getGlobal().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_SEARCH_SHORTEST, true);
+                final boolean search_shortest = this.goalContext.getVulasConfiguration().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_SEARCH_SHORTEST, true);
 
                 final StopWatch sw = new StopWatch("Check reachability of change list elements").start();
 
@@ -461,7 +462,7 @@ public class ReachabilityAnalyzer implements Runnable {
      */
     private void identifyTouchPoints() {
         // Allow to skip the collection of touch points (which is potentially time consuming due to nested looping over app methods and all their edges)
-        final boolean identify_touchpoints = VulasConfiguration.getGlobal().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_TOUCHPOINTS, true);
+        final boolean identify_touchpoints = this.goalContext.getVulasConfiguration().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_TOUCHPOINTS, true);
         if (!identify_touchpoints)
             log.warn("Identification of touch points disabled per configuration");
 
@@ -537,7 +538,7 @@ public class ReachabilityAnalyzer implements Runnable {
      * Returns a human-readable description of the constructor's specific configuration.
      */
     public Configuration getConfiguration() {
-        return (constructor == null ? null : constructor.getConfiguration());
+        return (constructor == null ? null : constructor.getConstructorConfiguration());
     }
 
     /**
@@ -658,7 +659,7 @@ public class ReachabilityAnalyzer implements Runnable {
     public synchronized void uploadBug(String _bugid, List<List<ConstructId>> _paths) {
 
         // Used to limit the number of paths (per change list element) that will be uploaded to the backend
-        final int max_path = VulasConfiguration.getGlobal().getConfiguration().getInt(ReachabilityConfiguration.REACH_MAX_PATH, 10);
+        final int max_path = this.goalContext.getVulasConfiguration().getConfiguration().getInt(ReachabilityConfiguration.REACH_MAX_PATH, 10);
         final Map<com.sap.psr.vulas.shared.json.model.ConstructId, Integer> counters = new HashMap<com.sap.psr.vulas.shared.json.model.ConstructId, Integer>();
         int count = -1;
 

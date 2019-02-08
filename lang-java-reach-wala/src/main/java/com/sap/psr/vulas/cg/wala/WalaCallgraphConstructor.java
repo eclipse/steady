@@ -46,11 +46,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 public class WalaCallgraphConstructor implements ICallgraphConstructor {
 
     private static final Log log = LogFactory.getLog(WalaCallgraphConstructor.class);
-    private static final String FRAMEWORK = "wala";
-
-    public String getFramework() {
-        return WalaCallgraphConstructor.FRAMEWORK;
-    }
+    public static final String FRAMEWORK = "wala";
 
     // Packages to be excluded for call graph construction, which is read from wala-cfg.properties
     private File excludedPackagesFile = null;
@@ -59,9 +55,17 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
      * The context information of the application JAR to be analyzed
      */
     private Application appContext = null;
+    
+    private VulasConfiguration vulasConfiguration = null;
 
+    public String getFramework() { return WalaCallgraphConstructor.FRAMEWORK; }
+    
     public Application getAppContext() {
         return this.appContext;
+    }
+    
+    public void setVulasConfiguration(VulasConfiguration _cfg) {
+    	this.vulasConfiguration = _cfg;
     }
 
     /**
@@ -272,8 +276,8 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
     /**
      * Returns a human-readable description of the constructor's specific configuration.
      */
-    public Configuration getConfiguration() {
-        return VulasConfiguration.getGlobal().getConfiguration().subset("vulas.reach.wala");
+    public Configuration getConstructorConfiguration() {
+        return this.vulasConfiguration.getConfiguration().subset("vulas.reach.wala");
     }
 
     /**
@@ -287,13 +291,13 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
         try {
             //String[] args = new String[]{"-appJar", this.classpath, "-cg", VulasConfiguration.getSingleton().getConfiguration().getString("vulas.reach.wala.callgraph.algorithm")};
             //CommandLine.parse(args);
-            String cg_algorithm = VulasConfiguration.getGlobal().getConfiguration().getString("vulas.reach.wala.callgraph.algorithm");
-            WalaCallgraphConstructor.log.info("Using algorithm [" + cg_algorithm + "], reflection option [" + VulasConfiguration.getGlobal().getConfiguration().getString("vulas.reach.wala.callgraph.reflection") + "]");
+            String cg_algorithm = this.vulasConfiguration.getConfiguration().getString("vulas.reach.wala.callgraph.algorithm");
+            WalaCallgraphConstructor.log.info("Using algorithm [" + cg_algorithm + "], reflection option [" + this.vulasConfiguration.getConfiguration().getString("vulas.reach.wala.callgraph.reflection") + "]");
             final long start_nanos = System.nanoTime();
 
             // encapsulates various analysis options
             AnalysisOptions options = new AnalysisOptions(this.scope, this.entrypoints);
-            options.setReflectionOptions(ReflectionOptions.valueOf(VulasConfiguration.getGlobal().getConfiguration().getString("vulas.reach.wala.callgraph.reflection")));
+            options.setReflectionOptions(ReflectionOptions.valueOf(this.vulasConfiguration.getConfiguration().getString("vulas.reach.wala.callgraph.reflection")));
             // callgraph builder based on algorithm
             CallGraphBuilder<?> builder = null;
 
@@ -413,10 +417,10 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
 
         // Overwrite configuration (if requested)
         if (_packages != null && !_packages.equals(""))
-            VulasConfiguration.getGlobal().setProperty("vulas.reach.wala.callgraph.exclusions", _packages);
+            this.vulasConfiguration.setProperty("vulas.reach.wala.callgraph.exclusions", _packages);
 
         // Get configuration (original or overwritten)
-        final String buffer = VulasConfiguration.getGlobal().getConfiguration().getString("vulas.reach.wala.callgraph.exclusions");
+        final String buffer = this.vulasConfiguration.getConfiguration().getString("vulas.reach.wala.callgraph.exclusions");
 
         // Write exluded packages into file
         try {

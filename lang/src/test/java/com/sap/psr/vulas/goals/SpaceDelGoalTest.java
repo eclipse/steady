@@ -79,23 +79,16 @@ public class SpaceDelGoalTest extends AbstractGoalTest {
 			.post("/backend" + PathBuilder.goalExcecutions(null, _s, null));
 	}
 
-	/**
-	 * Two HTTP requests made for space creation and goal execution creation
-	 * 
-	 * @throws GoalConfigurationException
-	 * @throws GoalExecutionException
-	 */
 	@Test
 	public void testDelSpace() throws GoalConfigurationException, GoalExecutionException {
 		// Mock REST services
 		this.configureBackendServiceUrl(server);
 		this.setupMockServices(this.testTenant, this.testSpace);
-				
-		final VulasConfiguration cfg = new VulasConfiguration();
-		cfg.setProperty(CoreConfiguration.TENANT_TOKEN, testTenant.getTenantToken());
-		cfg.setProperty(CoreConfiguration.SPACE_TOKEN, testSpace.getSpaceToken());
+		
+		this.vulasConfiguration.setProperty(CoreConfiguration.TENANT_TOKEN, testTenant.getTenantToken());
+		this.vulasConfiguration.setProperty(CoreConfiguration.SPACE_TOKEN, testSpace.getSpaceToken());
 		
 		final AbstractGoal goal = GoalFactory.create(GoalType.SPACEDEL, GoalClient.CLI);
-		goal.setConfiguration(cfg).executeSync();
+		goal.setConfiguration(this.vulasConfiguration).executeSync();
 	}
 }

@@ -114,19 +114,6 @@ public abstract class AbstractGoal implements Runnable {
 		if(_monitor_mem)
 			this.memoThread = new MemoryMonitor();
 
-		final StringList env_whitelist = VulasConfiguration.getGlobal().getStringList(VulasConfiguration.ENV_VARS, VulasConfiguration.ENV_VARS_CUSTOM);
-		final StringList sys_whitelist = VulasConfiguration.getGlobal().getStringList(VulasConfiguration.SYS_PROPS, VulasConfiguration.SYS_PROPS_CUSTOM);
-		
-		// A subset of environment variables
-		this.systemInfo.putAll(env_whitelist.filter(System.getenv(), true, ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE));
-
-		// A subset of system properties
-		for(Object key : System.getProperties().keySet()) {
-			final String key_string = (String)key;
-			if(sys_whitelist.contains(key_string, ComparisonMode.STARTSWITH, CaseSensitivity.CASE_INSENSITIVE))
-				this.systemInfo.put(key_string, System.getProperty(key_string));
-		}
-		
 		// Number of processors
 		this.systemInfo.put("runtime.availableProcessors", Integer.toString(Runtime.getRuntime().availableProcessors()));
 	}
@@ -198,7 +185,7 @@ public abstract class AbstractGoal implements Runnable {
 		}
 		finally {
 			if(this.goalUploadEnabled)
-				this.upload();
+				this.upload(false);
 		}
 	}
 
@@ -224,8 +211,12 @@ public abstract class AbstractGoal implements Runnable {
 	public synchronized final GoalContext getGoalContext() {
 		if(this.goalContext==null) {
 			final Configuration c = this.getConfiguration().getConfiguration();
+			
 			this.goalContext = new GoalContext();
 
+			// Configuration
+			this.goalContext.setVulasConfiguration(this.getConfiguration());
+			
 			// Tenant
 			if(!this.getConfiguration().isEmpty(CoreConfiguration.TENANT_TOKEN))
 				this.goalContext.setTenant(new Tenant(c.getString(CoreConfiguration.TENANT_TOKEN)));
@@ -446,6 +437,19 @@ public abstract class AbstractGoal implements Runnable {
 		b.append("}");
 
 		// System info
+		final StringList env_whitelist = this.getConfiguration().getStringList(VulasConfiguration.ENV_VARS, VulasConfiguration.ENV_VARS_CUSTOM);
+		final StringList sys_whitelist = this.getConfiguration().getStringList(VulasConfiguration.SYS_PROPS, VulasConfiguration.SYS_PROPS_CUSTOM);
+		
+		// A subset of environment variables
+		this.systemInfo.putAll(env_whitelist.filter(System.getenv(), true, ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE));
+
+		// A subset of system properties
+		for(Object key : System.getProperties().keySet()) {
+			final String key_string = (String)key;
+			if(sys_whitelist.contains(key_string, ComparisonMode.STARTSWITH, CaseSensitivity.CASE_INSENSITIVE))
+				this.systemInfo.put(key_string, System.getProperty(key_string));
+		}		
+		
 		b.append(",\"systemInfo\":[");
 		c = 0;
 		for(Map.Entry<String, String> entry: this.systemInfo.entrySet()) {
@@ -464,11 +468,11 @@ public abstract class AbstractGoal implements Runnable {
 	 * Uploads the JSON presentation of this goal execution to the Vulas backend.
 	 * Returns true of everything went fine (upload succeeded or is not necessary), false otherwise.
 	 */
-	public boolean upload() {
+	public boolean upload(boolean _before) {
 		boolean ret = false;
 		try {
 			AbstractGoal.log.info("Uploading goal execution info ...");
-			ret = BackendConnector.getInstance().uploadGoalExecution(this.getGoalContext(), this);
+			ret = BackendConnector.getInstance().uploadGoalExecution(this.getGoalContext(), this, _before);
 			AbstractGoal.log.info("Uploaded goal execution info");
 		} catch (Exception e) {
 			AbstractGoal.log.error("Error while uploading goal execution info: " + e.getMessage());

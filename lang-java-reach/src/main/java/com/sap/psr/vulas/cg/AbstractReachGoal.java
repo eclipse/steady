@@ -66,9 +66,9 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
         final FileSearch jar_search = new FileSearch(JAR_EXT);
         final FileSearch class_search = new FileSearch(CLASS_EXT);
 
-        final boolean preprocess = VulasConfiguration.getGlobal().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_PREPROCESS, true);
+        final boolean preprocess = this.getConfiguration().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_PREPROCESS, true);
 
-        final StringList exclude_jars = new StringList(VulasConfiguration.getGlobal().getConfiguration().getStringArray(ReachabilityConfiguration.REACH_EXCL_JARS));
+        final StringList exclude_jars = new StringList(this.getConfiguration().getConfiguration().getStringArray(ReachabilityConfiguration.REACH_EXCL_JARS));
 
         // Append known dependencies to classpath (can be none in case of CLI)
         for (Path p : this.getKnownDependencies().keySet()) {
@@ -160,13 +160,13 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
         this.setEntryPoints(ra);
 
         //set the call graph constructor, based on the configured framework
-        ra.setCallgraphConstructor(VulasConfiguration.getGlobal().getConfiguration().getString(ReachabilityConfiguration.REACH_FWK, "wala"), this.getGoalClient() == GoalClient.CLI);
+        ra.setCallgraphConstructor(this.getConfiguration().getConfiguration().getString(ReachabilityConfiguration.REACH_FWK, "wala"), this.getGoalClient() == GoalClient.CLI);
 
-        ra.setTargetConstructs(VulasConfiguration.getGlobal().getConfiguration().getString(ReachabilityConfiguration.REACH_BUGS, null));
-        ra.setExcludePackages(VulasConfiguration.getGlobal().getConfiguration().getString(ReachabilityConfiguration.REACH_EXCL_PACK, null));
+        ra.setTargetConstructs(this.getConfiguration().getConfiguration().getString(ReachabilityConfiguration.REACH_BUGS, null));
+        ra.setExcludePackages(this.getConfiguration().getConfiguration().getString(ReachabilityConfiguration.REACH_EXCL_PACK, null));
 
         // Trigger the analysis
-        final boolean success = ReachabilityAnalyzer.startAnalysis(ra, VulasConfiguration.getGlobal().getConfiguration().getInt(ReachabilityConfiguration.REACH_TIMEOUT, 15) * 60L * 1000L);
+        final boolean success = ReachabilityAnalyzer.startAnalysis(ra, this.getConfiguration().getConfiguration().getInt(ReachabilityConfiguration.REACH_TIMEOUT, 15) * 60L * 1000L);
 
         // Upload
         if (success)
@@ -186,7 +186,7 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
      */
     @Override
     protected final void cleanAfterExecution() {
-        if (VulasConfiguration.getGlobal().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_PREPROCESS, true)) {
+        if (this.getConfiguration().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_PREPROCESS, true)) {
         	log.info("Deleting [" + this.rewrittenJars.size() + "] temporary (pre-processed) dependencies...");
             for (Path p : this.rewrittenJars) {
                 try {

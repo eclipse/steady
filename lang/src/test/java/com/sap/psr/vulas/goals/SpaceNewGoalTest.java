@@ -71,7 +71,7 @@ public class SpaceNewGoalTest extends AbstractGoalTest {
 	@Test(expected=GoalExecutionException.class)
 	public void testNewSpaceWithoutTenantConfiguration() throws GoalConfigurationException, GoalExecutionException {
 		final AbstractGoal goal = GoalFactory.create(GoalType.SPACENEW, GoalClient.CLI);
-		goal.setConfiguration(new VulasConfiguration()).executeSync();
+		goal.setConfiguration(this.vulasConfiguration).executeSync();
 	}
 
 	/**
@@ -82,10 +82,9 @@ public class SpaceNewGoalTest extends AbstractGoalTest {
 	 */
 	@Test(expected=GoalExecutionException.class)
 	public void testNewSpaceWithoutBackendConfiguration() throws GoalConfigurationException, GoalExecutionException {
-		final VulasConfiguration cfg = new VulasConfiguration();
-		cfg.setProperty(CoreConfiguration.TENANT_TOKEN, testTenant.getTenantToken());		
+		this.vulasConfiguration.setProperty(CoreConfiguration.TENANT_TOKEN, testTenant.getTenantToken());		
 		final AbstractGoal goal = GoalFactory.create(GoalType.SPACENEW, GoalClient.CLI);
-		goal.setConfiguration(cfg).executeSync();
+		goal.setConfiguration(this.vulasConfiguration).executeSync();
 	}
 
 	/**
@@ -101,14 +100,13 @@ public class SpaceNewGoalTest extends AbstractGoalTest {
 		this.setupMockSpaceServices(testSpace);
 
 		// Set config
-		final VulasConfiguration cfg = new VulasConfiguration();
-		cfg.setProperty(CoreConfiguration.TENANT_TOKEN, testTenant.getTenantToken());
-		cfg.setProperty(CoreConfiguration.SPACE_NAME, testSpace.getSpaceName());
-		cfg.setProperty(CoreConfiguration.SPACE_DESCR, testSpace.getSpaceDescription());
+		this.vulasConfiguration.setProperty(CoreConfiguration.TENANT_TOKEN, testTenant.getTenantToken());
+		this.vulasConfiguration.setProperty(CoreConfiguration.SPACE_NAME, testSpace.getSpaceName());
+		this.vulasConfiguration.setProperty(CoreConfiguration.SPACE_DESCR, testSpace.getSpaceDescription());
 
 		// Execute goal
 		final AbstractGoal goal = GoalFactory.create(GoalType.SPACENEW, GoalClient.CLI);
-		goal.setConfiguration(cfg).executeSync();
+		goal.setConfiguration(this.vulasConfiguration).executeSync();
 		
 		final Space new_space = (Space)goal.getResultObject();
 		assertEquals(testSpace, new_space);

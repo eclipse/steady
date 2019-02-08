@@ -9,6 +9,8 @@ import org.apache.commons.logging.LogFactory;
 
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.HttpResponse;
+import com.sap.psr.vulas.goals.GoalContext;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 public class HttpRequestList extends AbstractHttpRequest {
 	
@@ -19,7 +21,7 @@ public class HttpRequestList extends AbstractHttpRequest {
 	 */
 	private boolean stopOnSuccess = true;
 	
-	private List<BasicHttpRequest> list = new LinkedList<BasicHttpRequest>();
+	private List<HttpRequest> list = new LinkedList<HttpRequest>();
 	
 	public HttpRequestList() { this(true); }
 	
@@ -27,7 +29,15 @@ public class HttpRequestList extends AbstractHttpRequest {
 		this.stopOnSuccess = _stop_on_success;
 	}
 	
-	public void addRequest(BasicHttpRequest _r) { this.list.add(_r); }
+	public void addRequest(HttpRequest _r) { this.list.add(_r); }
+	
+	@Override
+	public HttpRequest setGoalContext(GoalContext _ctx) {
+		this.context = _ctx;
+		for(HttpRequest r: this.list)
+			r.setGoalContext(_ctx);
+		return this;
+	}
 
 	/**
 	 * Loops over the list of requests and calls {@link HttpRequest#send()}. Depending on
@@ -37,7 +47,7 @@ public class HttpRequestList extends AbstractHttpRequest {
 	@Override
 	public HttpResponse send() throws BackendConnectionException {
 		HttpResponse response = null;
-		for(BasicHttpRequest r: this.list) {
+		for(HttpRequest r: this.list) {
 			response = r.send();
 			if(this.stopOnSuccess && response!=null && (response.isOk() || response.isCreated()))
 				break;
@@ -53,21 +63,21 @@ public class HttpRequestList extends AbstractHttpRequest {
 
 	@Override
 	public void savePayloadToDisk() throws IOException {
-		for(BasicHttpRequest r: this.list) {
+		for(HttpRequest r: this.list) {
 			r.savePayloadToDisk();
 		}
 	}
 
 	@Override
 	public void loadPayloadFromDisk() throws IOException {
-		for(BasicHttpRequest r: this.list) {
+		for(HttpRequest r: this.list) {
 			r.loadPayloadFromDisk();
 		}
 	}
 	
 	@Override
 	public void deletePayloadFromDisk() throws IOException {
-		for(BasicHttpRequest r: this.list) {
+		for(HttpRequest r: this.list) {
 			r.deletePayloadFromDisk();
 		}
 	}
