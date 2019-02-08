@@ -148,7 +148,7 @@ public class VulasCliTest extends AbstractGoalTest {
 		verifyHttp(server).times(1, 
 				method(Method.PUT),
 				uri("/backend" + PathBuilder.app(this.testApp)));
-		verifyHttp(server).times(2, 
+		verifyHttp(server).times(1, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}
