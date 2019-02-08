@@ -220,6 +220,42 @@ vulas.reach.wala.callgraph.reflection = NO_FLOW_TO_CASTS_NO_METHOD_INVOKE
 
 ##### Soot
 
+In order to use the Soot call graph construction framework, please modify the POM profile as follows:
+
+  * Add a `pluginRepositories` section in order to download Soot artifacts from the University of Paderborn
+
+    ```xml
+    <pluginRepositories>
+        <pluginRepository>
+            <id>soot</id>
+            <url>https://soot-build.cs.uni-paderborn.de/nexus/repository/soot-snapshot/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            </pluginRepository>
+    </pluginRepositories>
+    ```
+
+  * Add a `dependencies` and `dependency` section on the artifact `lang-java-reach-soot` right after the plugin:
+
+    ```xml
+    <groupId>com.sap.research.security.vulas</groupId>
+    <artifactId>plugin-maven</artifactId>
+    <version>${vulas.version}</version>
+    <dependencies>
+        <dependency>
+            <groupId>com.sap.research.security.vulas</groupId>
+            <artifactId>lang-java-reach-soot</artifactId>
+            <version>${vulas.version}</version>
+        </dependency>
+    </dependencies>
+    ```
+
+  * Make sure to exclude the Soot repository from mirrors in your Maven's `settings.xml`, e.g., `<mirrorOf>*,!soot</mirrorOf>`. See [here](https://maven.apache.org/guides/mini/guide-mirror-settings.html) for more details how to configure repository mirrors.
+
 The subset of Soot configuration options that can be set through @@PROJECT_NAME@@ are as follows. For all other Soot settings, the respective defaults are taken. See [here](https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm) for a complete documentation of Soot configuration options.
 
 ```ini
