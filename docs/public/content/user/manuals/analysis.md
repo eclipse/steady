@@ -145,6 +145,8 @@ mvn -Dvulas compile vulas:a2c
 
 #### Configure as follows
 
+The following configuration options apply to the reachability analysis no matter which call graph construction framework is used. See below for framework-specific configuration options.
+
 ```ini
 # Limits the analysis to certain bugs (multiple values separated by comma)
 # If empty, all relevant bugs retrieved from backend will be considered
@@ -196,7 +198,7 @@ Behind the scene, a source code analysis framework is used to construct the call
 [vulas-reach-1] INFO  com.sap.psr.vulas.cg.wala.WalaCallgraphConstructor  - Normalized call graph has [167639 nodes] (with distinct ConstructId) and [1279495 edges]
 ```
 
-#### WALA
+##### WALA
 
 The setting `vulas.reach.wala.callgraph.algorithm` determines the construction algorithm to be used. From `RTA` (Rapid Type Analysis) to `0-1-ctn-CFA`, the call graph  becomes more accurate, but the construction takes more time. A more accurate call graph means that it contains less false-positives, i.e., method invocations that cannot happen during actual program execution. As a rule of thumb, a call graph constructed with `RTA` contains more nodes and edges than one constructed with `0-1-ctn-CFA`. Note the following before choosing a more simple algorithm: The increase of nodes and edges resulting from, for instance, the choice of RTA, has a negative impact on the performance of the later analysis phases. As such, it may be worth to spend more time on the graph construction. See [here](https://ben-holland.com/call-graph-construction-algorithms-explained/), [there](http://wala.sourceforge.net/wiki/index.php/UserGuide:CallGraph) and [there](http://wala.sourceforge.net/wiki/index.php/UserGuide:PointerAnalysis) for more information regarding the difference of call graph construction algorithms.
 
@@ -216,7 +218,7 @@ The setting `vulas.reach.wala.callgraph.reflection` determines the consideration
 vulas.reach.wala.callgraph.reflection = NO_FLOW_TO_CASTS_NO_METHOD_INVOKE
 ```
 
-#### Soot
+##### Soot
 
 The subset of Soot configuration options that can be set through @@PROJECT_NAME@@ are as follows. For all other Soot settings, the respective defaults are taken. See [here](https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm) for a complete documentation of Soot configuration options.
 

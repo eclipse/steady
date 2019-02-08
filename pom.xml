@@ -105,7 +105,7 @@
 	<profiles>
 		<!--
 			Activate in order to build the Soot call graph construction service. 
-			Make sure to exlcude the soot repo from mirrors in settings.xml, e.g., <mirrorOf>*,!soot</mirrorOf>
+			Make sure to exclude the soot repo from mirrors in settings.xml, e.g., <mirrorOf>*,!soot</mirrorOf>
 			See here for more details: https://maven.apache.org/guides/mini/guide-mirror-settings.html
 		-->
 		<profile>
