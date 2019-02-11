@@ -30,6 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.sap.psr.vulas.backend.model.Application;
@@ -200,6 +201,44 @@ public class HubIntegrationControllerTest {
     	
     }
     
+    @Test
+    public void testGetHubAppWithSlashChar() throws Exception {
+    	// Rest-post http-client 4.1.3
+    	Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/dummy_app/lib.json")), Library.class);
+    	this.libRepository.customSave(lib);
+    	    	
+    	//Rest-post bug 
+    	final Bug bug = (Bug)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/dummy_app/bug_foo.json")), Bug.class);
+    	this.bugRepository.customSave(bug,true);
+    	
+    	
+    	//Rest-post app using http-client
+    	final Application app = new Application(APP_GROUP, APP_ARTIFACT, "0.0./r" + APP_VERSION);
+
+		//Dependencies
+		final Set<Dependency> app_dependency = new HashSet<Dependency>(); 
+		app_dependency.add(new Dependency(app,lib, Scope.COMPILE, false, "foo.jar"));
+		String token = spaceRepository.getDefaultSpace(null).getSpaceToken();
+		app.setSpace(spaceRepository.getDefaultSpace(null));
+		
+		app.setDependencies(app_dependency);
+    	this.appRepository.customSave(app);
+    	
+    	//Read all apps
+    	MvcResult result = mockMvc.perform(get("/hubIntegration/apps/"))
+        .andExpect(status().isOk()).andReturn();
+    	
+    	String item=result.getResponse().getContentAsString();
+    	item = item.substring(2, item.length()-2);
+    	
+    	
+    	// Read all public apps
+    	MvcResult vulndeps = mockMvc.perform(get("/hubIntegration/apps/"+item+"/vulndeps"))
+        .andExpect(status().isOk()).andExpect(jsonPath("$[0].spaceToken").exists())
+        .andExpect(jsonPath("$[0].appId",is(1)))    	
+        .andExpect(jsonPath("$[0].lastScan").exists())
+        .andExpect(jsonPath("$[0].reachable",is(false))).andReturn();
+    }
   
     
      

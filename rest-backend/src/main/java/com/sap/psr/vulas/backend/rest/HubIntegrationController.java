@@ -306,7 +306,7 @@ public class HubIntegrationController {
 				final String[] app_gav = app_string.split(_separator);
 				if(app_gav.length!=3)
 					throw new IllegalArgumentException("Cannot find application identifier in argument [" + _string + "]");
-				app = ApplicationRepository.FILTER.findOne(_app_repo.findByGAV(app_gav[0].trim(),  app_gav[1].trim(),  app_gav[2].trim(), space));
+				app = ApplicationRepository.FILTER.findOne(_app_repo.findByGAV(revertEscapedCharacters(app_gav[0].trim()),  revertEscapedCharacters(app_gav[1].trim()),  revertEscapedCharacters(app_gav[2].trim()), space));
 			}
 
 			return new ExportItem(space, app);
@@ -328,6 +328,10 @@ public class HubIntegrationController {
 		
 		private String escapeCharacters(String _param){
 			return _param.replace("/", "%2F");
+		}
+		
+		private static String revertEscapedCharacters(String _param){
+			return _param.replace("%2F", "/");
 		}
 	}
 
