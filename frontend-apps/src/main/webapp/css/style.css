@@ -56,3 +56,11 @@
 .width100{
 	width: 100%;
 }
+
+.sapMMsgStrip {
+	border-radius: 0 !important;
+}
+
+.sapMMsgStripMessage>.sapMLnk {
+	margin-left: 0 !important;
+}
