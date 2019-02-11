@@ -18,7 +18,7 @@ __Contribute to the vulnerability database__
 
 : Here you can find information about how to contribute new known vulnerabilities
 
-: [Go to the Contribute page](../../contributor/#contribute-to-the-vulnerability-knowledge-base)
+: [Go to the Contribute page](../contributor/#contribute-to-the-vulnerability-knowledge-base)
 
 !!! warning "Orange Hourglass"
 	Whenever an application library contains the signature of a construct that was changed to fix a vulnerability, but the patch lib analyzer didn't yet (or could not) establish whether it contains the vulnerable or fixed version of the construct, then the tool reports the vulnerability in the web frontend with an ORANGE hourglass in the column "Inclusion of vulnerable code".
