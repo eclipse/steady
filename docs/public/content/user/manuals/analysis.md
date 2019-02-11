@@ -222,9 +222,10 @@ vulas.reach.wala.callgraph.reflection = NO_FLOW_TO_CASTS_NO_METHOD_INVOKE
 
 In order to use the Soot call graph construction framework, please modify the POM profile as follows:
 
-  * Add a `pluginRepositories` section in order to download Soot artifacts from the University of Paderborn
+  * Add a `pluginRepositories` section right after the `properties` in order to download Soot artifacts from the University of Paderborn
 
-    ```xml
+    ```xml hl_lines="2 3 4 5 6 7 8 9 10 11 12 13"
+    </properties>
     <pluginRepositories>
         <pluginRepository>
             <id>soot</id>
@@ -241,7 +242,7 @@ In order to use the Soot call graph construction framework, please modify the PO
 
   * Add a `dependencies` and `dependency` section on the artifact `lang-java-reach-soot` right after the plugin:
 
-    ```xml
+    ```xml hl_lines="4 5 6 7 8 9 10"
     <groupId>com.sap.research.security.vulas</groupId>
     <artifactId>plugin-maven</artifactId>
     <version>${vulas.version}</version>
