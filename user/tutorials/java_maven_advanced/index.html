@@ -40,7 +40,7 @@
     
     
       
-        <title>Reachability analysis (Java/Maven) - vulnerability-assessment-tool - <small>3.0.13</small></title>
+        <title>Reachability analysis (Java/Maven) - vulnerability-assessment-tool 3.0.13</title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.13</small>" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.13" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool - <small>3.0.13</small>
+                vulnerability-assessment-tool 3.0.13
               </span>
               <span class="md-header-nav__topic">
                 Reachability analysis (Java/Maven)
@@ -311,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.13</small>" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.13" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool - <small>3.0.13</small>
+    vulnerability-assessment-tool 3.0.13
   </label>
   
     <div class="md-nav__source">
@@ -1199,7 +1199,7 @@
 <h3 id="test">test<a class="headerlink" href="#test" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
-<p><code>mvn -Dvulas test vulas:upload</code></p>
+<p><code>mvn -Dvulas vulas:prepare-vulas-agent test vulas:upload</code></p>
 </li>
 <li>
 <p>Connect to the apps Web frontend, then select your workspace and application.</p>
@@ -1242,7 +1242,7 @@
 </ol>
 <div class="admonition info">
 <p class="admonition-title">Run clean whenever the application changes</p>
-<p>If you already scanned your project in the past, you should run the <code>clean</code> goal prior to new analyses in order to delete the old analysis results in the backend. Otherwise, old analysis results will be shown together with new results. For example, if you updated a dependency from a vulnerable to a non-vulnerable version, both versions will be shown in the apps Web frontend.</p>
+<p>If you already scanned your project in the past, you should run the <code>vulas:clean</code> goal prior to new analyses in order to delete the old analysis results in the backend. Otherwise, old analysis results will be shown together with new results. For example, if you updated a dependency from a vulnerable to a non-vulnerable version, both versions will be shown in the apps Web frontend.</p>
 </div>
 <h2 id="useful-links">Useful links<a class="headerlink" href="#useful-links" title="Permanent link">&para;</a></h2>
 <ul>

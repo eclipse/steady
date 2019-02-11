@@ -40,7 +40,7 @@
     
     
       
-        <title>FAQ - vulnerability-assessment-tool - <small>3.0.13</small></title>
+        <title>FAQ - vulnerability-assessment-tool 3.0.13</title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.13</small>" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.13" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool - <small>3.0.13</small>
+                vulnerability-assessment-tool 3.0.13
               </span>
               <span class="md-header-nav__topic">
                 FAQ
@@ -311,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.13</small>" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.13" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool - <small>3.0.13</small>
+    vulnerability-assessment-tool 3.0.13
   </label>
   
     <div class="md-nav__source">
@@ -933,6 +933,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#test-error-injecting-private-orgeclipseaetherspiloglogger-orgapachemavenrepositoryinternaldefaultversionresolverlogger" title="TEST : "Error injecting: private org.eclipse.aether.spi.log.Logger org.apache.maven.repository.internal.DefaultVersionResolver.logger"" class="md-nav__link">
+    TEST : "Error injecting: private org.eclipse.aether.spi.log.Logger org.apache.maven.repository.internal.DefaultVersionResolver.logger"
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#junit-tests-using-powermock-fail-when-using-vulnerability-assessment-tool" title="JUnit tests using Powermock fail when using vulnerability-assessment-tool" class="md-nav__link">
     JUnit tests using Powermock fail when using vulnerability-assessment-tool
   </a>
@@ -1523,6 +1530,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#test-error-injecting-private-orgeclipseaetherspiloglogger-orgapachemavenrepositoryinternaldefaultversionresolverlogger" title="TEST : "Error injecting: private org.eclipse.aether.spi.log.Logger org.apache.maven.repository.internal.DefaultVersionResolver.logger"" class="md-nav__link">
+    TEST : "Error injecting: private org.eclipse.aether.spi.log.Logger org.apache.maven.repository.internal.DefaultVersionResolver.logger"
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#junit-tests-using-powermock-fail-when-using-vulnerability-assessment-tool" title="JUnit tests using Powermock fail when using vulnerability-assessment-tool" class="md-nav__link">
     JUnit tests using Powermock fail when using vulnerability-assessment-tool
   </a>
@@ -1667,6 +1681,7 @@ how to get support.</p>
 <li><a href="#test-byte-code-instrumentation-fails">TEST : Byte code instrumentation fails</a></li>
 <li><a href="#test-the-forked-vm-terminated">TEST : The forked VM terminated</a></li>
 <li><a href="#test-incomplete-app-context">TEST : Incomplete app context</a></li>
+<li><a href="#test-error-injecting-private-orgeclipseaetherspiloglogger-orgapachemavenrepositoryinternaldefaultversionresolverlogger">TEST : "Error injecting: private org.eclipse.aether.spi.log.Logger org.apache.maven.repository.internal.DefaultVersionResolver.logger"</a></li>
 <li><a href="#junit-tests-using-powermock-fail-when-using-vulnerability-assessment-tool">JUnit tests using Powermock fail when using vulnerability-assessment-tool</a></li>
 </ul>
 </li>
@@ -1933,8 +1948,9 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in c
 <li>Select an instrumentor that consumes less memory by adding, for instance, <code>-Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor</code>.</li>
 </ul>
 <h3 id="test-incomplete-app-context">TEST : Incomplete app context<a class="headerlink" href="#test-incomplete-app-context" title="Permanent link">&para;</a></h3>
-<p>Problem: Tests terminate with the error message <code>App context incomplete: [group=, artifact=, version=]</code> and there exists a white space in any of the parent directories of the Maven project (e.g., <code>C:\My Documents\projects\foo</code>).</p>
-<p>Solutions:</p>
+<p><strong>Problem</strong></p>
+<p>Tests terminate with the error message <code>App context incomplete: [group=, artifact=, version=]</code> and there exists a white space in any of the parent directories of the Maven project (e.g., <code>C:\My Documents\projects\foo</code>).</p>
+<p><strong>Solutions</strong></p>
 <ul>
 <li>Move the Maven project to a location without whitespaces in the names of any of the parent directories.</li>
 <li>Open the <code>pom.xml</code> and replace the Maven variable <code>${project.build.directory}</code> in the <code>&lt;argLine&gt;</code> configuration setting of the <code>maven-surefire-plugi</code>n by the relative path of the respective directory, typically <code>target</code>.</li>
@@ -1946,6 +1962,21 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in c
 <span class="nt">&lt;/systemPropertyVariables&gt;</span>
 </pre></div>
 
+<h3 id="test-error-injecting-private-orgeclipseaetherspiloglogger-orgapachemavenrepositoryinternaldefaultversionresolverlogger">TEST : "Error injecting: private org.eclipse.aether.spi.log.Logger org.apache.maven.repository.internal.DefaultVersionResolver.logger"<a class="headerlink" href="#test-error-injecting-private-orgeclipseaetherspiloglogger-orgapachemavenrepositoryinternaldefaultversionresolverlogger" title="Permanent link">&para;</a></h3>
+<p><strong>Problem</strong></p>
+<p>When running the vulnerability-assessment-tool test goal, you face an error similar to <code>Error injecting: private org.eclipse.aether.spi.log.Logger org.apache.maven.repository.internal.DefaultVersionResolver.logger</code></p>
+<p><strong>Solution</strong></p>
+<p>This error seems to appear with certain versions of Maven. It should disappear with maven 3.5.2 or higher. Please insure which version of maven you are using.</p>
+<ul>
+<li>If you locally run maven on your machine, please upgrade your local maven version to maven 3.5.2 or higher and run your scan again.</li>
+<li>If you perform your scans in a CI/CD environment like Jenkins, please check which version of Maven is used there. Then validate that the issue is linked to the current maven version (see previous point). Once you validated that the current Maven version is responsible for the issue, proceed with the update/upgrade to Maven 3.5.2 or higher in your CI/CD environment.</li>
+</ul>
+<p>As an example in Jenkins environments you can use one of the following alternatives:</p>
+<ul>
+<li>Make an upgrade request to your Jenkins administrator.</li>
+<li>Install Maven "globaly": in this case you can continue using your former command ex: <code>mvn clean compile vulas:clean vulas:app install vulas:upload -Pvulas -Dskip.integration.tests</code> as it is and Jenkins will use the new version.</li>
+<li>Install maven as new "Global Tool": you can do this in "Manage Jenkins" -&gt; "Global Tool Configuration". Here you find the entry "Maven installations". Add there the new Maven installation "M360" (if you like to install maven 3.6.0) with the installer "Install from Apache" Version 3.6.0. As a consequence, you will need to change the command in your job/task so that the new Maven version is used instead of the global one (which is still the version including the bug) and your command should like like <code>/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/M360/bin/mvn clean compile vulas:clean vulas:app install vulas:upload -Pvulas -Dskip.integration.tests</code></li>
+</ul>
 <h3 id="junit-tests-using-powermock-fail-when-using-vulnerability-assessment-tool">JUnit tests using Powermock fail when using vulnerability-assessment-tool<a class="headerlink" href="#junit-tests-using-powermock-fail-when-using-vulnerability-assessment-tool" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong></p>
 <p>JUnit tests making use of Powermock fail when activating the vulnerability-assessment-tool profile.</p>

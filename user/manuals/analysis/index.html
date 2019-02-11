@@ -40,7 +40,7 @@
     
     
       
-        <title>Analysis - vulnerability-assessment-tool - <small>3.0.13</small></title>
+        <title>Analysis - vulnerability-assessment-tool 3.0.13</title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.13</small>" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.13" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool - <small>3.0.13</small>
+                vulnerability-assessment-tool 3.0.13
               </span>
               <span class="md-header-nav__topic">
                 Analysis
@@ -311,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.13</small>" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.13" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool - <small>3.0.13</small>
+    vulnerability-assessment-tool 3.0.13
   </label>
   
     <div class="md-nav__source">
@@ -1318,7 +1318,7 @@
 <h4>Result</h4>
 <p>In the vulnerability-assessment-tool frontend, tab "Vulnerabilities", the column "Static Analysis" is populated for all libraries subject to known vulnerabilities. By selecting single row of this table and the one of the detailed page, one can get more information up until the paths of potential executions (if any).</p>
 <h4>How does it work</h4>
-<p>vulnerability-assessment-tool uses Wala or Soot, both static analysis frameworks for Java, in order to construct a call graph representing all possible program executions starting from application methods. This graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.</p>
+<p>vulnerability-assessment-tool uses <a href="http://wala.sourceforge.net/wiki/index.php/Main_Page">Wala</a> or <a href="https://sable.github.io/soot/">Soot</a>, both static analysis frameworks for Java, in order to construct a call graph representing all possible program executions starting from application methods. This graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.</p>
 <h4>Run as follows</h4>
 <div class="superfences-tabs">
 <input name="__tabs_2" type="radio" id="__tab_2_0" checked="checked" />
@@ -1336,6 +1336,7 @@ mvn -Dvulas compile vulas:a2c
 </pre></div></div>
 </div>
 <h4>Configure as follows</h4>
+<p>The following configuration options apply to the reachability analysis no matter which call graph construction framework is used. See below for framework-specific configuration options.</p>
 <div class="codehilite"><pre><span></span><span class="c1"># Limits the analysis to certain bugs (multiple values separated by comma)</span>
 <span class="c1"># If empty, all relevant bugs retrieved from backend will be considered</span>
 <span class="c1"># Default: empty</span>
@@ -1383,7 +1384,7 @@ mvn -Dvulas compile vulas:a2c
 <div class="codehilite"><pre><span></span>[vulas-reach-1] INFO  com.sap.psr.vulas.cg.wala.WalaCallgraphConstructor  - Normalized call graph has [167639 nodes] (with distinct ConstructId) and [1279495 edges]
 </pre></div>
 
-<h4>WALA</h4>
+<h5>WALA</h5>
 <p>The setting <code>vulas.reach.wala.callgraph.algorithm</code> determines the construction algorithm to be used. From <code>RTA</code> (Rapid Type Analysis) to <code>0-1-ctn-CFA</code>, the call graph  becomes more accurate, but the construction takes more time. A more accurate call graph means that it contains less false-positives, i.e., method invocations that cannot happen during actual program execution. As a rule of thumb, a call graph constructed with <code>RTA</code> contains more nodes and edges than one constructed with <code>0-1-ctn-CFA</code>. Note the following before choosing a more simple algorithm: The increase of nodes and edges resulting from, for instance, the choice of RTA, has a negative impact on the performance of the later analysis phases. As such, it may be worth to spend more time on the graph construction. See <a href="https://ben-holland.com/call-graph-construction-algorithms-explained/">here</a>, <a href="http://wala.sourceforge.net/wiki/index.php/UserGuide:CallGraph">there</a> and <a href="http://wala.sourceforge.net/wiki/index.php/UserGuide:PointerAnalysis">there</a> for more information regarding the difference of call graph construction algorithms.</p>
 <div class="codehilite"><pre><span></span><span class="c1"># Possible values: 0-CFA; 0-ctn-CFA; vanilla-0-1-CFA; 0-1-CFA; 0-1-ctn-CFA</span>
 <span class="c1"># Default algorithm: 0-1-CFA</span>
@@ -1398,8 +1399,94 @@ mvn -Dvulas compile vulas:a2c
 <span class="na">vulas.reach.wala.callgraph.reflection</span> <span class="o">=</span> <span class="s">NO_FLOW_TO_CASTS_NO_METHOD_INVOKE</span>
 </pre></div>
 
-<h4>Soot</h4>
-<h4>TODO</h4>
+<h5>Soot</h5>
+<p>In order to use the Soot call graph construction framework, please modify the POM profile as follows:</p>
+<ul>
+<li>
+<p>Add a <code>pluginRepositories</code> section right after the <code>properties</code> in order to download Soot artifacts from the University of Paderborn</p>
+<div class="codehilite"><pre><span></span><span class="nt">&lt;/properties&gt;</span>
+<span class="hll"><span class="nt">&lt;pluginRepositories&gt;</span>
+</span><span class="hll">    <span class="nt">&lt;pluginRepository&gt;</span>
+</span><span class="hll">        <span class="nt">&lt;id&gt;</span>soot<span class="nt">&lt;/id&gt;</span>
+</span><span class="hll">        <span class="nt">&lt;url&gt;</span>https://soot-build.cs.uni-paderborn.de/nexus/repository/soot-snapshot/<span class="nt">&lt;/url&gt;</span>
+</span><span class="hll">        <span class="nt">&lt;snapshots&gt;</span>
+</span><span class="hll">            <span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>
+</span><span class="hll">        <span class="nt">&lt;/snapshots&gt;</span>
+</span><span class="hll">        <span class="nt">&lt;releases&gt;</span>
+</span><span class="hll">            <span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>
+</span><span class="hll">        <span class="nt">&lt;/releases&gt;</span>
+</span><span class="hll">        <span class="nt">&lt;/pluginRepository&gt;</span>
+</span><span class="hll"><span class="nt">&lt;/pluginRepositories&gt;</span>
+</span></pre></div>
+
+</li>
+<li>
+<p>Add a <code>dependencies</code> and <code>dependency</code> section on the artifact <code>lang-java-reach-soot</code> right after the plugin:</p>
+<div class="codehilite"><pre><span></span><span class="nt">&lt;groupId&gt;</span>com.sap.research.security.vulas<span class="nt">&lt;/groupId&gt;</span>
+<span class="nt">&lt;artifactId&gt;</span>plugin-maven<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;version&gt;</span>${vulas.version}<span class="nt">&lt;/version&gt;</span>
+<span class="hll"><span class="nt">&lt;dependencies&gt;</span>
+</span><span class="hll">    <span class="nt">&lt;dependency&gt;</span>
+</span><span class="hll">        <span class="nt">&lt;groupId&gt;</span>com.sap.research.security.vulas<span class="nt">&lt;/groupId&gt;</span>
+</span><span class="hll">        <span class="nt">&lt;artifactId&gt;</span>lang-java-reach-soot<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class="hll">        <span class="nt">&lt;version&gt;</span>${vulas.version}<span class="nt">&lt;/version&gt;</span>
+</span><span class="hll">    <span class="nt">&lt;/dependency&gt;</span>
+</span><span class="hll"><span class="nt">&lt;/dependencies&gt;</span>
+</span></pre></div>
+
+</li>
+<li>
+<p>Make sure to exclude the Soot repository from mirrors in your Maven's <code>settings.xml</code>, e.g., <code>&lt;mirrorOf&gt;*,!soot&lt;/mirrorOf&gt;</code>. See <a href="https://maven.apache.org/guides/mini/guide-mirror-settings.html">here</a> for more details how to configure repository mirrors.</p>
+</li>
+</ul>
+<p>The subset of Soot configuration options that can be set through vulnerability-assessment-tool are as follows. For all other Soot settings, the respective defaults are taken. See <a href="https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm">here</a> for a complete documentation of Soot configuration options.</p>
+<div class="codehilite"><pre><span></span><span class="c1"># Packages that are excluded when building callgraph</span>
+<span class="c1"># Soot option: -exclude ...</span>
+<span class="c1"># https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm#section_5</span>
+<span class="na">vulas.reach.soot.exclusions</span>    <span class="o">=</span> <span class="s">java.awt.*;javax.swing.*;sun.awt.*;sun.swing.*;org.netbeans.*;com.sun.*;org.openide.*;com.ibm.crypto.*;com.ibm.security.*;org.apache.xerces.*</span>
+
+<span class="c1"># Use or not use &quot;verbose mode&quot; when building callgraph</span>
+<span class="c1"># Default: false; Recommended: set it to true when debugging</span>
+<span class="c1"># Soot options: -verbose -debug -debug-resolver</span>
+<span class="c1"># https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm#phase_5_2</span>
+<span class="na">vulas.reach.soot.verbose</span>       <span class="o">=</span> <span class="s">false</span>
+
+<span class="c1"># Use or not use &quot;application mode&quot; when building callgraph</span>
+<span class="c1"># Soot option: -app</span>
+<span class="c1"># https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm#section_2</span>
+<span class="na">vulas.reach.soot.appMode</span>       <span class="o">=</span> <span class="s">false</span>
+
+<span class="c1"># Allow or not allow phantom references (Recommended: false)</span>
+<span class="c1"># Soot option: -allow-phantom-refs</span>
+<span class="c1"># https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm#section_2</span>
+<span class="na">vulas.reach.soot.allowPhantom</span>  <span class="o">=</span> <span class="s">true</span>
+
+<span class="c1"># No class body for excluded packages</span>
+<span class="c1"># Soot option: -no-bodies-for-excluded</span>
+<span class="c1"># https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm#section_2</span>
+<span class="na">vulas.reach.soot.nobodyForX</span>    <span class="o">=</span> <span class="s">true</span>
+
+
+<span class="c1"># Use soot spark or not;</span>
+<span class="c1"># if yes, three options could be set: spark.otf (default true); spark.vta (default false); spark.rta (default false).</span>
+<span class="c1"># Soot option: -p cg.spark ...</span>
+<span class="c1"># https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm#phase_5_2</span>
+<span class="na">vulas.reach.soot.spark</span>         <span class="o">=</span> <span class="s">true</span>
+<span class="na">vulas.reach.soot.spark.otf</span>     <span class="o">=</span> <span class="s">true</span>
+<span class="na">vulas.reach.soot.spark.vta</span>     <span class="o">=</span> <span class="s">false</span>
+<span class="na">vulas.reach.soot.spark.rta</span>     <span class="o">=</span> <span class="s">false</span>
+
+
+<span class="c1"># Whether and how to generate a &#39;DummyMainMethod&#39; used as an entrypoint for the callgraph construction:</span>
+<span class="c1"># | Option                                                              | Consequence                                                                                          |</span>
+<span class="c1"># |-------------------------------------------------------------------- |------------------------------------------------------------------------------------------------------|</span>
+<span class="c1"># | none (default)                                                      | no &#39;DummyMainMethod&#39; is generated (default)                                                          |</span>
+<span class="c1"># | soot.jimple.infoflow.entryPointCreators.SequentialEntryPointCreator | a &#39;DummyMainMethod&#39; that invokes all entrypoints is generated                                        |</span>
+<span class="c1"># | soot.jimple.infoflow.entryPointCreators.DefaultEntryPointCreator    | a &#39;DummyMainMethod&#39; in which all entrypoints are generated (random order)                            |</span>
+<span class="c1"># | com.sap.psr.vulas.cg.soot.CustomEntryPointCreator                   | same as DefaultEntryPointCreated + for abstract classes/interface a dummy implementation is generated |</span>
+<span class="na">vulas.reach.soot.entrypointGenerator</span> <span class="o">=</span> <span class="s">none</span>
+</pre></div>
+
 <h2 id="dynamic-instrumentation-junit">Dynamic instrumentation (JUnit)<a class="headerlink" href="#dynamic-instrumentation-junit" title="Permanent link">&para;</a></h2>
 <h4>Objective</h4>
 <p>Collect method traces during the execution of JUnit tests. Information about traced methods will be compared with methods subject to known vulnerabilities.</p>

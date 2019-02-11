@@ -40,7 +40,7 @@
     
     
       
-        <title>Scanning Java (Maven) - vulnerability-assessment-tool - <small>3.0.13</small></title>
+        <title>Scanning Java (Maven) - vulnerability-assessment-tool 3.0.13</title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.13</small>" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.13" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool - <small>3.0.13</small>
+                vulnerability-assessment-tool 3.0.13
               </span>
               <span class="md-header-nav__topic">
                 Scanning Java (Maven)
@@ -311,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool - <small>3.0.13</small>" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.13" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool - <small>3.0.13</small>
+    vulnerability-assessment-tool 3.0.13
   </label>
   
     <div class="md-nav__source">
@@ -1220,99 +1220,6 @@ please see <a href="../../manuals/setup/#workspace">this section of the manual</
         <span class="nt">&lt;/properties&gt;</span>
         <span class="nt">&lt;build&gt;</span>
             <span class="nt">&lt;plugins&gt;</span>
-
-                <span class="c">&lt;!-- Copies vulnerability-assessment-tool JARs to ${project.build.directory}/vulas/lib and incl,</span>
-<span class="c">                    which is needed for the instrumentation of JUnit tests. --&gt;</span>
-                <span class="nt">&lt;plugin&gt;</span>
-                    <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
-                    <span class="nt">&lt;artifactId&gt;</span>maven-dependency-plugin<span class="nt">&lt;/artifactId&gt;</span>
-                    <span class="nt">&lt;version&gt;</span>2.10<span class="nt">&lt;/version&gt;</span>
-                    <span class="nt">&lt;executions&gt;</span>
-                        <span class="nt">&lt;execution&gt;</span>
-                            <span class="nt">&lt;id&gt;</span>copy-vulas<span class="nt">&lt;/id&gt;</span>
-                            <span class="nt">&lt;phase&gt;</span>generate-test-resources<span class="nt">&lt;/phase&gt;</span>
-                            <span class="nt">&lt;goals&gt;</span>
-                                <span class="nt">&lt;goal&gt;</span>copy<span class="nt">&lt;/goal&gt;</span>
-                            <span class="nt">&lt;/goals&gt;</span>
-                            <span class="nt">&lt;configuration&gt;</span>
-                                <span class="nt">&lt;artifactItems&gt;</span>
-                                    <span class="nt">&lt;artifactItem&gt;</span>
-                                        <span class="nt">&lt;groupId&gt;</span>com.sap.research.security.vulas<span class="nt">&lt;/groupId&gt;</span>
-                                        <span class="nt">&lt;artifactId&gt;</span>lang-java<span class="nt">&lt;/artifactId&gt;</span>
-                                        <span class="nt">&lt;version&gt;</span>${vulas.version}<span class="nt">&lt;/version&gt;</span>
-                                        <span class="nt">&lt;type&gt;</span>jar<span class="nt">&lt;/type&gt;</span>
-                                        <span class="nt">&lt;classifier&gt;</span>jar-with-dependencies<span class="nt">&lt;/classifier&gt;</span>
-                                        <span class="nt">&lt;outputDirectory&gt;</span>${project.build.directory}/vulas/lib<span class="nt">&lt;/outputDirectory&gt;</span>
-                                        <span class="nt">&lt;destFileName&gt;</span>vulas-core-latest-jar-with-dependencies.jar<span class="nt">&lt;/destFileName&gt;</span>
-                                    <span class="nt">&lt;/artifactItem&gt;</span>
-                                    <span class="nt">&lt;artifactItem&gt;</span>
-                                        <span class="nt">&lt;groupId&gt;</span>com.sap.research.security.vulas<span class="nt">&lt;/groupId&gt;</span>
-                                        <span class="nt">&lt;artifactId&gt;</span>lang-java<span class="nt">&lt;/artifactId&gt;</span>
-                                        <span class="nt">&lt;version&gt;</span>${vulas.version}<span class="nt">&lt;/version&gt;</span>
-                                        <span class="nt">&lt;type&gt;</span>jar<span class="nt">&lt;/type&gt;</span>
-                                        <span class="nt">&lt;classifier&gt;</span>jar-with-dependencies<span class="nt">&lt;/classifier&gt;</span>
-                                        <span class="nt">&lt;outputDirectory&gt;</span>${project.build.directory}/vulas/include<span class="nt">&lt;/outputDirectory&gt;</span>
-                                        <span class="nt">&lt;destFileName&gt;</span>vulas-core-latest-jar-with-dependencies.jar<span class="nt">&lt;/destFileName&gt;</span>
-                                    <span class="nt">&lt;/artifactItem&gt;</span>
-                                <span class="nt">&lt;/artifactItems&gt;</span>
-                            <span class="nt">&lt;/configuration&gt;</span>
-                        <span class="nt">&lt;/execution&gt;</span>
-                    <span class="nt">&lt;/executions&gt;</span>
-                <span class="nt">&lt;/plugin&gt;</span>
-
-                <span class="c">&lt;!-- Registers the vulnerability-assessment-tool agent at JVM startup (and specifies a couple of configuration settings) --&gt;</span>
-                <span class="nt">&lt;plugin&gt;</span>
-                    <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
-                    <span class="nt">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="nt">&lt;/artifactId&gt;</span>
-                    <span class="nt">&lt;version&gt;</span>2.21.0<span class="nt">&lt;/version&gt;</span>
-                    <span class="nt">&lt;configuration&gt;</span>
-                        <span class="c">&lt;!-- If set to 0, no separate JVM process will be spawned, i.e., one</span>
-<span class="c">                            can use mvnDebug and JVM params can be added to the Maven (rather than putting</span>
-<span class="c">                            them in the Surefire plugin configuration) (default: 1) --&gt;</span>
-                        <span class="nt">&lt;forkCount&gt;</span>1<span class="nt">&lt;/forkCount&gt;</span>
-
-                        <span class="c">&lt;!-- Kill the forked test process after a certain number of seconds.</span>
-<span class="c">                            If set to 0, wait forever for the process, never timing out. This allows</span>
-<span class="c">                            vulnerability-assessment-tool to (hopefully) upload all info in its shutdown hook. More info: https://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html,</span>
-<span class="c">                            https://maven.apache.org/surefire/maven-surefire-plugin/examples/shutdown.html --&gt;</span>
-                        <span class="nt">&lt;forkedProcessTimeoutInSeconds&gt;</span>0<span class="nt">&lt;/forkedProcessTimeoutInSeconds&gt;</span>
-
-                        <span class="c">&lt;!-- Available as of 2.20 (or so), default is 30 --&gt;</span>
-                        <span class="nt">&lt;forkedProcessExitTimeoutInSeconds&gt;</span>300<span class="nt">&lt;/forkedProcessExitTimeoutInSeconds&gt;</span>
-
-                        <span class="c">&lt;!-- Note: System properties cannot be set at the Maven command line,</span>
-<span class="c">                            they are not passed on to the JVM spawned by Surefire (if any, see parameter</span>
-<span class="c">                            forkCount) --&gt;</span>
-                        <span class="nt">&lt;argLine&gt;</span>
-                            -javaagent:&quot;${project.build.directory}/vulas/lib/vulas-core-latest-jar-with-dependencies.jar&quot;
-                            -Dvulas.shared.backend.serviceUrl=${vulas.shared.backend.serviceUrl}
-                            -Dvulas.shared.tmpDir=${project.build.directory}/vulas/tmp
-                            -Dvulas.core.backendConnection=READ_ONLY
-                            -Dvulas.core.uploadDir=${project.build.directory}/vulas/upload
-                            -Dvulas.core.monitor.periodicUpload.enabled=false
-                            -Dvulas.core.appContext.group=${vulas.core.appContext.group}
-                            -Dvulas.core.appContext.artifact=${vulas.core.appContext.artifact}
-                            -Dvulas.core.appContext.version=${vulas.core.appContext.version}
-                            -Dvulas.core.instr.writeCode=false
-                            -Dvulas.core.instr.maxStacktraces=10
-                            -Dvulas.core.space.token=${vulas.core.space.token}
-                            -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
-                            -noverify
-
-                            <span class="c">&lt;!-- Uncomment to write the heap to disk in case of memory issues --&gt;</span>
-                            <span class="c">&lt;!-- -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${project.build.directory}/vulas/tmp --&gt;</span>
-
-                            <span class="c">&lt;!-- Uncomment to debug the test execution or the vulnerability-assessment-tool plugin --&gt;</span>
-                            <span class="c">&lt;!-- -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 --&gt;</span>
-
-                        <span class="nt">&lt;/argLine&gt;</span>
-                        <span class="c">&lt;!-- Exclude problematic tests --&gt;</span>
-                        <span class="nt">&lt;excludes&gt;</span>
-                            <span class="nt">&lt;exclude&gt;</span>**/doesnotexist.java<span class="nt">&lt;/exclude&gt;</span>
-                        <span class="nt">&lt;/excludes&gt;</span>
-                    <span class="nt">&lt;/configuration&gt;</span>
-                <span class="nt">&lt;/plugin&gt;</span>
-
                 <span class="nt">&lt;plugin&gt;</span>
                     <span class="nt">&lt;groupId&gt;</span>com.sap.research.security.vulas<span class="nt">&lt;/groupId&gt;</span>
                     <span class="nt">&lt;artifactId&gt;</span>plugin-maven<span class="nt">&lt;/artifactId&gt;</span>
@@ -1338,7 +1245,10 @@ please see <a href="../../manuals/setup/#workspace">this section of the manual</
                             <span class="nt">&lt;vulas.core.instr.includeDir&gt;</span>${project.build.directory}/vulas/include<span class="nt">&lt;/vulas.core.instr.includeDir&gt;</span>
                             <span class="nt">&lt;vulas.core.instr.libDir&gt;</span>${project.build.directory}/vulas/lib<span class="nt">&lt;/vulas.core.instr.libDir&gt;</span>
                             <span class="nt">&lt;vulas.core.instr.writeCode&gt;</span>false<span class="nt">&lt;/vulas.core.instr.writeCode&gt;</span>
+                            <span class="nt">&lt;vulas.core.instr.instrumentorsChoosen&gt;</span>com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor<span class="nt">&lt;/vulas.core.instr.instrumentorsChoosen&gt;</span>
                             <span class="nt">&lt;vulas.core.instr.searchRecursive&gt;</span>false<span class="nt">&lt;/vulas.core.instr.searchRecursive&gt;</span>
+                            <span class="nt">&lt;vulas.core.monitor.periodicUpload.enabled&gt;</span>false<span class="nt">&lt;/vulas.core.monitor.periodicUpload.enabled&gt;</span>
+                            <span class="nt">&lt;vulas.core.instr.maxStacktraces&gt;</span>10<span class="nt">&lt;/vulas.core.instr.maxStacktraces&gt;</span>
 
                             <span class="c">&lt;!-- vulas:a2c/t2c : Performs static call graph analysis --&gt;</span>
                             <span class="nt">&lt;vulas.reach.wala.callgraph.reflection&gt;</span>NO_FLOW_TO_CASTS_NO_METHOD_INVOKE<span class="nt">&lt;/vulas.reach.wala.callgraph.reflection&gt;</span>
