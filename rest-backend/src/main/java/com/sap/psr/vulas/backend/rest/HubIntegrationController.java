@@ -14,6 +14,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.apache.tomcat.util.security.Escape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -306,7 +307,7 @@ public class HubIntegrationController {
 				final String[] app_gav = app_string.split(_separator);
 				if(app_gav.length!=3)
 					throw new IllegalArgumentException("Cannot find application identifier in argument [" + _string + "]");
-				app = ApplicationRepository.FILTER.findOne(_app_repo.findByGAV(app_gav[0].trim(),  app_gav[1].trim(),  app_gav[2].trim(), space));
+				app = ApplicationRepository.FILTER.findOne(_app_repo.findByGAV(revertEscapedCharacters(app_gav[0].trim()),  revertEscapedCharacters(app_gav[1].trim()),  revertEscapedCharacters(app_gav[2].trim()), space));
 			}
 
 			return new ExportItem(space, app);
@@ -328,6 +329,10 @@ public class HubIntegrationController {
 		
 		private String escapeCharacters(String _param){
 			return _param.replace("/", "%2F");
+		}
+		
+		private static String revertEscapedCharacters(String _param){
+			return _param.replace("%2F", "/");
 		}
 	}
 
