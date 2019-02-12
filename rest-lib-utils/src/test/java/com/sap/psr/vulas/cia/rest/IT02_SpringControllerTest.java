@@ -271,4 +271,13 @@ public class IT02_SpringControllerTest {
 	
 	}
 	
+	@Test
+	public void getConstructSignatureTest() throws Exception{
+		final MockHttpServletRequestBuilder get_builder = get(getConstructUri("org.apache.tomcat.embed",
+				"tomcat-embed-core",
+				"7.0.0","METH","org.apache.catalina.filters.CsrfPreventionFilter.doFilter(ServletRequest,ServletResponse,FilterChain)"+"/sign?sources=true&lang=JAVA"));
+		mockMvc.perform(get_builder)	
+        .andExpect(status().isOk());
+	}
+	
 }
