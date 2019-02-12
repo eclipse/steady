@@ -67,21 +67,31 @@ sap.ui.controller("view.Component", {
 	},
 
 	// Vulnerabilities tab: Sets date for last scan
-	loadAndSetLastScanDate:function() {
-		var sUrl = model.Config.getLatestGoalExecutionServiceUrl(groupId, artifactId, versionId, model.lastChange);
+	loadAndSetLastScanDate: function() {
+		var lastScanDate = this.getView().byId("lastScanDate");
+		const prefix = 'Date of last scan (APP goal): '
+		lastScanDate.setText(prefix + "loading...");
 		var oLastScanModel = this.getEmptyModel();
-		model.Config.addToQueue(oLastScanModel);
-		model.Config.loadData (oLastScanModel, sUrl, 'GET');
 		that = this;
-		oLastScanModel.attachRequestCompleted(function() {
-			model.Config.remFromQueue(oLastScanModel);			
-			var _date = oLastScanModel.getObject("/startedAtClient");
-			_date = _date.substring(0,19);
-			_date = _date.replace("T", ", ");
-			var lastScanDate = that.getView().byId("lastScanDate");
-			lastScanDate.setText("Date of last scan (APP goal): " + _date );
-		}
-		);
+		return new Promise(function(resolve, reject) {
+			try {
+				var sUrl = model.Config.getLatestGoalExecutionServiceUrl(groupId, artifactId, versionId, model.lastChange)
+				model.Config.addToQueue(oLastScanModel);
+				model.Config.loadData (oLastScanModel, sUrl, 'GET');
+				oLastScanModel.attachRequestCompleted(function() {
+					model.Config.remFromQueue(oLastScanModel);			
+					var _date = oLastScanModel.getObject("/startedAtClient");
+					_date = _date.substring(0,19);
+					_date = _date.replace("T", ", ");
+					var lastScanDate = that.getView().byId("lastScanDate");
+					lastScanDate.setText(prefix + _date );
+					resolve()
+				});
+			} catch (e) {
+				lastScanDate.setText(prefix + "error");
+				reject(e)
+			}
+		})
 	},
 	
 	// Vulnerabilities tab: Loads data from backend, post-processes CVSS info and prepares mitigation tab
@@ -93,6 +103,7 @@ sap.ui.controller("view.Component", {
 		oConstructView.setModel(this.getEmptyModel());
 		oConstructView.setBusy(true);
 		this.setVulnDepCounters(null, null);
+		this.loadAndSetLastScanDate();
 		
 		// URL to load data
 		var incl_hist = this.getView().byId("includeHistorical").getSelected();
@@ -146,8 +157,6 @@ sap.ui.controller("view.Component", {
 			
 			// Update counters
 			this.setVulnDepCounters(archives.length, vuln_count);
-			
-			this.loadAndSetLastScanDate();
 			
 			// Set model for tab
 			oVulnModel.setData(data);
