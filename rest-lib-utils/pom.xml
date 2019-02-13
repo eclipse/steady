@@ -178,7 +178,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>19.0</version>
+			<version>25.1-android</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>

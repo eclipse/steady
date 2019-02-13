@@ -42,7 +42,7 @@
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-assistedinject</artifactId>
-			<version>4.1.0</version><!-- 3.0 in the original POM from ChangeDistiller -->
+			<version>4.2.2</version><!-- 3.0 in the original POM from ChangeDistiller -->
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jdt.core.compiler</groupId>
