@@ -33,7 +33,7 @@ model.Config.settings = {
 // but always loaded from the configured backend
 model.Config.loadPropertiesFromBackend = function(){
 	//retrieve default from backend
-	var url = model.Config.getHost()+"/configuration?subset=vulas.backend.frontend.apps";
+	var url = model.Config.getHostBackend()+"/configuration?subset=vulas.backend.frontend.apps";
 	var oModel = new sap.ui.model.json.JSONModel();
 	//3rd param is 'asynch' 
 	oModel.loadData(url, null,true,"GET",false,true,{'X-Vulas-Component':'appfrontend'});
@@ -92,7 +92,7 @@ model.Config.setModel = function(_m){
 	model.Config.upgradeCookieStructure(model.Config.settings.cookie)
 }
 
-model.Config.setHost = function(_host) {
+model.Config.setHostBackend = function(_host) {
 	model.Config.settings.cookie.host=_host;
 	oStore.put("vulas-frontend-settings", model.Config.settings.cookie)
 	//also update the tenant and space tokens to match the new backend host (calling get with flag force=true will trigger the request)
@@ -102,8 +102,13 @@ model.Config.setHost = function(_host) {
 	model.Config.getSpace(true);
 	model.Config.loadPropertiesFromBackend();
 }
-model.Config.getHost = function() {
+
+model.Config.getHostBackend = function() {
 	return model.Config.settings.cookie.host;
+}
+
+model.Config.getHost = function() {
+	return model.Config.settings.cookie.host.replace('backend', '');
 }
 
 model.Config.setSpace = function(_token) {
@@ -138,7 +143,7 @@ model.Config.getDefaultSavedSpace = function() {
 model.Config.getDefaultSpace = function(_force) {
 	if((_force!=undefined && _force)|| model.Config.settings.defaultSpace=="" || model.Config.settings.defaultSpace ==null || model.Config.settings.defaultSpace == undefined){
 		//retrieve default from backend
-		var url = model.Config.getHost()+"/spaces/default";
+		var url = model.Config.getHostBackend()+"/spaces/default";
 		var oModel = new sap.ui.model.json.JSONModel();
 		//3rd param is 'asynch', set to false as the value is required to continue
 		oModel.loadData(url, null,false,"GET",false,true,{'X-Vulas-Component':'appfrontend','X-Vulas-Tenant':model.Config.getTenant()});
@@ -181,7 +186,7 @@ model.Config.setTenant = function(_token) {
 model.Config.getTenant = function(_force) {
 	if((_force!=undefined && _force) || model.Config.settings.tenant=="" || model.Config.settings.tenant ==null || model.Config.settings.tenant == undefined){
 		//retrieve default from backend
-		var url = model.Config.getHost()+"/tenants/default";
+		var url = model.Config.getHostBackend()+"/tenants/default";
 		var oModel = new sap.ui.model.json.JSONModel();
 		//3rd param is 'asynch', set to false as the value is required to continue
 		oModel.loadData(url, null,false,"GET",false,true, {
@@ -317,13 +322,13 @@ model.Config.cleanRequests = function () {
 //********* SECTION : FUNCTIONS USED TO CONFIGURE THE URLS *********\\
 
 model.Config.getCvesServiceUrl = function(cve) {
-	return model.Config.getHost() + "/cves/" + cve;
+	return model.Config.getHostBackend() + "/cves/" + cve;
 };
 
 
 
 model.Config.getSpacesServiceUrl = function(){
-	return model.Config.getHost() +"/spaces";
+	return model.Config.getHostBackend() +"/spaces";
 }
 
 /**
@@ -332,17 +337,17 @@ model.Config.getSpacesServiceUrl = function(){
 model.Config.getMyAppsServiceUrl = function(_loadVulnerabityIcons) {
 	var url = null;
 	if(model.Config.getSkipEmpty())
-		url =  model.Config.getHost()+"/apps?skipEmpty=true";
+		url =  model.Config.getHostBackend()+"/apps?skipEmpty=true";
 	else
-		url =  model.Config.getHost()+"/apps?skipEmpty=false";
+		url =  model.Config.getHostBackend()+"/apps?skipEmpty=false";
 	return url;
 };
 
 model.Config.getArchiveVulnServiceUrl = function(g,a,gt,sec,l) {
 	if(gt!=null)
-		return model.Config.getHost()+"/libids/"+ g + "/" + a + "?latest="+l+"&greaterThanVersion=" + gt + "&secureOnly=" + sec ;
+		return model.Config.getHostBackend()+"/libids/"+ g + "/" + a + "?latest="+l+"&greaterThanVersion=" + gt + "&secureOnly=" + sec ;
 	else 
-		return model.Config.getHost()+"/libids/"+ g + "/" + a + "?latest="+l+"&secureOnly=" + sec ;
+		return model.Config.getHostBackend()+"/libids/"+ g + "/" + a + "?latest="+l+"&secureOnly=" + sec ;
 };
 
 
@@ -352,18 +357,18 @@ model.Config.isArchiveInMaven = function(g,a) {
 };
 
 model.Config.getUpdateMetricsUrl = function(g,a,v,sha1) {
-		return model.Config.getHost()+"/apps/"+ g + "/" + a + "/" + v + "/deps/" + sha1 + "/updateMetrics";
+		return model.Config.getHostBackend()+"/apps/"+ g + "/" + a + "/" + v + "/deps/" + sha1 + "/updateMetrics";
 };
 
 model.Config.getUpdateChangesUrl = function(g,a,v,sha1) {
-		return model.Config.getHost()+"/apps/"+ g + "/" + a + "/" + v + "/deps/" + sha1 + "/updateChanges";
+		return model.Config.getHostBackend()+"/apps/"+ g + "/" + a + "/" + v + "/deps/" + sha1 + "/updateChanges";
 };
 
 /**
  * the service url for archives
  */
 model.Config.getArchivesServiceUrl = function(g, a, v, lastChange) {
-	let archiveServiceUrl = model.Config.getHost() + "/apps/" + g + "/" + a + "/" + v + "/deps"
+	let archiveServiceUrl = model.Config.getHostBackend() + "/apps/" + g + "/" + a + "/" + v + "/deps"
 	if (lastChange) {
 		archiveServiceUrl += "?lastChange=" + lastChange
 	}
@@ -374,7 +379,7 @@ model.Config.getArchivesServiceUrl = function(g, a, v, lastChange) {
  * the service url for goal executions
  */
 model.Config.getGoalExecutionsServiceUrl = function(g, a, v, lastChange) {
-	let goalExecutionServiceUrl = model.Config.getHost() + "/apps/" + g + "/" + a + "/" + v + "/goals"
+	let goalExecutionServiceUrl = model.Config.getHostBackend() + "/apps/" + g + "/" + a + "/" + v + "/goals"
 	if (lastChange) {
 		goalExecutionServiceUrl += "?lastChange=" + lastChange
 	}
@@ -382,7 +387,7 @@ model.Config.getGoalExecutionsServiceUrl = function(g, a, v, lastChange) {
 }
 
 model.Config.getLatestGoalExecutionServiceUrl = function(g, a, v, lastChange) {
-	let latestGoalExecutionServiceUrl = model.Config.getHost() + "/apps/"+ g + "/" + a + "/" + v + "/goals/latest?type=APP"
+	let latestGoalExecutionServiceUrl = model.Config.getHostBackend() + "/apps/"+ g + "/" + a + "/" + v + "/goals/latest?type=APP"
 	if (lastChange) {
 		latestGoalExecutionServiceUrl += "&lastChange=" + lastChange
 	}
@@ -393,7 +398,7 @@ model.Config.getLatestGoalExecutionServiceUrl = function(g, a, v, lastChange) {
  * the service url for goal execution details
  */
 model.Config.getGoalExecutionDetailsServiceUrl = function(g,a,v,gid) {
-	return model.Config.getHost()+"/apps/"+ g + "/" + a + "/" + v +"/goals/" + gid;
+	return model.Config.getHostBackend()+"/apps/"+ g + "/" + a + "/" + v +"/goals/" + gid;
 };
 
 
@@ -401,14 +406,14 @@ model.Config.getGoalExecutionDetailsServiceUrl = function(g,a,v,gid) {
  * the service url for archive properties
  */
 model.Config.getArchivePropertiesServiceUrl = function(g,a,v,sha1) {
-	return model.Config.getHost()+"/apps/"+ g + "/" + a + "/" + v +"/deps/" + sha1;
+	return model.Config.getHostBackend()+"/apps/"+ g + "/" + a + "/" + v +"/deps/" + sha1;
 };
 
 /**
  * the service url for used vulnerabilities
  */
 model.Config.getUsedVulnerabilitiesServiceUrl = function(g, a, v, _incl_historical, _incl_unconfirmed, _add_excemption_info, lastChange) {
-	let usedVulnerabilitiesServiceUrl = model.Config.getHost() + "/apps/" + g + "/" + a + "/" + v + "/vulndeps?includeHistorical=" + _incl_historical + "&includeAffected=true&includeAffectedUnconfirmed=" + _incl_unconfirmed + "&addExcemptionInfo=" + _add_excemption_info
+	let usedVulnerabilitiesServiceUrl = model.Config.getHostBackend() + "/apps/" + g + "/" + a + "/" + v + "/vulndeps?includeHistorical=" + _incl_historical + "&includeAffected=true&includeAffectedUnconfirmed=" + _incl_unconfirmed + "&addExcemptionInfo=" + _add_excemption_info
 	if (lastChange) {
 		usedVulnerabilitiesServiceUrl += "&lastChange=" + lastChange
 	}
@@ -417,18 +422,18 @@ model.Config.getUsedVulnerabilitiesServiceUrl = function(g, a, v, _incl_historic
 
 
 model.Config.getSpaceServiceUrl = function(_token) {
-	return model.Config.getHost()+"/spaces/"+ _token;
+	return model.Config.getHostBackend()+"/spaces/"+ _token;
 };
 
 /**
  * the service url for vulnerability details
  */
 model.Config.getVulnerabilityDetailsServiceUrl = function(g,a,v,sha1,bug) {
-	return model.Config.getHost()+"/apps/"+ g + "/" + a + "/" + v +"/vulndeps/"+sha1+"/bugs/"+bug;
+	return model.Config.getHostBackend()+"/apps/"+ g + "/" + a + "/" + v +"/vulndeps/"+sha1+"/bugs/"+bug;
 };
 
 model.Config.getReachabilityGraphServiceUrl = function(g,a,v,sha1,bug,cid) {
-	return model.Config.getHost()+"/apps/"+ g + "/" + a + "/" + v +"/deps/"+sha1+"/paths/"+bug+"/"+cid;
+	return model.Config.getHostBackend()+"/apps/"+ g + "/" + a + "/" + v +"/deps/"+sha1+"/paths/"+bug+"/"+cid;
 	
 };
 
@@ -436,7 +441,7 @@ model.Config.getReachabilityGraphServiceUrl = function(g,a,v,sha1,bug,cid) {
  * the service url for packages including test coverage
  */
 model.Config.getPackagesWithTestCoverageServiceUrl = function(g,a,v, lastChange) {
-	let packagesWithTestCoverageServiceUrl = model.Config.getHost() + "/apps/"+ g + "/" + a + "/" + v
+	let packagesWithTestCoverageServiceUrl = model.Config.getHostBackend() + "/apps/"+ g + "/" + a + "/" + v
 	if (lastChange) {
 		packagesWithTestCoverageServiceUrl += "?lastChange=" + lastChange
 	}
@@ -447,7 +452,7 @@ model.Config.getPackagesWithTestCoverageServiceUrl = function(g,a,v, lastChange)
  * the service url for packages including test coverage
  */
 model.Config.getAppDepRatios = function(g, a, v, lastChange) {
-	let appDepRatios = model.Config.getHost() + "/apps/" + g + "/" + a + "/" + v + "/metrics?excludedScopes=PROVIDED&excludedScopes=TEST"
+	let appDepRatios = model.Config.getHostBackend() + "/apps/" + g + "/" + a + "/" + v + "/metrics?excludedScopes=PROVIDED&excludedScopes=TEST"
 	if (lastChange) {
 		appDepRatios += "&lastChange=" + lastChange
 	}

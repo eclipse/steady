@@ -46,27 +46,22 @@ sap.ui.controller("view.Master", {
 
 	attachMessageStrip: function() {
 		const root = this.getView().byId('page');
+		const base_url = model.Config.getHost()
 		return new Promise(function(resolve, reject) {
-			// fetch data from server
 			try {
-				const data = []
-				// const data = [{
-				// 	text: "Custom message <a target=\"_blank\" href=\"\">Link</a>",
-				// 	type: "Warning"
-				// },
-				// {
-				// 	text: "Custom message <a target=\"_blank\" href=\"\">Link</a>",
-				// 	type: "Success"
-				// }]
-				data.forEach(function(message, index) {
-					const messageStrip = new sap.m.MessageStrip("rootMessageStrip" + index, {
-						text: message.text,
-						type: message.type,
-						enableFormattedText: true
-					});
-					root.insertContent(messageStrip, index);
+				$.ajax(base_url + 'alerts/browser.json').then(function(data) {
+					data.forEach(function(message, index) {
+						if (message.active) {
+							const messageStrip = new sap.m.MessageStrip("rootMessageStrip" + index, {
+								text: message.text,
+								type: message.type,
+								enableFormattedText: true
+							});
+							root.insertContent(messageStrip, index);
+						}
+					})
+					resolve()
 				})
-				resolve()
 			} catch (e) {
 				reject(e)
 			}
@@ -163,7 +158,7 @@ sap.ui.controller("view.Master", {
 				url: url,
 				headers: model.Config.defaultHeaders()
 			}).done(function(deps) {
-				if (listModel.oData.length > 0 && workspace === model.Config.getSpace() && backendUrl === model.Config.getHost() && skipEmpty === model.Config.getSkipEmpty()) {
+				if (listModel.oData.length > 0 && workspace === model.Config.getSpace() && backendUrl === model.Config.getHostBackend() && skipEmpty === model.Config.getSkipEmpty()) {
 					if (deps.some(function(dep) {
 						return dep.affected_version
 					})) {
@@ -187,7 +182,7 @@ sap.ui.controller("view.Master", {
 
 	loadVulnerabilityIcons: function(list) {
 		let workspace = model.Config.getSpace()
-		let backendUrl = model.Config.getHost()
+		let backendUrl = model.Config.getHostBackend()
 		let skipEmpty = model.Config.getSkipEmpty()
 		let listModel = list.getModel()
 		listModel.refresh()
@@ -513,7 +508,7 @@ sap.ui.controller("view.Master", {
 
 	updateFilteredVulnerabilityIcons: _.debounce(function(binding, listModel) {
 		let workspace = model.Config.getSpace()
-		let backendUrl = model.Config.getHost()
+		let backendUrl = model.Config.getHostBackend()
 		let skipEmpty = model.Config.getSkipEmpty()
 		binding.aIndices.forEach(function(id) {
 			if (!this.vulnerabilityIconQueue.queue.isInserted(id)) {
@@ -606,8 +601,8 @@ sap.ui.controller("view.Master", {
 								} else {
 									config.setListSize(core.byId('idListSize').getValue());
 								}
-								if (core.byId('idHostURL').getValue() != null && core.byId('idHostURL').getValue() != "" && core.byId('idHostURL').getValue() != config.getHost()) {
-									config.setHost(core.byId('idHostURL').getValue());
+								if (core.byId('idHostURL').getValue() != null && core.byId('idHostURL').getValue() != "" && core.byId('idHostURL').getValue() != config.getHostBackend()) {
+									config.setHostBackend(core.byId('idHostURL').getValue());
 								}
 								if (core.byId('idTenant') != undefined && core.byId('idTenant').getValue() != null && core.byId('idTenant').getValue() != "" && core.byId('idTenant').getValue() != config.getTenant()) {
 									config.setTenant(core.byId('idTenant').getValue());
@@ -674,7 +669,7 @@ sap.ui.controller("view.Master", {
 							type: sap.m.InputType.Text,
 							//  placeholder: 'Enter host address (default: 127.0.0.1) ...',
 							//  width: "100%",
-							value: model.Config.getHost()
+							value: model.Config.getHostBackend()
 						})
 					}),
 					new sap.m.InputListItem({
@@ -730,7 +725,7 @@ sap.ui.controller("view.Master", {
 			this.getView().addDependent(this.oPopoverSettings);
 		}
 		//refresh form with configured values
-		sap.ui.getCore().byId('idHostURL').setValue(model.Config.getHost());
+		sap.ui.getCore().byId('idHostURL').setValue(model.Config.getHostBackend());
 		sap.ui.getCore().byId('idCiaURL').setValue(model.Config.getCiaHost());
 		if (sap.ui.getCore().byId('idTenant') != undefined)
 			sap.ui.getCore().byId('idTenant').setValue(model.Config.getTenant());
