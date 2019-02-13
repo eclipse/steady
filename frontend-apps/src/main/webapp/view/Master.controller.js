@@ -2,7 +2,7 @@ sap.ui.controller("view.Master", {
 	
 	onInit: function(){
 		jQuery.sap.require("sap.m.MessageBox");
-
+		
 		this.router = sap.ui.core.UIComponent.getRouterFor(this);
 		
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
@@ -20,9 +20,13 @@ sap.ui.controller("view.Master", {
 		}
 		this.router.attachRouteMatched(this._handleRouteMatched, this)
 		this.adjustWorkSpace(this.router)
-		window.addEventListener("hashchange", function() {
-			this.adjustWorkSpace(this.router)
-		}.bind(this), false);
+		if(window.addEventListener) {
+			window.addEventListener("hashchange", function() {this.adjustWorkSpace(this.router)}.bind(this), false);
+			window.addEventListener("storage", function(){this.loadTemporaryWorkspaceWarning()}.bind(this), false);
+		} else {
+			window.attachEvent("hashchange", function() {this.adjustWorkSpace(this.router)}.bind(this));
+			window.attachEvent("onstorage", function(){this.loadTemporaryWorkspaceWarning()}.bind(this));
+		}
 		this.reloadData();
 		this.attachMessageStrip();
 	},
@@ -96,13 +100,10 @@ sap.ui.controller("view.Master", {
 
 	onExit : function() {
 	},
-	
-	reloadData: function() {
-		var list = this.getView().byId('idListApplications');
-		var label = this.getView().byId('app-label');
-		//var workspaceListHeader = this.getView().byId('workspace-description');
-		label.setText(model.Config.getSpace());
-		var labelCount = this.getView().byId('app-count');
+
+	loadTemporaryWorkspaceWarning: function() {
+		const list = this.getView().byId('idListApplications');
+		const label = this.getView().byId('app-label');
 		if (model.Config.getSpace() !== model.Config.getDefaultSavedSpace()) {
 			label.addStyleClass("temporaryWorkSpace")
 			label.removeStyleClass("defaultWorkSpace")
@@ -112,6 +113,14 @@ sap.ui.controller("view.Master", {
 			label.addStyleClass("defaultWorkSpace")
 			list.removeStyleClass("warningColor")
 		}
+	},
+	
+	reloadData: function() {
+		const list = this.getView().byId('idListApplications');
+		const label = this.getView().byId('app-label');
+		this.loadTemporaryWorkspaceWarning()
+		label.setText(model.Config.getSpace());
+		var labelCount = this.getView().byId('app-count');
 		list.setBusy(true);
 		var data = [];
 		var oldmodel = list.getModel();
