@@ -35,8 +35,8 @@ java -Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend/-jar ./patch-analyzer
 
 To run such commands in your own environment, you may need to adapt:
 
-* the path to the patch analyzer artifact and the artifact version, '-jar ./patch-analyzer/target/patch-analyzer-@@PROJECT_VERSION@@-jar-with-dependencies.jar'
-* the url of the @@PROJECT_NAME@@ backend, `-Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend/`
+* the path to the patch analyzer artifact and the artifact version, `-jar ./patch-analyzer/target/patch-analyzer-@@PROJECT_VERSION@@-jar-with-dependencies.jar`
+* the URL of the @@PROJECT_NAME@@ backend, `-Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend/`
 * the proxy settings; the proxy is not configured in the example but you can do so using the following configurations:
 
 ```sh
@@ -57,7 +57,7 @@ Once vulnerabilities are created in the vulnerability database, the patch lib an
 Run for all bugs
 
 ```sh
-java -Dvulas.patchEval.uploadResults=true -Dvulas.patchEval.onlyAddNewResults=true -Dvulas.patchEval.basefolder=<csv_folder> -Dvulas.patchEval.bugId=<comma_separated_list_of_bugs> -Dvulas.shared.cia.serviceUrl=@@ADDRESS@@/cia -Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend/-Xmx6G -Xms6G -jar patch-lib-analyzer-3.0.10-jar-with-dependencies.jar
+java -Dvulas.patchEval.uploadResults=true -Dvulas.patchEval.onlyAddNewResults=true -Dvulas.patchEval.basefolder=<csv_folder> -Dvulas.patchEval.bugId=<comma_separated_list_of_bugs> -Dvulas.shared.cia.serviceUrl=@@ADDRESS@@/cia -Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend/-Xmx6G -Xms6G -jar patch-lib-analyzer-@@PROJECT_VERSION@@-jar-with-dependencies.jar
 ```
 
 To check how to run it as a job, check [here](../../manuals/patch_lib_analyzer)

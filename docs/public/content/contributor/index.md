@@ -206,10 +206,10 @@ If this list sounds lengthy and hard to achieve - well, that's what WE have to c
 
 ## Contribute to the Vulnerability Knowledge Base
 
-@@PROJECT_URL@@ relies on a database with detailed information about vulnerable code (methods, functions, etc.) in open-source software libraries. This information is built by analyzing the source code changes (commits) done by open-source developers to fix a given vulnerability. In order to reflect new vulnerability disclosures, one has to analyze those so-called _fix commits_ and add corresponding entries to the local database.
+Every installation of @@PROJECT_NAME@@ relies on a database with detailed information about vulnerable code (methods, functions, etc.) in open-source software components. This database is populated by analyzing the source code changes (commits) done by open source developers to fix a given vulnerability.
 
-This analysis is done using the `PatchAnalyzer`, which takes several arguments as input, e.g., the source code repository of the respective component, the commit identifier(s), and a vulnerability identifier.
+This analysis is done using the `patch-analyzer`, which takes several arguments as input, e.g., the source code repository of the respective component, the commit identifier(s), and a vulnerability identifier. Analysis results such as the names and abstract syntax trees of modified methods are eventually stored in the local PostgreSQL database of @@PROJECT_NAME@@.
 
-In order to prevent that each and every tool user has to collect this information by himself, we aim at creating a shared knowledge base that can be maintained and used by multiple parties. This knowledge base will be a dedicated GitHub repository, where people can upload new input information for the `PatchAnalyzer`.
+In order to prevent that each and every user of @@PROJECT_NAME@@ has to collect the repository URL and the fix commit(s) for a given vulnerability by himself, we created the shared [vulnerability assessment knowledge base](https://github.com/SAP/vulnerability-assessment-kb) The maintenance of this knowledge base will become - in the ideal case -  a community effort involving both open source projects as well as users of @@PROJECT_NAME@@.
 
-This section will be updated once this repository is available and the `PatchAnalyzer` has been updated to read/write to this GitHub repo.
+Please [create an issue](https://github.com/SAP/vulnerability-assessment-kb/issues/new) if you want to provide new information about publicly disclosed vulnerabilities in open source components, or correct an existing entry.
