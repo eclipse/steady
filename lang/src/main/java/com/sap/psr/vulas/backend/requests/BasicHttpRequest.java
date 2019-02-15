@@ -144,8 +144,8 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 			// Make call if one of the following holds:
 			// - call is read request and connect is not offline
 			// - call is write request, exception is null and connect is read_write
-			if( (!this.isUploadRequest() && !CoreConfiguration.isBackendOffline(this.context.getVulasConfiguration()) ) ||
-				(this.isUploadRequest() && exception==null && CoreConfiguration.isBackendReadWrite(this.context.getVulasConfiguration())) ) {
+			if( (!this.isUploadRequest() && !CoreConfiguration.isBackendOffline(this.getVulasConfiguration()) ) ||
+				(this.isUploadRequest() && exception==null && CoreConfiguration.isBackendReadWrite(this.getVulasConfiguration())) ) {
 				try {
 					response = this.sendRequest();
 
@@ -171,7 +171,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 
 			// Save to disk if
 			// - call is write request and exception is not null or connect is not read_write
-			if(this.isUploadRequest() && !this.isPayloadSavedOnDisk() && (exception!=null || !CoreConfiguration.isBackendReadWrite(this.context.getVulasConfiguration()))) {
+			if(this.isUploadRequest() && !this.isPayloadSavedOnDisk() && (exception!=null || !CoreConfiguration.isBackendReadWrite(this.getVulasConfiguration()))) {
 				try {
 					this.saveToDisk();
 				} catch (IOException e) {
@@ -459,13 +459,13 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	public URI getUri(Service _service, String _path, Map<String,String> _params) {
 
 		// Check whether URL is present
-		if(!CoreConfiguration.isBackendOffline(this.context.getVulasConfiguration()) && !this.context.getVulasConfiguration().hasServiceUrl(_service))
+		if(!CoreConfiguration.isBackendOffline(this.getVulasConfiguration()) && !this.getVulasConfiguration().hasServiceUrl(_service))
 			throw new IllegalStateException("URL for service [" + _service + "] is not configured");
 
 		URI uri = null;
 
 		final StringBuilder builder = new StringBuilder();
-		builder.append(this.context.getVulasConfiguration().getServiceUrl(_service));
+		builder.append(this.getVulasConfiguration().getServiceUrl(_service));
 		builder.append(_path);
 		int i = 0;
 		if(_params!=null) {
