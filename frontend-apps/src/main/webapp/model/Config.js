@@ -137,7 +137,7 @@ model.Config.getSpace = function(_force) {
 }
 
 model.Config.getDefaultSavedSpace = function() {
-	return model.Config.settings.cookie.space
+	return JSON.parse(localStorage.getItem('state.key_-vulas-frontend-settings')).space
 }
 
 model.Config.getDefaultSpace = function(_force) {
