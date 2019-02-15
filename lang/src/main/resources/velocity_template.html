@@ -89,9 +89,10 @@ function toggle(_btn, _div) {
 	<p>Generated for:</p>
 	<table>
 		<tr>
-			<th>GroupId</th><th>ArtifactId</th><th>Version</th>
+			<th>Space</th><th>GroupId</th><th>ArtifactId</th><th>Version</th>
 		</tr>
 		<tr>
+			<td>$space.getSpaceToken()</td>
 			<td>$app.getMvnGroup()</td>
 			<td>$app.getArtifact()</td>
 			<td>$app.getVersion()</td>
@@ -234,7 +235,7 @@ function toggle(_btn, _div) {
 					<ul>
 					#foreach( $analysis in $vul.analyses )
 							<li>
-								<a href="$vulas-backend-serviceUrl/../apps/#/apps/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
+								<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 									#if($exceptionThreshold=='dependsOn' && $analysis.isThrowsException())
 										style="color: red; font-weight: bold;"
 									#elseif($exceptionThreshold=='dependsOn' && $analysis.isThrowsExceptionExcluded())
@@ -279,7 +280,7 @@ function toggle(_btn, _div) {
 					#foreach( $analysis in $vul.analyses )
 						#if( !$analysis.isNoneAffectedVersion())
 							<li>
-								<a href="$vulas-backend-serviceUrl/../apps/#/apps/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
+								<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 									#if( $exceptionThreshold=='potentiallyExecutes' && $analysis.isThrowsException())
 										style="color: red; font-weight: bold;"
 									#elseif($exceptionThreshold=='potentiallyExecutes' && $analysis.isThrowsExceptionExcluded())
@@ -324,7 +325,7 @@ function toggle(_btn, _div) {
 					#foreach( $analysis in $vul.analyses )
 						#if( !$analysis.isNoneAffectedVersion())
 							<li>
-								<a href="$vulas-backend-serviceUrl/../apps/#/apps/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
+								<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 									#if( $exceptionThreshold=='actuallyExecutes' && $analysis.isThrowsException())
 										style="color: red; font-weight: bold;"
 									#elseif($exceptionThreshold=='actuallyExecutes' && $analysis.isThrowsExceptionExcluded())
