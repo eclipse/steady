@@ -23,13 +23,14 @@ Other UI controls highlighted in the screenshot are as follows:
 |---|---                 |---          |
 | 1 | Home               | Reloads the entire application, no application will be shown on the right |
 | 2 | Redo Search        | Re-applies the search criterion |
-| 3 | Workspace          | Identifier of the current workspace |
-| 4 | About              |Provides information about the application such as version, authors, etc. |
-| 5 | Help               | Opens this Wiki page |
-| 6 | Documentation      | Provides a link to the Documentation |
-| 7 | Workspace Creation | Tools to create a new workspace |
-| 8 | Settings           | Provides the possibility to connect to another backend for loading application analyses (expert user only) and to select a workspace to display |
-| 9 | Reload             | Reloads all the applications (use if you want to see the analysis results of an application that did not exist before) |
+| 3 | Information        | Information messages to the attention of the user |
+| 4 | Workspace          | Identifier of the current workspace - Displayed with Gray background if default workspace and with red background otherwise |
+| 5 | About              |Provides information about the application such as version, authors, etc. |
+| 6 | Help               | Opens this Wiki page |
+| 7 | Documentation      | Provides a link to the Documentation |
+| 8 | Workspace Creation | Tools to create a new workspace |
+| 9 | Settings           | Provides the possibility to connect to another backend for loading application analyses (expert user only) and to select a workspace to display |
+| 10 | Reload             | Reloads all the applications (use if you want to see the analysis results of an application that did not exist before) |
 
 ## Vulnerabilities
 
