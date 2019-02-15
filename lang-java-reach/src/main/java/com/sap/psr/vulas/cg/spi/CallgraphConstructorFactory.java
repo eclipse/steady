@@ -49,9 +49,7 @@ public class CallgraphConstructorFactory {
 
         if (cgConstructor != null) {
             cgConstructor.setAppContext(appContext);
-
         } else {
-
             log.error("No Callgraph Constructor found for requested framework  [" + analysisFramework + "]");
         }
 
@@ -77,7 +75,7 @@ public class CallgraphConstructorFactory {
                 }
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+        	log.warn("Exception when loading JARs from [" + loc + "]: " + ex.getMessage());
         }
 
         URL[] urls = new URL[fileNames.size()];
@@ -86,6 +84,4 @@ public class CallgraphConstructorFactory {
 
         return ucl;
     }
-
-
 }
