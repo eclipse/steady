@@ -483,9 +483,15 @@ public class PipWrapper {
 	static class PipPackageJson {
 		String name;
 		String version;
+		String installer;
+		String location;
 		public String getName() { return name; }
 		public void setName(String name) { this.name = name; }
 		public String getVersion() { return version; }
 		public void setVersion(String version) { this.version = version; }
+		public String getInstaller() { return installer; }
+		public void setInstaller(String installer) { this.installer = installer; }
+		public String getLocation() { return location; }
+		public void setLocation(String location) { this.location = location; }
 	}
 }
