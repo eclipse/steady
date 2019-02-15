@@ -89,9 +89,10 @@ function toggle(_btn, _div) {
 	<p>Generated for:</p>
 	<table>
 		<tr>
-			<th>GroupId</th><th>ArtifactId</th><th>Version</th>
+			<th>Space</th><th>GroupId</th><th>ArtifactId</th><th>Version</th>
 		</tr>
 		<tr>
+			<td>$space.getSpaceToken()</td>
 			<td>$app.getMvnGroup()</td>
 			<td>$app.getArtifact()</td>
 			<td>$app.getVersion()</td>

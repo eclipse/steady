@@ -2,6 +2,7 @@
 	"vulasReport": {
 		"generatedAt": "$generatedAt",
 		"generatedFor": {
+			"space": "$space.getSpaceToken()",
 			"groupId": "$app.getMvnGroup()",
 			"artifactId": "$app.getArtifact()",
 			"version": "$app.getVersion()"

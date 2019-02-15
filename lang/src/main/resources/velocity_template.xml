@@ -4,6 +4,7 @@
 	<!-- Metadata -->
 	<generatedAt>$generatedAt</generatedAt>
 	<generatedFor>
+		<space>$space.getSpaceToken()</space>
 		<groupId>$app.getMvnGroup()</groupId>
 		<artifactId>$app.getArtifact()</artifactId>
 		<version>$app.getVersion()</version>
