@@ -16,7 +16,7 @@ __Manual__
 
 : Here you can find a description of the main activities and tools around the vulnerability database.
 
-: [Go to the Vulnerability Database Manual](./manuals/index)
+: [Go to the Vulnerability Database Manual](./manuals)
 
 __Contribute__
 
