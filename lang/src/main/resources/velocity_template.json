@@ -62,7 +62,7 @@
 				"artifactId": "$analysis.getApp().getArtifact()",
 				"version": "$analysis.getApp().getVersion()",
 				
-				"href": "$vulas-backend-serviceUrl/../apps/#/apps/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()",
+				"href": "$vulas-backend-serviceUrl/../apps/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()",
 				
 				"scope": "$analysis.getDep().getScope()",
 				"isTransitive": $analysis.getDep().getTransitive(),

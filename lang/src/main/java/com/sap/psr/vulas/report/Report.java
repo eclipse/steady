@@ -326,6 +326,7 @@ public class Report {
 		this.context.put("vulas-backend-serviceUrl", this.goalContext.getVulasConfiguration().getServiceUrl(Service.BACKEND));
 		this.context.put("vulas-cia-serviceUrl", this.goalContext.getVulasConfiguration().getServiceUrl(Service.CIA));
 		this.context.put("app", app);
+		this.context.put("space", this.goalContext.getSpace());
 		this.context.put("projects", modules);
 		this.context.put("generatedAt", Report.dateFormat.format(new Date()));
 		this.context.put("vulas-shared-homepage", this.goalContext.getVulasConfiguration().getConfiguration().getString(VulasConfiguration.HOMEPAGE, "undefined"));
