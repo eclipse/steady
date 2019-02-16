@@ -71,11 +71,11 @@ public class CallgraphConstructorFactory {
                 URL fileUrl = path.toUri().toURL();
                 if (fileUrl.getFile().endsWith(".jar")) {
                     fileNames.add(fileUrl);
-                    log.debug("Found jar file [" + fileUrl.toString() + "] in service folder [" + pluginFolder + "]");
+                    log.debug("Found JAR file [" + fileUrl.toString() + "] in service folder [" + pluginFolder + "]");
                 }
             }
         } catch (IOException ex) {
-        	log.warn("Exception when loading JARs from [" + loc + "]: " + ex.getMessage());
+        	log.warn("Cannot load plugin JARs (with additional call graph constructors) from directory [" + loc.toAbsolutePath() + "]");
         }
 
         URL[] urls = new URL[fileNames.size()];
