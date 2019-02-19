@@ -71,7 +71,7 @@ public abstract class AbstractVulasTask extends DefaultTask {
 
         // Check whether the application context can be established
         try {
-            app = CoreConfiguration.getAppContext();
+            app = CoreConfiguration.getAppContext(this.vulasConfiguration);
         }
         // In case the plugin is called w/o using the Vulas profile, project-specific settings are not set
         // Set them using the project member
@@ -82,7 +82,7 @@ public abstract class AbstractVulasTask extends DefaultTask {
         	this.vulasConfiguration.setProperty(CoreConfiguration.APP_CTX_VERSI, getMandatoryProjectProperty(project, GradleGavProperty.version, getLogger()));
             //TODO: packaging is not straightforward with gradle, leave it empty for now
             //VulasConfiguration.setProperty(CoreConfiguration.APP_CTX_PACKA, "", "", true);
-            app = CoreConfiguration.getAppContext();
+            app = CoreConfiguration.getAppContext(this.vulasConfiguration);
         }
 
         String rootDir = project.getProjectDir().getAbsolutePath();
