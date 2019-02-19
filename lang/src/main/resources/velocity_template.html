@@ -134,11 +134,10 @@ function toggle(_btn, _div) {
 			<ul>
 				<li>noException - no build exception will be thrown, regardless of the analysis results
 				<li>dependsOn - an exception will be thrown if at least one application project depends on an archive with known vulnerabilities (typically by declaring a dependency in the POM file)
-				<!-- 
-				<li>potentiallyExecutes - an exception will be thrown if at least one  application project can potentially execute vulnerable code (according to static source code analysis)
-				<li>actuallyExecutes - an exception will be thrown if at least one application project actually executes vulnerable code during application tests
-				-->
+				<li>potentiallyExecutes* - an exception will be thrown if at least one  application project can potentially execute vulnerable code (according to static source code analysis).
+				<li>actuallyExecutes* - an exception will be thrown if at least one application project actually executes vulnerable code during application tests.
 			</ul>
+			* Please consider <a href="https://sap.github.io/vulnerability-assessment-tool/user/manuals/assess_and_mitigate/#static-and-dynamic-analysis">this notice</a> when using those configuration options.  
 			</td>
 		</tr>
 		<tr>
