@@ -1,6 +1,5 @@
 package com.sap.psr.vulas.goals;
 
-import static com.jayway.restassured.RestAssured.expect;
 import static com.xebialabs.restito.builder.stub.StubHttp.whenHttp;
 import static com.xebialabs.restito.builder.verify.VerifyHttp.verifyHttp;
 import static com.xebialabs.restito.semantics.Action.charset;
@@ -12,20 +11,17 @@ import static com.xebialabs.restito.semantics.Condition.method;
 import static com.xebialabs.restito.semantics.Condition.post;
 import static com.xebialabs.restito.semantics.Condition.put;
 import static com.xebialabs.restito.semantics.Condition.uri;
-import static org.hamcrest.Matchers.equalTo;
 
 import org.glassfish.grizzly.http.Method;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.junit.Test;
 
-import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.shared.connectivity.PathBuilder;
 import com.sap.psr.vulas.shared.enums.GoalClient;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.Application;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 
 public class BomGoalTest extends AbstractGoalTest {
@@ -34,18 +30,18 @@ public class BomGoalTest extends AbstractGoalTest {
 	 * App creation results in the following two HTTP calls.
 	 * @param _a TODO
 	 */
-	private void setupMockServices(Application _a) {
+	private void setupMockServices(Application _a, boolean _exists_in_backend) {
 		final String s_json = JacksonUtil.asJsonString(_a);
-		
+
 		// Options app: 200
 		whenHttp(server).
-				match(composite(method(Method.OPTIONS), uri("/backend" + PathBuilder.app(_a)))).
-			then(
+		match(composite(method(Method.OPTIONS), uri("/backend" + PathBuilder.app(_a)))).
+		then(
 				stringContent(s_json),
 				contentType("application/json"),
 				charset("UTF-8"),
-				status(HttpStatus.OK_200));
-		
+				status(_exists_in_backend ? HttpStatus.OK_200 : HttpStatus.NOT_FOUND_404));
+
 		// Put app: 200
 		whenHttp(server).
 		match(put("/backend" + PathBuilder.apps())).
@@ -54,14 +50,14 @@ public class BomGoalTest extends AbstractGoalTest {
 				contentType("application/json"),
 				charset("UTF-8"),
 				status(HttpStatus.OK_200));
-		
-//		expect()
-//			.statusCode(201).
-//			when()
-//			.post("/backend" + PathBuilder.apps());
+
+		//		expect()
+		//			.statusCode(201).
+		//			when()
+		//			.post("/backend" + PathBuilder.apps());
 
 		// Options goal exe: 404 (default, no impl needed)
-		
+
 		// Post goal exe: 201
 		whenHttp(server).
 		match(post("/backend" + PathBuilder.goalExcecutions(null, null, _a))).
@@ -70,11 +66,11 @@ public class BomGoalTest extends AbstractGoalTest {
 				contentType("application/json"),
 				charset("UTF-8"),
 				status(HttpStatus.CREATED_201));
-		
-//		expect()
-//			.statusCode(201).
-//			when()
-//			.post("/backend" + PathBuilder.goalExcecutions(null, null, _a));
+
+		//		expect()
+		//			.statusCode(201).
+		//			when()
+		//			.post("/backend" + PathBuilder.goalExcecutions(null, null, _a));
 
 	}
 
@@ -88,7 +84,7 @@ public class BomGoalTest extends AbstractGoalTest {
 	public void testBomWithIncompleteAppConfiguration() throws GoalConfigurationException, GoalExecutionException {
 		// Mock REST services
 		this.configureBackendServiceUrl(server);
-		this.setupMockServices(this.testApp);
+		this.setupMockServices(this.testApp, true);
 
 		// Set config
 		this.vulasConfiguration.setProperty(CoreConfiguration.TENANT_TOKEN, "foo");
@@ -99,6 +95,14 @@ public class BomGoalTest extends AbstractGoalTest {
 		// Execute goal
 		final AbstractGoal goal = GoalFactory.create(GoalType.APP, GoalClient.CLI);
 		goal.setConfiguration(this.vulasConfiguration).executeSync();
+
+		// Check the HTTP calls made
+		verifyHttp(server).times(0, 
+				method(Method.PUT),
+				uri("/backend" + PathBuilder.app(this.testApp)));
+		verifyHttp(server).times(0, 
+				method(Method.POST),
+				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}
 
 	/**
@@ -111,7 +115,7 @@ public class BomGoalTest extends AbstractGoalTest {
 	public void testBomSkipSaveEmptyApp() throws GoalConfigurationException, GoalExecutionException {
 		// Mock REST services
 		this.configureBackendServiceUrl(server);
-		this.setupMockServices(this.testApp);
+		this.setupMockServices(this.testApp, false);
 
 		// Set config
 		this.vulasConfiguration.setProperty(CoreConfiguration.TENANT_TOKEN, "foo");
@@ -124,10 +128,10 @@ public class BomGoalTest extends AbstractGoalTest {
 		goal.setConfiguration(this.vulasConfiguration).executeSync();
 
 		// Check the HTTP calls made
-		verifyHttp(server).times(1, 
+		verifyHttp(server).times(0, 
 				method(Method.PUT),
 				uri("/backend" + PathBuilder.app(this.testApp)));
-		verifyHttp(server).times(1, 
+		verifyHttp(server).times(0, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}
@@ -142,7 +146,7 @@ public class BomGoalTest extends AbstractGoalTest {
 	public void testBomSaveEmptyApp() throws GoalConfigurationException, GoalExecutionException {
 		// Mock REST services
 		this.configureBackendServiceUrl(server);
-		this.setupMockServices(this.testApp);
+		this.setupMockServices(this.testApp, true);
 
 		// Set config
 		this.vulasConfiguration.setProperty(CoreConfiguration.TENANT_TOKEN, "foo");
@@ -150,16 +154,16 @@ public class BomGoalTest extends AbstractGoalTest {
 		this.vulasConfiguration.setProperty(CoreConfiguration.APP_CTX_ARTIF, this.testApp.getArtifact());
 		this.vulasConfiguration.setProperty(CoreConfiguration.APP_CTX_VERSI, this.testApp.getVersion());
 		this.vulasConfiguration.setProperty(CoreConfiguration.APP_UPLOAD_EMPTY, new Boolean(true));
-				
+
 		// Execute goal
 		final AbstractGoal goal = GoalFactory.create(GoalType.APP, GoalClient.CLI);
 		goal.setConfiguration(this.vulasConfiguration).executeSync();
-		
+
 		// Check (some of) the HTTP calls made (1 app PUT, 1 goal exe POST)
 		verifyHttp(server).times(1, 
 				method(Method.PUT),
 				uri("/backend" + PathBuilder.app(this.testApp)));
-		verifyHttp(server).times(1, 
+		verifyHttp(server).times(2, 
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}
