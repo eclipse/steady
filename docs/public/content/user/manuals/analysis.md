@@ -633,8 +633,8 @@ Identified vulnerabilities including any information gathered during static and 
     #    potentiallyExecutes : exception raised when vulnerable code is potentially executed (result of static analyse)
     #    actuallyExecutes : exception raised when vulnerable code is executed (result of dynamic analyse)
     #
-    # Default: actuallyExecutes
-    vulas.report.exceptionThreshold = actuallyExecutes
+    # Default: dependsOn
+    vulas.report.exceptionThreshold = dependsOn
 
     # Directory to where the reports (JSON, XML, HTML) will be written to
     # Default:
