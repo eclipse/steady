@@ -186,7 +186,7 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 				log.error("Cannot save bug [" + _b.getBugId() + "] with refreshed CVE data: " + e.getMessage());
 			}
 		} else {
-			log.info("Bug [" + _b.getBugId() + "] does not need a refresh of cached CVE data");
+			log.debug("Bug [" + _b.getBugId() + "] does not need a refresh of cached CVE data");
 		}
 		return update_happened;
 	}
