@@ -49,9 +49,7 @@ public class CallgraphConstructorFactory {
 
         if (cgConstructor != null) {
             cgConstructor.setAppContext(appContext);
-
         } else {
-
             log.error("No Callgraph Constructor found for requested framework  [" + analysisFramework + "]");
         }
 
@@ -73,11 +71,11 @@ public class CallgraphConstructorFactory {
                 URL fileUrl = path.toUri().toURL();
                 if (fileUrl.getFile().endsWith(".jar")) {
                     fileNames.add(fileUrl);
-                    log.debug("Found jar file [" + fileUrl.toString() + "] in service folder [" + pluginFolder + "]");
+                    log.debug("Found JAR file [" + fileUrl.toString() + "] in service folder [" + pluginFolder + "]");
                 }
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+        	log.warn("Cannot load plugin JARs (with additional call graph constructors) from directory [" + loc.toAbsolutePath() + "]");
         }
 
         URL[] urls = new URL[fileNames.size()];
@@ -86,6 +84,4 @@ public class CallgraphConstructorFactory {
 
         return ucl;
     }
-
-
 }

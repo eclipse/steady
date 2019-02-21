@@ -13,7 +13,9 @@ import org.junit.experimental.categories.Category;
 
 import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.python.ProcessWrapperException;
+import com.sap.psr.vulas.python.pip.PipWrapper.PipPackageJson;
 import com.sap.psr.vulas.shared.categories.Slow;
+import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.ThreadUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
@@ -109,5 +111,16 @@ public class PipWrapperTest {
 		assertTrue(werkzeug.getDownloadUrl()!=null);
 		assertTrue(ms.getDownloadUrl()!=null);
 		assertTrue(isdang.getDownloadUrl()!=null);
+	}
+	
+	@Test
+	public void testParsePipListJson() throws IOException, ProcessWrapperException {
+		String json = FileUtil.readFile("./src/test/resources/pip-list-old.json");
+		PipPackageJson[] packs = (PipPackageJson[])JacksonUtil.asObject(json, PipPackageJson[].class);
+		assertEquals(2, packs.length);
+		
+		json = FileUtil.readFile("./src/test/resources/pip-list-new.json");
+		packs = (PipPackageJson[])JacksonUtil.asObject(json, PipPackageJson[].class);
+		assertEquals(2, packs.length);
 	}
 }

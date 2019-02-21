@@ -67,7 +67,7 @@ public class BackendConnector {
 	 * The map is populated in method {@link BackendConnector#getAppBugs(Application)}.
 	 */
 	private Map<Application, Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>>> cacheBugChangeLists = new HashMap<Application, Map<String, Set<ConstructId>>>();
-	
+
 	/**
 	 * Cache the presence of the space in the backend.
 	 */
@@ -77,7 +77,7 @@ public class BackendConnector {
 	 * Cache the presence of the application in the backend.
 	 */
 	private Map<Application, Boolean> cacheAppExistanceCheck = new HashMap<Application, Boolean>();
-	
+
 	/**
 	 * Cache app dependencies.
 	 */
@@ -99,17 +99,17 @@ public class BackendConnector {
 	//TODO: Make all caches dependent on space and/or app!
 	public void cleanCache() {
 		//if(!this.cacheBugChangeLists.isEmpty() || !this.cacheAppExistanceCheck.isEmpty()) {
-			BackendConnector.log.info("Deleting cache: [" + this.cacheBugChangeLists.size() + "] bug change lists, [" + this.cacheAppExistanceCheck.size() + "] app existance");
-			this.cacheBugChangeLists = new HashMap<Application, Map<String, Set<ConstructId>>>();
-			this.cacheSpaceExistanceCheck = new HashMap<Space, Boolean>();
-			this.cacheAppExistanceCheck = new HashMap<Application, Boolean>();
-			this.cacheAppDependencies = new HashMap<Application, Set<Dependency>>();
-			this.cacheAppConstructs = new HashMap<Application, Set<ConstructId>>();
+		BackendConnector.log.info("Deleting cache: [" + this.cacheBugChangeLists.size() + "] bug change lists, [" + this.cacheAppExistanceCheck.size() + "] app existance");
+		this.cacheBugChangeLists = new HashMap<Application, Map<String, Set<ConstructId>>>();
+		this.cacheSpaceExistanceCheck = new HashMap<Space, Boolean>();
+		this.cacheAppExistanceCheck = new HashMap<Application, Boolean>();
+		this.cacheAppDependencies = new HashMap<Application, Set<Dependency>>();
+		this.cacheAppConstructs = new HashMap<Application, Set<ConstructId>>();
 		//}
 	}
-	
+
 	// ---------------------------------- SPACE-RELATED CALLS
-	
+
 	/**
 	 * Returns true if the given {@link Space} exists in the backend, false otherwise.
 	 * If the client is {@link CoreConfiguration.ConnectType#OFFLINE}, the check is skipped and true is returned. 
@@ -122,7 +122,7 @@ public class BackendConnector {
 	public boolean isSpaceExisting(GoalContext _goal_context, Space _space) throws BackendConnectionException {
 		Boolean exists = false;
 		if(!cacheSpaceExistanceCheck.containsKey(_space)) {
-			
+
 			// Don't check if client is OFFLINE
 			if(CoreConfiguration.isBackendOffline(_goal_context.getVulasConfiguration())) {
 				exists = true;
@@ -138,13 +138,13 @@ public class BackendConnector {
 		}
 		return cacheSpaceExistanceCheck.get(_space);
 	}
-	
+
 	public Space createSpace(GoalContext _goal_context, Space _space) throws BackendConnectionException {
 		final BasicHttpRequest r = new BasicHttpRequest(HttpMethod.POST, PathBuilder.spaces(), null); 
 		r.setGoalContext(_goal_context);
 		r.setPayload(JacksonUtil.asJsonString(_space), null, true);
 		final HttpResponse response = r.send();
-		
+
 		// Read and return the response to the caller (including the server-side generated space token)
 		Space created_space = null;
 		if(response!=null && response.isCreated()) {
@@ -156,14 +156,14 @@ public class BackendConnector {
 		}
 		return created_space;
 	}
-	
+
 	public void modifySpace(GoalContext _goal_context, Space _space) throws BackendConnectionException {
 		final BasicHttpRequest r = new BasicHttpRequest(HttpMethod.PUT, PathBuilder.space(_space), null); 
 		r.setGoalContext(_goal_context);
 		r.setPayload(JacksonUtil.asJsonString(_space), null, true);
 		r.send();
 	}
-	
+
 	public void cleanSpace(GoalContext _goal_context, Space _space) throws BackendConnectionException {
 		final Map<String,String> params = new HashMap<String,String>();
 		params.put("clean", "true");
@@ -171,13 +171,13 @@ public class BackendConnector {
 		r.setGoalContext(_goal_context);
 		r.send();
 	}
-	
+
 	public void deleteSpace(GoalContext _goal_context, Space _space) throws BackendConnectionException {
 		final BasicHttpRequest r = new BasicHttpRequest(HttpMethod.DELETE, PathBuilder.space(_space), null);
 		r.setGoalContext(_goal_context);
 		r.send();
 	}
-	
+
 	// ---------------------------------- APP-RELATED CALLS
 
 	public boolean isAppExisting(GoalContext _goal_context, Application _app) throws BackendConnectionException {
@@ -224,11 +224,11 @@ public class BackendConnector {
 
 	public void uploadApp(GoalContext _goal_context, Application _app) throws BackendConnectionException {
 		final String json = JacksonUtil.asJsonString(_app);
-		
+
 		// The request depending on whose result either POST or PUT will be called
 		final BasicHttpRequest cond_req = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.app(_app), null);
 		cond_req.setGoalContext(_goal_context);
-		
+
 		final HttpRequestList req_list = new HttpRequestList();
 		final Map<String,String> params = new HashMap<String,String>();
 		params.put("skipResponseBody", "true");
@@ -247,7 +247,7 @@ public class BackendConnector {
 				.setGoalContext(_goal_context)
 				);
 		req_list.send();
-		
+
 		// Clean app existance cache
 		this.cleanCache();
 	}
@@ -472,7 +472,7 @@ public class BackendConnector {
 	private static final Pattern pattern = Pattern.compile("\\\"countTotal\\\"\\s*:\\s*([\\d]*)");
 
 	// ---------------------------------- LIB-RELATED CALLS
-	
+
 	public String getLibrary(String _sha1) throws EntityNotFoundInBackendException {
 		HttpResponse response = null;
 		try {
@@ -486,7 +486,7 @@ public class BackendConnector {
 		}
 
 	}
-	
+
 	public int countLibraryConstructs(String _ja) throws BackendConnectionException {
 		int count_existing = -1;
 		String http_response = null;
@@ -513,7 +513,7 @@ public class BackendConnector {
 		final String json = JacksonUtil.asJsonString(_lib);
 		// Override setting
 		final boolean override = _ctx.getVulasConfiguration().getConfiguration().getBoolean("collector.overrideArchive", false);
-		
+
 		final HttpRequestList req_list = new HttpRequestList();
 		final BasicHttpRequest cond_req = new BasicHttpRequest(HttpMethod.GET, PathBuilder.lib(sha1), null);
 		cond_req.setGoalContext(_ctx);
@@ -571,9 +571,9 @@ public class BackendConnector {
 			BackendConnector.log.error("Cannot find [" + _file.toString()+ "]: Check if unknown to maven and upload will be skipped");
 		} 
 	}
-	
+
 	// ==================== Others
-	
+
 	/**
 	 * Returns true if the upload succeeded or the upload cannot be performed (because the application does not exist), false otherwise.
 	 * @param _ctx
@@ -584,44 +584,50 @@ public class BackendConnector {
 	 */
 	public boolean uploadGoalExecution(GoalContext _ctx, AbstractGoal _gexe, boolean _before) throws BackendConnectionException {
 		boolean ret = false;
-		
+
 		// Application goal
 		if(_ctx.getApplication()!=null) {
-			
+
 			// Make sure the app exists in the backend
 			final Application app = _ctx.getApplication();
 			if(this.isAppExisting(_ctx, app)) {
-				
+
 				// The request depending on whose result either POST or PUT will be called
 				final BasicHttpRequest cond_req = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.goalExcecution(null, _ctx.getSpace(), app, _gexe.getId()), null);
 				cond_req.setGoalContext(_ctx);
-				
-				// Create a conditional request to POST or PUT
-				HttpRequest chr = null;
+
+				// Create conditional requests for POST or PUT
 				final Map<String,String> params = new HashMap<String,String>();
 				params.put("skipResponseBody", "true");
+
+				final ConditionalHttpRequest post = new ConditionalHttpRequest(HttpMethod.POST, PathBuilder.goalExcecutions(null, _ctx.getSpace(), app), params);
+				post.setConditionRequest(cond_req);
+				post.addCondition(new StatusCondition(HttpURLConnection.HTTP_NOT_FOUND));
+				post.setPayload(_gexe.toJson(), null, false);
+				post.setGoalContext(_ctx);
+
+				final ConditionalHttpRequest put = new ConditionalHttpRequest(HttpMethod.PUT, PathBuilder.goalExcecution(null, _ctx.getSpace(), app, _gexe.getId()), params);
+				put.setConditionRequest(cond_req);
+				put.addCondition(new StatusCondition(HttpURLConnection.HTTP_OK));
+				put.setPayload(_gexe.toJson(), null, false);
+				put.setGoalContext(_ctx);
+
+				// Order them depending whether the upload is called before or after the actual goal execution (relevant for serialization)
+				final HttpRequestList req_list = new HttpRequestList();
 				if(_before) {
-					chr = new ConditionalHttpRequest(HttpMethod.POST, PathBuilder.goalExcecutions(null, _ctx.getSpace(), app), params)
-							.setConditionRequest(cond_req)
-							.addCondition(new StatusCondition(HttpURLConnection.HTTP_NOT_FOUND))
-							.setPayload(_gexe.toJson(), null, false)
-							.setGoalContext(_ctx);
+					req_list.addRequest(post);
+					req_list.addRequest(put);
 				} else {
-					chr = new ConditionalHttpRequest(HttpMethod.PUT, PathBuilder.goalExcecution(null, _ctx.getSpace(), app, _gexe.getId()), params)
-							.setConditionRequest(cond_req)
-							.addCondition(new StatusCondition(HttpURLConnection.HTTP_OK))
-							.setPayload(_gexe.toJson(), null, false)
-							.setGoalContext(_ctx);
-				}						
+					req_list.addRequest(put);
+					req_list.addRequest(post);
+				}
 
 				// Send and check response code
-				final HttpResponse response = chr.send();
-				if(CoreConfiguration.isBackendReadWrite(_ctx.getVulasConfiguration())) {
+				final HttpResponse response = req_list.send();
+				if(CoreConfiguration.isBackendReadWrite(_ctx.getVulasConfiguration()))
 					ret = response !=null && (response.isCreated() || response.isOk());
-				}
-				else {
+				else
 					ret = true;
-				}
 			}
 			else {
 				BackendConnector.log.info("App " + _ctx.getApplication() + " does not exist in backend, upload of goal execution [" + _gexe.getId() + "] skipped");
@@ -664,14 +670,14 @@ public class BackendConnector {
 			BackendConnector.log.warn("App " + _app + " does not exist in backend, path upload skipped");
 		}
 	}
-	
+
 	public boolean isBugExisting(String _bug) throws BackendConnectionException {
 		final HttpResponse response = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.bug(_bug), null).send();
 		return response.isOk();
 	}
 
 	public void uploadChangeList(String _bug, String _json) throws BackendConnectionException {
-		
+
 		// The request depending on whose result either POST or PUT will be called
 		final BasicHttpRequest cond_req = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.bug(_bug), null);
 
@@ -921,7 +927,7 @@ public class BackendConnector {
 
 			if ( response.isOk() ){
 				json = response.getBody();
-		//		ast = (String)JacksonUtil.asObject(json, String.class);
+				//		ast = (String)JacksonUtil.asObject(json, String.class);
 			} 
 		} catch (BackendConnectionException ex) {
 			log.error(ex);
@@ -939,23 +945,23 @@ public class BackendConnector {
 	public Artifact[] getAllArtifactsGroupArtifact(String _g, String _a) throws BackendConnectionException{
 		String json = null;
 		Artifact[] result = null;
-		
+
 		json = new BasicHttpRequest(Service.CIA, HttpMethod.GET, PathBuilder.artifactsGroupVersion(_g,_a), null).send().getBody();
 		BackendConnector.log.info("artifacts for  " + _g + ":" + _a + " received from backend");
 		if(json!=null)
 			result = (Artifact[])JacksonUtil.asObject(json, Artifact[].class);
-		
+
 		return result;
 	}
-	
+
 	public Artifact getArtifact(String _g, String _a, String _v) throws BackendConnectionException{
 		String json = null;
 		Artifact result = null;
-		
+
 		json = new BasicHttpRequest(Service.CIA, HttpMethod.GET, PathBuilder.artifactsGAV(_g,_a, _v), null).send().getBody();
 		if(json!=null)
 			result = (Artifact)JacksonUtil.asObject(json, Artifact.class);
-		
+
 		return result;
 	}
 
@@ -969,13 +975,13 @@ public class BackendConnector {
 
 	public synchronized boolean doesArtifactExist(String _g, String _a, String _v,Boolean _sources, String packaging) throws InterruptedException, BackendConnectionException {
 		final Map<String,String> params = new HashMap<String,String>();
-		
+
 		if(_sources!=null && _sources)
 			params.put("classifier", "sources");
 		params.put("packaging", packaging);
 
 		params.put("skipResponseBody","true");
-		
+
 		final HttpResponse r = new BasicHttpRequest(Service.CIA, HttpMethod.GET, PathBuilder.artifactsGAV(_g, _a, _v), params).send();
 		if(r.getStatus()==HttpStatus.SC_OK)
 			return true;

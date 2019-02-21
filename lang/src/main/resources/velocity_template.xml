@@ -4,6 +4,7 @@
 	<!-- Metadata -->
 	<generatedAt>$generatedAt</generatedAt>
 	<generatedFor>
+		<space>$space.getSpaceToken()</space>
 		<groupId>$app.getMvnGroup()</groupId>
 		<artifactId>$app.getArtifact()</artifactId>
 		<version>$app.getVersion()</version>
@@ -68,7 +69,7 @@
 				<version>$analysis.getApp().getVersion()</version>
 				
 				<!-- Link to the frontend with detailled analysis results -->
-				<href>$vulas-backend-serviceUrl/../apps/#/apps/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()</href>
+				<href>$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()</href>
 				
 				<!-- Details regarding the dependency of the app/module on the library containing vulnerable code -->
 				<scope>$analysis.getDep().getScope()</scope>

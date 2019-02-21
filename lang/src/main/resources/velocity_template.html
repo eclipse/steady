@@ -89,9 +89,10 @@ function toggle(_btn, _div) {
 	<p>Generated for:</p>
 	<table>
 		<tr>
-			<th>GroupId</th><th>ArtifactId</th><th>Version</th>
+			<th>Space</th><th>GroupId</th><th>ArtifactId</th><th>Version</th>
 		</tr>
 		<tr>
+			<td>$space.getSpaceToken()</td>
 			<td>$app.getMvnGroup()</td>
 			<td>$app.getArtifact()</td>
 			<td>$app.getVersion()</td>
@@ -133,11 +134,10 @@ function toggle(_btn, _div) {
 			<ul>
 				<li>noException - no build exception will be thrown, regardless of the analysis results
 				<li>dependsOn - an exception will be thrown if at least one application project depends on an archive with known vulnerabilities (typically by declaring a dependency in the POM file)
-				<!-- 
-				<li>potentiallyExecutes - an exception will be thrown if at least one  application project can potentially execute vulnerable code (according to static source code analysis)
-				<li>actuallyExecutes - an exception will be thrown if at least one application project actually executes vulnerable code during application tests
-				-->
+				<li>potentiallyExecutes* - an exception will be thrown if at least one  application project can potentially execute vulnerable code (according to static source code analysis).
+				<li>actuallyExecutes* - an exception will be thrown if at least one application project actually executes vulnerable code during application tests.
 			</ul>
+			* Please consider <a href="https://sap.github.io/vulnerability-assessment-tool/user/manuals/assess_and_mitigate/#static-and-dynamic-analysis">this notice</a> when using those configuration options.  
 			</td>
 		</tr>
 		<tr>
@@ -234,7 +234,7 @@ function toggle(_btn, _div) {
 					<ul>
 					#foreach( $analysis in $vul.analyses )
 							<li>
-								<a href="$vulas-backend-serviceUrl/../apps/#/apps/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
+								<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 									#if($exceptionThreshold=='dependsOn' && $analysis.isThrowsException())
 										style="color: red; font-weight: bold;"
 									#elseif($exceptionThreshold=='dependsOn' && $analysis.isThrowsExceptionExcluded())
@@ -263,7 +263,7 @@ function toggle(_btn, _div) {
 									</a>
 								#elseif( !$analysis.isAffectedVersionConfirmed() )
 									<a href="#" class="tooltip">
-										<img width="15px" align="center" src="data:image/png;base64,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"/>
+										<img width="15px" align="center" src="data:image/png;base64,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"/>
 										<span>It could not automatically be determined  whether &quot;$vul.filename&quot; is indeed a vulnerable release, please get back to the Vulas team to have this case checked</span>
 									</a>
 								#end
@@ -279,7 +279,7 @@ function toggle(_btn, _div) {
 					#foreach( $analysis in $vul.analyses )
 						#if( !$analysis.isNoneAffectedVersion())
 							<li>
-								<a href="$vulas-backend-serviceUrl/../apps/#/apps/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
+								<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 									#if( $exceptionThreshold=='potentiallyExecutes' && $analysis.isThrowsException())
 										style="color: red; font-weight: bold;"
 									#elseif($exceptionThreshold=='potentiallyExecutes' && $analysis.isThrowsExceptionExcluded())
@@ -324,7 +324,7 @@ function toggle(_btn, _div) {
 					#foreach( $analysis in $vul.analyses )
 						#if( !$analysis.isNoneAffectedVersion())
 							<li>
-								<a href="$vulas-backend-serviceUrl/../apps/#/apps/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
+								<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 									#if( $exceptionThreshold=='actuallyExecutes' && $analysis.isThrowsException())
 										style="color: red; font-weight: bold;"
 									#elseif($exceptionThreshold=='actuallyExecutes' && $analysis.isThrowsExceptionExcluded())

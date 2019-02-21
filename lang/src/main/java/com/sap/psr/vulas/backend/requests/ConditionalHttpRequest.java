@@ -57,7 +57,7 @@ public class ConditionalHttpRequest extends BasicHttpRequest {
 			throw new IllegalStateException("No condition request or no conditions set");
 
 		// Conditional requests will be skipped in offline mode
-		if(CoreConfiguration.isBackendOffline(this.context.getVulasConfiguration())) {
+		if(CoreConfiguration.isBackendOffline(this.getVulasConfiguration())) {
 			ConditionalHttpRequest.log.info("Condition(s) not evaluated due to offline mode, do " + this.toString());
 			return super.send();
 		}
