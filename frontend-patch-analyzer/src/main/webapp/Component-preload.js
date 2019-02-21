@@ -40,9 +40,9 @@ sap.ui.core.UIComponent.extend("sap.psr.patcha.web.Component", {
         
         // Settings
         var settingsModel = new sap.ui.model.json.JSONModel ({
-            uploadURL : "http://10.97.26.145:8000/vulasfrontend/xs/collector/",
-            uploadUser : "SU_VULAS",
-            uploadUserPwd : "Vulas123",
+            uploadURL : "",
+            uploadUser : "",
+            uploadUserPwd : "",
             debMode   : false,
             delTemp   : true
         });
