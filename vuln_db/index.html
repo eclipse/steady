@@ -1021,25 +1021,27 @@
                 
                 
                 <h1 id="vulnerability-database">Vulnerability database<a class="headerlink" href="#vulnerability-database" title="Permanent link">&para;</a></h1>
-<p>The vulnerability database is the knowledge base of the vulnerability assessment tool. The tool is able to detect and assess all and only the vulnerabilities present in the knowledge base.</p>
+<p>The vulnerability database comprises code-level information about publicly disclosed vulnerabilities in open source projects, which is the fuel of the code-centric analysis performed by <strong>vulnerability-assessment-tool</strong>. The tool is able to detect and assess all and only the vulnerabilities present in this PostgreSQL database.</p>
+<p>The code-level information is gathered by analyzing the commits that the open source developers submitted in order to fix the respective vulnerability (the so-called fix commit). The results of this analysis comprise, for instance, the unique names and abstract syntax trees of all methods or functions modified in the respective fix-commits.</p>
+<p>The fix commits for hundreds of vulnerabilities in Java and Python open source projects are available in a dedicated GitHub repository called <a href="https://github.com/SAP/vulnerability-assessment-kb">vulnerability assessment knowledge base</a>.</p>
 <dl>
 <dt><strong>Step by step tutorial</strong></dt>
 <dd>
-<p>Here you can find the steps to populate your vulnerability database with five known vulnerabilities.</p>
+<p>Here you can find the steps to populate your vulnerability database with five known vulnerabilities. Of course, you can exercise the tutorial for all the other vulnerabilities of the <a href="https://github.com/SAP/vulnerability-assessment-kb">vulnerability assessment knowledge base</a> as well.</p>
 </dd>
 <dd>
 <p><a href="./tutorials/vuln_db_tutorial">Go to the Tutorials page</a></p>
 </dd>
 <dt><strong>Manual</strong></dt>
 <dd>
-<p>Here you can find a description of the main activities and tool around the vulnerability database.</p>
+<p>Here you can find a description of the main activities and tools around the vulnerability database.</p>
 </dd>
 <dd>
-<p><a href="./tutorials/vuln_db_tutorial">Go to the Vulnerability Database Manual</a></p>
+<p><a href="./manuals">Go to the Vulnerability Database Manual</a></p>
 </dd>
-<dt><strong>Contribute to the vulnerability database</strong></dt>
+<dt><strong>Contribute</strong></dt>
 <dd>
-<p>Here you can find information about how to contribute new known vulnerabilities</p>
+<p>Here you can find information about how to contribute new publicly disclosed vulnerabilities to the knowledge base</p>
 </dd>
 <dd>
 <p><a href="../contributor/#contribute-to-the-vulnerability-knowledge-base">Go to the Contribute page</a></p>
