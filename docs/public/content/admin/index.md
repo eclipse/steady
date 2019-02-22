@@ -6,7 +6,7 @@ In this tutorial, you will be guided through the necessary steps to set-up the @
     [![start_page](./img/components.png)](./img/components.png)
 </center>
 
-!!! warning "Important Remark!"
+!!! warning "Important Remark"
 
     The setup obtained following these instructions is meant for demonstration purposes.
     It **shall not** be used in productive scenarios (both for security and scalability concerns).
@@ -49,9 +49,9 @@ cp docker/.env.sample docker/.env
 
 Edit the file `docker/.env` to match your needs.
 
-!!! info
+!!! info "Sensitive information"
 
-	In `docker/.env` you must always configure at least `POSTGRES_USER=` and `spring.datasource.username=` (with equal values)
+	In `docker/.env` you must configure at least `POSTGRES_USER=` and `spring.datasource.username=` (with equal values), you should also configure the `HAPROXY`'s user and password as well as the credentials to access the bugs' frontend
 
 At this point, you are ready to perform the actual build with the following command:
 
@@ -59,6 +59,14 @@ At this point, you are ready to perform the actual build with the following comm
 docker build --tag vulas-build-img -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
 docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags=-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow vulas-build-img
 ```
+
+!!! warning "Build error"
+
+	If the command above fails, add `-DreuseForks=False` flag to `mvn_flags`. As shown in the example below.
+
+    ```sh
+    docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags='-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow -DreuseForks=False' vulas-build-img
+    ```
 
 In case you are running behind a proxy you need to configure it in the `--build-arg` arguments.
 
