@@ -1167,7 +1167,7 @@
     <a href="img/components.png"><img alt="start_page" src="img/components.png" /></a>
 </center></p>
 <div class="admonition warning">
-<p class="admonition-title">Important Remark!</p>
+<p class="admonition-title">Important Remark</p>
 <p>The setup obtained following these instructions is meant for demonstration purposes.
 It <strong>shall not</strong> be used in productive scenarios (both for security and scalability concerns).
 <!--Detailed instructions on how to operate vulnerability-assessment-tool in a productive environment are given in the <a href="admin_guide.md">Admin Guide</a>.--></p>
@@ -1202,14 +1202,21 @@ Before proceeding, be sure to move there with:</p>
 
 <p>Edit the file <code>docker/.env</code> to match your needs.</p>
 <div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>In <code>docker/.env</code> you must always configure at least <code>POSTGRES_USER=</code> and <code>spring.datasource.username=</code> (with equal values)</p>
+<p class="admonition-title">Sensitive information</p>
+<p>In <code>docker/.env</code> you must configure at least <code>POSTGRES_USER=</code> and <code>spring.datasource.username=</code> (with equal values), you should also configure the <code>HAPROXY</code>'s user and password as well as the credentials to access the bugs' frontend</p>
 </div>
 <p>At this point, you are ready to perform the actual build with the following command:</p>
 <div class="codehilite"><pre><span></span>docker build --tag vulas-build-img -f docker/Dockerfile --build-arg <span class="nv">http_proxy</span><span class="o">=</span> --build-arg <span class="nv">https_proxy</span><span class="o">=</span> .
 docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span>-DexcludedGroups<span class="o">=</span>com.sap.psr.vulas.shared.categories.Slow vulas-build-img
 </pre></div>
 
+<div class="admonition warning">
+<p class="admonition-title">Build error</p>
+<p>If the command above fails, add <code>-DreuseForks=False</code> flag to <code>mvn_flags</code>. As shown in the example below.</p>
+<div class="codehilite"><pre><span></span>docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span><span class="s1">&#39;-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow -DreuseForks=False&#39;</span> vulas-build-img
+</pre></div>
+
+</div>
 <p>In case you are running behind a proxy you need to configure it in the <code>--build-arg</code> arguments.</p>
 <p>As a result, the folders <code>docker/&lt;component-name&gt;</code> will contain compiled JARs (or WARs, depending on the component).</p>
 <p>Finally, you may want to make all artifacts available to the developers of your organization (e.g., through an internal Nexus or other artifact distribution system).</p>
