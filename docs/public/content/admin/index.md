@@ -70,7 +70,7 @@ docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_f
 
 In case you are running behind a proxy you need to configure it in the `--build-arg` arguments.
 
-As a result, the folders `docker/<component-name>` will contain compiled JARs (or WARs, depending on the component).
+As a result, the folders `docker/<component-name>` will contain compiled JARs (or WARs, depending on the component). The folder `docker/client-tools` will be populated with the JARs for patch-analyzer and cli-scanner.
 
 Finally, you may want to make all artifacts available to the developers of your organization (e.g., through an internal Nexus or other artifact distribution system).
 
