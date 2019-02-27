@@ -1218,7 +1218,7 @@ docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><spa
 
 </div>
 <p>In case you are running behind a proxy you need to configure it in the <code>--build-arg</code> arguments.</p>
-<p>As a result, the folders <code>docker/&lt;component-name&gt;</code> will contain compiled JARs (or WARs, depending on the component).</p>
+<p>As a result, the folders <code>docker/&lt;component-name&gt;</code> will contain compiled JARs (or WARs, depending on the component). The folder <code>docker/client-tools</code> will be populated with the JARs for patch-analyzer and cli-scanner.</p>
 <p>Finally, you may want to make all artifacts available to the developers of your organization (e.g., through an internal Nexus or other artifact distribution system).</p>
 <h3 id="run">Run<a class="headerlink" href="#run" title="Permanent link">&para;</a></h3>
 <p>You are now ready to run the system:</p>
