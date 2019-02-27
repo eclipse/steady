@@ -22,6 +22,7 @@ gradle.zip
 /docker/**/*.*ar
 /docker/.env
 /docker/data
+/docker/client-components
 /.vscode
 lang-java-reach-soot-init/lib/*.jar
 docs/site
