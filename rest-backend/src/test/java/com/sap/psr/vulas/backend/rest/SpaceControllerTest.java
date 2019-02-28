@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -228,13 +229,46 @@ public class SpaceControllerTest {
 
 		assertEquals(1, this.spaceRepository.count());
 	}
+	
+	/**
+	 * Test modification of read-only space.
+	 * @throws Exception
+	 */
+	@Test
+	public void testReadOnlySpace() throws Exception {
+		assertEquals(0, this.spaceRepository.count());
+		final Tenant d_tenant = this.createDefaultTenant();
+		final Space d_space = this.createSpace(d_tenant, TEST_DEFAULT_SPACE, true);
+		assertEquals(1, this.spaceRepository.count());
+
+		// Change to read-only (should work)
+		d_space.setReadOnly(true);
+		MockHttpServletRequestBuilder post_builder = put("/spaces/" + d_space.getSpaceToken())
+				.content(JacksonUtil.asJsonString(d_space))
+				.contentType(MediaType.APPLICATION_JSON)
+				.header(Constants.HTTP_TENANT_HEADER, d_tenant.getTenantToken())
+				.accept(MediaType.APPLICATION_JSON);
+		mockMvc.perform(post_builder).andExpect(status().isOk())
+				.andExpect(content().contentType(contentType))
+				.andExpect(jsonPath("$.default", is(true)))
+				.andExpect(jsonPath("$.spaceName", is(TEST_DEFAULT_SPACE)));
+		
+		// Change to read-write (should fail)
+		d_space.setReadOnly(false);
+		post_builder = put("/spaces/" + d_space.getSpaceToken())
+				.content(JacksonUtil.asJsonString(d_space))
+				.contentType(MediaType.APPLICATION_JSON)
+				.header(Constants.HTTP_TENANT_HEADER, d_tenant.getTenantToken())
+				.accept(MediaType.APPLICATION_JSON);
+		mockMvc.perform(post_builder).andExpect(status().isBadRequest());
+	}
 
 	/**
 	 * Creates a workspace and searches for it.
 	 * @throws Exception
 	 */
 	@Test
-	public void testSearchSpace() throws Exception {
+	public void testSearchSpaces() throws Exception {
 		assertEquals(0, this.spaceRepository.count());
 		final Tenant d_tenant = this.createDefaultTenant();
 		final Space d_space = this.createSpace(d_tenant, TEST_DEFAULT_SPACE, true);

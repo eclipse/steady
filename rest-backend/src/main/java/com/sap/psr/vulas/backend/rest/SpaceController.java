@@ -260,6 +260,19 @@ public class SpaceController {
 				log.error("Tenant [" + tenant + "] not found");
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}
+			
+			// Prevent modification of read-only spaces
+			try {
+				final Space managed_space = SpaceRepository.FILTER.findOne(this.spaceRepository.findBySecondaryKey(new_space.getSpaceToken()));
+				if(managed_space.isReadOnly()) {
+					log.error("Space [" + managed_space + "] is read-only");
+					return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
+				}
+			}
+			catch(EntityNotFoundException enfe) {
+				log.error("Space [" + new_space + "] not found");
+				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
+			}
 
 			// Prevent the modification of spaces with configured tokens
 			final StringList do_not_modify = new StringList(VulasConfiguration.getGlobal().getStringArray(SPACE_DO_NOT_MODIFY, null));
@@ -314,6 +327,12 @@ public class SpaceController {
 			// Load existing space, and delete
 			try {
 				final Space space = SpaceRepository.FILTER.findOne(this.spaceRepository.findBySecondaryKey(t, token));
+				
+				// Prevent cleaning of read-only spaces
+				if(space.isReadOnly()) {
+					log.error("Space [" + space + "] is read-only");
+					return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
+				}
 
 				// Prevent cleaning of default space in default tenant
 				if(space.isDefault() && t.isDefault()) {
@@ -391,8 +410,14 @@ public class SpaceController {
 			try {
 				final Space space = SpaceRepository.FILTER.findOne(this.spaceRepository.findBySecondaryKey(t, token));
 
+				// Prevent deletion of read-only spaces
+				if(space.isReadOnly()) {
+					log.error("Space [" + space + "] is read-only");
+					return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
+				}
+				
 				// Prevent deletion of default space in default tenant. This is needed to make sure that scans w/o space token work
-				if(space.isDefault() && t.isDefault()){
+				if(space.isDefault() && t.isDefault()) {
 					log.error("The default space of the default tenant cannot be deleted as long as we want to support Vulas 2.x");
 					return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
 				}

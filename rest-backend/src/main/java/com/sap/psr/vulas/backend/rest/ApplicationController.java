@@ -166,6 +166,8 @@ public class ApplicationController {
 		Space s = null;
 		try {
 			s = this.spaceRepository.getSpace(space);
+			if(s.isReadOnly())
+				return new ResponseEntity<Application>(HttpStatus.BAD_REQUEST);
 		} catch (Exception e){
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<Application>(HttpStatus.NOT_FOUND);
@@ -215,6 +217,8 @@ public class ApplicationController {
 		Space s = null;
 		try {
 			s = this.spaceRepository.getSpace(space);
+			if(s.isReadOnly())
+				return new ResponseEntity<List<Application>>(HttpStatus.BAD_REQUEST);
 		} catch (Exception e){
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<List<Application>>(HttpStatus.NOT_FOUND);
@@ -342,6 +346,8 @@ public class ApplicationController {
 		Space s = null;
 		try {
 			s = this.spaceRepository.getSpace(space);
+			if(s.isReadOnly())
+				return new ResponseEntity<Application>(HttpStatus.BAD_REQUEST);
 		} catch (Exception e){
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<Application>(HttpStatus.NOT_FOUND);
@@ -579,6 +585,8 @@ public class ApplicationController {
 		Space s = null;
 		try {
 			s = this.spaceRepository.getSpace(space);
+			if(s.isReadOnly())
+				return new ResponseEntity<Application>(HttpStatus.BAD_REQUEST);
 		} catch (Exception e){
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<Application>(HttpStatus.NOT_FOUND);
@@ -772,6 +780,8 @@ public class ApplicationController {
 		Space s = null;
 		try {
 			s = this.spaceRepository.getSpace(space);
+			if(s.isReadOnly())
+				return new ResponseEntity<GoalExecution>(HttpStatus.BAD_REQUEST);
 		} catch (Exception e){
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
@@ -816,6 +826,8 @@ public class ApplicationController {
 		Space s = null;
 		try {
 			s = this.spaceRepository.getSpace(space);
+			if(s.isReadOnly())
+				return new ResponseEntity<GoalExecution>(HttpStatus.BAD_REQUEST);
 		} catch (Exception e){
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
@@ -982,6 +994,8 @@ public class ApplicationController {
 		Space s = null;
 		try {
 			s = this.spaceRepository.getSpace(space);
+			if(s.isReadOnly())
+				return new ResponseEntity<List<GoalExecution>>(HttpStatus.BAD_REQUEST);
 		} catch (Exception e){
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<List<GoalExecution>>(HttpStatus.NOT_FOUND);
@@ -1442,7 +1456,6 @@ public class ApplicationController {
 
 			}
 
-
 			return new ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate>(depUpdate, HttpStatus.OK);
 		}
 		catch(ServiceConnectionException sce) {
@@ -1452,8 +1465,6 @@ public class ApplicationController {
 			return new ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate>(HttpStatus.NOT_FOUND);
 		}
 	}
-
-
 
 	/**
 	 * Returns a collection of {@link VulnerableDependency}s relevant for the {@link Application} with the given GAV.
@@ -1600,6 +1611,8 @@ public class ApplicationController {
 		Space s = null;
 		try {
 			s = this.spaceRepository.getSpace(space);
+			if(s.isReadOnly())
+				return new ResponseEntity<List<Trace>>(HttpStatus.BAD_REQUEST);
 		} catch (Exception e){
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<List<Trace>>(HttpStatus.NOT_FOUND);
@@ -1662,6 +1675,8 @@ public class ApplicationController {
 		Space s = null;
 		try {
 			s = this.spaceRepository.getSpace(space);
+			if(s.isReadOnly())
+				return new ResponseEntity<List<Path>>(HttpStatus.BAD_REQUEST);
 		} catch (Exception e){
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<List<Path>>(HttpStatus.NOT_FOUND);
@@ -1817,6 +1832,8 @@ public class ApplicationController {
 		Space s = null;
 		try {
 			s = this.spaceRepository.getSpace(space);
+			if(s.isReadOnly())
+				return new ResponseEntity<Set<ConstructId>>(HttpStatus.BAD_REQUEST);
 		} catch (Exception e){
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<Set<ConstructId>>(HttpStatus.NOT_FOUND);
@@ -1852,6 +1869,8 @@ public class ApplicationController {
 		Space s = null;
 		try {
 			s = this.spaceRepository.getSpace(space);
+			if(s.isReadOnly())
+				return new ResponseEntity<Set<TouchPoint>>(HttpStatus.BAD_REQUEST);
 		} catch (Exception e){
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<Set<TouchPoint>>(HttpStatus.NOT_FOUND);
