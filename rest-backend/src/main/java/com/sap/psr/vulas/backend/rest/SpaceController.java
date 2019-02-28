@@ -30,9 +30,9 @@ import com.sap.psr.vulas.backend.util.TokenUtil;
 import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.StringList;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
 import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -42,17 +42,17 @@ import springfox.documentation.annotations.ApiIgnore;
 public class SpaceController {
 
 	private static Logger log = LoggerFactory.getLogger(SpaceController.class);
-	
+
 	private static String SPACE_DO_NOT_DELETE = "vulas.backend.space.doNotDelete";
-	
+
 	private static String SPACE_DO_NOT_CLEAN = "vulas.backend.space.doNotClean";
-	
+
 	private static String SPACE_DO_NOT_MODIFY = "vulas.backend.space.doNotModify";
 
 	private SpaceRepository spaceRepository;
 
 	private TenantRepository tenantRepository;
-	
+
 	private ApplicationRepository appRepository;
 
 	@Autowired
@@ -84,7 +84,7 @@ public class SpaceController {
 			return new ResponseEntity<Collection<Space>>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	/**
 	 * Returns the default {@link Space} of the given {@link Tenant}.
 	 * @param token
@@ -107,7 +107,42 @@ public class SpaceController {
 			return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
+	/**
+	 * Returns all public {@link Space}s of the given {@link Tenant} whose property with the given name matches the search expression defined by {@link ComparisonMode}, {@link CaseSensitivity} and value.
+	 * @param token
+	 * @return 404 {@link HttpStatus#NOT_FOUND} if no default space exists, 200 {@link HttpStatus#OK} if the space is found
+	 */
+	@RequestMapping(value = "search", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
+	public ResponseEntity<List<Space>> searchSpaces(
+			@RequestParam(value="propertyName", required=true) String propertyName,
+			@RequestParam(value="mode", required=false, defaultValue="EQUALS") ComparisonMode mode,
+			@RequestParam(value="caseSensitivity", required=false, defaultValue="CASE_SENSITIVE") CaseSensitivity caseSensitivity,
+			@RequestParam(value="value", required=true) String[] value,
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=true) String tenant) {
+		try {
+			// Check whether tenant exists
+			final Tenant t = TenantRepository.FILTER.findOne(this.tenantRepository.findBySecondaryKey(tenant));
+
+			final StringList filter = new StringList();
+			filter.addAll(value);
+
+			final List<Space> matching_spaces = new ArrayList<Space>();
+
+			// Loop over all spaces and compare the value of the given property
+			final List<Space> spaces= this.spaceRepository.findAllTenantSpaces(tenant);
+			for(Space s: spaces) {
+				final String p = s.getPropertyValue(propertyName);
+				if(p!=null && s.isPublic() && filter.contains(p, mode, caseSensitivity))
+					matching_spaces.add(s);
+			}
+			return new ResponseEntity<List<Space>>(matching_spaces, HttpStatus.OK);
+		}
+		catch(EntityNotFoundException enfe) {
+			return new ResponseEntity<List<Space>>(HttpStatus.NOT_FOUND);
+		}
+	}
+
 	/**
 	 * Checks whether a {@link Space} with the given token exists for the given {@link Tenant}.
 	 * @param token
@@ -125,7 +160,7 @@ public class SpaceController {
 			return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	/**
 	 * Returns a {@link Space} with the given token and the given {@link Tenant}.
 	 * @param token
@@ -174,7 +209,7 @@ public class SpaceController {
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}
 			//check that only 1 default space per tenant is created
-			if(space.isDefault()&& this.spaceRepository.findDefault(t.getTenantToken())!=null){
+			if(space.isDefault() && this.spaceRepository.findDefault(t.getTenantToken())!=null) {
 				log.error("A default space for the given tenant already exists, adjust the configuration accordingly");
 				return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
 			}
@@ -225,7 +260,7 @@ public class SpaceController {
 				log.error("Tenant [" + tenant + "] not found");
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}
-			
+
 			// Prevent the modification of spaces with configured tokens
 			final StringList do_not_modify = new StringList(VulasConfiguration.getGlobal().getStringArray(SPACE_DO_NOT_MODIFY, null));
 			if(do_not_modify.contains(token, ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE)) {
@@ -255,7 +290,7 @@ public class SpaceController {
 			return new ResponseEntity<Space>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * Cleans a given {@link Space}, i.e., removes all its applications.
 	 */
@@ -279,27 +314,27 @@ public class SpaceController {
 			// Load existing space, and delete
 			try {
 				final Space space = SpaceRepository.FILTER.findOne(this.spaceRepository.findBySecondaryKey(t, token));
-				
+
 				// Prevent cleaning of default space in default tenant
 				if(space.isDefault() && t.isDefault()) {
 					log.error("The default space of the default tenant cannot be cleaned as long as we want to support Vulas 2.x");
 					return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
 				}
-				
+
 				// Prevent the cleaning of spaces with configured tokens
 				final StringList do_not_clean = new StringList(VulasConfiguration.getGlobal().getStringArray(SPACE_DO_NOT_CLEAN, null));
 				if(do_not_clean.contains(token, ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE)) {
 					log.error("The following spaces cannot be cleaned according to configuration setting [" + SPACE_DO_NOT_CLEAN + "]: " + do_not_clean);
 					return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
 				}
-				
+
 				if(clean) {
 					// Find all applications in the space
 					final List<Application> apps = this.appRepository.findAllApps(token,0);
-	
+
 					// The deleted apps
 					final List<Application> deleted_apps = new ArrayList<Application>();
-					
+
 					// Apps are found
 					if(apps!=null && !apps.isEmpty()){
 						for(Application app: apps) {
@@ -355,26 +390,26 @@ public class SpaceController {
 			// Load existing space, and delete
 			try {
 				final Space space = SpaceRepository.FILTER.findOne(this.spaceRepository.findBySecondaryKey(t, token));
-				
+
 				// Prevent deletion of default space in default tenant. This is needed to make sure that scans w/o space token work
 				if(space.isDefault() && t.isDefault()){
 					log.error("The default space of the default tenant cannot be deleted as long as we want to support Vulas 2.x");
 					return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
 				}
-				
+
 				// Prevent the deletion of spaces with configured tokens
 				final StringList do_not_delete = new StringList(VulasConfiguration.getGlobal().getStringArray(SPACE_DO_NOT_DELETE, null));
 				if(do_not_delete.contains(token, ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE)) {
 					log.error("The following spaces cannot be deleted according to configuration setting [" + SPACE_DO_NOT_DELETE + "]: " + do_not_delete);
 					return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
 				}
-				
+
 				// Find all applications in the space
 				final List<Application> apps = this.appRepository.findAllApps(token,0);
 
 				// The deleted apps
 				final List<Application> deleted_apps = new ArrayList<Application>();
-				
+
 				// Apps are found
 				if(apps!=null && !apps.isEmpty()){
 					for(Application app: apps) {
@@ -400,7 +435,7 @@ public class SpaceController {
 				} catch (Exception e) {
 					log.error("Error while deleting space " + space.getSpaceName() + ": " + e.getMessage(), e);
 				}
-				
+
 
 				return new ResponseEntity<Space>(HttpStatus.OK);
 			}

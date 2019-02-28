@@ -1,6 +1,7 @@
 package com.sap.psr.vulas.shared.json.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -8,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sap.psr.vulas.shared.enums.ExportConfiguration;
-import com.sap.psr.vulas.shared.util.Constants;
 
 /**
  * A space is an isolated environment within a given {@link Tenant}. Every application scan has to happen in the context of a space.
@@ -55,6 +55,8 @@ public class Space implements Serializable {
 	 * Email address of the space owner(s)
 	 */
 	private Set<String> ownerEmails = null;
+	
+	private Collection<Property> properties;
 	
 	public Space() {}
 	
@@ -103,6 +105,9 @@ public class Space implements Serializable {
 	public void setDefault(boolean isDefault) {
 		this.isDefault = isDefault;
 	}
+	
+	public Collection<Property> getProperties() { return properties; }
+	public void setProperties(Collection<Property> properties) { this.properties = properties; }
 
 	@Override
 	public int hashCode() {
