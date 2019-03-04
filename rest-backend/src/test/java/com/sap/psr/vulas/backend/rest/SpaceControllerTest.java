@@ -136,7 +136,20 @@ public class SpaceControllerTest {
 		// Still one space only
 		assertEquals(1, this.spaceRepository.count());
 
+		// Create with read-only enabled -> bad request
+		new_shared_space.setReadOnly(true);
+		post_builder = post("/spaces")
+				.header(Constants.HTTP_TENANT_HEADER, d_tenant.getTenantToken())
+				.content(JacksonUtil.asJsonString(new_shared_space))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+		mockMvc.perform(post_builder).andExpect(status().isBadRequest());
+
+		// Still one space only
+		assertEquals(1, this.spaceRepository.count());
+
 		//try to create another default space
+		new_shared_space.setReadOnly(false);
 		new_shared_space.setSpaceName(space_name);
 		new_shared_space.setDefault(false);
 
@@ -229,7 +242,7 @@ public class SpaceControllerTest {
 
 		assertEquals(1, this.spaceRepository.count());
 	}
-	
+
 	/**
 	 * Test modification of read-only space.
 	 * @throws Exception
@@ -249,10 +262,10 @@ public class SpaceControllerTest {
 				.header(Constants.HTTP_TENANT_HEADER, d_tenant.getTenantToken())
 				.accept(MediaType.APPLICATION_JSON);
 		mockMvc.perform(post_builder).andExpect(status().isOk())
-				.andExpect(content().contentType(contentType))
-				.andExpect(jsonPath("$.default", is(true)))
-				.andExpect(jsonPath("$.spaceName", is(TEST_DEFAULT_SPACE)));
-		
+		.andExpect(content().contentType(contentType))
+		.andExpect(jsonPath("$.default", is(true)))
+		.andExpect(jsonPath("$.spaceName", is(TEST_DEFAULT_SPACE)));
+
 		// Change to read-write (should fail)
 		d_space.setReadOnly(false);
 		post_builder = put("/spaces/" + d_space.getSpaceToken())
@@ -294,7 +307,7 @@ public class SpaceControllerTest {
 				.andExpect(content().contentType(contentType))
 				.andExpect(jsonPath("$.default", is(false)))
 				.andExpect(jsonPath("$.spaceName", is(space_name))).andReturn();
-		
+
 		// Create another one (private)
 		new_shared_space.setPublic(false);
 		post_builder = post("/spaces")
@@ -327,10 +340,10 @@ public class SpaceControllerTest {
 				.header(Constants.HTTP_TENANT_HEADER, d_tenant.getTenantToken())
 				.accept(MediaType.APPLICATION_JSON);
 		result = mockMvc.perform(search_builder).andExpect(status().isOk()).andReturn();
-		
+
 		search_result = (com.sap.psr.vulas.shared.json.model.Space[])JacksonUtil.asObject(result.getResponse().getContentAsString(), com.sap.psr.vulas.shared.json.model.Space[].class);
 		assertEquals(1, search_result.length); // Should be one public space, the private one shall not be returned
-		
+
 		// Bad reqeust due to lack of search term
 		search_builder = get("/spaces/search")
 				.param("propertyName", "propName")

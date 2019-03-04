@@ -195,7 +195,11 @@ public class SpaceController {
 				return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
 			}
 			else if(!space.hasNameAndDescription()) {
-				log.error("Space creation requires name and description, adjust the configuration accordingly");
+				log.error("Work spaces require a name and description");
+				return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
+			}
+			else if(space.isReadOnly()) {
+				log.error("Work spaces cannot be created with read-only set to true");
 				return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
 			}
 
