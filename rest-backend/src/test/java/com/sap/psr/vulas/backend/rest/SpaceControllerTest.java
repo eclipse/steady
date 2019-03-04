@@ -309,7 +309,7 @@ public class SpaceControllerTest {
 
 		assertEquals(3, this.spaceRepository.count());
 
-		// Get with non-existing tenant token, defaults in controller method
+		// Search : 0 hits
 		MockHttpServletRequestBuilder search_builder = get("/spaces/search")
 				.param("propertyName", "propName")
 				.param("value", "xyz", "abc")
@@ -320,7 +320,7 @@ public class SpaceControllerTest {
 		com.sap.psr.vulas.shared.json.model.Space[] search_result = (com.sap.psr.vulas.shared.json.model.Space[])JacksonUtil.asObject(result.getResponse().getContentAsString(), com.sap.psr.vulas.shared.json.model.Space[].class);
 		assertEquals(0, search_result.length);
 
-		// Get with non-existing tenant token, defaults in controller method
+		// Search : 1 hit
 		search_builder = get("/spaces/search")
 				.param("propertyName", "propName")
 				.param("value", "xyz", "abc", "propValue")
