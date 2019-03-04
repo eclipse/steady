@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sap.psr.vulas.backend.cve.Cve;
-import com.sap.psr.vulas.backend.cve.CveReader;
+import com.sap.psr.vulas.backend.cve.CveReader2;
 import com.sap.psr.vulas.backend.model.Bug;
 import com.sap.psr.vulas.backend.repo.BugRepository;
 import com.sap.psr.vulas.shared.util.StopWatch;
@@ -99,7 +99,7 @@ public class CveController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Cve> getCve(@PathVariable String id) {
 		try {
-			final Cve cve = CveReader.read(id);
+			final Cve cve = CveReader2.read(id);
 			return new ResponseEntity<Cve>(cve, HttpStatus.OK);
 		}
 		catch(Exception enfe) {
