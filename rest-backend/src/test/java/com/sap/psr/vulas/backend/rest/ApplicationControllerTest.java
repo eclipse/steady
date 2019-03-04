@@ -3,6 +3,7 @@ package com.sap.psr.vulas.backend.rest;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -152,7 +153,6 @@ public class ApplicationControllerTest {
 
     @Autowired
     private AffectedLibraryRepository affLibRepository;
-
 
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
@@ -524,10 +524,75 @@ public class ApplicationControllerTest {
     	// Repo must contain 1
     	assertEquals(1, this.appRepository.count());
     	
-    	// Check its number of constructs and dependencies
+    	// Check that there are no constructs and dependencies any more
     	final Application managed_app = this.appRepository.findOne(app.getId());
-    	Boolean isEmpty=(managed_app.getConstructs()==null || managed_app.getConstructs().isEmpty()) && (managed_app.getDependencies()==null || managed_app.getDependencies().isEmpty());
+    	final Boolean isEmpty = (managed_app.getConstructs()==null || managed_app.getConstructs().isEmpty()) && (managed_app.getDependencies()==null || managed_app.getDependencies().isEmpty());
     	assertEquals(true, isEmpty);
+    }
+    
+    /**
+     * Repo-save and rest-clean
+     * @param obj
+     * @return
+     */
+    @Test
+    @Transactional
+    public void testCleanPurgeApp() throws Exception {
+    	final Library lib = this.createExampleLibrary();
+    	this.libRepository.customSave(lib);
+    	Application app = this.createExampleApplication();
+    	app = this.appRepository.customSave(app);
+    	
+    	// Repo must contain 1
+    	assertEquals(1, this.appRepository.count());
+    	
+    	// Rest-post
+    	final MockHttpServletRequestBuilder post_builder = delete(getGAUri(app))
+    			.param("clean", "true")
+    			.param("keep", "0")
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentTypeJson));
+    	
+    	// Repo must contain 0
+    	assertEquals(0, this.appRepository.count());
+    }
+    
+    /**
+     * Repo-save and rest-clean (fails due to read-only space)
+     * @param obj
+     * @return
+     */
+    @Test
+    @Transactional
+    public void testCleanAppReadOnlySpace() throws Exception {
+    	final Library lib = this.createExampleLibrary();
+    	this.libRepository.customSave(lib);
+    	Application app = this.createExampleApplication();
+    	app = this.appRepository.customSave(app);
+    	
+    	// Repo must contain 1
+    	assertEquals(1, this.appRepository.count());
+    	
+    	// Make the space read-only
+    	try{
+			final Space default_space = SpaceRepository.FILTER.findOne(spaceRepository.findBySecondaryKey(TEST_DEFAULT_SPACE));
+			default_space.setReadOnly(true);
+		} catch(EntityNotFoundException e) {
+			e.printStackTrace();
+			assertTrue(false);
+		}
+    	
+    	// Rest-post
+    	final MockHttpServletRequestBuilder post_builder = post(getAppUri(app))
+    			.param("clean", "true")
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isBadRequest());
+    	
+    	// Repo must still contain 1
+    	assertEquals(1, this.appRepository.count());
     }
     
     @Test
@@ -847,13 +912,18 @@ public class ApplicationControllerTest {
 		return "/apps/" + _app.getMvnGroup()+ "/" + _app.getArtifact() + "/" + _app.getVersion();
 	}
 	
+	public static String getGAUri(Application _app) {
+		return "/apps/" + _app.getMvnGroup()+ "/" + _app.getArtifact();
+	}
+	
 	public static String getAppsExportUri(String _format) {
 		return "/apps/export?format=" + _format;
 	}
 	
 	
 	private void createDefaultTenantandSpace() {
-		//default tenant
+		
+		// Default tenant
 		Tenant default_tenant = null;
 		try{
 			default_tenant = TenantRepository.FILTER.findOne(tenantRepository.findBySecondaryKey(TEST_DEFAULT_TENANT));
@@ -866,14 +936,12 @@ public class ApplicationControllerTest {
 			default_tenant = TenantRepository.FILTER.findOne(tenantRepository.findBySecondaryKey(TEST_DEFAULT_TENANT));
 			
 		}
-
 		
-		//default space
-		Space default_space = null;
-		
-		try{
+		// Default space
+		Space default_space = null;		
+		try {
 			default_space = SpaceRepository.FILTER.findOne(spaceRepository.findBySecondaryKey(TEST_DEFAULT_SPACE));
-		}catch(EntityNotFoundException e){
+		} catch(EntityNotFoundException e) {
 			default_space = new Space();
 			default_space.setSpaceName(TEST_DEFAULT_SPACE);
 			default_space.setSpaceToken(TEST_DEFAULT_SPACE);
@@ -888,9 +956,7 @@ public class ApplicationControllerTest {
 		}
 	}
 	
-	
 	private static final String AFF_LIB_JSON = "{\"libraryId\": { \"group\":\"com.acme\",\"artifact\":\"Foo\",\"version\":\"1.0.0\" },\"source\":\"MANUAL\",\"affected\":\"true\" }";
-
         
     /**
      * Creates a transient bug.

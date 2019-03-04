@@ -11,7 +11,7 @@ import com.sap.psr.vulas.backend.model.Space;
 import com.sap.psr.vulas.backend.util.ReferenceUpdater;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
-public class SpaceRepositoryImpl implements SpaceRepositoryCustom{
+public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 	
 	private static Logger log = LoggerFactory.getLogger(SpaceRepositoryImpl.class);
 
@@ -20,8 +20,6 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom{
 
 	@Autowired
 	SpaceRepository spaceRepository;
-	
-	
 	
 	@Autowired
 	ReferenceUpdater refUpdater;
@@ -46,8 +44,7 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom{
 			//	if(_s.getSpaceOwners()==null)
 			//	_s.setSpaceOwners(managed_space.getSpaceOwners());
 			
-		} catch (EntityNotFoundException e1) {
-			
+		} catch (EntityNotFoundException e1) {			
 			SpaceRepositoryImpl.log.info("Space [" + _s.getSpaceToken() + "] does not yet exist, going to save it.");
 		}
 		
