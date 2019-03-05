@@ -4,3 +4,4 @@ mkdocs-material
 markdown-include
 GitPython
 fire
+pathlib
