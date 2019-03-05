@@ -100,7 +100,7 @@ Please read [this document](CONTRIBUTING.md) to read more about your options:
 - [Report Bugs](CONTRIBUTING.md#report-an-issue) as GitHub issues
 - [Analyze Bugs](CONTRIBUTING.md#analyze-issues)
 - [Contribute Code](CONTRIBUTING.md#contribute-code) (fixes and features)
-- [Contribute to the Vulnerability Knowledge Base](CONTRIBUTING.md#knowledge-base): The fuel driving the open-source vulnerability assessment tool is its vulnerability database. We plan to use a dedicated GitHub repository to organize the sharing and joint maintenance of information about publicly known vulnerabilities in open-source components. In the majority of the cases, such information essentially consists of a bug identifier and references to one or more commits (created by the developers of the vulnerable component in order to fix the vulnerability). 
+- [Contribute to the Knowledge Base](CONTRIBUTING.md#knowledge-base): The fuel driving the open-source vulnerability assessment tool is its vulnerability database with information about fix commits for publicly known open source vulnerabilities. The so-called [vulnerability assessment knowledge base](https://github.com/SAP/vulnerability-assessment-kb) is a dedicated GitHub repository to organize the sharing and joint maintenance of this information.
 
 ## To-Do (upcoming changes)
 
