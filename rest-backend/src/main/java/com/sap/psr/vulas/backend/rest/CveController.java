@@ -28,12 +28,13 @@ public class CveController {
 	
 	private static String CACHE_REFRESH_ALL = "vulas.backend.cveCache.refetchAllMs";
 	private static String CACHE_REFRESH_SNG = "vulas.backend.cveCache.refetchSingleMs";
-	private static String CACHE_REFRESH_INI = "vulas.backend.cveCache.waitBeforeStartMs";
 	
 	private Thread cveCacheFetch = null;
 	
 	/**
-	 * Starts a thread pre-fetching the CVEs for all bugs.
+	 * Creates a thread pre-fetching the CVEs for all bugs.
+	 * This thread shall be started by using the REST endpoint {@link #startRefresh()}.
+	 * Note: If it would be started right away, multiple backend instances would update the database in parallel.
 	 */
 	@Autowired
 	CveController(BugRepository bugRepository) {
@@ -42,7 +43,6 @@ public class CveController {
 		// Refresh CVE cache
 		final long refresh_all = VulasConfiguration.getGlobal().getConfiguration().getLong(CACHE_REFRESH_ALL, -1);
 		final long refresh_sng = VulasConfiguration.getGlobal().getConfiguration().getLong(CACHE_REFRESH_SNG, 60000);
-		final long refresh_ini = VulasConfiguration.getGlobal().getConfiguration().getLong(CACHE_REFRESH_INI, 60000);
 		
 		if(refresh_all==-1) {
 			log.warn("Periodic update of cached CVE data: Disabled");
@@ -52,13 +52,6 @@ public class CveController {
 			this.cveCacheFetch = new Thread(new Runnable() {
 				public void run() {
 					boolean force = false;
-					
-					// Initial wait
-					/*try {
-						Thread.sleep(new Double(refresh_ini+Math.random()*refresh_ini).longValue());
-					} catch (InterruptedException e) {
-						CveController.log.error("Interrupted exception while refreshing cached CVE data: " + e.getMessage());
-					}*/
 					
 					while(true) {
 						
