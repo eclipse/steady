@@ -3,7 +3,6 @@ package com.sap.psr.vulas.backend.repo;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
-
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
@@ -14,7 +13,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sap.psr.vulas.backend.cve.Cve;
-import com.sap.psr.vulas.backend.cve.CveReader;
+import com.sap.psr.vulas.backend.cve.CveReader2;
 import com.sap.psr.vulas.backend.model.Bug;
 import com.sap.psr.vulas.backend.model.ConstructChange;
 import com.sap.psr.vulas.backend.model.ConstructId;
@@ -154,7 +153,7 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 					Cve.extractCveIdentifier(_b.getBugIdAlt());
 				
 				// Read cache
-				Cve cve = CveReader.read(cve_id);
+				Cve cve = CveReader2.read(cve_id);
 				
 				if(cve!=null) {
 					boolean to_save=false; 
