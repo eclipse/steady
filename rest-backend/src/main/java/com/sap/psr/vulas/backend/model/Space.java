@@ -83,6 +83,9 @@ public class Space {
 	@Column
 	private boolean isDefault = false;
 	
+	@Column
+	private boolean isReadOnly = false;
+	
 	// The default value is used whenever the values is not provided in the request body
 	// This implies that modifying an existing space without sending 'bugFilter' will
 	// will cause this field to go back to the default value (1)
@@ -132,6 +135,9 @@ public class Space {
 	
 	public boolean isDefault() { return isDefault; }
 	public void setDefault(boolean isDefault) { this.isDefault = isDefault; }
+	
+	public boolean isReadOnly() { return this.isReadOnly; }
+	public void setReadOnly(boolean readOnly) { this.isReadOnly = readOnly; }
 	
 	public int getBugFilter() { return bugFilter; }
 	public void setBugFilter(int bugFilter) { this.bugFilter = bugFilter; }
