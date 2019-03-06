@@ -892,6 +892,26 @@
     Patch Analyzer
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creation-of-above-listed-vulnerabilities" title="Creation of above-listed vulnerabilities" class="md-nav__link">
+    Creation of above-listed vulnerabilities
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-import-from-knowledge-base" title="Batch Import from Knowledge Base" class="md-nav__link">
+    Batch Import from Knowledge Base
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1050,6 +1070,26 @@
     Patch Analyzer
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creation-of-above-listed-vulnerabilities" title="Creation of above-listed vulnerabilities" class="md-nav__link">
+    Creation of above-listed vulnerabilities
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-import-from-knowledge-base" title="Batch Import from Knowledge Base" class="md-nav__link">
+    Batch Import from Knowledge Base
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1087,6 +1127,7 @@
 <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2014-0050">CVE-2014-0050</a> (Apache Commons FileUpload)</li>
 <li><a href="https://issues.jboss.org/browse/JBDS-3560?attachmentViewMode=list&amp;_sscc=t">COLLECTIONS-580</a> (Apache Commons Collections)</li>
 </ul>
+<p>The tutorial also explains how to consume the import script available in the <a href="https://github.com/SAP/vulnerability-assessment-kb">knowledge base</a>. Such script triggers the analysis of the available vulnerabilities.</p>
 <p>If you have a working installation of the vulnerability-assessment-tool backend services you will need
 to import vulnerability data before you can actually perform scans.</p>
 <div class="admonition tip">
@@ -1095,6 +1136,7 @@ to import vulnerability data before you can actually perform scans.</p>
 </div>
 <p>It is possible to add new vulnerabilities to the database using the <code>patch-analyzer</code> module of the vulnerability-assessment-tool project.</p>
 <h2 id="patch-analyzer">Patch Analyzer<a class="headerlink" href="#patch-analyzer" title="Permanent link">&para;</a></h2>
+<h3 id="creation-of-above-listed-vulnerabilities">Creation of above-listed vulnerabilities<a class="headerlink" href="#creation-of-above-listed-vulnerabilities" title="Permanent link">&para;</a></h3>
 <p>Run the following commands to create the change list for the vulnerability and upload it to the backend</p>
 <div class="codehilite"><pre><span></span>java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend/ -jar ./patch-analyzer/target/patch-analyzer-3.0.14-jar-with-dependencies.jar com.sap.psr.vulas.PatchAnalyzer -r https://github.com/FasterXML/jackson-databind -b CVE-2017-7525 -e e8f043d1aac9b82eee907e0f0c3abbdea723a935,ddfddfba6414adbecaff99684ef66eebd3a92e92,60d459cedcf079c6106ae7da2ac562bc32dcabe1 -links https://github.com/FasterXML/jackson-databind/issues/1599,https://github.com/FasterXML/jackson-databind/issues/1680,https://github.com/FasterXML/jackson-databind/issues/1737  -descr <span class="s2">&quot;When configured to enable default typing, Jackson contained a deserialization vulnerability that could lead to arbitrary code execution. Jackson fixed this vulnerability by blacklisting known &#39;deserialization gadgets&#39;. This vulnerability solves an incomplete fix for CVE-2017-4995-JK (main description at: https://github.com/FasterXML/jackson-databind/issues/1599 Issues not addressed by the incomplete fix of CVE-2017-4995-JK: https://github.com/FasterXML/jackson-databind/issues/1680 and https://github.com/FasterXML/jackson-databind/issues/1737) &quot;</span> -u
 
@@ -1120,6 +1162,20 @@ java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8
 -Dhttp.nonProxyHosts<span class="o">=</span>
 </pre></div>
 
+<h3 id="batch-import-from-knowledge-base">Batch Import from Knowledge Base<a class="headerlink" href="#batch-import-from-knowledge-base" title="Permanent link">&para;</a></h3>
+<p>To run the batch import you need to :</p>
+<ul>
+<li>Download the script "import_vulas_kb.sh" from the <a href="https://github.com/SAP/vulnerability-assessment-kb">knowledge base</a> </li>
+<li>Move it to the same folder where the patch-analyzer built artifact is available (Note that the artifact must be named <code>patch-analyzer-jar-with-dependencies.jar</code>)</li>
+<li>Run  the following command providing as argument the url of the backend</li>
+</ul>
+<div class="codehilite"><pre><span></span>bash import_vulas_kb.sh http://localhost:8033/backend/
+</pre></div>
+
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The patch-analyzer artifact can be found in the <code>/target</code> folder of the <code>patch-analyzer</code> module after building the project with maven, or in the <code>docker/client-tools</code> folder as a result of the build described <a href="../../../admin/">here</a>. In both cases the file needs to be renamed by removing the version information into <code>patch-analyzer-jar-with-dependencies.jar</code>.</p>
+</div>
 <h2 id="patch-lib-analyzer">Patch Lib Analyzer<a class="headerlink" href="#patch-lib-analyzer" title="Permanent link">&para;</a></h2>
 <p>Once vulnerabilities are created in the vulnerability database, the patch lib analyzer must run periodically to assess whether all versions of the library known by the backend contain the vulnerable or fixed version of the construct.</p>
 <div class="admonition info">
