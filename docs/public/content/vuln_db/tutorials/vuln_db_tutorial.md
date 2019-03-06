@@ -8,6 +8,8 @@ Vulnerabilities in @@PROJECT_NAME@@ are represented at code level. This tutorial
 - [CVE-2014-0050](https://nvd.nist.gov/vuln/detail/CVE-2014-0050) (Apache Commons FileUpload)
 - [COLLECTIONS-580](https://issues.jboss.org/browse/JBDS-3560?attachmentViewMode=list&_sscc=t) (Apache Commons Collections)
 
+The tutorial also explains how to consume the import script available in the [knowledge base](https://github.com/SAP/vulnerability-assessment-kb). Such script triggers the analysis of the available vulnerabilities.
+
 If you have a working installation of the @@PROJECT_NAME@@ backend services you will need
 to import vulnerability data before you can actually perform scans.
 
@@ -18,6 +20,8 @@ to import vulnerability data before you can actually perform scans.
 It is possible to add new vulnerabilities to the database using the `patch-analyzer` module of the @@PROJECT_NAME@@ project.
 
 ## Patch Analyzer
+
+### Creation of above-listed vulnerabilities
 
 Run the following commands to create the change list for the vulnerability and upload it to the backend
 
@@ -46,6 +50,22 @@ To run such commands in your own environment, you may need to adapt:
 -Dhttps.proxyPort=
 -Dhttp.nonProxyHosts=
 ```
+
+### Batch Import from Knowledge Base
+
+To run the batch import you need to :
+ 
+- Download the script "import_vulas_kb.sh" from the [knowledge base](https://github.com/SAP/vulnerability-assessment-kb) 
+- Move it to the same folder where the patch-analyzer built artifact is available (Note that the artifact must be named `patch-analyzer-jar-with-dependencies.jar`)
+- Run  the following command providing as argument the url of the backend
+
+```sh
+bash import_vulas_kb.sh @@ADDRESS@@/backend/
+```
+
+
+!!! Info
+	The patch-analyzer artifact can be found in the `/target` folder of the `patch-analyzer` module after building the project with maven, or in the `docker/client-tools` folder as a result of the build described [here](../../../admin/). In both cases the file needs to be renamed by removing the version information into `patch-analyzer-jar-with-dependencies.jar`.
 
 ## Patch Lib Analyzer
 
