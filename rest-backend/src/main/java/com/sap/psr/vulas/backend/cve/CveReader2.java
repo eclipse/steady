@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -18,12 +17,13 @@ import org.slf4j.LoggerFactory;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
 import com.sap.psr.vulas.backend.util.ConnectionUtil;
 import com.sap.psr.vulas.shared.cache.Cache;
 import com.sap.psr.vulas.shared.cache.CacheException;
 import com.sap.psr.vulas.shared.cache.ObjectFetcher;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
+
+import net.minidev.json.JSONArray;
 
 /**
  * Reads {@link CVE} from a service configured with "vulas.backend.cveCache.serviceUrl".
@@ -72,23 +72,25 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 			final CloseableHttpResponse response = httpclient.execute(method);
 			try {
 				sc = response.getStatusLine().getStatusCode();
-				HttpEntity entity = response.getEntity();
+				final HttpEntity entity = response.getEntity();
 			    if (sc==org.apache.http.HttpStatus.SC_OK && entity != null) {
 			       	result = ConnectionUtil.readInputStream(entity.getContent());
 			       	cve = buildFromJson(_key, result);
+			    } else {
+			    	log.error("HTTP GET [url=" + uri + "] completed with [" + sc + "], and entity [" + entity + "]");
 			    }
 			} catch (ParseException e) {
-				log.error("HTTP GET [uri=" + uri + "] caused an exception: " + e.getMessage());
+				log.error("HTTP GET [url=" + uri + "] caused an exception: " + e.getMessage());
 				throw new CacheException(_key, e);
 			} finally {
 				response.close();
 			}
 			log.info("Fetched " + cve + " for key [" + _key + "]");
 		} catch (ClientProtocolException e) {
-			log.error("HTTP GET [uri=" + uri + "] caused an exception: " + e.getMessage());
+			log.error("HTTP GET [url=" + uri + "] caused an exception: " + e.getMessage());
 			throw new CacheException(_key, e);
 		} catch (IOException e) {
-			log.error("HTTP GET [uri=" + uri + "] caused an exception: " + e.getMessage());
+			log.error("HTTP GET [url=" + uri + "] caused an exception: " + e.getMessage());
 			log.error("Error: " + e.getMessage(), e);
 			throw new CacheException(_key, e);
 		}
@@ -105,7 +107,15 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 		//conf.addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL);		
 		final Object document = conf.jsonProvider().parse(_json);
 		
-		cve.setSummary((String)JsonPath.read(document, "$.cve.description.description_data[0].value"));
+		// Take first english description
+		final JSONArray descriptions = JsonPath.read(document, "$.cve.description.description_data[?(@.lang=='en')].value");
+		if(descriptions==null || descriptions.size()==0) {
+			log.warn("No english description found for CVE [" + _id + "]");
+			cve.setSummary("Not available");
+		}
+		else {
+			cve.setSummary(descriptions.get(0).toString());
+		}
 		
 		final String published = JsonPath.read(document, "$.publishedDate");
 		final Calendar publ = new GregorianCalendar();
