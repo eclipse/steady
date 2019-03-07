@@ -255,7 +255,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
                 lib.setLibraryId(new LibraryId(a.getGroupId(), a.getArtifactId(), a.getVersion()));
 
                 // Create dependency and put into map
-                dep = new Dependency(this.goal.getGoalContext().getApplication(), lib, Scope.valueOf(a.getScope().toUpperCase()), !direct_artifacts.contains(a), null, a.getFile().toPath().toString());
+                dep = new Dependency(this.goal.getGoalContext().getApplication(), lib, Scope.fromString(a.getScope().toUpperCase()), !direct_artifacts.contains(a), null, a.getFile().toPath().toString());
                 dep_for_path.put(a.getFile().toPath(), dep);
 
                 getLog().info("Dependency [" + StringUtil.padLeft(++count, 4) + "]: Dependency [libid=" + dep.getLib().getLibraryId() + ", path " + a.getFile().getPath() + ", direct=" + direct_artifacts.contains(a) + ", scope=" + dep.getScope() + "] created for Maven artifact [g=" + a.getGroupId() + ", a=" + a.getArtifactId() + ", base version=" + a.getBaseVersion() + ", version=" + a.getVersion() + ", classifier=" + a.getClassifier() + "]");
