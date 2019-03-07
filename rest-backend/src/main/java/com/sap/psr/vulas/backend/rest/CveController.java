@@ -56,7 +56,7 @@ public class CveController {
 					while(true) {
 						
 						// Loop all bugs
-						final StopWatch sw = new StopWatch("Refresh of cached CVE data").start();
+						final StopWatch sw = new StopWatch("Refresh of cached CVE data").setTotal(bug_repo.count()).start();
 						for(Bug b: bug_repo.findAll()) {
 							try {
 								final boolean update_happened = bug_repo.updateCachedCveData(b, force);
@@ -65,6 +65,7 @@ public class CveController {
 							} catch (InterruptedException e) {
 								CveController.log.error("Interrupted exception while refreshing cached CVE data of bug [" + b.getBugId() + "]: " + e.getMessage());
 							}
+							sw.progress();
 						}						
 						sw.stop();
 						
