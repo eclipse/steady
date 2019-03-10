@@ -114,12 +114,6 @@
 				<module>lang-java-reach-soot</module>
 				<module>lang-java-reach-soot-init</module>
 			</modules>
-			<repositories>
-				<repository>
-					<id>soot</id>
-					<url>https://soot-build.cs.uni-paderborn.de/nexus/repository/soot-snapshot/</url><!-- Alternative: soot-snapshot -->
-				</repository>
-			</repositories>
 		</profile>
 
 		<profile>
