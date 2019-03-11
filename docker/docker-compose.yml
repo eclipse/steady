@@ -46,7 +46,6 @@ services:
       - "8034:7070"
     volumes:
       - "./haproxy/conf/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
-      - "/var/run:/var/run"
     depends_on: 
       - frontend-apps
       - frontend-bugs
