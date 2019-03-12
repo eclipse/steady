@@ -152,9 +152,11 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 				if(cve_id==null)
 					Cve.extractCveIdentifier(_b.getBugIdAlt());
 				
-				// Read cache
-				Cve cve = CveReader2.read(cve_id);
-				
+				Cve cve = null;
+				 if(cve_id!=null){
+					 // Read cache
+					 cve = CveReader2.read(cve_id);
+				}
 				if(cve!=null) {
 					boolean to_save=false; 
 					if(cve.getSummary()!=null && (_b.getDescription()==null || !(cve.getSummary().equals(_b.getDescription())))){
