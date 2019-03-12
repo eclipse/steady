@@ -245,15 +245,14 @@ sap.ui.controller("view.BugDetail", {
 //		url = data.bug.url;
 //		else
 //		url = "https://web.nvd.nist.gov/view/vuln/detail?vulnId="+data.bug.bugId;
-		var url = "https://web.nvd.nist.gov/view/vuln/detail?vulnId="+data.bug.bugId;
+		var url = "https://web.nvd.nist.gov/view/vuln/detail?vulnId=" + data.bug.bugId;
 		this.openLink(url, 'nvd');
 	},
 
 	openExploitDb : function(oEvent) {
 		var bugDetailPage = this.getView().byId('idBugDetailPage');
 		var data = bugDetailPage.getModel().getData();
-		//var url = "https://www.exploit-db.com/search/?action=search&cve=" + data.cve.cve_id.substring(4);
-		var url = "https://www.exploit-db.com/search/?action=search&cve=" + data.bug.bugId.substring(4);
+		var url = "https://www.exploit-db.com/search?cve=" + data.bug.bugId.substring(4);
 		this.openLink(url, 'edb');
 	},
 

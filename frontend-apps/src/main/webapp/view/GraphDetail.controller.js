@@ -436,8 +436,8 @@ sap.ui.controller("view.GraphDetail", {
 	
 	openNVD : function(oEvent) {
 	    var graphDetailPage = this.getView().byId('idGraphDetailPage');
-	    var data = graphDetailPage.getModel().getData();
-	    var url = data.cve.link;
+	    //var data = graphDetailPage.getModel().getData();
+	    var url = "https://web.nvd.nist.gov/view/vuln/detail?vulnId=" + bugId;
 	    this.openLink(url, 'nvd');
 	},
 	
