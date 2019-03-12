@@ -50,12 +50,13 @@ sap.ui.controller("view.UpdateDetail", {
 //			this.getView().byId("callersCount").setText("Distinct callers: ");
 //			this.getView().byId("calleesCount").setText("Distinct callees: ");
     		
-    		
+			this.getView().byId('changeTable').setBusy(true);
+			
 			$.ajax({
 		        type: "POST",
 		        url: model.Config.getUpdateChangesUrl(groupId,artifactId,version,archiveId),
 		        data : JSON.stringify(toCompare),
-		        headers : {'content-type': "application/json",'cache-control': "no-cache" ,'X-Vulas-Version':model.Version.version,'X-Vulas-Component':'appfrontend'},
+		        headers : {'content-type': "application/json",'cache-control': "no-cache" ,'X-Vulas-Version':model.Version.version,'X-Vulas-Component':'appfrontend','X-Vulas-Space': model.Config.getSpace(),'X-Vulas-Tenant': model.Config.getTenant()},
 		        success: function(data){
 		        	
         	       	var touchPointsReachTrc = [];
@@ -101,7 +102,10 @@ sap.ui.controller("view.UpdateDetail", {
 			    				touchPointRT.potential=reach;
 			    				touchPointsReachTrc.push(touchPointRT);
 			    			}
+			    		
 			    		}
+			    		
+			    		
 			    		
 			    		var callsModel = new sap.ui.model.json.JSONModel();
 			    		callsModel.setData(touchPointsReachTrc);
@@ -116,7 +120,11 @@ sap.ui.controller("view.UpdateDetail", {
 
 
 			    	}
+			    	this.getView().byId('changeTable').setBusy(false);
 		        	
+		        }.bind(this),
+		        error: function(){
+		        	this.getView().byId('changeTable').setBusy(false);
 		        }.bind(this)
 			});
 			}

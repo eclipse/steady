@@ -35,8 +35,8 @@
 					
 					
 				
-					<Table xmlns="sap.ui.table" selectionMode="None"
-						editable="false" allowColumnReordering="false" rows="{/}"
+					<Table id="changeTable" xmlns="sap.ui.table" selectionMode="None"
+						editable="false" allowColumnReordering="false" rows="{/}" enableBusyIndicator="true"
 						visibleRowCount="{path: '/', formatter: 'model.Formatter.getListLength'}">
 						<Column xmlns="sap.ui.table" sorted="true" sortProperty="from/qname">
 							<Label text="Caller" xmlns="sap.ui.commons" />
