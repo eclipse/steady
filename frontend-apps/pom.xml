@@ -37,6 +37,9 @@
 					<update>true</update>
 				</configuration>
 			</plugin>
+			<!--
+				Run "mvn -pl <module> clean package jetty:deploy-war" 
+			-->
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
