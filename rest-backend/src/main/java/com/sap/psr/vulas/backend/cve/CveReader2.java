@@ -26,7 +26,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import net.minidev.json.JSONArray;
 
 /**
- * Reads {@link CVE} from a service configured with "vulas.backend.cveCache.serviceUrl".
+ * Reads {@link CVE} information from a service configured with {@link #CVE_SERVICE_URL}.
  */
 public class CveReader2 implements ObjectFetcher<String, Cve> {
 	
@@ -48,10 +48,13 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 	}
 
 	/**
-	 * Fetches the CVE with the given key from the (remote) backing store.
-	 * 
+	 * Returns CVE information for the given key (or null in case the key is null).
+	 * This information is retrieved from a (remote) service configured with {@link #CVE_SERVICE_URL}.
 	 */
 	public Cve fetch(String _key) throws CacheException {
+		if(_key==null)
+			return null;
+		
 		Cve cve = null;
 		int sc = -1;
 		String result = null;
