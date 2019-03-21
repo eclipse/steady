@@ -891,9 +891,9 @@ public class BackendConnector {
 		return json;
 	}
 
-	public synchronized ConstructId[] getArtifactBugConstructsIntersection(String _qString,List<ConstructId> c, String packaging) throws BackendConnectionException{
+	public synchronized ConstructId[] getArtifactBugConstructsIntersection(String _qString,List<ConstructId> c, String packaging, ProgrammingLanguage lang) throws BackendConnectionException{
 		String json = null;
-		BasicHttpRequest bhr = new BasicHttpRequest(Service.CIA, HttpMethod.POST, PathBuilder.libConstructIdsIntersect(_qString,packaging), null);
+		BasicHttpRequest bhr = new BasicHttpRequest(Service.CIA, HttpMethod.POST, PathBuilder.libConstructIdsIntersect(_qString,packaging, lang), null);
 		bhr.setPayload(JacksonUtil.asJsonString(c), "application/json", false);                
 		final HttpResponse response = bhr.send();
 		ConstructId[] intersection = null;

@@ -417,10 +417,10 @@ public class PathBuilder {
 	 * @param qString
 	 * @return
 	 */
-	public static final String libConstructIdsIntersect(String qString, String packaging) {
+	public static final String libConstructIdsIntersect(String qString, String packaging, ProgrammingLanguage lang) {
 		final StringBuilder sb = new StringBuilder();
 		//TODO to uncomment once we have cia for python
-        sb.append("/artifacts/").append(qString).append("/").append(packaging).append("/constructIds/intersect");
+        sb.append("/artifacts/").append(qString).append("/").append(packaging).append("/constructIds/intersect?lang=").append(lang);
 		return sb.toString();
 	}
 

@@ -111,7 +111,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 		                //intersect change list with artifact constructs 
 		                List<ConstructId> cids = null;
 		                ConstructId[] cids_array =null;
-		                cids_array=BackendConnector.getInstance().getArtifactBugConstructsIntersection(qString,c,(lang==ProgrammingLanguage.JAVA)?"jar":"sdist");
+		                cids_array=BackendConnector.getInstance().getArtifactBugConstructsIntersection(qString,c,(lang==ProgrammingLanguage.JAVA)?"jar":"sdist",lang);
 		                if(cids_array ==null){
 		                	log.warn("The intersection returned null (thus something went wrong in cia); the Jar for library Id [" + l.toString() +"] will not be included in the csv for MOD constructs");
 		                } else {
@@ -237,7 +237,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 	                if(ad.size()>0){
 		                //intersect change list add/del with artifact constructs
 		                List<ConstructId> adcids = null;
-		                ConstructId[] adcids_array = BackendConnector.getInstance().getArtifactBugConstructsIntersection(qString,ad,(lang==ProgrammingLanguage.JAVA)?"jar":"sdist");
+		                ConstructId[] adcids_array = BackendConnector.getInstance().getArtifactBugConstructsIntersection(qString,ad,(lang==ProgrammingLanguage.JAVA)?"jar":"sdist",lang);
 		                if(adcids_array ==null){
 		                	log.warn("The intersection returned null (thus something went wrong in cia); the artifact for library Id [" + l.toString() +"] will not be included in the csv for ADD/DEL constructs");
 		                } else {
