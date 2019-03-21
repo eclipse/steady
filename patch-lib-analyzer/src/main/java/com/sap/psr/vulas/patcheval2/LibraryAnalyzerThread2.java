@@ -203,16 +203,17 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 			                			ast_lid = BackendConnector.getInstance().getAstForQnameInLib(qString+"/"+mcCC.getConstructId().getType().toString()+"/"+mcCC.getConstructId().getQname(),true,ProgrammingLanguage.PY);
 				                    	Gson gson = GsonHelper.getCustomGsonBuilder().create();
 				                    	PythonConstructDigest pythonConstructDigest = gson.fromJson(ast_lid, PythonConstructDigest.class);
-				                    	PythonConstructDigest vulnConstructDigest = gson.fromJson(mcCC.getBuggyBody(), PythonConstructDigest.class);
-				                    	PythonConstructDigest fixedConstructDigest = gson.fromJson(mcCC.getFixedBody(), PythonConstructDigest.class);
-				                		if(pythonConstructDigest.getDigest().equals(vulnConstructDigest.getDigest())){
-				                			changesToV = 0;
-				                		}
-				                		if(pythonConstructDigest.getDigest().equals(fixedConstructDigest.getDigest())){
-				                			changesToF = 0;
-				                		}
+				                    	if(pythonConstructDigest!=null){
+					                    	PythonConstructDigest vulnConstructDigest = gson.fromJson(mcCC.getBuggyBody(), PythonConstructDigest.class);
+					                    	PythonConstructDigest fixedConstructDigest = gson.fromJson(mcCC.getFixedBody(), PythonConstructDigest.class);
+					                		if(pythonConstructDigest.getDigest()!=null && vulnConstructDigest.getDigest()!=null && pythonConstructDigest.getDigest().equals(vulnConstructDigest.getDigest())){
+					                			changesToV = 0;
+					                		}
+					                		if(pythonConstructDigest.getDigest()!=null && fixedConstructDigest.getDigest()!=null &&pythonConstructDigest.getDigest().equals(fixedConstructDigest.getDigest())){
+					                			changesToF = 0;
+					                		}
+				                    	}
 				                	 }
-				                	break;
 				                }else{
 				                    	 log.info("JAVA Qname ["+mcCC.getConstructId().getQname()+"] not in sources of [" + l.toString()+"]");
 				                }
