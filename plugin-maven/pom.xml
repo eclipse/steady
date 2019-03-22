@@ -16,7 +16,7 @@
 
     <!-- maven plugins should use the same version in order to work properly -->
     <properties>
-        <maven.version>3.5.4</maven.version>
+        <maven.version>3.6.0</maven.version>
     </properties>
 
     <dependencies>
@@ -56,13 +56,13 @@
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
-            <version>3.5.2</version>
+            <version>${maven.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-utils</artifactId>
-            <version>3.1.0</version>
+            <version>3.2.0</version>
         </dependency>
         <!-- use ant's commandline parser -->
         <dependency>
@@ -107,7 +107,7 @@
         <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-verifier</artifactId>
-            <version>1.2</version>
+            <version>1.6</version>
             <scope>test</scope>
         </dependency>
 
