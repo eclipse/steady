@@ -70,7 +70,7 @@
 			<version>${project.version}</version>
 		</dependency>
 		
-		<!-- Todo: Cleanup -->
+		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
@@ -83,15 +83,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework.boot</groupId> -->
-<!-- 			<artifactId>spring-boot-starter-cloud-connectors</artifactId> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework.cloud</groupId> -->
-<!-- 			<artifactId>spring-cloud-spring-service-connector</artifactId> -->
-<!-- 			<version>1.2.3.RELEASE</version> -->
-<!-- 		</dependency> -->
 
 		<!-- Actuator -->
 		<dependency>
@@ -114,24 +105,24 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<version>2.7.0</version>
+			<version>2.9.2</version>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.7.0</version>
+			<version>2.9.2</version>
 		</dependency>
 
 		<!-- Swagger core dependencies -->
 		<dependency>
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-annotations</artifactId>
-			<version>1.5.21</version>
+			<version>1.5.22</version>
 		</dependency>
 		<dependency>
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-core</artifactId>
-			<version>1.5.21</version>
+			<version>1.5.22</version>
 		</dependency>
 
 		<!-- Test dependencies -->
@@ -178,7 +169,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>25.1-android</version>
+			<version>27.1-jre</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
