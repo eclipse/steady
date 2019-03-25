@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.java.sign.gson.GsonHelper;
 import com.sap.psr.vulas.java.sign.ASTSignatureChange;
+import com.sap.psr.vulas.python.sign.PythonConstructDigest;
 import com.sap.psr.vulas.patcheval.representation.ConstructPathLibResult2;
 import com.sap.psr.vulas.patcheval.representation.LidResult2;
 import com.sap.psr.vulas.patcheval.representation.OverallConstructChange;
@@ -73,10 +74,11 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
         	log.info("Analysis of lib ["+ l.toString() + "] with tid [" +tid+"]");
         	
         	  //TODO: now only going on for Java, extend to PYTHON
-            if (lang==ProgrammingLanguage.JAVA) {
+        //    if (lang==ProgrammingLanguage.JAVA) {
             	        	
                 
             	boolean binAvailable = true;
+            	// are these comments still valid?
             	//doesArtifactExist works for both Java and Python as the called api (/artifacts/g/a/v) does not use the package information for Python
             	// doesArtifactExist sets the package to Jar; as a result it checks that a Jar exists for java and that an artifact for the given gav exists for python (no matter which packaging)
 
@@ -109,7 +111,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 		                //intersect change list with artifact constructs 
 		                List<ConstructId> cids = null;
 		                ConstructId[] cids_array =null;
-		                cids_array=BackendConnector.getInstance().getArtifactBugConstructsIntersection(qString,c,(lang==ProgrammingLanguage.JAVA)?"jar":"sdist");
+		                cids_array=BackendConnector.getInstance().getArtifactBugConstructsIntersection(qString,c,(lang==ProgrammingLanguage.JAVA)?"jar":"sdist",lang);
 		                if(cids_array ==null){
 		                	log.warn("The intersection returned null (thus something went wrong in cia); the Jar for library Id [" + l.toString() +"] will not be included in the csv for MOD constructs");
 		                } else {
@@ -193,11 +195,27 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 						                    }
 						             }
 					            	 
-				                }else if(lang==ProgrammingLanguage.PY){
+				                }else if(qnameInBin && lang==ProgrammingLanguage.PY){
 				                //TODO: implement PY comparison
-				                	break;
+				                	 if ( mcCC.getChangeType().equals(ConstructChangeType.MOD) &&
+					            			 (mcCC.getBuggyBody()!=null ||mcCC.getFixedBody()!=null)){
+				                		//in this case the ast_lid field will contain the digest and body
+			                			ast_lid = BackendConnector.getInstance().getAstForQnameInLib(qString+"/"+mcCC.getConstructId().getType().toString()+"/"+mcCC.getConstructId().getQname(),true,ProgrammingLanguage.PY);
+				                    	Gson gson = GsonHelper.getCustomGsonBuilder().create();
+				                    	PythonConstructDigest pythonConstructDigest = gson.fromJson(ast_lid, PythonConstructDigest.class);
+				                    	if(pythonConstructDigest!=null){
+					                    	PythonConstructDigest vulnConstructDigest = gson.fromJson(mcCC.getBuggyBody(), PythonConstructDigest.class);
+					                    	PythonConstructDigest fixedConstructDigest = gson.fromJson(mcCC.getFixedBody(), PythonConstructDigest.class);
+					                		if(pythonConstructDigest.getDigest()!=null && vulnConstructDigest.getDigest()!=null && pythonConstructDigest.getDigest().equals(vulnConstructDigest.getDigest())){
+					                			changesToV = 0;
+					                		}
+					                		if(pythonConstructDigest.getDigest()!=null && fixedConstructDigest.getDigest()!=null && pythonConstructDigest.getDigest().equals(fixedConstructDigest.getDigest())){
+					                			changesToF = 0;
+					                		}
+				                    	}
+				                	 }
 				                }else{
-				                    	 log.info("JAVA Qname ["+mcCC.getConstructId().getQname()+"] not in sources of [" + l.toString()+"]");
+				                    	 log.info("Qname ["+mcCC.getConstructId().getQname()+"] not in sources of [" + l.toString()+"]");
 				                }
 					            lr.setAst_lid(ast_lid);
 				            	lr.setChangesToF(changesToF);
@@ -220,7 +238,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 	                if(ad.size()>0){
 		                //intersect change list add/del with artifact constructs
 		                List<ConstructId> adcids = null;
-		                ConstructId[] adcids_array = BackendConnector.getInstance().getArtifactBugConstructsIntersection(qString,ad,(lang==ProgrammingLanguage.JAVA)?"jar":"sdist");
+		                ConstructId[] adcids_array = BackendConnector.getInstance().getArtifactBugConstructsIntersection(qString,ad,(lang==ProgrammingLanguage.JAVA)?"jar":"sdist",lang);
 		                if(adcids_array ==null){
 		                	log.warn("The intersection returned null (thus something went wrong in cia); the artifact for library Id [" + l.toString() +"] will not be included in the csv for ADD/DEL constructs");
 		                } else {
@@ -243,7 +261,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 		                }
 		            }
                 }
-            }
+  //          }
         log.info("++++++++" + "Thread " + (tid) + " for library id " + libId.toString() +" finished+++++++++");
         return results;
     }

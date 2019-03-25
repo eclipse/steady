@@ -87,15 +87,16 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 	}
 	
 	private InputStream getArchiveInputStream() throws IOException {
-		final String ext = FileUtil.getFileExtension(this.archive);
+		//final String ext = FileUtil.getFileExtension(this.archive);
 		InputStream is = null;
-		try {
-			if(ext.equals("gz")) {
+		try {			
+			if(FileUtil.isZipped(this.archive)) {
+				is = new ZipInputStream(new FileInputStream(this.archive));
+			} else {
 				final GzipCompressorInputStream gzis = new GzipCompressorInputStream(new FileInputStream(this.archive));
 				is =  new TarArchiveInputStream(gzis);
-			} else {
-				is = new ZipInputStream(new FileInputStream(this.archive));
 			}
+			
 		} catch (FileNotFoundException e) {
 			log.error("Cannot find Pyhton archive to analyze ["+ this.archive.getAbsolutePath() +"]", e);
 		}

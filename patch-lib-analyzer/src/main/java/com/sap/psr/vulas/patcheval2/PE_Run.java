@@ -16,7 +16,7 @@ import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.java.sign.gson.GsonHelper;
 import com.sap.psr.vulas.patcheval.representation.Bug;
 import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
-
+import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.VulnerableDependency;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
@@ -27,6 +27,14 @@ public class PE_Run implements Runnable {
 	public void run() {
 
 		String[] bugs = VulasConfiguration.getGlobal().getConfiguration().getStringArray(PEConfiguration.BUGID);
+		ProgrammingLanguage lang = null;
+		try{
+			 lang = ProgrammingLanguage.valueOf(VulasConfiguration.getGlobal().getConfiguration().getString(PEConfiguration.LANG));
+		} catch(IllegalArgumentException e){
+			log.error("The specified language value "+VulasConfiguration.getGlobal().getConfiguration().getString(PEConfiguration.LANG)+" is not allowed. Allowed values: PY, JAVA.");
+			return;
+		}
+		
 
 		final Gson gson = GsonHelper.getCustomGsonBuilder().create();
 
@@ -35,8 +43,7 @@ public class PE_Run implements Runnable {
 		if (bugs == null || bugs.length == 0 || (bugs.length == 1 && bugs[0].equals("")) ) {
 			String allbugs;
 			try {
-				allbugs = BackendConnector.getInstance().getBugsList();
-
+				allbugs = BackendConnector.getInstance().getBugsList(lang);
 				bugsToAnalyze = Arrays.asList(gson.fromJson(allbugs, Bug[].class));
 			} catch (BackendConnectionException e) {
 				if(e.getHttpResponseStatus()==503)

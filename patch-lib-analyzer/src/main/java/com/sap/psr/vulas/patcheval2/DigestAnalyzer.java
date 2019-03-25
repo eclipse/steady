@@ -113,11 +113,20 @@ public class DigestAnalyzer {
 								(a.getLibraryId()!=null && l.getLibraryId()==null && a.getLibraryId().getMvnGroup().equals("org.apache.tomcat") && a.getLibraryId().getVersion().equals(version)) ||
 								//tomcat JAR with GAV for OSGI eclipse bundle, works for version > 7.0.x	
 								(a.getLibraryId()!=null && l.getLibraryId()!=null 
-									&& a.getLibraryId().getMvnGroup().equals("org.apache.tomcat") &&  a.getLibraryId().getArtifact().startsWith("tomcat-")
+									&& a.getLibraryId().getMvnGroup().equals("org.apache.tomcat") &&  (a.getLibraryId().getArtifact().startsWith("tomcat-") || a.getLibraryId().getArtifact().startsWith("tomcat7-"))
 									&& l.getLibraryId().getMvnGroup().equals("p2.eclipse-plugin")
-									&& l.getLibraryId().getArtifact().substring(0,l.getLibraryId().getArtifact().lastIndexOf(".")).equals("org.apache")
+									&& (l.getLibraryId().getArtifact().substring(0,l.getLibraryId().getArtifact().lastIndexOf(".")).equals("org.apache")
+											|| l.getLibraryId().getArtifact().substring(0,l.getLibraryId().getArtifact().lastIndexOf(".")).equals("org.apache.tomcat")
+											|| l.getLibraryId().getArtifact().substring(0,l.getLibraryId().getArtifact().lastIndexOf(".")).equals("org.apache.catalina")
+											|| l.getLibraryId().getArtifact().substring(0,l.getLibraryId().getArtifact().lastIndexOf(".")).equals("com.springsource.org.apache")
+											|| l.getLibraryId().getArtifact().substring(0,l.getLibraryId().getArtifact().lastIndexOf(".")).equals("com.springsource.org.apache.tomcat"))
 									&& l.getLibraryId().getArtifact().substring(l.getLibraryId().getArtifact().lastIndexOf(".")+1, l.getLibraryId().getArtifact().length()).equals(a.getLibraryId().getArtifact().substring(a.getLibraryId().getArtifact().lastIndexOf("-")+1,a.getLibraryId().getArtifact().length()))
-									&& a.getLibraryId().getVersion().equals(version))
+									&& a.getLibraryId().getVersion().equals(version)) ||
+								//springframework for OSGI eclipse bundle having same artifactId
+								(a.getLibraryId()!=null && l.getLibraryId()!=null && a.getLibraryId().getMvnGroup().equals("org.springframework") &&  a.getLibraryId().getArtifact().startsWith("org.springframework.")
+										&& l.getLibraryId().getMvnGroup().equals("p2.eclipse-plugin"))
+									&& a.getLibraryId().getArtifact().equals(l.getLibraryId().getArtifact())
+									&& a.getLibraryId().getVersion().equals(version)
 								){
 								if(a.getAffected()!=null){
 									if(affected == null){
@@ -163,9 +172,18 @@ public class DigestAnalyzer {
 			
 			if(_affected!=null)
 				result.addProperty("affected", _affected);
-			JsonObject lib = new JsonObject();
-			lib.addProperty("digest", _lib.getDigest());
-			result.add("lib", lib);
+				if(_lib.getLibraryId()!=null){
+					JsonObject lib = new JsonObject();
+					lib.addProperty("group", _lib.getLibraryId().getMvnGroup());
+					lib.addProperty("artifact", _lib.getLibraryId().getArtifact());
+					lib.addProperty("version", _lib.getLibraryId().getVersion());
+					result.add("libraryId", lib);
+			}
+			else{
+				JsonObject lib = new JsonObject();
+				lib.addProperty("digest", _lib.getDigest());
+				result.add("lib", lib);
+			}
 			return result;
 	    }
 	 

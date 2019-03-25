@@ -25,6 +25,11 @@
 			<artifactId>lang-java</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.sap.research.security.vulas</groupId>
+			<artifactId>lang-python</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		
 		<!-- Test -->
 		<dependency>

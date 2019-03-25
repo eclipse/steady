@@ -685,7 +685,7 @@ public class BackendConnector {
 		final Map<String,String> params = new HashMap<String,String>();
 		params.put("skipResponseBody", "true");
 		req_list.addRequest(
-				new ConditionalHttpRequest(HttpMethod.POST, PathBuilder.bugs(), params)
+				new ConditionalHttpRequest(HttpMethod.POST, PathBuilder.bugs(null), params)
 				.setConditionRequest(cond_req)
 				.addCondition(new StatusCondition(HttpURLConnection.HTTP_NOT_FOUND))
 				.setPayload(_json, null, false)
@@ -891,9 +891,9 @@ public class BackendConnector {
 		return json;
 	}
 
-	public synchronized ConstructId[] getArtifactBugConstructsIntersection(String _qString,List<ConstructId> c, String packaging) throws BackendConnectionException{
+	public synchronized ConstructId[] getArtifactBugConstructsIntersection(String _qString,List<ConstructId> c, String packaging, ProgrammingLanguage lang) throws BackendConnectionException{
 		String json = null;
-		BasicHttpRequest bhr = new BasicHttpRequest(Service.CIA, HttpMethod.POST, PathBuilder.libConstructIdsIntersect(_qString,packaging), null);
+		BasicHttpRequest bhr = new BasicHttpRequest(Service.CIA, HttpMethod.POST, PathBuilder.libConstructIdsIntersect(_qString,packaging, lang), null);
 		bhr.setPayload(JacksonUtil.asJsonString(c), "application/json", false);                
 		final HttpResponse response = bhr.send();
 		ConstructId[] intersection = null;
@@ -993,8 +993,8 @@ public class BackendConnector {
 		}
 	}
 
-	public String getBugsList() throws BackendConnectionException {
-		final String json = new BasicHttpRequest(Service.BACKEND, HttpMethod.GET, PathBuilder.bugs(), null).send().getBody();
+	public String getBugsList(ProgrammingLanguage _l) throws BackendConnectionException {
+		final String json = new BasicHttpRequest(Service.BACKEND, HttpMethod.GET, PathBuilder.bugs(_l), null).send().getBody();
 		return json;
 	}
 
