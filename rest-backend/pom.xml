@@ -198,10 +198,15 @@
 			</dependency>
 
 			<!-- Fix Spring Boot's dependency on vulnerable dom4j 1.6.1, inherited 
-				from hibernate-core 5.0.12.Final (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
+				from hibernate-core and hibernate-entitymanager 5.0.12.Final (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-core</artifactId>
+				<version>5.4.2.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-entitymanager</artifactId>
 				<version>5.4.2.Final</version>
 			</dependency>
 
@@ -234,7 +239,7 @@
 				<dependency>
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
-					<version>42.1.4</version>
+					<version>42.2.5</version>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -261,7 +266,7 @@
 				<dependency>
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
-					<version>42.1.4</version>
+					<version>42.2.5</version>
 				</dependency>
 			</dependencies>
 			<build>
