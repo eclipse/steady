@@ -35,7 +35,7 @@ public class ArchiveFixContainmentCheck {
 	private String bugId = null;
 	//private Archive archive = null;
 	private JarAnalyzer ja = null;
-	public static ClassPool cp = new ClassPool();
+	public static final ClassPool cp = new ClassPool();
 
 	/**
 	 * Caches the result of method {@link ArchiveFixContainmentCheck#containsFix()}.
@@ -225,7 +225,7 @@ public class ArchiveFixContainmentCheck {
 	 * construct body contains the fix or not.
 	 *
 	 */
-	private class ConstructFixContainmentCheck {
+	private static class ConstructFixContainmentCheck {
 
 		private ConstructId constructId = null;
 		private JarAnalyzer ja = null;

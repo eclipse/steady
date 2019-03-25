@@ -362,7 +362,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 					inputStream.close();
 				}
 				else if(response.isOk() || response.isCreated())
-					response.setBody(this.readInputStream(connection.getInputStream()));
+					response.setBody(FileUtil.readInputStream(connection.getInputStream(), FileUtil.getCharset()));
 
 				// Stats
 				final long end_nano = System.nanoTime();
@@ -427,29 +427,10 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 			if(is==null)
 				is = _c.getInputStream();
 			if(is!=null) {
-				error = this.readInputStream(is);
+				error = FileUtil.readInputStream(is, FileUtil.getCharset());
 			}
 		}
 		return error;
-	}
-
-	private String readInputStream(@NotNull InputStream _is) throws IOException {
-		final StringBuilder result_builder = new StringBuilder();
-		try {
-			final BufferedReader rd = new BufferedReader(new InputStreamReader(_is));
-			String line;
-			while((line = rd.readLine()) != null) {
-				result_builder.append(line).append('\r');
-			}
-			rd.close();
-		} finally {
-			try {
-				_is.close();
-			} catch (IOException e) {
-				BasicHttpRequest.log.error("Error closing input stream: " + e.getMessage());
-			}
-		}
-		return result_builder.toString().trim();
 	}
 
 	private URI getUri() {

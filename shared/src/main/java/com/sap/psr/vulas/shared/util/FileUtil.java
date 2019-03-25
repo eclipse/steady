@@ -227,14 +227,20 @@ public class FileUtil {
 	 * @throws IOException
 	 */
 	public static String readFile(Path _p) throws IOException {
-		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		try (final InputStream is = new FileInputStream(_p.toFile())) {
-			final byte[] byte_buffer = new byte[1024];
-			int len = 0;
-			while((len = is.read(byte_buffer)) != -1)
-				bos.write(byte_buffer,0,len);
+			return FileUtil.readInputStream(is, FileUtil.getCharset());
 		}
-		return new String(bos.toByteArray(), FileUtil.getCharset());
+	}
+	
+	/**
+	 * Reads the given {@link InputStream} into a {@link String}.
+	 * 
+	 * @param _p
+	 * @return
+	 * @throws IOException
+	 */
+	public static String readInputStream(InputStream _is, Charset _cs) throws IOException {
+		return new String(FileUtil.readInputStream(_is), _cs);		
 	}
 
 	/**
@@ -245,14 +251,13 @@ public class FileUtil {
 	 * @throws IOException
 	 */
 	public static byte[] readInputStream(InputStream _is) throws IOException {
-		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		final byte[] byte_buffer = new byte[1024];
 		int len = 0;
-		while((len = _is.read(byte_buffer)) != -1) {
-			baos.write(byte_buffer,0,len);
-		}
-		baos.flush();
-		return baos.toByteArray();		
+		while((len = _is.read(byte_buffer)) != -1)
+			bos.write(byte_buffer,0,len);
+		bos.flush();
+		return bos.toByteArray();		
 	}
 
 	// Writing files

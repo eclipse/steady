@@ -9,14 +9,15 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.sap.psr.vulas.shared.util.FileUtil;
 import com.strobel.decompiler.Decompiler;
 import com.strobel.decompiler.DecompilerSettings;
 import com.strobel.decompiler.PlainTextOutput;
 
 public class ProcyonDecompiler implements IDecompiler {
 
-
 	private static final Log log =LogFactory.getLog(ProcyonDecompiler.class);
+	
 	/**
 	 *
 	 * @param _classFile - the *.class file to be decompiled containing bytecode
@@ -25,47 +26,38 @@ public class ProcyonDecompiler implements IDecompiler {
 	@Override
 	public File decompileClassFile(File inputClassFile) {
 
-				//Default settings for the decompilers
-				final DecompilerSettings settings = new DecompilerSettings();
-				settings.setShowSyntheticMembers(true);
-				settings.setSimplifyMemberReferences(true);
-				settings.setExcludeNestedTypes(true);
+		//Default settings for the decompilers
+		final DecompilerSettings settings = new DecompilerSettings();
+		settings.setShowSyntheticMembers(true);
+		settings.setSimplifyMemberReferences(true);
+		settings.setExcludeNestedTypes(true);
 
-				String classFilePath = inputClassFile.getPath();
+		String classFilePath = inputClassFile.getPath();
+		String fileNameWithOutExt = FilenameUtils.removeExtension(inputClassFile.getName());
+		File outFile = new File(inputClassFile.getParent(), fileNameWithOutExt + ".java");
 
-				String fileNameWithOutExt = FilenameUtils.removeExtension(inputClassFile.getName());
+		try {
 
-				//Output File
-				File outFile = new File(inputClassFile.getParent(), fileNameWithOutExt+".java");
+			final FileOutputStream stream = new FileOutputStream(outFile.toString());
+			final OutputStreamWriter writer = new OutputStreamWriter(stream, FileUtil.getCharset());
 
-				try {
-
-					 final FileOutputStream stream = new FileOutputStream(outFile.toString());
-
-				    //try {
-				        final OutputStreamWriter writer = new OutputStreamWriter(stream);
-
-				        try {
-				            Decompiler.decompile(
-				            	classFilePath,
-				                new PlainTextOutput(writer),
-				                settings
-				            );
-				        }
-				        finally {
-				            writer.close();
-				            stream.close();
-				        }
-				    //}
-				    /*finally {
-				        stream.close();
-				    }*/
-				}
-				catch (final IOException e) {
-				    log.debug(e.getMessage());
-				}
-
-				return outFile;
+			try {
+				Decompiler.decompile(
+						classFilePath,
+						new PlainTextOutput(writer),
+						settings
+						);
 			}
+			finally {
+				writer.close();
+				stream.close();
+			}
+		}
+		catch (final IOException e) {
+			log.debug(e.getMessage());
+		}
+
+		return outFile;
+	}
 
 }

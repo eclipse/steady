@@ -11,13 +11,6 @@
 	<artifactId>frontend-apps</artifactId>
 	<packaging>war</packaging>
 	<name>Frontend for analysis results</name>
-	<dependencies>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>openui5</artifactId>
-			<version>1.58.2</version>
-		</dependency>
-	</dependencies>
 	<build>
 		<plugins>
 			<!--

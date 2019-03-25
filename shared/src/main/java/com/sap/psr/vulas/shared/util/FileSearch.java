@@ -27,10 +27,10 @@ public class FileSearch extends AbstractFileSearch {
 	public FileSearch(String[] _s) throws IllegalArgumentException {
 		if(_s==null || _s.length==0)
 			throw new IllegalArgumentException("At least one file extension must be provided");
-		this.suffixes = _s;
+		this.suffixes = _s.clone();
 	}
 	
-	public String[] getSuffixes() { return this.suffixes; }
+	public String[] getSuffixes() { return this.suffixes.clone(); }
 
 	@Override
 	public FileVisitResult visitFile(Path _f, BasicFileAttributes attrs) {

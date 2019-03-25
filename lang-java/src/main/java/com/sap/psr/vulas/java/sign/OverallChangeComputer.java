@@ -185,7 +185,7 @@ public class OverallChangeComputer {
 	 */
 	private boolean isConstructExistedBeforeFirstCommit(SortedSet<ConstructChange> changes) {
 		if(changes.size()==0) throw new IllegalStateException("No commits exist");
-		return !changes.first().getConstructChangeType().equals("ADD");
+		return !changes.first().getConstructChangeType().toString().equals("ADD");
 	}
 
 	/**
@@ -195,7 +195,7 @@ public class OverallChangeComputer {
 	 */
 	private boolean isConstructExistsAfterLastCommit(SortedSet<ConstructChange> changes) {
 		if(changes.size()==0) throw new IllegalStateException("No commits exist");
-		return !changes.last().getConstructChangeType().equals("DEL");
+		return !changes.last().getConstructChangeType().toString().equals("DEL");
 	}
 
 	/**

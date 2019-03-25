@@ -234,13 +234,13 @@ public class InstrumentationControl {
 
 	public long getMetric(InstrumentationMetrics _metric) {
 		if(InstrumentationMetrics.classesTotal.equals(_metric))
-			return new Long(this.classesCount);
+			return this.classesCount;
 		else if(InstrumentationMetrics.classesAlreadyInstrumented.equals(_metric))
-			return new Long(this.alreadyInstrumentedCount);
+			return this.alreadyInstrumentedCount;
 		else if(InstrumentationMetrics.classesInstrumentedSuccess.equals(_metric))
-			return new Long(this.successfulInstrumentationCount);
+			return this.successfulInstrumentationCount;
 		else if(InstrumentationMetrics.classesInstrumentedFailure.equals(_metric))
-			return new Long(this.failedInstrumentationCount);
+			return this.failedInstrumentationCount;
 		else
 			return -1;
 	}

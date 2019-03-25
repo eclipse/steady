@@ -17,7 +17,7 @@ public class KeyValue {
 	private String[] value = null;
 	public KeyValue(String _k, String[] _v) {
 		this.key = _k;
-		this.value = _v;
+		this.value = _v.clone();
 	}
 	public String getKey() {
 		return key;
@@ -26,10 +26,10 @@ public class KeyValue {
 		this.key = k;
 	}
 	public String[] getValue() {
-		return value;
+		return value.clone();
 	}
 	public void setValue(String[] value) {
-		this.value = value;
+		this.value = value.clone();
 	}
 	@Override
 	public int hashCode() {
