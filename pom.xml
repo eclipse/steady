@@ -78,7 +78,7 @@
 		<!-- Web frontends -->
 		<module>frontend-apps</module>
 		<module>frontend-bugs</module>
-		<module>frontend-patch-analyzer</module> <!-- IMPORTANT: This frontend is years old, one has to check whether it still 
+		<!-- module>frontend-patch-analyzer</module--> <!-- IMPORTANT: This frontend is years old, one has to check whether it still 
 			works. -->
 
 		<!-- REST services -->
