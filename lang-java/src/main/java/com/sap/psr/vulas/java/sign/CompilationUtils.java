@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jdt.internal.compiler.CompilationResult;
 import org.eclipse.jdt.internal.compiler.DefaultErrorHandlingPolicies;
 import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
@@ -21,6 +23,8 @@ import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.internal.core.util.CommentRecorderParser;
 
+import com.sap.psr.vulas.shared.util.FileUtil;
+
 import ch.uzh.ifi.seal.changedistiller.ast.java.Comment;
 import ch.uzh.ifi.seal.changedistiller.ast.java.CommentCollector;
 import ch.uzh.ifi.seal.changedistiller.ast.java.JavaCompilation;
@@ -30,6 +34,8 @@ import ch.uzh.ifi.seal.changedistiller.ast.java.JavaCompilation;
  *
  */
 public final class CompilationUtils {
+	
+	private static final Log log = LogFactory.getLog(CompilationUtils.class);
 
 	private CompilationUtils() {}
 
@@ -73,59 +79,24 @@ public final class CompilationUtils {
      * Returns the generated {@link JavaCompilation} from the file identified by the given filename. This method assumes
      * that the filename is relative to <code>{@value #TEST_DATA_BASE_DIR}</code>.
      *
-     * @param filename
+     * @param _filename
      *            of the file to compile
      * @return the compilation of the file
      */
-    public static JavaCompilation compileFile(String filename) {
-        CompilerOptions options = getDefaultCompilerOptions();
-        Parser parser = createCommentRecorderParser(options);
-        ICompilationUnit cu = createCompilationunit(getContentOfFile(filename), filename);
-        CompilationResult compilationResult = createDefaultCompilationResult(cu, options);
-        return new JavaCompilation(parser.parse(cu, compilationResult), parser.scanner);
+    public static JavaCompilation compileFile(String _filename) {
+    	JavaCompilation jc = null;
+		try {
+			final String src = FileUtil.readFile(_filename);
+			final CompilerOptions options = getDefaultCompilerOptions();
+	        final Parser parser = createCommentRecorderParser(options);
+	        final ICompilationUnit cu = createCompilationunit(src, _filename);
+	        final CompilationResult compilationResult = createDefaultCompilationResult(cu, options);
+	        jc = new JavaCompilation(parser.parse(cu, compilationResult), parser.scanner);
+		} catch (IOException e) {
+			log.error(e);
+		}
+		return jc;
     }
-
-    private static String getContentOfFile(String filename) {
-        char[] b = new char[1024];
-        StringBuilder sb = new StringBuilder();
-        try {
-            try (final FileReader reader = new FileReader(new File(filename))) {
-                int n = reader.read(b);
-                while (n > 0) {
-                    sb.append(b, 0, n);
-                    n = reader.read(b);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return sb.toString();
-    }
-
-
-  /**
-   * Alternative method for reading contents of a file into a String
-   *
-   * @param pathname - of the file (Absolute or Relative Path)
-   * @return String representing content of the file
-   * @throws IOException
-   */
-  	public static String readFile(String pathname) throws IOException {
-
-  	    File file = new File(pathname);
-  	    StringBuilder fileContents = new StringBuilder((int)file.length());
-  	    Scanner scanner = new Scanner(file);
-  	    String lineSeparator = System.getProperty("line.separator");
-
-  	    try {
-  	        while(scanner.hasNextLine()) {
-  	            fileContents.append(scanner.nextLine() + lineSeparator);
-  	        }
-  	        return fileContents.toString();
-  	    } finally {
-  	        scanner.close();
-  	    }
-  	}
 
     /**
      *  Create a CommentRecorderParser

@@ -27,6 +27,8 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class GoalContext implements Serializable {
 
+	private static final long serialVersionUID = 5117042314456447399L;
+
 	private Tenant tenant = null;
 
 	private Space space = null;

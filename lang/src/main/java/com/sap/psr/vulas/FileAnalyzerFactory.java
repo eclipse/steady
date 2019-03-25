@@ -41,7 +41,7 @@ public class FileAnalyzerFactory {
 			supportedFileExtensions = new String[exts.size()];
 			new ArrayList<String>(exts).toArray(supportedFileExtensions);
 		}
-		return supportedFileExtensions;
+		return supportedFileExtensions.clone();
 	}
 	
 

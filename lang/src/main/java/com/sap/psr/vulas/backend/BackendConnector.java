@@ -2,6 +2,7 @@ package com.sap.psr.vulas.backend;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.HttpURLConnection;
 import java.nio.file.Path;
@@ -553,8 +554,7 @@ public class BackendConnector {
 	}
 
 	public void uploadLibraryFile(String _sha1, Path _file) throws BackendConnectionException {
-		try {
-			final FileInputStream inputStream = new FileInputStream(_file.toFile());
+		try(final FileInputStream inputStream = new FileInputStream(_file.toFile())) {
 			final HttpRequestList req_list = new HttpRequestList();
 			final BasicHttpRequest cond_req = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.libupload(_sha1));
 			final Map<String,String> params = new HashMap<String,String>();
@@ -568,8 +568,10 @@ public class BackendConnector {
 					);
 			req_list.send();
 		} catch (FileNotFoundException e) {
-			BackendConnector.log.error("Cannot find [" + _file.toString()+ "]: Check if unknown to maven and upload will be skipped");
-		} 
+			BackendConnector.log.error("Cannot find [" + _file.toString()+ "]: Check if unknown to Maven and upload will be skipped");
+		} catch (IOException e) {
+			BackendConnector.log.error("Exception when uploading [" + _file.toString()+ "]: " + e.getMessage());
+		}
 	}
 
 	// ==================== Others

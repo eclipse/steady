@@ -222,6 +222,18 @@
 				<version>2.9.8</version>
 			</dependency>
 			
+			<!-- Fix Spring Boot's dependency on vulnerable logback 1.1.11 (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>1.2.3</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-core</artifactId>
+				<version>1.2.3</version>
+			</dependency>
+			
 		</dependencies>
 	</dependencyManagement>
 

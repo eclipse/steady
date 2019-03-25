@@ -46,7 +46,7 @@ public class Report {
 
 	private static final String dateFormatString = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
 
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH:mm:ss");
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH:mm:ss");
 	
 	/**
 	 * Whether or not archives with question marks will be ignored.
@@ -328,7 +328,7 @@ public class Report {
 		this.context.put("app", app);
 		this.context.put("space", this.goalContext.getSpace());
 		this.context.put("projects", modules);
-		this.context.put("generatedAt", Report.dateFormat.format(new Date()));
+		this.context.put("generatedAt", dateFormat.format(new Date()));
 		this.context.put("vulas-shared-homepage", this.goalContext.getVulasConfiguration().getConfiguration().getString(VulasConfiguration.HOMEPAGE, "undefined"));
 		
 		// Configuration

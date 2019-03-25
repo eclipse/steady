@@ -39,7 +39,7 @@ public class DirAnalyzer implements FileAnalyzer {
 	private String[] extensionFilter = null;
 	
 	public void setExtensionFilter(String[] _exts) {
-		this.extensionFilter = _exts;
+		this.extensionFilter = _exts.clone();
 	}
 	
 	@Override
@@ -161,6 +161,7 @@ public class DirAnalyzer implements FileAnalyzer {
 		if(!DirUtil.isBelowDestinationPath(tmp_dir, _entry)) {
 			log.warn("Entry [" + _entry + "] will not be extracted, as it would be outside of destination directory");
 		}
+		
 		// Extract to temp file and create nested PythonArchiveAnalyzer
 		else {
 			final File file = new File(tmp_dir.toFile(), _entry);
@@ -168,20 +169,27 @@ public class DirAnalyzer implements FileAnalyzer {
 				log.info("Exists already: Entry [" + _entry + "] corresponds to [" + file.toPath().toAbsolutePath() + "]");
 				fa = FileAnalyzerFactory.buildFileAnalyzer(file);
 			} else {
-				// Create parent if not existing
-				if (!file.getParentFile().exists())
-					file.getParentFile().mkdirs();
+				boolean dir_exists = file.getParentFile().exists();
 				
-				try(final FileOutputStream fos = new FileOutputStream(file)) {
-					final InputStream is2 = new BufferedInputStream(_is);
-					int cc = -1;
-					while ((cc = is2.read()) >= 0) fos.write(cc);
-					fos.flush();
-					log.info("Extracted entry [" + _entry + "] to [" + file.toPath().toAbsolutePath() + "]");
-					fa = FileAnalyzerFactory.buildFileAnalyzer(file);
+				// Create parent dir if not existing
+				if(!dir_exists) {
+					dir_exists = file.getParentFile().mkdirs();
+					if(!dir_exists)
+						log.error("Could not create directory [" + file.getParentFile() + "]");
 				}
-				catch(IOException ioe) {
-					log.error("Error when extracting entry to [" + file.toPath().toAbsolutePath() + "]: " + ioe.getMessage());
+				
+				if(dir_exists) {
+					try(final FileOutputStream fos = new FileOutputStream(file)) {
+						final InputStream is2 = new BufferedInputStream(_is);
+						int cc = -1;
+						while ((cc = is2.read()) >= 0) fos.write(cc);
+						fos.flush();
+						log.info("Extracted entry [" + _entry + "] to [" + file.toPath().toAbsolutePath() + "]");
+						fa = FileAnalyzerFactory.buildFileAnalyzer(file);
+					}
+					catch(IOException ioe) {
+						log.error("Error when extracting entry to [" + file.toPath().toAbsolutePath() + "]: " + ioe.getMessage());
+					}
 				}
 			}
 		}

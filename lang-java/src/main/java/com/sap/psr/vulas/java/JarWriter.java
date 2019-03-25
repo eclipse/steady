@@ -44,7 +44,7 @@ public class JarWriter {
 
 	private static final Log log = LogFactory.getLog(JarWriter.class);
 
-	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d MMM yyyy HH:mm:ss");
+	public final SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM yyyy HH:mm:ss");
 
 	/**
 	 * Included in the manifest file of every JAR rewritten by Vulas.
@@ -277,7 +277,7 @@ public class JarWriter {
 		}
 
 		// Add vulas-specific ones
-		atts.putValue(JarWriter.MANIFEST_ENTRY_VULAS_MODIF, JarWriter.DATE_FORMAT.format(new Date(System.currentTimeMillis())));
+		atts.putValue(JarWriter.MANIFEST_ENTRY_VULAS_MODIF, dateFormat.format(new Date(System.currentTimeMillis())));
 		atts.putValue(JarWriter.MANIFEST_ENTRY_ORIG_SHA1, this.getSHA1());
 
 		return m;

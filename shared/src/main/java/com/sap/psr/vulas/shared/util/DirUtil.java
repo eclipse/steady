@@ -94,16 +94,22 @@ public class DirUtil {
 							log.warn("Directory [" + file + "] could not be created");
 					}
 					else {
+						boolean exists = file.getParentFile().exists();
+						
 						// Create parent if not existing
-						if (!file.getParentFile().exists())
-							file.getParentFile().mkdirs();
+						if (!exists) {
+							exists = file.getParentFile().mkdirs();
+							log.error("Cannot create directory [" + file.getParentFile() + "]");
+						}
 
 						// Extract file
-						try (final BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
-							final byte[] bytes = new byte[1024];
-							int len = 0;
-							while((len = zis.read(bytes)) != -1)
-								bos.write(bytes,0,len);
+						if(exists) {
+							try (final BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
+								final byte[] bytes = new byte[1024];
+								int len = 0;
+								while((len = zis.read(bytes)) != -1)
+									bos.write(bytes,0,len);
+							}
 						}
 					}
 				}

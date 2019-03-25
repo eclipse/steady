@@ -291,8 +291,8 @@
 	<build>
 		<plugins>
 
-			<!-- Show whether there are newer versions available, run fully-qualified 
-				with 'mvn -DallowMajorUpdates=false -DprocessDependencyManagement=false org.codehaus.mojo:versions-maven-plugin:2.5:display-dependency-updates' -->
+			<!-- Show whether there are newer versions available, run fully-qualified with
+				'mvn -DallowMajorUpdates=false -DprocessDependencyManagement=false org.codehaus.mojo:versions-maven-plugin:2.5:display-dependency-updates' -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
@@ -314,8 +314,8 @@
 				</configuration>
 			</plugin>
 
-			<!-- Successor of Findbugs, run fully-qualified with 'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml 
-				-Dspotbugs.failOnError=false com.github.spotbugs:spotbugs-maven-plugin:3.1.3:check' -->
+			<!-- Successor of Findbugs, run fully-qualified with
+			    'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.failOnError=false -P soot,gradle com.github.spotbugs:spotbugs-maven-plugin:3.1.11:check' -->
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
@@ -500,7 +500,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.3</version>
+				<version>3.1.11</version>
 				<configuration>
 					<failOnError>false</failOnError>
 					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>

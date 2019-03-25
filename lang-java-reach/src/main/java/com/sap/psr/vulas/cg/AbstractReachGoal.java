@@ -46,10 +46,9 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
     protected final Set<com.sap.psr.vulas.shared.json.model.ConstructId> getAppConstructs() {
         if (this.appConstructs == null) {
             try {
-                // Get application constructs from central engine
                 this.appConstructs = BackendConnector.getInstance().getAppConstructIds(this.getGoalContext(), this.getApplicationContext());
             } catch (BackendConnectionException e) {
-                new IllegalStateException(e.getMessage());
+                throw new IllegalStateException(e.getMessage());
             }
         }
         return this.appConstructs;
