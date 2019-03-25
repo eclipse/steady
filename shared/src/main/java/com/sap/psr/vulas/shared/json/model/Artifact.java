@@ -186,7 +186,7 @@ public class Artifact implements Serializable,Comparable<Object> {
 			b.append("-").append(this.getClassifier());
 		if(this.lang!=null && this.lang==ProgrammingLanguage.PY){
 			if (this.getPackaging().equals("sdist")){
-				b.append(".tar.gz");
+				b.append(".sdist");
 			}
 			else if (this.getPackaging().equals("bdist_wheel")){
 				b.append(".whl");

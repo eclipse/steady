@@ -26,6 +26,7 @@ public class Main {
 		final Options options = new Options();
 		options.addOption("j", "job", false, "Run patch Eval as cron job");
 		options.addOption("folder", "folderPath", true, "where to save CSV, JSON files, and code snippets");
+		options.addOption("lang", "lang", true, "language for the bugs to be analyzed (allowed values: PY or JAVA)");
 		options.addOption("h", "hour", true, "Delay for starting the job (hours)");
 		options.addOption("p", "period", true, "The period between successive executions (in hours)");
 		options.addOption("bug", "bug", true, "comma separared list of bugs to analyze");
@@ -46,6 +47,9 @@ public class Main {
 			
 			if(cmd.hasOption("folder"))
 				VulasConfiguration.getGlobal().setProperty(PEConfiguration.BASEFOLDER, cmd.getOptionValue("folder"));
+			
+			if(cmd.hasOption("lang"))
+				VulasConfiguration.getGlobal().setProperty(PEConfiguration.LANG, cmd.getOptionValue("lang"));
 			
 			if(cmd.hasOption("f"))
 				VulasConfiguration.getGlobal().setProperty(PEConfiguration.UPLOAD_RESULTS, Boolean.valueOf(false));

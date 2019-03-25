@@ -3,6 +3,7 @@ package com.sap.psr.vulas.shared.util;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +23,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.zip.ZipInputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -413,5 +415,18 @@ public class FileUtil {
 		}
 
 		return file_path;
+	}
+	
+	public static Boolean isZipped(File _f) throws IOException{
+		ZipInputStream zis = new ZipInputStream(new FileInputStream(_f));
+		boolean isZipped = zis.getNextEntry() != null;			
+		if(isZipped) {
+			zis.close();
+			return true;
+		}
+		else{
+			zis.close();
+			return false;
+		}
 	}
 }

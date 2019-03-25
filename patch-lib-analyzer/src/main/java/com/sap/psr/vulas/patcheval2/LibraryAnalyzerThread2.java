@@ -195,7 +195,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 						                    }
 						             }
 					            	 
-				                }else if(lang==ProgrammingLanguage.PY){
+				                }else if(qnameInBin && lang==ProgrammingLanguage.PY){
 				                //TODO: implement PY comparison
 				                	 if ( mcCC.getChangeType().equals(ConstructChangeType.MOD) &&
 					            			 (mcCC.getBuggyBody()!=null ||mcCC.getFixedBody()!=null)){
@@ -209,13 +209,13 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 					                		if(pythonConstructDigest.getDigest()!=null && vulnConstructDigest.getDigest()!=null && pythonConstructDigest.getDigest().equals(vulnConstructDigest.getDigest())){
 					                			changesToV = 0;
 					                		}
-					                		if(pythonConstructDigest.getDigest()!=null && fixedConstructDigest.getDigest()!=null &&pythonConstructDigest.getDigest().equals(fixedConstructDigest.getDigest())){
+					                		if(pythonConstructDigest.getDigest()!=null && fixedConstructDigest.getDigest()!=null && pythonConstructDigest.getDigest().equals(fixedConstructDigest.getDigest())){
 					                			changesToF = 0;
 					                		}
 				                    	}
 				                	 }
 				                }else{
-				                    	 log.info("JAVA Qname ["+mcCC.getConstructId().getQname()+"] not in sources of [" + l.toString()+"]");
+				                    	 log.info("Qname ["+mcCC.getConstructId().getQname()+"] not in sources of [" + l.toString()+"]");
 				                }
 					            lr.setAst_lid(ast_lid);
 				            	lr.setChangesToF(changesToF);

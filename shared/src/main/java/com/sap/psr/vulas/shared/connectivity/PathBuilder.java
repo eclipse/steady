@@ -156,15 +156,17 @@ public class PathBuilder {
 		return b.toString();
 	}
 
-	public static final String bugs() {
+	public static final String bugs(ProgrammingLanguage _l) {
 		final StringBuilder b = new StringBuilder();
 		b.append(root()).append("bugs");
+		if(_l != null)
+			b.append("?lang=").append(_l);
 		return b.toString();
 	}
 
 	public static final String bug(String _bugid) {
 		final StringBuilder b = new StringBuilder();
-		b.append(bugs()).append("/").append(_bugid);
+		b.append(bugs(null)).append("/").append(_bugid);
 		return b.toString();
 	}
 
