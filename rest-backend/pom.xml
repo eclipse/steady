@@ -7,7 +7,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.19.RELEASE</version>
-		<relativePath/>
+		<relativePath />
 	</parent>
 
 	<groupId>com.sap.research.security.vulas</groupId>
@@ -28,22 +28,22 @@
 	</properties>
 
 	<distributionManagement>
-        <snapshotRepository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>build.snapshots.repo</id>
-            <name>Internal Snapshots</name>
-            <url>${snapshots.repo}</url>
-        </snapshotRepository>
-        <repository>
-            <id>build.releases.repo</id>
-            <name>Internal Releases</name>
-            <url>${milestones.repo}</url>
-        </repository>
-        <site>
-            <id>vulas.website</id>
-            <name>Vulas Documentation</name>
-            <url>file:${project.basedir}/docs/site</url>
-        </site>
+		<snapshotRepository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>build.snapshots.repo</id>
+			<name>Internal Snapshots</name>
+			<url>${snapshots.repo}</url>
+		</snapshotRepository>
+		<repository>
+			<id>build.releases.repo</id>
+			<name>Internal Releases</name>
+			<url>${milestones.repo}</url>
+		</repository>
+		<site>
+			<id>vulas.website</id>
+			<name>Vulas Documentation</name>
+			<url>file:${project.basedir}/docs/site</url>
+		</site>
 	</distributionManagement>
 
 	<dependencies>
@@ -53,7 +53,7 @@
 			<artifactId>shared</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -92,7 +92,7 @@
 			<artifactId>json-path</artifactId>
 			<version>2.4.0</version>
 		</dependency>
-		
+
 		<!-- Swagger core dependencies -->
 		<dependency>
 			<groupId>io.swagger</groupId>
@@ -118,15 +118,15 @@
 		</dependency>
 
 		<dependency>
-		    <groupId>com.sun.mail</groupId>
-		    <artifactId>javax.mail</artifactId>
-		    <version>1.6.2</version>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.6.2</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>javax.activation</groupId>
-		    <artifactId>javax.activation-api</artifactId>
-		    <version>1.2.0</version>
+			<groupId>javax.activation</groupId>
+			<artifactId>javax.activation-api</artifactId>
+			<version>1.2.0</version>
 		</dependency>
 
 		<!-- Test dependencies -->
@@ -154,7 +154,7 @@
 			<version>1.3</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Used to mock REST services -->
 		<dependency>
 			<groupId>com.xebialabs.restito</groupId>
@@ -168,19 +168,19 @@
 			<version>2.9.0</version>
 			<scope>test</scope>
 		</dependency>
-				
+
 		<!-- Flyway -->
 		<dependency>
-    		<groupId>org.flywaydb</groupId>
-    		<artifactId>flyway-core</artifactId>
-    		<version>5.0.7</version>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>5.0.7</version>
 		</dependency>
 	</dependencies>
-	
+
 	<dependencyManagement>
 		<dependencies>
-		
-			<!-- Fix Spring Boot's dependency on vulnerable Jackson releases (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
+
+			<!-- Fix Spring Boot's dependency on vulnerable release (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-core</artifactId>
@@ -196,12 +196,21 @@
 				<artifactId>jackson-annotations</artifactId>
 				<version>2.9.8</version>
 			</dependency>
-			
+
+			<!-- Fix Spring Boot's dependency on vulnerable dom4j 1.6.1, inherited 
+				from hibernate-core 5.0.12.Final (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-core</artifactId>
+				<version>5.4.2.Final</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
 	<profiles>
-		<!-- To start locally with H2 and Hibernate, run "java -Dspring.profiles.active=test -jar rest-backend/target/rest-backend-<version>.jar" -->
+		<!-- To start locally with H2 and Hibernate, run "java -Dspring.profiles.active=test 
+			-jar rest-backend/target/rest-backend-<version>.jar" -->
 		<profile>
 			<id>standalone</id>
 			<activation>
@@ -219,15 +228,17 @@
 				<dependency>
 					<groupId>com.h2database</groupId>
 					<artifactId>h2</artifactId>
+					<version>1.4.199</version><!-- Fix Spring Boot's dependency on vulnerable 
+						h2 1.4.197 (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
 				</dependency>
 				<dependency>
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
-					<version>9.4.1212</version>
+					<version>42.1.4</version>
 				</dependency>
 			</dependencies>
 		</profile>
-		
+
 		<profile>
 			<id>container</id>
 			<properties>
@@ -235,8 +246,8 @@
 			</properties>
 			<dependencies>
 				<dependency>
-				    <groupId>commons-digester</groupId>
-				    <artifactId>commons-digester</artifactId>
+					<groupId>commons-digester</groupId>
+					<artifactId>commons-digester</artifactId>
 				</dependency>
 				<dependency>
 					<groupId>org.springframework.boot</groupId>
@@ -250,17 +261,14 @@
 				<dependency>
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
-					<version>9.4.1212</version>
+					<version>42.1.4</version>
 				</dependency>
 			</dependencies>
 			<build>
 				<plugins>
-					<!--
-						Maintain admin credentials for vulas-tomcat-server @ {host:port} in settings.xml
-						Build WAR
-						Run "mvn -Dmaven.tomcat.url={host:port}/manager/text -P container package tomcat7:deploy-only"
-						Point browser to {host:port}/apps
-					-->			
+					<!-- Maintain admin credentials for vulas-tomcat-server @ {host:port} 
+						in settings.xml Build WAR Run "mvn -Dmaven.tomcat.url={host:port}/manager/text 
+						-P container package tomcat7:deploy-only" Point browser to {host:port}/apps -->
 					<plugin>
 						<groupId>org.apache.tomcat.maven</groupId>
 						<artifactId>tomcat7-maven-plugin</artifactId>
@@ -312,52 +320,16 @@
 	</build>
 
 	<!-- Run with 'mvn clean site site:deploy' -->
-	<!--reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.9</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.0.0</version>
-				<configuration>
-					<failOnError>false</failOnError>
-					<noindex>false</noindex>
-					<links>
-						<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
-					</links>
-				</configuration>
-				<reportSets>
-					<reportSet>
-						<id>aggregate</id>
-						<configuration>
-						</configuration>
-						<reports>
-							<report>aggregate</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.5</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.0.0</version>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>checkstyle</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-		</plugins>
-	</reporting-->
+	<!--reporting> <plugins> <plugin> <groupId>org.apache.maven.plugins</groupId> 
+		<artifactId>maven-project-info-reports-plugin</artifactId> <version>2.9</version> 
+		</plugin> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
+		<version>3.0.0</version> <configuration> <failOnError>false</failOnError> 
+		<noindex>false</noindex> <links> <link>http://java.sun.com/j2se/1.5.0/docs/api</link> 
+		</links> </configuration> <reportSets> <reportSet> <id>aggregate</id> <configuration> 
+		</configuration> <reports> <report>aggregate</report> </reports> </reportSet> 
+		</reportSets> </plugin> <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>findbugs-maven-plugin</artifactId> 
+		<version>3.0.5</version> </plugin> <plugin> <groupId>org.apache.maven.plugins</groupId> 
+		<artifactId>maven-checkstyle-plugin</artifactId> <version>3.0.0</version> 
+		<reportSets> <reportSet> <reports> <report>checkstyle</report> </reports> 
+		</reportSet> </reportSets> </plugin> </plugins> </reporting -->
 </project>
