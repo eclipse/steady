@@ -25,7 +25,9 @@ import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.FileAnalyzer;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.monitor.ClassVisitor;
+import com.sap.psr.vulas.shared.connectivity.Service;
 import com.sap.psr.vulas.shared.util.FileSearch;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 import javassist.CannotCompileException;
 import javassist.CtClass;
@@ -40,6 +42,9 @@ import javassist.NotFoundException;
 public class WarAnalyzer extends JarAnalyzer {
 
 	private static final Log log = LogFactory.getLog(WarAnalyzer.class);
+	
+	private static final String INCL_SPACE = "vulas.core.instr.static.inclSpace";
+	private static final String INCL_BACKEND_URL = "vulas.core.instr.static.inclBackendUrl";
 
 	//	private static final ClassPool CLASSPOOL = ClassPool.getDefault();
 	//	/**
@@ -387,6 +392,15 @@ public class WarAnalyzer extends JarAnalyzer {
 				cfg.setProperty(CoreConfiguration.APP_CTX_GROUP, JarAnalyzer.getAppContext().getMvnGroup());
 				cfg.setProperty(CoreConfiguration.APP_CTX_ARTIF, JarAnalyzer.getAppContext().getArtifact());
 				cfg.setProperty(CoreConfiguration.APP_CTX_VERSI, JarAnalyzer.getAppContext().getVersion());
+				
+				// Include space
+				if(VulasConfiguration.getGlobal().getConfiguration().getBoolean(INCL_SPACE, true) && VulasConfiguration.getGlobal().getConfiguration().containsKey(CoreConfiguration.SPACE_TOKEN))
+					cfg.setProperty(CoreConfiguration.SPACE_TOKEN, VulasConfiguration.getGlobal().getConfiguration().getString(CoreConfiguration.SPACE_TOKEN));
+				
+				// Include backend URL
+				if(VulasConfiguration.getGlobal().getConfiguration().getBoolean(INCL_BACKEND_URL, true) && VulasConfiguration.getGlobal().getConfiguration().containsKey(VulasConfiguration.getServiceUrlKey(Service.BACKEND)))
+					cfg.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), VulasConfiguration.getGlobal().getConfiguration().getString(VulasConfiguration.getServiceUrlKey(Service.BACKEND)));
+				
 				tmp_file = Files.createTempFile("vulas-core-", ".properties");
 				cfg.save(tmp_file.toFile());
 				is = new FileInputStream(tmp_file.toFile());						

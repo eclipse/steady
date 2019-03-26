@@ -4,10 +4,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -161,5 +166,17 @@ public class VulasConfigurationTest {
 			ce = e;
 		}
 		assertTrue(ce==null);
+	}
+	
+	@Test
+	public void testEscapedUrl() {
+		final VulasConfiguration c1 = new VulasConfiguration();
+		final Properties props = new Properties();
+		try {
+			props.load(new FileInputStream(new File("./src/test/resources/vulas-test.properties")));
+			assertEquals("https://foo.com/bar", props.getProperty("vulas.bar"));
+		} catch (IOException e) {
+			assertTrue(false);
+		}
 	}
 }
