@@ -65,7 +65,7 @@ public class InstrGoal extends AbstractAppGoal {
 	public void addInstrPath(Path _p) throws IllegalArgumentException {
 		if(!FileUtil.isAccessibleDirectory(_p) && !FileUtil.isAccessibleFile(_p))
 			log.warn("[" + _p + "] is not an accessible file or directory");
-		else if(this.getAppPaths().contains(_p))
+		else if(this.getInstrPaths().contains(_p))
 			log.debug("[" + _p + "] is already part of intrumentation paths, and will not be added another time");
 		else
 			this.instrPaths.add(_p);
@@ -142,7 +142,7 @@ public class InstrGoal extends AbstractAppGoal {
 		final JarAnalysisManager mgr = new JarAnalysisManager(no_threads, true, app);
 		mgr.setRename(true);
 
-		// Set the different lib, include and work directories (if any)
+		// Set the lib, include and work directories (if any)
 		//if(this.inclPathsFileUtil.isAccessibleDirectory(includeDir) && this.app.getPackaging().toLowerCase().equals("war"))
 		if(this.hasInclPath())
 			mgr.setIncludeDir(this.inclPath);
