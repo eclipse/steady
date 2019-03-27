@@ -92,6 +92,38 @@ public class SpaceControllerTest {
 		this.tenantRepository.deleteAll();
 	}
 
+//	/**
+//	 * Check space creation without tenant header
+//	 * @throws Exception
+//	 */
+//	@Test
+//	public void testSpaceCreationNoTenant() throws Exception {
+//		final Tenant d_tenant = this.createDefaultTenant();
+//		com.sap.psr.vulas.shared.json.model.Space new_shared_space = new com.sap.psr.vulas.shared.json.model.Space();
+//		new_shared_space.setSpaceName("spaceNoTenant");
+//		new_shared_space.setDefault(false); 
+//		new_shared_space.setExportConfiguration(ExportConfiguration.OFF);
+//		new_shared_space.setSpaceDescription("description");
+//		new_shared_space.setOwnerEmails(new HashSet<String>(Arrays.asList(new String[] {"foo@bar.com"})));
+//
+//		
+//		// Post w/o tenant header, returns 400
+//		MockHttpServletRequestBuilder post_builder = post("/spaces")
+//				.content(JacksonUtil.asJsonString(new_shared_space))
+//				.contentType(MediaType.APPLICATION_JSON)
+//				.accept(MediaType.APPLICATION_JSON);
+//		mockMvc.perform(post_builder).andExpect(status().isBadRequest());
+//		
+//		post_builder = post("/spaces")
+//				.header(Constants.HTTP_TENANT_HEADER,  d_tenant.getTenantToken())
+//				.content(JacksonUtil.asJsonString(new_shared_space))
+//				.contentType(MediaType.APPLICATION_JSON)
+//				.accept(MediaType.APPLICATION_JSON);
+//		mockMvc.perform(post_builder).andExpect(status().isCreated())
+//		.andExpect(content().contentType(contentType))
+//		.andExpect(jsonPath("$.spaceName", is(space_name)));
+//	}
+	
 	/**
 	 * Check space creation.
 	 * @throws Exception
@@ -112,8 +144,9 @@ public class SpaceControllerTest {
 		new_shared_space.setSpaceDescription("bar");
 		new_shared_space.setOwnerEmails(new HashSet<String>(Arrays.asList(new String[] {"foo@bar.com"})));
 
-		// Post w/o tenant header, returns 400
+		// returns 400 as default space already exists
 		MockHttpServletRequestBuilder post_builder = post("/spaces")
+				.header(Constants.HTTP_TENANT_HEADER, d_tenant.getTenantToken())
 				.content(JacksonUtil.asJsonString(new_shared_space))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON);
@@ -124,17 +157,17 @@ public class SpaceControllerTest {
 
 		// Still one space only
 		assertEquals(1, this.spaceRepository.count());
+		
+		new_shared_space.setDefault(false); 
 
-		// Post w/ tenant header to try to recreate default space
+		// Post w/o tenant header to try to create a NON default space
 		post_builder = post("/spaces")
-				.header(Constants.HTTP_TENANT_HEADER, d_tenant.getTenantToken())
 				.content(JacksonUtil.asJsonString(new_shared_space))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON);
-		mockMvc.perform(post_builder).andExpect(status().isBadRequest());
+		mockMvc.perform(post_builder).andExpect(status().isCreated());
 
-		// Still one space only
-		assertEquals(1, this.spaceRepository.count());
+		assertEquals(2, this.spaceRepository.count());
 
 		// Create with read-only enabled -> bad request
 		new_shared_space.setReadOnly(true);
@@ -145,10 +178,9 @@ public class SpaceControllerTest {
 				.accept(MediaType.APPLICATION_JSON);
 		mockMvc.perform(post_builder).andExpect(status().isBadRequest());
 
-		// Still one space only
-		assertEquals(1, this.spaceRepository.count());
+		// Still two space only
+		assertEquals(2, this.spaceRepository.count());
 
-		//try to create another default space
 		new_shared_space.setReadOnly(false);
 		new_shared_space.setSpaceName(space_name);
 		new_shared_space.setDefault(false);
@@ -162,8 +194,8 @@ public class SpaceControllerTest {
 		.andExpect(content().contentType(contentType))
 		.andExpect(jsonPath("$.spaceName", is(space_name)));
 
-		// Now two space
-		assertEquals(2, this.spaceRepository.count());
+		// Now three space
+		assertEquals(3, this.spaceRepository.count());
 
 		// Post with non-existing tenant token, defaults in controller method
 		MockHttpServletRequestBuilder post_builder2 = post("/spaces")
@@ -172,6 +204,7 @@ public class SpaceControllerTest {
 				.header(Constants.HTTP_TENANT_HEADER, "does-not-exist")
 				.accept(MediaType.APPLICATION_JSON);
 		mockMvc.perform(post_builder2).andExpect(status().isNotFound());
+		
 	}
 
 	/**
