@@ -68,7 +68,7 @@ public class TenantRepositoryImpl implements TenantRepositoryCustom {
 				tenant = TenantRepository.FILTER.findOne(this.tenantRepository.findBySecondaryKey(_tenantToken));
 			}
 			catch(EntityNotFoundException enfe) {
-				log.error("A space with token [" + _tenantToken + "] does not exist: " + enfe.getMessage());
+				log.error("A tenant with token [" + _tenantToken + "] does not exist: " + enfe.getMessage());
 				throw enfe; 
 			}
 		}
