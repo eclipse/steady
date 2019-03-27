@@ -653,6 +653,53 @@ public class ApplicationControllerTest {
     	assertEquals(0, vd.size());
     }
     
+    @Test
+    public void testGetSpaceApps() throws Exception {
+    	// Rest-post http-client 4.1.3
+    	Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_http-client-4.1.3.json")), Library.class);
+    	this.libRepository.customSave(lib);
+    	/*MockHttpServletRequestBuilder post_builder = post("/libs/")
+    			.content(JacksonUtil.asJsonString(lib).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.sha1", is("16CF5A6B78951F50713D29BFAE3230A611DC01F0")));*/
+    	
+    	//Rest-post bug 
+    	final Bug bug = (Bug)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/bug_2015-5262.json")), Bug.class);
+    	this.bugRepository.customSave(bug,true);
+    	// Rest-post
+    	/*post_builder = post("/bugs/")
+    			.content(JacksonUtil.asJsonString(bug).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.bugId", is("CVE-2015-5262")));*/
+    	
+    	//Rest-post app using http-client
+    	final Application app = new Application(APP_GROUP, APP_ARTIFACT, "0.0." + APP_VERSION);
+
+		//Dependencies
+		final Set<Dependency> app_dependency = new HashSet<Dependency>(); 
+		app_dependency.add(new Dependency(app,lib, Scope.COMPILE, false, "httpclient-4.1.3.jar"));
+		app.setSpace(spaceRepository.getDefaultSpace(null));
+		app.setDependencies(app_dependency);
+    	this.appRepository.customSave(app);
+    	
+    	// Read all apps for the given space
+    	final MvcResult result = mockMvc.perform(get("/spaces/" + spaceRepository.getDefaultSpace(null).getSpaceToken() + "/apps"))
+                  .andExpect(status().isOk())
+                  .andExpect(content().contentType(contentTypeJson))
+                  .andReturn();
+    	
+    	final String resp = result.getResponse().getContentAsString();
+    	return;
+    }
+    
     /**
      * Tests application lastVulnChange update when bug construct changes are saved 
      * @return

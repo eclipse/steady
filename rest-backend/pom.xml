@@ -226,8 +226,8 @@
 	</dependencyManagement>
 
 	<profiles>
-		<!-- To start locally with H2 and Hibernate, run "java -Dspring.profiles.active=test 
-			-jar rest-backend/target/rest-backend-<version>.jar" -->
+		<!-- To start locally with H2 and Hibernate, run
+		    "java -Dspring.profiles.active=test -jar rest-backend/target/rest-backend-<version>.jar" -->
 		<profile>
 			<id>standalone</id>
 			<activation>
@@ -284,8 +284,8 @@
 			<build>
 				<plugins>
 					<!-- Maintain admin credentials for vulas-tomcat-server @ {host:port} 
-						in settings.xml Build WAR Run "mvn -Dmaven.tomcat.url={host:port}/manager/text 
-						-P container package tomcat7:deploy-only" Point browser to {host:port}/apps -->
+						in settings.xml. Build WAR Run "mvn -Dmaven.tomcat.url={host:port}/manager/text 
+						-P container package tomcat7:deploy-only". Point browser to {host:port}/apps -->
 					<plugin>
 						<groupId>org.apache.tomcat.maven</groupId>
 						<artifactId>tomcat7-maven-plugin</artifactId>

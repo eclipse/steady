@@ -64,6 +64,15 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 	@Query("SELECT app FROM Application AS app JOIN FETCH app.space s WHERE s.tenant = :tenant ORDER BY app.mvnGroup, app.artifact, app.version")
 	ArrayList<Application> findAllApps(@Param("tenant") Tenant tenant);
 	
+	/**
+	 * Returns all {@link Application}s of the given {@link Tenant} and {@link Space}. Note that the JPQL query cannot use distinct, as the applications
+	 * of different spaces can have the same group, artifact and version identifier.
+	 * @param tenant
+	 * @return
+	 */
+	@Query("SELECT app FROM Application AS app JOIN FETCH app.space s WHERE s.tenant = :tenant AND s.spaceToken = :spaceToken ORDER BY app.mvnGroup, app.artifact, app.version")
+	ArrayList<Application> findAllApps(@Param("tenant") Tenant tenant, @Param("spaceToken") String spaceToken);
+	
 	@Query("SELECT app FROM Application AS app JOIN FETCH app.space s WHERE app.mvnGroup LIKE :mvnGroup AND app.artifact LIKE :artifact AND app.version LIKE :version")
 	Collection<Application> searchByGAV(@Param("mvnGroup") String group, @Param("artifact") String artifact,@Param("version") String version);
 	

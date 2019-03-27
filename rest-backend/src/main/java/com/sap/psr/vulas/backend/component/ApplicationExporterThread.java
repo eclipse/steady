@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.GoalExecution;
+import com.sap.psr.vulas.backend.model.VulnerableDependency;
 import com.sap.psr.vulas.backend.repo.ApplicationRepository;
 import com.sap.psr.vulas.backend.repo.GoalExecutionRepository;
 import com.sap.psr.vulas.shared.enums.ExportFormat;
+import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.JsonBuilder;
 import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.StringUtil;
@@ -56,6 +59,10 @@ public class ApplicationExporterThread implements Runnable {
 	private List<Application> apps = null;
 
 	private ExportFormat format = null;
+	
+	private boolean includeAllBugs = false;
+	
+	private boolean includeExemptions = false;
 	
 	public ApplicationExporterThread setSeparator(String separator) {
 		this.separator = separator;
@@ -106,6 +113,24 @@ public class ApplicationExporterThread implements Runnable {
 
 	public StringBuffer getBuffer() {
 		return buffer;
+	}
+	
+	public boolean isIncludeAllBugs() {
+		return includeAllBugs;
+	}
+
+	public ApplicationExporterThread setIncludeAllBugs(boolean includeAllBugs) {
+		this.includeAllBugs = includeAllBugs;
+		return this;
+	}
+
+	public boolean isIncludeExemptions() {
+		return includeExemptions;
+	}
+
+	public ApplicationExporterThread setIncludeExemptions(boolean includeExemptions) {
+		this.includeExemptions = includeExemptions;
+		return this;
 	}
 
 	@Transactional(readOnly=true, propagation=Propagation.REQUIRED) // Needed in order to lazy load properties when called async
@@ -168,7 +193,7 @@ public class ApplicationExporterThread implements Runnable {
 					json.appendObjectProperty("createdAt", (String)null);
 				json.endObject();
 				
-				// Bugs
+				// Is the current app affected by the given bugs
 				if(!StringUtil.isEmptyOrContainsEmptyString(this.bugs) && this.affectedApps!=null) {
 					json.startObjectProperty("vulns");
 					final HashMap<String, Boolean> affected_app = this.affectedApps.get(a.getId());
@@ -191,6 +216,16 @@ public class ApplicationExporterThread implements Runnable {
 						}
 					}
 					json.endObject();
+				}
+				
+				// Include all vulnerable dependencies of the current app (JSON format only)
+				if(ExportFormat.JSON.equals(this.getFormat()) && this.includeAllBugs) {
+					json.startArrayProperty("vulnerableDependencies");
+					final TreeSet<VulnerableDependency> vd_all = this.appRepository.findAppVulnerableDependencies(a, this.includeExemptions, false);
+					for(VulnerableDependency vd: vd_all) {
+						json.appendJsonToArray(JacksonUtil.asJsonString(vd));
+					}
+					json.endArray();
 				}
 
 				// Stuff from goal execution
