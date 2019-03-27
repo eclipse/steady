@@ -21,7 +21,7 @@ public enum Scope {
 		if(_values!=null) {
 			for(String v: _values) {				
 				try {
-					scopes.add(Scope.valueOf(v));
+					scopes.add(Scope.valueOf(v.toUpperCase()));
 				} catch(IllegalArgumentException e) {
 					Scope.log.warn("Invalid scope [" + v + "] ignored, use one of [COMPILE, PROVIDED, RUNTIME, TEST, SYSTEM, IMPORT]");
 				}
