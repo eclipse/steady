@@ -38,6 +38,5 @@ public enum Scope {
 			Scope.log.warn("Invalid scope [" + _value + "], returning default [" + _default + "]");
 			return _default;
 		}
-    }
-    
+    }    
 }
