@@ -347,11 +347,15 @@ sap.ui.controller("view.Master", {
 										.done(function() {
 											this.submitNewWorkspace()
 										}.bind(this))
-										.fail(function() {
-											sap.m.MessageBox.warning(
-												"Please provide a valid " + model.Config.getSwIdLabel()
-											);
-										})
+										.fail(function(response) {
+											if (response.status !== 404) {
+												this.submitNewWorkspace()
+											} else {
+												sap.m.MessageBox.warning(
+													"Please provide a valid " + model.Config.getSwIdLabel()
+												);
+											}
+										}.bind(this))
 								} else {
 									this.submitNewWorkspace()
 								}
@@ -434,25 +438,32 @@ sap.ui.controller("view.Master", {
 			source.setValueState(sap.ui.core.ValueState.Information)
 			source.setValueStateText('Checking...')
 			this.validateSwid(swid)
-				.done(function(data) {
-					source.setValueState(sap.ui.core.ValueState.Success)
+			.done(function(data) {
+				source.setValueState(sap.ui.core.ValueState.Information)
+				source.setValueStateText(JSON.parse(data).name)
 				})
-				.fail(function(data) {
-					source.setValueState(sap.ui.core.ValueState.Error)
-					source.setValueStateText(model.Config.settings.swIdLabel + ' not recognized')
+				.fail(function(response) {
+					if (response.status === 404) {
+						source.setValueState(sap.ui.core.ValueState.Error)
+						source.setValueStateText(model.Config.settings.swIdLabel + ' not recognized')
+					} else {
+						source.setValueState(sap.ui.core.ValueState.Information)
+						source.setValueStateText('Validation service down')
+					}
 				})
 		} else if (swid.length > 3) {
 			source.setValueState(sap.ui.core.ValueState.Error)
 			source.setValueStateText('Provide 20 chars')
 		} else {
 			source.setValueState(sap.ui.core.ValueState.None)
+			source.setValueStateText(null)
 		}
 	},
 
 	validateSwid: function(swid) {
 		const base_url = model.Config.getHost()
 		const swid_url = model.Config.settings.swIdUrl
-		return $.ajax(base_url.replace(/\/$/, "") + swid_url + '/swids/' + swid)
+		return $.ajax(base_url.replace(/\/$/, "") + swid_url + '/swids/' + swid, {timeout: 5000})
 	},
 
 	submitNewWorkspace: function() {
