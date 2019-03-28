@@ -243,180 +243,132 @@ sap.ui.controller("view.Master", {
     	    	
     	
     	oSpaceModel.attachRequestCompleted(function() {
-    	
     		// create popover
 	        if (!this.oPopoverEdit) {
-	            this.oPopoverEdit = new sap.m.Popover("editSpace_popover", {
-		            title: "Manage Space", 
-			         //   placement: sap.m.PlacementType.Top, 
-			            footer: new sap.m.Bar({
-			                contentRight: [new sap.m.Button({
-			                    text: "Save",
-			                    icon: "sap-icon://save",
-			                    press: function () {
-			                    	if(sap.ui.getCore().byId('idSw').getValue()!="" && (model.Config.getSwIdLabel()=="" || model.Config.getSwIdLink()=="" || model.Config.getSwIdRegex()=="" || model.Config.getSwIdDb()=="")){
-			                    		sap.m.MessageBox.warning(
-			                    				"Cannot create/edit space with software identifier; corresponding properties not configured in the backend."
-			                    			);
-			                    	}
-			                    	else if(sap.ui.getCore().byId('idSpaceDL').getValue()!=""  && ( model.Config.getDlRegexList=="" || model.Config.getDlExample=="")){
-			                    		sap.m.MessageBox.warning(
-			                    				"Cannot create/edit space with distribution list; corresponding properties not configured in the backend"
-			                    			);
-			                    	}
-			                    	else if(model.Config.getSwIdMandatory()=="true" && sap.ui.getCore().byId('idSpaceDL').getValue()=="" && sap.ui.getCore().byId('idSw').getValue()=="")
-			                    		sap.m.MessageBox.warning(
-			                    				"Please provide a valid " + model.Config.getSwIdLabel()+ " or a valid distribution list. Other mandatory fields are: name, description, export mode and public/private mode."
-			                    			);
-			                    	else if(sap.ui.getCore().byId('idSpaceName').getValue() ==null || sap.ui.getCore().byId('idSpaceName').getValue()==""
-			                    		|| sap.ui.getCore().byId('idSpaceDescription').getValue() ==null || sap.ui.getCore().byId('idSpaceDescription').getValue()==""
-			                    			|| sap.ui.getCore().byId('idSpaceExport').getSelectedItem() ==null || sap.ui.getCore().byId('idSpaceExport').getSelectedKey()=="")
-			                    		sap.m.MessageBox.warning(
-			                    				"Please provide name, description, export mode for the space to be created."
-			                    			);
-			                    	else if(sap.ui.getCore().byId('idSpaceDL').getValue()!="" && !this.validateEmail(sap.ui.getCore().byId('idSpaceDL').getValue()))
-			                    		sap.m.MessageBox.warning(
-			                    				"Please provide an internal distribution list as contact " + model.Config.getDlExample()
-			                    			);
-			                    	else if(sap.ui.getCore().byId('idSw').getValue()!="" && !this.validateSwIdObjectNumber(sap.ui.getCore().byId('idSw').getValue()))
-			                    		sap.m.MessageBox.warning(
-			                    				"Please provide a valid " + model.Config.getSwIdLabel()
-			                    			);
-			                    	else{
-			                    		
-			                    		//construct body
-			                    		var body = '{ "spaceName": "' + sap.ui.getCore().byId("idSpaceName").getValue()+'"';
-			                    		body = body + ', "spaceDescription": "' + sap.ui.getCore().byId("idSpaceDescription").getValue()+'"';
-			                    		body = body + ', "exportConfiguration": "' + sap.ui.getCore().byId("idSpaceExport").getSelectedKey()+'"';
-			                    		body = body + ', "public": "' + sap.ui.getCore().byId("idSpacePublic").getState()+'"';
-			                    		body = body + ', "default": "false"';
-			                    		if(this.token!=null)
-			                    			body = body + ', "spaceToken": "' + this.token +'"';
-			                    		if(sap.ui.getCore().byId('idSpaceDL').getValue()!=null && sap.ui.getCore().byId('idSpaceDL').getValue()!=""){
-			                    			body = body + ', "spaceOwners": [ "' + sap.ui.getCore().byId("idSpaceDL").getValue()+'" ]';
-			                    		}
-			                    		if(sap.ui.getCore().byId('idSw').getValue()!=null && sap.ui.getCore().byId('idSw').getValue()!=""){
-			                    			body = body + ', "properties":[{"source":"USER","name":"'+model.Config.getSwIdDb()+'","value":"' + sap.ui.getCore().byId("idSw").getValue()+'"}]';
-			                    		}
-			                    		else{ //alert that SwId id was not provided and they should do it by editing the space
-			                    			sap.m.MessageBox.warning(
-				                    				"You did not provide the " + model.Config.getSwIdLabel() +
-				                    				" Please do so by going to Configuration -> Space Edit. Follow the info link for more information."
-				                    			);
-			                    		}
-			                    		
-			                    		body = body + '}'
-			                    		
-			                    			//todo add properties
-			                    		
-			                    		
-			                    		$.ajax({
-			            			        type: this.method,
-			            			        url: this.urlSpace,
-			            			        async: false,
-			            			        data: body,
-			            			        headers : {'content-type': "application/json",'cache-control': "no-cache" ,'X-Vulas-Tenant' : model.Config.getTenant() },
-	          						        
-			            			        success: function(data, status, jqXHR) {
-	               						    	sap.m.MessageBox.success(
-	        		                    				"Space has been saved, please copy the following token and provide it when analyzing your application: " + data.spaceToken
-	        		                    			);
-		    	
-	               						    	sap.ui.getCore().byId('editSpace_popover').close();},
-	               	        			    error: function(data, status, jqXHR) {
-	                   						    	sap.m.MessageBox.error(
-	            		                    				"Error [" + status + "] while saving the space."
-	            		                    			);
-	    	    	
-	                   						    	},        			
-			                    		})
-			                    		sap.ui.getCore().byId('editSpace_popover').close();
-			                    	}}.bind(this)})],
-			                    contentLeft: [ new sap.m.Button({
-			                        text: "Close",
-			                        icon: "sap-icon://close",
-			                        press: function () {
-			                        	sap.ui.getCore().byId('editSpace_popover').close();
-			                        }
-			                      })]
-			            }), 
-			            content: [
-			            new sap.m.InputListItem({
-			            	label: "Name",
-				            content: new sap.m.Input({
-				            	  id: "idSpaceName",
-				            	  type: sap.m.InputType.Text,
-				            //	  value: oSpaceModel.getObject("/spaceName")
-				            	  //liveChange : function() {model.Config.loadSpaces(sap.ui.getCore().byId('idTenant').getValue());}
-				        		})
-			            }),
-			            new sap.m.InputListItem({
-			            	label: "Description",
-				            content: new sap.m.Input({
-				            	  id: "idSpaceDescription",
-				            	  type: sap.m.InputType.Text,
-				            //	  value: oSpaceModel.getObject("/spaceDescription")
-				            	  //liveChange : function() {model.Config.loadSpaces(sap.ui.getCore().byId('idTenant').getValue());}
-				        		})
-			            }),
-			            new sap.m.InputListItem({
-			            	label: "Contact (provide a DL)",
-				            content: new sap.m.Input({
-				            	  id: "idSpaceDL",
-				            	  type: sap.m.InputType.Text,
-				            //	  value: dl
-				            	  //liveChange : function() {model.Config.loadSpaces(sap.ui.getCore().byId('idTenant').getValue());}
-				        		})
-			            }),
-			            new sap.m.InputListItem({
-			            	label: model.Config.getSwIdLabel(),
-				            content: new sap.ui.layout.HorizontalLayout({ 
-				            	content :[ 
-									new sap.m.Link(
-											{
-												text : "info",
-												href : model.Config
-														.getSwIdLink(),
-												target : "_blank"
-											}),
-									new sap.m.Input(
-											{
-												id : "idSw",
-												type : sap.m.InputType.Text,
+	        	this.oPopoverEdit = new sap.m.Popover("editSpace_popover", {
+	        		title: "Manage Space",
+					contentMinWidth: '500px',
+					modal: true,
+	        		content: [
+	        			new sap.m.InputListItem({
+							label: "Name (required)",
+	        				content: new sap.m.Input({
+								id: "idSpaceName",
+								required: true,
+	        					type: sap.m.InputType.Text,
+	        					//	  value: oSpaceModel.getObject("/spaceName")
+	        					//liveChange : function() {model.Config.loadSpaces(sap.ui.getCore().byId('idTenant').getValue());}
+	        				})
+	        			}),
+	        			new sap.m.InputListItem({
+							label: "Description (required)",
+	        				content: new sap.m.Input({
+								id: "idSpaceDescription",
+								required: true,
+	        					type: sap.m.InputType.Text,
+	        					//	  value: oSpaceModel.getObject("/spaceDescription")
+	        					//liveChange : function() {model.Config.loadSpaces(sap.ui.getCore().byId('idTenant').getValue());}
+	        				})
+	        			}),
+	        			new sap.m.InputListItem({
+	        				label: "Contact (provide a DL)",
+	        				content: new sap.m.Input({
+	        					id: "idSpaceDL",
+	        					type: sap.m.InputType.Text,
+	        					liveChange: function (event) {
+	        						let email = event.getParameters().value
+									let source = event.getSource()
+									this.markEmail(email, source)
+	        					}.bind(this)
+	        				})
+	        			}),
+	        			new sap.m.InputListItem({
+	        				label: model.Config.getSwIdLabel(),
+	        				content: new sap.ui.layout.HorizontalLayout({
+	        					content: [
+	        						new sap.m.Link({
+	        							text: "info",
+	        							href: model.Config
+	        								.getSwIdLink(),
+	        							target: "_blank"
+	        						}),
+	        						new sap.m.Input({
+	        							id: "idSw",
+	        							type: sap.m.InputType.Text,
+	        							valueLiveUpdate: true,
+	        							liveChange: function (event) {
+	        								let swid = event.getParameters().value
+											let source = event.getSource()
+	        								this.markSwid(swid, source)
+	        							}.bind(this)
+	        						})
+	        					]
+	        				})
+	        			}),
+	        			new sap.m.InputListItem({
+	        				label: "Export results",
+	        				content: new sap.m.ComboBox("idSpaceExport", {
+	        					items: [
+	        						new sap.ui.core.ListItem({
+	        							key: 'OFF',
+	        							text: 'OFF',
+	        							additionalText: 'No export'
+	        						}),
+	        						new sap.ui.core.ListItem("idAggregated", {
+	        							key: 'AGGREGATED',
+	        							text: 'AGGREGATED',
+	        							additionalText: 'Scan results of all apps are aggregated before export'
+	        						}),
+	        						new sap.ui.core.ListItem({
+	        							key: 'DETAILED',
+	        							text: 'DETAILED',
+	        							additionalText: 'Scan results of all apps are exported as is'
+	        						})
+	        					]
+	        				})
+	        			}),
+	        			new sap.m.InputListItem({
+	        				label: "Public",
+	        				content: new sap.m.Switch({
+	        					id: "idSpacePublic",
+	        					state: oSpaceModel.getObject("/public")
+	        					//	  width: "100%",
+	        				})
+	        			})
+					],
+					footer: new sap.m.Bar({
+						contentRight: [new sap.m.Button({
+							text: "Save",
+							icon: "sap-icon://save",
+							press: function () {
+								const swid = sap.ui.getCore().byId('idSw').getValue()
+								if (swid != "") {
+									this.validateSwid(swid, true)
+										.done(function() {
+											this.submitNewWorkspace()
+										}.bind(this))
+										.fail(function() {
+											sap.m.MessageBox.warning(
+												"Please provide a valid " + model.Config.getSwIdLabel()
+											);
+										})
+								} else {
+									this.submitNewWorkspace()
+								}
+								
+							}.bind(this)
+						})],
+						contentLeft: [new sap.m.Button({
+							text: "Close",
+							icon: "sap-icon://close",
+							press: function () {
+								sap.ui.getCore().byId('editSpace_popover').close();
+							}
+						})]
+					})
+	        	});
 
-											//liveChange : function() {model.Config.loadSpaces(sap.ui.getCore().byId('idTenant').getValue());}
-											})
-				            ]})
-			            }),
-			            new sap.m.InputListItem({
-			            	label: "Export results",
-				            content:  new sap.m.ComboBox("idSpaceExport",
-				            		{
-				            	items:[
-				            		new sap.ui.core.ListItem({key: 'OFF', 
-		                            	text:'OFF',
-		                            	additionalText:'No export'}),
-		                            new sap.ui.core.ListItem("idAggregated",{key: 'AGGREGATED', 
-			                           	text:'AGGREGATED',
-			                           	additionalText:'Scan results of all apps are aggregated before export'}),
-			                        new sap.ui.core.ListItem({key: 'DETAILED', 
-				                           	text:'DETAILED',
-				                           	additionalText:'Scan results of all apps are exported as is'})
-				            		]}
-				            )
-			            }),
-			            new sap.m.InputListItem({
-			            	label:"Public",
-				            content: new sap.m.Switch({
-				            		id : "idSpacePublic",
-			        	    	  state: oSpaceModel.getObject("/public")
-			        	    //	  width: "100%",
-			        	      })
-			            })] 
-			        });
-
-	         
-	            this.getView().addDependent(this.oPopoverEdit);
+	        	this.getView().addDependent(this.oPopoverEdit);
 	        }
 	        
 	        if(_new){
@@ -461,8 +413,122 @@ sap.ui.controller("view.Master", {
 	    	
     	}.bind(this))
     	
-    },
+	},
+	
+	markEmail: function(email, source) {
+		let regexes = model.Config.getDlRegexList()
+		if (email.length > 3) {
+			if (this.validateEmail(email)) {
+				source.setValueState(sap.ui.core.ValueState.Success)
+			} else {
+				source.setValueState(sap.ui.core.ValueState.Error)
+				source.setValueStateText('Satisfy one of the following: \n' + regexes.join('\n'))
+			}
+		} else {
+			source.setValueState(sap.ui.core.ValueState.None)
+		}
+	},
 
+	markSwid: function(swid, source) {
+		if (swid.length === 20) {
+			source.setValueState(sap.ui.core.ValueState.Information)
+			source.setValueStateText('Checking...')
+			this.validateSwid(swid)
+				.done(function(data) {
+					source.setValueState(sap.ui.core.ValueState.Success)
+				})
+				.fail(function(data) {
+					source.setValueState(sap.ui.core.ValueState.Error)
+					source.setValueStateText(model.Config.settings.swIdLabel + ' not recognized')
+				})
+		} else if (swid.length > 3) {
+			source.setValueState(sap.ui.core.ValueState.Error)
+			source.setValueStateText('Provide 20 chars')
+		} else {
+			source.setValueState(sap.ui.core.ValueState.None)
+		}
+	},
+
+	validateSwid: function(swid) {
+		const base_url = model.Config.getHost()
+		const swid_url = model.Config.settings.swIdUrl
+		return $.ajax(base_url.replace(/\/$/, "") + swid_url + '/swids/' + swid)
+	},
+
+	submitNewWorkspace: function() {
+		if (sap.ui.getCore().byId('idSw').getValue() != "" && (model.Config.getSwIdLabel() == "" || model.Config.getSwIdLink() == "" || model.Config.getSwIdRegex() == "" || model.Config.getSwIdDb() == "")) {
+			sap.m.MessageBox.warning(
+				"Cannot create/edit space with software identifier; corresponding properties not configured in the backend."
+			);
+		} else if (sap.ui.getCore().byId('idSpaceDL').getValue() != "" && (model.Config.getDlRegexList == "" || model.Config.getDlExample == "")) {
+			sap.m.MessageBox.warning(
+				"Cannot create/edit space with distribution list; corresponding properties not configured in the backend"
+			);
+		} else if (model.Config.getSwIdMandatory() == "true" && sap.ui.getCore().byId('idSpaceDL').getValue() == "" && sap.ui.getCore().byId('idSw').getValue() == "")
+			sap.m.MessageBox.warning(
+				"Please provide a valid " + model.Config.getSwIdLabel() + " or a valid distribution list. Other mandatory fields are: name, description, export mode and public/private mode."
+			);
+		else if (sap.ui.getCore().byId('idSpaceName').getValue() == null || sap.ui.getCore().byId('idSpaceName').getValue() == "" ||
+			sap.ui.getCore().byId('idSpaceDescription').getValue() == null || sap.ui.getCore().byId('idSpaceDescription').getValue() == "" ||
+			sap.ui.getCore().byId('idSpaceExport').getSelectedItem() == null || sap.ui.getCore().byId('idSpaceExport').getSelectedKey() == "")
+			sap.m.MessageBox.warning(
+				"Please provide name, description, export mode for the space to be created."
+			);
+		else if (sap.ui.getCore().byId('idSpaceDL').getValue() != "" && !this.validateEmail(sap.ui.getCore().byId('idSpaceDL').getValue()))
+			sap.m.MessageBox.warning(
+				"Please provide an internal distribution list as contact " + model.Config.getDlExample()
+			);
+		else {
+
+			//construct body
+			var body = '{ "spaceName": "' + sap.ui.getCore().byId("idSpaceName").getValue() + '"';
+			body = body + ', "spaceDescription": "' + sap.ui.getCore().byId("idSpaceDescription").getValue() + '"';
+			body = body + ', "exportConfiguration": "' + sap.ui.getCore().byId("idSpaceExport").getSelectedKey() + '"';
+			body = body + ', "public": "' + sap.ui.getCore().byId("idSpacePublic").getState() + '"';
+			body = body + ', "default": "false"';
+			if (this.token != null)
+				body = body + ', "spaceToken": "' + this.token + '"';
+			if (sap.ui.getCore().byId('idSpaceDL').getValue() != null && sap.ui.getCore().byId('idSpaceDL').getValue() != "") {
+				body = body + ', "spaceOwners": [ "' + sap.ui.getCore().byId("idSpaceDL").getValue() + '" ]';
+			}
+			if (sap.ui.getCore().byId('idSw').getValue() != null && sap.ui.getCore().byId('idSw').getValue() != "") {
+				body = body + ', "properties":[{"source":"USER","name":"' + model.Config.getSwIdDb() + '","value":"' + sap.ui.getCore().byId("idSw").getValue() + '"}]';
+			} else { //alert that SwId id was not provided and they should do it by editing the space
+				sap.m.MessageBox.warning(
+					"You did not provide the " + model.Config.getSwIdLabel() +
+					" Please do so by going to Configuration -> Space Edit. Follow the info link for more information."
+				);
+			}
+
+			body = body + '}'
+
+			//todo add properties
+
+
+			$.ajax({
+				type: this.method,
+				url: this.urlSpace,
+				async: false,
+				data: body,
+				headers: {
+					'content-type': "application/json",
+					'cache-control': "no-cache",
+					'X-Vulas-Tenant': model.Config.getTenant()
+				},
+
+				success: function (data, status, jqXHR) {
+					sap.m.MessageBox.success(
+						"Space has been saved, please copy the following token and provide it when analyzing your application: " + data.spaceToken
+					);
+
+					sap.ui.getCore().byId('editSpace_popover').close();
+				},
+				error: function (data, status, jqXHR) {
+					sap.m.MessageBox.error("Error [" + status + "] while saving the space.");
+				}
+			})
+		}
+	},
 
 	onListItemTap: function(oEvent) {
 		let object = oEvent.getParameter("listItem").getBindingContext().getObject()

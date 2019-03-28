@@ -19,6 +19,7 @@ model.Config.settings = {
 		dlRegexList : "",
 		dlExample : "",
 		swIdLabel : "",
+		swIdUrl : "",
 		swIdLink : "", 
 		swIdRegex : "",
 		swIdDb : "",
@@ -43,6 +44,7 @@ model.Config.loadPropertiesFromBackend = function(){
 			model.Config.settings.dlRegexList="";
 			model.Config.settings.dlExample="";
 			model.Config.settings.swIdLabel="";
+			model.Config.settings.swIdUrl="";
 			model.Config.settings.swIdLink="";
 			model.Config.settings.swIdRegex="";
 			model.Config.settings.wikiUrl="";
@@ -56,6 +58,8 @@ model.Config.loadPropertiesFromBackend = function(){
 				model.Config.settings.dlExample=configs[i].value[0];
 			if(configs[i].key=="sw.id.label")
 				model.Config.settings.swIdLabel=configs[i].value[0];
+			if(configs[i].key=="sw.id.url")
+				model.Config.settings.swIdUrl=configs[i].value[0];
 			if(configs[i].key=="sw.id.link")
 				model.Config.settings.swIdLink=configs[i].value[0];
 			if(configs[i].key=="sw.id.regex")
