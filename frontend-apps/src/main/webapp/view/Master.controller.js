@@ -343,19 +343,25 @@ sap.ui.controller("view.Master", {
 							press: function () {
 								const swid = sap.ui.getCore().byId('idSw').getValue()
 								if (swid != "") {
-									this.validateSwid(swid, true)
-										.done(function() {
-											this.submitNewWorkspace()
-										}.bind(this))
-										.fail(function(response) {
-											if (response.status !== 404) {
+									if (this.validateSwIdObjectNumber(swid)) {
+										this.validateSwidAsync(swid, true)
+											.done(function() {
 												this.submitNewWorkspace()
-											} else {
-												sap.m.MessageBox.warning(
-													"Please provide a valid " + model.Config.getSwIdLabel()
-												);
-											}
-										}.bind(this))
+											}.bind(this))
+											.fail(function(response) {
+												if (response.status !== 404) {
+													this.submitNewWorkspace()
+												} else {
+													sap.m.MessageBox.warning(
+														"Please provide a valid " + model.Config.getSwIdLabel()
+													);
+												}
+											}.bind(this))
+									} else {
+										sap.m.MessageBox.warning(
+											"Please provide a valid " + model.Config.getSwIdLabel()
+										);
+									}
 								} else {
 									this.submitNewWorkspace()
 								}
@@ -421,7 +427,7 @@ sap.ui.controller("view.Master", {
 	
 	markEmail: function(email, source) {
 		let regexes = model.Config.getDlRegexList()
-		if (email.length > 3) {
+		if (email.length > 0) {
 			if (this.validateEmail(email)) {
 				source.setValueState(sap.ui.core.ValueState.Success)
 			} else {
@@ -434,10 +440,11 @@ sap.ui.controller("view.Master", {
 	},
 
 	markSwid: function(swid, source) {
-		if (swid.length === 20) {
+		let regex = model.Config.getSwIdRegex()
+		if (this.validateSwIdObjectNumber(swid)) {
 			source.setValueState(sap.ui.core.ValueState.Information)
 			source.setValueStateText('Checking...')
-			this.validateSwid(swid)
+			this.validateSwidAsync(swid)
 			.done(function(data) {
 				source.setValueState(sap.ui.core.ValueState.Information)
 				source.setValueStateText(JSON.parse(data).name)
@@ -448,19 +455,19 @@ sap.ui.controller("view.Master", {
 						source.setValueStateText(model.Config.settings.swIdLabel + ' not recognized')
 					} else {
 						source.setValueState(sap.ui.core.ValueState.Information)
-						source.setValueStateText('Validation service down')
+						source.setValueStateText('Ok')
 					}
 				})
-		} else if (swid.length > 3) {
+		} else if (swid.length > 0) {
 			source.setValueState(sap.ui.core.ValueState.Error)
-			source.setValueStateText('Provide 20 chars')
+			source.setValueStateText('Satisfy the regex below:\n' + regex)
 		} else {
 			source.setValueState(sap.ui.core.ValueState.None)
 			source.setValueStateText(null)
 		}
 	},
 
-	validateSwid: function(swid) {
+	validateSwidAsync: function(swid) {
 		const base_url = model.Config.getHost()
 		const swid_url = model.Config.settings.swIdUrl
 		return $.ajax(base_url.replace(/\/$/, "") + swid_url + '/swids/' + swid, {timeout: 5000})
