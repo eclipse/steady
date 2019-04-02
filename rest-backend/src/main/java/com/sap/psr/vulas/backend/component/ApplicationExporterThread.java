@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.GoalExecution;
 import com.sap.psr.vulas.backend.model.VulnerableDependency;
+import com.sap.psr.vulas.backend.model.view.Views;
 import com.sap.psr.vulas.backend.repo.ApplicationRepository;
 import com.sap.psr.vulas.backend.repo.GoalExecutionRepository;
 import com.sap.psr.vulas.shared.enums.ExportFormat;
@@ -223,7 +224,7 @@ public class ApplicationExporterThread implements Runnable {
 					json.startArrayProperty("vulnerableDependencies");
 					final TreeSet<VulnerableDependency> vd_all = this.appRepository.findAppVulnerableDependencies(a, this.includeExemptions, false);
 					for(VulnerableDependency vd: vd_all) {
-						json.appendJsonToArray(JacksonUtil.asJsonString(vd));
+						json.appendJsonToArray(JacksonUtil.asJsonString(vd, null, Views.Default.class));
 					}
 					json.endArray();
 				}

@@ -2,6 +2,7 @@ package com.sap.psr.vulas.shared.json;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -14,22 +15,33 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 public class JacksonUtil {
 	
 	/**
-	 * Serializes the given object to JSON, thereby using no custom {@link StdSerializer}s.
+	 * Serializes the given object to JSON, thereby using no custom {@link StdSerializer}s and no view {@link Class}.
 	 * @param _object
 	 * @return
 	 */
 	public static String asJsonString(final Object _object) {
-		return JacksonUtil.asJsonString(_object,  null);
+		return JacksonUtil.asJsonString(_object, null, null);
 	}
 
 	/**
-	 * Serializes the given object to JSON, thereby using the given {@link StdSerializer}s.
+	 * Serializes the given object to JSON, thereby using the given {@link StdSerializer}s and no view {@link Class}.
 	 * @param _object
 	 * @param _custom_serializers
 	 * @return
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static String asJsonString(final Object _object, final Map<Class<?>, StdSerializer<?>> _custom_serializers) {
+		return JacksonUtil.asJsonString(_object, _custom_serializers, null);
+	}
+	
+	/**
+	 * Serializes the given object to JSON, thereby using the given {@link StdSerializer}s and the given view {@link Class}.
+	 * @param _object
+	 * @param _custom_serializers
+	 * @param _view
+	 * @return
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static String asJsonString(final Object _object, final Map<Class<?>, StdSerializer<?>> _custom_serializers, Class _view) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
             
@@ -42,7 +54,13 @@ public class JacksonUtil {
     		}
     		mapper.registerModule(module);
             
-            final String jsonContent = mapper.writeValueAsString(_object);
+    		String jsonContent = null;
+    		if(_view==null) {
+    			jsonContent = mapper.writeValueAsString(_object);
+    		}
+    		else {
+    			jsonContent = mapper.writerWithView(_view).writeValueAsString(_object);
+    		}
             return jsonContent;
         } catch (Exception e) {
             throw new RuntimeException(e);
