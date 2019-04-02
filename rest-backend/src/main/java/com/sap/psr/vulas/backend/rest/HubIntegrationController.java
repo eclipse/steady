@@ -47,6 +47,7 @@ import com.sap.psr.vulas.backend.repo.GoalExecutionRepository;
 import com.sap.psr.vulas.backend.repo.SpaceRepository;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
 import com.sap.psr.vulas.shared.enums.ExportConfiguration;
+import com.sap.psr.vulas.shared.enums.ExportFormat;
 import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.StopWatch;
@@ -243,11 +244,11 @@ public class HubIntegrationController {
 				else
 					vhd = new VulnerableItemDependency(_s.getSpaceToken(), vd, snapshot_date);
 
-				//add application id to ease integration
+				// Add application id to ease integration
 				vhd.setAppId(_app.getId());
-				//add application id to ease integration
+				
+				// Last scan date and client version
 				vhd.setLastScan(_app.getLastScan());
-				//add client version
 				if(latest_gexe!=null)
 					vhd.setClientVersion(latest_gexe.getClientVersion());
 				

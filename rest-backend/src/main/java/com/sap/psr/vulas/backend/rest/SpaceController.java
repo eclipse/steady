@@ -1,10 +1,19 @@
 package com.sap.psr.vulas.backend.rest;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sap.psr.vulas.backend.component.ApplicationExporter;
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.Space;
 import com.sap.psr.vulas.backend.model.Tenant;
@@ -27,6 +37,7 @@ import com.sap.psr.vulas.backend.repo.ApplicationRepository;
 import com.sap.psr.vulas.backend.repo.SpaceRepository;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
 import com.sap.psr.vulas.backend.util.TokenUtil;
+import com.sap.psr.vulas.shared.enums.ExportFormat;
 import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.StringList;
@@ -54,12 +65,15 @@ public class SpaceController {
 	private TenantRepository tenantRepository;
 
 	private ApplicationRepository appRepository;
+	
+	private final ApplicationExporter appExporter;
 
 	@Autowired
-	SpaceController(TenantRepository tenantRepository, SpaceRepository spaceRepository, ApplicationRepository appRepository) {
+	SpaceController(TenantRepository tenantRepository, SpaceRepository spaceRepository, ApplicationRepository appRepository, ApplicationExporter appExporter) {
 		this.tenantRepository = tenantRepository;
 		this.spaceRepository = spaceRepository;
 		this.appRepository = appRepository;
+		this.appExporter = appExporter;
 
 		//(SP, 27-10-2017) It is not mandatory to have default tenant & spaces. This is only required for 
 		// the existing internal VULAS system to be backward compatible with vulas 2.x
@@ -308,7 +322,7 @@ public class SpaceController {
 				log.error("Error retrieving tenant: " + e);
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}
-			
+
 			// Prevent modification of read-only spaces
 			try {
 				final Space managed_space = SpaceRepository.FILTER.findOne(this.spaceRepository.findBySecondaryKey(new_space.getSpaceToken()));
@@ -378,7 +392,7 @@ public class SpaceController {
 			// Load existing space, and delete
 			try {
 				final Space space = SpaceRepository.FILTER.findOne(this.spaceRepository.findBySecondaryKey(t, token));
-				
+
 				// Prevent cleaning of read-only spaces
 				if(space.isReadOnly()) {
 					log.error("Space [" + space + "] is read-only");
@@ -469,7 +483,7 @@ public class SpaceController {
 					log.error("Space [" + space + "] is read-only");
 					return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
 				}
-				
+
 				// Prevent deletion of default space in default tenant. This is needed to make sure that scans w/o space token work
 				if(space.isDefault() && t.isDefault()) {
 					log.error("The default space of the default tenant cannot be deleted as long as we want to support Vulas 2.x");
@@ -524,6 +538,73 @@ public class SpaceController {
 		}
 		catch(Exception enfe) {
 			return new ResponseEntity<Space>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * @return sorted set of all {@link Application}s of the respective tenant and space (as CSV attachment) 
+	 */
+	@RequestMapping(value = "/{token:.+}/apps", method = RequestMethod.GET)
+	public void getApplications(
+			@PathVariable String token,
+			@RequestParam(value="includeSpaceProperties", required=false, defaultValue="") final String[] includeSpaceProperties, 
+			@RequestParam(value="includeGoalConfiguration", required=false, defaultValue="") final String[] includeGoalConfiguration,
+			@RequestParam(value="includeGoalSystemInfo", required=false, defaultValue="") final String[] includeGoalSystemInfo,
+			@RequestParam(value="includeBugs", required=false, defaultValue="false") final String includeBugs,
+			@RequestParam(value="includeExemptions", required=false, defaultValue="false") final String includeExemptions,
+			@RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) final String tenant,
+			HttpServletRequest request,
+			HttpServletResponse response) {
+
+		// Get the tenant
+		Tenant t = null;
+		try {
+			if(tenant!=null && !tenant.equals(""))
+				t = TenantRepository.FILTER.findOne(this.tenantRepository.findBySecondaryKey(tenant));
+			else
+				t = tenantRepository.findDefault();
+		}
+		catch(EntityNotFoundException enfe) {
+			log.error("Tenant [" + tenant + "] not found");
+			throw new RuntimeException("Tenant [" + tenant + "] not found");
+		}
+
+		// Load existing space, and delete
+		try {
+			final boolean include_bugs = Boolean.valueOf(includeBugs);
+			final boolean include_exemptions = Boolean.valueOf(includeExemptions);
+			
+			final Space space = SpaceRepository.FILTER.findOne(this.spaceRepository.findBySecondaryKey(t, token));
+
+			final java.nio.file.Path json_file = this.appExporter.produceExport(t, space, ";", includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, null, include_bugs, include_exemptions, ExportFormat.JSON);
+
+			// Headers
+			response.setContentType(ExportFormat.getHttpContentType(ExportFormat.JSON));
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(json_file.toFile())));
+			String line = null;
+			final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
+			while( (line=reader.readLine())!=null ) {
+				writer.write(line);
+				writer.newLine();
+				writer.flush();
+			}
+
+			// Finish up
+			reader.close();
+			writer.flush();
+			response.flushBuffer();
+		} catch (FileNotFoundException e) {
+			log.error("Error while reading all tenant apps (as [" + ExportFormat.JSON + "]): " + e.getMessage(), e);
+			throw new RuntimeException("IOError writing file to output stream");
+		} catch (IOException e) {
+			log.error("Error while reading all tenant apps (as [" + ExportFormat.JSON + "]): " + e.getMessage(), e);
+			throw new RuntimeException("IOError writing file to output stream");
+		} catch(EntityNotFoundException enfe) {
+			log.error(enfe.getMessage());
+			throw new RuntimeException("Space not found");
+		} catch (Exception e) {
+			log.error("Error while reading all tenant apps (as [" + ExportFormat.JSON + "]): " + e.getMessage(), e);
+			throw new RuntimeException("IOError writing file to output stream");
 		}
 	}
 }

@@ -130,6 +130,10 @@ public class ApplicationController {
 	private final V_AppVulndepRepository appVulDepRepository;
 	
 	private final ApplicationExporter appExporter;
+	
+	public final static String SENDER_EMAIL = "vulas.backend.smtp.sender";
+	
+	public static final String ALL_APPS_CSV_SUBJECT = "vulas.backend.allApps.mailSubject";
 
 	@Bean(name = DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
 	public DispatcherServlet dispatcherServlet() {
@@ -139,7 +143,7 @@ public class ApplicationController {
 	}
 
 	@Autowired
-	ApplicationController(ApplicationRepository appRepository, GoalExecutionRepository gexeRepository, DependencyRepository depRepository, TracesRepository traceRepository, LibraryRepository libRepository, PathRepository pathRepository, BugRepository bugRepository, SpaceRepository tokenRepository, ConstructIdRepository cidRepository, AffectedLibraryRepository affLibRepository, TenantRepository tenantRepository, V_AppVulndepRepository appVulDepRepository, ApplicationExporter csvProducer) {
+	ApplicationController(ApplicationRepository appRepository, GoalExecutionRepository gexeRepository, DependencyRepository depRepository, TracesRepository traceRepository, LibraryRepository libRepository, PathRepository pathRepository, BugRepository bugRepository, SpaceRepository tokenRepository, ConstructIdRepository cidRepository, AffectedLibraryRepository affLibRepository, TenantRepository tenantRepository, V_AppVulndepRepository appVulDepRepository, ApplicationExporter appExporter) {
 		this.appRepository = appRepository;
 		this.gexeRepository = gexeRepository;
 		this.depRepository = depRepository;
@@ -152,7 +156,7 @@ public class ApplicationController {
 		this.affLibRepository = affLibRepository;
 		this.tenantRepository = tenantRepository;
 		this.appVulDepRepository = appVulDepRepository;
-		this.appExporter = csvProducer;
+		this.appExporter = appExporter;
 	}
 
 	//TODO: The space headers must become mandatory once we get (most of) users to switch to vulas3
@@ -460,12 +464,10 @@ public class ApplicationController {
 
 	}
 	
-	public final static String SENDER_EMAIL = "vulas.backend.smtp.sender";
-	
-	public static final String ALL_APPS_CSV_SUBJECT = "vulas.backend.allApps.mailSubject";
-	
 	/**
-	 * @return sorted set of all {@link Application}s of the respective tenant and space (as CSV attachment) 
+	 * Compiles a list of all {@link Application}s of the respective {@link Tenant}, which is either sent by email (as attachment) or returned as part of the HTTP response.
+	 * 
+	 * @return
 	 */
 	@RequestMapping(value = "/export", method = RequestMethod.GET)
 	public void exportApplications(
@@ -476,7 +478,7 @@ public class ApplicationController {
 			@RequestParam(value="vuln", required=false, defaultValue="") final String[] vuln,
 			@RequestParam(value="to", required=false, defaultValue="") final String[] to,
 			@RequestParam(value="format", required=false, defaultValue="csv") final String format,
-			@RequestHeader(value="X-Vulas-Tenant", required=false) final String tenant,
+			@RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) final String tenant,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 
@@ -510,7 +512,7 @@ public class ApplicationController {
 					msg.addRecipient(recipient);
 				
 				// Write apps to CSV and send email (async)
-				this.appExporter.produceExportAsync(t, separator, includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, vuln, msg, exp_format);
+				this.appExporter.produceExportAsync(t, null, separator, includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, vuln, false, false, exp_format, msg);
 								
 				// Short response				
 				response.setContentType(ExportFormat.TXT_PLAIN);      
@@ -537,7 +539,7 @@ public class ApplicationController {
 		else {
 			try {
 				// Write apps to CSV
-				final java.nio.file.Path csv = this.appExporter.produceExport(t, separator, includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, vuln, exp_format);
+				final java.nio.file.Path csv = this.appExporter.produceExport(t, null, separator, includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, vuln, false, false, exp_format);
 				
 				// Headers
 				response.setContentType(ExportFormat.getHttpContentType(exp_format));      

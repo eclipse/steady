@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sap.psr.vulas.backend.model.Application;
+import com.sap.psr.vulas.backend.model.Space;
 import com.sap.psr.vulas.backend.model.Tenant;
 import com.sap.psr.vulas.backend.repo.ApplicationRepository;
 import com.sap.psr.vulas.backend.util.Message;
@@ -52,24 +53,24 @@ public class ApplicationExporter {
 	@Autowired
 	private ApplicationRepository appRepository;
 
-	public synchronized void produceExportAsync(final Tenant _tenant, final String separator, final String[] includeSpaceProperties, final String[] includeGoalConfiguration, final String[] includeGoalSystemInfo, final String[] _bugs, final Message _msg, final ExportFormat _format) {
+	public synchronized void produceExportAsync(final Tenant _tenant, final Space _space, final String separator, final String[] includeSpaceProperties, final String[] includeGoalConfiguration, final String[] includeGoalSystemInfo, final String[] _selected_bugs, final boolean _incl_all_bugs, final boolean _incl_exemptions, final ExportFormat _format, final Message _msg) {
 		// Check whether SMTP is properly configured (throws ISE if not)
 		SmtpClient.getSmtpProperties(VulasConfiguration.getGlobal().getConfiguration());
 		
 		final Thread thread = new Thread(new Runnable() {
 			public void run() {
 				try {
-					final java.nio.file.Path csv_file = produceExport(_tenant, separator, includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, _bugs, _format);
+					final java.nio.file.Path csv_file = produceExport(_tenant, _space, separator, includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, _selected_bugs, _incl_all_bugs, _incl_exemptions, _format);
 					_msg.setAttachment(csv_file);
 					final SmtpClient c = new SmtpClient();
 					c.send(_msg);
 				} catch (IOException e) {
-					log.error("Error while reading all tenant apps (as CSV): " + e.getMessage(), e);
+					log.error("Error while reading all tenant apps as [" + _format + "]: " + e.getMessage(), e);
 				} catch (MessagingException e) {
-					log.error("Error while sending all tenant apps (as CSV) per email: " + e.getMessage(), e);
+					log.error("Error while sending all tenant apps as [" + _format + "] per email: " + e.getMessage(), e);
 				}
 			}
-		}, "AllAppsAsCsv-" + StringUtil.getRandonString(6));
+		}, "ExportAllApps-" + StringUtil.getRandonString(6));
 		thread.setPriority(Thread.MIN_PRIORITY); 
 		thread.start();
 	}
@@ -84,23 +85,27 @@ public class ApplicationExporter {
 	 * @param _msg
 	 */
 	@Transactional
-	public synchronized Path produceExport(Tenant _tenant, String separator, String[] includeSpaceProperties, String[] includeGoalConfiguration, String[] includeGoalSystemInfo, String[] _bugs, ExportFormat _format) throws IOException {
+	public synchronized Path produceExport(Tenant _tenant, Space _space, String separator, String[] includeSpaceProperties, String[] includeGoalConfiguration, String[] includeGoalSystemInfo, String[] _selected_bugs, boolean _incl_all_bugs, boolean _incl_exemptions, ExportFormat _format) throws IOException {
 		// To be returned
 		Path export_file = null;
 
-		// Get all apps
-		final ArrayList<Application> apps = this.appRepository.findAllApps(_tenant);
+		// Get the apps to be exported
+		ArrayList<Application> apps = null;
+		if(_space!=null)
+			apps = this.appRepository.findAllApps(_tenant, _space.getSpaceToken());
+		else
+			apps = this.appRepository.findAllApps(_tenant);
 
 		// Show progress
-		final StopWatch sw = new StopWatch("Produce [" + _format + "] export for [" + apps.size() + "] apps");
+		final StopWatch sw = new StopWatch("Produce [" + _format + "] export for [" + apps.size() + "] app(s) of " + _tenant + " and " + _space);
 		sw.setTotal(apps.size());
 		sw.start();
 
 		// Get applications affected by given bugs
 		HashMap<Long, HashMap<String, Boolean>> affected_apps = null;
-		if(_bugs!=null && _bugs.length>0) {
-			affected_apps = this.appRepository.findAffectedApps(_bugs);
-			sw.lap("Completed search for apps affected by [" + StringUtil.join(_bugs, ", ") + "]", true);
+		if(_selected_bugs!=null && _selected_bugs.length>0) {
+			affected_apps = this.appRepository.findAffectedApps(_selected_bugs);
+			sw.lap("Completed search for apps affected by [" + StringUtil.join(_selected_bugs, ", ") + "]", true);
 		}
 
 		// Partition size
@@ -116,8 +121,10 @@ public class ApplicationExporter {
 			.setIncludeGoalConfiguration(includeGoalConfiguration)
 			.setIncludeGoalSystemInfo(includeGoalSystemInfo)
 			.setIncludeSpaceProperties(includeSpaceProperties)
-			.setBugs(_bugs)
+			.setBugs(_selected_bugs)
 			.setAffectedApps(affected_apps)
+			.setIncludeAllBugs(_incl_all_bugs)
+			.setIncludeExemptions(_incl_exemptions)
 			.setFormat(_format);
 			searches.add(search);
 			pool.execute(search);
@@ -132,8 +139,10 @@ public class ApplicationExporter {
 				.setIncludeGoalConfiguration(includeGoalConfiguration)
 				.setIncludeGoalSystemInfo(includeGoalSystemInfo)
 				.setIncludeSpaceProperties(includeSpaceProperties)
-				.setBugs(_bugs)
+				.setBugs(_selected_bugs)
 				.setAffectedApps(affected_apps)
+				.setIncludeAllBugs(_incl_all_bugs)
+				.setIncludeExemptions(false)
 				.setFormat(_format);
 				searches.add(search);
 				pool.execute(search);
@@ -164,8 +173,8 @@ public class ApplicationExporter {
 			
 			
 				// Bugs
-				if(_bugs!=null)
-					for(String b: _bugs)
+				if(_selected_bugs!=null)
+					for(String b: _selected_bugs)
 						header.append(b).append(separator);
 	
 				// Most recent goal execution
