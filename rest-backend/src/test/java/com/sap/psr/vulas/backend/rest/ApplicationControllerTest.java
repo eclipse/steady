@@ -667,7 +667,7 @@ public class ApplicationControllerTest {
     	Calendar originalLastVulnChange = managed_app.getLastVulnChange();
     	Calendar originalModifiedAt = managed_app.getModifiedAt();
     	Calendar originalCreatedAt = managed_app.getCreatedAt();
-    	assertTrue(originalModifiedAt.getTimeInMillis()==originalCreatedAt.getTimeInMillis());
+    	assertTrue(originalModifiedAt.getTimeInMillis()>=originalCreatedAt.getTimeInMillis());
     	    	
     	//Get the application by CC
     	List<Application> appFromJPQL = this.appRepository.findAppsByCC((List<ConstructId>)managed_lib.getConstructs());

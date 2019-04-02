@@ -48,5 +48,33 @@ public class TenantRepositoryImpl implements TenantRepositoryCustom {
 		}
 		return true;
 	}
+	
+	/**
+	 * Returns the tenant for the given tenant token. In case a tenant token is not provided, it returns the default tenant (if existing, null otherwise)
+	 * @return the tenant for the given tenant token; default tenant if token is null; null otherwise.
+	 * @throws Exception 
+	 */
+	public Tenant getTenant(String _tenantToken) {
+		Tenant tenant = null;		
+		if(_tenantToken==null){
+			tenant = tenantRepository.findDefault();
+			if(tenant==null){
+				log.error("No default tenant exists");
+				throw new EntityNotFoundException("Default tenant does not exists");
+			}
+		}
+		else{
+			try {
+				tenant = TenantRepository.FILTER.findOne(this.tenantRepository.findBySecondaryKey(_tenantToken));
+			}
+			catch(EntityNotFoundException enfe) {
+				log.error("A tenant with token [" + _tenantToken + "] does not exist: " + enfe.getMessage());
+				throw enfe; 
+			}
+		}
+		
+		log.info("Found " + tenant + " for token [" + _tenantToken + "]");
+		return tenant;
+	}
 }
 

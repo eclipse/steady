@@ -72,12 +72,20 @@ public class SpaceController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Collection<Space>> getAllSpaces(
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=true) String tenant) {
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
+		
+		// Check whether tenant exists or retrieve default
+		Tenant t = null;
 		try {
-			// Check whether tenant exists
-			final Tenant t = TenantRepository.FILTER.findOne(this.tenantRepository.findBySecondaryKey(tenant));
+			t = this.tenantRepository.getTenant(tenant);
+		} catch (Exception e){
+			log.error("Error retrieving tenant: " + e);
+			return new ResponseEntity<Collection<Space>>(HttpStatus.NOT_FOUND);
+		}
+
+		try {
 			// Get all its spaces
-			final Collection<Space> all_tenant_spaces = this.spaceRepository.findAllTenantSpaces(tenant, true);
+			final Collection<Space> all_tenant_spaces = this.spaceRepository.findAllTenantSpaces(t.getTenantToken(), true);
 			return new ResponseEntity<Collection<Space>>(all_tenant_spaces, HttpStatus.OK);
 		}
 		catch(EntityNotFoundException enfe) {
@@ -92,14 +100,21 @@ public class SpaceController {
 	 */
 	@RequestMapping(value = "default", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Space> getDefaultSpace(
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=true) String tenant) {
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
+		
+		// Check whether tenant exists or retrieve default
+		Tenant t = null;
 		try {
-			// Check whether tenant exists
-			final Tenant t = TenantRepository.FILTER.findOne(this.tenantRepository.findBySecondaryKey(tenant));
+			t = this.tenantRepository.getTenant(tenant);
+		} catch (Exception e){
+			log.error("Error retrieving tenant: " + e);
+			return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
+		}
+		try {
 			// Get default space
-			final Space def = this.spaceRepository.findDefault(tenant);
+			final Space def = this.spaceRepository.findDefault(t.getTenantToken());
 			if(def==null)
-				throw new EntityNotFoundException("No default space can be found for tenant [" + tenant + "]");
+				throw new EntityNotFoundException("No default space can be found for tenant [" + t.getTenantToken() + "]");
 			else
 				return new ResponseEntity<Space>(def, HttpStatus.OK);
 		}
@@ -119,18 +134,24 @@ public class SpaceController {
 			@RequestParam(value="mode", required=false, defaultValue="EQUALS") ComparisonMode mode,
 			@RequestParam(value="caseSensitivity", required=false, defaultValue="CASE_SENSITIVE") CaseSensitivity caseSensitivity,
 			@RequestParam(value="value", required=true) String[] value,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=true) String tenant) {
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
+		
+		// Check whether tenant exists or retrieve default
+		Tenant t = null;
 		try {
-			// Check whether tenant exists
-			final Tenant t = TenantRepository.FILTER.findOne(this.tenantRepository.findBySecondaryKey(tenant));
-
+			t = this.tenantRepository.getTenant(tenant);
+		} catch (Exception e){
+			log.error("Error retrieving tenant: " + e);
+			return new ResponseEntity<List<Space>>(HttpStatus.NOT_FOUND);
+		}
+		try {
 			final StringList filter = new StringList();
 			filter.addAll(value);
 
 			final List<Space> matching_spaces = new ArrayList<Space>();
 
 			// Loop over all spaces and compare the value of the given property
-			final List<Space> spaces= this.spaceRepository.findAllTenantSpaces(tenant);
+			final List<Space> spaces= this.spaceRepository.findAllTenantSpaces(t.getTenantToken());
 			for(Space s: spaces) {
 				final String p = s.getPropertyValue(propertyName);
 				if(p!=null && s.isPublic() && filter.contains(p, mode, caseSensitivity))
@@ -151,9 +172,17 @@ public class SpaceController {
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.OPTIONS)
 	public ResponseEntity<Space> isSpaceExisting(
 			@PathVariable String token,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=true) String tenant) {
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
+		// Check whether tenant exists or retrieve default
+		Tenant t = null;
 		try {
-			SpaceRepository.FILTER.findOne(this.spaceRepository.findBySecondaryKey(tenant, token));
+			t = this.tenantRepository.getTenant(tenant);
+		} catch (Exception e){
+			log.error("Error retrieving tenant: " + e);
+			return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
+		}
+		try {
+			SpaceRepository.FILTER.findOne(this.spaceRepository.findBySecondaryKey(t.getTenantToken(), token));
 			return new ResponseEntity<Space>(HttpStatus.OK);
 		}
 		catch(EntityNotFoundException enfe) {
@@ -169,9 +198,17 @@ public class SpaceController {
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.GET)
 	public ResponseEntity<Space> getSpace(
 			@PathVariable String token,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=true) String tenant) {
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
+		// Check whether tenant exists or retrieve default
+		Tenant t = null;
 		try {
-			final Space s = SpaceRepository.FILTER.findOne(this.spaceRepository.findBySecondaryKey(tenant, token));
+			t = this.tenantRepository.getTenant(tenant);
+		} catch (Exception e){
+			log.error("Error retrieving tenant: " + e);
+			return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
+		}
+		try {
+			final Space s = SpaceRepository.FILTER.findOne(this.spaceRepository.findBySecondaryKey(t.getTenantToken(), token));
 			return new ResponseEntity<Space>(s, HttpStatus.OK);
 		}
 		catch(EntityNotFoundException enfe) {
@@ -185,9 +222,10 @@ public class SpaceController {
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Space> createSpace(
 			@RequestBody Space space,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=true) String tenant) {
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
 		final StopWatch sw = new StopWatch("Create space [" + (space==null?null:space.getSpaceName()) + "] "
 				+ "for tenant token [" + tenant +"] ").start();
+
 		try {
 			// Check arguments
 			if(space==null) {
@@ -203,13 +241,16 @@ public class SpaceController {
 				return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
 			}
 
-			// Get the tenant
+			// Check whether tenant exists or retrieve default
 			Tenant t = null;
 			try {
-				t = TenantRepository.FILTER.findOne(this.tenantRepository.findBySecondaryKey(tenant));
-			}
+				t = this.tenantRepository.getTenant(tenant);
+			} 
 			catch(EntityNotFoundException enfe) {
-				log.error("Tenant [" + tenant + "] not found");
+				log.error("Tenant [" + t.getTenantToken() + "] not found");
+				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
+			}catch (Exception e){
+				log.error("Error retrieving tenant: " + e);
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}
 			//check that only 1 default space per tenant is created
@@ -239,7 +280,7 @@ public class SpaceController {
 	public ResponseEntity<Space> modifySpace(
 			@PathVariable String token,
 			@RequestBody Space new_space,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=true) String tenant) {
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
 		try {
 			// Check arguments
 			if(new_space==null) {
@@ -255,13 +296,16 @@ public class SpaceController {
 				return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
 			}
 
-			// Get the tenant
+			// Check whether tenant exists or retrieve default
 			Tenant t = null;
 			try {
-				t = TenantRepository.FILTER.findOne(this.tenantRepository.findBySecondaryKey(tenant));
-			}
+				t = this.tenantRepository.getTenant(tenant);
+			} 
 			catch(EntityNotFoundException enfe) {
-				log.error("Tenant [" + tenant + "] not found");
+				log.error("Tenant [" + t.getTenantToken() + "] not found");
+				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
+			}catch (Exception e){
+				log.error("Error retrieving tenant: " + e);
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}
 			
@@ -315,16 +359,19 @@ public class SpaceController {
 	public ResponseEntity<Space> cleanSpace(
 			@PathVariable String token,
 			@RequestParam(value="clean", required=true) Boolean clean,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=true) String tenant) {
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
 		try {
 
-			// Get the tenant
+			// Check whether tenant exists or retrieve default
 			Tenant t = null;
 			try {
-				t = TenantRepository.FILTER.findOne(this.tenantRepository.findBySecondaryKey(tenant));
-			}
+				t = this.tenantRepository.getTenant(tenant);
+			} 
 			catch(EntityNotFoundException enfe) {
-				log.error("Tenant [" + tenant + "] not found");
+				log.error("Tenant [" + t.getTenantToken() + "] not found");
+				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
+			}catch (Exception e){
+				log.error("Error retrieving tenant: " + e);
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}
 
@@ -397,16 +444,19 @@ public class SpaceController {
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.DELETE)
 	public ResponseEntity<Space> deleteSpace(
 			@PathVariable String token,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=true) String tenant) {
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
 		try {
 
-			// Get the tenant
+			// Check whether tenant exists or retrieve default
 			Tenant t = null;
 			try {
-				t = TenantRepository.FILTER.findOne(this.tenantRepository.findBySecondaryKey(tenant));
-			}
+				t = this.tenantRepository.getTenant(tenant);
+			} 
 			catch(EntityNotFoundException enfe) {
-				log.error("Tenant [" + tenant + "] not found");
+				log.error("Tenant [" + t.getTenantToken() + "] not found");
+				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
+			}catch (Exception e){
+				log.error("Error retrieving tenant: " + e);
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}
 
