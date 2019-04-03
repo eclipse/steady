@@ -142,7 +142,7 @@ public class ApplicationExporter {
 				.setBugs(_selected_bugs)
 				.setAffectedApps(affected_apps)
 				.setIncludeAllBugs(_incl_all_bugs)
-				.setIncludeExemptions(false)
+				.setIncludeExemptions(_incl_exemptions)
 				.setFormat(_format);
 				searches.add(search);
 				pool.execute(search);
