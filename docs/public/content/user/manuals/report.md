@@ -4,6 +4,8 @@
 
 The reports are generated after the execution of the `report` goal. They are generated in three different formats (JSON, XML and HTML). See the [report goal documentation section](../analysis/#create-result-report-report).
 
+We will mainly present the HTML version in this documentation.
+
 Reports come with the advantage of having an aggregate view on a set of modules. They can mainly be divided into two parts.
 
 ## Report Header
