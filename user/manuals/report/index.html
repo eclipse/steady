@@ -36,15 +36,15 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../../images/vulas.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-3.0.6">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-3.1.0">
     
     
       
-        <title>Report - vulnerability-assessment-tool 3.0.15</title>
+        <title>Report - vulnerability-assessment-tool 3.0.14</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/application.451f80e5.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application.11e41852.css">
       
         <link rel="stylesheet" href="../../../assets/stylesheets/application-palette.22915126.css">
       
@@ -55,12 +55,13 @@
       
     
     
-      <script src="../../../assets/javascripts/modernizr.1aa3b519.js"></script>
+      <script src="../../../assets/javascripts/modernizr.20ef595d.js"></script>
     
     
     <!-- Suppress Material fonts -->
 
     <link rel="stylesheet" href="../../../assets/fonts/material-icons.css">
+    
     
       <link rel="stylesheet" href="../../../css/faq.css">
     
@@ -124,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.15" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.14" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -138,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.0.15
+                vulnerability-assessment-tool 3.0.14
               </span>
               <span class="md-header-nav__topic">
                 Report
@@ -310,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.15" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.14" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.0.15
+    vulnerability-assessment-tool 3.0.14
   </label>
   
     <div class="md-nav__source">
@@ -650,9 +651,52 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Report
+      </label>
+    
     <a href="./" title="Report" class="md-nav__link md-nav__link--active">
       Report
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" title="Introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#report-header" title="Report Header" class="md-nav__link">
+    Report Header
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#report-core" title="Report Core" class="md-nav__link">
+    Report Core
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -1008,6 +1052,36 @@
     
   
   
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" title="Introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#report-header" title="Report Header" class="md-nav__link">
+    Report Header
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#report-core" title="Report Core" class="md-nav__link">
+    Report Core
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1022,10 +1096,34 @@
                 
                 
                 <h1 id="report-manual">Report Manual<a class="headerlink" href="#report-manual" title="Permanent link">&para;</a></h1>
-<div class="admonition tip">
-<p class="admonition-title">Work in progress</p>
-<p>To be written.</p>
-</div>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
+<p>The reports are generated after the execution of the <code>report</code> goal. They are generated in three different formats (JSON, XML and HTML). See the <a href="../analysis/#create-result-report-report">report goal documentation section</a>.</p>
+<p>We will mainly present the HTML version in this documentation.</p>
+<p>Reports come with the advantage of having an aggregate view on a set of modules. They can mainly be divided into two parts.</p>
+<h2 id="report-header">Report Header<a class="headerlink" href="#report-header" title="Permanent link">&para;</a></h2>
+<p>The report header contains general information about the scanned  module(s).</p>
+<p><center class='expandable'>
+    <a href="../img/report_header.png"><img alt="start_page" src="../img/report_header.png" /></a>
+</center></p>
+<p>It provides:</p>
+<ul>
+<li>The date &amp; time the report was created.</li>
+<li>The information if the report is an aggregated report or not.</li>
+<li>The list of projects/modules included in this report.</li>
+<li>The settings used to generate the report (in the "Plugin Configuration" section).</li>
+<li>The conclusion of the exceution of the "report" goal. It is displayed in red when the relevant vulnerabilities were found. Relevant is to be understood as relevant againts the provided settings for the scan, e.g. considering the different settings provided by the user.</li>
+</ul>
+<h2 id="report-core">Report Core<a class="headerlink" href="#report-core" title="Permanent link">&para;</a></h2>
+<p>The report "core" contains the list of findings. This part is basically was can be seen when opening the Frontend.</p>
+<p>Please notice that the "core" section could be empty in case no vulnerability could be identified into the scanned project(s).</p>
+<p><center class='expandable'>
+    <a href="../img/report_core.png"><img alt="start_page" src="../img/report_core.png" /></a>
+</center></p>
+<p>This list contains the complete list of vulnerabilities identified in the scanned project(s), including assessed and mitigated ones.</p>
+<ul>
+<li>CVEs listed with a red background color and for which the text in the  "Applications including vulnerable code" column is red are vulnerabilities impacting the scanned project(s).</li>
+<li>CVEs with a white background and for which the text in the  "Applications including vulnerable code" column is greyed out are assessed vulnerabilities.</li>
+</ul>
                 
                   
                 
@@ -1117,7 +1215,7 @@
 
     </div>
     
-      <script src="../../../assets/javascripts/application.5e60981f.js"></script>
+      <script src="../../../assets/javascripts/application.9e1f3b71.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:"../../.."}})</script>
       
