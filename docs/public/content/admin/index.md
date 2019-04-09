@@ -89,7 +89,7 @@ All endpoints should appear as green (you may want to replace `localhost` with t
 
 In order for the tool to detect vulnerabilities, you need to analyze them first so that they are available in the tool's vulnerability database.
 
-To do so, please follow the instructions mentioned [here](../../../vuln_db/tutorials/vuln_db_tutorial).
+To do so, please follow the instructions mentioned [here](../vuln_db/tutorials/vuln_db_tutorial).
 
 ## Analyze an application
 
@@ -102,13 +102,13 @@ You may want to replace `localhost` with the actual hostname of your machine.
 
 Get going:
 
-1. Setup your [workspace](../../../user/manuals/setup/#workspace) (if you don't have one)
-2. Become familiar with the various analysis [goals](../../../user/manuals/analysis/) (first time users)
-3. Analyze your [Java](../../../user/tutorials/java_maven) or [Python](../../../user/tutorials/python_cli) application (on a regular basis)
-4. [Assess](../../../user/manuals/assess_and_mitigate) findings using the apps Web frontend (following every analysis)
+1. Setup your [workspace](../user/manuals/setup/#workspace) (if you don't have one)
+2. Become familiar with the various analysis [goals](../user/manuals/analysis/) (first time users)
+3. Analyze your [Java](../user/tutorials/java_maven) or [Python](../user/tutorials/python_cli) application (on a regular basis)
+4. [Assess](../user/manuals/assess_and_mitigate) findings using the apps Web frontend (following every analysis)
 
 Further links:
 
-- [Configure](../../../user/tutorials/) the client-side analysis
-- [Automate](../../../user/tutorials/jenkins_howto) with Jenkins
-- [Get help](../../../user/support) if you run into troubles
+- [Configure](../user/tutorials/) the client-side analysis
+- [Automate](../user/tutorials/jenkins_howto) with Jenkins
+- [Get help](../user/support) if you run into troubles
