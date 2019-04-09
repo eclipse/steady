@@ -1,10 +1,11 @@
 <mvc:View controllerName="view.Component" xmlns="sap.m"
 	xmlns:c="sap.suite.ui.commons" xmlns:form="sap.ui.layout.form"
 	xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core"
-	xmlns:commons="sap.ui.commons" xmlns:m="sap.ui.commons.layout">
+	xmlns:commons="sap.ui.commons" xmlns:m="sap.ui.commons.layout" 
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
 	<Page id="componentPage">
 		<headerContent>
-			<Button icon="sap-icon://refresh" press="loadData" tooltip="Reload App data" />
+			<Button icon="sap-icon://refresh" press="loadData" tooltip="Reload App data" app:hard="true"/>
 			<Button icon="sap-icon://sys-help" press="openWiki" tooltip="Open help in wiki page" />
 		</headerContent>
 		<content>

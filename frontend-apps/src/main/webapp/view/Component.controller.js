@@ -95,7 +95,7 @@ sap.ui.controller("view.Component", {
 	},
 	
 	// Vulnerabilities tab: Loads data from backend, post-processes CVSS info and prepares mitigation tab
-	 loadVulns:function() {
+	 loadVulns:function(hard) {
 		
 		// Empty table, set to busy and reset counter
 		var oConstructView = this.getView().byId("idPatchAnalysisList");
@@ -109,7 +109,11 @@ sap.ui.controller("view.Component", {
 		var incl_hist = this.getView().byId("includeHistorical").getSelected();
 		var incl_unconfirmed = this.getView().byId("includeUnconfirmed").getSelected();
 		var add_excemption_info = true;
-		var sUrl = model.Config.getUsedVulnerabilitiesServiceUrl(groupId, artifactId, versionId, incl_hist, incl_unconfirmed, add_excemption_info, model.lastChange);
+		var cache = model.lastChange
+		if (hard) {
+			cache = false
+		}
+		var sUrl = model.Config.getUsedVulnerabilitiesServiceUrl(groupId, artifactId, versionId, incl_hist, incl_unconfirmed, add_excemption_info, cache);
 		
 		model.Config.addToQueue(oVulnModel);
 		model.Config.loadData (oVulnModel, sUrl, 'GET');
@@ -217,7 +221,14 @@ sap.ui.controller("view.Component", {
 //         }
 	},
 	
-	loadData:function() {
+	loadData:function(oEvent) {
+		let hard = false
+		if (oEvent && oEvent.getSource()) {
+			const method = oEvent.getSource().data("hard")
+			if ( method === "true") {
+				hard = true
+			}
+		}
 		
 		// Used for table labels
 		var i18nModel = new sap.ui.model.resource.ResourceModel({
@@ -270,12 +281,16 @@ sap.ui.controller("view.Component", {
 		
 		// Vulnerabilities tab
 		if (!model.Config.isMock) {
-			this.loadVulns();
+			this.loadVulns(hard);
 		}
 		
 		// Archive-Tab All
 		if (!model.Config.isMock) {
-			sUrl = model.Config.getArchivesServiceUrl(groupId,artifactId,versionId, model.lastChange);
+			var cache = model.lastChange
+			if (hard) {
+				cache = false
+			}
+			sUrl = model.Config.getArchivesServiceUrl(groupId,artifactId,versionId, cache);
 
 			var archiveTotal = this.getView().byId("archiveTotal");
 			var archiveTraced = this.getView().byId("archiveTraced");
@@ -313,7 +328,11 @@ sap.ui.controller("view.Component", {
 		
 		// Goal-Executions-Tab
 		if (!model.Config.isMock) {
-			sUrl = model.Config.getGoalExecutionsServiceUrl(groupId,artifactId,versionId, model.lastChange);
+			var cache = model.lastChange
+			if (hard) {
+				cache = false
+			}
+			sUrl = model.Config.getGoalExecutionsServiceUrl(groupId,artifactId,versionId, cache);
 			
 			model.Config.addToQueue(oExecutionsModel);
 			model.Config.loadData (oExecutionsModel,sUrl, 'GET');
@@ -380,7 +399,11 @@ sap.ui.controller("view.Component", {
 			var execConstructTraced = this.getView().byId("execConstructTraced");
 			
 			// Coverage of app packages
-			sUrl = model.Config.getPackagesWithTestCoverageServiceUrl(groupId,artifactId,versionId, model.lastChange);
+			var cache = model.lastChange
+			if (hard) {
+				cache = false
+			}
+			sUrl = model.Config.getPackagesWithTestCoverageServiceUrl(groupId,artifactId,versionId, cache);
 
 			model.Config.addToQueue(oPackagesModel);
 			model.Config.loadData (oPackagesModel,sUrl, 'GET');
@@ -459,8 +482,11 @@ sap.ui.controller("view.Component", {
 			
 			// App Dep Ratio
 			var depCounter = this.getView().byId("depCounter");
-			
-			sUrl = model.Config.getAppDepRatios(groupId, artifactId, versionId, model.lastChange);			
+			var cache = model.lastChange
+			if (hard) {
+				cache = false
+			}
+			sUrl = model.Config.getAppDepRatios(groupId, artifactId, versionId, cache);			
 			
 			model.Config.addToQueue(oAppDepRatioModel);
 			model.Config.loadData(oAppDepRatioModel, sUrl, 'GET');
