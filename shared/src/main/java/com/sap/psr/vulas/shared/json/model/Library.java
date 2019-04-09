@@ -7,10 +7,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
+import com.sap.psr.vulas.shared.json.model.view.Views;
 
 @JsonInclude(JsonInclude.Include.ALWAYS)
-@JsonIgnoreProperties(ignoreUnknown=true, value = { "constructTypeCounters" }, allowGetters=true)
+@JsonIgnoreProperties(ignoreUnknown=true, value = { "constructCounter", "constructTypeCounters" }, allowGetters=true)
 public class Library implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -22,8 +24,10 @@ public class Library implements Serializable {
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	private java.util.Calendar createdAt;
 
+	@JsonView(Views.LibDetails.class)
 	private Collection<Property> properties;
 
+	@JsonView(Views.LibDetails.class)
 	private Collection<ConstructId> constructs;
 
 	//http://stackoverflow.com/questions/23260464/how-to-serialize-using-jsonview-with-nested-objects
@@ -85,9 +89,11 @@ public class Library implements Serializable {
 	public void setDigestVerificationUrl(String digestVerificationUrl) { this.digestVerificationUrl = digestVerificationUrl; }
 	
 	@JsonProperty(value = "constructCounter")
+	@JsonView(Views.LibDetails.class)
 	public int countConstructs() { return ( this.getConstructs()==null ? 0 : this.getConstructs().size()); }
 
 	@JsonProperty(value = "constructTypeCounters")
+	@JsonView(Views.LibDetails.class)
 	public ConstructIdFilter countConstructTypes() { return new ConstructIdFilter(this.getConstructs()); }
 	
 	@Override

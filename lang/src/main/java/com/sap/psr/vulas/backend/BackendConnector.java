@@ -46,6 +46,7 @@ import com.sap.psr.vulas.shared.json.model.Dependency;
 import com.sap.psr.vulas.shared.json.model.Library;
 import com.sap.psr.vulas.shared.json.model.Space;
 import com.sap.psr.vulas.shared.json.model.VulnerableDependency;
+import com.sap.psr.vulas.shared.json.model.view.Views;
 import com.sap.psr.vulas.shared.util.FileSearch;
 import com.sap.psr.vulas.shared.util.StringList;
 import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
@@ -224,7 +225,7 @@ public class BackendConnector {
 	}
 
 	public void uploadApp(GoalContext _goal_context, Application _app) throws BackendConnectionException {
-		final String json = JacksonUtil.asJsonString(_app);
+		final String json = JacksonUtil.asJsonString(_app, null, Views.Default.class);
 
 		// The request depending on whose result either POST or PUT will be called
 		final BasicHttpRequest cond_req = new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.app(_app), null);
@@ -511,7 +512,7 @@ public class BackendConnector {
 
 	public synchronized void uploadLibrary(GoalContext _ctx, Library _lib) throws BackendConnectionException {
 		final String sha1 = _lib.getDigest();
-		final String json = JacksonUtil.asJsonString(_lib);
+		final String json = JacksonUtil.asJsonString(_lib, null, Views.LibDetails.class);
 		// Override setting
 		final boolean override = _ctx.getVulasConfiguration().getConfiguration().getBoolean("collector.overrideArchive", false);
 
