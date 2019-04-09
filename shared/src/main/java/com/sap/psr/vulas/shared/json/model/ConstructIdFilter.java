@@ -1,9 +1,9 @@
 package com.sap.psr.vulas.shared.json.model;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,7 +15,7 @@ import com.sap.psr.vulas.shared.enums.ConstructType;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConstructIdFilter {
 
-	private Map<ConstructType, SortedSet<ConstructId>> constructIds = new HashMap<ConstructType, SortedSet<ConstructId>>();
+	private Map<ConstructType, SortedSet<ConstructId>> constructIds = new TreeMap<ConstructType, SortedSet<ConstructId>>();
 
 	public ConstructIdFilter(Collection<ConstructId> _constructs_ids) {
 		SortedSet<ConstructId> cids = null;
