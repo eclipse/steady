@@ -18,7 +18,7 @@ Read more in our [**Docs**](https://sap.github.io/vulnerability-assessment-tool/
 
 ## History
 
-Originally developed by SAP Security Research [[2]](https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html)[[3]](https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en), the tool has become the officially recommended open-source scan tool for Java applications at SAP. Since the beginning of 2017, it has been used to perform 20K+ scans of more than 600+ Java development projects.
+Originally developed by SAP Security Research [[2]](https://www.sap.com/documents/2017/08/f2895a6e-ca7c-0010-82c7-eda71af511fa.html)[[3]](https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en), is is productively used at SAP since early 2017. The tool has become the officially recommended open-source scan tool for Java applications at SAP. As of April 2019, it has been used to perform 1M+ scans of ~1000 Java and Python development projects, and its adoption is growing at a steady pace.
 
 The tool approach is best described in the following scientific papers, please cite these if you use the tool for your research work:
 
