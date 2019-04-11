@@ -173,30 +173,42 @@ public class VulasConfiguration {
 
 		// Add: Properties in JAR files contained in classpath
 		final ClassLoader cl = VulasConfiguration.class.getClassLoader();
-		final Set<String> jar_paths_analyzed = new HashSet<String>();
+		final Set<String> jar_paths = new HashSet<String>();
 		
-		// Search in all JARs
+		// Consider JARs known to URLClassLoader
 		if(cl instanceof URLClassLoader) {
 			final URL[] urls = ((URLClassLoader)cl).getURLs();
 			getLog().info("Class loader search path contains [" + urls.length + "] items: Search for configurations in JAR files");
 			for(int i=0; i<urls.length; i++) {
 				final String jar_path = FileUtil.getJARFilePath(urls[i].toString());
 				if(jar_path!=null) {
-					if(!jar_paths_analyzed.contains(jar_path)) {
-						//getLog().info("Search configuration info in URL [" + urls[i] + "], JAR [" + jar_path + "]");
-						appendConfigurationsFromJarPath(jar_path);
-						jar_paths_analyzed.add(jar_path);
-					}
-					else {
-						//getLog().info("URL [" + urls[i] + "], JAR [" + jar_path + "] already analyzed for configuration info");
-					}
+					jar_paths.add(jar_path);
 				}
 			}
 		}
-		// Read specific files: vulas-core and vulas-java.properties
+		// Search for specific files, e.g., vulas-core.properties, and consider their JARs
 		else {
-			final URL core = cl.getResource("vulas-core.properties");
-			final URL java = cl.getResource("vulas-core.properties");
+			final String[] config_files = new String[] {"vulas-core.properties", "vulas-java.properties"};
+			for(String config_file: config_files) {
+				final URL u = cl.getResource(config_file);
+				final String jar_path = FileUtil.getJARFilePath(u.toString());
+				if(jar_path!=null) {
+					jar_paths.add(jar_path);
+				}
+			}
+		}
+		
+		// Search in all JARs
+		final Set<String> jar_paths_analyzed = new HashSet<String>();
+		for(String jar_path: jar_paths) {
+			if(!jar_paths_analyzed.contains(jar_path)) {
+				//getLog().info("Search configuration info in URL [" + urls[i] + "], JAR [" + jar_path + "]");
+				appendConfigurationsFromJarPath(jar_path);
+				jar_paths_analyzed.add(jar_path);
+			}
+			else {
+				//getLog().info("URL [" + urls[i] + "], JAR [" + jar_path + "] already analyzed for configuration info");
+			}
 		}
 
 		// Log configuration composition and actual settings
