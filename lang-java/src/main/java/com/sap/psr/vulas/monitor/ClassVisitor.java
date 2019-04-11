@@ -362,9 +362,9 @@ public class ClassVisitor {
 
 		CtField f = new CtField(CtClass.booleanType, _field_name, this.c);
 		if(!_final)
-			f.setModifiers(Modifier.PUBLIC | Modifier.STATIC);
+			f.setModifiers(Modifier.PUBLIC | Modifier.STATIC | Modifier.TRANSIENT);
 		else
-			f.setModifiers(Modifier.PUBLIC | Modifier.STATIC | Modifier.FINAL);
+			f.setModifiers(Modifier.PUBLIC | Modifier.STATIC | Modifier.TRANSIENT | Modifier.FINAL);
 		this.c.addField(f, new Boolean(_value).toString());
 	}
 
