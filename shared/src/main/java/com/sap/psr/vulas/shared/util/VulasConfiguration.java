@@ -174,6 +174,8 @@ public class VulasConfiguration {
 		// Add: Properties in JAR files contained in classpath
 		final ClassLoader cl = VulasConfiguration.class.getClassLoader();
 		final Set<String> jar_paths_analyzed = new HashSet<String>();
+		
+		// Search in all JARs
 		if(cl instanceof URLClassLoader) {
 			final URL[] urls = ((URLClassLoader)cl).getURLs();
 			getLog().info("Class loader search path contains [" + urls.length + "] items: Search for configurations in JAR files");
@@ -190,6 +192,11 @@ public class VulasConfiguration {
 					}
 				}
 			}
+		}
+		// Read specific files: vulas-core and vulas-java.properties
+		else {
+			final URL core = cl.getResource("vulas-core.properties");
+			final URL java = cl.getResource("vulas-core.properties");
 		}
 
 		// Log configuration composition and actual settings
