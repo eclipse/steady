@@ -177,25 +177,11 @@ public class VulasConfiguration {
 		
 		// Consider JARs known to URLClassLoader
 		if(cl instanceof URLClassLoader) {
-			final URL[] urls = ((URLClassLoader)cl).getURLs();
-			getLog().info("Class loader search path contains [" + urls.length + "] items: Search for configurations in JAR files");
-			for(int i=0; i<urls.length; i++) {
-				final String jar_path = FileUtil.getJARFilePath(urls[i].toString());
-				if(jar_path!=null) {
-					jar_paths.add(jar_path);
-				}
-			}
+			jar_paths.addAll(FileUtil.getJarFilePaths((URLClassLoader)cl));
 		}
-		// Search for specific files, e.g., vulas-core.properties, and consider their JARs
+		// Search for JARs containing specific configuration files, e.g., vulas-core.properties
 		else {
-			final String[] config_files = new String[] {"vulas-core.properties", "vulas-java.properties"};
-			for(String config_file: config_files) {
-				final URL u = cl.getResource(config_file);
-				final String jar_path = FileUtil.getJARFilePath(u.toString());
-				if(jar_path!=null) {
-					jar_paths.add(jar_path);
-				}
-			}
+			jar_paths.addAll(FileUtil.getJarFilePathsForResources(cl, new String[] {"vulas-core.properties", "vulas-java.properties"}));
 		}
 		
 		// Search in all JARs
@@ -214,7 +200,7 @@ public class VulasConfiguration {
 		// Log configuration composition and actual settings
 		this.log(LOG_PREFIXES, "    ");
 	}
-
+	
 	private void addConfiguration(Configuration _cfg, String _source) {
 		if(!individualConfigurations.containsValue(_source)) {
 			individualConfigurations.put(_cfg, _source);

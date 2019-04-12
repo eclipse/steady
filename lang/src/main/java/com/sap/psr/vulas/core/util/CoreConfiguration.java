@@ -93,6 +93,7 @@ public class CoreConfiguration {
 	public final static String INSTR_CHOOSEN_INSTR     = "vulas.core.instr.instrumentorsChoosen";
 	public final static String INSTR_MAX_STACKTRACES   = "vulas.core.instr.maxStacktraces";
 	public final static String INSTR_WRITE_CODE        = "vulas.core.instr.writeCode";
+	public final static String INSTR_FLD_ANNOS         = "vulas.core.instr.fieldAnnotations";
 
 	public final static String INSTR_BLACKLIST_DIRS           = "vulas.core.instr.blacklist.dirs";
 

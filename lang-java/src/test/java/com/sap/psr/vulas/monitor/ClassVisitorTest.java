@@ -1,7 +1,7 @@
 package com.sap.psr.vulas.monitor;
 
-import static com.xebialabs.restito.builder.stub.StubHttp.whenHttp;
 import static com.xebialabs.restito.builder.verify.VerifyHttp.verifyHttp;
+import static com.xebialabs.restito.builder.stub.StubHttp.whenHttp;
 import static com.xebialabs.restito.semantics.Action.charset;
 import static com.xebialabs.restito.semantics.Action.contentType;
 import static com.xebialabs.restito.semantics.Action.status;
@@ -13,6 +13,7 @@ import static com.xebialabs.restito.semantics.Condition.uri;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -72,7 +73,7 @@ public class ClassVisitorTest extends AbstractGoalTest {
 	}
 
 	/**
-	 * Test class.
+	 * Test class required for {@link ClassVisitorTest#testNonStaticInnerClassConstructor()}.
 	 */
 	private class NonStaticInner {
 		NonStaticInner(Map<String,Object> _arg) {}
@@ -82,21 +83,27 @@ public class ClassVisitorTest extends AbstractGoalTest {
 	public void testPrettyPrint() {
 		final String src = "try {if(!VUL_TRC_XGETALIGNMENT_635905){Class vul_cls = null;if(vul_cls==null) { try { vul_cls=$0.getClass(); } catch(Exception e) {} }if(vul_cls==null) { try { vul_cls=java.lang.invoke.MethodHandles.lookup().lookupClass(); } catch(Exception e) {} }if(vul_cls==null) { try { vul_cls=$class; } catch(Exception e) {} }final ClassLoader vul_cls_ldr=vul_cls.getClassLoader();java.net.URL vul_cls_res = null;if(vul_cls_ldr!=null)vul_cls_res=vul_cls_ldr.getResource(vul_cls.getName().replace('.', '/') + \".class\");java.util.Map params = new java.util.HashMap();params.put(\"junit\", \"false\");params.put(\"counter\", new Integer(1));VUL_TRC_XGETALIGNMENT_635905=com.sap.psr.vulas.monitor.trace.TraceCollector.callback(\"METHOD\",\"org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTPTabImpl.xgetAlignment()\",vul_cls_ldr,vul_cls_res,\"BF0D37E25A643FD4527731790F174BE26AB74A07\",\"com.acme\",\"vulas-testapp\",\"2.1.0-SNAPSHOT\",params);}} catch(Throwable e) { System.err.println(e.getClass().getName() + \" occured during execution of instrumentation code in JAVA METH [org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTPTabImpl.xgetAlignment()]: \" + e.getMessage()); }";
 		final String pretty = ClassVisitor.prettyPrint(src);
-		assertTrue(true);
 	}
 
 	@Test
 	public void testVisitMethodsInstr() {
 		try {
-			// The instrumentors to be used
-			VulasConfiguration.getGlobal().setProperty(CoreConfiguration.INSTR_CHOOSEN_INSTR, "com.sap.psr.vulas.monitor.trace.SingleStackTraceInstrumentor,com.sap.psr.vulas.monitor.touch.TouchPointInstrumentor");
-			// Set before static block in ClassVisitor
-			VulasConfiguration.getGlobal().setProperty(CoreConfiguration.INSTR_WRITE_CODE, "true");
-			
 			// Mock REST services
 			this.configureBackendServiceUrl(server);
 			this.setupMockServices(this.testApp);
-
+			
+			// The instrumentors to be used
+			System.setProperty(CoreConfiguration.INSTR_CHOOSEN_INSTR, "com.sap.psr.vulas.monitor.trace.SingleStackTraceInstrumentor,com.sap.psr.vulas.monitor.touch.TouchPointInstrumentor");
+			
+			// Set before static block in ClassVisitor
+			System.setProperty(CoreConfiguration.INSTR_WRITE_CODE, "true");
+			
+			// Test field annotations
+			System.setProperty(CoreConfiguration.INSTR_FLD_ANNOS, "javax.persistence.Transient, com.fasterxml.jackson.annotation.JsonIgnore");
+			
+			// Directory with instr code
+			System.setProperty(VulasConfiguration.TMP_DIR,  "./target/tmp");
+						
 			// The test class
 			final JavaClassId cid = JavaId.parseClassQName("com.sap.psr.vulas.java.test.Vanilla");
 
@@ -107,15 +114,21 @@ public class ClassVisitorTest extends AbstractGoalTest {
 
 			// Instrument the methods
 			final Set<ConstructId> methods = cv.visitMethods(true);
-			VulasConfiguration.getGlobal().setProperty(CoreConfiguration.INSTR_WRITE_CODE, "false");
 
 			// Check that the methods have been instrumented
 			final Path tmp = VulasConfiguration.getGlobal().getTmpDir();
-			final Path p1 = Paths.get(tmp.toString(), "com/sap/psr/vulas/java/test/Vanilla.foo(String).java");
-			final Path p2 = Paths.get(tmp.toString(), "com/sap/psr/vulas/java/test/Vanilla.vuln(String).java");
+			final Path p1 = Paths.get("./target/tmp/com/sap/psr/vulas/java/test/Vanilla.foo(String).java");
+			final Path p2 = Paths.get("./target/tmp/com/sap/psr/vulas/java/test/Vanilla.vuln(String).java");
 			System.out.println("Expecting files [" + p1 + "] and [" + p2 + "]");
 			assertTrue(FileUtil.isAccessibleFile(p1));
 			assertTrue(FileUtil.isAccessibleFile(p2));
+			
+			// Write class
+			cv.finalizeInstrumentation();
+			new File("./target/tmp/com/sap/psr/vulas/java/test").mkdirs();
+			final File vanilla_class_file = new File("./target/tmp/com/sap/psr/vulas/java/test/Vanilla.class");
+			FileUtil.writeToFile(vanilla_class_file, cv.getBytecode());
+			assertTrue(FileUtil.isAccessibleFile(vanilla_class_file.toPath()));
 			
 			// Check the HTTP calls made
 			/*verifyHttp(server).times(1, 

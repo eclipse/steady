@@ -36,7 +36,7 @@ public class InstrumentorFactory {
 			final String[] instrumentors = cfg.getStringArray(CoreConfiguration.INSTR_CHOOSEN_INSTR);
 			for(String name: instrumentors) {
 				final AbstractInstrumentor i = InstrumentorFactory.getInstrumentor(name);
-				if(i!= null) InstrumentorFactory.instrumentors.add(i);
+				if(i!=null) InstrumentorFactory.instrumentors.add(i);
 			}
 		}
 		return instrumentors;

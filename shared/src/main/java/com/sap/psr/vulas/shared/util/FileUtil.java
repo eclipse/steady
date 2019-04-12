@@ -3,7 +3,6 @@ package com.sap.psr.vulas.shared.util;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +10,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
@@ -379,10 +379,57 @@ public class FileUtil {
 		return null;
 	}
 
+	/**
+	 * Searches for the JAR file containing the class file of the given {@link Class}.
+	 * 
+	 * @param _clazz
+	 * @return
+	 */
 	public static String getJarFilePath(Class<?> _clazz) {
 		final ClassLoader cl = _clazz.getClassLoader();
 		final URL res_url = cl.getResource(_clazz.getName().replace('.', '/') + ".class");
 		return FileUtil.getJARFilePath(res_url.toString());
+	}
+	
+	/**
+	 * Searches for JAR files containing the given resources.
+	 * 
+	 * @param _cl
+	 * @param _resources
+	 * @return
+	 */
+	public static Set<String> getJarFilePathsForResources(ClassLoader _cl, String[] _resources) {
+		final Set<String> jar_paths = new HashSet<String>();
+		if(_cl!=null && _resources!=null) {
+			for(String r: _resources) {
+				final URL u = _cl.getResource(r);
+				final String jar_path = FileUtil.getJARFilePath(u.toString());
+				if(jar_path!=null) {
+					jar_paths.add(jar_path);
+				}
+			}
+		}
+		return jar_paths;		
+	}
+	
+	/**
+	 * Returns all JARs known to the given {@link URLClassLoader}.
+	 * 
+	 * @param _cl
+	 * @param _resources
+	 * @return
+	 */
+	public static Set<String> getJarFilePaths(URLClassLoader _cl) {
+		final Set<String> jar_paths = new HashSet<String>();		
+		final URL[] urls = _cl.getURLs();
+		log.info("Class loader search path contains [" + urls.length + "] items: Search for configurations in JAR files");
+		for(int i=0; i<urls.length; i++) {
+			final String jar_path = FileUtil.getJARFilePath(urls[i].toString());
+			if(jar_path!=null) {
+				jar_paths.add(jar_path);
+			}
+		}		
+		return jar_paths;		
 	}
 
 	/**
