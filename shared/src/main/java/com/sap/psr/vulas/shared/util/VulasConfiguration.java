@@ -173,29 +173,34 @@ public class VulasConfiguration {
 
 		// Add: Properties in JAR files contained in classpath
 		final ClassLoader cl = VulasConfiguration.class.getClassLoader();
-		final Set<String> jar_paths_analyzed = new HashSet<String>();
+		final Set<String> jar_paths = new HashSet<String>();
+		
+		// Consider JARs known to URLClassLoader
 		if(cl instanceof URLClassLoader) {
-			final URL[] urls = ((URLClassLoader)cl).getURLs();
-			getLog().info("Class loader search path contains [" + urls.length + "] items: Search for configurations in JAR files");
-			for(int i=0; i<urls.length; i++) {
-				final String jar_path = FileUtil.getJARFilePath(urls[i].toString());
-				if(jar_path!=null) {
-					if(!jar_paths_analyzed.contains(jar_path)) {
-						//getLog().info("Search configuration info in URL [" + urls[i] + "], JAR [" + jar_path + "]");
-						appendConfigurationsFromJarPath(jar_path);
-						jar_paths_analyzed.add(jar_path);
-					}
-					else {
-						//getLog().info("URL [" + urls[i] + "], JAR [" + jar_path + "] already analyzed for configuration info");
-					}
-				}
+			jar_paths.addAll(FileUtil.getJarFilePaths((URLClassLoader)cl));
+		}
+		// Search for JARs containing specific configuration files, e.g., vulas-core.properties
+		else {
+			jar_paths.addAll(FileUtil.getJarFilePathsForResources(cl, new String[] {"vulas-core.properties", "vulas-java.properties"}));
+		}
+		
+		// Search in all JARs
+		final Set<String> jar_paths_analyzed = new HashSet<String>();
+		for(String jar_path: jar_paths) {
+			if(!jar_paths_analyzed.contains(jar_path)) {
+				//getLog().info("Search configuration info in URL [" + urls[i] + "], JAR [" + jar_path + "]");
+				appendConfigurationsFromJarPath(jar_path);
+				jar_paths_analyzed.add(jar_path);
+			}
+			else {
+				//getLog().info("URL [" + urls[i] + "], JAR [" + jar_path + "] already analyzed for configuration info");
 			}
 		}
 
 		// Log configuration composition and actual settings
 		this.log(LOG_PREFIXES, "    ");
 	}
-
+	
 	private void addConfiguration(Configuration _cfg, String _source) {
 		if(!individualConfigurations.containsValue(_source)) {
 			individualConfigurations.put(_cfg, _source);

@@ -75,5 +75,6 @@ public class AbstractGoalTest {
 		final StringBuffer b = new StringBuffer();
 		b.append("http://localhost:").append(_ss.getPort()).append("/backend");
 		VulasConfiguration.getGlobal().setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), b.toString());
+		System.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), b.toString());
 	}
 }

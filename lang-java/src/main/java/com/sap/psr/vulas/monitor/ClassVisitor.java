@@ -34,7 +34,10 @@ import javassist.CtField;
 import javassist.CtMethod;
 import javassist.Modifier;
 import javassist.NotFoundException;
+import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
+import javassist.bytecode.ConstPool;
+import javassist.bytecode.annotation.Annotation;
 
 /**
  * Identifies all methods and constructors in a given Java class (using Javassist).
@@ -53,7 +56,6 @@ public class ClassVisitor {
 			ClassVisitor.log = LogFactory.getLog(ClassVisitor.class);
 		return ClassVisitor.log;
 	}
-	private boolean writeCodeToTmp = false;
 
 	// ====================================== INSTANCE MEMBERS
 
@@ -80,6 +82,10 @@ public class ClassVisitor {
 	/** The constructs found in the given class. */
 	private Set<ConstructId> constructs = null;
 
+	private boolean writeCodeToTmp = false;
+
+	private String[] fieldAnnotations = null;
+
 	public ClassVisitor(CtClass _c) {
 		// Build the JavaId
 		if(_c.isInterface())
@@ -105,8 +111,10 @@ public class ClassVisitor {
 			if(!Modifier.isStatic(this.c.getModifiers()))
 				ClassVisitor.getLog().warn("No declaring class found for non-static inner class [" + this.javaId.getQualifiedName() + "]");//: " + e.getMessage());
 		}
-		
-		writeCodeToTmp = VulasConfiguration.getGlobal().getConfiguration().getBoolean(CoreConfiguration.INSTR_WRITE_CODE, false);
+
+		this.writeCodeToTmp = VulasConfiguration.getGlobal().getConfiguration().getBoolean(CoreConfiguration.INSTR_WRITE_CODE, false);
+
+		this.fieldAnnotations = VulasConfiguration.getGlobal().getStringArray(CoreConfiguration.INSTR_FLD_ANNOS, new String[] {});
 	}
 
 	/**
@@ -362,10 +370,32 @@ public class ClassVisitor {
 
 		CtField f = new CtField(CtClass.booleanType, _field_name, this.c);
 		if(!_final)
-			f.setModifiers(Modifier.PUBLIC | Modifier.STATIC);
+			f.setModifiers(Modifier.PUBLIC | Modifier.STATIC | Modifier.TRANSIENT);
 		else
-			f.setModifiers(Modifier.PUBLIC | Modifier.STATIC | Modifier.FINAL);
+			f.setModifiers(Modifier.PUBLIC | Modifier.STATIC | Modifier.TRANSIENT | Modifier.FINAL);
+
+		// Avoid problems with JDO/JPA
+		this.addFieldAnnotations(f,  this.fieldAnnotations);
+
 		this.c.addField(f, new Boolean(_value).toString());
+	}
+	
+	/**
+	 * Adds the given annotations to the given field. Can be used to avoid problems with OR mappers by adding
+	 * an annotation "javax.persistence.Transient".
+	 * @param _fld
+	 * @param _annotations
+	 */
+	private void addFieldAnnotations(CtField _fld, String[] _annotations) {
+		if(_annotations!=null && _annotations.length>0) {
+			final ConstPool cpool = this.c.getClassFile().getConstPool();
+			final AnnotationsAttribute attr = new AnnotationsAttribute(cpool, AnnotationsAttribute.visibleTag);
+			for(String anno: _annotations) {
+				final Annotation annot = new Annotation(anno, cpool);
+				attr.addAnnotation(annot);
+			}
+			_fld.getFieldInfo().addAttribute(attr);
+		}
 	}
 
 	public synchronized void addIntMember(String _field_name, boolean _final) throws CannotCompileException {
@@ -374,9 +404,13 @@ public class ClassVisitor {
 
 		CtField f = new CtField(CtClass.intType, _field_name, this.c);
 		if(!_final)
-			f.setModifiers(Modifier.PUBLIC | Modifier.STATIC);
+			f.setModifiers(Modifier.PUBLIC | Modifier.STATIC | Modifier.TRANSIENT);
 		else
-			f.setModifiers(Modifier.PUBLIC | Modifier.STATIC | Modifier.FINAL);
+			f.setModifiers(Modifier.PUBLIC | Modifier.STATIC | Modifier.TRANSIENT | Modifier.FINAL);
+
+		// Avoid problems with JDO/JPA
+		this.addFieldAnnotations(f,  this.fieldAnnotations);
+
 		this.c.addField(f, "0");
 	}
 
@@ -510,7 +544,7 @@ public class ClassVisitor {
 		}
 		return b.toString();
 	}
-	
+
 	private static String getIndent(String _c, int _i) {
 		final StringBuffer b = new StringBuffer();
 		for(int i=0; i<_i; i++)

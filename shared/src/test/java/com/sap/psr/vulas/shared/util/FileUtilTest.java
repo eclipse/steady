@@ -1,12 +1,15 @@
 package com.sap.psr.vulas.shared.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -47,5 +50,18 @@ public class FileUtilTest {
 			e.printStackTrace();
 			assertEquals(true, false);
 		}
+	}
+	
+	@Test
+	public void testGetJarFilePathsForResources() {
+		final String[] resources = new String[] { "LICENSE-junit.txt" }; // Contained in junit-4.12.jar
+		final Set<String> jars = FileUtil.getJarFilePathsForResources(FileUtil.class.getClassLoader(), resources);
+		assertTrue(jars.size()==1);
+	}
+	
+	@Test
+	public void testGetJarFilePaths() {
+		final Set<String> jars = FileUtil.getJarFilePaths((URLClassLoader)FileUtil.class.getClassLoader());
+		assertTrue(!jars.isEmpty());
 	}
 }
