@@ -150,8 +150,8 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<file>${project.basedir}/src/main/resources/vulas-tenant.properties</file>
+				<!-- configuration>
+					<file>${project.basedir}/src/main/resources/vulas-tenant.properties.template</file>
 					<outputFile>${project.build.directory}/classes/vulas-tenant.properties</outputFile>
 					<regex>false</regex>
 					<replacements>
@@ -160,7 +160,7 @@
 							<value>603EFBA1EA9B98ADB4B548682597E6D0</value>
 						</replacement>
 					</replacements>
-				</configuration>
+				</configuration-->
 			</plugin>
 
 			<!-- Plugin configuration to create a JAR archive that can be used for 
