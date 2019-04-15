@@ -2,3 +2,4 @@ Dockerfile
 docker
 !docker/run.sh
 **/target
+docs
