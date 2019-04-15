@@ -33,7 +33,7 @@ public class ApplicationExporterThread implements Runnable {
 
 	private static Logger log = LoggerFactory.getLogger(ApplicationExporterThread.class);
 
-	private final static DateFormat DATE_FORMAT  = new SimpleDateFormat("dd/MM/yyyy");
+	private final DateFormat dateFormat  = new SimpleDateFormat("dd/MM/yyyy");
 
 	private static final String lb = System.getProperty("line.separator");
 
@@ -181,7 +181,7 @@ public class ApplicationExporterThread implements Runnable {
 
 				// Application
 				csv.append(a.getId()).append(separator).append(a.getMvnGroup()).append(separator).append(a.getArtifact()).append(separator).append(a.getVersion()).append(separator);
-				csv.append(ApplicationExporterThread.DATE_FORMAT.format(a.getCreatedAt().getTime()));
+				csv.append(this.dateFormat.format(a.getCreatedAt().getTime()));
 				//entry.append(separator).append(a.countDependencies()).append(separator).append(a.countConstructs());
 				json.startObjectProperty("app");
 				json.appendObjectProperty("id", a.getId().toString())
@@ -189,7 +189,7 @@ public class ApplicationExporterThread implements Runnable {
 			    	.appendObjectProperty("artifact", a.getArtifact())
 			    	.appendObjectProperty("version", a.getVersion());
 				if(a.getCreatedAt()!=null)
-					json.appendObjectProperty("createdAt", ApplicationExporterThread.DATE_FORMAT.format(a.getCreatedAt().getTime()));
+					json.appendObjectProperty("createdAt", this.dateFormat.format(a.getCreatedAt().getTime()));
 				else
 					json.appendObjectProperty("createdAt", (String)null);
 				json.endObject();
@@ -232,9 +232,9 @@ public class ApplicationExporterThread implements Runnable {
 				// Stuff from goal execution
 				final GoalExecution latest_goal_exe = gexeRepository.findLatestGoalExecution(a, null);
 				if(latest_goal_exe!=null) {
-					csv.append(separator).append(DATE_FORMAT.format(latest_goal_exe.getCreatedAt().getTime())).append(separator).append(latest_goal_exe.getClientVersion());
+					csv.append(separator).append(this.dateFormat.format(latest_goal_exe.getCreatedAt().getTime())).append(separator).append(latest_goal_exe.getClientVersion());
 					json.startObjectProperty("lastGoalExecution");
-					json.appendObjectProperty("timestamp", DATE_FORMAT.format(latest_goal_exe.getCreatedAt().getTime()))
+					json.appendObjectProperty("timestamp", this.dateFormat.format(latest_goal_exe.getCreatedAt().getTime()))
 					    .appendObjectProperty("client", latest_goal_exe.getClientVersion());
 					
 					// Goal config
