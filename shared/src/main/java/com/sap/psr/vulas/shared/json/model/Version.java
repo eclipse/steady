@@ -94,9 +94,16 @@ public class Version implements Comparable<Version>{
 	 * 	@return 0 if they are equal or contains letters; 1 if this.version>other.version; -1 otherwise
 	 */
 	public int compareNumberVersion(Version other) {
+	
+		Matcher this_m  = VERSION_PATTERN.matcher(this.getVersion());
+		Matcher other_m = VERSION_PATTERN.matcher(other.getVersion());
 
-		String[] varray = this.version.split("\\.");
-		String[] otherVersions = other.getVersion().split("\\.");
+		// Extract the numeric part of the version
+		String this_v = (this_m.matches() ? this_m.group(1) : this.getVersion());
+		String other_v = (other_m.matches() ? other_m.group(1) : other.getVersion());
+
+		String[] varray = this_v.split("\\.");
+		String[] otherVersions = other_v.split("\\.");
 		for(int v=0;v<varray.length&&v<otherVersions.length;v++){
 			if(!varray[v].equals(otherVersions[v])){
 				//check that it only contains numbers
@@ -111,6 +118,7 @@ public class Version implements Comparable<Version>{
 			}
 		}
 		return 0;
+		
 	}
 
 	@Override
