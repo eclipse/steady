@@ -164,7 +164,7 @@ The Gradle plugin only works with later releases of Gradle. How to upgrade is de
 
 ### Command-line interface
 
-1. Create a new folder, download the ZIP archive @@CLI_ZIP_LOCATION@@ and extract it into the newly created folder. This folder will then contain the following items:
+1. Create a new folder, download the latest ZIP archive `vulas-cli-@@PROJECT_VERSION@@.zip` from @@CLI_ZIP_LOCATION@@ and extract it into the newly created folder. This folder will then contain the following items:
 
 | Folder/File | Description |
 |---|---|
