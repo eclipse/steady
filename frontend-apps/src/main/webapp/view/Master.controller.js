@@ -512,10 +512,12 @@ sap.ui.controller("view.Master", {
 			if (sap.ui.getCore().byId('idSw').getValue() != null && sap.ui.getCore().byId('idSw').getValue() != "") {
 				body = body + ', "properties":[{"source":"USER","name":"' + model.Config.getSwIdDb() + '","value":"' + sap.ui.getCore().byId("idSw").getValue() + '"}]';
 			} else { //alert that SwId id was not provided and they should do it by editing the space
-				sap.m.MessageBox.warning(
-					"You did not provide the " + model.Config.getSwIdLabel() +
-					" Please do so by going to Configuration -> Space Edit. Follow the info link for more information."
-				);
+				if (model.Config.settings.swIdMandatory === "true") {
+					sap.m.MessageBox.warning(
+						"You did not provide the " + model.Config.getSwIdLabel() +
+						" Please do so by going to Configuration -> Space Edit. Follow the info link for more information."
+					)
+				}
 			}
 
 			body = body + '}'
