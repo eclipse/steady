@@ -29,7 +29,8 @@ public class PE_Run implements Runnable {
 		String[] bugs = VulasConfiguration.getGlobal().getConfiguration().getStringArray(PEConfiguration.BUGID);
 		ProgrammingLanguage lang = null;
 		try{
-			 lang = ProgrammingLanguage.valueOf(VulasConfiguration.getGlobal().getConfiguration().getString(PEConfiguration.LANG));
+			if(VulasConfiguration.getGlobal().getConfiguration().getString(PEConfiguration.LANG)!=null)
+				lang = ProgrammingLanguage.valueOf(VulasConfiguration.getGlobal().getConfiguration().getString(PEConfiguration.LANG));
 		} catch(IllegalArgumentException e){
 			log.error("The specified language value "+VulasConfiguration.getGlobal().getConfiguration().getString(PEConfiguration.LANG)+" is not allowed. Allowed values: PY, JAVA.");
 			return;
