@@ -322,6 +322,7 @@
 				<version>3.1.11</version>
 				<configuration>
 					<failOnError>false</failOnError>
+					<onlyAnalyze>com.sap.research.security.*</onlyAnalyze>
 					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
 					<omitVisitors></omitVisitors>
 				</configuration>
