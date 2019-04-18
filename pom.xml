@@ -68,6 +68,7 @@
 		<module>lang-java-reach-wala</module>
 		<module>lang-java-reach-soot</module>
 		<module>lang-python</module>
+		<module>lang-nodejs</module>
 
 		<!-- Analysis of security patches and libraries -->
 		<module>repo-client</module>
@@ -86,7 +87,8 @@
 		<module>rest-lib-utils-init</module>
 		<module>rest-lib-utils</module>
 		<module>rest-backend</module>
-	</modules>
+
+    </modules>
 
 	<properties>
 		<!-- Leave at 1.7, otherwise the agent may not work with older applications -->
