@@ -309,7 +309,7 @@ public class ArtifactController {
 						cshared = JavaId.toSharedType(c);
 					else
 						cshared = PythonId.toSharedType(c);
-					if(type==null || type.equals("") || cshared.getType().toString().equals(type.toString()))
+					if(type==null || type.toString().equals("") || cshared.getType().toString().equals(type.toString()))
 						constructs_out.add(cshared);
 				}
 				return new ResponseEntity<Set<ConstructId>>(constructs_out, HttpStatus.OK);
