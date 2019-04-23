@@ -73,7 +73,7 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 		else
 			id = this.gexeRepository.findLatestForApp(_app.getId());
 		if(id!=null)
-			return this.gexeRepository.findOne(id);
+			return this.gexeRepository.findById(id).orElse(null);
 		else
 			return null;
 	}

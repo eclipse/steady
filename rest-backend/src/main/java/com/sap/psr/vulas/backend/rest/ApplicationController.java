@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
@@ -27,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.DispatcherServletAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -910,8 +911,8 @@ public class ApplicationController {
 		catch (EntityNotFoundException e) { return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND); }
 
 		// Ensure that goal execution exists
-		final GoalExecution gexe = this.gexeRepository.findOne(id);
-		if(gexe==null)
+		final GoalExecution gexe = this.gexeRepository.findById(id).orElse(null);
+		if(gexe!=null)
 			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
 
 		return new ResponseEntity<GoalExecution>(gexe, HttpStatus.OK);
@@ -1538,7 +1539,7 @@ public class ApplicationController {
 			//for (int i=0; i<dep_bug.size();i++) {
 				for (Entry<BigInteger,String> entry : dep_bug) {
 					try{
-						VulnerableDependency vd = new VulnerableDependency(DependencyRepository.FILTER.findOne(this.depRepository.findById(entry.getKey().longValue())), BugRepository.FILTER.findOne(this.bugRepository.findByBugId(entry.getValue())));
+						VulnerableDependency vd = new VulnerableDependency(this.depRepository.findById(entry.getKey().longValue()).orElse(null), BugRepository.FILTER.findOne(this.bugRepository.findByBugId(entry.getValue())));
 						vd_list.add(vd);
 					}
 					catch(EntityNotFoundException e){

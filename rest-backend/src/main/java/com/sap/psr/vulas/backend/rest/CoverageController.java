@@ -8,7 +8,7 @@ import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.DispatcherServletAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,12 +53,12 @@ public class CoverageController {
 
 	private final BugRepository bugRepository;
 
-	@Bean(name = DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
-	public DispatcherServlet dispatcherServlet() {
-		DispatcherServlet dispatcherServlet = new DispatcherServlet();
-		dispatcherServlet.setDispatchOptionsRequest(true);
-		return dispatcherServlet;
-	}
+//	@Bean(name = DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
+//	public DispatcherServlet dispatcherServlet() {
+//		DispatcherServlet dispatcherServlet = new DispatcherServlet();
+//		dispatcherServlet.setDispatchOptionsRequest(true);
+//		return dispatcherServlet;
+//	}
 
 	@Autowired
 	CoverageController(BugRepository bugRepository) {

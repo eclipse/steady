@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.DispatcherServletAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,12 +71,12 @@ public class HubIntegrationController {
 
 	private final TenantRepository tenantRepository;
 
-	@Bean(name = DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
-	public DispatcherServlet dispatcherServlet() {
-		DispatcherServlet dispatcherServlet = new DispatcherServlet();
-		dispatcherServlet.setDispatchOptionsRequest(true);
-		return dispatcherServlet;
-	}
+//	@Bean(name = DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
+//	public DispatcherServlet dispatcherServlet() {
+//		DispatcherServlet dispatcherServlet = new DispatcherServlet();
+//		dispatcherServlet.setDispatchOptionsRequest(true);
+//		return dispatcherServlet;
+//	}
 
 	@Autowired
 	HubIntegrationController(ApplicationRepository appRepository, GoalExecutionRepository gexeRepository, SpaceRepository spaceRepository, TenantRepository tenantRepository) {

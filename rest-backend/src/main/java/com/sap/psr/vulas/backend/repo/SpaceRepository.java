@@ -18,7 +18,7 @@ public interface SpaceRepository extends CrudRepository<Space, Long>, SpaceRepos
 
 	public static final ResultSetFilter<Space> FILTER = new ResultSetFilter<Space>();
 	
-	List<Space> findById(@Param("id") Long id);
+	//List<Space> findById(@Param("id") Long id);
 	
 	/**
 	 * All spaces of the given {@link Tenant}.

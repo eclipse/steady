@@ -2,6 +2,7 @@ package com.sap.psr.vulas.backend.repo;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.constraints.Null;
 
@@ -22,8 +23,8 @@ public interface DependencyRepository extends PagingAndSortingRepository<Depende
 	
 	public static final ResultSetFilter<Dependency> FILTER = new ResultSetFilter<Dependency>();
 
-	@Query("SELECT dep FROM Dependency dep JOIN FETCH dep.lib l WHERE dep.id = :id")
-	List<Dependency> findById(@Param("id") Long id);
+//	@Query("SELECT dep FROM Dependency dep JOIN FETCH dep.lib l WHERE dep.id = :id")
+//	Optional<List<Dependency>> findById(@Param("id") ID id);
 	
 	@Query("SELECT dep FROM Dependency dep JOIN FETCH dep.lib l WHERE l.digest = :lib")
 	List<Dependency> findByDigest(@Param("lib") String lib);

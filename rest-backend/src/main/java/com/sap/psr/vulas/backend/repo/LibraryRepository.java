@@ -2,6 +2,7 @@ package com.sap.psr.vulas.backend.repo;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -26,8 +27,8 @@ public interface LibraryRepository extends CrudRepository<Library, Long>, Librar
 	
 	public static final ResultSetFilter<Library> FILTER = new ResultSetFilter<Library>();
 
-	@Query("SELECT l FROM Library l LEFT OUTER JOIN FETCH l.libraryId WHERE l.id=:id")
-	List<Library> findById(@Param("id") Long id);
+//	@Query("SELECT l FROM Library l LEFT OUTER JOIN FETCH l.libraryId WHERE l.id=:id")
+//	Optional<List<Library>> findById(@Param("id") Long id);
 	
 	@Query("SELECT l FROM Library l LEFT OUTER JOIN FETCH l.libraryId WHERE l.digest=:digest")
 	List<Library> findByDigest(@Param("digest") String digest);

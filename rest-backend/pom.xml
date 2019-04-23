@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.20.RELEASE</version>
+		<version>2.1.4.RELEASE</version>
 		<relativePath />
 	</parent>
 
@@ -47,7 +47,11 @@
 	</distributionManagement>
 
 	<dependencies>
-
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-properties-migrator</artifactId>
+	<scope>runtime</scope>
+</dependency>
 		<dependency>
 			<groupId>com.sap.research.security.vulas</groupId>
 			<artifactId>shared</artifactId>
@@ -173,7 +177,7 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
-			<version>5.0.7</version>
+			<version>5.2.4</version>
 		</dependency>
 	</dependencies>
 

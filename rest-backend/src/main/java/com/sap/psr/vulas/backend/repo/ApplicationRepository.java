@@ -38,7 +38,7 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 	
 	public static final ResultSetFilter<Application> FILTER = new ResultSetFilter<Application>();
 	
-	List<Application> findById(@Param("id") Long id);
+//	List<Application> findById(@Param("id") Long id);
 		
 	@Query("SELECT app FROM Application AS app JOIN FETCH app.space s WHERE app.mvnGroup = :mvnGroup AND app.artifact = :artifact AND app.space = :space")
 	List<Application> findByGA(@Param("mvnGroup") String group, @Param("artifact") String artifact, @Param("space") Space space);
