@@ -15,6 +15,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -264,7 +266,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 				// Only if put something in the body
 				if(this.hasPayload()) {
 					connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-					connection.setRequestProperty("Content-Length", Integer.toString(this.payload.getBytes().length));
+					connection.setRequestProperty("Content-Length", Integer.toString(this.payload.getBytes(StandardCharsets.UTF_8).length));
 					connection.setRequestProperty("Content-Language", "en-US");
 				}
 				else if(this.binPayload!=null){
@@ -274,7 +276,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 				if(!this.hasPayload())
 					BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
 				else if(this.binPayload==null)	
-					BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + ", size=" + StringUtil.byteToKBString(this.payload.getBytes().length) + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
+					BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + ", size=" + StringUtil.byteToKBString(this.payload.getBytes(StandardCharsets.UTF_8).length) + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
 				else
 					BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + ", size=" + this.binPayload.available() + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
 
@@ -285,7 +287,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 					connection.setDoOutput(true);
 					request_fields = connection.getRequestProperties();
 					final DataOutputStream wr = new DataOutputStream (connection.getOutputStream ());
-					wr.write(this.payload.getBytes("UTF-8"));
+					wr.write(this.payload.getBytes(StandardCharsets.UTF_8));
 					wr.flush();
 					wr.close();
 				}

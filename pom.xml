@@ -315,7 +315,7 @@
 			</plugin>
 
 			<!-- Successor of Findbugs, run fully-qualified with
-			    'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.failOnError=false -P soot,gradle com.github.spotbugs:spotbugs-maven-plugin:3.1.11:check' -->
+			    'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dthreshold=High -Dspotbugs.failOnError=true -P soot,gradle com.github.spotbugs:spotbugs-maven-plugin:3.1.11:check' -->
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
@@ -323,6 +323,7 @@
 				<configuration>
 					<failOnError>true</failOnError>
 					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+					<threshold>High</threshold>
 					<omitVisitors></omitVisitors>
 				</configuration>
 			</plugin>

@@ -2,9 +2,6 @@ package com.sap.psr.vulas.cia.util;
 
 import java.nio.file.Path;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.FileAnalyzer;
 import com.sap.psr.vulas.java.JarAnalyzer;
@@ -16,9 +13,7 @@ import com.sap.psr.vulas.shared.json.model.Artifact;
 
 public class FileAnalyzerFetcher implements ObjectFetcher<Artifact, FileAnalyzer> {
 	
-	private static Logger log = LoggerFactory.getLogger(FileAnalyzerFetcher.class);
-
-	private static Cache<Artifact, FileAnalyzer> ANALYZERS_CACHE= new Cache<Artifact, FileAnalyzer>(new FileAnalyzerFetcher(), 10080 , 50);
+	private static Cache<Artifact, FileAnalyzer> ANALYZERS_CACHE = new Cache<Artifact, FileAnalyzer>(new FileAnalyzerFetcher(), 10080 , 50);
 	
 	public static FileAnalyzer read(Artifact _key) throws CacheException {
 		return ANALYZERS_CACHE.get(_key);
