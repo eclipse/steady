@@ -47,11 +47,6 @@
 	</distributionManagement>
 
 	<dependencies>
-<dependency>
-	<groupId>org.springframework.boot</groupId>
-	<artifactId>spring-boot-properties-migrator</artifactId>
-	<scope>runtime</scope>
-</dependency>
 		<dependency>
 			<groupId>com.sap.research.security.vulas</groupId>
 			<artifactId>shared</artifactId>
