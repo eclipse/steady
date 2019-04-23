@@ -321,7 +321,7 @@
 				<artifactId>spotbugs-maven-plugin</artifactId>
 				<version>3.1.11</version>
 				<configuration>
-					<failOnError>false</failOnError>
+					<failOnError>true</failOnError>
 					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
 					<omitVisitors></omitVisitors>
 				</configuration>
