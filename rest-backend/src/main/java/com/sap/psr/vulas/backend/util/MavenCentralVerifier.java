@@ -37,6 +37,9 @@ public class MavenCentralVerifier implements DigestVerifier {
 	
 	private String url = null;
 	
+	/** Release timestamp of the given digest (null if unknown). */
+	private Long timestamp;
+	
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
 		return SUPP_LANG;
@@ -49,6 +52,9 @@ public class MavenCentralVerifier implements DigestVerifier {
 
 	@Override
 	public String getVerificationUrl() { return url; }
+	
+	@Override
+	public Long getReleaseTimestamp() { return this.timestamp; }
 
 	@Override
 	public Boolean verify(final Library _lib) throws VerificationException {
@@ -74,14 +80,16 @@ public class MavenCentralVerifier implements DigestVerifier {
 					int num_found = ((Integer)JsonPath.read(mvnResponse, "$.response.numFound")).intValue();
 					verified = num_found > 0;
 					
-					if(num_found==1){
+					if(num_found==1) {
+						this.timestamp = (Long)JsonPath.read(mvnResponse, "$.response.docs[0].timestamp");
+						
 						// Check whether given and returned libid correspond
 						final LibraryId returned_libid = new LibraryId((String)JsonPath.read(mvnResponse, "$.response.docs[0].g"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].a"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].v"));
 						if(_lib.getLibraryId()!=null && !_lib.getLibraryId().equals(returned_libid))
 							log.warn("Given and returned library identifiers do not match: Given [" + _lib.getLibraryId() + "], returned [" + returned_libid + "]");
 					}
-					else if (num_found>1){
-						log.warn("The lookup of the given SHA1 in maven central returned [" + num_found + "] artifacts");
+					else if(num_found>1) {
+						log.warn("The lookup of SHA1 digest [" + _lib.getDigest() + "] in Maven Central returned [" + num_found + "] artifacts");
 					}
 				}
 			} finally {

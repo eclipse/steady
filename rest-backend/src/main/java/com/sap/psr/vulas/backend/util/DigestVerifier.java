@@ -26,6 +26,13 @@ public interface DigestVerifier {
 	 * @return
 	 */
 	public String getVerificationUrl();
+	
+	/**
+	 * Returns the release timestamp of the given digest (milliseconds, between the current time and midnight, January 1, 1970 UTC).
+	 * Returns null if the verification did not succeed.
+	 * @see System#currentTimeMillis()
+	 */
+	public Long getReleaseTimestamp();
 
 	/**
 	 * Returns null if the verification did not succeed, e.g., due to connectivity issues.
