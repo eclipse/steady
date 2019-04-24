@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import org.junit.Test;
 
@@ -18,7 +20,9 @@ public class PyPiVerifierTest {
 		
 		PyPiVerifier ppv = new PyPiVerifier();
 		assertTrue(ppv.containsMD5(json,  "c1d30f51cff4a38f9454b23328a15c5a")); // Flask 0.11
-		assertEquals(1482348132000L, ppv.getReleaseTimestamp().longValue());
+		final Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		c.setTimeInMillis(1482351732000L);
+		assertEquals(c, ppv.getReleaseTimestamp());
 		
 		ppv = new PyPiVerifier();
 		assertFalse(ppv.containsMD5(json, "c1d30f51cff4a38f9454b23328a15c5azzzzz")); // Does not exist

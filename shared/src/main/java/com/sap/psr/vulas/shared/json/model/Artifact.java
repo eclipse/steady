@@ -93,28 +93,6 @@ public class Artifact implements Serializable,Comparable<Object> {
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
-	
-	/**
-	 * Uses the release {@link #timestamp} in order to compute and return the artifact age in days.
-	 * Returns null if the release {@link #timestamp} is not known. 
-	 */
-	@JsonProperty(value = "ageInDays")
-	@JsonIgnoreProperties(value = { "ageInDays" }, allowGetters=true)
-	public Long getAgeInDays() {
-		return this.getAgeInDays(LocalDate.now());
-	}
-	
-	@JsonIgnore
-	public Long getAgeInDays(LocalDate _date) {
-		Long days = null;
-		if(this.getTimestamp()!=null) {
-			final Calendar relc = Calendar.getInstance();
-			relc.setTimeInMillis(this.getTimestamp());
-			final LocalDate reld = LocalDate.of(relc.get(Calendar.YEAR), relc.get(Calendar.MONTH)+1, relc.get(Calendar.DAY_OF_MONTH));
-			days = ChronoUnit.DAYS.between(reld, _date);
-		}
-		return days;
-	}
 
 	public String getRepository() {
 		return repository;

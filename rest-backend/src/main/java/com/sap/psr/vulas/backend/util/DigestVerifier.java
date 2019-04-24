@@ -32,7 +32,7 @@ public interface DigestVerifier {
 	 * Returns null if the verification did not succeed.
 	 * @see System#currentTimeMillis()
 	 */
-	public Long getReleaseTimestamp();
+	public java.util.Calendar getReleaseTimestamp();
 
 	/**
 	 * Returns null if the verification did not succeed, e.g., due to connectivity issues.

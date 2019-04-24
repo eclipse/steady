@@ -2,10 +2,12 @@ package com.sap.psr.vulas.backend.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -37,9 +39,14 @@ public class PyPiVerifier implements DigestVerifier {
 	private String url = null;
 	
 	/** Release timestamp of the given digest (null if unknown). */
-	private Long timestamp;
+	private java.util.Calendar timestamp;
 	
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+	private SimpleDateFormat dateFormat = null;
+	
+	public PyPiVerifier() {
+		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+	}
 	
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
@@ -55,7 +62,7 @@ public class PyPiVerifier implements DigestVerifier {
 	public String getVerificationUrl() { return url; }
 	
 	@Override
-	public Long getReleaseTimestamp() { return this.timestamp; }
+	public java.util.Calendar getReleaseTimestamp() { return this.timestamp; }
 	
 	@Override
 	public Boolean verify(final Library _lib) throws VerificationException {
@@ -113,7 +120,8 @@ public class PyPiVerifier implements DigestVerifier {
 			final String upload_time = releases.get(0);
 			try {
 				final Date parsedDate = dateFormat.parse(upload_time);
-				this.timestamp = parsedDate.getTime();
+				this.timestamp = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+				this.timestamp.setTimeInMillis(parsedDate.getTime());
 			} catch (ParseException e) {
 				log.error("Error when parsing the timestamp [" + upload_time + "] of PyPi package with MD5 digest [" + _md5 + "]");
 			}

@@ -120,8 +120,10 @@ public class Library implements Serializable {
 	 * The library's publication timestamp (read from the package repository during digest verification).
 	 */
 	@Column(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	@JsonIgnoreProperties(value = { "digestTimestamp" }, allowGetters=true)
-	private Long digestTimestamp;
+	private java.util.Calendar digestTimestamp;
 
 	/**
 	 * The URL used to verify the digest (and get the publication timestamp), empty if the digest is not known to any of the available package repositories.
@@ -191,8 +193,8 @@ public class Library implements Serializable {
 	public Boolean getWellknownDigest() { return wellknownDigest; }
 	public void setWellknownDigest(Boolean wellknownDigest) { this.wellknownDigest = wellknownDigest; }
 
-	public Long getDigestTimestamp() { return digestTimestamp; }
-	public void setDigestTimestamp(Long digestTimestamp) { this.digestTimestamp = digestTimestamp; }
+	public java.util.Calendar getDigestTimestamp() { return digestTimestamp; }
+	public void setDigestTimestamp(java.util.Calendar digestTimestamp) { this.digestTimestamp = digestTimestamp; }
 
 	public String getDigestVerificationUrl() { return digestVerificationUrl; }
 	public void setDigestVerificationUrl(String digestVerificationUrl) { this.digestVerificationUrl = digestVerificationUrl; }

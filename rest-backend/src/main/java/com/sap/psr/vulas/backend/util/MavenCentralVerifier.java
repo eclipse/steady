@@ -1,9 +1,9 @@
 package com.sap.psr.vulas.backend.util;
 
+import java.util.Calendar;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -15,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Predicate;
-import com.jayway.jsonpath.Predicate.PredicateContext;
 import com.sap.psr.vulas.backend.model.Library;
 import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
@@ -38,7 +36,7 @@ public class MavenCentralVerifier implements DigestVerifier {
 	private String url = null;
 	
 	/** Release timestamp of the given digest (null if unknown). */
-	private Long timestamp;
+	private java.util.Calendar timestamp;
 	
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
@@ -54,7 +52,7 @@ public class MavenCentralVerifier implements DigestVerifier {
 	public String getVerificationUrl() { return url; }
 	
 	@Override
-	public Long getReleaseTimestamp() { return this.timestamp; }
+	public java.util.Calendar getReleaseTimestamp() { return this.timestamp; }
 
 	@Override
 	public Boolean verify(final Library _lib) throws VerificationException {
@@ -81,7 +79,9 @@ public class MavenCentralVerifier implements DigestVerifier {
 					verified = num_found > 0;
 					
 					if(num_found==1) {
-						this.timestamp = (Long)JsonPath.read(mvnResponse, "$.response.docs[0].timestamp");
+						final long ms = (Long)JsonPath.read(mvnResponse, "$.response.docs[0].timestamp");
+						this.timestamp = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+						this.timestamp.setTimeInMillis(ms);						
 						
 						// Check whether given and returned libid correspond
 						final LibraryId returned_libid = new LibraryId((String)JsonPath.read(mvnResponse, "$.response.docs[0].g"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].a"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].v"));
