@@ -4,7 +4,6 @@ services:
   frontend-apps:
     container_name: vulas-os-frontend-apps
     hostname: frontend-apps
-    env_file: .env
     build: 
       context: ./frontend-apps
       dockerfile: ./Dockerfile
@@ -18,7 +17,6 @@ services:
   frontend-bugs:
     container_name: vulas-os-frontend-bugs
     hostname: frontend-bugs
-    env_file: .env
     build: 
       context: ./frontend-bugs
       dockerfile: ./Dockerfile
@@ -46,7 +44,7 @@ services:
       - "8034:7070"
     volumes:
       - "./haproxy/conf/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
-    depends_on: 
+    depends_on:
       - frontend-apps
       - frontend-bugs
       - rest-backend
@@ -57,7 +55,6 @@ services:
   patch-lib-analyzer:
     container_name: vulas-os-patch-lib-analyzer
     hostname: patch-lib-analyzer
-    env_file: .env
     build: 
       context: ./patch-lib-analyzer
       dockerfile: ./Dockerfile
@@ -85,12 +82,14 @@ services:
   postgresql:
     container_name: vulas-os-postgresql
     hostname: postgresql
-    env_file: .env
     build: 
       context: ./postgresql
       dockerfile: ./Dockerfile
       args:
         - VULAS_RELEASE=${VULAS_RELEASE}
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "8032:5432"
     volumes:
@@ -101,7 +100,9 @@ services:
   rest-backend:
     container_name: vulas-os-rest-backend
     hostname: rest-backend
-    env_file: .env
+    env_file: 
+      - .env
+      - ./rest-backend/conf/restbackend.properties
     build: 
       context: ./rest-backend    
       dockerfile: ./Dockerfile
@@ -116,6 +117,8 @@ services:
       - vulas.shared.cia.serviceUrl=http://cia:8092/cia
       - vulas.backend.coverageService.langConfidenceThreshold=0.2
       - vulas.backend.coverageService.licenseConfidenceThreshold=0.2
+      - spring.datasource.username=${POSTGRES_USER}
+      - spring.datasource.password=${POSTGRES_PASSWORD}
     links:
       - postgresql:postgresql
       - rest-lib-utils:cia
@@ -129,7 +132,6 @@ services:
   rest-lib-utils:
     container_name: vulas-os-rest-lib-utils
     hostname: rest-lib-utils
-    env_file: .env
     build: 
       context: ./rest-lib-utils 
       dockerfile: ./Dockerfile

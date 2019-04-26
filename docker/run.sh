@@ -1,5 +1,11 @@
 #!/bin/sh
 
+echo -e '\n[+] Cleaning old archives'
+
+rm /exporter/**/*.?ar 2> /dev/null
+rm /exporter/client-components/*.?ar 2> /dev/null
+rm /exporter/all-components/*.?ar 2> /dev/null
+
 echo -e "\n[+] Building new archives"
 
 ( set -x; mvn -U -e -Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_PORT} -Dhttps.proxyHost=${HTTPS_PROXY_HOST} -Dhttps.proxyPort=${HTTPS_PROXY_PORT} ${mvn_flags} clean install)
@@ -9,11 +15,6 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-echo -e '\n[+] Cleaning old archives'
-
-rm /exporter/**/*.?ar 2> /dev/null
-rm /exporter/client-components/*.?ar 2> /dev/null
-
 VULAS_JAVA_BACKEND_COMPONENTS="frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils"
 VULAS_JAVA_CLIENT_COMPONENTS="patch-analyzer cli-scanner plugin-maven"
 VULAS_JAVA_COMPONENTS="cli-scanner frontend-apps frontend-bugs lang-java-reach-wala lang-java-reach lang-java lang-python lang patch-analyzer patch-lib-analyzer plugin-maven repo-client rest-backend rest-lib-utils shared"
@@ -21,6 +22,7 @@ VULAS_JAVA_COMPONENTS="cli-scanner frontend-apps frontend-bugs lang-java-reach-w
 echo -e '\n[+] Copying new archives'
 
 for i in $VULAS_JAVA_BACKEND_COMPONENTS ; do
+    mkdir -p /exporter/$i/
     cp $i/target/*.?ar /exporter/$i/
 done
 
