@@ -182,15 +182,16 @@ public class ApplicationExporter {
 				if(ExportFormat.JSON.equals(_format))
 					writer.write("[");
 				
-				// Join reachable constructs and touch points
+				// Merge results
 				int i = 0;
 				for(ApplicationExporterThread search: searches) {
-					// Separate JSON objects
-					if(ExportFormat.JSON.equals(_format) && i++>0)
-						writer.write(",");
-					
-					writer.write(search.getBuffer().toString());
-					writer.flush();
+					final String search_json = search.getBuffer().toString();
+					if(search_json!=null && !search_json.equals("")) {
+						if(ExportFormat.JSON.equals(_format) && i++>0)
+							writer.write(",");
+						writer.write(search_json);
+						writer.flush();
+					}
 				}
 				
 				// Close JSON array
