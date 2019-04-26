@@ -258,7 +258,9 @@
 										</multiLabels>
 										<template>
 											<TextView xmlns="sap.ui.commons"
-												text="{lib/digestTimestamp}"></TextView>
+												text="{
+		 												path: 'lib/digestTimestamp',
+		 												formatter: 'model.Formatter.digestTimestamp'}"></TextView>
 										</template>
 									</Column>
 									<Column xmlns="sap.ui.table" width="10%" sorted="true"
