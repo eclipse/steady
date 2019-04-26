@@ -68,7 +68,9 @@ public class DigestVerifierEnumerator implements DigestVerifier {
 		final ServiceLoader<DigestVerifier> loader = ServiceLoader.load(DigestVerifier.class);
 		for(DigestVerifier l: loader) {
 			// Check that programming language and digest alg match (in order to avoid a couple of queries)
-			if(new CollectionUtil<ProgrammingLanguage>().haveIntersection(_lib.getDevelopedIn(), l.getSupportedLanguages()) &&
+			final CollectionUtil<ProgrammingLanguage> u = new CollectionUtil<ProgrammingLanguage>();
+			final Set<ProgrammingLanguage> developed_in = _lib.getDevelopedIn();
+			if( (developed_in.isEmpty() || u.haveIntersection(developed_in, l.getSupportedLanguages())) &&
 					l.getSupportedDigestAlgorithms().contains(_lib.getDigestAlgorithm())) {
 				try {
 					verified = l.verify(_lib);

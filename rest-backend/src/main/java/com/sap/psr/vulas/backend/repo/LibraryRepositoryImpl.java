@@ -57,9 +57,6 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 		
 		// Does it already exist?
 		Library managed_lib = null;
-		
-	
-		
 		try {
 			managed_lib = LibraryRepository.FILTER.findOne(this.libRepository.findByDigest(digest));
 			_lib.setId(managed_lib.getId());
@@ -73,6 +70,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 			else {
 				_lib.setWellknownDigest(managed_lib.getWellknownDigest());
 				_lib.setDigestVerificationUrl(managed_lib.getDigestVerificationUrl());
+				_lib.setDigestTimestamp(managed_lib.getDigestTimestamp());
 			}
 			
 			//keep the existing lib GAV if the newly posted/put doesn't have one
@@ -84,8 +82,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 					_lib.setLibraryId(managed_lib.getLibraryId());
 			}
 					
-		} catch (EntityNotFoundException e1) {
-			
+		} catch(EntityNotFoundException e1) {			
 			LibraryRepositoryImpl.log.info("Library [" + _lib.getDigest() + "] does not yet exist, going to save it.");
 		}
 		
@@ -101,8 +98,6 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 		sw.lap("Updated refs to nested properties");
 		
 		_lib = this.saveNestedLibraryId(_lib);
-		
-		
 		
 		// Save
 		try {
