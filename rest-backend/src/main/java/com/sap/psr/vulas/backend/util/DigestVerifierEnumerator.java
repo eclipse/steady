@@ -21,6 +21,9 @@ public class DigestVerifierEnumerator implements DigestVerifier {
 	private static Logger log = LoggerFactory.getLogger(DigestVerifierEnumerator.class);
 
 	private String url = null;
+	
+	/** Release timestamp of the given digest (null if unknown). */
+	private java.util.Calendar timestamp;
 
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
@@ -44,6 +47,9 @@ public class DigestVerifierEnumerator implements DigestVerifier {
 
 	@Override
 	public String getVerificationUrl() { return url; }
+	
+	@Override
+	public java.util.Calendar getReleaseTimestamp() { return this.timestamp; }
 
 	/**
 	 * Loops over available implementations of {@link DigestVerifier} in order to verify the digest of a given {@link Library}.
@@ -68,6 +74,7 @@ public class DigestVerifierEnumerator implements DigestVerifier {
 					verified = l.verify(_lib);
 					if(verified!=null && verified) {
 						this.url = l.getVerificationUrl();
+						this.timestamp = l.getReleaseTimestamp();
 						break;
 					}
 				} catch (VerificationException e) {

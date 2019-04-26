@@ -18,7 +18,6 @@ import javax.persistence.Index;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -111,22 +110,28 @@ public class Library implements Serializable {
 	/**
 	 * True if the library provider or a trusted software repository confirms the mapping of digest to human-readable ID, false otherwise.
 	 * TODO: field now set to false even in case the verification failed because the external service returns [500]; should be null instead
-	 * Was 'wellknownSha1' but renamed to wellknownDigest to be more general.
 	 * 
 	 */
 	@Column(nullable = true)
 	@JsonIgnoreProperties(value = { "wellknownDigest" }, allowGetters=true)
-	private Boolean wellknownDigest;	
+	private Boolean wellknownDigest;
+	
+	/**
+	 * The library's publication timestamp (read from the package repository during digest verification).
+	 */
+	@Column(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
+	@JsonIgnoreProperties(value = { "digestTimestamp" }, allowGetters=true)
+	private java.util.Calendar digestTimestamp;
 
 	/**
-	 * The URL used to verify the digest. Will be empty if none of the available
-	 * package repositories was able to confirm the digest.
-	 * Should be renamed to wellknownDigest, to be more general.
+	 * The URL used to verify the digest (and get the publication timestamp), empty if the digest is not known to any of the available package repositories.
 	 */
 	@Column(nullable = true)
 	@JsonIgnoreProperties(value = { "digestVerificationUrl" }, allowGetters=true)
 	private String digestVerificationUrl;	
-
+	
 	/**
 	 * Contains collections of library constructs per {@link ConstructType}.
 	 */
@@ -187,6 +192,9 @@ public class Library implements Serializable {
 	public boolean isWellknownDigest() { return wellknownDigest!=null && wellknownDigest.equals(true); }
 	public Boolean getWellknownDigest() { return wellknownDigest; }
 	public void setWellknownDigest(Boolean wellknownDigest) { this.wellknownDigest = wellknownDigest; }
+
+	public java.util.Calendar getDigestTimestamp() { return digestTimestamp; }
+	public void setDigestTimestamp(java.util.Calendar digestTimestamp) { this.digestTimestamp = digestTimestamp; }
 
 	public String getDigestVerificationUrl() { return digestVerificationUrl; }
 	public void setDigestVerificationUrl(String digestVerificationUrl) { this.digestVerificationUrl = digestVerificationUrl; }
@@ -308,6 +316,7 @@ public class Library implements Serializable {
 				if(verified!=null) {
 					this.setDigestVerificationUrl(dv.getVerificationUrl());
 					this.setWellknownDigest(verified);
+					this.setDigestTimestamp(dv.getReleaseTimestamp());
 				}
 			} catch (VerificationException e) {
 				log.error(e.getMessage());

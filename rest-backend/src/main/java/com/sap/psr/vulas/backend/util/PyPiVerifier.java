@@ -1,9 +1,13 @@
 package com.sap.psr.vulas.backend.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -14,8 +18,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jayway.jsonpath.Criteria;
-import com.jayway.jsonpath.Filter;
 import com.jayway.jsonpath.JsonPath;
 import com.sap.psr.vulas.backend.model.Library;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
@@ -36,6 +38,16 @@ public class PyPiVerifier implements DigestVerifier {
 	
 	private String url = null;
 	
+	/** Release timestamp of the given digest (null if unknown). */
+	private java.util.Calendar timestamp;
+	
+	private SimpleDateFormat dateFormat = null;
+	
+	public PyPiVerifier() {
+		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+	}
+	
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
 		return SUPP_LANG;
@@ -48,6 +60,9 @@ public class PyPiVerifier implements DigestVerifier {
 
 	@Override
 	public String getVerificationUrl() { return url; }
+	
+	@Override
+	public java.util.Calendar getReleaseTimestamp() { return this.timestamp; }
 	
 	@Override
 	public Boolean verify(final Library _lib) throws VerificationException {
@@ -73,7 +88,7 @@ public class PyPiVerifier implements DigestVerifier {
 				HttpEntity entity = response.getEntity();
 				if (sc==HttpStatus.SC_OK && entity != null) {
 					response_body = ConnectionUtil.readInputStream(entity.getContent());
-					verified = PyPiVerifier.containsMD5(response_body, _lib.getDigest());
+					verified = this.containsMD5(response_body, _lib.getDigest());
 
 					// Check whether given and returned libid correspond
 					//final LibraryId returned_libid = new LibraryId((String)JsonPath.read(response_body, "$.response.docs[0].g"),(String)JsonPath.read(response_body, "$.response.docs[0].a"),(String)JsonPath.read(response_body, "$.response.docs[0].v"));
@@ -89,18 +104,33 @@ public class PyPiVerifier implements DigestVerifier {
 		return verified;
 	}
 	
-	public static boolean containsMD5(String _body, final String _digest) {
-		/*final Predicate md5_predicate = new Predicate() {
-		    public boolean apply(PredicateContext context) {
-		        String md5 = context.item(Map.class).get("md5_digest").toString();
-		        return md5.equals(_digest);
-		    }
-		};
-		final List<Map<String, Object>> releases = JsonPath.parse(_body)
-		  .read("$['releases'][?][?]", md5_predicate);*/
+	/**
+	 * Returns true if the given JSON (produced by PyPi) contains a release having the given MD5 digest, false otherwise.
+	 * Example PyPi response for the Python library called requests: https://pypi.org/pypi/requests/2.18.4/json
+	 * 
+	 * @param _json
+	 * @param _md5
+	 * @return
+	 */
+	boolean containsMD5(String _json, final String _md5) {		
+		final List<String> releases = JsonPath.read(_json, "$.releases..[?(@.md5_digest == \"" + _md5.toLowerCase() + "\")].upload_time");
 		
-		Filter md5_filter = Filter.filter(Criteria.where("[*]['md5_digest']").eq(_digest));
-		List<Map<String, Object>> releases = JsonPath.parse(_body).read("$['releases'][*]", md5_filter);
+		// One result, take the release's timestamp
+		if(releases.size()==1) {
+			final String upload_time = releases.get(0);
+			try {
+				final Date parsedDate = dateFormat.parse(upload_time);
+				this.timestamp = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+				this.timestamp.setTimeInMillis(parsedDate.getTime());
+			} catch (ParseException e) {
+				log.error("Error when parsing the timestamp [" + upload_time + "] of PyPi package with MD5 digest [" + _md5 + "]");
+			}
+		}
+		
+		// More than 1 result, don't take any timestamp
+		else if(releases.size()>1) {
+			log.warn("The lookup of MD5 digest [" + _md5 + "] in PyPi returned [" + releases.size() + "] artifacts");
+		}
 		
 		return !releases.isEmpty();
 	}

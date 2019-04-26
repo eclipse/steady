@@ -1,0 +1,1 @@
+alter table lib add column digest_timestamp timestamp;
