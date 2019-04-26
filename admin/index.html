@@ -40,7 +40,7 @@
     
     
       
-        <title>DevOps - vulnerability-assessment-tool 3.0.16</title>
+        <title>DevOps - vulnerability-assessment-tool 3.0.17</title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.16" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.17" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.0.16
+                vulnerability-assessment-tool 3.0.17
               </span>
               <span class="md-header-nav__topic">
                 DevOps
@@ -311,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.16" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.17" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.0.16
+    vulnerability-assessment-tool 3.0.17
   </label>
   
     <div class="md-nav__source">
@@ -816,13 +816,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#analyze-an-application" title="Analyze an application" class="md-nav__link">
-    Analyze an application
-  </a>
-  
-</li>
-      
       
       
       
@@ -1135,13 +1128,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#analyze-an-application" title="Analyze an application" class="md-nav__link">
-    Analyze an application
-  </a>
-  
-</li>
-      
       
       
       
@@ -1162,7 +1148,7 @@
                 
                 
                 <h1 id="devops">DevOps<a class="headerlink" href="#devops" title="Permanent link">&para;</a></h1>
-<p>In this tutorial, you will be guided through the necessary steps to set-up the vulnerability-assessment-tool backend services.</p>
+<p>In this tutorial you will be guided through the necessary steps to set-up the vulnerability-assessment-tool backend services.</p>
 <p><center class='expandable'>
     <a href="img/components.png"><img alt="start_page" src="img/components.png" /></a>
 </center></p>
@@ -1174,8 +1160,8 @@ It <strong>shall not</strong> be used in productive scenarios (both for security
 </div>
 <h2 id="pre-requisites">Pre-requisites<a class="headerlink" href="#pre-requisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>docker</li>
 <li>git</li>
+<li>docker</li>
 </ul>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <h3 id="clone-from-github">Clone from GitHub<a class="headerlink" href="#clone-from-github" title="Permanent link">&para;</a></h3>
@@ -1183,14 +1169,6 @@ It <strong>shall not</strong> be used in productive scenarios (both for security
 </pre></div>
 
 <h3 id="build-docker-images">Build Docker images<a class="headerlink" href="#build-docker-images" title="Permanent link">&para;</a></h3>
-<div class="admonition info">
-<p class="admonition-title">Testing Environment</p>
-<p>vulnerability-assessment-tool was successfully built against</p>
-<ul>
-<li>Ubuntu 16.04 - Docker version 17.03.2-ce, build f5ec1e2</li>
-<li>Win10 noWSL - Docker version 18.01.0-ce, build 03596f5</li>
-</ul>
-</div>
 <p>All the following commands are supposed to be executed from the root folder of the project.
 Before proceeding, be sure to move there with:</p>
 <div class="codehilite"><pre><span></span><span class="nb">cd</span> vulnerability-assessment-tool
@@ -1200,10 +1178,10 @@ Before proceeding, be sure to move there with:</p>
 <div class="codehilite"><pre><span></span>cp docker/.env.sample docker/.env
 </pre></div>
 
-<p>Edit the file <code>docker/.env</code> to match your needs.</p>
+<p>Customize the file <code>docker/.env</code> to match your needs.</p>
 <div class="admonition info">
 <p class="admonition-title">Sensitive information</p>
-<p>In <code>docker/.env</code> you must configure at least <code>POSTGRES_USER=</code> and <code>spring.datasource.username=</code> (with equal values), you should also configure the <code>HAPROXY</code>'s user and password as well as the credentials to access the bugs' frontend</p>
+<p>In <code>docker/.env</code> you must configure at least <code>POSTGRES_USER=</code>, you should also configure the <code>HAPROXY</code>'s user and password as well as the credentials to access the bugs' frontend</p>
 </div>
 <p>At this point, you are ready to perform the actual build with the following command:</p>
 <div class="codehilite"><pre><span></span>docker build --tag vulas-build-img -f docker/Dockerfile --build-arg <span class="nv">http_proxy</span><span class="o">=</span> --build-arg <span class="nv">https_proxy</span><span class="o">=</span> .
@@ -1218,27 +1196,24 @@ docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><spa
 
 </div>
 <p>In case you are running behind a proxy you need to configure it in the <code>--build-arg</code> arguments.</p>
-<p>As a result, the folders <code>docker/&lt;component-name&gt;</code> will contain compiled JARs (or WARs, depending on the component). The folder <code>docker/client-tools</code> will be populated with the JARs for patch-analyzer and cli-scanner.</p>
+<p>As a result, the folders <code>docker/&lt;component-name&gt;</code> will contain compiled JARs (or WARs, depending on the component). The folder <code>docker/client-tools</code> will be populated with the JARs for client side tools (CLI, plugins, patchanalyzer).</p>
 <p>Finally, you may want to make all artifacts available to the developers of your organization (e.g., through an internal Nexus or other artifact distribution system).</p>
 <h3 id="run">Run<a class="headerlink" href="#run" title="Permanent link">&para;</a></h3>
 <p>You are now ready to run the system:</p>
 <div class="codehilite"><pre><span></span><span class="o">(</span><span class="nb">cd</span> docker <span class="o">&amp;&amp;</span> docker-compose up -d --build<span class="o">)</span>
 </pre></div>
 
-<p>To check that everything started successfully, check the page <code>http://localhost:8033/haproxy?stats</code> (user/pwd: <code>admin/admin</code>).
-All endpoints should appear as green (you may want to replace <code>localhost</code> with the actual hostname of your machine).</p>
+<p>To check if everything started successfully, check the page <code>http://localhost:8033/haproxy?stats</code>. All endpoints should appear as green (you may want to replace <code>localhost</code> with the actual hostname of your machine).</p>
+<div class="admonition info">
+<p class="admonition-title">Credentials and start up time</p>
+<p><code>username</code> and <code>password</code> can be found in your <code>.env</code> file, be also advised that <code>rest-backend</code> could take more than 30 seconds to be available to answer HTTP requests</p>
+</div>
 <h3 id="populatemaintain-the-vulnerability-database">Populate/maintain the vulnerability database<a class="headerlink" href="#populatemaintain-the-vulnerability-database" title="Permanent link">&para;</a></h3>
-<p>In order for the tool to detect vulnerabilities, you need to analyze them first so that they are available in the tool's vulnerability database.</p>
-<p>To do so, please follow the instructions mentioned <a href="../vuln_db/tutorials/vuln_db_tutorial">here</a>.</p>
-<h2 id="analyze-an-application">Analyze an application<a class="headerlink" href="#analyze-an-application" title="Permanent link">&para;</a></h2>
-<p><strong>Pre-requisite</strong>: Please, make sure you take note of the URL of the <strong>backend service</strong> as well as the URL of the <strong>apps Web frontend</strong>, you will need these:</p>
-<ul>
-<li>Apps Web frontend: <a href="https://localhost:8033/apps">http://localhost:8033/apps</a></li>
-<li>Backend service: <a href="http://localhost:8033/backend">http://localhost:8033/backend</a></li>
-</ul>
-<p>You may want to replace <code>localhost</code> with the actual hostname of your machine.</p>
+<p>In order for the tool to detect vulnerabilities, you need to import and analyze them first so that they are available in the tool's vulnerability database. Large part of CVE's and bugs are open sourced in <a href="https://github.com/SAP/vulnerability-assessment-kb">vulnerability-assessment-kb</a>.</p>
+<p>Follow the instructions mentioned <a href="../vuln_db/tutorials/vuln_db_tutorial">here</a>, to import and build all the vulnerabilities' knowledge.</p>
 <p>Get going:</p>
 <ol>
+<li><a href="../vuln_db/tutorials/vuln_db_tutorial">Import</a> all the CVEs and bugs in your local datababse</li>
 <li>Setup your <a href="../user/manuals/setup/#workspace">workspace</a> (if you don't have one)</li>
 <li>Become familiar with the various analysis <a href="../user/manuals/analysis/">goals</a> (first time users)</li>
 <li>Analyze your <a href="../user/tutorials/java_maven">Java</a> or <a href="../user/tutorials/python_cli">Python</a> application (on a regular basis)</li>
