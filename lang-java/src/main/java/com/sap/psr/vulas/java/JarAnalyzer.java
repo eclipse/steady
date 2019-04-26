@@ -82,12 +82,10 @@ public class JarAnalyzer implements Runnable, JarEntryWriter, FileAnalyzer {
 	protected InstrumentationControl instrControl = null;
 
 	@Override
-	public String[] getSupportedFileExtensions() {
-		return new String[] { "jar" };
-	}
+	public String[] getSupportedFileExtensions() { return new String[] { "jar" }; }
 
 	@Override
-	public boolean canAnalyze(File _file) {
+	public final boolean canAnalyze(File _file) {
 		final String ext = FileUtil.getFileExtension(_file);
 		if(ext == null || ext.equals(""))
 			return false;

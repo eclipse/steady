@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.sap.psr.vulas.FileAnalysisException;
+import com.sap.psr.vulas.shared.util.FileUtil;
 
 public class AarAnalyzer extends JarAnalyzer {
 
@@ -18,7 +19,6 @@ public class AarAnalyzer extends JarAnalyzer {
 	private JarWriter aarWriter;
 	
 	private Path tmpDir = null; // To where the AAR is extracted
-
 	
 	@Override
 	public String[] getSupportedFileExtensions() { return new String[] { "aar" }; }
@@ -26,7 +26,6 @@ public class AarAnalyzer extends JarAnalyzer {
 	@Override
 	public void analyze(final File _file) throws FileAnalysisException {
 		try {
-			
 			this.aar = new JarFile(_file, false, java.util.zip.ZipFile.OPEN_READ);
 			this.aarWriter = new JarWriter(_file.toPath());
 			this.url = _file.getAbsolutePath().toString();
@@ -39,14 +38,17 @@ public class AarAnalyzer extends JarAnalyzer {
 		
 			this.aarWriter.extract(this.tmpDir);
 			
-			
 			// TODO: what if no classes.jar
 			// TODO: is aar or classes.jar uploaded
-			File classesJar = this.tmpDir.resolve("classes.jar").toFile();
-			
-			this.jar = new JarFile(classesJar, false, java.util.zip.ZipFile.OPEN_READ);
-			this.jarWriter = new JarWriter(classesJar.toPath());
-			
+			final File classes_jar = this.tmpDir.resolve("classes.jar").toFile();
+			if(classes_jar!=null && FileUtil.isAccessibleFile(classes_jar.toPath())) {
+				JarAnalyzer.insertClasspath(classes_jar.toPath().toAbsolutePath().toString());
+				this.jar = new JarFile(classes_jar, false, java.util.zip.ZipFile.OPEN_READ);
+				this.jarWriter = new JarWriter(classes_jar.toPath());
+			}
+			else {
+				log.warn("No classes.jar found in [" + _file.toPath().toAbsolutePath() + "]");
+			}
 		} catch (IllegalStateException e) {
 			log.error("IllegalStateException when analyzing file [" + _file + "]: " + e.getMessage());
 			throw new FileAnalysisException("Error when analyzing file [" + _file + "]: " + e.getMessage(), e);
