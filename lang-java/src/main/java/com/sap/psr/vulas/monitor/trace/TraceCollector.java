@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -94,6 +95,9 @@ public class TraceCollector {
 
 	/** Used in different upload methods, set in uploadInformarion(GoalExecution, int). */
 	private AbstractGoal exe = null;
+	
+	/** Java Ids corresponding to classes and packages of executable constructs. */
+	private Set<ConstructId> contextConstructs = new HashSet<ConstructId>();
 
 	private TraceCollector() {
 		final Configuration cfg = VulasConfiguration.getGlobal().getConfiguration();
@@ -218,8 +222,9 @@ public class TraceCollector {
 
 		// Create a new trace
 		final int counter = (Integer)_params.get("counter");
+		final long now = System.currentTimeMillis();
 		if(counter==0) this.getLog().error("Error while reading counter: counter is null");
-		final ConstructUsage u = new ConstructUsage(_id, jar_path, l, System.currentTimeMillis(), counter);
+		final ConstructUsage u = new ConstructUsage(_id, jar_path, l, now, counter);
 
 		// Instrumentation happened in this JVM process
 		if(_archive_digest==null) {
@@ -263,10 +268,24 @@ public class TraceCollector {
 			
 			// Stats
 			switch(c_type) {
-			case CONSTRUCTOR: this.constructorTraceCount++; break;
-			case METHOD: this.methodTraceCount++; break;
-			case CLASSINIT: this.clinitTraceCount++; break;
-			default: break; // Should not happen
+				case CONSTRUCTOR: this.constructorTraceCount++; break;
+				case METHOD: this.methodTraceCount++; break;
+				case CLASSINIT: this.clinitTraceCount++; break;
+				default: break; // Should not happen
+			}
+			
+			// Add 1 trace for context and package (more does not seem to make any sense, there could be easily too many)
+			final ConstructId ctx_id  = _id.getDefinitionContext();
+			final ConstructId pack_id = ((JavaId)_id).getJavaPackageId();
+			if(!this.contextConstructs.contains(ctx_id)) {
+				final ConstructUsage ctx_u = new ConstructUsage(ctx_id, jar_path, l, now, 1);
+				this.contextConstructs.add(ctx_id);
+				this.constructUsage.add(ctx_u);
+			}
+			if(!this.contextConstructs.contains(pack_id)) {
+				final ConstructUsage pack_u = new ConstructUsage(pack_id, jar_path, l, now, 1);
+				this.contextConstructs.add(pack_id);
+				this.constructUsage.add(pack_u);
 			}
 
 			// Analyze stacktrace to get path and/or junit information
@@ -295,10 +314,10 @@ public class TraceCollector {
 		else {
 			// Stats
 			switch(c_type) {
-			case CONSTRUCTOR: this.constructorBlacklistedCount++; break;
-			case METHOD: this.methodBlacklistedCount++; break;
-			case CLASSINIT: this.clinitBlacklistedCount++; break;
-			default: break; // Should not happen
+				case CONSTRUCTOR: this.constructorBlacklistedCount++; break;
+				case METHOD: this.methodBlacklistedCount++; break;
+				case CLASSINIT: this.clinitBlacklistedCount++; break;
+				default: break; // Should not happen
 			}
 		}
 	}
