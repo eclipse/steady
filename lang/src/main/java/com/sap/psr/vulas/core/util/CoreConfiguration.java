@@ -107,6 +107,8 @@ public class CoreConfiguration {
 
 	public final static String INSTR_BLACKLIST_CLASSLOADER    = "vulas.core.instr.blacklist.classloader";
 	public final static String INSTR_BLACKLIST_CLASSLOADER_ACC_CHILD = "vulas.core.instr.whitelist.classloader.acceptChilds";
+	
+	public final static String INSTR_GUARD_OPEN = "vulas.core.instr.guard.open";
 
 	public final static String MONI_PERIODIC_UPL_ENABLED    = "vulas.core.monitor.periodicUpload.enabled";
 	public final static String MONI_PERIODIC_UPL_INTERVAL   = "vulas.core.monitor.periodicUpload.interval";

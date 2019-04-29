@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -203,14 +204,27 @@ public abstract class JavaId extends ConstructId {
 	 */
 	public static com.sap.psr.vulas.ConstructId toCoreType(com.sap.psr.vulas.shared.json.model.ConstructId _cid) {
 		switch(_cid.getType()) {
-		case METH: return JavaId.parseMethodQName(_cid.getQname());
-		case CONS: return JavaId.parseConstructorQName(_cid.getQname());
-		case PACK: return new JavaPackageId(_cid.getQname());
-		case INIT: return JavaId.parseClassInitQName(_cid.getQname());
-		case ENUM: return JavaId.parseEnumQName(_cid.getQname());
-		case CLAS: return JavaId.parseClassQName(_cid.getQname());
-		default: throw new IllegalArgumentException("Unknown type [" + _cid.getType() + "]");
+			case METH: return JavaId.parseMethodQName(_cid.getQname());
+			case CONS: return JavaId.parseConstructorQName(_cid.getQname());
+			case PACK: return new JavaPackageId(_cid.getQname());
+			case INIT: return JavaId.parseClassInitQName(_cid.getQname());
+			case ENUM: return JavaId.parseEnumQName(_cid.getQname());
+			case CLAS: return JavaId.parseClassQName(_cid.getQname());
+			default: throw new IllegalArgumentException("Unknown type [" + _cid.getType() + "]");
 		}
+	}
+	
+	/**
+	 * Transforms a collection of objects with a given shared type (defined in vulas-share) into
+	 * a {@link HashSet} of objects having the corresponding core type (defined in vulas-core).
+	 * @param _cid
+	 * @return
+	 */
+	public static Set<com.sap.psr.vulas.ConstructId> toCoreType(Collection<com.sap.psr.vulas.shared.json.model.ConstructId> _cids) {
+		final Set<com.sap.psr.vulas.ConstructId> cids = new HashSet<com.sap.psr.vulas.ConstructId>();
+		for(com.sap.psr.vulas.shared.json.model.ConstructId cid: _cids)
+			cids.add(JavaId.toCoreType(cid));
+		return cids;
 	}
 
 	/**

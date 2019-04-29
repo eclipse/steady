@@ -449,9 +449,7 @@ public class BackendConnector {
 	}
 
 	/**
-	 * The entry points will be all the traces that have been collected during application tests,
-	 * provided by the central Vulas engine.
-	 * @param _sha1
+	 * Returns all {@link ConstructId}s that have been previously traced for the given {@link Application}.
 	 */
 	public Set<ConstructId> getAppTraces(GoalContext _ctx, @NotNull Application _app) throws BackendConnectionException {
 		boolean app_exists = this.isAppExisting(_ctx, _app);
@@ -469,6 +467,25 @@ public class BackendConnector {
 			BackendConnector.log.info("[" + backend_traces.length + "] traces received from backend, [" + constructs.size() + "] transformed to client representation");
 		}
 		return constructs;
+	}
+	
+	/**
+	 * Returns all {@link Dependency}s of the given {@link Application} including their reachable {@link ConstructId}s.
+	 */
+	public Set<Dependency> getAppDependencies(GoalContext _ctx, @NotNull Application _app) throws BackendConnectionException {
+		boolean app_exists = this.isAppExisting(_ctx, _app);
+		final Set<Dependency> deps = new HashSet<Dependency>();
+		if(app_exists) {
+			final String json = new BasicHttpRequest(HttpMethod.GET, PathBuilder.appReachableConstructIds(_app), null).setGoalContext(_ctx).send().getBody();
+			com.sap.psr.vulas.shared.json.model.Dependency[] backend_deps = null;
+			if(json!=null)
+				backend_deps = (com.sap.psr.vulas.shared.json.model.Dependency[])JacksonUtil.asObject(json, com.sap.psr.vulas.shared.json.model.Dependency[].class);
+			else
+				backend_deps = new com.sap.psr.vulas.shared.json.model.Dependency[]{};
+			deps.addAll(Arrays.asList(backend_deps));
+			BackendConnector.log.info("[" + deps.size() + "] dependencies received from backend");
+		}
+		return deps;
 	}
 
 	private static final Pattern pattern = Pattern.compile("\\\"countTotal\\\"\\s*:\\s*([\\d]*)");
