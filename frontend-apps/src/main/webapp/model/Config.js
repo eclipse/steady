@@ -263,7 +263,6 @@ model.Config.loadSpaces = function(_t){
 model.Config.loadData = function(oModel,sUrl, method) {
 	oModel.loadData(sUrl, null,true,method,false,true, model.Config.defaultHeaders());
 	oModel.attachRequestFailed(function(oControlEvent){
-		console.log(oControlEvent.getParameters().statusCode);
 		if(oControlEvent.getParameters().statusCode=="503"){
 			sap.m.MessageBox.warning(
 				"The Vulas backend is in maintenance mode. Please come back later."

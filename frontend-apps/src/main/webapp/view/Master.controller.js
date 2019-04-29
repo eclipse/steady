@@ -186,16 +186,18 @@ sap.ui.controller("view.Master", {
 		let skipEmpty = model.Config.getSkipEmpty()
 		let listModel = list.getModel()
 		listModel.refresh()
-		listModel.oData.forEach(function(app, index){
-			if (index <= (model.Config.getListSize() - 1)) {
-				this.vulnerabilityIconQueue.add(function() {
-					return this.loadVulnerabilityIcon(workspace, backendUrl, skipEmpty, app, index, listModel)
-				}.bind(this), {
-					priority: 1,
-					id: index
-				})
-			}
-		}.bind(this))
+		if (listModel.oData && listModel.oData.length >= 1) {
+			listModel.oData.forEach(function(app, index){
+				if (index <= (model.Config.getListSize() - 1)) {
+					this.vulnerabilityIconQueue.add(function() {
+						return this.loadVulnerabilityIcon(workspace, backendUrl, skipEmpty, app, index, listModel)
+					}.bind(this), {
+						priority: 1,
+						id: index
+					})
+				}
+			}.bind(this))
+		}
 	},
 	
 	validateEmail: function (email) {
