@@ -3,6 +3,7 @@ package com.sap.psr.vulas.java;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -231,4 +232,27 @@ public class JavaIdTest {
 	  assertEquals(hashSet, retval);
 	}
 
+	@Test
+	public void testGetJarUrl() {
+		try {
+			URL u = Class.forName("org.junit.Assert").getResource('/' + "org.junit.Assert".replace('.', '/') + ".class");//new URL("jar:file:/test/foo.jar!bar.class");
+			URL uj = JavaId.getJarUrl(u);
+			assertTrue(uj.toString().matches("^file:/.*/\\.m2/repository/junit/junit/.*/junit-.*\\.jar$"));
+			
+			u = Class.forName("java.util.jar.JarFile").getResource('/' + "java.util.jar.JarFile".replace('.', '/') + ".class");//new URL("jar:file:/test/foo.jar!bar.class");
+			uj = JavaId.getJarUrl(u);
+			assertTrue(uj!=null);
+						
+			u = new URL("jar", "", "file:/org.eclipse.equinox.p2.jarprocessor_1.0.300.v20130327-2119.jar");
+			uj = JavaId.getJarUrl(u);
+			assertEquals("file:/org.eclipse.equinox.p2.jarprocessor_1.0.300.v20130327-2119.jar", uj.toString());
+			
+			u = new URL("jar", "", "file:/org.eclipse.equinox.p2.jarprocessor_1.0.300.v20130327-2119.jar!bar.class");
+			uj = JavaId.getJarUrl(u);
+			assertEquals("file:/org.eclipse.equinox.p2.jarprocessor_1.0.300.v20130327-2119.jar", uj.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(false);
+		}		
+	}
 }
