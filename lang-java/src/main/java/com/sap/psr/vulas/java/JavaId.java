@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -203,14 +204,27 @@ public abstract class JavaId extends ConstructId {
 	 */
 	public static com.sap.psr.vulas.ConstructId toCoreType(com.sap.psr.vulas.shared.json.model.ConstructId _cid) {
 		switch(_cid.getType()) {
-		case METH: return JavaId.parseMethodQName(_cid.getQname());
-		case CONS: return JavaId.parseConstructorQName(_cid.getQname());
-		case PACK: return new JavaPackageId(_cid.getQname());
-		case INIT: return JavaId.parseClassInitQName(_cid.getQname());
-		case ENUM: return JavaId.parseEnumQName(_cid.getQname());
-		case CLAS: return JavaId.parseClassQName(_cid.getQname());
-		default: throw new IllegalArgumentException("Unknown type [" + _cid.getType() + "]");
+			case METH: return JavaId.parseMethodQName(_cid.getQname());
+			case CONS: return JavaId.parseConstructorQName(_cid.getQname());
+			case PACK: return new JavaPackageId(_cid.getQname());
+			case INIT: return JavaId.parseClassInitQName(_cid.getQname());
+			case ENUM: return JavaId.parseEnumQName(_cid.getQname());
+			case CLAS: return JavaId.parseClassQName(_cid.getQname());
+			default: throw new IllegalArgumentException("Unknown type [" + _cid.getType() + "]");
 		}
+	}
+	
+	/**
+	 * Transforms a collection of objects with a given shared type (defined in vulas-share) into
+	 * a {@link HashSet} of objects having the corresponding core type (defined in vulas-core).
+	 * @param _cid
+	 * @return
+	 */
+	public static Set<com.sap.psr.vulas.ConstructId> toCoreType(Collection<com.sap.psr.vulas.shared.json.model.ConstructId> _cids) {
+		final Set<com.sap.psr.vulas.ConstructId> cids = new HashSet<com.sap.psr.vulas.ConstructId>();
+		for(com.sap.psr.vulas.shared.json.model.ConstructId cid: _cids)
+			cids.add(JavaId.toCoreType(cid));
+		return cids;
 	}
 
 	/**
@@ -591,16 +605,37 @@ public abstract class JavaId extends ConstructId {
 		}
 		
 		// Transform "jar:file:/.../foo.jar!bar.class" into "file:/.../foo.jar"
-		if(url!=null && url.toString().startsWith("jar:")) {
-			final String url_string = url.toString().substring(4, url.toString().indexOf(".jar")+4);
+		if(url!=null && url.toString().startsWith("jar:")) {			
 			try {
-				return new URL(url_string);
+				return JavaId.getJarUrl(url);
 			} catch (MalformedURLException e) {
-				JavaId.log.error("Cannot create URL from [" + url_string + "]: " + e.getMessage());
+				JavaId.log.error("Cannot create URL from [" + url.toString() + "]: " + e.getMessage());
 			}
 		}
 		
 		// Return null
+		return null;
+	}
+	
+	/**
+	 * Transform URLs like "jar:file:/.../foo.jar!bar.class" into "file:/.../foo.jar".
+	 * @param _url
+	 */
+	public final static URL getJarUrl(URL _url) throws MalformedURLException {
+		if(_url!=null && _url.toString().startsWith("jar:")) {
+
+			// The following creates problem in cases such as org.eclipse.equinox.p2.jarprocessor_1.0.300.v20130327-2119.jar, where ".jar" occurs two times
+			//final String url_string = url.toString().substring(4, url.toString().indexOf(".jar")+4);
+			
+			String url_string = _url.toString();
+			final int last_excl = url_string.lastIndexOf("!");
+			url_string = url_string.substring(4, url_string.lastIndexOf(".jar", (last_excl==-1 ? url_string.length() : last_excl)) + 4);
+			try {
+				return new URL(url_string);
+			} catch (MalformedURLException e) {
+				throw new MalformedURLException("Cannot create URL from [" + _url.toString() + "]: " + e.getMessage());
+			}
+		}
 		return null;
 	}
 	

@@ -17,7 +17,6 @@ import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.ConstructId;
 
 /**
- * 
  * This class represent the MetaInformation that a node in the {@link CallGraph} can carry with himself
  */
 public class NodeMetaInformation {

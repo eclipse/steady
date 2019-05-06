@@ -162,50 +162,6 @@ public class CallgraphReachableSearch implements Runnable {
 							log.error(e.getClass().getSimpleName() + " occured when looping callgraph node " + current_node_metainf + ": " + e.getMessage());
 						}
 					}
-
-					/*while (wala_graph_iterator.hasNext()) {
-						try {
-							// Current node and its meta information
-							current_node = wala_graph_iterator.next();
-
-							// HP, 29.11.2017: Poor implementation, use Spliterator instead
-							if(min <= current_node && current_node < max) {
-								current_node_metainf = this.graph.getInformationForId(current_node);
-								current_node_qname = current_node_metainf.getConstructId().getQualifiedName();
-
-								// Current node is part of library --> reachable constructs
-								if(MethodNameFilter.getInstance().isLibraryMethod(this.appConstructs, current_node_qname)) {
-									if(!MethodNameFilter.getInstance().isBlackListed(current_node_qname))
-										this.addReachableNode(current_node_metainf);
-								}
-								// Current node is part of app --> touch points
-								else {
-									// Collection enabled?
-									if(this.findTouchPoints) {
-										// Loop all successors of the current node
-										successor_nodes_iterator = wala_graph.getSuccNodes(current_node);
-										while(successor_nodes_iterator.hasNext()){
-
-											// Successor node of the current node
-											successor_node = successor_nodes_iterator.next();
-											successor_node_metainf = this.graph.getInformationForId(successor_node);
-
-											final String succ_node_qname = successor_node_metainf.getConstructId().getQualifiedName();
-											if(MethodNameFilter.getInstance().isLibraryMethod(this.appConstructs, succ_node_qname) && !MethodNameFilter.getInstance().isBlackListed(succ_node_qname)){
-												//current_node_metainf.addToList(successor_node_metainf);
-												this.addTouchPoint(current_node_metainf, successor_node_metainf);
-											}
-										}
-									}
-								}								
-								sw.progress();
-							}
-
-							//TODO Davide: Also collect touchpoints from Library to Application (L2A)
-						} catch(Exception e) {
-							log.error(e.getClass().getSimpleName() + " occured when looping callgraph node " + current_node_metainf + ": " + e.getMessage());
-						}
-					}*/
 					sw.stop();
 				}
 			}
