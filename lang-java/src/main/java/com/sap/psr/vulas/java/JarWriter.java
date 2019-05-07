@@ -156,7 +156,7 @@ public class JarWriter {
 						dir = path.getParent().toFile();
 						if(!dir.exists()) {
 							Files.createDirectories(path.getParent());
-							JarWriter.log.info(this.toString() + ": Invalid JAR file: No directory entry for file entry [" + path + "]");
+							JarWriter.log.warn(this.toString() + ": Invalid JAR file: No directory entry for file entry [" + path + "]");
 						}
 	
 						try (final FileOutputStream fos = new FileOutputStream(path.toFile()); final InputStream is = this.originalJar.getInputStream(entry)) {

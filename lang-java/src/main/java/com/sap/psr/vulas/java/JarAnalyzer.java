@@ -404,7 +404,7 @@ public class JarAnalyzer implements Runnable, JarEntryWriter, FileAnalyzer {
 	public String toString() {
 		final StringBuilder b = new StringBuilder();
 		final String classname = this.getClass().getName().substring(1 + this.getClass().getName().lastIndexOf("."));
-		b.append(classname + "[jar/war=").append(this.jarWriter.getOriginalJarFileName());
+		b.append(classname + "[Xar=").append(this.getFileName());
 		b.append(", libId=").append( (this.libraryId==null?"false":this.libraryId.toString()));
 		b.append(", instr=").append(this.instrument);
 		b.append(", instrCtx=").append( (JarAnalyzer.getAppContext()==null?"false":JarAnalyzer.getAppContext().toString(false)) ).append("]");

@@ -15,6 +15,8 @@ public class AarAnalyzer extends JarAnalyzer {
 
 	private static final Log log = LogFactory.getLog(AarAnalyzer.class);
 	
+	private static final String CLASSES_JAR = "classes.jar";
+	
 	private JarFile aar;
 	private JarWriter aarWriter;
 	
@@ -38,16 +40,15 @@ public class AarAnalyzer extends JarAnalyzer {
 		
 			this.aarWriter.extract(this.tmpDir);
 			
-			// TODO: what if no classes.jar
-			// TODO: is aar or classes.jar uploaded
-			final File classes_jar = this.tmpDir.resolve("classes.jar").toFile();
+			// TODO: What if no classes.jar
+			final File classes_jar = this.tmpDir.resolve(CLASSES_JAR).toFile();
 			if(classes_jar!=null && FileUtil.isAccessibleFile(classes_jar.toPath())) {
 				JarAnalyzer.insertClasspath(classes_jar.toPath().toAbsolutePath().toString());
 				this.jar = new JarFile(classes_jar, false, java.util.zip.ZipFile.OPEN_READ);
 				this.jarWriter = new JarWriter(classes_jar.toPath());
 			}
 			else {
-				log.warn("No classes.jar found in [" + _file.toPath().toAbsolutePath() + "]");
+				log.warn("No " + CLASSES_JAR + " found in [" + _file.toPath().toAbsolutePath() + "]");
 			}
 		} catch (IllegalStateException e) {
 			log.error("IllegalStateException when analyzing file [" + _file + "]: " + e.getMessage());
@@ -69,6 +70,6 @@ public class AarAnalyzer extends JarAnalyzer {
 	public synchronized String getSHA1() { return this.aarWriter.getSHA1(); }
 	
 	public String getFileName() {
-		return this.aarWriter.getOriginalJarFileName().toString();
+		return this.aarWriter.getOriginalJarFileName().toString();// + "!" + CLASSES_JAR;
 	}
 }
