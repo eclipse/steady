@@ -62,6 +62,7 @@
 		<module>lang-java</module>
 		<module>lang-java-reach</module>
 		<module>lang-java-reach-wala</module>
+		<module>lang-java-reach-soot</module>
 
 		<module>lang-python</module>
 
@@ -108,13 +109,13 @@
 			Make sure to exclude the soot repo from mirrors in settings.xml, e.g., <mirrorOf>*,!soot</mirrorOf>
 			See here for more details: https://maven.apache.org/guides/mini/guide-mirror-settings.html
 		-->
-		<profile>
-			<id>soot</id>
-			<modules>
-				<module>lang-java-reach-soot</module>
-				<module>lang-java-reach-soot-init</module>
-			</modules>
-		</profile>
+<!-- 		<profile> -->
+<!-- 			<id>soot</id> -->
+<!-- 			<modules> -->
+<!-- 				<module>lang-java-reach-soot</module> -->
+<!-- 				<module>lang-java-reach-soot-init</module> -->
+<!-- 			</modules> -->
+<!-- 		</profile> -->
 
 		<profile>
 			<id>gradle</id>

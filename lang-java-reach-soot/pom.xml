@@ -20,29 +20,22 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
-			<artifactId>lang-java-reach-soot-init</artifactId>
-			<version>${project.version}</version>
-			<type>pom</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>ca.mcgill.sable</groupId>
 			<artifactId>soot</artifactId>
 			<version>3.3.0</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>de.tud.sse</groupId>
-			<artifactId>soot-infoflow</artifactId>
-			<version>2.6-SNAPSHOT</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>de.tud.sse</groupId> -->
+<!-- 			<artifactId>soot-infoflow</artifactId> -->
+<!-- 			<version>2.6-SNAPSHOT</version> -->
+<!-- 		</dependency> -->
 
 		<!-- Fix Soot's dependency on Guava 18.0 (CVE-2018-10237) -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>27.1-android</version>
+			<version>27.1-jre</version>
 		</dependency>
 		
 	</dependencies>

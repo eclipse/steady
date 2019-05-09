@@ -30,13 +30,21 @@
 			<version>${project.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- Use Wala as a default call graph constructor service-->
-		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
-			<artifactId>lang-java-reach-wala</artifactId>
-			<version>${project.version}</version>
-			<scope>runtime</scope>
-		</dependency>
+
+        <!-- Frameworks for call graph construction -->
+        <dependency>
+            <groupId>com.sap.research.security.vulas</groupId>
+            <artifactId>lang-java-reach-wala</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sap.research.security.vulas</groupId>
+            <artifactId>lang-java-reach-soot</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
 		<dependency>
 			<groupId>com.sap.research.security.vulas</groupId>
 			<artifactId>lang-python</artifactId>

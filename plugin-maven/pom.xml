@@ -32,13 +32,21 @@
             <version>${project.version}</version>
             <scope>compile</scope> <!-- Compile until all goals and the signature creation is service-enabled -->
         </dependency>
-        <!-- Use Wala as a default call graph constructor service-->
+        
+        <!-- Frameworks for call graph construction -->
         <dependency>
             <groupId>com.sap.research.security.vulas</groupId>
             <artifactId>lang-java-reach-wala</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.sap.research.security.vulas</groupId>
+            <artifactId>lang-java-reach-soot</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
