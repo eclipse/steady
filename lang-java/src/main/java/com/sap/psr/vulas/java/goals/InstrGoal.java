@@ -138,8 +138,10 @@ public class InstrGoal extends AbstractAppGoal {
 
 		//TODO: Check how to use packaging information from the Maven plugin
 
+		final long timeout   = this.getConfiguration().getConfiguration().getLong(CoreConfiguration.JAR_TIMEOUT, -1);
 		final int no_threads = ThreadUtil.getNoThreads(this.getConfiguration(), 2);
-		final JarAnalysisManager mgr = new JarAnalysisManager(no_threads, true, app);
+		
+		final JarAnalysisManager mgr = new JarAnalysisManager(no_threads, timeout, true, app);
 		mgr.setRename(true);
 
 		// Set the lib, include and work directories (if any)

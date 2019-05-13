@@ -215,7 +215,7 @@ public class WarAnalyzer extends JarAnalyzer {
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) {
 		if(this.mgr==null) {
-			this.mgr = new JarAnalysisManager(4, this.instrument, JarAnalyzer.getAppContext());
+			this.mgr = new JarAnalysisManager(4, -1, this.instrument, JarAnalyzer.getAppContext());
 	
 			// Create a lib_mod folder for instrumented JARs of the WAR
 			if(this.instrument) {

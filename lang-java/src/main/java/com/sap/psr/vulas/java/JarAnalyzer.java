@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.Callable;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -47,7 +48,7 @@ import javassist.NotFoundException;
  * Analyzes a single Java archives as to identify (and potentially instrument) all its constructs.
  *
  */
-public class JarAnalyzer implements Runnable, JarEntryWriter, FileAnalyzer {
+public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, FileAnalyzer {
 
 	private static final Log log = LogFactory.getLog(JarAnalyzer.class);
 
@@ -203,7 +204,7 @@ public class JarAnalyzer implements Runnable, JarEntryWriter, FileAnalyzer {
 	/**
 	 * This method is called by {@link JarAnalysisManager}.
 	 */
-	public void run() {
+	public FileAnalyzer call() {
 		try {
 			this.getSHA1();
 			this.getConstructIds();
@@ -219,9 +220,8 @@ public class JarAnalyzer implements Runnable, JarEntryWriter, FileAnalyzer {
 		}
 		catch(Exception e) {
 			JarAnalyzer.log.error(this.toString() + ": Error during analysis: " + e.getMessage());
-			//			for(StackTraceElement el: e.getStackTrace())
-			//				JarAnalyzer.log.error("    " + el.toString());
 		}
+		return this;
 	}
 
 	/**

@@ -20,7 +20,7 @@ public class JarAnalysisManagerTest {
 	@Category(Slow.class)
 	public void testStartAnalysis() {
 		try {
-			final JarAnalysisManager jam = new JarAnalysisManager(4, false, null);
+			final JarAnalysisManager jam = new JarAnalysisManager(4, -1, false, null);
 			final FileSearch fs = new FileSearch(new String[] { "war" });
 			jam.startAnalysis(fs.search(Paths.get("./src/test/resources")), null);
 			final Set<JarAnalyzer> analyzers = jam.getAnalyzers();

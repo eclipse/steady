@@ -206,8 +206,11 @@ public class JavaBomTask extends AbstractBomTask {
 
 		// 2) Analyze all of the JAR/WAR files
 		final Set<JarAnalyzer> app_dependencies = new HashSet<JarAnalyzer>();
-
-		final JarAnalysisManager mgr = new JarAnalysisManager(ThreadUtil.getNoThreads(2), false, this.getApplication());
+	
+		final long timeout   = this.vulasConfiguration.getConfiguration().getLong(CoreConfiguration.JAR_TIMEOUT, -1);
+		final int no_threads = ThreadUtil.getNoThreads(this.vulasConfiguration, 2);
+		
+		final JarAnalysisManager mgr = new JarAnalysisManager(no_threads, timeout, false, this.getApplication());
 		mgr.setMavenDependencies(this.getKnownDependencies());
 		mgr.startAnalysis(dep_files, null);
 
