@@ -233,11 +233,10 @@ public class JarAnalysisManager extends SimpleFileVisitor<Path> {
 		try {
 			while (!this.pool.awaitTermination(10, TimeUnit.SECONDS)) {				
 				final Map<JarAnalyzer, Future<FileAnalyzer>> open_tasks = this.getOpenTasks();
-				
 				final long sw_runtime = sw.getRuntimeMillis();
 				
-				// Cancel remaining tasks
-				if(this.analysisTimeout!=-1 && sw_runtime > this.analysisTimeout) {
+				// There are remaining tasks, and a timeout has been configured and reached
+				if(!open_tasks.isEmpty() && this.analysisTimeout!=-1 && sw_runtime > this.analysisTimeout) {
 					JarAnalysisManager.log.warn("Timeout of [" + this.analysisTimeout + "ms] reached, the following [" + open_tasks.size() + "] non-completed analysis tasks will be canceled:");
 					for(JarAnalyzer ja: open_tasks.keySet()) {
 						JarAnalysisManager.log.info("    " + ja);
@@ -245,8 +244,8 @@ public class JarAnalysisManager extends SimpleFileVisitor<Path> {
 					}
 					throw new JarAnalysisException("Timeout of [" + this.analysisTimeout + "ms] reached, [" + open_tasks.size() + "] have been canceled");
 				}
-				// Log message
-				else {
+				// There are remaining tasks, but no timeout is set or reached
+				else if(!open_tasks.isEmpty()) {
 					JarAnalysisManager.log.info("Waiting for the completion of [" + open_tasks.size() + "] analysis tasks:");
 					for(JarAnalyzer ja: open_tasks.keySet())
 						JarAnalysisManager.log.info("    " + ja);
