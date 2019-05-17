@@ -202,7 +202,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 	}
 
 	/**
-	 * This method is called by {@link JarAnalysisManager}.
+	 * This method is called by {@link ArchiveAnalysisManager}.
 	 */
 	public FileAnalyzer call() {
 		try {

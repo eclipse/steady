@@ -12,7 +12,7 @@ import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.AbstractAppGoal;
 import com.sap.psr.vulas.goals.AbstractGoal;
 import com.sap.psr.vulas.goals.GoalConfigurationException;
-import com.sap.psr.vulas.java.JarAnalysisManager;
+import com.sap.psr.vulas.java.ArchiveAnalysisManager;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.util.FileSearch;
@@ -141,7 +141,7 @@ public class InstrGoal extends AbstractAppGoal {
 		final long timeout   = this.getConfiguration().getConfiguration().getLong(CoreConfiguration.JAR_TIMEOUT, -1);
 		final int no_threads = ThreadUtil.getNoThreads(this.getConfiguration(), 2);
 		
-		final JarAnalysisManager mgr = new JarAnalysisManager(no_threads, timeout, true, app);
+		final ArchiveAnalysisManager mgr = new ArchiveAnalysisManager(no_threads, timeout, true, app);
 		mgr.setRename(true);
 
 		// Set the lib, include and work directories (if any)

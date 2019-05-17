@@ -19,7 +19,7 @@ import com.sap.psr.vulas.FileAnalyzerFactory;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.GoalConfigurationException;
 import com.sap.psr.vulas.goals.GoalExecutionException;
-import com.sap.psr.vulas.java.JarAnalysisManager;
+import com.sap.psr.vulas.java.ArchiveAnalysisManager;
 import com.sap.psr.vulas.java.JarAnalyzer;
 import com.sap.psr.vulas.java.JavaId;
 import com.sap.psr.vulas.shared.enums.GoalClient;
@@ -210,8 +210,8 @@ public class JavaBomTask extends AbstractBomTask {
 		final long timeout   = this.vulasConfiguration.getConfiguration().getLong(CoreConfiguration.JAR_TIMEOUT, -1);
 		final int no_threads = ThreadUtil.getNoThreads(this.vulasConfiguration, 2);
 		
-		final JarAnalysisManager mgr = new JarAnalysisManager(no_threads, timeout, false, this.getApplication());
-		mgr.setMavenDependencies(this.getKnownDependencies());
+		final ArchiveAnalysisManager mgr = new ArchiveAnalysisManager(no_threads, timeout, false, this.getApplication());
+		mgr.setKnownDependencies(this.getKnownDependencies());
 		mgr.startAnalysis(dep_files, null);
 
 		// Loop over all analyzers created above and add to app dependencies
@@ -265,10 +265,10 @@ public class JavaBomTask extends AbstractBomTask {
 			try {
 				Dependency dep = null;
 				if(ja.getParent()!=null){
-					dep = mgr.getMavenDependency(ja.getParent().getPath());
+					dep = mgr.getKnownDependency(ja.getParent().getPath());
 				}
 				else
-					dep = mgr.getMavenDependency(ja.getPath());
+					dep = mgr.getKnownDependency(ja.getPath());
 
 				final Dependency new_dep = new Dependency();
 				new_dep.setLib(ja.getLibrary());

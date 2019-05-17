@@ -9,7 +9,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import com.sap.psr.vulas.java.JarAnalysisManager;
+import com.sap.psr.vulas.java.ArchiveAnalysisManager;
 import com.sap.psr.vulas.java.JarAnalyzer;
 import com.sap.psr.vulas.shared.categories.Slow;
 import com.sap.psr.vulas.shared.util.FileSearch;
@@ -20,7 +20,7 @@ public class JarAnalysisManagerTest {
 	@Category(Slow.class)
 	public void testStartAnalysis() {
 		try {
-			final JarAnalysisManager jam = new JarAnalysisManager(4, -1, false, null);
+			final ArchiveAnalysisManager jam = new ArchiveAnalysisManager(4, -1, false, null);
 			final FileSearch fs = new FileSearch(new String[] { "war" });
 			jam.startAnalysis(fs.search(Paths.get("./src/test/resources")), null);
 			final Set<JarAnalyzer> analyzers = jam.getAnalyzers();

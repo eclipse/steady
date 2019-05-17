@@ -28,12 +28,12 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 
 /**
- * Identifies all Java archives below a certain directory.
- * For each, a JarAnalyzer is created in order to analyze its content.
+ * Parallelizes the analysis of Java archives.
+ * The number of parallel {@link Thread}s as well as a timeout is passed as argument to the constructor.
  */
-public class JarAnalysisManager extends SimpleFileVisitor<Path> {
+public class ArchiveAnalysisManager {
 
-	private static final Log log = LogFactory.getLog(JarAnalysisManager.class);
+	private static final Log log = LogFactory.getLog(ArchiveAnalysisManager.class);
 
 	private ExecutorService pool;
 	
@@ -48,20 +48,26 @@ public class JarAnalysisManager extends SimpleFileVisitor<Path> {
 	private Map<JarAnalyzer, Future<FileAnalyzer>> futures = new HashMap<JarAnalyzer, Future<FileAnalyzer>>();
 	
 	private boolean rename = false;
-	private Map<Path,Dependency> mavenDeps = null;
+	
+	private Map<Path,Dependency> knownDependencies = null;
 	
 	private long analysisTimeout = -1;
 
-	public JarAnalysisManager(int _pool_size, long _timeout, boolean _instr, Application _ctx) {
+	/**
+	 * 
+	 * @param _pool_size the number of parallel analysis threads
+	 * @param _timeout the timeout in milleseconds to wait for the completion of all analysis tasks (-1 means no timeout)
+	 * @param _instr whether or not the Java archives shall be instrumented
+	 * @param _ctx the application context in which the analysis takes place (if any)
+	 */
+	public ArchiveAnalysisManager(int _pool_size, long _timeout, boolean _instr, Application _ctx) {
 		this.pool = Executors.newFixedThreadPool(_pool_size);
 		this.analysisTimeout = _timeout;
 		this.instrument = _instr;
 		this.ctx = _ctx;
 	}
 
-	public void setInstrument(boolean _instr) {
-		this.instrument = _instr;
-	}
+	public void setInstrument(boolean _instr) { this.instrument = _instr; }
 
 	public void setWorkDir(Path _p) { this.setWorkDir(_p, false); }
 
@@ -71,20 +77,20 @@ public class JarAnalysisManager extends SimpleFileVisitor<Path> {
 			try {
 				Files.createDirectories(_p);
 			} catch (IOException e) {
-				JarAnalysisManager.log.error("Error while creating dir [" + _p + "]: " + e.getMessage());
+				ArchiveAnalysisManager.log.error("Error while creating dir [" + _p + "]: " + e.getMessage());
 			}
 		}
-		JarAnalysisManager.log.info("Work dir set to [" + _p + "]");
+		ArchiveAnalysisManager.log.info("Work dir set to [" + _p + "]");
 	}
 
 	public void setLibDir(Path _p) {
 		this.libDir = _p;
-		JarAnalysisManager.log.info("Lib dir set to [" + _p + "]");
+		ArchiveAnalysisManager.log.info("Lib dir set to [" + _p + "]");
 	}
 
 	public void setIncludeDir(Path _p) {
 		this.inclDir = _p;
-		JarAnalysisManager.log.info("Include dir set to [" + _p + "]");
+		ArchiveAnalysisManager.log.info("Include dir set to [" + _p + "]");
 	}
 
 	/**
@@ -99,18 +105,18 @@ public class JarAnalysisManager extends SimpleFileVisitor<Path> {
 	 * Takes a map of file system paths to {@link Dependency}s.
 	 * Entries will be used when instantiating {@link JarAnalyzer}s in {@link #startAnalysis(Set, JarAnalyzer)}.
 	 */
-	public void setMavenDependencies(Map<Path, Dependency> _deps) {
-		this.mavenDeps = _deps;
+	public void setKnownDependencies(Map<Path, Dependency> _deps) {
+		this.knownDependencies = _deps;
 	}
 
 	/**
-	 * Returns the {@link Dependency} for a given JAR path, or null if no such path is known.
+	 * Returns the {@link Dependency} for a given archive, or null if no such archive is known.
 	 * The underlying map is built during the execution of the Maven plugin.
 	 * @param _p
 	 */
-	public Dependency getMavenDependency(Path _p) {
-		if(this.mavenDeps!=null)
-			return this.mavenDeps.get(_p);
+	public Dependency getKnownDependency(Path _p) {
+		if(this.knownDependencies!=null)
+			return this.knownDependencies.get(_p);
 		else 
 			return null;
 	}
@@ -154,7 +160,7 @@ public class JarAnalysisManager extends SimpleFileVisitor<Path> {
 			} catch (Exception e) {
 				// No problem at all if instrumentation is not requested.
 				// If instrumentation is requested, however, some classes may not compile
-				JarAnalysisManager.log.error("Error while updating the classpath: " + e.getMessage());
+				ArchiveAnalysisManager.log.error("Error while updating the classpath: " + e.getMessage());
 			}
 		}
 
@@ -168,7 +174,7 @@ public class JarAnalysisManager extends SimpleFileVisitor<Path> {
 				} catch (Exception e) {
 					// No problem at all if instrumentation is not requested.
 					// If instrumentation is requested, however, some classes may not compile
-					JarAnalysisManager.log.error("Error while updating the classpath from lib [" + this.libDir + "]: " + e.getMessage());
+					ArchiveAnalysisManager.log.error("Error while updating the classpath from lib [" + this.libDir + "]: " + e.getMessage());
 				}
 			}
 		}
@@ -203,7 +209,7 @@ public class JarAnalysisManager extends SimpleFileVisitor<Path> {
 					ja.setInstrument(this.instrument);
 				} 
 				else {
-					JarAnalysisManager.log.warn("File extension not supported (only JAR, WAR, AAR): " + p);
+					ArchiveAnalysisManager.log.warn("File extension not supported (only JAR, WAR, AAR): " + p);
 					continue;
 				}
 				if(parent!=null)
@@ -212,8 +218,8 @@ public class JarAnalysisManager extends SimpleFileVisitor<Path> {
 				ja.setRename(this.rename);
 				ja.setWorkDir(this.workDir);
 
-				if(this.getMavenDependency(p)!=null)
-					ja.setLibraryId(this.getMavenDependency(p).getLib().getLibraryId());
+				if(this.getKnownDependency(p)!=null)
+					ja.setLibraryId(this.getKnownDependency(p).getLib().getLibraryId());
 
 				this.analyzers.put(p, ja);
 				
@@ -222,7 +228,7 @@ public class JarAnalysisManager extends SimpleFileVisitor<Path> {
 				this.futures.put(ja, future);
 				
 			} catch (Exception e) {
-				JarAnalysisManager.log.error("Error while analyzing path [" + p + "]: " + e.getMessage());
+				ArchiveAnalysisManager.log.error("Error while analyzing path [" + p + "]: " + e.getMessage());
 			}
 		}
 
@@ -237,18 +243,18 @@ public class JarAnalysisManager extends SimpleFileVisitor<Path> {
 				
 				// There are remaining tasks, and a timeout has been configured and reached
 				if(!open_tasks.isEmpty() && this.analysisTimeout!=-1 && sw_runtime > this.analysisTimeout) {
-					JarAnalysisManager.log.warn("Timeout of [" + this.analysisTimeout + "ms] reached, the following [" + open_tasks.size() + "] non-completed analysis tasks will be canceled:");
+					ArchiveAnalysisManager.log.warn("Timeout of [" + this.analysisTimeout + "ms] reached, the following [" + open_tasks.size() + "] non-completed analysis tasks will be canceled:");
 					for(JarAnalyzer ja: open_tasks.keySet()) {
-						JarAnalysisManager.log.info("    " + ja);
+						ArchiveAnalysisManager.log.info("    " + ja);
 						open_tasks.get(ja).cancel(true);
 					}
 					throw new JarAnalysisException("Timeout of [" + this.analysisTimeout + "ms] reached, [" + open_tasks.size() + "] have been canceled");
 				}
 				// There are remaining tasks, but no timeout is set or reached
 				else if(!open_tasks.isEmpty()) {
-					JarAnalysisManager.log.info("Waiting for the completion of [" + open_tasks.size() + "] analysis tasks:");
+					ArchiveAnalysisManager.log.info("Waiting for the completion of [" + open_tasks.size() + "] analysis tasks:");
 					for(JarAnalyzer ja: open_tasks.keySet())
-						JarAnalysisManager.log.info("    " + ja);
+						ArchiveAnalysisManager.log.info("    " + ja);
 				}
 			}
 			
