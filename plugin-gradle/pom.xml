@@ -27,13 +27,21 @@
             <artifactId>lang-java-reach</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- Use Wala as a default call graph constructor service-->
+        
+        <!-- Frameworks for call graph construction -->
         <dependency>
             <groupId>com.sap.research.security.vulas</groupId>
             <artifactId>lang-java-reach-wala</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.sap.research.security.vulas</groupId>
+            <artifactId>lang-java-reach-soot</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        
         <dependency>
             <groupId>com.android.tools.build</groupId>
             <artifactId>gradle</artifactId>
