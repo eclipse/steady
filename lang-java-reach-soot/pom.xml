@@ -30,6 +30,18 @@
 			<artifactId>soot-infoflow</artifactId>
 			<version>2.7.1.1</version>
 			<scope>compile</scope>
+			<!-- Defined in its dependency on soot:3.2.0, which is any how irrelevant 
+				due to the above dep on soot:3.2.0 -->
+			<exclusions>
+				<exclusion>
+					<groupId>pxb.android</groupId>
+					<artifactId>axml</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>heros</groupId>
+					<artifactId>heros</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- Fix Soot's dependency on Guava 18.0 (CVE-2018-10237) -->
@@ -38,6 +50,5 @@
 			<artifactId>guava</artifactId>
 			<version>27.1-jre</version>
 		</dependency>
-		
 	</dependencies>
 </project>
