@@ -36,7 +36,7 @@ nav:
       - 'Getting help': user/support/index.md
       - 'FAQ': user/support/faq.md
   - DevOps:
-    - DevOps: admin/index.md
+    - DevOps: 'admin/tutorials/docker.md'
   - Contribute:
     - Contribute: contributor/index.md
     # - Tutorials:
