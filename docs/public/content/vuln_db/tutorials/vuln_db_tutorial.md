@@ -54,8 +54,8 @@ To run such commands in your own environment, you may need to adapt:
 ### Batch Import from Knowledge Base
 
 To run the batch import you need to :
- 
-- Download the script "import_vulas_kb.sh" from the [knowledge base](https://github.com/SAP/vulnerability-assessment-kb) 
+
+- Download the script "import_vulas_kb.sh" from the [knowledge base](https://github.com/SAP/vulnerability-assessment-kb)
 - Move it to the same folder where the patch-analyzer built artifact is available (Note that the artifact must be named `patch-analyzer-jar-with-dependencies.jar`)
 - Run  the following command providing as argument the url of the backend
 
@@ -65,7 +65,7 @@ bash import_vulas_kb.sh @@ADDRESS@@/backend/
 
 
 !!! Info
-	The patch-analyzer artifact can be found in the `/target` folder of the `patch-analyzer` module after building the project with maven, or in the `docker/client-tools` folder as a result of the build described [here](../../../admin/). In both cases the file needs to be renamed by removing the version information into `patch-analyzer-jar-with-dependencies.jar`.
+	The patch-analyzer artifact can be found in the `/target` folder of the `patch-analyzer` module after building the project with maven, or in the `docker/client-tools` folder as a result of the build described [here](../../../admin/tutorials/docker/). In both cases the file needs to be renamed by removing the version information into `patch-analyzer-jar-with-dependencies.jar`.
 
 ## Patch Lib Analyzer
 
