@@ -15,7 +15,7 @@ to import vulnerability data before you can actually perform scans.
 
 !!! tip "Installing the @@PROJECT_NAME@@ backend services"
 
-    Instructions on how to setup backend services are available [here](../../../admin/).
+    Instructions on how to setup backend services are available [here](../../../admin/tutorials/docker/).
 
 It is possible to add new vulnerabilities to the database using the `patch-analyzer` module of the @@PROJECT_NAME@@ project.
 
