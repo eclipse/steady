@@ -13,7 +13,7 @@
 
 **Admins**
 
-* [Operating your own @@PROJECT_NAME@@ servers](admin/)
+* [Operating your own @@PROJECT_NAME@@ servers](admin/tutorials/docker/)
 
 **Vulnerabilities**
 

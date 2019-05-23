@@ -24,7 +24,7 @@ To add a new vulnerability fixed in a given library repository, the following fi
 * `skip-if-existing (-sie)` : Skips the analysis of a vulnerability if it already exists in the backend
 * `upload (-u)` : Upload construct changes
 
-Additionally the @@PROJECT_NAME@@ backend service URL must be configured (see [here](../../../admin/) for instructions).
+Additionally the @@PROJECT_NAME@@ backend service URL must be configured (see [here](../../../admin/tutorials/docker/) for instructions).
 
 !!! Info
 	In case you want to be sure about the analysis result before uploading it to the backend, you can run the analysis without the -u option so that the resulting JSON will be saved to file for you to review (e.g., to check that the list of construct changes is not empty).
@@ -44,12 +44,12 @@ The first POST request creates the entry into the vulnerabilities database (in t
 
 ```json
 {
-"bugId": "S2-043",
-"constructChanges": [],
-"createdBy": "sp",
-"description": "Usage of the Config Browser in a production environment can lead to exposing vunerable information of the application.",
-"source": "StrutsSecBulletin",
-"reference": ["https://struts.apache.org/docs/s2-043.htm"]
+    "bugId": "S2-043",
+    "constructChanges": [],
+    "createdBy": "sp",
+    "description": "Usage of the Config Browser in a production environment can lead to exposing vunerable information of the application.",
+    "source": "StrutsSecBulletin",
+    "reference": ["https://struts.apache.org/docs/s2-043.htm"]
 }
 ```
 
@@ -59,14 +59,14 @@ The second POST request defines which versions to be marked as affected or not. 
 
 ```json
 [
-{
-"libraryId":{ "artifact": "struts2-core", "version": "2.0.11", "group": "org.apache.struts" },
+    {
+        "libraryId":{ "artifact": "struts2-core", "version": "2.0.11", "group": "org.apache.struts" },
 
-"lib": null,
-"affectedcc": [],
-"source": "MANUAL",
-"affected": true
-}
+        "lib": null,
+        "affectedcc": [],
+        "source": "MANUAL",
+        "affected": true
+    }
 ]
 ```
 
