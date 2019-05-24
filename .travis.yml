@@ -55,7 +55,6 @@ matrix:
       before_install:
         - docker -v
         - docker-compose -v
-        - wget -qO- 'https://github.com/tianon/pgp-happy-eyeballs/raw/master/hack-my-builds.sh' | bash
         - cp .travis/.env docker/.env
       install:
         - docker build --tag vulas-travis -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
