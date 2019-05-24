@@ -194,39 +194,36 @@ public class ArchiveAnalysisManager {
 				JarAnalyzer ja = null;
 				if(p.toString().endsWith("jar")) {
 					ja = new JarAnalyzer();
-					ja.analyze(p.toFile());
-					ja.setInstrument(this.instrument);
 				}
 				else if(p.toString().endsWith("war")) {
 					ja = new WarAnalyzer();
-					ja.analyze(p.toFile());
-					ja.setInstrument(this.instrument);
 					((WarAnalyzer)ja).setIncludeDir(this.inclDir);
 				} 
 				else if(p.toString().endsWith("aar")) {
 					ja = new AarAnalyzer();
-					ja.analyze(p.toFile());
-					ja.setInstrument(this.instrument);
 				} 
 				else {
 					ArchiveAnalysisManager.log.warn("File extension not supported (only JAR, WAR, AAR): " + p);
 					continue;
 				}
+				
 				if(parent!=null)
 					ja.setParent(parent);
 
+				ja.setInstrument(this.instrument);
 				ja.setRename(this.rename);
 				ja.setWorkDir(this.workDir);
 
 				if(this.getKnownDependency(p)!=null)
 					ja.setLibraryId(this.getKnownDependency(p).getLib().getLibraryId());
 
+				ja.analyze(p.toFile());
+				
 				this.analyzers.put(p, ja);
 				
 				// Execute the analyzer
 				final Future<FileAnalyzer> future = this.pool.submit(ja);
-				this.futures.put(ja, future);
-				
+				this.futures.put(ja, future);				
 			} catch (Exception e) {
 				ArchiveAnalysisManager.log.error("Error while analyzing path [" + p + "]: " + e.getMessage());
 			}
