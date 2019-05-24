@@ -286,3 +286,8 @@ a>code {
     font-weight: 600;
     font-size: 20px;
 }
+
+/* Github stars and forks - start */
+ul.md-source__facts:not(:nth-of-type(1)) {
+    display: none;
+}
