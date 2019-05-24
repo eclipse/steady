@@ -52,6 +52,8 @@ public class CoreConfiguration {
 	
 	public final static String VERIFY_JARS = "vulas.core.verifyJars";
 	
+	public final static String JAR_TIMEOUT = "vulas.core.jarAnalysis.timeout";
+	
 	// CLEAN
 	public final static String CLEAN_HISTORY         = "vulas.core.clean.goalHistory";
 	public final static String CLEAN_PURGE_VERSIONS  = "vulas.core.clean.purgeVersions";

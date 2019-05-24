@@ -28,7 +28,7 @@ public class WarAnalyzerTest {
 			wa.setWorkDir(Paths.get("./target"));
 			wa.setRename(true);
 			WarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
-			wa.run();
+			wa.call();
 			
 			// 15 archives in WEB-INF/lib
 			final Set<FileAnalyzer> fas = wa.getChilds(true);
@@ -54,7 +54,7 @@ public class WarAnalyzerTest {
 			wa.setRename(true);
 			wa.setInstrument(true);
 			WarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
-			wa.run();
+			wa.call();
 			
 			// Check instrumented WAR
 			final File new_war = wa.getInstrumentedArchive();

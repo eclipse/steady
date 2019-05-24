@@ -246,7 +246,7 @@ public class TraceCollector {
 						// Schedule JAR analysis (and create pool if necessary)
 						if(this.pool==null)
 							this.pool = Executors.newFixedThreadPool(this.poolSize);
-						this.pool.execute(ja);
+						this.pool.submit(ja);
 					}
 					catch(FileAnalysisException e) {
 						this.getLog().error("Error while reading JAR file from URL [" + jar_path + "]: " + e.getMessage());

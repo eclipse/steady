@@ -63,7 +63,7 @@ public class WarAnalyzer extends JarAnalyzer {
 	private Path tmpDir = null; // To where the WAR is extracted
 	private Path inclDir = null;
 	
-	private JarAnalysisManager mgr = null;
+	private ArchiveAnalysisManager mgr = null;
 	private Set<FileAnalyzer> nestedAnalyzers = null;
 
 	/** The Vulas archive in incl/ will be rewritten as to contain a proper vulas configuration file. The original will
@@ -215,7 +215,7 @@ public class WarAnalyzer extends JarAnalyzer {
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) {
 		if(this.mgr==null) {
-			this.mgr = new JarAnalysisManager(4, this.instrument, JarAnalyzer.getAppContext());
+			this.mgr = new ArchiveAnalysisManager(4, -1, this.instrument, JarAnalyzer.getAppContext());
 	
 			// Create a lib_mod folder for instrumented JARs of the WAR
 			if(this.instrument) {
