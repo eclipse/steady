@@ -3,3 +3,11 @@ docker
 !docker/run.sh
 **/target
 docs
+.travis
+.github
+.git
+.vscode
+findbugs-exclude.xml
+kubernetes
+.gradle
+.gradle_home

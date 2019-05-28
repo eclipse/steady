@@ -1,4 +1,4 @@
-# DevOps
+# Deploy on Docker
 
 In this tutorial you will be guided through the necessary steps to set-up the @@PROJECT_NAME@@ backend services.
 
@@ -84,7 +84,7 @@ To check if everything started successfully, check the page `http://localhost:80
 
 In order for the tool to detect vulnerabilities, you need to import and analyze them first so that they are available in the tool's vulnerability database. Large part of CVE's and bugs are open sourced in [vulnerability-assessment-kb](https://github.com/SAP/vulnerability-assessment-kb).
 
-Follow the instructions mentioned [here](../../../vuln_db/tutorials/vuln_db_tutorial), to import and build all the vulnerabilities' knowledge.
+Follow the instructions mentioned [here](../../../vuln_db/tutorials/vuln_db_tutorial/#batch-import-from-knowledge-base), to import and build all the vulnerabilities' knowledge.
 
 Get going:
 
