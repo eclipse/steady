@@ -1,7 +1,7 @@
 # Push Docker images on a registry
 
 !!! warning "Official @@PROJECT_NAME@@ images"
-    @@PROJECT_NAME@@ does **not** officially publish any docker image on any public registry such as Docker hub or Quay.io. That said it provides a Bash script to push local images to any Docker registry.
+    @@PROJECT_NAME@@ does **not** officially publish Docker images on any public registry such as Docker Hub or Quay.io. The provided Bash script is meant to push images to **local** Docker repositories running within your organization.
 
 ## Pre-requisites
 
@@ -11,7 +11,7 @@
 
 ## Generate @@PROJECT_NAME@@ images
 
-In order to generate the Docker images to upload on the registry you should generate @@PROJECT_NAME@@'s JAVA archives. This can be done following the first part of the [Deploy on Docker tutorial](../docker#build-docker-images). To briefly summarize you should build and run an image which will populate your local directories with the @@PROJECT_NAME@@ JARs and WARs. In the end of this preliminary step you should have your images locally, this can be tested with the command `docker images | grep vulnerability-assessment-tool`.
+In order to generate the Docker images to upload to a local registry, you should generate @@PROJECT_NAME@@'s Java archives. This can be done following the first part of the [Deploy on Docker tutorial](../docker#build-docker-images). To briefly summarize you should build and run an image which will populate your local directories with the @@PROJECT_NAME@@ JARs and WARs. In the end of this preliminary step you should have your images locally, this can be tested with the command `docker images | grep vulnerability-assessment-tool`.
 
 ```sh
 # sample output for `docker images` command
@@ -26,12 +26,12 @@ vulnerability-assessment-tool-postgresql         @@PROJECT_VERSION@@ c7a17e4f4cd
 
 ## Push the images to a registry
 
-A script was created to push the images to a remote Docker registry. [This script](https://github.com/SAP/vulnerability-assessment-tool/blob/master/docker/push-images.sh) simply tags the images and pushes them towards the registry.
+A script was created to push the images to a local Docker registry running inside your organization. [This script](https://github.com/SAP/vulnerability-assessment-tool/blob/master/docker/push-images.sh) simply tags the images and pushes them towards the registry.
 
 To use the script you will need:
 
-- a registry (`gcr.io`, `docker.io`, `quay.io`)
-- a username (the account name you used to register on the registry website)
+- a registry in your organization (e.g., [goharbor/harbor](https://github.com/goharbor/harbor))
+- a username
 - @@PROJECT_NAME@@ used version
 
 Invoke the script with the following positional arguments. The script will authenticate yourself on the registry, tag your images and push them.
