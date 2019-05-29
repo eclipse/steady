@@ -746,6 +746,54 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2">
+    
+    <label class="md-nav__link" for="nav-3-2">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-3-2">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../admin/tutorials/docker/" title="Deploy on Docker" class="md-nav__link">
+      Deploy on Docker
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../admin/tutorials/registry/" title="Push Docker images to a registry" class="md-nav__link">
+      Push Docker images to a registry
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -1133,7 +1181,7 @@
 to import vulnerability data before you can actually perform scans.</p>
 <div class="admonition tip">
 <p class="admonition-title">Installing the vulnerability-assessment-tool backend services</p>
-<p>Instructions on how to setup backend services are available <a href="../../../admin/">here</a>.</p>
+<p>Instructions on how to setup backend services are available <a href="../../../admin/tutorials/docker/">here</a>.</p>
 </div>
 <p>It is possible to add new vulnerabilities to the database using the <code>patch-analyzer</code> module of the vulnerability-assessment-tool project.</p>
 <h2 id="patch-analyzer">Patch Analyzer<a class="headerlink" href="#patch-analyzer" title="Permanent link">&para;</a></h2>
@@ -1166,7 +1214,7 @@ java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8
 <h3 id="batch-import-from-knowledge-base">Batch Import from Knowledge Base<a class="headerlink" href="#batch-import-from-knowledge-base" title="Permanent link">&para;</a></h3>
 <p>To run the batch import you need to :</p>
 <ul>
-<li>Download the script "import_vulas_kb.sh" from the <a href="https://github.com/SAP/vulnerability-assessment-kb">knowledge base</a> </li>
+<li>Download the script "import_vulas_kb.sh" from the <a href="https://github.com/SAP/vulnerability-assessment-kb">knowledge base</a></li>
 <li>Move it to the same folder where the patch-analyzer built artifact is available (Note that the artifact must be named <code>patch-analyzer-jar-with-dependencies.jar</code>)</li>
 <li>Run  the following command providing as argument the url of the backend</li>
 </ul>
@@ -1175,7 +1223,7 @@ java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8
 
 <div class="admonition info">
 <p class="admonition-title">Info</p>
-<p>The patch-analyzer artifact can be found in the <code>/target</code> folder of the <code>patch-analyzer</code> module after building the project with maven, or in the <code>docker/client-tools</code> folder as a result of the build described <a href="../../../admin/">here</a>. In both cases the file needs to be renamed by removing the version information into <code>patch-analyzer-jar-with-dependencies.jar</code>.</p>
+<p>The patch-analyzer artifact can be found in the <code>/target</code> folder of the <code>patch-analyzer</code> module after building the project with maven, or in the <code>docker/client-tools</code> folder as a result of the build described <a href="../../../admin/tutorials/docker/">here</a>. In both cases the file needs to be renamed by removing the version information into <code>patch-analyzer-jar-with-dependencies.jar</code>.</p>
 </div>
 <h2 id="patch-lib-analyzer">Patch Lib Analyzer<a class="headerlink" href="#patch-lib-analyzer" title="Permanent link">&para;</a></h2>
 <p>Once vulnerabilities are created in the vulnerability database, the patch lib analyzer must run periodically to assess whether all versions of the library known by the backend contain the vulnerable or fixed version of the construct.</p>

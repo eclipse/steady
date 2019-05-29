@@ -750,80 +750,58 @@
       
     
     
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        DevOps
-      </label>
-    
     <a href="./" title="DevOps" class="md-nav__link md-nav__link--active">
       DevOps
     </a>
     
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
     
-  
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pre-requisites" title="Pre-requisites" class="md-nav__link">
-    Pre-requisites
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installation" title="Installation" class="md-nav__link">
-    Installation
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2">
+    
+    <label class="md-nav__link" for="nav-3-2">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-3-2">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
         
-          <li class="md-nav__item">
-  <a href="#clone-from-github" title="Clone from GitHub" class="md-nav__link">
-    Clone from GitHub
-  </a>
-  
-</li>
         
-          <li class="md-nav__item">
-  <a href="#build-docker-images" title="Build Docker images" class="md-nav__link">
-    Build Docker images
-  </a>
-  
-</li>
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="tutorials/docker/" title="Deploy on Docker" class="md-nav__link">
+      Deploy on Docker
+    </a>
+  </li>
+
         
-          <li class="md-nav__item">
-  <a href="#run" title="Run" class="md-nav__link">
-    Run
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#populatemaintain-the-vulnerability-database" title="Populate/maintain the vulnerability database" class="md-nav__link">
-    Populate/maintain the vulnerability database
-  </a>
-  
-</li>
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="tutorials/registry/" title="Push Docker images to a registry" class="md-nav__link">
+      Push Docker images to a registry
+    </a>
+  </li>
+
         
       </ul>
     </nav>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -1077,63 +1055,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pre-requisites" title="Pre-requisites" class="md-nav__link">
-    Pre-requisites
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installation" title="Installation" class="md-nav__link">
-    Installation
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#clone-from-github" title="Clone from GitHub" class="md-nav__link">
-    Clone from GitHub
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#build-docker-images" title="Build Docker images" class="md-nav__link">
-    Build Docker images
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run" title="Run" class="md-nav__link">
-    Run
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#populatemaintain-the-vulnerability-database" title="Populate/maintain the vulnerability database" class="md-nav__link">
-    Populate/maintain the vulnerability database
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1148,82 +1069,11 @@
                 
                 
                 <h1 id="devops">DevOps<a class="headerlink" href="#devops" title="Permanent link">&para;</a></h1>
-<p>In this tutorial you will be guided through the necessary steps to set-up the vulnerability-assessment-tool backend services.</p>
-<p><center class='expandable'>
-    <a href="img/components.png"><img alt="start_page" src="img/components.png" /></a>
-</center></p>
-<div class="admonition warning">
-<p class="admonition-title">Important Remark</p>
-<p>The setup obtained following these instructions is meant for demonstration purposes.
-It <strong>shall not</strong> be used in productive scenarios (both for security and scalability concerns).
-<!--Detailed instructions on how to operate vulnerability-assessment-tool in a productive environment are given in the <a href="admin_guide.md">Admin Guide</a>.--></p>
-</div>
-<h2 id="pre-requisites">Pre-requisites<a class="headerlink" href="#pre-requisites" title="Permanent link">&para;</a></h2>
+<p>vulnerability-assessment-tool is meant to run within the internal network of software development organizations, and this tutorial is meant to facilitate the operation of vulnerability-assessment-tool using <strong>local</strong> Docker repositories or <strong>local</strong> container orchestration systems (e.g., Kubernetes or OpenShift).</p>
+<p><strong>Important</strong>: Due to the current lack of an authorization concept, we do not advise to expose an instance of vulnerability-assessment-tool to the Internet.</p>
 <ul>
-<li>git</li>
-<li>docker</li>
-</ul>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<h3 id="clone-from-github">Clone from GitHub<a class="headerlink" href="#clone-from-github" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span>git clone https://github.com/SAP/vulnerability-assessment-tool
-</pre></div>
-
-<h3 id="build-docker-images">Build Docker images<a class="headerlink" href="#build-docker-images" title="Permanent link">&para;</a></h3>
-<p>All the following commands are supposed to be executed from the root folder of the project.
-Before proceeding, be sure to move there with:</p>
-<div class="codehilite"><pre><span></span><span class="nb">cd</span> vulnerability-assessment-tool
-</pre></div>
-
-<p>Make a copy of the sample configuration:</p>
-<div class="codehilite"><pre><span></span>cp docker/.env.sample docker/.env
-</pre></div>
-
-<p>Customize the file <code>docker/.env</code> to match your needs.</p>
-<div class="admonition info">
-<p class="admonition-title">Sensitive information</p>
-<p>In <code>docker/.env</code> you must configure at least <code>POSTGRES_USER=</code>, you should also configure the <code>HAPROXY</code>'s user and password as well as the credentials to access the bugs' frontend</p>
-</div>
-<p>At this point, you are ready to perform the actual build with the following command:</p>
-<div class="codehilite"><pre><span></span>docker build --tag vulas-build-img -f docker/Dockerfile --build-arg <span class="nv">http_proxy</span><span class="o">=</span> --build-arg <span class="nv">https_proxy</span><span class="o">=</span> .
-docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span>-DexcludedGroups<span class="o">=</span>com.sap.psr.vulas.shared.categories.Slow vulas-build-img
-</pre></div>
-
-<div class="admonition warning">
-<p class="admonition-title">Build error</p>
-<p>If the command above fails, add <code>-DreuseForks=False</code> flag to <code>mvn_flags</code>. As shown in the example below.</p>
-<div class="codehilite"><pre><span></span>docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span><span class="s1">&#39;-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow -DreuseForks=False&#39;</span> vulas-build-img
-</pre></div>
-
-</div>
-<p>In case you are running behind a proxy you need to configure it in the <code>--build-arg</code> arguments.</p>
-<p>As a result, the folders <code>docker/&lt;component-name&gt;</code> will contain compiled JARs (or WARs, depending on the component). The folder <code>docker/client-tools</code> will be populated with the JARs for client side tools (CLI, plugins, patchanalyzer).</p>
-<p>Finally, you may want to make all artifacts available to the developers of your organization (e.g., through an internal Nexus or other artifact distribution system).</p>
-<h3 id="run">Run<a class="headerlink" href="#run" title="Permanent link">&para;</a></h3>
-<p>You are now ready to run the system:</p>
-<div class="codehilite"><pre><span></span><span class="o">(</span><span class="nb">cd</span> docker <span class="o">&amp;&amp;</span> docker-compose up -d --build<span class="o">)</span>
-</pre></div>
-
-<p>To check if everything started successfully, check the page <code>http://localhost:8033/haproxy?stats</code>. All endpoints should appear as green (you may want to replace <code>localhost</code> with the actual hostname of your machine).</p>
-<div class="admonition info">
-<p class="admonition-title">Credentials and start up time</p>
-<p><code>username</code> and <code>password</code> can be found in your <code>.env</code> file, be also advised that <code>rest-backend</code> could take more than 30 seconds to be available to answer HTTP requests</p>
-</div>
-<h3 id="populatemaintain-the-vulnerability-database">Populate/maintain the vulnerability database<a class="headerlink" href="#populatemaintain-the-vulnerability-database" title="Permanent link">&para;</a></h3>
-<p>In order for the tool to detect vulnerabilities, you need to import and analyze them first so that they are available in the tool's vulnerability database. Large part of CVE's and bugs are open sourced in <a href="https://github.com/SAP/vulnerability-assessment-kb">vulnerability-assessment-kb</a>.</p>
-<p>Follow the instructions mentioned <a href="../vuln_db/tutorials/vuln_db_tutorial">here</a>, to import and build all the vulnerabilities' knowledge.</p>
-<p>Get going:</p>
-<ol>
-<li><a href="../vuln_db/tutorials/vuln_db_tutorial">Import</a> all the CVEs and bugs in your local datababse</li>
-<li>Setup your <a href="../user/manuals/setup/#workspace">workspace</a> (if you don't have one)</li>
-<li>Become familiar with the various analysis <a href="../user/manuals/analysis/">goals</a> (first time users)</li>
-<li>Analyze your <a href="../user/tutorials/java_maven">Java</a> or <a href="../user/tutorials/python_cli">Python</a> application (on a regular basis)</li>
-<li><a href="../user/manuals/assess_and_mitigate">Assess</a> findings using the apps Web frontend (following every analysis)</li>
-</ol>
-<p>Further links:</p>
-<ul>
-<li><a href="../user/tutorials/">Configure</a> the client-side analysis</li>
-<li><a href="../user/tutorials/jenkins_howto">Automate</a> with Jenkins</li>
-<li><a href="../user/support">Get help</a> if you run into troubles</li>
+<li><a href="./tutorials/docker">Deploy on Docker</a> and <a href="../vuln_db/tutorials/vuln_db_tutorial/#batch-import-from-knowledge-base">Import the knowledge base</a></li>
+<li><a href="./tutorials/registry">Push Docker images to a registry</a></li>
 </ul>
                 
                   
@@ -1261,13 +1111,13 @@ docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><spa
           </a>
         
         
-          <a href="../contributor/" title="Contribute" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="tutorials/docker/" title="Deploy on Docker" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Contribute
+                Deploy on Docker
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">

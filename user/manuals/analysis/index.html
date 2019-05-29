@@ -858,6 +858,54 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2">
+    
+    <label class="md-nav__link" for="nav-3-2">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-3-2">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../admin/tutorials/docker/" title="Deploy on Docker" class="md-nav__link">
+      Deploy on Docker
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../admin/tutorials/registry/" title="Push Docker images to a registry" class="md-nav__link">
+      Push Docker images to a registry
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -1596,7 +1644,7 @@ mvn -Dvulas compile vulas:a2c
 -Dvulas.core.appContext.artifact=&lt;ARTIFACT&gt;
 -Dvulas.core.appContext.version=&lt;VERSION&gt;
 -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
--Dvulas.core.space.token=&lt;WORKSSPACE-TOKEN&gt;
+-Dvulas.core.space.token=&lt;WORKSPACE-TOKEN&gt;
 -noverify
 </pre></div>
 
@@ -1604,11 +1652,11 @@ mvn -Dvulas compile vulas:a2c
 <li>Start the application and perform some application-specific tests and workflows.</li>
 </ul>
 <h4>Example</h4>
-<p>In case of Tomcat 8.x, one needs to (1) copy <code>lang-java-3.0.17-jar-with-dependencies.jar</code> into the folder <code>./bin</code> and (2) specify the variable <code>CATALINA_OPTS</code> as follows in the file <code>./bin/setenv.bat</code>. Do not forget to specify <code>&lt;GROUP&gt;</code>, <code>&lt;ARTIFACT&gt;</code> and <code>&lt;VERSION&gt;</code> for the application under analysis. Note: The use of <code>setenv.bat</code> does not work if Tomcat is run as Windows service.</p>
+<p>In case of Tomcat 8.x, one needs to (1) copy <code>lang-java-3.0.17-jar-with-dependencies.jar</code> into the folder <code>./bin</code> and (2) specify the variable <code>CATALINA_OPTS</code> as follows in the file <code>./bin/setenv.bat</code>. Do not forget to specify <code>&lt;GROUP&gt;</code>, <code>&lt;ARTIFACT&gt;</code>, <code>&lt;VERSION&gt;</code> and <code>&lt;WORKSPACE-TOKEN&gt;</code> for the application under analysis. Note: The use of <code>setenv.bat</code> does not work if Tomcat is run as Windows service.</p>
 <div class="superfences-tabs">
 <input name="__tabs_4" type="radio" id="__tab_4_0" checked="checked" />
 <label for="__tab_4_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nb">set</span> <span class="s2">&quot;CATALINA_OPTS=-javaagent:lang-java-3.0.17-jar-with-dependencies.jar -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/-Dvulas.core.backendConnection=READ_WRITE -Dvulas.core.monitor.periodicUpload.enabled=true -Dvulas.core.appContext.group=&lt;GROUP&gt; -Dvulas.core.appContext.artifact=&lt;ARTIFACT&gt; -Dvulas.core.appContext.version=&lt;VERSION&gt; -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor -noverify&quot;</span>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nb">set</span> <span class="s2">&quot;CATALINA_OPTS=-javaagent:lang-java-3.0.17-jar-with-dependencies.jar -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/-Dvulas.core.backendConnection=READ_WRITE -Dvulas.core.monitor.periodicUpload.enabled=true -Dvulas.core.appContext.group=&lt;GROUP&gt; -Dvulas.core.appContext.artifact=&lt;ARTIFACT&gt; -Dvulas.core.appContext.version=&lt;VERSION&gt; -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor -Dvulas.core.space.token=&lt;WORKSPACE-TOKEN&gt; -noverify&quot;</span>
 </pre></div></div>
 </div>
 <h2 id="static-instrumentation-instr">Static instrumentation (instr)<a class="headerlink" href="#static-instrumentation-instr" title="Permanent link">&para;</a></h2>

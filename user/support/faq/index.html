@@ -836,6 +836,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#app-the-goal-execution-breaks-with-a-javaniofileinvalidpathexception" title="app : The goal execution breaks with a java.nio.file.InvalidPathException" class="md-nav__link">
+    app : The goal execution breaks with a java.nio.file.InvalidPathException
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1068,6 +1075,54 @@
     <a href="../../../admin/" title="DevOps" class="md-nav__link">
       DevOps
     </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2">
+    
+    <label class="md-nav__link" for="nav-3-2">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-3-2">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../admin/tutorials/docker/" title="Deploy on Docker" class="md-nav__link">
+      Deploy on Docker
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../admin/tutorials/registry/" title="Push Docker images to a registry" class="md-nav__link">
+      Push Docker images to a registry
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
         
@@ -1433,6 +1488,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#app-the-goal-execution-breaks-with-a-javaniofileinvalidpathexception" title="app : The goal execution breaks with a java.nio.file.InvalidPathException" class="md-nav__link">
+    app : The goal execution breaks with a java.nio.file.InvalidPathException
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1665,6 +1727,7 @@ how to get support.</p>
 <li><a href="#app-notfoundexception-when-analyzing-jar-files">app : NotFoundException when analyzing JAR files?</a></li>
 <li><a href="#app-the-goal-execution-takes-very-long">app : The goal execution takes very long</a></li>
 <li><a href="#app-the-goal-execution-breaks-with-a-5xx-response-code-received-from-the-backend">app : The goal execution breaks with a 5xx response code received from the backend</a></li>
+<li><a href="#app-the-goal-execution-breaks-with-a-javaniofileinvalidpathexception">app : The goal execution breaks with a java.nio.file.InvalidPathException</a></li>
 </ul>
 </li>
 <li><a href="#reachability-analysis-goals-a2c-and-t2c">Reachability Analysis (goals a2c and t2c)</a><ul>
@@ -1800,6 +1863,16 @@ how to get support.</p>
 <h3 id="app-the-goal-execution-breaks-with-a-5xx-response-code-received-from-the-backend">app : The goal execution breaks with a 5xx response code received from the backend<a class="headerlink" href="#app-the-goal-execution-breaks-with-a-5xx-response-code-received-from-the-backend" title="Permanent link">&para;</a></h3>
 <p>Problem: The goal execution breaks with a 5xx response code received from the backend.</p>
 <p>Explanation: This can happen if multiple processes (on the same computer or remotely) try to upload the same method signature to the backend. In such cases, one can simply restart at a later time to avoid the clash.</p>
+<h3 id="app-the-goal-execution-breaks-with-a-javaniofileinvalidpathexception">app : The goal execution breaks with a java.nio.file.InvalidPathException<a class="headerlink" href="#app-the-goal-execution-breaks-with-a-javaniofileinvalidpathexception" title="Permanent link">&para;</a></h3>
+<p>Problem: The goal execution breaks with a <code>java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters</code> as viewable here below.</p>
+<div class="codehilite"><pre><span></span>[ERROR] Failed to execute goal com.sap.research.security.vulas:plugin-maven:3.0.17:app (default-cli) on project xxxxx: java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters: shapeless/$tilde$qmark$greater$?.class
+</pre></div>
+
+<p>Explanation : the exception  is often due to an encoding problem.</p>
+<p>Solution : Try one of the following options.</p>
+<p>1/ Add the property <code>&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</code> to your pom.xml file. Current property <code>&lt;encoding&gt;</code> only works if added to the configuration section of individual plugins.</p>
+<p>OR</p>
+<p>2/ Force the usage of the UTF-8 encoding using the <code>"-Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8"</code> properties in your command line.</p>
 <h2 id="reachability-analysis-goals-a2c-and-t2c">Reachability Analysis (goals a2c and t2c)<a class="headerlink" href="#reachability-analysis-goals-a2c-and-t2c" title="Permanent link">&para;</a></h2>
 <h3 id="a2c-javalangoutofmemoryerror">a2c : java.lang.OutOfMemoryError<a class="headerlink" href="#a2c-javalangoutofmemoryerror" title="Permanent link">&para;</a></h3>
 <p>Solutions:</p>

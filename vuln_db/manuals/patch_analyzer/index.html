@@ -746,6 +746,54 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-2" type="checkbox" id="nav-3-2">
+    
+    <label class="md-nav__link" for="nav-3-2">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-3-2">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../admin/tutorials/docker/" title="Deploy on Docker" class="md-nav__link">
+      Deploy on Docker
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../admin/tutorials/registry/" title="Push Docker images to a registry" class="md-nav__link">
+      Push Docker images to a registry
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -1118,7 +1166,7 @@
 <li><code>skip-if-existing (-sie)</code> : Skips the analysis of a vulnerability if it already exists in the backend</li>
 <li><code>upload (-u)</code> : Upload construct changes</li>
 </ul>
-<p>Additionally the vulnerability-assessment-tool backend service URL must be configured (see <a href="../../../admin/">here</a> for instructions).</p>
+<p>Additionally the vulnerability-assessment-tool backend service URL must be configured (see <a href="../../../admin/tutorials/docker/">here</a> for instructions).</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>In case you want to be sure about the analysis result before uploading it to the backend, you can run the analysis without the -u option so that the resulting JSON will be saved to file for you to review (e.g., to check that the list of construct changes is not empty).</p>
@@ -1133,26 +1181,26 @@
 <p>The first POST request creates the entry into the vulnerabilities database (in the following example we create and entry for CVE "S2-043"):</p>
 <p><code>POST http://http://localhost:8033/backend/bugs</code></p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
-<span class="nt">&quot;bugId&quot;</span><span class="p">:</span> <span class="s2">&quot;S2-043&quot;</span><span class="p">,</span>
-<span class="nt">&quot;constructChanges&quot;</span><span class="p">:</span> <span class="p">[],</span>
-<span class="nt">&quot;createdBy&quot;</span><span class="p">:</span> <span class="s2">&quot;sp&quot;</span><span class="p">,</span>
-<span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Usage of the Config Browser in a production environment can lead to exposing vunerable information of the application.&quot;</span><span class="p">,</span>
-<span class="nt">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;StrutsSecBulletin&quot;</span><span class="p">,</span>
-<span class="nt">&quot;reference&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;https://struts.apache.org/docs/s2-043.htm&quot;</span><span class="p">]</span>
+    <span class="nt">&quot;bugId&quot;</span><span class="p">:</span> <span class="s2">&quot;S2-043&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;constructChanges&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="nt">&quot;createdBy&quot;</span><span class="p">:</span> <span class="s2">&quot;sp&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Usage of the Config Browser in a production environment can lead to exposing vunerable information of the application.&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;StrutsSecBulletin&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;reference&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;https://struts.apache.org/docs/s2-043.htm&quot;</span><span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 
 <p>The second POST request defines which versions to be marked as affected or not. Please notice that the id of the CVE to update ("S2-403" in the following example) has to be used/replaced in the following POST request.</p>
 <p><code>POST http://http://localhost:8033/backend/bugs/S2-043/affectedLibIds?source=MANUAL</code></p>
 <div class="codehilite"><pre><span></span><span class="p">[</span>
-<span class="p">{</span>
-<span class="nt">&quot;libraryId&quot;</span><span class="p">:{</span> <span class="nt">&quot;artifact&quot;</span><span class="p">:</span> <span class="s2">&quot;struts2-core&quot;</span><span class="p">,</span> <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0.11&quot;</span><span class="p">,</span> <span class="nt">&quot;group&quot;</span><span class="p">:</span> <span class="s2">&quot;org.apache.struts&quot;</span> <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;libraryId&quot;</span><span class="p">:{</span> <span class="nt">&quot;artifact&quot;</span><span class="p">:</span> <span class="s2">&quot;struts2-core&quot;</span><span class="p">,</span> <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0.11&quot;</span><span class="p">,</span> <span class="nt">&quot;group&quot;</span><span class="p">:</span> <span class="s2">&quot;org.apache.struts&quot;</span> <span class="p">},</span>
 
-<span class="nt">&quot;lib&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-<span class="nt">&quot;affectedcc&quot;</span><span class="p">:</span> <span class="p">[],</span>
-<span class="nt">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;MANUAL&quot;</span><span class="p">,</span>
-<span class="nt">&quot;affected&quot;</span><span class="p">:</span> <span class="kc">true</span>
-<span class="p">}</span>
+        <span class="nt">&quot;lib&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="nt">&quot;affectedcc&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="nt">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;MANUAL&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;affected&quot;</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
 <span class="p">]</span>
 </pre></div>
 
