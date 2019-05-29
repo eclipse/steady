@@ -6,10 +6,10 @@
 
 **Users**
 
-* [Quick start](user/tutorials)
-* [Frequently Asked Questions/Troubleshooting](user/support/faq)
-* [User Manual](user/manuals)
-* [Get support](user/support)
+* [Quick start](user/tutorials/)
+* [Frequently Asked Questions/Troubleshooting](user/support/faq/)
+* [User Manual](user/manuals/)
+* [Get support](user/support/)
 
 **Admins**
 

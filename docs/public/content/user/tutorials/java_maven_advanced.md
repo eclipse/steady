@@ -1,11 +1,11 @@
 # Scanning Java apps built with Maven
 
 !!! warning "Beginner? Read here"
-    This tutorial is the second part of the [introductory tutorial that you can find here](../java_maven). If you have not done so yet, you are warmly encouraged to follow that one first, and then come back here. This document will assume you already have a working configuration and have successfully executed the steps described in the basic tutorial.
+    This tutorial is the second part of the [introductory tutorial that you can find here](../java_maven/). If you have not done so yet, you are warmly encouraged to follow that one first, and then come back here. This document will assume you already have a working configuration and have successfully executed the steps described in the basic tutorial.
 
 ## Prerequisites
 
-The same prerequisites as in the [introductory tutorial](../java_maven) also apply here.
+The same prerequisites as in the [introductory tutorial](../java_maven/) also apply here.
 
 ## Goal execution
 
@@ -54,7 +54,7 @@ This tutorial explains how to perform the static and dynamic analyses in order t
 
 ## Useful links
 
-- [Automate](../../tutorials/jenkins_howto) with Jenkins
+- [Automate](../../tutorials/jenkins_howto/) with Jenkins
 - [Configure](../../manuals/setup/) the client-side analysis
-- [Get help](../../support) if you run into troubles
-- [Assess and mitigate](../../manuals/assess_and_mitigate) reported vulnerabilities
+- [Get help](../../support/) if you run into troubles
+- [Assess and mitigate](../../manuals/assess_and_mitigate/) reported vulnerabilities

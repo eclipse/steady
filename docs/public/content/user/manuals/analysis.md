@@ -583,7 +583,7 @@ mvn -Dvulas vulas:upload
 
 #### Objective
 
-Creates result reports in HTML, XML and JSON format (on the basis of analysis results downloaded from the @@PROJECT_NAME@@ backend). Additionally, the Maven and Gradle plugins can be configured to throw a build exception in order break Jenkins jobs and pipelines in case vulnerable code is present (or reachable/executed). The HTML report can be copied into a Jenkins dashboard using the [HTML Publisher Plugin](http://wiki.jenkins-ci.org/display/JENKINS/HTML+Publisher+Plugin) (see [automation](../../tutorials/jenkins_howto) for a configuration example).
+Creates result reports in HTML, XML and JSON format (on the basis of analysis results downloaded from the @@PROJECT_NAME@@ backend). Additionally, the Maven and Gradle plugins can be configured to throw a build exception in order break Jenkins jobs and pipelines in case vulnerable code is present (or reachable/executed). The HTML report can be copied into a Jenkins dashboard using the [HTML Publisher Plugin](http://wiki.jenkins-ci.org/display/JENKINS/HTML+Publisher+Plugin) (see [automation](../../tutorials/jenkins_howto/) for a configuration example).
 
 #### Multi-module Maven projects
 

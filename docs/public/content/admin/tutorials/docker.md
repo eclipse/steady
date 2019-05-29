@@ -88,14 +88,14 @@ Follow the instructions mentioned [here](../../../vuln_db/tutorials/vuln_db_tuto
 
 Get going:
 
-1. [Import](../../../vuln_db/tutorials/vuln_db_tutorial) all the CVEs and bugs in your local datababse
+1. [Import](../../../vuln_db/tutorials/vuln_db_tutorial/) all the CVEs and bugs in your local datababse
 2. Setup your [workspace](../../../user/manuals/setup/#workspace) (if you don't have one)
 3. Become familiar with the various analysis [goals](../../../user/manuals/analysis/) (first time users)
-4. Analyze your [Java](../../../user/tutorials/java_maven) or [Python](../../../user/tutorials/python_cli) application (on a regular basis)
-5. [Assess](../../../user/manuals/assess_and_mitigate) findings using the apps Web frontend (following every analysis)
+4. Analyze your [Java](../../../user/tutorials/java_maven/) or [Python](../../../user/tutorials/python_cli/) application (on a regular basis)
+5. [Assess](../../../user/manuals/assess_and_mitigate/) findings using the apps Web frontend (following every analysis)
 
 Further links:
 
 - [Configure](../../../user/tutorials/) the client-side analysis
-- [Automate](../../../user/tutorials/jenkins_howto) with Jenkins
-- [Get help](../../../user/support) if you run into troubles
+- [Automate](../../../user/tutorials/jenkins_howto/) with Jenkins
+- [Get help](../../../user/support/) if you run into troubles

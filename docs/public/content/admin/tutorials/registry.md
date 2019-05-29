@@ -11,7 +11,7 @@
 
 ## Generate @@PROJECT_NAME@@ images
 
-In order to generate the Docker images to upload to a local registry, you should generate @@PROJECT_NAME@@'s Java archives. This can be done following the first part of the [Deploy on Docker tutorial](../docker#build-docker-images). To briefly summarize you should build and run an image which will populate your local directories with the @@PROJECT_NAME@@ JARs and WARs. In the end of this preliminary step you should have your images locally, this can be tested with the command `docker images | grep vulnerability-assessment-tool`.
+In order to generate the Docker images to upload to a local registry, you should generate @@PROJECT_NAME@@'s Java archives. This can be done following the first part of the [Deploy on Docker tutorial](../docker/#build-docker-images). To briefly summarize you should build and run an image which will populate your local directories with the @@PROJECT_NAME@@ JARs and WARs. In the end of this preliminary step you should have your images locally, this can be tested with the command `docker images | grep vulnerability-assessment-tool`.
 
 ```sh
 # sample output for `docker images` command

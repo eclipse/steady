@@ -6,21 +6,21 @@ For detailed extensive documentation, please check out the [@@PROJECT_NAME@@ Man
 
 ## Workspace
 
-* [Create a workspace](./workspace_howto.md) (Beginner)
-* [Workspaces for multiple releases/branches](./workspace_howto_advanced.md) (Advanced)
+* [Create a workspace](./workspace_howto/) (Beginner)
+* [Workspaces for multiple releases/branches](./workspace_howto_advanced/) (Advanced)
 
 ## Java
 
-* [Scanning Java apps built with Maven](./java_maven.md) (Beginner)
-* [Scanning Java apps built with Gradle](./java_gradle.md) (Beginner)
-* [Scanning Java apps (no/other build system)](./java_cli.md) (Beginner) - please follow this tutorial if your project neither uses Maven nor Gradle.
-* [Reachability analysis (Java/Maven)](./java_maven_advanced.md) (Advanced)
+* [Scanning Java apps built with Maven](./java_maven/) (Beginner)
+* [Scanning Java apps built with Gradle](./java_gradle/) (Beginner)
+* [Scanning Java apps (no/other build system)](./java_cli/) (Beginner) - please follow this tutorial if your project neither uses Maven nor Gradle.
+* [Reachability analysis (Java/Maven)](./java_maven_advanced/) (Advanced)
 
 ## Python
 
-* [Scanning Python apps (other build systems)](./python_cli.md) (Beginner)
+* [Scanning Python apps (other build systems)](./python_cli/) (Beginner)
 
 ## Other topics
 
-* [Automating @@PROJECT_NAME@@ scans with Jenkins](./jenkins_howto.md)
-* [Demystifying @@PROJECT_NAME@@ reports](./reports.md)
+* [Automating @@PROJECT_NAME@@ scans with Jenkins](./jenkins_howto/)
+* [Demystifying @@PROJECT_NAME@@ reports](./reports/)

@@ -1,4 +1,4 @@
-## About
+# About
 
 @@PROJECT_NAME@@ analyzes Java and Python applications in order to:
 
