@@ -19,4 +19,4 @@ __Getting Help__
 
 : If the tutorials and the manual could not help you with a specific problem you are facing, the support pages are what you should check out next.
 
-: [Go to the User Support page](./support/
+: [Go to the User Support page](./support/)
