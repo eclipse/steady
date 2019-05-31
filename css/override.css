@@ -61,8 +61,12 @@ body, input, textarea, select, button {
 }
 
 /* Colors - start */
-.md-header, .md-tabs{
+.md-header, .md-tabs, .md-sidebar .md-nav--primary > .md-nav__title--site, .md-sidebar .md-nav__source{
     background-color: #20232a !important;
+}
+
+.md-sidebar .md-nav__source{
+    background-color: #20232ae6 !important;
 }
 
 .md-typeset .admonition.todo > .admonition-title, .md-typeset details.todo > .admonition-title, .md-typeset .admonition.todo > summary, .md-typeset details.todo > summary, .md-typeset .admonition.info > .admonition-title, .md-typeset details.info > .admonition-title, .md-typeset .admonition.info > summary, .md-typeset details.info > summary {
@@ -200,7 +204,6 @@ a>code {
 }
 
 /* Super fences */
-
 .md-typeset .superfences-tabs > label:hover {
     color: #4adbff !important;
 }
@@ -216,7 +219,6 @@ a>code {
 }
 
 /* Hidden - start */
-
 .hidden {
     display: none !important;
 }
@@ -265,7 +267,6 @@ a>code {
 }
 
 /* Headers */
-
 .md-typeset h1 {
     font-weight: 700;
     font-size: 65px;
@@ -287,7 +288,20 @@ a>code {
     font-size: 20px;
 }
 
+@media (max-width: 700px) {
+    .md-typeset h1 {
+        font-size: 35px;
+    }
+}
+
 /* Github stars and forks - start */
 ul.md-source__facts:not(:nth-of-type(1)) {
     display: none;
+}
+
+/* Header */
+span.md-header-nav__topic, .md-sidebar .md-nav__title.md-nav__title--site, .md-sidebar .md-nav .md-source__repository {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
