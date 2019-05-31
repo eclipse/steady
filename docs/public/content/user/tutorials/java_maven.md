@@ -29,7 +29,7 @@ HP: Not needed in my option.
 The plugin for Maven can be used with or without adding a @@PROJECT_NAME@@ profile to the `pom.xml` of your application. This tutorial guides you through the setup ***with @@PROJECT_NAME@@ profile***.
 
 !!! info "Cannot add the @@PROJECT_NAME@@ profile?"
-	If possible we recommend to use the @@PROJECT_NAME@@ profile as the execution of goals using the command-line is more concise (readable). If you cannot paste the @@PROJECT_NAME@@ profile in the `pom.xml` of your application you can still use the @@PROJECT_NAME@@ plugin for Maven. Check out the Manual [Java (Maven)](../../manuals/setup#maven)
+	If possible we recommend to use the @@PROJECT_NAME@@ profile as the execution of goals using the command-line is more concise (readable). If you cannot paste the @@PROJECT_NAME@@ profile in the `pom.xml` of your application you can still use the @@PROJECT_NAME@@ plugin for Maven. Check out the Manual [Java (Maven)](../../manuals/setup/#maven)
 
 Add the following to the `<profiles>` section of the `pom.xml` of your application project and make sure that `<vulas.shared.backend.serviceUrl>` points to the URL of the backend service and that `<vulas.core.space.token>` specifies the token of your individual workspace (see highlighted lines).
 
@@ -72,7 +72,7 @@ In case your application does not follow the standard structure of Maven applica
 
 ## Useful links
 
-- [Automate](../../tutorials/jenkins_howto) with Jenkins
+- [Automate](../../tutorials/jenkins_howto/) with Jenkins
 - [Configure](../../manuals/setup/) the client-side analysis
-- [Get help](../../support) if you run into troubles
-- [Assess and mitigate](../../manuals/assess_and_mitigate) reported vulnerabilities
+- [Get help](../../support/) if you run into troubles
+- [Assess and mitigate](../../manuals/assess_and_mitigate/) reported vulnerabilities

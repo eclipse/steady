@@ -10,13 +10,13 @@ __Step by step tutorial__
 
 : Here you can find the steps to populate your vulnerability database with five known vulnerabilities. Of course, you can exercise the tutorial for all the other vulnerabilities of the [vulnerability assessment knowledge base](https://github.com/SAP/vulnerability-assessment-kb) as well.
 
-: [Go to the Tutorials page](./tutorials/vuln_db_tutorial)
+: [Go to the Tutorials page](./tutorials/vuln_db_tutorial/)
 
 __Manual__
 
 : Here you can find a description of the main activities and tools around the vulnerability database.
 
-: [Go to the Vulnerability Database Manual](./manuals)
+: [Go to the Vulnerability Database Manual](./manuals/)
 
 __Contribute__
 
@@ -27,4 +27,4 @@ __Contribute__
 !!! warning "Orange Hourglass"
 	Whenever an application library contains the signature of a construct that was changed to fix a vulnerability, but the patch lib analyzer didn't yet (or could not) establish whether it contains the vulnerable or fixed version of the construct, then the tool reports the vulnerability in the web frontend with an ORANGE hourglass in the column "Inclusion of vulnerable code".
 
-	To resolve orange hourglasses it's necessary to feed the tool with the information whether the library contains the vulnerable or fixed version of the construct changed in the vulnerability fix. This can be done either [manually](./manuals/manual_assessment) or automatically with the [patch-lib-analyzer](./manuals/patch_lib_analyzer) (for a subset of cases).
+	To resolve orange hourglasses it's necessary to feed the tool with the information whether the library contains the vulnerable or fixed version of the construct changed in the vulnerability fix. This can be done either [manually](./manuals/manual_assessment/) or automatically with the [patch-lib-analyzer](./manuals/patch_lib_analyzer/) (for a subset of cases).

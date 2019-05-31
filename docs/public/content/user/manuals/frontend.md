@@ -392,7 +392,7 @@ The second section of this page presents 2 metrics and a table:
 | Column | Description |
 |---|---|
 | Status | Empty on success, error message in case of failures |
-| Goal | Goal executed, see [here](../analysis) for the list of all goals |
+| Goal | Goal executed, see [here](../analysis/) for the list of all goals |
 | Started at |Start date and time of the goal execution |
 | Runtime | Total duration of the goal execution in minutes |
 | JVM Max.Memory (MB) | Max. memory available for the JVM |

@@ -199,8 +199,6 @@ The client-side analysis tools can be configured in different ways. At runtime, 
 
 ### General settings
 
-<!--Many settings are specific to the individual goals and are explained in the respective [Java](Java) and [Python](Python) sections.-->
-
 The following settings, however, have to be present for every goal execution:
 
 - `vulas.core.space.token`: The token of the workspace to be used for the analysis

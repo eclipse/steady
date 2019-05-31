@@ -34,4 +34,4 @@ Once the fields have been filled, press the "Save" button. The system then retur
 
 To use a workspace, you need to pass the token as configuration parameter `vulas.core.space.token`.
 
-See [here](../../../user/manuals/setup/#setup) for more information on how-to configure the scans clients or [continue with the scan tutorials](../../tutorials).
+See [here](../../../user/manuals/setup/#setup) for more information on how-to configure the scans clients or [continue with the scan tutorials](../../tutorials/).
