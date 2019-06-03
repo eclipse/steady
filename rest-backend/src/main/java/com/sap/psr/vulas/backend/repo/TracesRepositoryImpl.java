@@ -130,6 +130,10 @@ public class TracesRepositoryImpl implements TracesRepositoryCustom {
 				throw new PersistenceException("Error while saving trace " + provided_trace + ": " + e.getMessage());
 			}
 		}
+		//After all traces have been saved,
+		//update the lastScan timestamp of the application (we already have a managed application here)
+		appRepository.refreshLastScanbyApp(_app);
+		
 		sw.stop();
 		return traces;
 	}
