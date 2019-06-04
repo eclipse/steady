@@ -30,6 +30,7 @@ sap.ui.controller("view.BugDetail", {
 			app.artifactid = evt.getParameter("arguments").artifact;
 			app.version = evt.getParameter("arguments").version;
 			workspaceSlug = evt.getParameter("arguments").workspaceSlug;
+			app.workspaceSlug = evt.getParameter("arguments").workspaceSlug;
 
 			model.Config.cleanRequests();
 			this.loadDataIntoView();
