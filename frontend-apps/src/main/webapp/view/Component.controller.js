@@ -688,7 +688,7 @@ sap.ui.controller("view.Component", {
 		var do_wc = wildcardSearch.getSelected();
 		
 		// Build URL
-		var url = model.Config.host;
+		var url = model.Config.getHostBackend()
 		url += "/apps/" + groupId + "/" + artifactId + "/" + versionId + "/search?searchString=" + search_string + "&wildcardSearch=" + do_wc;
 		
 		// Load data
