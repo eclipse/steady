@@ -147,7 +147,7 @@ model.Config.getDefaultSavedSpace = function() {
 model.Config.getDefaultSpace = function(_force) {
 	if((_force!=undefined && _force)|| model.Config.settings.defaultSpace=="" || model.Config.settings.defaultSpace ==null || model.Config.settings.defaultSpace == undefined){
 		//retrieve default from backend
-		var url = model.Config.getHostBackend()+"/spaces/default";
+		var url = model.Config.getHostBackend()+"/spaces/default?cache=true";
 		var oModel = new sap.ui.model.json.JSONModel();
 		//3rd param is 'asynch', set to false as the value is required to continue
 		oModel.loadData(url, null,false,"GET",false,true,{'X-Vulas-Component':'appfrontend','X-Vulas-Tenant':model.Config.getTenant()});
@@ -190,7 +190,7 @@ model.Config.setTenant = function(_token) {
 model.Config.getTenant = function(_force) {
 	if((_force!=undefined && _force) || model.Config.settings.tenant=="" || model.Config.settings.tenant ==null || model.Config.settings.tenant == undefined){
 		//retrieve default from backend
-		var url = model.Config.getHostBackend()+"/tenants/default";
+		var url = model.Config.getHostBackend()+"/tenants/default?cache=true";
 		var oModel = new sap.ui.model.json.JSONModel();
 		//3rd param is 'asynch', set to false as the value is required to continue
 		oModel.loadData(url, null,false,"GET",false,true, {
@@ -348,15 +348,15 @@ model.Config.getMyAppsServiceUrl = function(_loadVulnerabityIcons) {
 
 model.Config.getArchiveVulnServiceUrl = function(g,a,gt,sec,l) {
 	if(gt!=null)
-		return model.Config.getHostBackend()+"/libids/"+ g + "/" + a + "?latest="+l+"&greaterThanVersion=" + gt + "&secureOnly=" + sec ;
+		return model.Config.getHostBackend()+"/libids/"+ g + "/" + a + "?latest="+l+"&cache=true&greaterThanVersion=" + gt + "&secureOnly=" + sec ;
 	else 
-		return model.Config.getHostBackend()+"/libids/"+ g + "/" + a + "?latest="+l+"&secureOnly=" + sec ;
+		return model.Config.getHostBackend()+"/libids/"+ g + "/" + a + "?latest="+l+"&cache=true&secureOnly=" + sec ;
 };
 
 
 //used to check whether the g a are known using the response status code 
 model.Config.isArchiveInMaven = function(g,a) {
-	return model.Config.getCiaHost()+"/artifacts/"+ g + "/" + a + "?packaging=jar&skipResponseBody=true";
+	return model.Config.getCiaHost()+"/artifacts/"+ g + "/" + a + "?packaging=jar&skipResponseBody=true&cache=true"; // TODO: cache forever
 };
 
 model.Config.getUpdateMetricsUrl = function(g,a,v,sha1) {
@@ -401,7 +401,7 @@ model.Config.getLatestGoalExecutionServiceUrl = function(g, a, v, lastChange) {
  * the service url for goal execution details
  */
 model.Config.getGoalExecutionDetailsServiceUrl = function(g,a,v,gid) {
-	return model.Config.getHostBackend()+"/apps/"+ g + "/" + a + "/" + v +"/goals/" + gid;
+	return model.Config.getHostBackend()+"/apps/"+ g + "/" + a + "/" + v +"/goals/" + gid + '/?cache=true'; // TODO: cache forever
 };
 
 
@@ -409,7 +409,7 @@ model.Config.getGoalExecutionDetailsServiceUrl = function(g,a,v,gid) {
  * the service url for archive properties
  */
 model.Config.getArchivePropertiesServiceUrl = function(g,a,v,sha1) {
-	return model.Config.getHostBackend()+"/apps/"+ g + "/" + a + "/" + v +"/deps/" + sha1;
+	return model.Config.getHostBackend()+"/apps/"+ g + "/" + a + "/" + v +"/deps/" + sha1 + '/?cache=true';
 };
 
 /**
