@@ -72,6 +72,7 @@ public class CoreConfiguration {
 	public final static String REP_EXCL_UNASS    = "vulas.report.exceptionExcludeUnassessed";
 	public final static String REP_EXCL_BUGS     = "vulas.report.exceptionExcludeBugs";
 	public final static String REP_DIR           = "vulas.report.reportDir";
+	public final static String REP_OVERRIDE_VER  = "vulas.report.overridePomVersion";
 
 	public final static String SEQ_DEFAULT       = "vulas.core.sequence.defaultGoals";
 

@@ -105,7 +105,7 @@ public class VulasConfiguration {
 	private Configuration writableConfiguration = new MapConfiguration(new HashMap<String,Object>());
 	
 	// Add the initial ones right away
-	public VulasConfiguration( ){
+	public VulasConfiguration() {
 		this.appendInitialConfigurations();
 	}
 
