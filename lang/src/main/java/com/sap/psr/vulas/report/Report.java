@@ -108,10 +108,15 @@ public class Report {
 	public Report(GoalContext _ctx, Application _app, Set<Application> _modules) {
 		this.goalContext = _ctx;
 		this.app = _app;
-		if(_modules==null) this.modules = new HashSet<Application>();
-		else this.modules = _modules;
-		this.modules.add(app);			
-		Report.log.info("Report to be done for " + _app + ", [" + this.modules.size() + "] modules in total: " + this.modules);
+
+		if(_modules==null) {
+			this.modules = new HashSet<Application>();
+			this.modules.add(this.app);
+		}
+		else
+			this.modules = _modules;
+				
+		Report.log.info("Report to be done for " + this.app + ", [" + this.modules.size() + "] modules in total: " + this.modules);
 	}
 
 	public String getExceptionThreshold() { return exceptionThreshold; }
