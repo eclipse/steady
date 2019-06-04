@@ -263,12 +263,18 @@ sap.ui.controller("view.BugDetail", {
 
 	onExit : function() {
 		var bugDetailPage = this.getView().byId('idBugDetailPage');
-		bugDetailPage.getModel().destroy();
-
-		bugDetailPage.getModel("osspatch").destroy();
-		bugDetailPage.getModel("cveModel").destroy();
-		bugDetailPage.getModel("app").destroy();
-
+		if (bugDetailPage.getModel()) {
+			bugDetailPage.getModel().destroy();
+		}
+		if (bugDetailPage.getModel("osspatch")) {
+			bugDetailPage.getModel("osspatch").destroy();
+		}
+		if (bugDetailPage.getModel("cveModel")) {
+			bugDetailPage.getModel("cveModel").destroy();
+		}
+		if (bugDetailPage.getModel("app")) {
+			bugDetailPage.getModel("app").destroy();
+		}
 	},
 	openWiki : function(evt){
 
