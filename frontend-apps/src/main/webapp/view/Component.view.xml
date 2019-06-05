@@ -203,6 +203,11 @@
 											<Text id="archiveTotalTraces" xmlns="sap.m" text="None" />
 										</m:MatrixLayoutCell>
 									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="archiveAvgAge" xmlns="sap.m" text="None" />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
 								</m:MatrixLayout>
 
 
@@ -217,14 +222,14 @@
 												xmlns="sap.m" titleActive="true" titlePress="onArchiveListItemTap" />
 										</template>
 									</Column>
-									<Column xmlns="sap.ui.table" width="14%" sorted="true"
+									<Column xmlns="sap.ui.table" width="10%" sorted="true"
 										sortProperty="scope">
 										<Label text="Dependency Scope" xmlns="sap.ui.commons" />
 										<template>
 											<TextView xmlns="sap.ui.commons" text="{scope}"></TextView>
 										</template>
 									</Column>
-									<Column xmlns="sap.ui.table" width="14%" sorted="true"
+									<Column xmlns="sap.ui.table" width="10%" sorted="true"
 										sortProperty="transitive">
 										<Label text="Direct / Transitive" xmlns="sap.ui.commons" />
 										<template>
@@ -234,7 +239,7 @@
 		 												formatter: 'model.Formatter.directTransitive'}"></TextView>
 										</template>
 									</Column>
-									<Column xmlns="sap.ui.table" width="14%" sorted="true"
+									<Column xmlns="sap.ui.table" width="10%" sorted="true"
 										sortProperty="lib/wellknownDigest">
 										<multiLabels>
 											<Label text="{i18n>wellknownDigest}" xmlns="sap.ui.commons" />
@@ -246,7 +251,19 @@
 											</commons:TextView>
 										</template>
 									</Column>
-									<Column xmlns="sap.ui.table" width="14%" sorted="true"
+									<Column xmlns="sap.ui.table" width="10%" sorted="true"
+										sortProperty="lib/digestTimestamp">
+										<multiLabels>
+											<Label text="{i18n>digestTimestamp}" xmlns="sap.ui.commons" />
+										</multiLabels>
+										<template>
+											<TextView xmlns="sap.ui.commons"
+												text="{
+		 												path: 'lib/digestTimestamp',
+		 												formatter: 'model.Formatter.digestTimestamp'}"></TextView>
+										</template>
+									</Column>
+									<Column xmlns="sap.ui.table" width="10%" sorted="true"
 										sortProperty="declared">
 										<multiLabels>
 											<Label text="{i18n>declaredDependency}" xmlns="sap.ui.commons" />
@@ -258,7 +275,7 @@
 											</commons:TextView>
 										</template>
 									</Column>
-									<Column xmlns="sap.ui.table" width="14%" sorted="true"
+									<Column xmlns="sap.ui.table" width="10%" sorted="true"
 										sortProperty="reachExecConstructsCounter">
 										<!-- Text text="App potentially executes library code" / -->
 										<multiLabels>
@@ -270,7 +287,7 @@
 												text="{reachExecConstructsCounter}"></TextView>
 										</template>
 									</Column>
-									<Column xmlns="sap.ui.table" width="14%" sorted="true"
+									<Column xmlns="sap.ui.table" width="10%" sorted="true"
 										sortProperty="tracedExecConstructsCounter">
 										<multiLabels>
 											<Label text="Library constructs " xmlns="sap.ui.commons" />
@@ -485,7 +502,7 @@
 											<Text xmlns="sap.m" text="Search string for the construct name" />
 										</m:MatrixLayoutCell>
 										<m:MatrixLayoutCell>
-											<commons:TextField id="idSearchString" placeholder="Enter search string for the construct name..." width="75%"/>
+											<commons:TextField id="idSearchString" placeholder="Enter search string for the construct name (min length: 3)" width="100%"/>
 										</m:MatrixLayoutCell>
 									</m:MatrixLayoutRow>
 									<m:MatrixLayoutRow>

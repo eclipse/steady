@@ -15,7 +15,7 @@ to import vulnerability data before you can actually perform scans.
 
 !!! tip "Installing the @@PROJECT_NAME@@ backend services"
 
-    Instructions on how to setup backend services are available [here](../../../admin/).
+    Instructions on how to setup backend services are available [here](../../../admin/tutorials/docker/).
 
 It is possible to add new vulnerabilities to the database using the `patch-analyzer` module of the @@PROJECT_NAME@@ project.
 
@@ -54,8 +54,8 @@ To run such commands in your own environment, you may need to adapt:
 ### Batch Import from Knowledge Base
 
 To run the batch import you need to :
- 
-- Download the script "import_vulas_kb.sh" from the [knowledge base](https://github.com/SAP/vulnerability-assessment-kb) 
+
+- Download the script "import_vulas_kb.sh" from the [knowledge base](https://github.com/SAP/vulnerability-assessment-kb)
 - Move it to the same folder where the patch-analyzer built artifact is available (Note that the artifact must be named `patch-analyzer-jar-with-dependencies.jar`)
 - Run  the following command providing as argument the url of the backend
 
@@ -65,7 +65,7 @@ bash import_vulas_kb.sh @@ADDRESS@@/backend/
 
 
 !!! Info
-	The patch-analyzer artifact can be found in the `/target` folder of the `patch-analyzer` module after building the project with maven, or in the `docker/client-tools` folder as a result of the build described [here](../../../admin/). In both cases the file needs to be renamed by removing the version information into `patch-analyzer-jar-with-dependencies.jar`.
+	The patch-analyzer artifact can be found in the `/target` folder of the `patch-analyzer` module after building the project with maven, or in the `docker/client-tools` folder as a result of the build described [here](../../../admin/tutorials/docker/). In both cases the file needs to be renamed by removing the version information into `patch-analyzer-jar-with-dependencies.jar`.
 
 ## Patch Lib Analyzer
 
@@ -80,7 +80,7 @@ Run for all bugs
 java -Dvulas.patchEval.uploadResults=true -Dvulas.patchEval.onlyAddNewResults=true -Dvulas.patchEval.basefolder=<csv_folder> -Dvulas.patchEval.bugId=<comma_separated_list_of_bugs> -Dvulas.shared.cia.serviceUrl=@@ADDRESS@@/cia -Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend/-Xmx6G -Xms6G -jar patch-lib-analyzer-@@PROJECT_VERSION@@-jar-with-dependencies.jar
 ```
 
-To check how to run it as a job, check [here](../../manuals/patch_lib_analyzer)
+To check how to run it as a job, check [here](../../manuals/patch_lib_analyzer/)
 
 !!! Info
 	In case the application results still shows orange hourglasses after running the patch lib analyser, the manual assessment is required, see [here](../../manuals/manual_assessment/)

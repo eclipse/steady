@@ -236,30 +236,32 @@ public class ClassVisitor {
 	}
 
 	private void instrument(JavaId _jid, CtBehavior _behavior) throws CannotCompileException {
-		// Remember an exception (if any) and throw it at the end
-		CannotCompileException cce = null;
-
 		// Loop all instrumentors to build the to-be-injected source code
 		final List<IInstrumentor> instrumentorList = InstrumentorFactory.getInstrumentors();
 		final Iterator<IInstrumentor> iter = instrumentorList.iterator();
-
-		// The source code to be added
-		final StringBuffer source_code = new StringBuffer();
-
-		// Whatever code is injected, surround it by a try clause
-		source_code.append("try {");
-
-		// Add the code of all instrumentors
+		final StringBuffer instrumentation_code = new StringBuffer();
 		while(iter.hasNext()) {
 			IInstrumentor i = iter.next();
 			if(i.acceptToInstrument(_jid, _behavior, this)) {
-				i.instrument(source_code, _jid, _behavior, this);
+				i.instrument(instrumentation_code, _jid, _behavior, this);
 			}
 		}
+		
+		// Return if there's nothing to inject
+		if(instrumentation_code.length()==0)
+			return;
 
-		// The catch clause of the above try clause
-		source_code.append("} catch(Throwable e) { System.err.println(e.getClass().getName() + \" occurred during execution of instrumentation code in " + _jid.toString() + ": \" + e.getMessage()); }");
+		// If there's something to inject, surround it by a try clause
+		final StringBuffer source_code = new StringBuffer();
+		source_code.append("try {");
+		source_code.append(instrumentation_code.toString());
+		source_code.append("}");
+		source_code.append("catch(IllegalStateException ise) { throw ise; }");
+		source_code.append("catch(Throwable e) { System.err.println(e.getClass().getName() + \" occurred during execution of instrumentation code in " + _jid.toString() + ": \" + e.getMessage()); }");
 
+		// Remember an exception (if any) and throw it at the end
+		CannotCompileException cce = null;
+		
 		// Inject the code		
 		try {
 			if(_jid.getType().equals(JavaId.Type.CONSTRUCTOR) || _jid.getType().equals(JavaId.Type.CLASSINIT))

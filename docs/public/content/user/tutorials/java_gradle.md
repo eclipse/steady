@@ -87,7 +87,7 @@ See [here](../../manuals/analysis/) for a description of all analysis goals.
 
 ## Useful links
 
-- [Automate](../../tutorials/jenkins_howto) with Jenkins
+- [Automate](../../tutorials/jenkins_howto/) with Jenkins
 - [Configure](../../manuals/setup/) the client-side analysis
-- [Get help](../../support) if you run into troubles
-- [Assess and mitigate](../../manuals/assess_and_mitigate) reported vulnerabilities
+- [Get help](../../support/) if you run into troubles
+- [Assess and mitigate](../../manuals/assess_and_mitigate/) reported vulnerabilities

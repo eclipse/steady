@@ -186,16 +186,18 @@ sap.ui.controller("view.Master", {
 		let skipEmpty = model.Config.getSkipEmpty()
 		let listModel = list.getModel()
 		listModel.refresh()
-		listModel.oData.forEach(function(app, index){
-			if (index <= (model.Config.getListSize() - 1)) {
-				this.vulnerabilityIconQueue.add(function() {
-					return this.loadVulnerabilityIcon(workspace, backendUrl, skipEmpty, app, index, listModel)
-				}.bind(this), {
-					priority: 1,
-					id: index
-				})
-			}
-		}.bind(this))
+		if (listModel.oData && listModel.oData.length >= 1) {
+			listModel.oData.forEach(function(app, index){
+				if (index <= (model.Config.getListSize() - 1)) {
+					this.vulnerabilityIconQueue.add(function() {
+						return this.loadVulnerabilityIcon(workspace, backendUrl, skipEmpty, app, index, listModel)
+					}.bind(this), {
+						priority: 1,
+						id: index
+					})
+				}
+			}.bind(this))
+		}
 	},
 	
 	validateEmail: function (email) {
@@ -512,10 +514,12 @@ sap.ui.controller("view.Master", {
 			if (sap.ui.getCore().byId('idSw').getValue() != null && sap.ui.getCore().byId('idSw').getValue() != "") {
 				body = body + ', "properties":[{"source":"USER","name":"' + model.Config.getSwIdDb() + '","value":"' + sap.ui.getCore().byId("idSw").getValue() + '"}]';
 			} else { //alert that SwId id was not provided and they should do it by editing the space
-				sap.m.MessageBox.warning(
-					"You did not provide the " + model.Config.getSwIdLabel() +
-					" Please do so by going to Configuration -> Space Edit. Follow the info link for more information."
-				);
+				if (model.Config.settings.swIdMandatory === "true") {
+					sap.m.MessageBox.warning(
+						"You did not provide the " + model.Config.getSwIdLabel() +
+						" Please do so by going to Configuration -> Space Edit. Follow the info link for more information."
+					)
+				}
 			}
 
 			body = body + '}'

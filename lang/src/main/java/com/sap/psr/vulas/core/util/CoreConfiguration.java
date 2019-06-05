@@ -52,6 +52,8 @@ public class CoreConfiguration {
 	
 	public final static String VERIFY_JARS = "vulas.core.verifyJars";
 	
+	public final static String JAR_TIMEOUT = "vulas.core.jarAnalysis.timeout";
+	
 	// CLEAN
 	public final static String CLEAN_HISTORY         = "vulas.core.clean.goalHistory";
 	public final static String CLEAN_PURGE_VERSIONS  = "vulas.core.clean.purgeVersions";
@@ -70,6 +72,7 @@ public class CoreConfiguration {
 	public final static String REP_EXCL_UNASS    = "vulas.report.exceptionExcludeUnassessed";
 	public final static String REP_EXCL_BUGS     = "vulas.report.exceptionExcludeBugs";
 	public final static String REP_DIR           = "vulas.report.reportDir";
+	public final static String REP_OVERRIDE_VER  = "vulas.report.overridePomVersion";
 
 	public final static String SEQ_DEFAULT       = "vulas.core.sequence.defaultGoals";
 
@@ -107,6 +110,8 @@ public class CoreConfiguration {
 
 	public final static String INSTR_BLACKLIST_CLASSLOADER    = "vulas.core.instr.blacklist.classloader";
 	public final static String INSTR_BLACKLIST_CLASSLOADER_ACC_CHILD = "vulas.core.instr.whitelist.classloader.acceptChilds";
+	
+	public final static String INSTR_GUARD_OPEN = "vulas.core.instr.guard.open";
 
 	public final static String MONI_PERIODIC_UPL_ENABLED    = "vulas.core.monitor.periodicUpload.enabled";
 	public final static String MONI_PERIODIC_UPL_INTERVAL   = "vulas.core.monitor.periodicUpload.interval";

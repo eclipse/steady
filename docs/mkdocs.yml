@@ -1,4 +1,4 @@
-site_name: vulnerability-assessment-tool 3.0.16
+site_name: vulnerability-assessment-tool 3.0.18
 site_description: vulnerability-assessment-tool Documentation
 site_url: https://sap.github.io/vulnerability-assessment-tool/
 dev_addr: 0.0.0.0:8000
@@ -36,7 +36,10 @@ nav:
       - 'Getting help': user/support/index.md
       - 'FAQ': user/support/faq.md
   - DevOps:
-    - DevOps: admin/index.md
+    - DevOps: 'admin/index.md'
+    - Tutorials: 
+      - 'Deploy on Docker': 'admin/tutorials/docker.md'
+      - 'Push Docker images to a registry': 'admin/tutorials/registry.md'
   - Contribute:
     - Contribute: contributor/index.md
     # - Tutorials:

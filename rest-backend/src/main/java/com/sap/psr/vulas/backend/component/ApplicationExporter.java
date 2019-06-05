@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -107,17 +108,16 @@ public class ApplicationExporter {
 			affected_apps = this.appRepository.findAffectedApps(_selected_bugs);
 			sw.lap("Completed search for apps affected by [" + StringUtil.join(_selected_bugs, ", ") + "]", true);
 		}
-
-		// Partition size
-		final int size = new Double(Math.ceil( (double)apps.size() / (double)no_threads)).intValue();
-
+		
 		// Create parallel threads
 		final ExecutorService pool = Executors.newFixedThreadPool(no_threads);
 		final Set<ApplicationExporterThread> searches = new HashSet<ApplicationExporterThread>();
-		if(no_threads > apps.size()) {
+		
+		final Set<List<Application>> parts = ApplicationExporter.partition(apps, (apps.size()<=no_threads ? 1 : no_threads) );
+		for(List<Application> part: parts) {
 			final ApplicationExporterThread search = (ApplicationExporterThread)this.applicationContext.getBean("csvProducerThread");
 			search.setSeparator(separator)
-			.setApps(apps)
+			.setApps(part)
 			.setIncludeGoalConfiguration(includeGoalConfiguration)
 			.setIncludeGoalSystemInfo(includeGoalSystemInfo)
 			.setIncludeSpaceProperties(includeSpaceProperties)
@@ -128,25 +128,6 @@ public class ApplicationExporter {
 			.setFormat(_format);
 			searches.add(search);
 			pool.execute(search);
-		}
-		else {
-			for(int i=0; i<no_threads; i++) {
-				int min = i * size;
-				int max = Math.min((i + 1) * size, apps.size());
-				final ApplicationExporterThread search = (ApplicationExporterThread)this.applicationContext.getBean("csvProducerThread");
-				search.setSeparator(separator)
-				.setApps(apps.subList(min, max))
-				.setIncludeGoalConfiguration(includeGoalConfiguration)
-				.setIncludeGoalSystemInfo(includeGoalSystemInfo)
-				.setIncludeSpaceProperties(includeSpaceProperties)
-				.setBugs(_selected_bugs)
-				.setAffectedApps(affected_apps)
-				.setIncludeAllBugs(_incl_all_bugs)
-				.setIncludeExemptions(_incl_exemptions)
-				.setFormat(_format);
-				searches.add(search);
-				pool.execute(search);
-			}
 		}
 
 		try {
@@ -201,15 +182,16 @@ public class ApplicationExporter {
 				if(ExportFormat.JSON.equals(_format))
 					writer.write("[");
 				
-				// Join reachable constructs and touch points
+				// Merge results
 				int i = 0;
 				for(ApplicationExporterThread search: searches) {
-					// Separate JSON objects
-					if(ExportFormat.JSON.equals(_format) && i++>0)
-						writer.write(",");
-					
-					writer.write(search.getBuffer().toString());
-					writer.flush();
+					final String search_json = search.getBuffer().toString();
+					if(search_json!=null && !search_json.equals("")) {
+						if(ExportFormat.JSON.equals(_format) && i++>0)
+							writer.write(",");
+						writer.write(search_json);
+						writer.flush();
+					}
 				}
 				
 				// Close JSON array
@@ -228,5 +210,54 @@ public class ApplicationExporter {
 		}
 
 		return export_file;
+	}
+	
+	/**
+	 * Creates a set with the given number of sublists of the given list.
+	 * 
+	 * If the given list is null, the method returns an empty set.
+	 * If the given list is empty or its size is smaller than the given number, the method returns a set that just contains the given list as its only element.
+	 * 
+	 * @param _list
+	 * @param _num
+	 * @return
+	 */
+	public static <T> Set<List<T>> partition(List<T> _list, int _num) throws IllegalArgumentException {
+		final Set<List<T>> parts = new HashSet<List<T>>();
+		
+		// Number of parts must be > 0
+		if(_num<1)
+			throw new IllegalArgumentException("Number of partitions must be greater than 0 but is [" + _num + "]");
+		
+		// No list
+		else if(_list==null)
+			;
+		
+		// Return 1 part only 
+		else if(_list.size()<_num)
+			parts.add(_list);
+		
+		// Create sublists
+		else {
+			final int size = new Double(Math.floor((double)_list.size()/(double)_num)).intValue();
+			int i, min, max;
+			
+			// Create _partition_no -1 parts
+			for(i=0; i<_num-1; i++) {
+				min = i * size;
+				max = Math.min((i + 1) * size, _list.size());
+				if(max>=min) {
+					parts.add(_list.subList(min, max));
+				}
+			}
+			
+			// Create last part with remaining elements
+			min = i * size;
+			max = Math.min((_num + 1) * size, _list.size());
+			if(max>=min) {
+				parts.add(_list.subList(min, max));
+			}
+		}
+		return parts;
 	}
 }

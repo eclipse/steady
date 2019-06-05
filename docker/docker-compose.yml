@@ -2,35 +2,35 @@ version: '2'
 
 services:
   frontend-apps:
-    container_name: vulas-os-frontend-apps
+    container_name: vulnerability-assessment-tool-frontend-apps
     hostname: frontend-apps
-    env_file: .env
     build: 
       context: ./frontend-apps
       dockerfile: ./Dockerfile
       args:
         - VULAS_RELEASE=${VULAS_RELEASE}
+    image: vulnerability-assessment-tool-frontend-apps:${VULAS_RELEASE}
     expose:
       - "8080"
     security_opt:
       - no-new-privileges
 
   frontend-bugs:
-    container_name: vulas-os-frontend-bugs
+    container_name: vulnerability-assessment-tool-frontend-bugs
     hostname: frontend-bugs
-    env_file: .env
     build: 
       context: ./frontend-bugs
       dockerfile: ./Dockerfile
       args:
         - VULAS_RELEASE=${VULAS_RELEASE}
+    image: vulnerability-assessment-tool-frontend-bugs:${VULAS_RELEASE}
     expose:
       - "8080"
     security_opt:
       - no-new-privileges
 
   haproxy:
-    container_name: vulas-os-haproxy
+    container_name: vulnerability-assessment-tool-haproxy
     hostname: haproxy
     env_file: .env
     build: 
@@ -40,13 +40,14 @@ services:
         - VULAS_RELEASE=${VULAS_RELEASE}
         - http_proxy=${http_proxy}
         - https_proxy=${https_proxy}
+    image: vulnerability-assessment-tool-haproxy:${VULAS_RELEASE}
     restart: unless-stopped
     ports:
       - "8033:8080"
       - "8034:7070"
     volumes:
       - "./haproxy/conf/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
-    depends_on: 
+    depends_on:
       - frontend-apps
       - frontend-bugs
       - rest-backend
@@ -55,9 +56,8 @@ services:
       - no-new-privileges
 
   patch-lib-analyzer:
-    container_name: vulas-os-patch-lib-analyzer
+    container_name: vulnerability-assessment-tool-patch-lib-analyzer
     hostname: patch-lib-analyzer
-    env_file: .env
     build: 
       context: ./patch-lib-analyzer
       dockerfile: ./Dockerfile
@@ -65,6 +65,7 @@ services:
         - VULAS_RELEASE=${VULAS_RELEASE}
         - http_proxy=${http_proxy}
         - https_proxy=${https_proxy}
+    image: vulnerability-assessment-tool-patch-lib-analyzer:${VULAS_RELEASE}
     expose:
       - "8080"
     volumes:
@@ -83,25 +84,30 @@ services:
       - no-new-privileges
   
   postgresql:
-    container_name: vulas-os-postgresql
+    container_name: vulnerability-assessment-tool-postgresql
     hostname: postgresql
-    env_file: .env
     build: 
       context: ./postgresql
       dockerfile: ./Dockerfile
       args:
         - VULAS_RELEASE=${VULAS_RELEASE}
+    image: vulnerability-assessment-tool-postgresql:${VULAS_RELEASE}
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "8032:5432"
     volumes:
-      - vulas-os-postgres-data:/var/lib/postgresql/data
+      - vulnerability-assessment-tool-postgres-data:/var/lib/postgresql/data
     security_opt:
       - no-new-privileges
 
   rest-backend:
-    container_name: vulas-os-rest-backend
+    container_name: vulnerability-assessment-tool-rest-backend
     hostname: rest-backend
-    env_file: .env
+    env_file: 
+      - .env
+      - ./rest-backend/conf/restbackend.properties
     build: 
       context: ./rest-backend    
       dockerfile: ./Dockerfile
@@ -109,6 +115,7 @@ services:
         - VULAS_RELEASE=${VULAS_RELEASE}
         - http_proxy=${http_proxy}
         - https_proxy=${https_proxy}
+    image: vulnerability-assessment-tool-rest-backend:${VULAS_RELEASE}
     expose:
       - "8091"
     environment:
@@ -116,6 +123,8 @@ services:
       - vulas.shared.cia.serviceUrl=http://cia:8092/cia
       - vulas.backend.coverageService.langConfidenceThreshold=0.2
       - vulas.backend.coverageService.licenseConfidenceThreshold=0.2
+      - spring.datasource.username=${POSTGRES_USER}
+      - spring.datasource.password=${POSTGRES_PASSWORD}
     links:
       - postgresql:postgresql
       - rest-lib-utils:cia
@@ -127,9 +136,8 @@ services:
       - no-new-privileges
 
   rest-lib-utils:
-    container_name: vulas-os-rest-lib-utils
+    container_name: vulnerability-assessment-tool-rest-lib-utils
     hostname: rest-lib-utils
-    env_file: .env
     build: 
       context: ./rest-lib-utils 
       dockerfile: ./Dockerfile
@@ -137,6 +145,7 @@ services:
         - VULAS_RELEASE=${VULAS_RELEASE}
         - http_proxy=${http_proxy}
         - https_proxy=${https_proxy}
+    image: vulnerability-assessment-tool-rest-lib-utils:${VULAS_RELEASE}
     expose:
         - "8092"
     volumes:
@@ -145,4 +154,4 @@ services:
       - no-new-privileges
   
 volumes:
-  vulas-os-postgres-data:
+  vulnerability-assessment-tool-postgres-data:

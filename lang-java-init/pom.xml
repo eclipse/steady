@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.sap.research.security.vulas</groupId>
 		<artifactId>root</artifactId>
-		<version>3.0.17-SNAPSHOT</version>
+		<version>3.0.19-SNAPSHOT</version>
 	</parent>
 	<artifactId>lang-java-init</artifactId>
 	<packaging>pom</packaging>

@@ -3,7 +3,6 @@ package com.sap.psr.vulas.shared.json.model;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
@@ -13,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
-
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Artifact implements Serializable,Comparable<Object> {

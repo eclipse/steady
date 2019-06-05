@@ -351,6 +351,14 @@ model.Formatter = {
 		}
 	},
 	
+	digestTimestamp : function(_timestamp) {
+	    if(_timestamp!==null && _timestamp!=="") {
+			return _timestamp.substring(0, 10);
+		} else {
+			return "N/A";
+		}
+	},
+	
 	rowColorForVuln : function(sType) {
 		if (sType === true) {
 			return "Negative";

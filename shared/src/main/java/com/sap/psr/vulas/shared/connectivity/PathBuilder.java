@@ -82,6 +82,12 @@ public class PathBuilder {
 		b.append(app(_app)).append("/traces");
 		return b.toString();
 	}
+	
+	public static final String appReachableConstructIds(@NotNull Application _app) {
+		final StringBuilder b = new StringBuilder();
+		b.append(app(_app)).append("/reachableConstructIds");
+		return b.toString();
+	}
 
 	public static final String appBugs(@NotNull Application _app) {
 		final StringBuilder b = new StringBuilder();

@@ -1,7 +1,6 @@
 package com.sap.psr.vulas.cg;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -25,7 +24,6 @@ import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.java.JarAnalyzer;
 import com.sap.psr.vulas.java.JavaClassId;
 import com.sap.psr.vulas.java.JavaId;
-import com.sap.psr.vulas.java.JavaPackageId;
 import com.sap.psr.vulas.monitor.ClassPoolUpdater;
 import com.sap.psr.vulas.monitor.ClassVisitor;
 
@@ -73,14 +71,6 @@ public class Callgraph {
 	 * most of them share the JAR with others methods
 	 */
 	private final HashMap<URL, JarAnalyzer> jarAnalyzersCache = new HashMap<URL, JarAnalyzer>();
-
-	/**
-	 * Maps all callgraph integerIDs {@link Callgraph#nodeId} to their String containing the 
-	 * JAR url
-	 * 
-	 * @see Callgraph#nodeId
-	 */
-	//private final HashMap<Integer, String> jarMap = new HashMap<Integer, String>();
 
 	/**
 	 * Cache of JAR URLs for given construct Ids.
@@ -176,48 +166,6 @@ public class Callgraph {
 		}
 	}
 
-
-	/*public Callgraph (Graph<ConstructId> _g) {
-		if( _g!=null ) {
-			Iterator<ConstructId> iter = _g.iterator();
-			ConstructId src_node = null, tgt_node = null;
-			Iterator<ConstructId> succNodes = null;
-			Integer src_id = null, tgt_id = null, count = -1;
-
-			// Populate the map of constructs and integers
-			while (iter.hasNext()) {
-				this.nodeCount++;
-				src_node = iter.next();
-				src_id = this.nodeMap.get(src_node);
-				if(src_id == null) {
-					src_id = ++count;
-					this.nodeMap.put(src_node, src_id);
-					this.nodeInfoMap.put(src_id, this.createNodeMetaInformation(src_node, src_id));
-					this.nodeId.add(src_node);
-					this.idgraph.addNode(src_id);
-				}
-				//targets
-				succNodes = _g.getSuccNodes(src_node);
-				while(succNodes.hasNext()){
-					this.edgeCount++;
-					tgt_node = succNodes.next();
-					tgt_id = this.nodeMap.get(tgt_node);
-					if(tgt_id == null) {
-						tgt_id = ++count;
-						this.nodeMap.put(tgt_node, tgt_id);
-						this.nodeInfoMap.put(tgt_id, this.createNodeMetaInformation(tgt_node, tgt_id));
-						this.nodeId.add(tgt_node);
-						this.idgraph.addNode(tgt_id);
-					}
-					//add edges
-					this.idgraph.addEdge(src_id, tgt_id);
-				}
-			}
-			Callgraph.log.info("Built Graph<Integer> of " + this.idgraph.getNumberOfNodes() + " nodes");
-		}
-	}*/
-
-
 	/** 
 	 * Given a {@link ConstructId} and its ID (look {@link Callgraph#nodeId}) return
 	 * the NodeMetaInformation object that represent this node.
@@ -264,28 +212,10 @@ public class Callgraph {
 	public int getEdgeCount() { return this.edgeCount; }
 
 	/**
-	 * Returns the {@link JavaPackageId} of a given {@link ConstructId}.
-	 * 
-	 * @param _cid
-	 * @return
-	 */
-	public static JavaPackageId getPackageId (ConstructId _cid) {
-		JavaPackageId pid = null;
-		if(_cid instanceof com.sap.psr.vulas.java.JavaPackageId)
-			pid = (JavaPackageId) _cid;
-		else if(_cid instanceof com.sap.psr.vulas.java.JavaId)
-			pid = ((JavaId)_cid).getJavaPackageId();
-		else
-			Callgraph.log.error("Cannot find the package id for construct [" + _cid.getQualifiedName() + "]");
-		return pid;
-	}
-
-	/**
 	 * Given a target (changes), compute the shortest distance from all nodes to this target
 	 * @param _tgt
 	 * @return
 	 */
-
 	public Map<com.sap.psr.vulas.shared.json.model.ConstructId, Integer> getDist (com.sap.psr.vulas.shared.json.model.ConstructId _tgt) {
 
 		// Initialize the distances map, whereby the distance from source to source is 0,

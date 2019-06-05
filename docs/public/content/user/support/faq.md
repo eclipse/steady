@@ -152,6 +152,24 @@ Problem: The goal execution breaks with a 5xx response code received from the ba
 
 Explanation: This can happen if multiple processes (on the same computer or remotely) try to upload the same method signature to the backend. In such cases, one can simply restart at a later time to avoid the clash.
 
+### app : The goal execution breaks with a java.nio.file.InvalidPathException
+
+Problem: The goal execution breaks with a `java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters` as viewable here below.
+
+```text
+[ERROR] Failed to execute goal com.sap.research.security.vulas:plugin-maven:@@PROJECT_VERSION@@:app (default-cli) on project xxxxx: java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters: shapeless/$tilde$qmark$greater$?.class
+```
+
+Explanation : the exception  is often due to an encoding problem.
+
+Solution : Try one of the following options.
+
+1/ Add the property `<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>` to your pom.xml file. Current property `<encoding>` only works if added to the configuration section of individual plugins.
+
+OR
+
+2/ Force the usage of the UTF-8 encoding using the `"-Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8"` properties in your command line.
+
 ## Reachability Analysis (goals a2c and t2c)
 
 ### a2c : java.lang.OutOfMemoryError

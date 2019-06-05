@@ -2,12 +2,12 @@
 
 ## User support
 
-If you would like to try @@PROJECT_NAME@@ and you do not know where to start, our [Tutorials](../tutorials) provides a gentle, step-by-step walkthrough of your first scan. Also, an extensive documentation of the features, options and configuration settings
+If you would like to try @@PROJECT_NAME@@ and you do not know where to start, our [Tutorials](../tutorials/) provides a gentle, step-by-step walkthrough of your first scan. Also, an extensive documentation of the features, options and configuration settings
 of the tool can be found in [User Guide](../manuals/).
 
 If you run into troubles, have a look at
 
-- the list of [Frequently Asked Questions](./faq.md).
+- the list of [Frequently Asked Questions](./faq/).
 
 ## Bug reports
 

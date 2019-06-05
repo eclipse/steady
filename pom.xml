@@ -5,7 +5,7 @@
 
 	<groupId>com.sap.research.security.vulas</groupId>
 	<artifactId>root</artifactId>
-	<version>3.0.17-SNAPSHOT</version>
+	<version>3.0.19-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Vulas</name>
@@ -62,6 +62,7 @@
 		<module>lang-java</module>
 		<module>lang-java-reach</module>
 		<module>lang-java-reach-wala</module>
+		<module>lang-java-reach-soot</module>
 
 		<module>lang-python</module>
 
@@ -103,19 +104,6 @@
 	</properties>
 
 	<profiles>
-		<!--
-			Activate in order to build the Soot call graph construction service. 
-			Make sure to exclude the soot repo from mirrors in settings.xml, e.g., <mirrorOf>*,!soot</mirrorOf>
-			See here for more details: https://maven.apache.org/guides/mini/guide-mirror-settings.html
-		-->
-		<profile>
-			<id>soot</id>
-			<modules>
-				<module>lang-java-reach-soot</module>
-				<module>lang-java-reach-soot-init</module>
-			</modules>
-		</profile>
-
 		<profile>
 			<id>gradle</id>
 			<modules>
@@ -181,7 +169,7 @@
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
-				<version>4.5.7</version>
+				<version>4.5.8</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-cli</groupId>
@@ -221,7 +209,7 @@
 			<dependency>
 				<groupId>org.javassist</groupId>
 				<artifactId>javassist</artifactId>
-				<version>3.24.1-GA</version>
+				<version>3.25.0-GA</version>
 			</dependency>
 			<dependency>
 				<groupId>org.antlr</groupId>
@@ -233,17 +221,17 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-core</artifactId>
-				<version>2.9.8</version>
+				<version>2.9.9</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>2.9.8</version>
+				<version>2.9.9</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-annotations</artifactId>
-				<version>2.9.8</version>
+				<version>2.9.9</version>
 			</dependency>
 
 			<!-- Versions of 'org.apache.maven' artifacts should be identical -->
@@ -449,7 +437,7 @@
 				<plugin>
 					<groupId>org.antlr</groupId>
 					<artifactId>antlr4-maven-plugin</artifactId>
-					<version>4.7.1</version>
+					<version>4.7.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

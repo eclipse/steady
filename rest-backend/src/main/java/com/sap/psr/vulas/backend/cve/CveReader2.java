@@ -162,9 +162,6 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 			cve.setCvssVector(cvss2_vector);
 			cve.setCvssVersion(cvss2_version);
 		}
-		else {
-			return null;
-		}
 		
 		return cve;
 	}

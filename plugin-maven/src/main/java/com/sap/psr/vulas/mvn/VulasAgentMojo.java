@@ -24,7 +24,6 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Environment;
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
-import com.sap.psr.vulas.core.util.CoreConfiguration.ConnectType;
 import com.sap.psr.vulas.goals.GoalExecutionException;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.util.StringUtil;
@@ -121,7 +120,24 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 				}
 			}
 			
-			// Always READ_ONLY so that traces, paths, etc. will be rewritten to disk
+			// If not yet present, e.g., because no plugin configuration is present, add GAV from pom.xml
+			if(this.agentOptions.get(CoreConfiguration.APP_CTX_GROUP)==null || this.agentOptions.get(CoreConfiguration.APP_CTX_ARTIF)==null || this.agentOptions.get(CoreConfiguration.APP_CTX_VERSI)==null) {
+				getLog().info("The following settings are taken from the project's [pom.xml]:");
+				if(this.agentOptions.get(CoreConfiguration.APP_CTX_GROUP)==null) {
+					this.agentOptions.put(CoreConfiguration.APP_CTX_GROUP, project.getGroupId());
+					getLog().info("    [" + CoreConfiguration.APP_CTX_GROUP + "=" + project.getGroupId() + "]");
+				}
+				if(this.agentOptions.get(CoreConfiguration.APP_CTX_ARTIF)==null) {
+					this.agentOptions.put(CoreConfiguration.APP_CTX_ARTIF, project.getArtifactId());
+					getLog().info("    [" + CoreConfiguration.APP_CTX_ARTIF + "=" + project.getArtifactId() + "]");
+				}
+				if(this.agentOptions.get(CoreConfiguration.APP_CTX_VERSI)==null) {
+					this.agentOptions.put(CoreConfiguration.APP_CTX_VERSI, project.getVersion());
+					getLog().info("    [" + CoreConfiguration.APP_CTX_VERSI + "=" + project.getVersion() + "]");
+				}
+			}
+				
+			// Always READ_ONLY so that traces, paths, etc. will be written to disk
 			this.agentOptions.put(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.READ_ONLY.toString());
 			getLog().info("Setting [" + CoreConfiguration.BACKEND_CONNECT + "] set to [" + CoreConfiguration.ConnectType.READ_ONLY + "] (hard-coded, no matter the configured value)");
 		}

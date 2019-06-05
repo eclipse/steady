@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -1663,6 +1662,32 @@ public class ApplicationController {
 
 		// Save and return
 		return new ResponseEntity<List<Trace>>(this.traceRepository.findByApp(app), HttpStatus.OK);
+	}
+	
+	/**
+	 * Returns a {@link Collection} of all application {@link Dependency}s including their reachable {@link ConstructId}s. 
+	 * @param 
+	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 */
+	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/reachableConstructIds", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
+	@JsonView(Views.DepDetails.class)
+	public ResponseEntity<Collection<Dependency>> getReachableContructIds(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version,
+			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+
+		Space s = null;
+		try {
+			s = this.spaceRepository.getSpace(space);
+		} catch (Exception e){
+			log.error("Error retrieving space: " + e);
+			return new ResponseEntity<Collection<Dependency>>(HttpStatus.NOT_FOUND);
+		}
+		// Ensure that app exists
+		Application app = null;
+		try { app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s)); }
+		catch (EntityNotFoundException e) { return new ResponseEntity<Collection<Dependency>>(HttpStatus.NOT_FOUND); }
+		
+		// Save and return
+		return new ResponseEntity<Collection<Dependency>>(app.getDependencies(), HttpStatus.OK);
 	}
 
 	/**

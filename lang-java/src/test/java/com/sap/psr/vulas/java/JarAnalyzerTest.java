@@ -47,7 +47,7 @@ public class JarAnalyzerTest {
 			ja.setWorkDir(Paths.get("./target"));
 			ja.setRename(true);
 			JarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
-			ja.run();			
+			ja.call();			
 		} catch(Exception e) {
 			e.printStackTrace();
 			assertTrue(false);
@@ -68,7 +68,7 @@ public class JarAnalyzerTest {
 			ja.setRename(true);
 			JarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
 			ja.analyze(new File("./src/test/resources/org.apache.servicemix.bundles.jaxb-xjc-2.2.4_1.jar"));		
-			ja.run();
+			ja.call();
 			assertEquals(8984, ja.getConstructIds().size());
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -87,7 +87,7 @@ public class JarAnalyzerTest {
 			ja.setWorkDir(Paths.get("./target"));
 			ja.setRename(true);
 			JarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
-			ja.run();			
+			ja.call();			
 		} catch(Exception e) {
 			e.printStackTrace();
 			assertTrue(false);
@@ -102,7 +102,7 @@ public class JarAnalyzerTest {
 			ja.setWorkDir(Paths.get("./target"));
 			ja.setRename(true);
 			JarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
-			ja.run();			
+			ja.call();			
 		} catch(Exception e) {
 			e.printStackTrace();
 			assertTrue(false);

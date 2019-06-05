@@ -295,9 +295,11 @@ sap.ui.controller("view.Component", {
 			var archiveTotal = this.getView().byId("archiveTotal");
 			var archiveTraced = this.getView().byId("archiveTraced");
 			var archiveTotalTraces = this.getView().byId("archiveTotalTraces");
+			var archiveAvgAge = this.getView().byId("archiveAvgAge");
 			archiveTotal.setText("Archives Total: ");
 			archiveTraced.setText("Archives Traced: ");
 			archiveTotalTraces.setText("Total Number of Traces: ");
+			archiveAvgAge.setText("Average age (in days): ");
 			
 			model.Config.addToQueue(oArchiveModel);
 			model.Config.loadData(oArchiveModel, sUrl, 'GET');
@@ -311,18 +313,24 @@ sap.ui.controller("view.Component", {
 				var archives = oArchiveModel.getObject("/");
 				var traced = 0;
 				var traces = 0;
+				var days = 0, archives_with_timestamp = 0, now = Date.now();
 				for(var a=0;a<archives.length; a++){
 					if(archives[a].tracedExecConstructsCounter>0){
 						traced++;
 						traces = traces + archives[a].tracedExecConstructsCounter;
 					}
-					
+					if(archives[a].lib.digestTimestamp!=null) {
+						archives_with_timestamp++;
+						var timestamp19 = archives[a].lib.digestTimestamp.substring(0,19);
+						var timestamp = Date.parse(timestamp19);
+						days += Math.floor(Math.abs(now-timestamp)/86400000);
+					}
 				}
+				
 				archiveTotal.setText("Archives Total: " + archives.length);
 				archiveTraced.setText("Archives Traced: " + traced);
 				archiveTotalTraces.setText("Total Number of Traces: " + traces);
-				
-				
+				archiveAvgAge.setText("Average age (in days): " + (archives_with_timestamp==0 ? "N/A" : Math.floor(days/archives_with_timestamp)));
 			});
 		}
 		
@@ -680,7 +688,7 @@ sap.ui.controller("view.Component", {
 		var do_wc = wildcardSearch.getSelected();
 		
 		// Build URL
-		var url = model.Config.host;
+		var url = model.Config.getHostBackend()
 		url += "/apps/" + groupId + "/" + artifactId + "/" + versionId + "/search?searchString=" + search_string + "&wildcardSearch=" + do_wc;
 		
 		// Load data
