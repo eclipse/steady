@@ -157,7 +157,7 @@ Explanation: This can happen if multiple processes (on the same computer or remo
 Problem: The goal execution breaks with a `java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters` as viewable here below.
 
 ```text
-[ERROR] Failed to execute goal com.sap.research.security.vulas:plugin-maven:3.0.17:app (default-cli) on project xxxxx: java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters: shapeless/$tilde$qmark$greater$?.class
+[ERROR] Failed to execute goal com.sap.research.security.vulas:plugin-maven:@@PROJECT_VERSION@@:app (default-cli) on project xxxxx: java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters: shapeless/$tilde$qmark$greater$?.class
 ```
 
 Explanation : the exception  is often due to an encoding problem.
