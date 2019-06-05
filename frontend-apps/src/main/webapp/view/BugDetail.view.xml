@@ -65,7 +65,7 @@
 						<l:content>
 							<Label design="Bold" text="Filename: " class="marginVerticalContent" />
 							<Link xmlns="sap.m"
-								href="/apps/#/apps/{app>/groupid}/{app>/artifactid}/{app>/version}/archive/{/dep/lib/digest}"
+								href="/apps/#/{app>/workspaceSlug}/{app>/groupid}/{app>/artifactid}/{app>/version}/archive/{/dep/lib/digest}"
 								class="marginVerticalContent" text="{/dep/filename}">
 							</Link>
 						</l:content>
