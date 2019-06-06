@@ -6,18 +6,18 @@ The various client-side tools offer so-called **goals** in order to analyze appl
 
 The following goals perform some sort of application analysis:
 
-- `app`: Creates a method-level bill of material of an application and all its dependencies.
-- `a2c`: Builds a call graph (starting from app methods) and checks whether vulnerable code is potentially executable (reachable).
+- [`app`](#bill-of-material-analysis-app): Creates a method-level bill of material of an application and all its dependencies.
+- [`a2c`](#reachable-from-app-a2c): Builds a call graph (starting from app methods) and checks whether vulnerable code is potentially executable (reachable).
 - `test`: This is not an actual goal implemented by any of the clients, but describes the collection of execution traces by a so-called Java agent that _dynamically instruments_ Java bytecode during JUnit and integration tests.
-- `instr`: Produces a modified version of Java archives (_static instrumentation_) that can be deployed/executed in order to collect traces of actual method executions.
-- `t2c`: Builds a call graph (starting from traced methods) and checks whether vulnerable code is potentially reachable from those.
+- [`instr`](#static-instrumentation-instr): Produces a modified version of Java archives (_static instrumentation_) that can be deployed/executed in order to collect traces of actual method executions.
+- [`t2c`](#reachable-from-traces-t2c): Builds a call graph (starting from traced methods) and checks whether vulnerable code is potentially reachable from those.
 
 The following goals are related to data management and reporting:
 
-- `upload`: Uploads analysis data previously written to disk to the backend
-- `report`: Downloads analysis data from the backend to the client, produces a result report (HTML, XML, JSON), and throws a build exception in order to break Jenkins jobs
-- `clean`: Cleans the analysis data of a single app in the backend
-- `cleanspace`: Cleans an entire workspace in the backend
+- [`upload`](#upload-analysis-files-upload): Uploads analysis data previously written to disk to the backend
+- [`report`](#create-result-report-report): Downloads analysis data from the backend to the client, produces a result report (HTML, XML, JSON), and throws a build exception in order to break Jenkins jobs
+- [`clean`](#clean-and-delete-apps-clean): Cleans the analysis data of a single app in the backend
+- [`cleanspace`](#clean-workspaces-cleanspace): Cleans an entire workspace in the backend
 
 Which goals are supported by the different clients, and how-to configure and execute them is explained in the following subsections.
 
