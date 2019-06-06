@@ -40,7 +40,7 @@
     
     
       
-        <title>Push Docker images to a registry - vulnerability-assessment-tool 3.0.17</title>
+        <title>Push Docker images to a registry - vulnerability-assessment-tool 3.0.18</title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.17" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.18" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.0.17
+                vulnerability-assessment-tool 3.0.18
               </span>
               <span class="md-header-nav__topic">
                 Push Docker images to a registry
@@ -311,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.17" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.18" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.0.17
+    vulnerability-assessment-tool 3.0.18
   </label>
   
     <div class="md-nav__source">
@@ -1171,13 +1171,13 @@
 <h2 id="generate-vulnerability-assessment-tool-images">Generate vulnerability-assessment-tool images<a class="headerlink" href="#generate-vulnerability-assessment-tool-images" title="Permanent link">&para;</a></h2>
 <p>In order to generate the Docker images to upload to a local registry, you should generate vulnerability-assessment-tool's Java archives. This can be done following the first part of the <a href="../docker/#build-docker-images">Deploy on Docker tutorial</a>. To briefly summarize you should build and run an image which will populate your local directories with the vulnerability-assessment-tool JARs and WARs. In the end of this preliminary step you should have your images locally, this can be tested with the command <code>docker images | grep vulnerability-assessment-tool</code>.</p>
 <div class="codehilite"><pre><span></span><span class="c1"># sample output for `docker images` command</span>
-vulnerability-assessment-tool-patch-lib-analyzer <span class="m">3</span>.0.17 fbe5ec6de811  <span class="m">22</span> hours ago 103MB
-vulnerability-assessment-tool-rest-backend       <span class="m">3</span>.0.17 277217bc35b2  <span class="m">22</span> hours ago 136MB
-vulnerability-assessment-tool-rest-lib-utils     <span class="m">3</span>.0.17 53bbb929895d  <span class="m">22</span> hours ago 127MB
-vulnerability-assessment-tool-frontend-bugs      <span class="m">3</span>.0.17 fab5925fe785  <span class="m">22</span> hours ago 316MB
-vulnerability-assessment-tool-frontend-apps      <span class="m">3</span>.0.17 191ce235c420  <span class="m">22</span> hours ago 317MB
-vulnerability-assessment-tool-haproxy            <span class="m">3</span>.0.17 37948fae374e  <span class="m">22</span> hours ago <span class="m">20</span>.9MB
-vulnerability-assessment-tool-postgresql         <span class="m">3</span>.0.17 c7a17e4f4cda  <span class="m">22</span> hours ago <span class="m">70</span>.8MB
+vulnerability-assessment-tool-patch-lib-analyzer <span class="m">3</span>.0.18 fbe5ec6de811  <span class="m">22</span> hours ago 103MB
+vulnerability-assessment-tool-rest-backend       <span class="m">3</span>.0.18 277217bc35b2  <span class="m">22</span> hours ago 136MB
+vulnerability-assessment-tool-rest-lib-utils     <span class="m">3</span>.0.18 53bbb929895d  <span class="m">22</span> hours ago 127MB
+vulnerability-assessment-tool-frontend-bugs      <span class="m">3</span>.0.18 fab5925fe785  <span class="m">22</span> hours ago 316MB
+vulnerability-assessment-tool-frontend-apps      <span class="m">3</span>.0.18 191ce235c420  <span class="m">22</span> hours ago 317MB
+vulnerability-assessment-tool-haproxy            <span class="m">3</span>.0.18 37948fae374e  <span class="m">22</span> hours ago <span class="m">20</span>.9MB
+vulnerability-assessment-tool-postgresql         <span class="m">3</span>.0.18 c7a17e4f4cda  <span class="m">22</span> hours ago <span class="m">70</span>.8MB
 </pre></div>
 
 <h2 id="push-the-images-to-a-registry">Push the images to a registry<a class="headerlink" href="#push-the-images-to-a-registry" title="Permanent link">&para;</a></h2>
