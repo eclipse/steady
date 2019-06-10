@@ -42,7 +42,7 @@
             <groupId>com.sap.research.security.vulas</groupId>
             <artifactId>lang-java-reach-soot</artifactId>
             <version>${project.version}</version>
-            <scope>runtime</scope>
+            <scope>provided</scope>
         </dependency>
 
 		<dependency>
