@@ -170,8 +170,8 @@ public class LibraryController {
 	/**
 	 * Re-creates the {@link Library} with a given digest.
 	 * @param digest
-	 * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given digest does not exist,
-	 * 		   422 {@link HttpStatus.UNPROCESSABLE_ENTITY} if the value of path variable (digest) does not equal the corresponding field in the body
+	 * @return 404 {@link HttpStatus#NOT_FOUND} if library with given digest does not exist,
+	 * 		   422 {@link HttpStatus.UNPROCESSABLE_ENTITY} if the value of path variable (digest) is not equal to the corresponding field in the body
 	 * 		   200 {@link HttpStatus#OK} if the library was successfully re-created
 	 */
 	@RequestMapping(value = "/{digest}", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"})
@@ -194,6 +194,30 @@ public class LibraryController {
 		}
 	}	
 
+	/**
+	 * Updates the meta-data of a {@link Library} with a given digest. In particular it updates the digest verified flag and release timestamp fields.
+	 * @param digest
+	 * @return 404 {@link HttpStatus#NOT_FOUND} if library with given digest does not exist,
+	 * 		   200 {@link HttpStatus#OK} if the library metadata were successfully updated
+	 */
+	@RequestMapping(value = "/{digest}/updateMetadata", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"})
+	@JsonView(Views.LibDetails.class)
+	public ResponseEntity<Library> updateLibraryMetaData(@PathVariable String digest, @RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody) {
+		try {
+			Library managed_lib = LibraryRepository.FILTER.findOne(this.libRepository.findByDigest(digest));
+			managed_lib = this.libRepository.customSave(managed_lib);
+			if(skipResponseBody){
+				return new ResponseEntity<Library>(HttpStatus.OK);
+			}
+			else 
+				return new ResponseEntity<Library>(managed_lib, HttpStatus.OK);
+		} catch (EntityNotFoundException e) {
+			return new ResponseEntity<Library>(HttpStatus.NOT_FOUND);
+		} catch (PersistenceException e) {
+			return new ResponseEntity<Library>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}	
+	
 	/**
 	 * 
 	 * @param digest
