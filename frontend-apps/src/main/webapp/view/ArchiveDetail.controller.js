@@ -229,7 +229,7 @@ sap.ui.controller("view.ArchiveDetail", {
 		for(var o=0; o<archiveMetricTableNew.getRows().length;o++){
 				 
 			//var r = archiveMetricTableNew.getRows();
-			var rowIndex=o;
+			let rowIndex=o;
 // code snippet : how to manually fire cellClick event
 //			var newC=new sap.ui.model.Context(metricModel, "/"+rowIndex);
 //			archiveMetricTableNew.fireCellClick({cellControl : archiveMetricTableNew.getRows()[o].getCells()[0],
@@ -258,11 +258,10 @@ sap.ui.controller("view.ArchiveDetail", {
 		        type: "POST",
 		        url: model.Config.getUpdateMetricsUrl(groupId,artifactId,version,archiveId),
 		        data : JSON.stringify(toCompare),
-		        headers : {'content-type': "application/json",'cache-control': "no-cache", 'X-Vulas-Space': model.Config.getSpace(), 'X-Vulas-Echo': o,'X-Vulas-Version':model.Version.version,'X-Vulas-Component':'appfrontend' },
+		        headers : {'content-type': "application/json",'cache-control': "no-cache", 'X-Vulas-Space': model.Config.getSpace(),'X-Vulas-Version':model.Version.version,'X-Vulas-Component':'appfrontend' },
 		        success: function(data, status, jqXHR){
 		        	ajaxQueue1.pop(r);
 		        	var ratios = data.metrics.ratios;
-		        	var echo = jqXHR.getResponseHeader("X-Vulas-Echo");
 		      //  	var archive = data.toLibraryId.group.concat(":").concat(data.toLibraryId.artifact).concat(":").concat(data.toLibraryId.version);
 		        	var metricModel = this.getView().byId("idArchiveMetrics").getModel("metricModel");
 		        //	var oJson = JSON.parse(metricModel.getJSON());
@@ -275,7 +274,6 @@ sap.ui.controller("view.ArchiveDetail", {
 //		        	}
 //		        	
 //		        	if (rowIndex!=undefined){
-		        	rowIndex=echo;
 		        	for(var r=0;r<ratios.length;r++){
 		        		if(ratios[r].name == 'callee_stability'){
 		        			metricModel.setProperty("/"+rowIndex+"/calleeDelCount", ratios[r].count);
@@ -304,7 +302,6 @@ sap.ui.controller("view.ArchiveDetail", {
 		        }.bind(this), 
 		        error: function(jqXHR){
 		        	ajaxQueue1.pop(r);
-		        	var echo = jqXHR.getResponseHeader("X-Vulas-Echo");
 		      //  	var archive = data.toLibraryId.group.concat(":").concat(data.toLibraryId.artifact).concat(":").concat(data.toLibraryId.version);
 		        	var metricModel = this.getView().byId("idArchiveMetrics").getModel("metricModel");
 		        //	var oJson = JSON.parse(metricModel.getJSON());
@@ -317,7 +314,6 @@ sap.ui.controller("view.ArchiveDetail", {
 //		        	}
 //		        	
 //		        	if (rowIndex!=undefined){
-		        	rowIndex=echo;
 		        	
         			metricModel.setProperty("/"+rowIndex+"/calleeDelCount", "n/a");
         			metricModel.setProperty("/"+rowIndex+"/calleeDelTotal", "n/a");
