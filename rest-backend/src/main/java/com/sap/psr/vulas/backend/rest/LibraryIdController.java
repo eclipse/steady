@@ -10,12 +10,10 @@ import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +28,6 @@ import com.sap.psr.vulas.backend.repo.AffectedLibraryRepository;
 import com.sap.psr.vulas.backend.repo.BugRepository;
 import com.sap.psr.vulas.backend.repo.LibraryIdRepository;
 import com.sap.psr.vulas.backend.util.ArtifactMaps;
-import com.sap.psr.vulas.backend.util.HeaderEcho;
 import com.sap.psr.vulas.backend.util.ServiceWrapper;
 import com.sap.psr.vulas.shared.json.model.Version;
 
@@ -132,16 +129,12 @@ public class LibraryIdController {
 			@RequestParam(value="latest", required=false, defaultValue="false") Boolean latest,
 			@RequestParam(value="greaterThanVersion", required=false, defaultValue="false") String greaterThanVersion,
 			@RequestParam(value="secureOnly", required=false, defaultValue="false") Boolean secureOnly,
-			@RequestParam(value="vulnerableOnly", required=false, defaultValue="false") Boolean vulnerableOnly,
-			@RequestHeader(value="X-Vulas-Echo", required=false, defaultValue="") String echo) {
-
-		// Echo
-		final HttpHeaders headers = HeaderEcho.getHeaders(echo);
+			@RequestParam(value="vulnerableOnly", required=false, defaultValue="false") Boolean vulnerableOnly) {
 		
 		// Check consistency of the query
 		if(secureOnly && vulnerableOnly) {
 			log.error("Bad request, both flags secureOnly and vulnerableOnly are set to true");
-			return new ResponseEntity<List<com.sap.psr.vulas.shared.json.model.LibraryId>>(headers, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<List<com.sap.psr.vulas.shared.json.model.LibraryId>>(HttpStatus.BAD_REQUEST);
 		}
 
 		// Fix params
@@ -177,7 +170,7 @@ public class LibraryIdController {
 
 			// Client only wants vulnerable: no need to call external service
 			if(vulnerableOnly && greaterThanVersion==null)
-				return new ResponseEntity<List<com.sap.psr.vulas.shared.json.model.LibraryId>>(vuln_libids, headers, HttpStatus.OK);
+				return new ResponseEntity<List<com.sap.psr.vulas.shared.json.model.LibraryId>>(vuln_libids, HttpStatus.OK);
 			
 
 			// Else we get all versions from external services 
@@ -219,11 +212,11 @@ public class LibraryIdController {
 				}
 			}
 
-			return new ResponseEntity<List<com.sap.psr.vulas.shared.json.model.LibraryId>>(result, headers, HttpStatus.OK);
+			return new ResponseEntity<List<com.sap.psr.vulas.shared.json.model.LibraryId>>(result, HttpStatus.OK);
 		}
 		catch(Exception e) {
 			log.error("Error: " + e.getMessage(), e);
-			return new ResponseEntity<List<com.sap.psr.vulas.shared.json.model.LibraryId>>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<List<com.sap.psr.vulas.shared.json.model.LibraryId>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }
