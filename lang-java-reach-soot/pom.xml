@@ -24,6 +24,12 @@
 			<artifactId>soot</artifactId>
 			<version>3.3.0</version>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>ca.mcgill.sable</groupId>
+					<artifactId>jasmin</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>de.tud.sse</groupId>
