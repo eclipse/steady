@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.DispatcherServletAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -74,7 +73,6 @@ import com.sap.psr.vulas.backend.repo.TenantRepository;
 import com.sap.psr.vulas.backend.repo.TracesRepository;
 import com.sap.psr.vulas.backend.repo.V_AppVulndepRepository;
 import com.sap.psr.vulas.backend.util.DependencyUtil;
-import com.sap.psr.vulas.backend.util.HeaderEcho;
 import com.sap.psr.vulas.backend.util.Message;
 import com.sap.psr.vulas.backend.util.ServiceWrapper;
 import com.sap.psr.vulas.shared.connectivity.ServiceConnectionException;
@@ -1244,7 +1242,6 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}/updateMetrics", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.DepDetails.class) // extends View LibDetails that allows to see the properties
 	public ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate> getUpdateMetrics(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String digest, @RequestBody LibraryId otherVersion,
-			@RequestHeader(value="X-Vulas-Echo", required=false, defaultValue="") String echo,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
@@ -1255,8 +1252,6 @@ public class ApplicationController {
 			return new ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate>(HttpStatus.NOT_FOUND);
 		}
 
-		// Echo
-		final HttpHeaders headers = HeaderEcho.getHeaders(echo);
 		try {
 
 			// To throw an exception if the entity is not found
@@ -1265,13 +1260,13 @@ public class ApplicationController {
 			final Dependency dep = a.getDependency(digest);
 			if(dep==null) {
 				log.error("App " + a.toString() + " has no dependency with digest [" + digest + "]: No update metrics will be returned");
-				return new ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate>(headers,HttpStatus.NOT_FOUND);
+				return new ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate>(HttpStatus.NOT_FOUND);
 			}
 
 			// Pre-requisite: The dependency has to have a library id known to Maven
 			if(dep.getLib().getLibraryId()==null) {
 				log.error("App " + a.toString() + " dependency with digest [" + digest + "] has no library id");
-				return new ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate>(headers,HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate>(HttpStatus.BAD_REQUEST);
 			}
 
 			dep.setTraces(this.traceRepository.findTracesOfLibrary(a, dep.getLib()));
@@ -1383,13 +1378,13 @@ public class ApplicationController {
 
 			depUpdate.setMetrics(metrics);
 
-			return new ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate>(depUpdate,headers, HttpStatus.OK);
+			return new ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate>(depUpdate, HttpStatus.OK);
 		}
 		catch(ServiceConnectionException sce) {
-			return new ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate>(headers,HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		catch(EntityNotFoundException enfe) {
-			return new ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate>(headers,HttpStatus.NOT_FOUND);
+			return new ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate>(HttpStatus.NOT_FOUND);
 		}
 	}
 
