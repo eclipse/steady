@@ -47,6 +47,10 @@
 					<groupId>heros</groupId>
 					<artifactId>heros</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>ca.mcgill.sable</groupId>
+					<artifactId>jasmin</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
