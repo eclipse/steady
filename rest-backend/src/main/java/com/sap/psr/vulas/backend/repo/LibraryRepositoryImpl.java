@@ -64,7 +64,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 			_lib.setModifiedAt(Calendar.getInstance());
 			
 			//	Re-create wellknownDigest if it is null in our current db (this part should be removed once it is created for all)
-			if(managed_lib.getWellknownDigest()==null || managed_lib.getDigestTimestamp()==null) {
+			if(managed_lib.getWellknownDigest()==null || (managed_lib.getDigestTimestamp()==null && managed_lib.getWellknownDigest())) {
 				_lib.verifyDigest();
 			}
 			else {
