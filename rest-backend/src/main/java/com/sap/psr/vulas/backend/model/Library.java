@@ -309,7 +309,7 @@ public class Library implements Serializable {
 
 	//changed to public temporarily to recreate wellknownDigest flag for already persisted libs
 	public void verifyDigest() {
-		if(this.getWellknownDigest()==null || this.getDigestVerificationUrl()==null) {
+		if(this.getWellknownDigest()==null || this.getDigestVerificationUrl()==null || this.getDigestTimestamp()==null) {
 			try {
 				final DigestVerifierEnumerator dv = new DigestVerifierEnumerator();
 				final Boolean verified = dv.verify(this);
