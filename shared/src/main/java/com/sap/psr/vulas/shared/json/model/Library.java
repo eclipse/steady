@@ -30,11 +30,17 @@ public class Library implements Serializable {
 	@JsonView(Views.LibDetails.class)
 	private Collection<ConstructId> constructs;
 
-	//http://stackoverflow.com/questions/23260464/how-to-serialize-using-jsonview-with-nested-objects
 	/**
-	 * Human-readable library identifier, e.g., a Maven artifact ID consisting of group, artifact and version.
+	 * Library identifier used for publishing the library in package repositories such as Maven Central or PyPI.
 	 */
 	private LibraryId libraryId;
+	
+	
+	/**
+	 * Other library identifiers found within the library.
+	 * Could be many in case a a library bundles (includes) the content of several other libraries (e.g., Uber JARs).
+	 */
+	private Collection<LibraryId> bundledLibraryIds;
 
 	/**
 	 * True if the library provider or a trusted software repository confirms the mapping of SHA1 to human-readable ID, false otherwise.
@@ -81,9 +87,12 @@ public class Library implements Serializable {
 	public LibraryId getLibraryId() { return libraryId; }
 	public void setLibraryId(LibraryId _library_id) { this.libraryId = _library_id; }
 	
+	public Collection<LibraryId> getBundledLibraryIds() { return this.bundledLibraryIds; }
+	public void setBundledLibraryIds(Collection<LibraryId> _libids) { this.bundledLibraryIds = _libids; }
+	
 	public boolean isWellknownDigest() { return wellknownDigest!=null && wellknownDigest.equals(true); }
 	public Boolean getWellknownDigest() { return wellknownDigest; }
-	public void setWellknownSha1(Boolean wellknownDigest) { this.wellknownDigest = wellknownDigest; }
+	public void setWellknownDigest(Boolean wellknownDigest) { this.wellknownDigest = wellknownDigest; }
 	
 	public String getDigestVerificationUrl() { return digestVerificationUrl; }
 	public void setDigestVerificationUrl(String digestVerificationUrl) { this.digestVerificationUrl = digestVerificationUrl; }

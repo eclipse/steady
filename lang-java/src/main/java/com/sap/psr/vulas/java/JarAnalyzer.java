@@ -20,8 +20,15 @@ import java.util.concurrent.Callable;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.ConstructId;
@@ -75,6 +82,8 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 	protected Path workDir = null; // To where modified JARs are written
 
 	private LibraryId libraryId = null;
+	
+	private Set<LibraryId> bundledLibraryIds = new HashSet<LibraryId>();
 
 	protected JarWriter jarWriter = null;
 
@@ -178,6 +187,9 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		lib.setDigestAlgorithm(DigestAlgorithm.SHA1);
 		lib.setConstructs(this.getSharedConstructs());
 		lib.setLibraryId(this.libraryId);
+		
+		if(this.bundledLibraryIds!=null && !this.bundledLibraryIds.isEmpty())
+			lib.setBundledLibraryIds(this.bundledLibraryIds);
 
 		final Set<Property> p = new HashSet<Property>();
 		if(this.jarWriter.getOriginalManifest()!=null) {
@@ -219,7 +231,12 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 			}
 		}
 		catch(Exception e) {
-			JarAnalyzer.log.error(this.toString() + ": Error during analysis: " + e.getMessage());
+			if(e instanceof NullPointerException) {
+				JarAnalyzer.log.error(this.toString() + ": [" + e.getClass().getSimpleName() + "] during analysis");
+				e.printStackTrace();
+			} else {
+				JarAnalyzer.log.error(this.toString() + ": [" + e.getClass().getSimpleName() + "] during analysis: " + e.getMessage());
+			}
 		}
 		return this;
 	}
@@ -282,36 +299,47 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 	 * Identifies all {@link ConstructId}s of all methods and constructors.
 	 */
 	public synchronized Set<ConstructId> getConstructIds() {
-		
 		//this method is used to collect statistics about the analyzed jars but these are not available (and thus skipped if the flag skipknownArchive is true 
 		//if(this.constructs==null && !uploadEnabledAndSkipKnownArchive()) {
 		if(this.constructs==null) {
-			
 			this.constructs = new TreeSet<ConstructId>();
-			// Loop all *.class files in order to identify all Java classes
+			
+			final SAXParserFactory spf = SAXParserFactory.newInstance();
+			spf.setNamespaceAware(true);
+			
+			// Loop all files in order to identify Java classes and bundled pom.xml files
 			final Enumeration<JarEntry> en =  this.jar.entries();
-			JarEntry je = null;
-			String class_name = null;
 			while(en.hasMoreElements()) {
-				je = en.nextElement();
+				final JarEntry je = en.nextElement();
+				
 				// 18.11.2014: Ignore "package-info.class" files, which can contain annotations and documentation
 				// 05.12.2017: Ignore "module-info.class" files, which can contain annotations and documentation
 				if(je.getName().endsWith(".class") && !je.getName().endsWith("package-info.class") && !je.getName().endsWith("module-info.class")) {
-					class_name = je.getName();					
-
-					final String fqn = JarAnalyzer.getFqClassname(class_name);
+					final String fqn = JarAnalyzer.getFqClassname(je.getName());
 					if(fqn!=null) {
 						this.classNames.add(fqn);					
-						JarAnalyzer.log.debug("JAR entry [" + class_name + "] transformed to Java class identifier [" + fqn + "]");
+						JarAnalyzer.log.debug("JAR entry [" + je.getName() + "] transformed to Java class identifier [" + fqn + "]");
 					}
 					else {
-						JarAnalyzer.log.warn("JAR entry [" + class_name + "] will be ignored, as no Java class identifier could be built");
+						JarAnalyzer.log.warn("JAR entry [" + je.getName() + "] will be ignored, as no Java class identifier could be built");
 					}
-
-					/*class_name = class_name.substring(0, class_name.length()-6); // ".class"
-					class_name = class_name.replace('/', '.');
-					this.classNames.add(class_name);					
-					JarAnalyzer.log.debug("Found [" + class_name + "]");*/
+				}
+				else if(je.getName().endsWith("pom.xml")) {
+					try {
+						final PomParser pp = new PomParser();
+						final SAXParser saxParser = spf.newSAXParser();
+						final XMLReader xmlReader = saxParser.getXMLReader();
+						xmlReader.setContentHandler(pp);
+						xmlReader.parse(new InputSource(this.jar.getInputStream(je)));
+						if(pp.getLibraryId().isDefined())
+							this.bundledLibraryIds.add(pp.getLibraryId());
+					} catch (ParserConfigurationException e) {
+						JarAnalyzer.log.warn("Parser configuration exception when parsing JAR entry [" + je.getName() + "]: " + e.getMessage(), e);
+					} catch (SAXException e) {
+						JarAnalyzer.log.warn("Exception when parsing JAR entry [" + je.getName() + "]: " + e.getMessage(), e);
+					} catch (IOException e) {
+						JarAnalyzer.log.warn("I/O exception for JAR entry [" + je.getName() + "]: " + e.getMessage(), e);
+					}					
 				}
 			}
 
