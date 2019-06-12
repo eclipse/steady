@@ -49,8 +49,8 @@ Customize the file `docker/.env` to match your needs.
 At this point, you are ready to perform the actual build with the following command:
 
 ```sh
-docker build --tag vulas-build-img -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
-docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags=-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow vulas-build-img
+docker build --tag vulnerability-assessment-tool-generator:@@PROJECT_VERSION@@ -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
+docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags=-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow vulnerability-assessment-tool-generator:@@PROJECT_VERSION@@
 ```
 
 !!! warning "Build error"
@@ -58,7 +58,7 @@ docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_f
 	If the command above fails, add `-DreuseForks=False` flag to `mvn_flags`. As shown in the example below.
 
     ```sh
-    docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags='-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow -DreuseForks=False' vulas-build-img
+    docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags='-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow -DreuseForks=False' vulnerability-assessment-tool-generator:@@PROJECT_VERSION@@
     ```
 
 In case you are running behind a proxy you need to configure it in the `--build-arg` arguments.
