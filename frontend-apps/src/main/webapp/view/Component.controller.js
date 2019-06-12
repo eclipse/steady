@@ -299,7 +299,7 @@ sap.ui.controller("view.Component", {
 			archiveTotal.setText("Archives Total: ");
 			archiveTraced.setText("Archives Traced: ");
 			archiveTotalTraces.setText("Total Number of Traces: ");
-			archiveAvgAge.setText("Average age (in days): ");
+			archiveAvgAge.setText("Average age (in months): ");
 			
 			model.Config.addToQueue(oArchiveModel);
 			model.Config.loadData(oArchiveModel, sUrl, 'GET');
@@ -330,7 +330,7 @@ sap.ui.controller("view.Component", {
 				archiveTotal.setText("Archives Total: " + archives.length);
 				archiveTraced.setText("Archives Traced: " + traced);
 				archiveTotalTraces.setText("Total Number of Traces: " + traces);
-				archiveAvgAge.setText("Average age (in days): " + (archives_with_timestamp==0 ? "N/A" : Math.floor(days/archives_with_timestamp)));
+				archiveAvgAge.setText("Average age (in months): " + (archives_with_timestamp==0 ? "n/a" : Math.floor(days/30/archives_with_timestamp)));
 			});
 		}
 		

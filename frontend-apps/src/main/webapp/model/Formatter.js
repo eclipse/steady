@@ -355,7 +355,7 @@ model.Formatter = {
 	    if(_timestamp!==null && _timestamp!=="") {
 			return _timestamp.substring(0, 10);
 		} else {
-			return "N/A";
+			return "n/a";
 		}
 	},
 	
