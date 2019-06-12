@@ -1,8 +1,6 @@
 package com.sap.psr.vulas.shared.json.model;
 
 import java.io.Serializable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,9 +20,7 @@ public class LibraryId implements Serializable, Comparable<Object> {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(LibraryId.class);
-	
-	
+	private static Log log = LogFactory.getLog(LibraryId.class);	
 	
 	@JsonIgnore
 	private Long id;
@@ -34,17 +30,10 @@ public class LibraryId implements Serializable, Comparable<Object> {
 
 	private String artifact;
 	
-	private String version;
-	
-		
+	private String version;		
 	
 	public LibraryId() { super(); }
-	
-	/**
-	 * @param group
-	 * @param artifact
-	 * @param version
-	 */
+
 	public LibraryId(String group, String artifact, String version) {
 		super();
 		this.mvnGroup = group;
@@ -63,6 +52,15 @@ public class LibraryId implements Serializable, Comparable<Object> {
 
 	public String getVersion() { return version; }
 	public void setVersion(String version) { this.version = version; }
+	
+	/**
+	 * Returns true if group, artfiact and version have been specified, false otherwise.
+	 * @return
+	 */
+	@JsonIgnore
+	public boolean isDefined() {
+		return this.mvnGroup!=null && this.artifact!=null && this.version!=null;
+	}
 
 	@Override
 	public int hashCode() {
@@ -128,10 +126,5 @@ public class LibraryId implements Serializable, Comparable<Object> {
 		else {
 			throw new IllegalArgumentException("Expected object of type LibraryId, got [" + _other.getClass().getName() + "]");
 		}
-	}
-	
-
-	
-
-
+	}	
 }

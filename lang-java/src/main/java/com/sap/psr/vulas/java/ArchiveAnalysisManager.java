@@ -210,7 +210,7 @@ public class ArchiveAnalysisManager {
 				if(parent!=null)
 					ja.setParent(parent);
 
-				ja.setInstrument(this.instrument);
+				
 				ja.setRename(this.rename);
 				ja.setWorkDir(this.workDir);
 
@@ -218,6 +218,7 @@ public class ArchiveAnalysisManager {
 					ja.setLibraryId(this.getKnownDependency(p).getLib().getLibraryId());
 
 				ja.analyze(p.toFile());
+				ja.setInstrument(this.instrument); // To be called after analyze, since instrument uses the URL member
 				
 				this.analyzers.put(p, ja);
 				
