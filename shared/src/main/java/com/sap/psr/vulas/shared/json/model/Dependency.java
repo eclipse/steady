@@ -13,7 +13,7 @@ import com.sap.psr.vulas.shared.enums.Scope;
 
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown=true, value={"reachableConstructIds", "touchPoints"}, allowGetters=true)
-public class Dependency implements Serializable {
+public class Dependency implements Serializable, Comparable<Dependency> {
 	
 	private static final long serialVersionUID = 1L;
 		
@@ -72,6 +72,14 @@ public class Dependency implements Serializable {
 
 	public Dependency getParent() { return parent; }
 	public void setParent(Dependency parent) { this.parent = parent; }
+	public boolean isParent(Dependency _dep) {
+		if(this.parent==null)
+			return false;
+		else if(this.parent.equals(_dep))
+			return true;
+		else
+			return this.parent.isParent(_dep);
+	}
 
 	public DependencyOrigin getOrigin() { return origin; }
 	public void setOrigin(DependencyOrigin origin) { this.origin = origin; }
@@ -103,6 +111,27 @@ public class Dependency implements Serializable {
 
 	public List<PathNode> getTouchPoints() { return touchPoints; }
 	public void setTouchPoints(List<PathNode> touchPoints) { this.touchPoints = touchPoints; }
+	
+	/**
+	 * Compares this dependency with the given dependency by looking at parent-child relationships,
+	 * library identifiers and filenames.
+	 */
+	@Override
+	public int compareTo(Dependency _other) {		
+		if(_other.isParent(this))
+			return -1;
+		else if(this.isParent(_other))
+			return +1;
+		else {
+			if(this.getLib().getLibraryId()!=null && _other.getLib().getLibraryId()!=null) {
+				return this.getLib().getLibraryId().compareTo(_other.getLib().getLibraryId());
+			} else if(this.getFilename()!=null && _other.getFilename()!=null) {
+				return this.getFilename().compareTo(_other.getFilename());
+			} else {
+				throw new IllegalStateException("Cannot compare " + this + " with " + _other);
+			}
+		}
+	}
 	
 	@Override
 	public int hashCode() {
@@ -180,8 +209,6 @@ public class Dependency implements Serializable {
 		return true;
 	}
 	
-
-
 	public boolean equalLibParentRelPath(Object obj) {
 		if (this == obj)
 			return true;
@@ -209,7 +236,6 @@ public class Dependency implements Serializable {
 		
 		return true;
 	}
-	
 	
 	@Override
 	public String toString() {

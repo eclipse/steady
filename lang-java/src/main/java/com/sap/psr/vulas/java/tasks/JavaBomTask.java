@@ -279,7 +279,8 @@ public class JavaBomTask extends AbstractBomTask {
 				new_dep.setScope( (dep!=null ? dep.getScope() : Scope.RUNTIME) );
 				new_dep.setTransitive( (ja.getParent()!= null? new Boolean(true) :(dep!=null ? new Boolean(dep.getTransitive()) : new Boolean(false)) ) );
 				new_dep.setDeclared( ((dep!=null && ja.getParent()==null) ? new Boolean(true): new Boolean(false)) );
-				
+				new_dep.setParent( (dep!=null && dep.getParent()!=null ? dep.getParent() : null) );
+								
 				a.addDependency(new_dep);
 			} catch (FileAnalysisException e) {
 				log.error(e.getMessage(), e);
