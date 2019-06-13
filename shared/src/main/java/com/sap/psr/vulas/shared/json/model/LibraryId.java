@@ -2,6 +2,8 @@ package com.sap.psr.vulas.shared.json.model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -16,12 +18,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LibraryId implements Serializable, Comparable<Object> {
+public class LibraryId implements Serializable, Comparable<LibraryId> {
 
 	private static final long serialVersionUID = 1L;
 
 	private static Log log = LogFactory.getLog(LibraryId.class);	
-	
+
 	@JsonIgnore
 	private Long id;
 
@@ -29,9 +31,9 @@ public class LibraryId implements Serializable, Comparable<Object> {
 	private String mvnGroup;
 
 	private String artifact;
-	
+
 	private String version;		
-	
+
 	public LibraryId() { super(); }
 
 	public LibraryId(String group, String artifact, String version) {
@@ -40,7 +42,7 @@ public class LibraryId implements Serializable, Comparable<Object> {
 		this.artifact = artifact;
 		this.version = version;
 	}
-	
+
 	public Long getId() { return id; }
 	public void setId(Long id) { this.id = id; }
 
@@ -52,7 +54,7 @@ public class LibraryId implements Serializable, Comparable<Object> {
 
 	public String getVersion() { return version; }
 	public void setVersion(String version) { this.version = version; }
-	
+
 	/**
 	 * Returns true if group, artfiact and version have been specified, false otherwise.
 	 * @return
@@ -98,33 +100,26 @@ public class LibraryId implements Serializable, Comparable<Object> {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public final String toString() {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("[").append(this.getMvnGroup()).append("|").append(this.getArtifact()).append("|").append(this.getVersion()).append("]");
 		return builder.toString();
 	}
-	
+
 	/**
-	 * Compares this library ID with the provided library ID using, in that order,
-	 * group, artifact, or version.
+	 * Compares this library ID with the specified library ID using group, artifact and version.
 	 */
 	@Override
-	public int compareTo(Object _other) {
-		if(_other instanceof LibraryId) {
-			final LibraryId other_libid = (LibraryId)_other;
-			int result = this.getMvnGroup().compareToIgnoreCase(other_libid.getMvnGroup());
-			if(result==0)
-				result = this.getArtifact().compareToIgnoreCase(other_libid.getArtifact());
-			if(result==0){
-				Version v = new Version(this.getVersion());
-				result = v.compareTo(new Version(other_libid.getVersion()));
-			}
-			return result;
+	public int compareTo(LibraryId _other) {
+		int result = this.getMvnGroup().compareToIgnoreCase(_other.getMvnGroup());
+		if(result==0)
+			result = this.getArtifact().compareToIgnoreCase(_other.getArtifact());
+		if(result==0){
+			Version v = new Version(this.getVersion());
+			result = v.compareTo(new Version(_other.getVersion()));
 		}
-		else {
-			throw new IllegalArgumentException("Expected object of type LibraryId, got [" + _other.getClass().getName() + "]");
-		}
+		return result;
 	}	
 }
