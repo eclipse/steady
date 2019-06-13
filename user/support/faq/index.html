@@ -1865,7 +1865,7 @@ how to get support.</p>
 <p>Explanation: This can happen if multiple processes (on the same computer or remotely) try to upload the same method signature to the backend. In such cases, one can simply restart at a later time to avoid the clash.</p>
 <h3 id="app-the-goal-execution-breaks-with-a-javaniofileinvalidpathexception">app : The goal execution breaks with a java.nio.file.InvalidPathException<a class="headerlink" href="#app-the-goal-execution-breaks-with-a-javaniofileinvalidpathexception" title="Permanent link">&para;</a></h3>
 <p>Problem: The goal execution breaks with a <code>java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters</code> as viewable here below.</p>
-<div class="codehilite"><pre><span></span>[ERROR] Failed to execute goal com.sap.research.security.vulas:plugin-maven:3.0.18:app (default-cli) on project xxxxx: java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters: shapeless/$tilde$qmark$greater$?.class
+<div class="codehilite"><pre><span></span>[ERROR] Failed to execute goal com.sap.research.security.vulas:plugin-maven:3.0.19:app (default-cli) on project xxxxx: java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters: shapeless/$tilde$qmark$greater$?.class
 </pre></div>
 
 <p>Explanation : the exception  is often due to an encoding problem.</p>
