@@ -40,7 +40,7 @@
     
     
       
-        <title>Push Docker images to a registry - vulnerability-assessment-tool 3.0.18</title>
+        <title>Push Docker images to a registry - vulnerability-assessment-tool 3.0.19</title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.18" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.19" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.0.18
+                vulnerability-assessment-tool 3.0.19
               </span>
               <span class="md-header-nav__topic">
                 Push Docker images to a registry
@@ -311,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.18" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.0.19" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.0.18
+    vulnerability-assessment-tool 3.0.19
   </label>
   
     <div class="md-nav__source">
@@ -1171,6 +1171,7 @@
 <h2 id="generate-vulnerability-assessment-tool-images">Generate vulnerability-assessment-tool images<a class="headerlink" href="#generate-vulnerability-assessment-tool-images" title="Permanent link">&para;</a></h2>
 <p>In order to generate the Docker images to upload to a local registry, you should generate vulnerability-assessment-tool's Java archives. This can be done following the first part of the <a href="../docker/#build-docker-images">Deploy on Docker tutorial</a>. To briefly summarize you should build and run an image which will populate your local directories with the vulnerability-assessment-tool JARs and WARs. In the end of this preliminary step you should have your images locally, this can be tested with the command <code>docker images | grep vulnerability-assessment-tool</code>.</p>
 <div class="codehilite"><pre><span></span><span class="c1"># sample output for `docker images` command</span>
+vulnerability-assessment-tool-generator          <span class="m">3</span>.0.19 a829f93eb9aa  <span class="m">22</span> hours ago 223MB
 vulnerability-assessment-tool-patch-lib-analyzer <span class="m">3</span>.0.19 fbe5ec6de811  <span class="m">22</span> hours ago 103MB
 vulnerability-assessment-tool-rest-backend       <span class="m">3</span>.0.19 277217bc35b2  <span class="m">22</span> hours ago 136MB
 vulnerability-assessment-tool-rest-lib-utils     <span class="m">3</span>.0.19 53bbb929895d  <span class="m">22</span> hours ago 127MB
