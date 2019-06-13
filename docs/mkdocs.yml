@@ -1,4 +1,4 @@
-site_name: vulnerability-assessment-tool 3.0.18
+site_name: vulnerability-assessment-tool 3.0.19
 site_description: vulnerability-assessment-tool Documentation
 site_url: https://sap.github.io/vulnerability-assessment-tool/
 dev_addr: 0.0.0.0:8000
