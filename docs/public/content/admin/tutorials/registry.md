@@ -15,6 +15,7 @@ In order to generate the Docker images to upload to a local registry, you should
 
 ```sh
 # sample output for `docker images` command
+vulnerability-assessment-tool-generator          @@PROJECT_VERSION@@ a829f93eb9aa  22 hours ago 223MB
 vulnerability-assessment-tool-patch-lib-analyzer @@PROJECT_VERSION@@ fbe5ec6de811  22 hours ago 103MB
 vulnerability-assessment-tool-rest-backend       @@PROJECT_VERSION@@ 277217bc35b2  22 hours ago 136MB
 vulnerability-assessment-tool-rest-lib-utils     @@PROJECT_VERSION@@ 53bbb929895d  22 hours ago 127MB
