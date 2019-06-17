@@ -2,6 +2,7 @@ package com.sap.psr.vulas.backend.repo;
 
 import java.nio.file.Path;
 import java.util.Calendar;
+import java.util.Collection;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
@@ -96,6 +97,14 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 		
 		_lib.setProperties(refUpdater.saveNestedProperties(_lib.getProperties()));
 		sw.lap("Updated refs to nested properties");
+		
+		Collection<LibraryId> bundledLibraryIds = _lib.getBundledLibraryIds();
+		if(bundledLibraryIds!=null && bundledLibraryIds.contains(_lib.getLibraryId())){
+			log.debug("Number of bundled libids before removal : " + bundledLibraryIds.size());
+			bundledLibraryIds.remove(_lib.getLibraryId());
+			log.debug("Number of bundled libids after removal : " + bundledLibraryIds.size());
+		}
+		_lib.setBundledLibraryIds(refUpdater.saveNestedBundledLibraryIds(bundledLibraryIds));
 		
 		_lib = this.saveNestedLibraryId(_lib);
 		
