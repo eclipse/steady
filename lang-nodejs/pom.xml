@@ -1,15 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>root</artifactId>
-        <groupId>com.sap.research.security.vulas</groupId>
-        <version>3.0.16-SNAPSHOT</version>
-    </parent>
+<project
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+        xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>com.sap.research.security.vulas</groupId>
+        <artifactId>root</artifactId>
+        <version>3.0.16-SNAPSHOT</version>
+    </parent>
     <artifactId>lang-nodejs</artifactId>
 
+    <name>NodeJS - Core classes for NodeJS analysis</name>
+    <description></description>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.sap.research.security.vulas</groupId>
+            <artifactId>lang</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>com.sap.research.security.vulas</groupId>
+            <artifactId>shared</artifactId>
+            <classifier>tests</classifier> <!-- type=test-jar does not seem to work here, use classifier instead -->
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <configuration>
+                    <visitor>false</visitor>
+                    <listener>true</listener>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
