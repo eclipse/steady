@@ -70,6 +70,7 @@ import com.sap.psr.vulas.backend.repo.AffectedLibraryRepository;
 import com.sap.psr.vulas.backend.repo.ApplicationRepository;
 import com.sap.psr.vulas.backend.repo.BugRepository;
 import com.sap.psr.vulas.backend.repo.ConstructIdRepository;
+import com.sap.psr.vulas.backend.repo.DependencyRepository;
 import com.sap.psr.vulas.backend.repo.GoalExecutionRepository;
 import com.sap.psr.vulas.backend.repo.LibraryRepository;
 import com.sap.psr.vulas.backend.repo.SpaceRepository;
@@ -153,6 +154,10 @@ public class ApplicationControllerTest {
 
     @Autowired
     private AffectedLibraryRepository affLibRepository;
+    
+
+    @Autowired
+    private DependencyRepository depRepository;
 
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
@@ -651,6 +656,53 @@ public class ApplicationControllerTest {
     	System.out.println("Vulnerable Dependency list size: "+vd.size());
        	System.out.println("====================================");
     	assertEquals(0, vd.size());
+    }
+    
+    @Test
+    public void testGetAppVulnerabilitiesForBundledLibs() throws Exception {
+    	Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_bundledLibIds.json")), Library.class);
+    	this.libRepository.customSave(lib);
+    	
+    	this.libRepository.customSave((Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_jackson-databind-2.9.5.json")), Library.class));
+    	
+    	final Bug bug = (Bug)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/bug_CVE-2018-12023.json")), Bug.class);
+    	this.bugRepository.customSave(bug,true);
+    	
+    	final Application app = new Application(APP_GROUP, APP_ARTIFACT, "0.0." + APP_VERSION);
+
+		//Dependencies
+		final Set<Dependency> app_dependency = new HashSet<Dependency>(); 
+		app_dependency.add(new Dependency(app,lib, Scope.COMPILE, false, "spring-cloud-cloudfoundry-connector-1.2.6.RELEASE.jar"));
+		app.setSpace(spaceRepository.getDefaultSpace(null));
+		app.setDependencies(app_dependency);
+    	Application a = this.appRepository.customSave(app);
+    	
+    	//test code from AppliationRepositoryImpl.findAppVulnerableDependencies
+    	List<Dependency> depsWithBundledLibIds = this.depRepository.findWithBundledByApp(a);
+		
+		assertTrue(depsWithBundledLibIds.size()==1);
+		
+		for(Dependency depWithBundledLibId : depsWithBundledLibIds){
+			Collection<LibraryId> bundledLibIds = depWithBundledLibId.getLib().getBundledLibraryIds();
+			
+			assertTrue(bundledLibIds.size()==3);
+			
+			for(LibraryId bundledLibId : bundledLibIds){
+				List<Library> bundledDigests = this.libRepository.findByLibraryId(bundledLibId);
+				
+				if(bundledDigests.size()==0){
+					System.out.println("The bundled libraryId ["+bundledLibId+"] does not appear as GAV for any of the existing digests.");
+				}else{
+					System.out.println("Found ["+bundledDigests.size()+"] bundled digests, using the first : " + bundledDigests.get(0).getDigest());
+					Library bundledDigest = bundledDigests.get(0);
+					List<Bug> vulns = this.bugRepository.findByLibrary(bundledDigest);
+					System.out.println("found ["+vulns.size()+"] vulns");
+					assertTrue(vulns.size()==1);
+				}
+			}
+		}
+    	
+    	
     }
     
     @Test

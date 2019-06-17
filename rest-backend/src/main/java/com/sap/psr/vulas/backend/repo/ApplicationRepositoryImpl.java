@@ -36,6 +36,7 @@ import com.sap.psr.vulas.backend.model.Dependency;
 import com.sap.psr.vulas.backend.model.Excemption;
 import com.sap.psr.vulas.backend.model.GoalExecution;
 import com.sap.psr.vulas.backend.model.Library;
+import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.backend.model.Path;
 import com.sap.psr.vulas.backend.model.Space;
 import com.sap.psr.vulas.backend.model.TouchPoint;
@@ -432,12 +433,51 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		final TreeSet<VulnerableDependency> vd_list_cc = this.appRepository.findJPQLVulnerableDependenciesByGAV(_app.getMvnGroup(), _app.getArtifact(), _app.getVersion(), _app.getSpace());
 		if(_log)
 			sw.lap("Found [" + vd_list_cc.size() + "] through joining constructs", true);
+		
+		// Retrieve vuln for bundled libids
+		TreeSet<VulnerableDependency> vd_list_bundled_cc = new TreeSet<VulnerableDependency>();
+		TreeSet<VulnerableDependency> vd_list_bundled_av = new TreeSet<VulnerableDependency>();
+		
+		List<Dependency> depsWithBundledLibIds = this.depRepository.findWithBundledByApp(_app);
+		
+		log.debug("Found ["+depsWithBundledLibIds.size()+"] libs with bundled lids.");
+		
+		for(Dependency depWithBundledLibId : depsWithBundledLibIds){
+			Collection<LibraryId> bundledLibIds = depWithBundledLibId.getLib().getBundledLibraryIds();
+			for(LibraryId bundledLibId : bundledLibIds){
+				List<Library> bundledDigests = this.libRepository.findByLibraryId(bundledLibId);
+				
+				if(bundledDigests==null || bundledDigests.size()==0){
+					log.debug("The bundled libraryId ["+bundledLibId+"] does not appear as GAV for any of the existing digests.");
+				}else{
+					log.debug("Found ["+bundledDigests.size()+"] bundled digests, using the first : " + bundledDigests.get(0).getDigest());
+					Library bundledDigest = bundledDigests.get(0);
+				
+					List<Bug> vulns_cc = this.bugRepository.findByLibrary(bundledDigest);
+					List<Bug> vulns_av = this.bugRepository.findByLibId(bundledLibId);
+					
+					for (Bug b: vulns_cc){
+						vd_list_bundled_cc.add(new VulnerableDependency(depWithBundledLibId, b));
+					}
+					for (Bug b: vulns_av){
+						vd_list_bundled_av.add(new VulnerableDependency(depWithBundledLibId, b));
+					}
+				}
+			}
+		}
+		
+		if(_log){
+			sw.lap("Found [" + vd_list_bundled_cc.size() + "] vulns w/ cc through bundled library ids", true);
+			sw.lap("Found [" + vd_list_bundled_av.size() + "] vulns w/o cc through bundled library ids", true);
+		}
 
 		//to improve performances we use a native query to get the affected version (having moved to SQL the computation of the affected version source having priority.
 		//further improvements could be:
 		// embedding the native query into the JPQL one to only get the bugs according to the requested flags, e.g., only affected or only historical ones.
 		this.affLibRepository.computeAffectedLib(vd_list_cc);
+		this.affLibRepository.computeAffectedLib(vd_list_bundled_cc);
 		this.updateFlags(vd_list_cc, true);
+		this.updateFlags(vd_list_bundled_cc, true);
 
 		// Join over libids
 		final TreeSet<VulnerableDependency> vd_list_libid = this.appRepository.findJPQLVulnerableDependenciesByGAVAndAffVersion(_app.getMvnGroup(), _app.getArtifact(), _app.getVersion(), _app.getSpace());
@@ -450,6 +490,8 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		final TreeSet<VulnerableDependency> vd_all = new TreeSet<VulnerableDependency>();	
 		vd_all.addAll(vd_list_cc);
 		vd_all.addAll(vd_list_libid);
+		vd_all.addAll(vd_list_bundled_cc);
+		vd_all.addAll(vd_list_bundled_av);
 
 		// Read excemption info from configuration and enrich vuln dep
 		if(_add_excemption_info) {

@@ -12,6 +12,7 @@ import com.sap.psr.vulas.backend.model.AffectedConstructChange;
 import com.sap.psr.vulas.backend.model.Bug;
 import com.sap.psr.vulas.backend.model.ConstructId;
 import com.sap.psr.vulas.backend.model.Library;
+import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.backend.util.ResultSetFilter;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.Scope;
@@ -206,5 +207,8 @@ public interface LibraryRepository extends CrudRepository<Library, Long>, Librar
 			" where l2.digest=:digest and c2.type='PACK') as unknown_count " + 
 			" where (s.candidate_pack_count >= unknown_count.unknown_pack_count*90/100) AND (s.candidate_pack_count <= unknown_count.unknown_pack_count*100/100) ",nativeQuery=true)
 	List<String> findDigestSamePack(@Param("digest") String digest);
+
+	@Query("SELECT l FROM Library l WHERE l.libraryId =:bundledLibId")
+	List<Library> findByLibraryId(@Param("bundledLibId") LibraryId bundledLibId);
 
 }

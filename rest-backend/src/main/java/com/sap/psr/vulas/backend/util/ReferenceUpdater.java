@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.ConstructId;
+import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.backend.model.Property;
 import com.sap.psr.vulas.backend.repo.ConstructIdRepository;
+import com.sap.psr.vulas.backend.repo.LibraryIdRepository;
 import com.sap.psr.vulas.backend.repo.PropertyRepository;
 
 /**
@@ -30,6 +32,10 @@ public class ReferenceUpdater {
 
 	@Autowired
 	PropertyRepository propRepository;
+	
+
+	@Autowired
+	LibraryIdRepository libidRepository;
 
 	/**
 	 * Checks whether any of the referenced {@link ConstructId}s already exist in the database.
@@ -87,5 +93,28 @@ public class ReferenceUpdater {
 			}
 		}
 		return props;
+	}
+
+	public Collection<LibraryId> saveNestedBundledLibraryIds(Collection<LibraryId> _bundledLibraryIds) {
+		final Collection<LibraryId> libraryids = new HashSet<LibraryId>();	
+		if(_bundledLibraryIds!=null){
+			LibraryId managed_lid = null;
+			for(LibraryId provided_lid: _bundledLibraryIds){
+				try{
+					managed_lid = LibraryIdRepository.FILTER.findOne(this.libidRepository.findBySecondaryKey(provided_lid.getMvnGroup(), provided_lid.getArtifact(), provided_lid.getVersion()));
+				} catch (EntityNotFoundException e) {
+					try {
+						managed_lid = this.libidRepository.save(provided_lid);
+					} catch (Exception e1) {
+						log.error("Error while saving libraryId [" + provided_lid + "]");
+						managed_lid = null;
+					}		
+				}
+				if(managed_lid!=null){
+					libraryids.add(managed_lid);
+				}
+			}
+		}
+		return libraryids;
 	}
 }

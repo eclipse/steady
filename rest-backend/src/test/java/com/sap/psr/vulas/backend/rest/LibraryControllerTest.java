@@ -1,6 +1,7 @@
 package com.sap.psr.vulas.backend.rest;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -77,7 +78,7 @@ public class LibraryControllerTest {
     }
     
     /**
-     * 2x rest-post and rest-get (using different versions of Apache Commons-Fileupload)
+     * 2x rest-post and rest-get (using Jinja2-2.9.6)
      * @throws Exception
      */
     @Test
@@ -94,6 +95,31 @@ public class LibraryControllerTest {
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.wellknownDigest", is(true)))
                 .andExpect(jsonPath("$.digest", is("61A215BCDB0F7939C70582BC00B293F1")));
+    	
+
+    	// Repo must contain 1
+    	assertEquals(1, this.libRepository.count());
+    }
+    
+    
+    /**
+     * 2x rest-post and rest-get for a library with bundled libIds (org.springframework.cloud:spring-cloud-cloudfoundry-connector)
+     * @throws Exception
+     */
+    @Test
+    @Category(RequiresNetwork.class)
+    public void testPostLibWithBundledLibIds() throws Exception {
+    	// Rest-post 1.2.2
+    	Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_bundledLibIds.json")), Library.class);
+    	MockHttpServletRequestBuilder post_builder = post("/libs/")
+    			.content(JacksonUtil.asJsonString(lib).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.wellknownDigest", is(true)))
+                .andExpect(jsonPath("$.bundledLibraryIds", hasSize(3)));
     	
 
     	// Repo must contain 1
