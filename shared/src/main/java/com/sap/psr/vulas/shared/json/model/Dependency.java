@@ -142,7 +142,6 @@ public class Dependency implements Serializable, Comparable<Dependency> {
 		result = prime * result + ((origin == null) ? 0 : origin.hashCode());
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
 		result = prime * result + ((lib == null) ? 0 : lib.hashCode());
-		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
 		result = prime * result + ((relativePath == null) ? 0 : relativePath.hashCode());
 		result = prime * result + ((scope == null) ? 0 : scope.hashCode());
 		result = prime * result + ((transitive == null) ? 0 : transitive.hashCode());
@@ -185,11 +184,6 @@ public class Dependency implements Serializable, Comparable<Dependency> {
 			if (other.lib != null)
 				return false;
 		} else if (!lib.equals(other.lib))
-			return false;
-		if (parent == null) {
-			if (other.parent != null)
-				return false;
-		} else if (!parent.equals(other.parent))
 			return false;
 		if (relativePath == null) {
 			if (other.relativePath != null)

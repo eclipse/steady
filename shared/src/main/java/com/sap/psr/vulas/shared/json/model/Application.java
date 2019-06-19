@@ -109,6 +109,15 @@ public class Application implements Serializable, Comparable<Application> {
 		this.constructs.addAll(constructs);
 	}
 	
+	public Dependency getDependencyForPath(@NotNull String _path) {
+		for(Dependency d: this.getDependencies()) {
+			if(d.getPath()!=null && d.getPath().equals(_path)) {
+				return d;
+			}
+		}
+		return null;
+	}
+	
 	public Dependency getDependency(@NotNull String _sha1) {
 			for(Dependency d: this.getDependencies()) {
 				if(d.getLib()!=null && d.getLib().getDigest().equals(_sha1)) {
@@ -117,6 +126,7 @@ public class Application implements Serializable, Comparable<Application> {
 			}
 		return null;
 	}
+	
 	public Collection<Dependency> getDependencies() { return dependencies; }
 	
 	/**
