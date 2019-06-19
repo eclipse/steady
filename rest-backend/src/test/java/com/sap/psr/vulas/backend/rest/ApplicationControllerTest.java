@@ -410,6 +410,38 @@ public class ApplicationControllerTest {
     }
     
     @Test
+    @Category(RequiresNetwork.class)
+    public void testPostAppWithDepParent() throws Exception {
+    	Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_http-client-4.1.3.json")), Library.class);
+    	this.libRepository.customSave(lib);
+    	
+    	lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_commons-fileupload-1.2.2.json")), Library.class);
+    	MockHttpServletRequestBuilder post_builder = post("/libs/")
+    			.content(JacksonUtil.asJsonString(lib).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(contentTypeJson))
+                .andExpect(jsonPath("$.digest", is("1E48256A2341047E7D729217ADEEC8217F6E3A1A")));
+    
+    	Application app = (Application)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/dummy_app/app_parent.json")), Application.class);
+    	post_builder = post("/apps/")
+    			.content(JacksonUtil.asJsonString(app).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(contentTypeJson))
+                .andExpect(jsonPath("$.group", is("com.acme.foo")))
+                .andExpect(jsonPath("$.artifact", is("vulas-testapp-webapp")));
+    	
+    	// Repo must contain 1
+    	assertEquals(1, this.appRepository.count());
+    	
+    }
+    
+    @Test
     public void readAllApplications() throws Exception {
     	libRepository.customSave(this.createExampleLibrary());
     	appRepository.customSave(this.createExampleApplication());
