@@ -29,7 +29,7 @@ public class PutLibraryCondition implements ResponseCondition {
 			meets = true;
 		else if(backend_lib.getLibraryId()==null && this.lib.getLibraryId()!=null){
 			meets = true;
-		}else if(backend_lib.getBundledLibraryIds()==null && this.lib.getBundledLibraryIds()!=null && !(this.lib.getBundledLibraryIds().size()==1 && this.lib.getBundledLibraryIds().contains(this.lib.getLibraryId()))){
+		}else if((backend_lib.getBundledLibraryIds()==null || backend_lib.getBundledLibraryIds().size()==0) && (this.lib.getBundledLibraryIds()!=null && this.lib.getBundledLibraryIds().size()>0)){
 			meets = true;
 		}
 			
