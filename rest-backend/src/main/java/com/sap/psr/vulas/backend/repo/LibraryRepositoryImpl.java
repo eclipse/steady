@@ -98,13 +98,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 		_lib.setProperties(refUpdater.saveNestedProperties(_lib.getProperties()));
 		sw.lap("Updated refs to nested properties");
 		
-		Collection<LibraryId> bundledLibraryIds = _lib.getBundledLibraryIds();
-		if(bundledLibraryIds!=null && bundledLibraryIds.contains(_lib.getLibraryId())){
-			log.debug("Number of bundled libids before removal : " + bundledLibraryIds.size());
-			bundledLibraryIds.remove(_lib.getLibraryId());
-			log.debug("Number of bundled libids after removal : " + bundledLibraryIds.size());
-		}
-		_lib.setBundledLibraryIds(refUpdater.saveNestedBundledLibraryIds(bundledLibraryIds));
+		_lib.setBundledLibraryIds(refUpdater.saveNestedBundledLibraryIds(_lib.getBundledLibraryIds()));
 		
 		_lib = this.saveNestedLibraryId(_lib);
 		

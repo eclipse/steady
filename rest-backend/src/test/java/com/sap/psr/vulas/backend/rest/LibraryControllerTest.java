@@ -124,6 +124,7 @@ public class LibraryControllerTest {
 
     	// Repo must contain 1
     	assertEquals(1, this.libRepository.count());
+    	
     }
     
     /**
@@ -143,6 +144,7 @@ public class LibraryControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.wellknownDigest", is(true)))
+                .andExpect(jsonPath("$.bundledLibraryIds", hasSize(1)))
                 .andExpect(jsonPath("$.digest", is("1E48256A2341047E7D729217ADEEC8217F6E3A1A")));
     	
 

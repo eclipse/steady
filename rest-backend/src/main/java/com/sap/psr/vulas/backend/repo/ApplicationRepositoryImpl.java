@@ -449,6 +449,8 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 				
 				if(bundledDigests==null || bundledDigests.size()==0){
 					log.debug("The bundled libraryId ["+bundledLibId+"] does not appear as GAV for any of the existing digests.");
+				}else if(bundledDigests.contains(depWithBundledLibId.getLib())){
+					log.debug("The bundled library "+bundledDigests.get(0).toString()+" is the library itself "+depWithBundledLibId.getLib().toString()+", no need to query for vuln deps");
 				}else{
 					log.debug("Found ["+bundledDigests.size()+"] bundled digests, using the first : " + bundledDigests.get(0).getDigest());
 					Library bundledDigest = bundledDigests.get(0);

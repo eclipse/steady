@@ -662,6 +662,8 @@ public class ApplicationControllerTest {
     public void testGetAppVulnerabilitiesForBundledLibs() throws Exception {
     	Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_bundledLibIds.json")), Library.class);
     	this.libRepository.customSave(lib);
+    	Library lib_fu = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_commons-fileupload-1.2.2.json")), Library.class);
+    	this.libRepository.customSave(lib_fu);
     	
     	this.libRepository.customSave((Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_jackson-databind-2.9.5.json")), Library.class));
     	
@@ -673,6 +675,7 @@ public class ApplicationControllerTest {
 		//Dependencies
 		final Set<Dependency> app_dependency = new HashSet<Dependency>(); 
 		app_dependency.add(new Dependency(app,lib, Scope.COMPILE, false, "spring-cloud-cloudfoundry-connector-1.2.6.RELEASE.jar"));
+		app_dependency.add(new Dependency(app,lib_fu, Scope.COMPILE, false, "commons-fileupload-1.2.2.jar"));
 		app.setSpace(spaceRepository.getDefaultSpace(null));
 		app.setDependencies(app_dependency);
     	Application a = this.appRepository.customSave(app);
@@ -680,18 +683,22 @@ public class ApplicationControllerTest {
     	//test code from AppliationRepositoryImpl.findAppVulnerableDependencies
     	List<Dependency> depsWithBundledLibIds = this.depRepository.findWithBundledByApp(a);
 		
-		assertTrue(depsWithBundledLibIds.size()==1);
+		assertTrue(depsWithBundledLibIds.size()==2);
 		
 		for(Dependency depWithBundledLibId : depsWithBundledLibIds){
 			Collection<LibraryId> bundledLibIds = depWithBundledLibId.getLib().getBundledLibraryIds();
-			
-			assertTrue(bundledLibIds.size()==3);
+			if(depWithBundledLibId.getFilename().equals("commons-fileupload-1.2.2.jar"))
+				assertTrue(bundledLibIds.size()==1);
+			else
+				assertTrue(bundledLibIds.size()==3);
 			
 			for(LibraryId bundledLibId : bundledLibIds){
 				List<Library> bundledDigests = this.libRepository.findByLibraryId(bundledLibId);
 				
 				if(bundledDigests.size()==0){
 					System.out.println("The bundled libraryId ["+bundledLibId+"] does not appear as GAV for any of the existing digests.");
+				}else if(bundledDigests.contains(depWithBundledLibId.getLib())){
+					System.out.println("The bundled library is the library itself, no need to query for vuln deps");
 				}else{
 					System.out.println("Found ["+bundledDigests.size()+"] bundled digests, using the first : " + bundledDigests.get(0).getDigest());
 					Library bundledDigest = bundledDigests.get(0);
