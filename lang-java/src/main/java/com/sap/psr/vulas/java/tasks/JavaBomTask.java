@@ -289,6 +289,7 @@ public class JavaBomTask extends AbstractBomTask {
 					for(JarAnalyzer ja2: app_dependencies) {
 						if(ja2.getPath().toString().equals(known_dep.getParent().getPath())) {
 							known_dep.getParent().setLib(ja2.getLibrary());
+							known_dep.getParent().setFilename(ja2.getFileName());
 							break;
 						}
 					}
