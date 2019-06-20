@@ -1,0 +1,492 @@
+{
+    "artifact": "vulas-testapp-webapp",
+    "version": "3.0.20-MVN",
+    "createdAt": null,
+    "modifiedAt": null,
+    "lastScan": null,
+    "lastVulnChange": null,
+    "constructs": [
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchiveServlet.doPost(HttpServletRequest,HttpServletResponse)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CONS",
+        "qname": "com.acme.foo.ArchivePrinter(InputStream)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CONS",
+        "qname": "com.acme.foo.ArchivePrinter(Path)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.MessageStore$1$1Bar.compress()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "com.acme.foo.MessageStore",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchivePrinter$2.checkClientTrusted(X509Certificate[],String)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchivePrinter$2.checkServerTrusted(X509Certificate[],String)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CONS",
+        "qname": "com.acme.foo.HelloWorldAction()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.HelloWorldAction.setMessageStore(MessageStore)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchivePrinter.testInnerClassesAsParameters(InnerNonStaticClass,InnerStaticClass)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.MessageStore$1.run()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CONS",
+        "qname": "com.acme.foo.MessageStore$1(MessageStore)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "com.acme.foo.ArchivePrinter",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CONS",
+        "qname": "com.acme.foo.ArchivePrinter()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CONS",
+        "qname": "com.acme.foo.ArchivePrinter$InnerNonStaticClass(String)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.HelloWorldAction.execute()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CONS",
+        "qname": "com.acme.foo.ArchivePrinter$InnerNonStaticClass(ArchivePrinter,String)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "com.acme.foo.ArchivePrinter$InnerStaticClass",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CONS",
+        "qname": "com.acme.foo.MessageStore()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.HelloWorldAction.getMessageStore()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchivePrinter.openSpreadsheet(Path)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CONS",
+        "qname": "com.acme.foo.ArchivePrinter$InnerStaticClass(String)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.MessageStore.getMessage()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CONS",
+        "qname": "com.acme.foo.ArchivePrinter$1$1Bar()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "com.acme.foo.ArchivePrinter$InnerNonStaticClass",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "com.acme.foo.ArchivePrinter$1$1Bar",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchivePrinter.testGenericsAsParameters(Set,int,Map)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "INIT",
+        "qname": "com.acme.foo.ArchiveServlet.<clinit>",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "INIT",
+        "qname": "com.acme.foo.ArchivePrinter.<clinit>",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.MessageStore.printStacktrace()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CONS",
+        "qname": "com.acme.foo.ArchivePrinter$1(ArchivePrinter)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "com.acme.foo.ArchivePrinter$2",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchivePrinter.printEntries(PrintStream)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CONS",
+        "qname": "com.acme.foo.ArchiveServlet()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchiveServlet.saveNote(String)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchivePrinter$1$1Bar.compress()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchiveServlet.processRequest(HttpServletRequest,HttpServletResponse)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchivePrinter$2.getAcceptedIssuers()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchivePrinter$1.run()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.MessageStore.setMessage(String)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "com.acme.foo.MessageStore$1",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "com.acme.foo.ArchivePrinter$1",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CONS",
+        "qname": "com.acme.foo.MessageStore$1$1Bar()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchivePrinter.countEntries()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "com.acme.foo.ArchiveServlet",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "com.acme.foo.MessageStore$1$1Bar",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "PACK",
+        "qname": "com.acme.foo",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchivePrinter.compressExploitability(Path,Path)",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchivePrinter.main(String[])",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CLAS",
+        "qname": "com.acme.foo.HelloWorldAction",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "CONS",
+        "qname": "com.acme.foo.ArchivePrinter$2()",
+        "relates": null,
+        "attributes": null
+      },
+      {
+        "lang": "JAVA",
+        "type": "METH",
+        "qname": "com.acme.foo.ArchivePrinter.compressArchive()",
+        "relates": null,
+        "attributes": null
+      }
+    ],
+    "dependencies": [
+      {
+        "lib": {
+          "digest": "1E48256A2341047E7D729217ADEEC8217F6E3A1A",
+          "digestAlgorithm": "SHA1",
+          "createdAt": null,
+          "libraryId": {
+            "artifact": "commons-fileupload",
+            "version": "1.2.2",
+            "group": "commons-fileupload"
+          },
+          "bundledLibraryIds": [
+            {
+              "artifact": "commons-fileupload",
+              "version": "1.2.2",
+              "group": "commons-fileupload"
+            }
+          ],
+          "wellknownDigest": null,
+          "digestVerificationUrl": null
+        },
+        "declared": true,
+        "traced": null,
+        "scope": "COMPILE",
+        "transitive": true,
+        "filename": "commons-fileupload-1.2.2.jar",
+        "path": "/home/i059406/.m2/repository/commons-fileupload/commons-fileupload/1.2.2/commons-fileupload-1.2.2.jar",
+        "reachableConstructIds": null,
+        "touchPoints": null,
+        "parent": {
+          "lib": {
+            "digest": "16CF5A6B78951F50713D29BFAE3230A611DC01F0",
+            "digestAlgorithm": "SHA1",
+            "createdAt": null,
+            "libraryId": {
+              "artifact": "httpclient",
+              "version": "4.1.3",
+              "group": "org.apache.httpcomponents"
+            },
+            "bundledLibraryIds": [
+              {
+                "artifact": "httpclient",
+                "version": "4.1.3",
+                "group": "org.apache.httpcomponents"
+              }
+            ],
+            "wellknownDigest": null,
+            "digestVerificationUrl": null
+          },
+          "declared": true,
+          "traced": false,
+          "scope": "COMPILE",
+          "transitive": false,
+          "filename": "httpclient-4.1.3.jar",
+          "path": "/home/i059406/.m2/repository/org/apache/httpcomponents/httpclient/4.1.3/httpclient-4.1.3.jar",
+          "reachableConstructIds": null,
+          "touchPoints": null,
+          "parent": null,
+          "origin": null,
+          "relativePath": null
+        },
+        "origin": null,
+        "relativePath": null
+      },
+      {
+        "lib": {
+          "digest": "16CF5A6B78951F50713D29BFAE3230A611DC01F0",
+          "digestAlgorithm": "SHA1",
+          "createdAt": null,
+          "libraryId": {
+            "artifact": "httpclient",
+            "version": "4.1.3",
+            "group": "org.apache.httpcomponents"
+          },
+          "bundledLibraryIds": [
+            {
+              "artifact": "httpclient",
+              "version": "4.1.3",
+              "group": "org.apache.httpcomponents"
+            }
+          ],
+          "wellknownDigest": null,
+          "digestVerificationUrl": null
+        },
+        "declared": true,
+        "traced": null,
+        "scope": "COMPILE",
+        "transitive": false,
+        "filename": "httpclient-4.1.3.jar",
+        "path": "/home/i059406/.m2/repository/org/apache/httpcomponents/httpclient/4.1.3/httpclient-4.1.3.jar",
+        "reachableConstructIds": null,
+        "touchPoints": null,
+        "parent": null,
+        "origin": null,
+        "relativePath": null
+      }],
+    "complete": true,
+    "empty": false,
+    "group": "com.acme.foo",
+    "constructCounter": 53,
+    "constructTypeCounters": {
+      "PACK": 1,
+      "CLASS": 11,
+      "ENUM": 0,
+      "INIT": 2,
+      "CONS": 14,
+      "METH": 25,
+      "MODU": 0,
+      "FUNC": 0
+    },
+    "countDependencies": 31
+  }
