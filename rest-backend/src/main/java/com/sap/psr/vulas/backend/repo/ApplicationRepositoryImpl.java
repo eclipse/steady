@@ -456,11 +456,35 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 					Library bundledDigest = bundledDigests.get(0);
 				
 					List<Bug> vulns_cc = this.bugRepository.findByLibrary(bundledDigest);
+					
+					for(Bug b: vulns_cc){
+						VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
+						Boolean avByLib = this.affLibRepository.isBugLibAffected(b.getBugId(), bundledDigest.getDigest());
+					
+						boolean found=false;
+						if(avByLib !=null){
+							vulndep.setAffectedVersion((avByLib)?1:0);
+							vulndep.setAffectedVersionConfirmed(1);
+							found=true;
+						}
+						else if(bundledDigest.getLibraryId()!=null) {
+							ApplicationRepositoryImpl.log.debug("look for affected for bug [" +b.getBugId()+"] and lib [" +bundledDigest.getLibraryId()+ "]");
+							Boolean avByLibId = this.affLibRepository.isBugLibIdAffected(b.getBugId(), bundledDigest.getLibraryId());
+							if(avByLibId !=null){
+								vulndep.setAffectedVersion((avByLibId)?1:0);
+								vulndep.setAffectedVersionConfirmed(1);
+								found=true;
+							}
+						}
+						if(!found){
+							vulndep.setAffectedVersionConfirmed(0);
+							vulndep.setAffectedVersion(1); // when the confirmed flag is 0, the value of affected-version is irrelevant but we set it to 1 so that the UI doesn't filter it out when filtering out historical vulnerabilities
+						}
+						vd_list_bundled_cc.add(vulndep);
+					}
+					
 					List<Bug> vulns_av = this.bugRepository.findByLibId(bundledLibId);
 					
-					for (Bug b: vulns_cc){
-						vd_list_bundled_cc.add(new VulnerableDependency(depWithBundledLibId, b));
-					}
 					for (Bug b: vulns_av){
 						vd_list_bundled_av.add(new VulnerableDependency(depWithBundledLibId, b));
 					}
@@ -477,9 +501,9 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		//further improvements could be:
 		// embedding the native query into the JPQL one to only get the bugs according to the requested flags, e.g., only affected or only historical ones.
 		this.affLibRepository.computeAffectedLib(vd_list_cc);
-		this.affLibRepository.computeAffectedLib(vd_list_bundled_cc);
 		this.updateFlags(vd_list_cc, true);
-		this.updateFlags(vd_list_bundled_cc, true);
+		//for bundled libraries we do have have traced and reachable information so we skip the query
+	//	this.updateFlags(vd_list_bundled_cc, true);
 
 		// Join over libids
 		final TreeSet<VulnerableDependency> vd_list_libid = this.appRepository.findJPQLVulnerableDependenciesByGAVAndAffVersion(_app.getMvnGroup(), _app.getArtifact(), _app.getVersion(), _app.getSpace());
