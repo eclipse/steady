@@ -53,17 +53,18 @@ public interface BugRepository extends CrudRepository<Bug, Long>, BugRepositoryC
 	List<Bug> findByLibrary(@Param("bundledDigest") Library bundledDigest);
 	
 	
-	@Query("SELECT distinct b FROM"
-			+ "   LibraryId libid,"
-			+ "	  Bug b"
+	@Query("SELECT distinct b FROM "
+			+ "   LibraryId libid, "
+			+ "	  Bug b "
 			+ "   JOIN "
 			+ "   b.affectedVersions av "
 			+ "   JOIN "
-			+ "   av.libraryId av_libid"
+			+ "   av.libraryId av_libid "
 			+ "   LEFT OUTER JOIN "
-			+ "   b.constructChanges as cc"
+			+ "   b.constructChanges as cc "
 			+ "	  WHERE libid = :bundledLibId "
-			+ "   AND libid = av_libid" 
+			+ "   AND libid = av_libid "
+			+ "   AND av.affected = true" 
 			+ "   AND cc IS NULL"
 			)
 	List<Bug> findByLibId(@Param("bundledLibId") LibraryId bundledLibId);
