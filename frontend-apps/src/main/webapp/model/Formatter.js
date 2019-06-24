@@ -454,5 +454,27 @@ model.Formatter = {
 			return "Artifact ID: "+lib.libraryId.group+":"+lib.libraryId.artifact+":"+lib.libraryId.version;
 		}
 		return "Artifact ID: unknown";
+	},
+	
+	vulnDepOrigin : function(origin){
+		if(origin == "CC")
+			return "Dependency contains vulnerable code";
+		else if(origin == "AFFLIBID")
+			return "Dependency is known to be affected by the configuration vulnerability (no vulnerable code)";
+		else if(origin == "BUNDLEDCC")
+			return "Dependency rebundles a library containing vulnerable code (altering the construct signatures)";
+		else if(origin == "BUNDLEDAFFLIBID")
+			return "Dependency rebundles a library known to be affected by the configuration vulnerability (no vulnerable code)";
+
+	},
+	
+	bundledGAV : function(libLibId,libid){
+		if(libLibId!=null && libLibId!=undefined)
+			return "Through rebundled: " + model.Formatter.mavenIdLink(libLibId.group,libLibId.artifact,libLibId.version);
+		else if (libid!=null && libid!=undefined)
+			return "Through rebundled: " + model.Formatter.mavenIdLink(libid.group,libid.artifact,libid.version);
+		else
+			return null;
+		
 	}
 };
