@@ -51,6 +51,7 @@ import com.sap.psr.vulas.backend.model.Dependency;
 import com.sap.psr.vulas.backend.model.DependencyIntersection;
 import com.sap.psr.vulas.backend.model.DependencyUpdate;
 import com.sap.psr.vulas.backend.model.GoalExecution;
+import com.sap.psr.vulas.backend.model.Library;
 import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.backend.model.Path;
 import com.sap.psr.vulas.backend.model.PathNode;
@@ -80,6 +81,7 @@ import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.ExportFormat;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.enums.Scope;
+import com.sap.psr.vulas.shared.enums.VulnDepOrigin;
 import com.sap.psr.vulas.shared.json.model.diff.JarDiffResult;
 import com.sap.psr.vulas.shared.json.model.metrics.Counter;
 import com.sap.psr.vulas.shared.json.model.metrics.Metrics;
@@ -1574,6 +1576,11 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/vulndeps/{digest}/bugs/{bugid}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.VulnDepDetails.class)
 	public ResponseEntity<VulnerableDependency> getVulnerableDependencyBugDetails(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String digest, @PathVariable String bugid,
+			@RequestParam(value="origin", required=true, defaultValue="CC") VulnDepOrigin vulnDepOrigin,
+			@RequestParam(value="bundledGroup", required=false, defaultValue="") String bundledGroup,
+			@RequestParam(value="bundledArtifact", required=false, defaultValue="") String bundledArtifact,
+			@RequestParam(value="bundledVersion", required=false, defaultValue="") String bundledVersion,
+			@RequestParam(value="bundledLibrary", required=false, defaultValue="") String bundledLibrary,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
@@ -1586,8 +1593,11 @@ public class ApplicationController {
 		try {
 			// To throw an exception if the entity is not found
 			final Application a = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s));
+			
+			if( (vulnDepOrigin.equals(VulnDepOrigin.BUNDLEDCC) && bundledLibrary == null) || (vulnDepOrigin.equals(VulnDepOrigin.BUNDLEDAFFLIBID) && (bundledGroup == null || bundledGroup == null || bundledVersion == null )))
+				return new ResponseEntity<VulnerableDependency>(HttpStatus.BAD_REQUEST);
 
-			return new ResponseEntity<VulnerableDependency>(appRepository.getVulnerableDependencyBugDetails(a, digest, bugid), HttpStatus.OK);
+			return new ResponseEntity<VulnerableDependency>(appRepository.getVulnerableDependencyBugDetails(a, digest, bugid, vulnDepOrigin, bundledLibrary, bundledGroup, bundledArtifact, bundledVersion), HttpStatus.OK);
 		}
 		catch(EntityNotFoundException enfe) {
 			return new ResponseEntity<VulnerableDependency>(HttpStatus.NOT_FOUND);

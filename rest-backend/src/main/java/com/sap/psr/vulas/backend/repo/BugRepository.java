@@ -64,8 +64,8 @@ public interface BugRepository extends CrudRepository<Bug, Long>, BugRepositoryC
 			+ "   b.constructChanges as cc "
 			+ "	  WHERE libid = :bundledLibId "
 			+ "   AND libid = av_libid "
-			+ "   AND av.affected = true" 
+			+ "   AND av.affected = :affected" 
 			+ "   AND cc IS NULL"
 			)
-	List<Bug> findByLibId(@Param("bundledLibId") LibraryId bundledLibId);
+	List<Bug> findByLibId(@Param("bundledLibId") LibraryId bundledLibId,@Param("affected") Boolean affected);
 }

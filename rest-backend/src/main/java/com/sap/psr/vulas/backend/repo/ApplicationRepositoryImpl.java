@@ -46,6 +46,7 @@ import com.sap.psr.vulas.backend.util.ReferenceUpdater;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.PathSource;
 import com.sap.psr.vulas.shared.enums.Scope;
+import com.sap.psr.vulas.shared.enums.VulnDepOrigin;
 import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.StringUtil;
 
@@ -63,6 +64,9 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 	@Autowired
 	LibraryRepository libRepository;
+	
+	@Autowired
+	LibraryIdRepository libIdRepository;
 
 	@Autowired
 	BugRepository bugRepository;
@@ -247,7 +251,8 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	public void updateFlags(VulnerableDependency _vd, Boolean _withChangeList) {
 		// 1) Bugs WITH change list
 		if(_withChangeList) {
-
+			_vd.setVulnDepOrigin(VulnDepOrigin.CC);
+			
 			// 1.1) Dynamic analysis
 			final List<Trace> trace_list = traceRepository.findVulnerableTracesOfLibraries(_vd.getDep().getApp(),_vd.getDep().getLib(),_vd.getBugId());
 			if(trace_list.size()>0)
@@ -271,6 +276,8 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		}
 		// 2) Bugs WITHOUT change list
 		else {
+			_vd.setVulnDepOrigin(VulnDepOrigin.AFFLIBID);
+			
 			// 2.1) Dynamic analysis
 			if(_vd.getDep().isTraced())
 				_vd.setTraced(1);
@@ -305,30 +312,49 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	}
 
 	@Override
-	public VulnerableDependency getVulnerableDependencyBugDetails(Application a, String digest, String bugid) throws EntityNotFoundException {
-		//TODO: Add entity not found exception (if called through API)
+	public VulnerableDependency getVulnerableDependencyBugDetails(Application a, String digest, String bugid, VulnDepOrigin origin, String bundledDigest, String bundledGroup, String bundledArtifact, String bundledVersion) throws EntityNotFoundException {
 
 		// Bug
 		final Bug bug = BugRepository.FILTER.findOne(bugRepository.findByBugId(bugid));
 		this.bugRepository.updateCachedCveData(bug, false);
 
-		// Create the vuln dependency and set all its flags
+		// Create the vuln dependency (flags to be set afterwards)
 		VulnerableDependency vd = new VulnerableDependency(DependencyRepository.FILTER.findOne(depRepository.findByAppAndLib(a, digest)), bug);
-		//set affected flag
-		this.affLibRepository.computeAffectedLib(vd);
-		if(vd.getBug().countConstructChanges()>0)
-			this.updateFlags(vd,true);
-		else
-			this.updateFlags(vd,false);
-
+		
 		// Required for setting the flags for all elements of the change list (if any)
-		final List<Trace> trace_list = traceRepository.findVulnerableTracesOfLibraries(vd.getDep().getApp(),vd.getDep().getLib(), vd.getBugId());
-		final List<Path> path_list = pathRepository.findPathsForLibraryBug(vd.getDep().getApp(), vd.getDep().getLib(), vd.getBugId());
-
-		List<ConstructId> cidList = libRepository.findBuggyConstructIds(vd.getDep().getLib().getDigest(),vd.getBug().getBugId() );
-
-		List<AffectedConstructChange> aff_ccList = affLibRepository.findByBugAndLib(vd.getBug(),vd.getDep().getLib());
-
+		List<Trace> trace_list = null;
+		List<Path> path_list = null;
+		List<ConstructId> cidList = null;
+		List<AffectedConstructChange> aff_ccList = null;
+		
+		//set affected flag and trace.reachable (if applicable)
+		if(origin.equals(VulnDepOrigin.CC) || origin.equals(VulnDepOrigin.AFFLIBID)){
+			this.affLibRepository.computeAffectedLib(vd,vd.getDep().getLib());
+			if(vd.getBug().countConstructChanges()>0)
+				this.updateFlags(vd,true);
+			else
+				this.updateFlags(vd,false);
+			
+			// Required for setting the flags for all elements of the change list (if any)
+			trace_list = traceRepository.findVulnerableTracesOfLibraries(vd.getDep().getApp(),vd.getDep().getLib(), vd.getBugId());
+			path_list = pathRepository.findPathsForLibraryBug(vd.getDep().getApp(), vd.getDep().getLib(), vd.getBugId());
+			cidList = libRepository.findBuggyConstructIds(vd.getDep().getLib().getDigest(),vd.getBug().getBugId() );
+			aff_ccList = affLibRepository.findByBugAndLib(vd.getBug(),vd.getDep().getLib());
+		}
+		else if (origin.equals(VulnDepOrigin.BUNDLEDCC) ){
+			Library library = LibraryRepository.FILTER.findOne(this.libRepository.findByDigest(bundledDigest));
+			this.affLibRepository.computeAffectedLib(vd,library);
+			vd.setVulnDepOrigin(VulnDepOrigin.BUNDLEDCC);
+			cidList = libRepository.findBuggyConstructIds(library.getDigest(),vd.getBug().getBugId() );
+			aff_ccList = affLibRepository.findByBugAndLib(vd.getBug(),library);
+		} else if (origin.equals(VulnDepOrigin.BUNDLEDAFFLIBID) ){
+			LibraryId libraryId = LibraryIdRepository.FILTER.findOne(this.libIdRepository.findBySecondaryKey(bundledGroup, bundledArtifact, bundledVersion));  
+			Boolean affected = this.affLibRepository.isBugLibIdAffected(vd.getBug().getBugId(), libraryId);
+			vd.setAffectedVersion(affected?1:0);
+			vd.setAffectedVersionConfirmed(1);
+			vd.setVulnDepOrigin(VulnDepOrigin.BUNDLEDAFFLIBID);
+		}
+		
 		List<ConstructChangeInDependency> constructsList = new ArrayList<ConstructChangeInDependency>();
 		for(ConstructChange c : vd.getBug().getConstructChanges()) {
 			if(c.getConstructId().getType()== ConstructType.CONS || c.getConstructId().getType()== ConstructType.METH || c.getConstructId().getType()== ConstructType.INIT){
@@ -366,7 +392,9 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 				}
 				else
 					ccd.setInArchive(false);
+				
 
+				
 				for(AffectedConstructChange aff_cc : aff_ccList){
 					if(aff_cc.getCc().equals(c)){
 						ccd.setAffected(aff_cc.getAffected());
@@ -374,7 +402,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 						ccd.setEqualChangeType(aff_cc.getEqualChangeType());
 						ccd.setOverall_change(aff_cc.getOverall_chg());
 						if(ccd.getInArchive()!=aff_cc.getInArchive()){
-							System.out.println("Conclusion of construct In archive from backend is " + ccd.getInArchive() + " while vulas:check-version concluded " + aff_cc.getInArchive());
+							log.warn("Conclusion of construct In archive from backend is " + ccd.getInArchive() + " while vulas:check-version concluded " + aff_cc.getInArchive());
 						}
 					}
 				}
@@ -429,18 +457,24 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		if(_log)
 			sw.start();
 
-		// Join over construct changes
+		// 1) Join over construct changes (origin=cc)
 		final TreeSet<VulnerableDependency> vd_list_cc = this.appRepository.findJPQLVulnerableDependenciesByGAV(_app.getMvnGroup(), _app.getArtifact(), _app.getVersion(), _app.getSpace());
 		if(_log)
 			sw.lap("Found [" + vd_list_cc.size() + "] through joining constructs", true);
 		
-		// Retrieve vuln for bundled libids
+		//to improve performances we use a native query to get the affected version (having moved to SQL the computation of the affected version source having priority.
+		//further improvements could be:
+		// embedding the native query into the JPQL one to only get the bugs according to the requested flags, e.g., only affected or only historical ones.
+		this.affLibRepository.computeAffectedLib(vd_list_cc);
+		this.updateFlags(vd_list_cc, true);
+		
+		// 2+3) Retrieve vuln for bundled libids
 		TreeSet<VulnerableDependency> vd_list_bundled_cc = new TreeSet<VulnerableDependency>();
 		TreeSet<VulnerableDependency> vd_list_bundled_av = new TreeSet<VulnerableDependency>();
 		
 		List<Dependency> depsWithBundledLibIds = this.depRepository.findWithBundledByApp(_app);
 		
-		log.debug("Found ["+depsWithBundledLibIds.size()+"] libs with bundled lids.");
+		log.debug("Found ["+depsWithBundledLibIds.size()+"] libs with bundled libids.");
 		
 		for(Dependency depWithBundledLibId : depsWithBundledLibIds){
 			Collection<LibraryId> bundledLibIds = depWithBundledLibId.getLib().getBundledLibraryIds();
@@ -448,68 +482,79 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 				List<Library> bundledDigests = this.libRepository.findByLibraryId(bundledLibId);
 				
 				if(bundledDigests==null || bundledDigests.size()==0){
-					log.debug("The bundled libraryId ["+bundledLibId+"] does not appear as GAV for any of the existing digests.");
-				}else if(bundledDigests.contains(depWithBundledLibId.getLib())){
+					log.warn("The bundled libraryId ["+bundledLibId+"] does not appear as GAV for any of the existing digests.");
+				} else if(bundledDigests.contains(depWithBundledLibId.getLib())){
 					log.debug("The bundled library "+bundledDigests.get(0).toString()+" is the library itself "+depWithBundledLibId.getLib().toString()+", no need to query for vuln deps");
-				}else{
-					log.debug("Found ["+bundledDigests.size()+"] bundled digests, using the first : " + bundledDigests.get(0).getDigest());
-					Library bundledDigest = bundledDigests.get(0);
+				} else {
+					Library bundledDigest = null;
+					for(Library l: bundledDigests){
+						if(l.getWellknownDigest() == true){
+							bundledDigest = l;
+							break;
+						}			
+					}
+					log.debug("Found ["+bundledDigests.size()+"] digests for the bundled libid, using: " + bundledDigest.getDigest());
 				
 					List<Bug> vulns_cc = this.bugRepository.findByLibrary(bundledDigest);
 					
 					for(Bug b: vulns_cc){
 						VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
-						Boolean avByLib = this.affLibRepository.isBugLibAffected(b.getBugId(), bundledDigest.getDigest());
-					
-						boolean found=false;
-						if(avByLib !=null){
-							vulndep.setAffectedVersion((avByLib)?1:0);
-							vulndep.setAffectedVersionConfirmed(1);
-							found=true;
-						}
-						else if(bundledDigest.getLibraryId()!=null) {
-							ApplicationRepositoryImpl.log.debug("look for affected for bug [" +b.getBugId()+"] and lib [" +bundledDigest.getLibraryId()+ "]");
-							Boolean avByLibId = this.affLibRepository.isBugLibIdAffected(b.getBugId(), bundledDigest.getLibraryId());
-							if(avByLibId !=null){
-								vulndep.setAffectedVersion((avByLibId)?1:0);
-								vulndep.setAffectedVersionConfirmed(1);
-								found=true;
-							}
-						}
-						if(!found){
-							vulndep.setAffectedVersionConfirmed(0);
-							vulndep.setAffectedVersion(1); // when the confirmed flag is 0, the value of affected-version is irrelevant but we set it to 1 so that the UI doesn't filter it out when filtering out historical vulnerabilities
-						}
+						vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDCC);
+						this.affLibRepository.computeAffectedLib(vulndep,bundledDigest);
+						vulndep.setBundledLibId(bundledLibId);
+						vulndep.setBundledLib(bundledDigest);
 						vd_list_bundled_cc.add(vulndep);
 					}
 					
-					List<Bug> vulns_av = this.bugRepository.findByLibId(bundledLibId);
+					List<Bug> vulns_av_true = this.bugRepository.findByLibId(bundledLibId,true);
 					
-					for (Bug b: vulns_av){
-						vd_list_bundled_av.add(new VulnerableDependency(depWithBundledLibId, b));
+					for (Bug b: vulns_av_true){
+						VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
+						vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDAFFLIBID);
+						vulndep.setAffectedVersion(1);
+						vulndep.setAffectedVersionConfirmed(1);
+						vulndep.setBundledLibId(bundledLibId);
+						vd_list_bundled_av.add(vulndep);
 					}
+					List<Bug> vulns_av_false = this.bugRepository.findByLibId(bundledLibId,false);
+					
+					for (Bug b: vulns_av_false){
+						VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
+						vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDAFFLIBID);
+						vulndep.setAffectedVersion(0);
+						vulndep.setAffectedVersionConfirmed(1);
+						vulndep.setBundledLibId(bundledLibId);
+						vd_list_bundled_av.add(vulndep);
+					}
+					//for bundled libraries we do have have traced and reachable information so we skip the query
+					//	this.updateFlags(vd_list_bundled_cc, true);
 				}
 			}
 		}
 		
 		if(_log){
-			sw.lap("Found [" + vd_list_bundled_cc.size() + "] vulns w/ cc through bundled library ids", true);
+			sw.lap("Found [" + vd_list_bundled_cc.size() + "] vulns w/  cc through bundled library ids", true);
 			sw.lap("Found [" + vd_list_bundled_av.size() + "] vulns w/o cc through bundled library ids", true);
 		}
 
-		//to improve performances we use a native query to get the affected version (having moved to SQL the computation of the affected version source having priority.
-		//further improvements could be:
-		// embedding the native query into the JPQL one to only get the bugs according to the requested flags, e.g., only affected or only historical ones.
-		this.affLibRepository.computeAffectedLib(vd_list_cc);
-		this.updateFlags(vd_list_cc, true);
-		//for bundled libraries we do have have traced and reachable information so we skip the query
-	//	this.updateFlags(vd_list_bundled_cc, true);
 
-		// Join over libids
-		final TreeSet<VulnerableDependency> vd_list_libid = this.appRepository.findJPQLVulnerableDependenciesByGAVAndAffVersion(_app.getMvnGroup(), _app.getArtifact(), _app.getVersion(), _app.getSpace());
+
+
+		// 4) Join over libids
+		final TreeSet<VulnerableDependency> vd_list_libid = this.appRepository.findJPQLVulnerableDependenciesByGAVAndAffVersion(_app.getMvnGroup(), _app.getArtifact(), _app.getVersion(), _app.getSpace(), true);
+		for(VulnerableDependency vd : vd_list_libid){
+			vd.setAffectedVersion(1);
+			vd.setAffectedVersionConfirmed(1);
+		}
+		final TreeSet<VulnerableDependency> vd_list_libid_false = this.appRepository.findJPQLVulnerableDependenciesByGAVAndAffVersion(_app.getMvnGroup(), _app.getArtifact(), _app.getVersion(), _app.getSpace(), false);
+		for(VulnerableDependency vd : vd_list_libid_false){
+			vd.setAffectedVersion(0);
+			vd.setAffectedVersionConfirmed(1);
+		}
+		vd_list_libid.addAll(vd_list_libid_false);
 		if(_log)
 			sw.lap("Found [" + vd_list_libid.size() + "] through joining libids", true);
-		this.affLibRepository.computeAffectedLib(vd_list_libid);
+		//this.affLibRepository.computeAffectedLib(vd_list_libid); this is not required for vulns w/o cc as we select by affectedVersions.affected (in this way we save the additional queries to get the affected flag afterwards)
 		this.updateFlags(vd_list_libid, false);
 
 		// Merge bugs found joining constructs and libids 
