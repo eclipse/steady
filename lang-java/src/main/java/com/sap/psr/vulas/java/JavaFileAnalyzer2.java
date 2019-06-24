@@ -620,12 +620,10 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 		}
 
 		public void push(ConstructId id) {
-			// System.out.println("PUSHING " + id.getName());
 			this.nestedDeclarationContexts.push(new ContextStackEntry(id));
 		}
 
 		public void push(ContextStackEntry id) {
-			// System.out.println("PUSHING " + id.getName());
 			this.nestedDeclarationContexts.push(id);
 		}
 
