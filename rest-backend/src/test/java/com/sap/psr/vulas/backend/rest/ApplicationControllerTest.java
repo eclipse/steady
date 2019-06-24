@@ -1,6 +1,7 @@
 package com.sap.psr.vulas.backend.rest;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -86,6 +87,7 @@ import com.sap.psr.vulas.shared.enums.PathSource;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.enums.PropertySource;
 import com.sap.psr.vulas.shared.enums.Scope;
+import com.sap.psr.vulas.shared.enums.VulnDepOrigin;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.FileUtil;
@@ -740,8 +742,25 @@ public class ApplicationControllerTest {
 				}
 			}
 		}
-    	
-    	
+		
+		// Read vulndeps
+		mockMvc.perform(get("/apps/" + APP_GROUP + "/" + APP_ARTIFACT + "/" + "0.0." + APP_VERSION + "/vulndeps")
+    	.header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
+    	.header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentTypeJson))
+        .andExpect(jsonPath("$[0].vulnDepOrigin", is("BUNDLEDCC")))
+        .andExpect(jsonPath("$[0].bundledLib.digest", is("3490508379D065FE3FCB80042B62F630F7588606")));
+		
+		// Read CVE-2018-12023
+		mockMvc.perform(get("/apps/" + APP_GROUP + "/" + APP_ARTIFACT + "/" + "0.0." + APP_VERSION + "/vulndeps/40F483D396FB001654DD685115BB6883098A9F43/bugs/CVE-2018-12023?origin="+VulnDepOrigin.BUNDLEDCC+"&bundledLibrary=3490508379D065FE3FCB80042B62F630F7588606")
+    	.header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
+    	.header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentTypeJson))
+        .andExpect(jsonPath("$.constructList", hasSize(2)))
+        .andExpect(jsonPath("$.constructList[0].inArchive", is(true)));
+		
     }
     
     @Test

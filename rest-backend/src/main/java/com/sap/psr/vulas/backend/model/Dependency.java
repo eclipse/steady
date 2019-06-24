@@ -63,7 +63,7 @@ public class Dependency implements Serializable{
 	@JoinColumn(name = "lib",  referencedColumnName = "digest")
 	private Library lib;
 	
-	@ManyToOne(optional = true, fetch = FetchType.LAZY )//, cascade = { CascadeType.REMOVE }) //we do not need to cascade operations as parents are always stored in the main list of app's dependencies and thus to cascade PERSIST would throw exceptions for saving multiple times the same managed object, similar for the DELETE
+	@ManyToOne(optional = true, fetch = FetchType.EAGER )//, cascade = { CascadeType.REMOVE }) //we do not need to cascade operations as parents are always stored in the main list of app's dependencies and thus to cascade PERSIST would throw exceptions for saving multiple times the same managed object, similar for the DELETE
 	@JoinColumn(name = "parent",  referencedColumnName = "id")
 	private Dependency parent;
 	
