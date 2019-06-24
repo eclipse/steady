@@ -345,6 +345,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			Library library = LibraryRepository.FILTER.findOne(this.libRepository.findByDigest(bundledDigest));
 			this.affLibRepository.computeAffectedLib(vd,library);
 			vd.setVulnDepOrigin(VulnDepOrigin.BUNDLEDCC);
+			vd.setBundledLib(library);
 			cidList = libRepository.findBuggyConstructIds(library.getDigest(),vd.getBug().getBugId() );
 			aff_ccList = affLibRepository.findByBugAndLib(vd.getBug(),library);
 		} else if (origin.equals(VulnDepOrigin.BUNDLEDAFFLIBID) ){
@@ -353,6 +354,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			vd.setAffectedVersion(affected?1:0);
 			vd.setAffectedVersionConfirmed(1);
 			vd.setVulnDepOrigin(VulnDepOrigin.BUNDLEDAFFLIBID);
+			vd.setBundledLibId(libraryId);
 		}
 		
 		List<ConstructChangeInDependency> constructsList = new ArrayList<ConstructChangeInDependency>();
@@ -559,7 +561,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 		// Merge bugs found joining constructs and libids 
 		final TreeSet<VulnerableDependency> vd_all = new TreeSet<VulnerableDependency>();	
-		vd_all.addAll(vd_list_cc);
+		vd_all.addAll(vd_list_cc); //this must be done before the add for bundled vulndeps to ensure that we do not consider as bundledcc the cases where the code signature was not altered.
 		vd_all.addAll(vd_list_libid);
 		vd_all.addAll(vd_list_bundled_cc);
 		vd_all.addAll(vd_list_bundled_av);
