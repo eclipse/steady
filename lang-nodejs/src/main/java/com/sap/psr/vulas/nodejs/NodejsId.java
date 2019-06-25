@@ -6,7 +6,7 @@ import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.JsonBuilder;
 
-public class NodeJSId extends ConstructId {
+public class NodejsId extends ConstructId {
 
     /** Supported NodeJS construct types. */
     public static enum Type { PACKAGE, MODULE, CLASS, CONSTRUCTOR, METHOD, FUNCTION };
@@ -14,7 +14,7 @@ public class NodeJSId extends ConstructId {
     public static final String SCRIPT_NAME = "<script>";
 
     /**
-     * Transforms the shared type {@link ConstructType} into the corresponding local type {@link NodeJSId#Type}.
+     * Transforms the shared type {@link ConstructType} into the corresponding local type {@link NodejsId#Type}.
      * @param _type
      * @return
      */
@@ -49,10 +49,10 @@ public class NodeJSId extends ConstructId {
 
     // Members
     protected Type type = null;
-    protected NodeJSId definitionContext = null;
+    protected NodejsId definitionContext = null;
     protected String simpleName = "";
 
-    NodeJSId(NodeJSId _ctx, Type _t, String _simple_name) {
+    NodejsId(NodejsId _ctx, Type _t, String _simple_name) {
         super(ProgrammingLanguage.JS);
 
         // Packages dont have a definition context
@@ -69,8 +69,8 @@ public class NodeJSId extends ConstructId {
         return this.type;
     }
 
-    public NodeJSId getPackage() {
-        NodeJSId pack = null;
+    public NodejsId getPackage() {
+        NodejsId pack = null;
         // Package of packages is null
         if(this.type == Type.PACKAGE)
             ;
@@ -91,7 +91,7 @@ public class NodeJSId extends ConstructId {
     }
 
     @Override
-    public NodeJSId getDefinitionContext() {
+    public NodejsId getDefinitionContext() {
         return this.definitionContext;
     }
 
