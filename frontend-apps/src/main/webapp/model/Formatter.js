@@ -173,6 +173,10 @@ model.Formatter = {
 		return _val!==undefined && _val!== null && _val !=="";
 	},
 	
+	ArrayVisibility : function(_val) {
+		return _val!==undefined && _val!== null && Array.isArray(_val) && _val.legth>0;
+	},
+	
 //	executionStatus : function(sSrc) {
 //		if (sSrc !== null && sSrc !== '') {
 //			return "img/notmaven.png";
@@ -203,6 +207,35 @@ model.Formatter = {
 		} else {
 			return "";
 		}
+	},
+	
+	mavenIdLinkArray : function(libraries) {
+		let a=[];
+		if(libraries){
+			for(i=0;i<libraries.length;i++)
+				a.push(model.Formatter.mavenIdLink(libraries[i].group,libraries[i].artifact,libraries[i].version));
+		}
+		return a;
+	},
+	
+	parentArray : function(parent) {
+		let a=[];
+		if(parent){
+			a.push(model.Formatter.mavenIdLink(parent.lib.libraryId.group,parent.lib.libraryId.artifact,parent.lib.libraryId.version));
+			a.push(model.Formatter.parentArray(parent.parent));
+		}
+		else
+			a.push("root");
+		return a;
+	},
+	
+	parentDepth : function(parent) {
+		let a=0;
+		if(parent){
+			a+=1;
+			a+=model.Formatter.parentDepth(parent.parent);
+		}
+		return a;
 	},
 	
 	buildmavenIdLink: function(groupid, artifactid) {

@@ -103,7 +103,10 @@
 											<Label text="Archive Filename&#13;&#10;(Digest)" xmlns="sap.ui.commons" />
 											<template>
 												<ObjectIdentifier title="{dep/filename}"
-													text="{dep/lib/digest}" xmlns="sap.m" />
+													text="{
+		 												parts: ['bundledLib/libraryId', 'bundledLibId'], 
+		 												formatter: 'model.Formatter.bundledGAV'
+		 												}" xmlns="sap.m" />
 											</template>
 										</Column>
 										<Column width="25%" sorted="true" sortProperty="bug/cvssScore"
@@ -142,6 +145,7 @@
 			 												formatter: 'model.Formatter.affectedRelease'
 			 												}">
 													</Image>
+													<Text text="{vulnDepOrigin}" xmlns="sap.m" />
 													<!-- Text
 														text="{
 			 												parts: ['affectedVersionSource','affected_version_confirmed'],
@@ -237,6 +241,15 @@
 												text="{
 		 												path: 'transitive',
 		 												formatter: 'model.Formatter.directTransitive'}"></TextView>
+										</template>
+									</Column>
+									<Column xmlns="sap.ui.table" width="10%" >
+										<Label text="Depth" xmlns="sap.ui.commons" />
+										<template>
+											<TextView xmlns="sap.ui.commons"
+												text="{
+		 												path: 'parent',
+		 												formatter: 'model.Formatter.parentDepth'}"></TextView>
 										</template>
 									</Column>
 									<Column xmlns="sap.ui.table" width="10%" sorted="true"
