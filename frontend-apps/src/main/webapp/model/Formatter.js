@@ -174,7 +174,7 @@ model.Formatter = {
 	},
 	
 	ArrayVisibility : function(_val) {
-		return _val!==undefined && _val!== null && Array.isArray(_val) && _val.legth>0;
+		return Array.isArray(_val) && _val.length>0;
 	},
 	
 //	executionStatus : function(sSrc) {
