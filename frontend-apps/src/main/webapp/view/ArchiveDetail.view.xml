@@ -72,9 +72,7 @@
                 		
 					</mm:Table-->
 					
- 					<l:HorizontalLayout width="100%"
-						visible="{ parts: ['/lib/libraryId'], 
- 								formatter: 'model.Formatter.mavenIdVisibility'}">
+ 					<l:HorizontalLayout width="100%" >
 						<l:content>
 							<Label design="Bold" text="Digest: " class="marginVerticalContent" />
 							<commons:TextView
@@ -84,9 +82,7 @@
 						</l:content>
 					</l:HorizontalLayout>
 					
-					<l:HorizontalLayout width="100%"
-						visible="{ parts: ['/lib/libraryId'], 
- 								formatter: 'model.Formatter.mavenIdVisibility'}">
+					<l:HorizontalLayout width="100%" >
 						<l:content>
 							<Label design="Bold" text="Digest verified: " class="marginVerticalContent" />
 							<commons:TextView
@@ -123,13 +119,13 @@
 						</l:content>
 					</l:HorizontalLayout>
 					<l:HorizontalLayout width="100%" 	visible="{ parts: ['/path'], 
- 								formatter: 'model.Formatter.mavenIdVisibility'}">
+ 								formatter: 'model.Formatter.fieldVisibility'}">
  								<l:content>
 						<Label design="Bold" text="Dependency Path: " class="marginVerticalContent" />
 							</l:content>
 					</l:HorizontalLayout>
 					<l:HorizontalLayout width="100%" 	visible="{ parts: ['/path'], 
- 								formatter: 'model.Formatter.mavenIdVisibility'}">
+ 								formatter: 'model.Formatter.fieldVisibility'}">
 						<l:content>
 							<Text xmlns="sap.m" 
 								class="marginVerticalContent"
@@ -137,6 +133,42 @@
 							</Text>
 						</l:content>
 					</l:HorizontalLayout>
+					
+					<l:HorizontalLayout width="100%" 	visible="{ parts: ['/lib/libraryId'], 
+ 								formatter: 'model.Formatter.mavenIdVisibility'}">
+						<l:content>
+							<Label design="Bold" text="Maven Coordinates: " class="marginVerticalContent" />
+							<Text xmlns="sap.m" 
+								class="marginVerticalContent"
+								text="{ parts: ['/lib/libraryId/group','/lib/libraryId/artifact','/lib/libraryId/version'], 
+ 								formatter: 'model.Formatter.mavenIdLink'}">
+							</Text>
+						</l:content>
+					</l:HorizontalLayout>
+					
+					<l:VerticalLayout width="100%" 	visible="{ parts: ['/lib/bundledLibraryIds'], 
+ 								formatter: 'model.Formatter.ArrayVisibility'}">
+						<l:content>
+							<Label design="Bold" text="Bundled maven Coordinates: " class="marginVerticalContent" />
+							<Text xmlns="sap.m" 
+								class="marginVerticalContent"
+								text="{ parts: ['/lib/bundledLibraryIds'], 
+ 								formatter: 'model.Formatter.mavenIdLinkArray'}">
+							</Text>
+						</l:content>
+					</l:VerticalLayout>
+					
+					<l:VerticalLayout width="100%" 	visible="{ parts: ['/parent'], 
+ 								formatter: 'model.Formatter.fieldVisibility'}">
+						<l:content>
+							<Label design="Bold" text="Dependency Trail: " class="marginVerticalContent" />
+							<Text xmlns="sap.m" 
+								class="marginVerticalContent"
+								text="{ parts: ['/parent'], 
+ 								formatter: 'model.Formatter.parentArray'}">
+							</Text>
+						</l:content>
+					</l:VerticalLayout>
 
 					
 					<Label design="Bold" text="Calls from application to archive:" class="marginVerticalContent" />
