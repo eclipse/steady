@@ -121,7 +121,7 @@
 					<l:HorizontalLayout width="100%" 	visible="{ parts: ['/path'], 
  								formatter: 'model.Formatter.fieldVisibility'}">
  								<l:content>
-						<Label design="Bold" text="Dependency Path: " class="marginVerticalContent" />
+						<Label design="Bold" text="Archive Filesystem Path: " class="marginVerticalContent" />
 							</l:content>
 					</l:HorizontalLayout>
 					<l:HorizontalLayout width="100%" 	visible="{ parts: ['/path'], 
@@ -137,7 +137,7 @@
 					<l:HorizontalLayout width="100%" 	visible="{ parts: ['/lib/libraryId'], 
  								formatter: 'model.Formatter.mavenIdVisibility'}">
 						<l:content>
-							<Label design="Bold" text="Maven Coordinates: " class="marginVerticalContent" />
+							<Label design="Bold" text="Archive Coordinates: " class="marginVerticalContent" />
 							<Text xmlns="sap.m" 
 								class="marginVerticalContent"
 								text="{ parts: ['/lib/libraryId/group','/lib/libraryId/artifact','/lib/libraryId/version'], 
@@ -149,7 +149,7 @@
 					<l:VerticalLayout width="100%" 	visible="{ parts: ['/lib/bundledLibraryIds'], 
  								formatter: 'model.Formatter.ArrayVisibility'}">
 						<l:content>
-							<Label design="Bold" text="Bundled maven Coordinates: " class="marginVerticalContent" />
+							<Label design="Bold" text="Bundled Archives Coordinates: " class="marginVerticalContent" />
 							<Text xmlns="sap.m" 
 								class="marginVerticalContent"
 								text="{ parts: ['/lib/bundledLibraryIds'], 

@@ -74,7 +74,7 @@
 						visible="{ parts: ['/dep/lib/libraryId/group', '/dep/lib/libraryId/artifact','/dep/lib/libraryId/version'], 
  								formatter: 'model.Formatter.mavenIdVisibility'}">
 						<l:content>
-							<Label design="Bold" text="Maven Coordinates: " class="marginVerticalContent" />
+							<Label design="Bold" text="Archive Coordinates: " class="marginVerticalContent" />
 						 	<Link xmlns="sap.m"  target="_blank" href="{parts: ['/dep/lib/libraryId/group', '/dep/lib/libraryId/artifact'], 
  								formatter: 'model.Formatter.buildmavenIdLink'}"
 								class="marginVerticalContent"
@@ -105,7 +105,7 @@
 					<l:HorizontalLayout width="100%" visible="{ path: '/bundledLib/libraryId', 
  								formatter: 'model.Formatter.fieldVisibility'}">
 						<l:content>
-							<Label design="Bold" text="Bundled Library Maven Coordinates: " class="marginVerticalContent" />
+							<Label design="Bold" text="Bundled Archive Coordinates: " class="marginVerticalContent" />
 							<Label text="{parts: ['/bundledLib/libraryId/group', '/bundledLib/libraryId/artifact','/bundledLib/libraryId/version'], 
  								formatter: 'model.Formatter.mavenIdLink'}" class="marginVerticalContent" />
 						</l:content>
@@ -114,7 +114,7 @@
 					<l:HorizontalLayout width="100%" visible="{ path: '/bundledLibId', 
  								formatter: 'model.Formatter.fieldVisibility'}">
 						<l:content>
-							<Label design="Bold" text="Bundled Library Id: " class="marginVerticalContent" />
+							<Label design="Bold" text="Bundled Archive Coordinates: " class="marginVerticalContent" />
 							<Label text="{parts: ['/bundledLibId/group', '/bundledLibId/artifact','/bundledLibId/version'], 
  								formatter: 'model.Formatter.mavenIdLink'}" class="marginVerticalContent" />
 						</l:content>

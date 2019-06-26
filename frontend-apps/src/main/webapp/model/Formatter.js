@@ -101,7 +101,6 @@ model.Formatter = {
 		}
 	},
 	
-
 	affectedVersionSource: function(_affected_version_source, _affected_release_confirmed) {
 		if (_affected_release_confirmed === 1) {
 			if(_affected_version_source === "MANUAL")
@@ -219,13 +218,14 @@ model.Formatter = {
 	},
 	
 	parentArray : function(parent) {
-		let a=[];
+		let a="";
 		if(parent){
-			a.push(model.Formatter.mavenIdLink(parent.lib.libraryId.group,parent.lib.libraryId.artifact,parent.lib.libraryId.version));
-			a.push(model.Formatter.parentArray(parent.parent));
+			a+=model.Formatter.mavenIdLink(parent.lib.libraryId.group,parent.lib.libraryId.artifact,parent.lib.libraryId.version);
+			a+= " > "
+			a+= model.Formatter.parentArray(parent.parent);
 		}
 		else
-			a.push("root");
+			a+= ("application");
 		return a;
 	},
 	
@@ -495,17 +495,17 @@ model.Formatter = {
 		else if(origin == "AFFLIBID")
 			return "Dependency is known to be affected by the configuration vulnerability (no vulnerable code)";
 		else if(origin == "BUNDLEDCC")
-			return "Dependency rebundles a library containing vulnerable code (altering the construct signatures)";
+			return "Dependency rebundles an archive containing vulnerable code (altering the construct signatures)";
 		else if(origin == "BUNDLEDAFFLIBID")
-			return "Dependency rebundles a library known to be affected by the configuration vulnerability (no vulnerable code)";
+			return "Dependency rebundles an archive known to be affected by the configuration vulnerability (no vulnerable code)";
 
 	},
 	
 	bundledGAV : function(libLibId,libid){
 		if(libLibId!=null && libLibId!=undefined)
-			return "Through rebundled: " + model.Formatter.mavenIdLink(libLibId.group,libLibId.artifact,libLibId.version);
+			return "Rebundles: " + model.Formatter.mavenIdLink(libLibId.group,libLibId.artifact,libLibId.version);
 		else if (libid!=null && libid!=undefined)
-			return "Through rebundled: " + model.Formatter.mavenIdLink(libid.group,libid.artifact,libid.version);
+			return "Rebundles: " + model.Formatter.mavenIdLink(libid.group,libid.artifact,libid.version);
 		else
 			return null;
 		
