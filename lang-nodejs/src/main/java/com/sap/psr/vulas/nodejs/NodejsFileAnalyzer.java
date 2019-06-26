@@ -47,9 +47,12 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
     /** Number of times a given function has been defined in the given context. */
     protected final Map<NodejsId, Map<String, Integer>> countPerContext = new HashMap<NodejsId, Map<String, Integer>>();
 
+    private final ConstructIdBuilder constructIdBuilder = new ConstructIdBuilder();
+
     private NodejsId module = null;
 
     private File file = null;
+
 
     @Override
     public String[] getSupportedFileExtensions() {
@@ -125,7 +128,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
     public void enterClassDeclaration(JavaScriptParser.ClassDeclarationContext ctx) {
         // Happens if a class is anonymous.
         if(ctx.Identifier() == null)
-            throw new IllegalStateException("Parser error: Class without name in context " + this.context + ", line [" + ctx.getStart().getLine() + "]");
+            throw new IllegalStateException("Parser error: Class declaration without name in context " + this.context + ", line [" + ctx.getStart().getLine() + "]");
 
         final String name = ctx.Identifier().toString();
         String parent_classes = "";
@@ -161,8 +164,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
                 name = ((JavaScriptParser.AssignmentExpressionContext) ctx.getParent()).singleExpression(0).getText();
             // Anon-class
             else
-                return;
-            //throw new IllegalStateException("Parser error: Class without name in context " + this.context + ", line [" + ctx.getStart().getLine() + "]");
+                name = constructIdBuilder.buildAnonymousName(this.context.peek());
         }
         else {
             name = ctx.Identifier().getText();
@@ -171,7 +173,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
         if(ctx.classTail().Extends() != null)
             parent_classes = ctx.classTail().singleExpression().getText();
 
-        // Create construct and ad dto context
+        // Create construct and add to context
         final NodejsId id = new NodejsId(this.context.peek(), NodejsId.Type.CLASS, name + "(" + parent_classes + ")");
         final Construct c = new Construct(id, ctx.getText());
         this.constructs.put(id, c);
@@ -190,7 +192,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
     public void enterFunctionDeclaration(JavaScriptParser.FunctionDeclarationContext ctx) {
         // Happens if a function is anonymous.
         if(ctx.Identifier() == null)
-            throw new IllegalStateException("Parser error: Function without name in context " + this.context + ", line [" + ctx.getStart().getLine() + "]");
+            throw new IllegalStateException("Parser error: Function declaration without name in context " + this.context + ", line [" + ctx.getStart().getLine() + "]");
 
         final String name = ctx.Identifier().getText();
         String parameters = "";
@@ -241,9 +243,8 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
             }
             // Anon-function
             else {
-                return;
+                name = constructIdBuilder.buildAnonymousName(this.context.peek());
             }
-                //throw new IllegalStateException("Parser error: Function without name in context " + this.context + ", line [" + ctx.getStart().getLine() + "]");
         }
         else {
             name = ctx.Identifier().getText();
@@ -292,11 +293,13 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
         }
         // Anon-function
         else
-            return;
-        //throw new IllegalStateException("Parser error: Function without name in context " + this.context + ", line [" + ctx.getStart().getLine() + "]");
+            name = constructIdBuilder.buildAnonymousName(this.context.peek());
 
         if(ctx.arrowFunctionParameters().formalParameterList() != null)
             parameters = ctx.arrowFunctionParameters().formalParameterList().getText();
+        else if(ctx.arrowFunctionParameters().Identifier() != null) {
+            parameters = ctx.arrowFunctionParameters().Identifier().getText();
+        }
         final NodejsId id = new NodejsId(this.context.peek(), NodejsId.Type.FUNCTION, name + "(" + parameters + ")");
         final Construct c = new Construct(id, ctx.getText());
         this.constructs.put(id, c);
@@ -467,15 +470,10 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
     }
 
     class ConstructIdBuilder  {
-        private String declaredName = null;
         /**
          * Used to give numeric names to anonymous inner constructs.
          */
         private Map<ConstructId, Integer> anonymousConstructCounters = new HashMap<ConstructId, Integer>();
-        /**
-         * Used to prepend numeric values to named classes declared in methods.
-         */
-        private Map<ConstructId, Map<String, Integer>> namedClassesCounter = new HashMap<ConstructId, Map<String, Integer>>();
 
         private Integer incrementAnonymousCounter(ConstructId id) {
             Integer count = null;
@@ -483,8 +481,20 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
             // Initialize if not done already
             if(!this.anonymousConstructCounters.containsKey(id))
                 this.anonymousConstructCounters.put(id, 1);
-            return 0;
+
+            // Current value
+            count = this.anonymousConstructCounters.get(id);
+
+            // Increase by one
+            this.anonymousConstructCounters.put(id, count+1);
+
+            return count;
         }
 
+        public String buildAnonymousName(NodejsId _ctx) {
+            // Construct name of new construct
+            final StringBuilder construct_name = new StringBuilder();
+            return construct_name.append(this.incrementAnonymousCounter(_ctx).toString()).toString();
+        }
     }
 }

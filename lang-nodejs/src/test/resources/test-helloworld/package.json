@@ -1,0 +1,16 @@
+{
+  "name": "test-helloworld",
+  "version": "1.0.0",
+  "description": "test",
+  "main": "cat.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "upper-case": "*",
+    "http": "*",
+    "connect": "2.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
