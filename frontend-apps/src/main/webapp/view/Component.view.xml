@@ -47,6 +47,9 @@
 										<m:MatrixLayoutCell>
 											<CheckBox id="includeUnconfirmed" text="Include unconfirmed vulnerabilities (hourglass)" selected="true" />
 										</m:MatrixLayoutCell>
+										<m:MatrixLayoutCell>
+											<CheckBox id="showAdvanced" text="Show advanced analysis" selected="false" />
+										</m:MatrixLayoutCell>
 									</m:MatrixLayoutRow>
 								</m:MatrixLayout>
 								
@@ -141,11 +144,11 @@
 													<Image xmlns="sap.m" decorative="true" id="affectedVersion"
 														width="30px"
 														src="{
-			 												parts: ['affected_version', 'affected_version_confirmed'],
-			 												formatter: 'model.Formatter.affectedRelease'
-			 												}">
+			 												parts: ['affected_version', 'affected_version_confirmed'], 
+ 			 												formatter: 'model.Formatter.affectedRelease'
+ 			 												}"> 
 													</Image>
-													<Text text="{vulnDepOrigin}" xmlns="sap.m" />
+<!-- 													<Text text="{vulnDepOrigin}" xmlns="sap.m" /> -->
 													<!-- Text
 														text="{
 			 												parts: ['affectedVersionSource','affected_version_confirmed'],
@@ -155,7 +158,7 @@
 												</l:HorizontalLayout>
 											</template>
 										</Column>
-										<Column width="10%" grouped="false">
+										<Column width="10%" grouped="false" visible="false" id="idReach">
 											<multiLabels>
 												<Label text="Static Analysis: Potential" xmlns="sap.ui.commons" />
 												<Label text="execution of vuln. code" xmlns="sap.ui.commons" />
@@ -170,7 +173,7 @@
 												</Image>
 											</template>
 										</Column>
-										<Column width="10%" grouped="false">
+										<Column width="10%" grouped="false" visible="false" id="idExec">
 											<multiLabels>
 												<Label text="Dynamic Analysis: Actual" xmlns="sap.ui.commons" />
 												<Label text="execution of vuln. code" xmlns="sap.ui.commons" />
@@ -243,7 +246,7 @@
 		 												formatter: 'model.Formatter.directTransitive'}"></TextView>
 										</template>
 									</Column>
-									<Column xmlns="sap.ui.table" width="10%" >
+									<Column xmlns="sap.ui.table" width="10%">
 										<Label text="Depth" xmlns="sap.ui.commons" />
 										<template>
 											<TextView xmlns="sap.ui.commons"

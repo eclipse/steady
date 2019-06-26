@@ -108,6 +108,15 @@ sap.ui.controller("view.Component", {
 		// URL to load data
 		var incl_hist = this.getView().byId("includeHistorical").getSelected();
 		var incl_unconfirmed = this.getView().byId("includeUnconfirmed").getSelected();
+		
+		if(this.getView().byId("showAdvanced").getSelected()){
+			this.getView().byId("idReach").setVisible(true);
+			this.getView().byId("idExec").setVisible(true);
+		} else {
+			this.getView().byId("idReach").setVisible(false);
+		    this.getView().byId("idExec").setVisible(false);
+		}
+		  
 		var add_excemption_info = true;
 		var cache = model.lastChange
 		if (hard) {
