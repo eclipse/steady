@@ -42,13 +42,13 @@
 											<Button id="toggle" text="Reload data" press="loadVulns" tooltip="Reload table data using the selected filters" />
 										</m:MatrixLayoutCell>
 										<m:MatrixLayoutCell>
-											<CheckBox id="includeHistorical" text="Include historical vulnerabilities" selected="false" />
+											<CheckBox id="includeHistorical" text="Include historical vulnerabilities" selected="false" select="loadVulns"/>
 										</m:MatrixLayoutCell>
 										<m:MatrixLayoutCell>
-											<CheckBox id="includeUnconfirmed" text="Include unconfirmed vulnerabilities (hourglass)" selected="true" />
+											<CheckBox id="includeUnconfirmed" text="Include unconfirmed vulnerabilities (hourglass)" selected="true" select="loadVulns"/>
 										</m:MatrixLayoutCell>
 										<m:MatrixLayoutCell>
-											<CheckBox id="showAdvanced" text="Show advanced analysis" selected="false" />
+											<CheckBox id="showAdvanced" text="Show advanced analysis" selected="false" select="loadVulns"/>
 										</m:MatrixLayoutCell>
 									</m:MatrixLayoutRow>
 								</m:MatrixLayout>
