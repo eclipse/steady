@@ -316,7 +316,13 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
 
     @Override
     public void enterMethodDefinition(JavaScriptParser.MethodDefinitionContext ctx) {
-        final String name = ctx.propertyName().getText();
+        String name = "";
+        if(ctx.getter() != null)
+            name = "get@" + ctx.getter().propertyName().getText();
+        else if(ctx.setter() != null)
+            name = "set@" + ctx.setter().propertyName().getText();
+        else
+            name = ctx.propertyName().getText();
         String parameters = "";
         if(ctx.formalParameterList() != null)
             parameters = ctx.formalParameterList().getText();

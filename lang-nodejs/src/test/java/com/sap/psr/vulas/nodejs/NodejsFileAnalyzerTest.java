@@ -89,12 +89,49 @@ public class NodejsFileAnalyzerTest {
 
     @Test
     public void testClassDeclarationExpression() throws FileAnalysisException {
-        /*
-        final FileAnalyzer f1 = FileAnalyzerFactory.buildFileAnalyzer(new File("src/test/resources/antlr4-grammars-examples/Classes.js"));
+        final FileAnalyzer f1 = FileAnalyzerFactory.buildFileAnalyzer(new File("src/test/resources/test-helloworld/class_test.js"));
         final Map<ConstructId, Construct> c1 = f1.getConstructs();
 
-        assertEquals(20, c1.size());
-         */
+        final NodejsId pack1 = new NodejsId(null, NodejsId.Type.PACKAGE, "test-helloworld");
+        final NodejsId modu1 = new NodejsId(pack1, NodejsId.Type.MODULE, "class_test");
+        final NodejsId pet = new NodejsId(modu1, NodejsId.Type.CLASS, "Pet()");
+        final NodejsId pet_con = new NodejsId(pet, NodejsId.Type.CONSTRUCTOR, "constructor(name,owner)");
+        final NodejsId dog = new NodejsId(modu1, NodejsId.Type.CLASS,"Dog(Pet)");
+        final NodejsId dog_con = new NodejsId(dog, NodejsId.Type.CONSTRUCTOR, "constructor(name,owner,color)");
+        final NodejsId dog_bark = new NodejsId(dog, NodejsId.Type.METHOD, "bark()");
+        final NodejsId dog_get_color = new NodejsId(dog, NodejsId.Type.METHOD, "get@color()");
+        final NodejsId dog_set_color = new NodejsId(dog, NodejsId.Type.METHOD, "set@color(color)");
+        final NodejsId bird = new NodejsId(modu1, NodejsId.Type.CLASS, "Bird(Pet)");
+        final NodejsId bird_con = new NodejsId(bird, NodejsId.Type.CONSTRUCTOR, "constructor(name,owner,size)");
+        final NodejsId bird_fly = new NodejsId(bird, NodejsId.Type.METHOD, "fly(z)");
+        final NodejsId blank = new NodejsId(modu1, NodejsId.Type.CLASS, "Blank()");
+        final NodejsId human = new NodejsId(modu1, NodejsId.Type.CLASS, "Human()");
+        final NodejsId human_con = new NodejsId(human, NodejsId.Type.CONSTRUCTOR, "constructor(name,age)");
+        final NodejsId human_walk = new NodejsId(human, NodejsId.Type.METHOD, "walk(x,y)");
+        final NodejsId rabbit = new NodejsId(modu1, NodejsId.Type.CLASS, "Rabbit(Pet)");
+        final NodejsId rabbit_con = new NodejsId(rabbit, NodejsId.Type.CONSTRUCTOR, "constructor(name,owner,color,age)");
+        final NodejsId rabbit_jump = new NodejsId(rabbit, NodejsId.Type.METHOD, "jump()");
+
+        assertEquals(19, c1.size());
+        assertTrue(c1.containsKey(pack1));
+        assertTrue(c1.containsKey(modu1));
+        assertTrue(c1.containsKey(pet));
+        assertTrue(c1.containsKey(pet_con));
+        assertTrue(c1.containsKey(dog));
+        assertTrue(c1.containsKey(dog_con));
+        assertTrue(c1.containsKey(dog_bark));
+        assertTrue(c1.containsKey(dog_get_color));
+        assertTrue(c1.containsKey(dog_set_color));
+        assertTrue(c1.containsKey(bird));
+        assertTrue(c1.containsKey(bird_con));
+        assertTrue(c1.containsKey(bird_fly));
+        assertTrue(c1.containsKey(blank));
+        assertTrue(c1.containsKey(human));
+        assertTrue(c1.containsKey(human_con));
+        assertTrue(c1.containsKey(human_walk));
+        assertTrue(c1.containsKey(rabbit));
+        assertTrue(c1.containsKey(rabbit_con));
+        assertTrue(c1.containsKey(rabbit_jump));
     }
 
     @Test
