@@ -136,7 +136,10 @@ public class NodejsFileAnalyzerTest {
 
     @Test
     public void testAnonClass() throws FileAnalysisException {
+        final FileAnalyzer f1 = FileAnalyzerFactory.buildFileAnalyzer(new File("src/test/resources/test-helloworld/anonymous_class.js"));
+        final Map<ConstructId, Construct> c1 = f1.getConstructs();
 
+        assertEquals(16, c1.size());
     }
 
     @Test
