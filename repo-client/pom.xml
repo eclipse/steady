@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.sap.research.security.vulas</groupId>
 		<artifactId>root</artifactId>
-		<version>3.0.19-SNAPSHOT</version>
+		<version>3.0.20-SNAPSHOT</version>
 	</parent>
 	<artifactId>repo-client</artifactId>
 	<packaging>jar</packaging>
@@ -19,11 +19,6 @@
 			<groupId>com.sap.research.security.vulas</groupId>
 			<artifactId>shared</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.tmatesoft.svnkit</groupId>
-			<artifactId>svnkit</artifactId>
-			<version>1.9.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jgit</groupId>

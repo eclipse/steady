@@ -2,7 +2,6 @@ package com.sap.psr.vulas.backend.repo;
 
 
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.SortedSet;
@@ -11,14 +10,17 @@ import java.util.TreeSet;
 import com.sap.psr.vulas.backend.model.AffectedLibrary;
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.ConstructChange;
+import com.sap.psr.vulas.backend.model.Library;
+import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.backend.model.VulnerableDependency;
+import com.sap.psr.vulas.shared.enums.VulnDepOrigin;
 
 
 public interface ApplicationRepositoryCustom {
 
 	public Application customSave(Application _app);
 
-	public VulnerableDependency getVulnerableDependencyBugDetails(Application a, String digest, String bugid);
+	public VulnerableDependency getVulnerableDependencyBugDetails(Application a, String digest, String bugid, VulnDepOrigin origin, String bundledLibrary, String bundledGroup, String bundledArtifact, String bundledVersion);
 
 	public void updateFlags(TreeSet<VulnerableDependency> _vdList, Boolean _withChangeList);
 

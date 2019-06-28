@@ -4,8 +4,8 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -263,24 +263,40 @@ public class JavaBomTask extends AbstractBomTask {
 		// Loop all JAR analyzers and add a corresponding dependency
 		for(JarAnalyzer ja: app_dependencies) {
 			try {
-				Dependency dep = null;
+				final Dependency app_dep = new Dependency();
+				app_dep.setLib(ja.getLibrary());
+				app_dep.setApp(this.getApplication());
+				app_dep.setFilename(ja.getFileName());
+				app_dep.setPath(ja.getPath().toString());
+				
+				// Dependency known to a package manager (if any)
+				Dependency known_dep = null;
 				if(ja.getParent()!=null){
-					dep = mgr.getKnownDependency(ja.getParent().getPath());
+					known_dep = mgr.getKnownDependency(ja.getParent().getPath());
 				}
-				else
-					dep = mgr.getKnownDependency(ja.getPath());
-
-				final Dependency new_dep = new Dependency();
-				new_dep.setLib(ja.getLibrary());
-				new_dep.setApp(this.getApplication());
-				new_dep.setFilename(ja.getFileName());
-				new_dep.setPath(ja.getPath().toString());
+				else {
+					known_dep = mgr.getKnownDependency(ja.getPath());
+				}
 				
-				new_dep.setScope( (dep!=null ? dep.getScope() : Scope.RUNTIME) );
-				new_dep.setTransitive( (ja.getParent()!= null? new Boolean(true) :(dep!=null ? new Boolean(dep.getTransitive()) : new Boolean(false)) ) );
-				new_dep.setDeclared( ((dep!=null && ja.getParent()==null) ? new Boolean(true): new Boolean(false)) );
+				// Take information from known dependency
+				app_dep.setScope( (known_dep!=null ? known_dep.getScope() : Scope.RUNTIME) );
+				app_dep.setTransitive( (ja.getParent()!= null? new Boolean(true) :(known_dep!=null ? new Boolean(known_dep.getTransitive()) : new Boolean(false)) ) );
+				app_dep.setDeclared( ((known_dep!=null && ja.getParent()==null) ? new Boolean(true): new Boolean(false)) );
 				
-				a.addDependency(new_dep);
+				// Set the parent (if any)
+				if(known_dep!=null && known_dep.getParent()!=null) {
+					// Complete the draft parent dependency with library info
+					for(JarAnalyzer ja2: app_dependencies) {
+						if(ja2.getPath().toString().equals(known_dep.getParent().getPath())) {
+							known_dep.getParent().setLib(ja2.getLibrary());
+							known_dep.getParent().setFilename(ja2.getFileName());
+							break;
+						}
+					}
+					app_dep.setParent(known_dep.getParent());
+				}
+				
+				a.addDependency(app_dep);
 			} catch (FileAnalysisException e) {
 				log.error(e.getMessage(), e);
 			}

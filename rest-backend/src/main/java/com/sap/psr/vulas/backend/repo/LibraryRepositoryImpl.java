@@ -2,6 +2,7 @@ package com.sap.psr.vulas.backend.repo;
 
 import java.nio.file.Path;
 import java.util.Calendar;
+import java.util.Collection;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
@@ -64,7 +65,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 			_lib.setModifiedAt(Calendar.getInstance());
 			
 			//	Re-create wellknownDigest if it is null in our current db (this part should be removed once it is created for all)
-			if(managed_lib.getWellknownDigest()==null) {
+			if(managed_lib.getWellknownDigest()==null || (managed_lib.getDigestTimestamp()==null && managed_lib.getWellknownDigest())) {
 				_lib.verifyDigest();
 			}
 			else {
@@ -96,6 +97,8 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 		
 		_lib.setProperties(refUpdater.saveNestedProperties(_lib.getProperties()));
 		sw.lap("Updated refs to nested properties");
+		
+		_lib.setBundledLibraryIds(refUpdater.saveNestedBundledLibraryIds(_lib.getBundledLibraryIds()));
 		
 		_lib = this.saveNestedLibraryId(_lib);
 		

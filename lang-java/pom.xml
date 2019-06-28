@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.sap.research.security.vulas</groupId>
 		<artifactId>root</artifactId>
-		<version>3.0.19-SNAPSHOT</version>
+		<version>3.0.20-SNAPSHOT</version>
 	</parent>
 	<artifactId>lang-java</artifactId>
 
@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>org.bitbucket.mstrobel</groupId>
 			<artifactId>procyon-compilertools</artifactId>
-			<version>0.5.33</version>
+			<version>0.5.35</version>
 		</dependency>
 		<!-- The following are dependencies of ChangeDistiller (which is not in 
 			any repository) -->

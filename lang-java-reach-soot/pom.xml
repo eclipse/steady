@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.sap.research.security.vulas</groupId>
 		<artifactId>root</artifactId>
-		<version>3.0.19-SNAPSHOT</version>
+		<version>3.0.20-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -24,6 +24,12 @@
 			<artifactId>soot</artifactId>
 			<version>3.3.0</version>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>ca.mcgill.sable</groupId>
+					<artifactId>jasmin</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>de.tud.sse</groupId>
@@ -40,6 +46,10 @@
 				<exclusion>
 					<groupId>heros</groupId>
 					<artifactId>heros</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>ca.mcgill.sable</groupId>
+					<artifactId>jasmin</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>

@@ -103,6 +103,9 @@ public class Library implements Serializable {
 	@ManyToOne(optional = true, cascade = {}, fetch = FetchType.EAGER)
 	private LibraryId libraryId;
 
+	@ManyToMany(cascade = {})
+	private Collection<LibraryId> bundledLibraryIds;
+	
 	@Transient
 	@JsonView(Views.Overview.class)
 	private Integer directUsageCounter = null;
@@ -309,7 +312,7 @@ public class Library implements Serializable {
 
 	//changed to public temporarily to recreate wellknownDigest flag for already persisted libs
 	public void verifyDigest() {
-		if(this.getWellknownDigest()==null || this.getDigestVerificationUrl()==null) {
+		if(this.getWellknownDigest()==null || this.getDigestVerificationUrl()==null || this.getDigestTimestamp()==null) {
 			try {
 				final DigestVerifierEnumerator dv = new DigestVerifierEnumerator();
 				final Boolean verified = dv.verify(this);
@@ -375,5 +378,13 @@ public class Library implements Serializable {
 
 	public void setDirectUsageCounter(Integer directUsageCounter) {
 		this.directUsageCounter = directUsageCounter;
+	}
+	
+	public Collection<LibraryId> getBundledLibraryIds() {
+		return bundledLibraryIds;
+	}
+
+	public void setBundledLibraryIds(Collection<LibraryId> bundledLibraryIds) {
+		this.bundledLibraryIds = bundledLibraryIds;
 	}
 }

@@ -29,10 +29,12 @@ public class PutLibraryCondition implements ResponseCondition {
 			meets = true;
 		else if(backend_lib.getLibraryId()==null && this.lib.getLibraryId()!=null){
 			meets = true;
+		}else if((backend_lib.getBundledLibraryIds()==null || backend_lib.getBundledLibraryIds().size()==0) && (this.lib.getBundledLibraryIds()!=null && this.lib.getBundledLibraryIds().size()>0)){
+			meets = true;
 		}
 			
 		return meets;
 	}
 
-	public String toString() { return "[body LT_DOUBLE " + this.constructs_count + "] OR [existing_GAV==null, current_GAV!=null]"; }
+	public String toString() { return "[body LT_DOUBLE " + this.constructs_count + "] OR [existing_GAV==null, current_GAV!=null] OR [existing_bundledLibIds==null, current_bundledLibIds!=null]"; }
 }

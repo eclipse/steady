@@ -146,17 +146,18 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 			+ "   JOIN "
 			+ "   b.affectedVersions av "
 			+ "   JOIN "
-			+ "   av.libraryId av_libid"
+			+ "   av.libraryId av_libid "
 			+ "   LEFT OUTER JOIN "
-			+ "   b.constructChanges as cc"
+			+ "   b.constructChanges as cc "
 			+ "	  WHERE a.mvnGroup = :mvnGroup "
 			+ "   AND a.artifact = :artifact "
-			+ "   AND a.version = :version"
-			+ "   AND a.space = :space"
-			+ "   AND dep_libid = av_libid" 
-			+ "   AND cc IS NULL"
+			+ "   AND a.version = :version "
+			+ "   AND a.space = :space "
+			+ "   AND dep_libid = av_libid "
+			+ "   AND av.affected = :affected " 
+			+ "   AND cc IS NULL "
 			)
-	TreeSet<VulnerableDependency> findJPQLVulnerableDependenciesByGAVAndAffVersion(@Param("mvnGroup") String group, @Param("artifact") String artifact,@Param("version") String version, @Param("space") Space space);
+	TreeSet<VulnerableDependency> findJPQLVulnerableDependenciesByGAVAndAffVersion(@Param("mvnGroup") String group, @Param("artifact") String artifact,@Param("version") String version, @Param("space") Space space, @Param("affected") Boolean affected);
 
 	@Query("SELECT"
 			+ "   DISTINCT new com.sap.psr.vulas.backend.model.VulnerableDependency(d,b) FROM"

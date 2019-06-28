@@ -17,7 +17,7 @@ fi
 REGISTRY_HOST=$1
 USERNAME=$2
 VERSION=$3
-SERVICES='frontend-apps frontend-bugs haproxy patch-lib-analyzer postgresql rest-backend rest-lib-utils'
+SERVICES='generator frontend-apps frontend-bugs haproxy patch-lib-analyzer postgresql rest-backend rest-lib-utils'
 
 docker login $REGISTRY_HOST
 

@@ -108,6 +108,15 @@ sap.ui.controller("view.Component", {
 		// URL to load data
 		var incl_hist = this.getView().byId("includeHistorical").getSelected();
 		var incl_unconfirmed = this.getView().byId("includeUnconfirmed").getSelected();
+		
+		if(this.getView().byId("showAdvanced").getSelected()){
+			this.getView().byId("idReach").setVisible(true);
+			this.getView().byId("idExec").setVisible(true);
+		} else {
+			this.getView().byId("idReach").setVisible(false);
+		    this.getView().byId("idExec").setVisible(false);
+		}
+		  
 		var add_excemption_info = true;
 		var cache = model.lastChange
 		if (hard) {
@@ -299,7 +308,7 @@ sap.ui.controller("view.Component", {
 			archiveTotal.setText("Archives Total: ");
 			archiveTraced.setText("Archives Traced: ");
 			archiveTotalTraces.setText("Total Number of Traces: ");
-			archiveAvgAge.setText("Average age (in days): ");
+			archiveAvgAge.setText("Average age (in months): ");
 			
 			model.Config.addToQueue(oArchiveModel);
 			model.Config.loadData(oArchiveModel, sUrl, 'GET');
@@ -330,7 +339,7 @@ sap.ui.controller("view.Component", {
 				archiveTotal.setText("Archives Total: " + archives.length);
 				archiveTraced.setText("Archives Traced: " + traced);
 				archiveTotalTraces.setText("Total Number of Traces: " + traces);
-				archiveAvgAge.setText("Average age (in days): " + (archives_with_timestamp==0 ? "N/A" : Math.floor(days/archives_with_timestamp)));
+				archiveAvgAge.setText("Average age (in months): " + (archives_with_timestamp==0 ? "n/a" : Math.floor(days/30/archives_with_timestamp)));
 			});
 		}
 		
@@ -744,6 +753,15 @@ sap.ui.controller("view.Component", {
 		var archiveid = oEvent.getParameters().rowBindingContext.getObject("dep/lib/digest");
 			//oEvent.getParameter("listItem").getBindingContext()
 			//	.getObject().dep.lib.digest;
+		var origin = oEvent.getParameters().rowBindingContext.getObject("vulnDepOrigin");
+		model.Config.setVulnDepOrigin(origin);
+		if(origin == 'BUNDLEDCC')
+			model.Config.setBundledDigest(oEvent.getParameters().rowBindingContext.getObject("bundledLib/digest"));
+		else if(origin == 'BUNDLEDAFFLIBID'){
+			model.Config.setBundledGroup(oEvent.getParameters().rowBindingContext.getObject("bundledLibId/group"));
+			model.Config.setBundledArtifact(oEvent.getParameters().rowBindingContext.getObject("bundledLibId/artifact"));
+			model.Config.setBundledVersion(oEvent.getParameters().rowBindingContext.getObject("bundledLibId/version"));
+		}
 		const workspaceSlug = model.Config.getSpace()
 		this.router.navTo("bugDetail", {
 			workspaceSlug: workspaceSlug,
@@ -871,7 +889,7 @@ sap.ui.controller("view.Component", {
 		var el = JSON.parse(mitigationModel.getJSON());
 	//	var archiveDetailPageController = this.getView("view.ArchiveDetail").getController();
 		for(var o=0; o<el.length;o++) {
-			var rowIndex=o;
+			let rowIndex=o;
 			var lib = mitigationModel.getProperty("/"+rowIndex+"/dep/lib");
 			if(lib.libraryId!=null) { // the additional condition is only needed if we load the latest upon selection of the mitigation tab (&& el[rowIndex].latest=="Loading...")
 				// used when Mvn Central was not availble
@@ -887,25 +905,23 @@ sap.ui.controller("view.Component", {
 			        type: "GET",
 			        url: mUrl,
 			        async: true,
-			        headers : {'content-type': "application/json",'cache-control': "no-cache" ,'X-Vulas-Echo': o },
+			        headers : {'content-type': "application/json",'cache-control': "no-cache" },
 			        statusCode: {
 			        	
 			        	// Lib is known by Maven
 			            200: function(data, status, jqXHR1) {
 			            	ajaxQueue.pop(r);
-			            	var echo1 = jqXHR1.getResponseHeader("X-Vulas-Echo");
 			            	var mitigationModel = this.getView().byId("idLibraryList").getModel();
-			            	var lib = mitigationModel.getProperty("/"+echo1+"/dep/lib");
+			            	var lib = mitigationModel.getProperty("/"+rowIndex+"/dep/lib");
 			            	// Get latest non-vulnerable version
 							var	vUrl = model.Config.getArchiveVulnServiceUrl(lib.libraryId.group,lib.libraryId.artifact,null,true,true);
 							var r1 = $.ajax({
 						        type: "GET",
 						        url: vUrl,
-						        headers : {'content-type': "application/json",'cache-control': "no-cache", 'X-Vulas-Echo': echo1 ,'X-Vulas-Version':model.Version.version,'X-Vulas-Component':'appfrontend'},
+						        headers : {'content-type': "application/json",'cache-control': "no-cache" ,'X-Vulas-Version':model.Version.version,'X-Vulas-Component':'appfrontend'},
 						        
 						        success: function(data, status, jqXHR) {
 						        	ajaxQueue.pop(r1);
-						        	var echo = jqXHR.getResponseHeader("X-Vulas-Echo");
 						        	var model = this.getView().byId("idLibraryList").getModel();
 						        	if(data.length>0){
 							        	var oJson = JSON.parse(model.getJSON());
@@ -918,15 +934,15 @@ sap.ui.controller("view.Component", {
 								        		model.refresh();
 							        		}
 							        	}*/
-							        	if(oJson[echo].dep.lib.libraryId!=null && oJson[echo].dep.lib.libraryId.group.toUpperCase() == data[latest].group.toUpperCase()&& oJson[echo].dep.lib.libraryId.artifact.toUpperCase() ==  data[latest].artifact.toUpperCase())
-							        		model.setProperty("/"+echo+"/latest", data[latest].group.concat(":"+data[latest].artifact).concat(":"+data[latest].version));
+							        	if(oJson[rowIndex].dep.lib.libraryId!=null && oJson[rowIndex].dep.lib.libraryId.group.toUpperCase() == data[latest].group.toUpperCase()&& oJson[rowIndex].dep.lib.libraryId.artifact.toUpperCase() ==  data[latest].artifact.toUpperCase())
+							        		model.setProperty("/"+rowIndex+"/latest", data[latest].group.concat(":"+data[latest].artifact).concat(":"+data[latest].version));
 										else{
-											model.setProperty("/"+echo+"/latest", data[latest].group.concat(":"+data[latest].artifact).concat(":"+data[latest].version).concat(" **"));
+											model.setProperty("/"+rowIndex+"/latest", data[latest].group.concat(":"+data[latest].artifact).concat(":"+data[latest].version).concat(" **"));
 											this.getView().byId("id-legend1").setText("** The latest non-vulnerable release has a different group and/or artifact then the one in use. This may indicate that the library underwent a major refactoring. Please click on the row to get details about the update metrics, hence, migration efforts.");
 										}
 						        		model.refresh(true);
 						        	}else{
-						        		model.setProperty("/"+echo+"/latest", "Latest is vulnerable");
+						        		model.setProperty("/"+rowIndex+"/latest", "Latest is vulnerable");
 						        		model.refresh(true);
 						        	}
 							        	
@@ -938,17 +954,15 @@ sap.ui.controller("view.Component", {
 				        // Lib is not known by Maven
 				        404: function(jqXHR1){
 				        	ajaxQueue.pop(r);
-				        	var echo1 = jqXHR1.getResponseHeader("X-Vulas-Echo");
 				        	var model = this.getView().byId("idLibraryList").getModel();
-				        	mitigationModel.setProperty("/"+echo1+"/latest", "Artifact identifier unknown to Maven Central *");
+				        	mitigationModel.setProperty("/"+rowIndex+"/latest", "Artifact identifier unknown to Maven Central *");
 				        	this.getView().byId("id-legend").setText("* The lookup for the latest version in Maven Central is not possible.");
 				        	model.refresh(true);
 				        }.bind(this), 
 				        500: function(jqXHR1){
 				        	ajaxQueue.pop(r);
-				        	var echo1 = jqXHR1.getResponseHeader("X-Vulas-Echo");
 				        	var model = this.getView().byId("idLibraryList").getModel();
-				        	mitigationModel.setProperty("/"+echo1+"/latest", "Recommendation currently unavailable ***");
+				        	mitigationModel.setProperty("/"+rowIndex+"/latest", "Recommendation currently unavailable ***");
 							this.getView().byId("id-legend").setText("*** The lookup for the latest version in Maven Central is temporarily unreachable.");
 							model.refresh(true);
 				        }.bind(this),
