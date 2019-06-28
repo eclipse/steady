@@ -135,7 +135,7 @@ public class HubIntegrationControllerTest {
        
     }
     
-    @Ignore
+    
     @Test
     public void testGetHubApps() throws Exception {
     	// Rest-post http-client 4.1.3
@@ -196,7 +196,7 @@ public class HubIntegrationControllerTest {
     	
     }
     
-    @Ignore
+    
     @Test
     public void testGetHubAppWithSlashChar() throws Exception {
     	// Rest-post http-client 4.1.3
