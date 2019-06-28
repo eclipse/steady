@@ -1,6 +1,7 @@
 package com.sap.psr.vulas.backend.rest;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -70,6 +71,7 @@ import com.sap.psr.vulas.backend.repo.AffectedLibraryRepository;
 import com.sap.psr.vulas.backend.repo.ApplicationRepository;
 import com.sap.psr.vulas.backend.repo.BugRepository;
 import com.sap.psr.vulas.backend.repo.ConstructIdRepository;
+import com.sap.psr.vulas.backend.repo.DependencyRepository;
 import com.sap.psr.vulas.backend.repo.GoalExecutionRepository;
 import com.sap.psr.vulas.backend.repo.LibraryRepository;
 import com.sap.psr.vulas.backend.repo.SpaceRepository;
@@ -85,6 +87,7 @@ import com.sap.psr.vulas.shared.enums.PathSource;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.enums.PropertySource;
 import com.sap.psr.vulas.shared.enums.Scope;
+import com.sap.psr.vulas.shared.enums.VulnDepOrigin;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.FileUtil;
@@ -153,6 +156,10 @@ public class ApplicationControllerTest {
 
     @Autowired
     private AffectedLibraryRepository affLibRepository;
+    
+
+    @Autowired
+    private DependencyRepository depRepository;
 
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
@@ -405,6 +412,38 @@ public class ApplicationControllerTest {
     }
     
     @Test
+    @Category(RequiresNetwork.class)
+    public void testPostAppWithDepParent() throws Exception {
+    	Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_http-client-4.1.3.json")), Library.class);
+    	this.libRepository.customSave(lib);
+    	
+    	lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_commons-fileupload-1.2.2.json")), Library.class);
+    	MockHttpServletRequestBuilder post_builder = post("/libs/")
+    			.content(JacksonUtil.asJsonString(lib).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(contentTypeJson))
+                .andExpect(jsonPath("$.digest", is("1E48256A2341047E7D729217ADEEC8217F6E3A1A")));
+    
+    	Application app = (Application)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/dummy_app/app_parent.json")), Application.class);
+    	post_builder = post("/apps/")
+    			.content(JacksonUtil.asJsonString(app).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(contentTypeJson))
+                .andExpect(jsonPath("$.group", is("com.acme.foo")))
+                .andExpect(jsonPath("$.artifact", is("vulas-testapp-webapp")));
+    	
+    	// Repo must contain 1
+    	assertEquals(1, this.appRepository.count());
+    	
+    }
+    
+    @Test
     public void readAllApplications() throws Exception {
     	libRepository.customSave(this.createExampleLibrary());
     	appRepository.customSave(this.createExampleApplication());
@@ -651,6 +690,77 @@ public class ApplicationControllerTest {
     	System.out.println("Vulnerable Dependency list size: "+vd.size());
        	System.out.println("====================================");
     	assertEquals(0, vd.size());
+    }
+    
+    @Test
+    public void testGetAppVulnerabilitiesForBundledLibs() throws Exception {
+    	Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_bundledLibIds.json")), Library.class);
+    	this.libRepository.customSave(lib);
+    	Library lib_fu = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_commons-fileupload-1.2.2.json")), Library.class);
+    	this.libRepository.customSave(lib_fu);
+    	
+    	this.libRepository.customSave((Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_jackson-databind-2.9.5.json")), Library.class));
+    	
+    	final Bug bug = (Bug)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/bug_CVE-2018-12023.json")), Bug.class);
+    	this.bugRepository.customSave(bug,true);
+    	
+    	final Application app = new Application(APP_GROUP, APP_ARTIFACT, "0.0." + APP_VERSION);
+
+		//Dependencies
+		final Set<Dependency> app_dependency = new HashSet<Dependency>(); 
+		app_dependency.add(new Dependency(app,lib, Scope.COMPILE, false, "spring-cloud-cloudfoundry-connector-1.2.6.RELEASE.jar"));
+		app_dependency.add(new Dependency(app,lib_fu, Scope.COMPILE, false, "commons-fileupload-1.2.2.jar"));
+		app.setSpace(spaceRepository.getDefaultSpace(null));
+		app.setDependencies(app_dependency);
+    	Application a = this.appRepository.customSave(app);
+    	
+    	//test code from AppliationRepositoryImpl.findAppVulnerableDependencies
+    	List<Dependency> depsWithBundledLibIds = this.depRepository.findWithBundledByApp(a);
+		
+		assertTrue(depsWithBundledLibIds.size()==2);
+		
+		for(Dependency depWithBundledLibId : depsWithBundledLibIds){
+			Collection<LibraryId> bundledLibIds = depWithBundledLibId.getLib().getBundledLibraryIds();
+			if(depWithBundledLibId.getFilename().equals("commons-fileupload-1.2.2.jar"))
+				assertTrue(bundledLibIds.size()==1);
+			else
+				assertTrue(bundledLibIds.size()==3);
+			
+			for(LibraryId bundledLibId : bundledLibIds){
+				List<Library> bundledDigests = this.libRepository.findByLibraryId(bundledLibId);
+				
+				if(bundledDigests.size()==0){
+					System.out.println("The bundled libraryId ["+bundledLibId+"] does not appear as GAV for any of the existing digests.");
+				}else if(bundledDigests.contains(depWithBundledLibId.getLib())){
+					System.out.println("The bundled library is the library itself, no need to query for vuln deps");
+				}else{
+					System.out.println("Found ["+bundledDigests.size()+"] bundled digests, using the first : " + bundledDigests.get(0).getDigest());
+					Library bundledDigest = bundledDigests.get(0);
+					List<Bug> vulns = this.bugRepository.findByLibrary(bundledDigest);
+					System.out.println("found ["+vulns.size()+"] vulns");
+					assertTrue(vulns.size()==1);
+				}
+			}
+		}
+		
+		// Read vulndeps
+		mockMvc.perform(get("/apps/" + APP_GROUP + "/" + APP_ARTIFACT + "/" + "0.0." + APP_VERSION + "/vulndeps")
+    	.header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
+    	.header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentTypeJson))
+        .andExpect(jsonPath("$[0].vulnDepOrigin", is("BUNDLEDCC")))
+        .andExpect(jsonPath("$[0].bundledLib.digest", is("3490508379D065FE3FCB80042B62F630F7588606")));
+		
+		// Read CVE-2018-12023
+		mockMvc.perform(get("/apps/" + APP_GROUP + "/" + APP_ARTIFACT + "/" + "0.0." + APP_VERSION + "/vulndeps/40F483D396FB001654DD685115BB6883098A9F43/bugs/CVE-2018-12023?origin="+VulnDepOrigin.BUNDLEDCC+"&bundledLibrary=3490508379D065FE3FCB80042B62F630F7588606")
+    	.header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
+    	.header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentTypeJson))
+        .andExpect(jsonPath("$.constructList", hasSize(2)))
+        .andExpect(jsonPath("$.constructList[0].inArchive", is(true)));
+		
     }
     
     @Test

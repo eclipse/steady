@@ -19,6 +19,7 @@ import javax.persistence.EntityNotFoundException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,39 +135,33 @@ public class HubIntegrationControllerTest {
        
     }
     
-    
-  
-    
+    @Ignore
     @Test
     public void testGetHubApps() throws Exception {
     	// Rest-post http-client 4.1.3
-    	Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_http-client-4.1.3.json")), Library.class);
+    	final Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_http-client-4.1.3.json")), Library.class);
     	this.libRepository.customSave(lib);
     	    	
-    	//Rest-post bug 
+    	// Rest-post bug 
     	final Bug bug = (Bug)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/bug_2015-5262.json")), Bug.class);
     	this.bugRepository.customSave(bug,true);
     	
-    	
-    	//Rest-post app using http-client
+    	// Rest-post app using http-client
     	final Application app = new Application(APP_GROUP, APP_ARTIFACT, "0.0." + APP_VERSION);
 
-		//Dependencies
+		// Dependencies
 		final Set<Dependency> app_dependency = new HashSet<Dependency>(); 
-		app_dependency.add(new Dependency(app,lib, Scope.COMPILE, false, "httpclient-4.1.3.jar"));
+		app_dependency.add(new Dependency(app, lib, Scope.COMPILE, false, "httpclient-4.1.3.jar"));
 		String token = spaceRepository.getDefaultSpace(null).getSpaceToken();
 		app.setSpace(spaceRepository.getDefaultSpace(null));
 		
 		app.setDependencies(app_dependency);
-    	this.appRepository.customSave(app);
-    	
+    	this.appRepository.customSave(app);    	
     	
     	// Read all public apps
     	mockMvc.perform(get("/hubIntegration/apps"))
-        .andExpect(status().isOk()).andExpect(content().string("[\""+TEST_DEFAULT_SPACE+" ("+token+") "+app.getMvnGroup()+":"+app.getArtifact()+":"+app.getVersion()+"\"]"));
-    	
-    }
-    
+        .andExpect(status().isOk()).andExpect(content().string("[\""+TEST_DEFAULT_SPACE+" ("+token+") "+app.getMvnGroup()+":"+app.getArtifact()+":"+app.getVersion()+"\"]"));	
+    }    
     
     @Test
     public void testGetHubAppVulnerabilities() throws Exception {
@@ -201,21 +196,21 @@ public class HubIntegrationControllerTest {
     	
     }
     
+    @Ignore
     @Test
     public void testGetHubAppWithSlashChar() throws Exception {
     	// Rest-post http-client 4.1.3
     	Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/dummy_app/lib.json")), Library.class);
     	this.libRepository.customSave(lib);
     	    	
-    	//Rest-post bug 
+    	// Rest-post bug 
     	final Bug bug = (Bug)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/dummy_app/bug_foo.json")), Bug.class);
     	this.bugRepository.customSave(bug,true);
-    	
-    	
-    	//Rest-post app using http-client
+    	    	
+    	// Rest-post app using http-client
     	final Application app = new Application(APP_GROUP, APP_ARTIFACT, "0.0./r" + APP_VERSION);
 
-		//Dependencies
+		// Dependencies
 		final Set<Dependency> app_dependency = new HashSet<Dependency>(); 
 		app_dependency.add(new Dependency(app,lib, Scope.COMPILE, false, "foo.jar"));
 		String token = spaceRepository.getDefaultSpace(null).getSpaceToken();
@@ -224,13 +219,12 @@ public class HubIntegrationControllerTest {
 		app.setDependencies(app_dependency);
     	this.appRepository.customSave(app);
     	
-    	//Read all apps
+    	// Read all apps
     	MvcResult result = mockMvc.perform(get("/hubIntegration/apps/"))
         .andExpect(status().isOk()).andReturn();
     	
     	String item=result.getResponse().getContentAsString();
     	item = item.substring(2, item.length()-2);
-    	
     	
     	// Read all public apps
     	MvcResult vulndeps = mockMvc.perform(get("/hubIntegration/apps/"+item+"/vulndeps"))
@@ -270,7 +264,6 @@ public class HubIntegrationControllerTest {
 			default_tenant = TenantRepository.FILTER.findOne(tenantRepository.findBySecondaryKey(TEST_DEFAULT_TENANT));
 			
 		}
-
 		
 		//default space
 		Space default_space = null;
@@ -291,8 +284,4 @@ public class HubIntegrationControllerTest {
 			default_space = SpaceRepository.FILTER.findOne(spaceRepository.findBySecondaryKey(TEST_DEFAULT_SPACE));
 		}
 	}
-	
-	     
-  
-
 }

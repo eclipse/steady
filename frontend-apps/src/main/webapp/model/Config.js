@@ -235,6 +235,45 @@ model.Config.getSwIdMandatory = function() {
 	return model.Config.settings.swIdMandatory;
 }
 
+model.Config.setVulnDepOrigin = function(origin) {
+	model.Config.vulnDepOrigin = origin
+}
+
+model.Config.getVulnDepOrigin = function() {
+	return model.Config.vulnDepOrigin
+}
+
+model.Config.setBundledDigest = function(digest) {
+	model.Config.bundledDigest = digest
+}
+
+model.Config.getBundledDigest = function() {
+	return model.Config.bundledDigest
+}
+
+model.Config.setBundledGroup = function(group) {
+	model.Config.bundledGroup = group
+}
+
+model.Config.getBundledGroup = function() {
+	return model.Config.bundledGroup
+}
+
+model.Config.setBundledVersion = function(version) {
+	model.Config.bundledVersion = version
+}
+
+model.Config.getBundledVersion = function() {
+	return model.Config.bundledVersion
+}
+
+model.Config.setBundledArtifact = function(artifact) {
+	model.Config.bundledArtifact = artifact
+}
+
+model.Config.getBundledArtifact = function() {
+	return model.Config.bundledArtifact
+}
 
 //********* SECTION : FUNCTIONS TO POPULATE JSONMODELS WITH JSON RETURNED BY THE BACKEND REQUESTS *********\\
 
@@ -431,9 +470,15 @@ model.Config.getSpaceServiceUrl = function(_token) {
 /**
  * the service url for vulnerability details
  */
-model.Config.getVulnerabilityDetailsServiceUrl = function(g,a,v,sha1,bug) {
-	return model.Config.getHostBackend()+"/apps/"+ g + "/" + a + "/" + v +"/vulndeps/"+sha1+"/bugs/"+bug;
-};
+model.Config.getVulnerabilityDetailsServiceUrl = function(g,a,v,sha1,bug,origin,bundledDigest,bundledG,bundledA,bundledV) {
+	let queryString = "?origin="+origin;
+	if(origin == 'BUNDLEDCC')
+		queryString += "&bundledLibrary="+bundledDigest;
+	if(origin == 'BUNDLEDAFFLIBID')
+		queryString += "&bundledGroup="+bundledG+"&bundledArtifact="+bundledA+"&bundledVersion="+bundledV;
+		
+	return model.Config.getHostBackend()+"/apps/"+ g + "/" + a + "/" + v +"/vulndeps/"+sha1+"/bugs/"+bug+queryString;
+}
 
 model.Config.getReachabilityGraphServiceUrl = function(g,a,v,sha1,bug,cid) {
 	return model.Config.getHostBackend()+"/apps/"+ g + "/" + a + "/" + v +"/deps/"+sha1+"/paths/"+bug+"/"+cid;

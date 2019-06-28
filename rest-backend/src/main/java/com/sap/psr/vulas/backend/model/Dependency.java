@@ -63,7 +63,7 @@ public class Dependency implements Serializable{
 	@JoinColumn(name = "lib",  referencedColumnName = "digest")
 	private Library lib;
 	
-	@ManyToOne(optional = true, fetch = FetchType.LAZY )//, cascade = { CascadeType.REMOVE }) //we do not need to cascade operations as parents are always stored in the main list of app's dependencies and thus to cascade PERSIST would throw exceptions for saving multiple times the same managed object, similar for the DELETE
+	@ManyToOne(optional = true, fetch = FetchType.EAGER )//, cascade = { CascadeType.REMOVE }) //we do not need to cascade operations as parents are always stored in the main list of app's dependencies and thus to cascade PERSIST would throw exceptions for saving multiple times the same managed object, similar for the DELETE
 	@JoinColumn(name = "parent",  referencedColumnName = "id")
 	private Dependency parent;
 	
@@ -153,7 +153,7 @@ public class Dependency implements Serializable{
 	
 	public Application getApp() { return app; }
 	public void setApp(Application app) { this.app = app; }
-
+	
 	public Library getLib() { return lib; }
 	public void setLib(Library lib) { this.lib = lib; }
 	
@@ -269,6 +269,12 @@ public class Dependency implements Serializable{
 			this.setTraced(false);
 		}
 	}
+	
+	public void setAppRecursively(Application app) { 
+		this.app = app;
+		if(this.parent!=null)
+			this.parent.setAppRecursively(app);}
+
 
 	@Override
 	public int hashCode() {

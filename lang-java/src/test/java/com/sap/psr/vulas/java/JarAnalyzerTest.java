@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Set;
 
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.monitor.ClassVisitor;
 import com.sap.psr.vulas.shared.json.model.Application;
+import com.sap.psr.vulas.shared.json.model.LibraryId;
 
 public class JarAnalyzerTest {
 
@@ -75,10 +77,7 @@ public class JarAnalyzerTest {
 			assertTrue(false);
 		}
 	}
-
-	/**
-	 * Test the analysis of Apache Commons FileUpload, our running example.
-	 */
+	
 	@Test
 	public void testCommonsFileUploadAnalysis() {
 		try {
@@ -102,7 +101,13 @@ public class JarAnalyzerTest {
 			ja.setWorkDir(Paths.get("./target"));
 			ja.setRename(true);
 			JarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
-			ja.call();			
+			ja.call();
+			
+			// Check bundled library IDs
+			final Collection<LibraryId> blibids = ja.getLibrary().getBundledLibraryIds();
+			assertEquals(2, blibids.size());
+			assertTrue(blibids.contains(new LibraryId("org.apache.commons", "commons-compress", "1.10")));
+			assertTrue(blibids.contains(new LibraryId("commons-fileupload", "commons-fileupload", "1.3.1")));
 		} catch(Exception e) {
 			e.printStackTrace();
 			assertTrue(false);
@@ -129,7 +134,6 @@ public class JarAnalyzerTest {
 	@Test
 	public void testNonStaticMemberClass() {
 		try {
-			// Create a new JarAnalyzer
 			final JarAnalyzer ja = new JarAnalyzer();
 			ja.analyze(new File("./src/test/resources/commons-fileupload-1.3.1.jar"));
 			final Set<ConstructId> constructs = ja.getConstructIds();

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
@@ -14,6 +16,7 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
@@ -144,7 +147,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
                 this.executeGoal();
             }
         }
-        // Expected problems will be passed on as is
+        // Expected problems will be passed on as-is
         catch (MojoFailureException mfe) {
             throw mfe;
         }
@@ -219,7 +222,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
      * @throws DependencyResolutionRequiredException
      */
     private final void setKnownDependencies() throws DependencyResolutionRequiredException {
-        if (this.goal != null && this.goal instanceof AbstractAppGoal) {
+        if (this.goal!=null && this.goal instanceof AbstractAppGoal) {
 
             // ---- Determine dependencies (Vulas 2.x)
 
@@ -256,10 +259,27 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
 
                 // Create dependency and put into map
                 dep = new Dependency(this.goal.getGoalContext().getApplication(), lib, Scope.fromString(a.getScope().toUpperCase(), Scope.RUNTIME), !direct_artifacts.contains(a), null, a.getFile().toPath().toString());
+                
+                // Set parent dependency (if any)
+                final LibraryId parent = this.getParent(a.getDependencyTrail());
+                if(parent!=null) {
+                	for(Dependency d: dep_for_path.values()) {
+                		if(d.getLib().getLibraryId().equals(parent)) {
+                			dep.setParent(d);
+                			break;
+                		}
+                	}
+                }
+                
+                // Check consistency
+                if( (dep.getParent()==null && dep.getTransitive()) || (dep.getParent()!=null && !dep.getTransitive()) ) {
+                	getLog().warn("Dependency is transitive [" + dep.getTransitive() + "], but parent is [" + (dep.getParent()==null ? "null" : "present") + "]");
+                }
+                
+                getLog().info("Dependency [" + StringUtil.padLeft(++count, 4) + "]: Dependency [libid=" + dep.getLib().getLibraryId() + ", parent=" + (dep.getParent()==null ? "null" : dep.getParent().getLib().getLibraryId()) + ", path " + a.getFile().getPath() + ", direct=" + direct_artifacts.contains(a) + ", scope=" + dep.getScope() + "] created for Maven artifact [g=" + a.getGroupId() + ", a=" + a.getArtifactId() + ", base version=" + a.getBaseVersion() + ", version=" + a.getVersion() + ", classifier=" + a.getClassifier() + "]");
+                getLog().info("    " + StringUtil.join(a.getDependencyTrail(), " => "));
+                
                 dep_for_path.put(a.getFile().toPath(), dep);
-
-                getLog().info("Dependency [" + StringUtil.padLeft(++count, 4) + "]: Dependency [libid=" + dep.getLib().getLibraryId() + ", path " + a.getFile().getPath() + ", direct=" + direct_artifacts.contains(a) + ", scope=" + dep.getScope() + "] created for Maven artifact [g=" + a.getGroupId() + ", a=" + a.getArtifactId() + ", base version=" + a.getBaseVersion() + ", version=" + a.getVersion() + ", classifier=" + a.getClassifier() + "]");
-                getLog().info("    " + this.trailToString(a.getDependencyTrail(), " => "));
             }
 
             //TODO: Is it necessary to check whether the above dependency (via getArtifacts) is actually the one added to the classpath (via project.getRuntimeClasspathElements())?
@@ -268,16 +288,31 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
             ((AbstractAppGoal) this.goal).setKnownDependencies(dep_for_path);
         }
     }
-
-    private final String trailToString(List<String> _trail, String _sep) {
-        final StringBuffer b = new StringBuffer();
-        if (_trail != null) {
-            for (int i = 0; i < _trail.size(); i++) {
-                if (i > 0)
-                    b.append(_sep);
-                b.append(_trail.get(i));
-            }
-        }
-        return b.toString();
+    
+    protected final LibraryId getParent(List<String> _trail) {
+    	LibraryId parent = null;
+    	// Should not occur
+    	if(_trail==null || _trail.size()<2) {
+    		getLog().warn("Invalid dependency trail [" + _trail + "]");
+    	}
+    	// Dependency is direct, there's no parent
+    	else if(_trail.size()==2) {
+    		;
+    	}
+    	// Dependency is transitive, get parent
+    	else {
+    		parent = this.parseGAPV(_trail.get(_trail.size()-2));
+    	}
+    	return parent;
     }
+    
+	protected final LibraryId parseGAPV(@NotNull String _string) {
+		final String[] gapv = _string.split(":");
+		if(gapv.length!=4) {
+			getLog().warn("Could not identify GAPV in [" + _string + "]");
+			return null;
+		} else {
+			return new LibraryId(gapv[0], gapv[1], gapv[3]);
+		}
+	}
 }

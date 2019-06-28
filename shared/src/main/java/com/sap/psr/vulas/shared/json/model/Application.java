@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.validation.constraints.NotNull;
 
@@ -18,7 +19,7 @@ import com.sap.psr.vulas.shared.util.StringUtil;
 
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown=true, value = { "createdAt" }, allowGetters=true)
-public class Application implements Serializable, Comparable { 
+public class Application implements Serializable, Comparable<Application> { 
 		
 	private static final long serialVersionUID = 1L;
 	
@@ -47,7 +48,7 @@ public class Application implements Serializable, Comparable {
 	private Collection<ConstructId> constructs = new HashSet<ConstructId>();
 	
 	@JsonManagedReference//(value="app-deps")
-	private Collection<Dependency> dependencies = new HashSet<Dependency>();
+	private Set<Dependency> dependencies = new TreeSet<Dependency>();
 	
 	public Application() { super(); }
 
@@ -108,6 +109,15 @@ public class Application implements Serializable, Comparable {
 		this.constructs.addAll(constructs);
 	}
 	
+	public Dependency getDependencyForPath(@NotNull String _path) {
+		for(Dependency d: this.getDependencies()) {
+			if(d.getPath()!=null && d.getPath().equals(_path)) {
+				return d;
+			}
+		}
+		return null;
+	}
+	
 	public Dependency getDependency(@NotNull String _sha1) {
 			for(Dependency d: this.getDependencies()) {
 				if(d.getLib()!=null && d.getLib().getDigest().equals(_sha1)) {
@@ -116,6 +126,7 @@ public class Application implements Serializable, Comparable {
 			}
 		return null;
 	}
+	
 	public Collection<Dependency> getDependencies() { return dependencies; }
 	
 	/**
@@ -169,7 +180,7 @@ public class Application implements Serializable, Comparable {
 	}
 
 	/**
-	 * Removes all application {@link ConstructId}s and {@link Dependency}s.
+	 * Removes all {@link ConstructId}s and {@link Dependency}s of the application.
 	 */
 	public void clean() {
 		this.setConstructs(new HashSet<ConstructId>());
@@ -232,12 +243,10 @@ public class Application implements Serializable, Comparable {
 	}
 	
 	@Override
-	public int compareTo(Object _other) {
-		if(_other==null || !(_other instanceof Application))
-			throw new IllegalArgumentException();
-		int v = this.getMvnGroup().compareTo(((Application)_other).getMvnGroup());
-		if(v==0) v = this.getArtifact().compareTo(((Application)_other).getArtifact());
-		if(v==0) v = this.getVersion().compareTo(((Application)_other).getVersion());
+	public int compareTo(Application _other) {
+		int v = this.getMvnGroup().compareTo((_other).getMvnGroup());
+		if(v==0) v = this.getArtifact().compareTo((_other).getArtifact());
+		if(v==0) v = this.getVersion().compareTo((_other).getVersion());
 		return v;
 	}
 

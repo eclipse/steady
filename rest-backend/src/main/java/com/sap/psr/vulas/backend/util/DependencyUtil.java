@@ -100,6 +100,7 @@ public class DependencyUtil {
 		final Set<Dependency> parent_set = new HashSet<Dependency>();
 		if(_deps!=null) {
 			for(Dependency d: _deps) {
+				d.setAppRecursively(_app);
 				final Dependency existing_dep = DependencyUtil.getDependency(main_set, d);
 				if(existing_dep==null) {
 					main_set.add(d);
@@ -112,7 +113,6 @@ public class DependencyUtil {
 				}
 			}
 			for(Dependency d: parent_set){
-				d.setApp(_app);
 				if(!main_set.contains(d))
 					return false;
 			}
