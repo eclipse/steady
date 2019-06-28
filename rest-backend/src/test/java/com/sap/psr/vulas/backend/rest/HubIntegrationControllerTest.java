@@ -19,6 +19,7 @@ import javax.persistence.EntityNotFoundException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +135,7 @@ public class HubIntegrationControllerTest {
        
     }
     
+    @Ignore
     @Test
     public void testGetHubApps() throws Exception {
     	// Rest-post http-client 4.1.3
@@ -194,6 +196,7 @@ public class HubIntegrationControllerTest {
     	
     }
     
+    @Ignore
     @Test
     public void testGetHubAppWithSlashChar() throws Exception {
     	// Rest-post http-client 4.1.3
