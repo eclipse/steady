@@ -139,7 +139,41 @@ public class NodejsFileAnalyzerTest {
         final FileAnalyzer f1 = FileAnalyzerFactory.buildFileAnalyzer(new File("src/test/resources/test-helloworld/anonymous_class.js"));
         final Map<ConstructId, Construct> c1 = f1.getConstructs();
 
+        final NodejsId pack = new NodejsId(null, NodejsId.Type.PACKAGE, "test-helloworld");
+        final NodejsId modu = new NodejsId(pack, NodejsId.Type.MODULE, "anonymous_class");
+        final NodejsId human = new NodejsId(modu, NodejsId.Type.CLASS, "Human()");
+        final NodejsId human_con = new NodejsId(human, NodejsId.Type.CONSTRUCTOR, "constructor(name,surname)");
+        final NodejsId human_get_full = new NodejsId(human, NodejsId.Type.METHOD, "get@fullname()");
+        final NodejsId human_get_name = new NodejsId(human, NodejsId.Type.METHOD, "get@name()");
+        final NodejsId human_set_name = new NodejsId(human, NodejsId.Type.METHOD, "set@name(name)");
+        final NodejsId human_get_surname = new NodejsId(human, NodejsId.Type.METHOD, "get@surname()");
+        final NodejsId human_set_surname = new NodejsId(human, NodejsId.Type.METHOD, "set@surname(surname)");
+        final NodejsId anon_c1 = new NodejsId(modu, NodejsId.Type.CLASS, "1(Human)");
+        final NodejsId anon_c1_con = new NodejsId(anon_c1, NodejsId.Type.CONSTRUCTOR, "constructor(name,surname,univ,year)");
+        final NodejsId anon_c1_get_univ = new NodejsId(anon_c1, NodejsId.Type.METHOD, "get@university()");
+        final NodejsId anon_c1_set_univ = new NodejsId(anon_c1, NodejsId.Type.METHOD, "set@university(univ)");
+        final NodejsId anon_c1_get_year = new NodejsId(anon_c1, NodejsId.Type.METHOD, "get@year()");
+        final NodejsId anon_c1_set_year = new NodejsId(anon_c1, NodejsId.Type.METHOD, "set@year(year)");
+        final NodejsId anon_c2 = new NodejsId(modu, NodejsId.Type.CLASS, "2()");
+
         assertEquals(16, c1.size());
+        assertTrue(c1.containsKey(pack));
+        assertTrue(c1.containsKey(modu));
+        assertTrue(c1.containsKey(human));
+        assertTrue(c1.containsKey(human_con));
+        assertTrue(c1.containsKey(human_get_full));
+        assertTrue(c1.containsKey(human_get_name));
+        assertTrue(c1.containsKey(human_set_name));
+        assertTrue(c1.containsKey(human_get_surname));
+        assertTrue(c1.containsKey(human_set_surname));
+        assertTrue(c1.containsKey(anon_c1));
+        assertTrue(c1.containsKey(anon_c1_con));
+        assertTrue(c1.containsKey(anon_c1_get_univ));
+        assertTrue(c1.containsKey(anon_c1_set_univ));
+        assertTrue(c1.containsKey(anon_c1_get_year));
+        assertTrue(c1.containsKey(anon_c1_set_year));
+        assertTrue(c1.containsKey(anon_c2));
+
     }
 
     @Test
@@ -182,7 +216,8 @@ public class NodejsFileAnalyzerTest {
         assertTrue(c2.containsKey(anon_3));
         assertTrue(c2.containsKey(anon_4));
         assertTrue(c2.containsKey(anon_5));
-        */
+         */
+
     }
 
     @Test
