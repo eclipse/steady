@@ -495,17 +495,20 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 							break;
 						}			
 					}
-					log.debug("Found ["+bundledDigests.size()+"] digests for the bundled libid, using: " + bundledDigest.getDigest());
-				
-					List<Bug> vulns_cc = this.bugRepository.findByLibrary(bundledDigest);
 					
-					for(Bug b: vulns_cc){
-						VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
-						vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDCC);
-						this.affLibRepository.computeAffectedLib(vulndep,bundledDigest);
-						vulndep.setBundledLibId(bundledLibId);
-						vulndep.setBundledLib(bundledDigest);
-						vd_list_bundled_cc.add(vulndep);
+					if(bundledDigest!=null){
+						log.debug("Found ["+bundledDigests.size()+"] digests for the bundled libid, using: " + bundledDigest.getDigest());
+					
+						List<Bug> vulns_cc = this.bugRepository.findByLibrary(bundledDigest);
+						
+						for(Bug b: vulns_cc){
+							VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
+							vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDCC);
+							this.affLibRepository.computeAffectedLib(vulndep,bundledDigest);
+							vulndep.setBundledLibId(bundledLibId);
+							vulndep.setBundledLib(bundledDigest);
+							vd_list_bundled_cc.add(vulndep);
+						}
 					}
 					
 					List<Bug> vulns_av_true = this.bugRepository.findByLibId(bundledLibId,true);
