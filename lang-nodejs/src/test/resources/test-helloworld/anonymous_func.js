@@ -15,3 +15,14 @@ b.named_func(function(a,b,success,fail) {
         }
     }
     , 11, 20);
+b.named_func(function(a,b,success,fail) {
+        if(a<b) {
+            success(b-a);
+            return b-a;
+        }
+        else {
+            fail('b <= a');
+            return null;
+        }
+    }
+    , 11, 30);

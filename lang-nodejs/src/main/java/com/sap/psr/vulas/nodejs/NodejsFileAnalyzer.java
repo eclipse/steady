@@ -189,6 +189,36 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
     }
 
     @Override
+    public void enterObjectLiteralExpression(JavaScriptParser.ObjectLiteralExpressionContext ctx) {
+        String name = "";
+        // Declare a new variable as an object
+        if(ctx.getParent() instanceof JavaScriptParser.VariableDeclarationContext) {
+            name = ((JavaScriptParser.VariableDeclarationContext) ctx.getParent()).Identifier().getText();
+        }
+        // Assign an existing variable as an object
+        else if(ctx.getParent() instanceof JavaScriptParser.AssignmentExpressionContext) {
+            name = ((JavaScriptParser.AssignmentExpressionContext) ctx.getParent()).singleExpression(0).getText();
+        }
+        // Anon object
+        else {
+            name = constructIdBuilder.buildAnonymousName(this.context.peek());
+        }
+
+        final NodejsId id = new NodejsId(this.context.peek(), NodejsId.Type.OBJECT, name);
+        final Construct c = new Construct(id, ctx.getText());
+        this.constructs.put(id, c);
+        this.context.push(id);
+    }
+
+    @Override
+    public void exitObjectLiteralExpression(JavaScriptParser.ObjectLiteralExpressionContext ctx) {
+        if(!NodejsFileAnalyzer.isTopOfType(this.context, NodejsId.Type.OBJECT))
+            log.error("Top most element in stack is not of type [" + NodejsId.Type.OBJECT + "], line [" + ctx.getStart().getLine() + "]");
+        else
+            context.pop();
+    }
+
+    @Override
     public void enterFunctionDeclaration(JavaScriptParser.FunctionDeclarationContext ctx) {
         // Happens if a function is anonymous.
         if(ctx.Identifier() == null)
@@ -232,6 +262,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
             else if(ctx.getParent() instanceof JavaScriptParser.PropertyExpressionAssignmentContext) {
                 name = ((JavaScriptParser.PropertyExpressionAssignmentContext) ctx.getParent()).propertyName().getText();
 
+                /*
                 // Check and find a name of an object
                 ParserRuleContext var_assign_or_declare = ctx.getParent().getParent().getParent().getParent();
                 ParserRuleContext obj_literal = ctx.getParent().getParent().getParent();
@@ -240,6 +271,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
                             || var_assign_or_declare instanceof JavaScriptParser.AssignmentExpressionContext)) {
                     name = ((JavaScriptParser.VariableDeclarationContext) var_assign_or_declare).Identifier().getText() + '.' + name;
                 }
+                 */
             }
             // Anon-function
             else {
@@ -282,6 +314,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
         else if(ctx.getParent() instanceof JavaScriptParser.PropertyExpressionAssignmentContext) {
             name = ((JavaScriptParser.PropertyExpressionAssignmentContext) ctx.getParent()).propertyName().getText();
 
+            /*
             // Check and find a name of an object
             ParserRuleContext var_assign_or_declare = ctx.getParent().getParent().getParent().getParent();
             ParserRuleContext obj_literal = ctx.getParent().getParent().getParent();
@@ -290,6 +323,8 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
                     || var_assign_or_declare instanceof JavaScriptParser.AssignmentExpressionContext)) {
                 name = ((JavaScriptParser.VariableDeclarationContext) var_assign_or_declare).Identifier().getText() + '.' + name;
             }
+            */
+
         }
         // Anon-function
         else
@@ -321,8 +356,10 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
             name = "get@" + ctx.getter().propertyName().getText();
         else if(ctx.setter() != null)
             name = "set@" + ctx.setter().propertyName().getText();
-        else
+        else if(ctx.propertyName() != null)
             name = ctx.propertyName().getText();
+        else
+            throw new IllegalStateException("Parser error: Method definition without name in context " + this.context + ", line [" + ctx.getStart().getLine() + "]");
         String parameters = "";
         if(ctx.formalParameterList() != null)
             parameters = ctx.formalParameterList().getText();
@@ -342,6 +379,67 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
         final NodejsId.Type[] types = new NodejsId.Type[] { NodejsId.Type.METHOD, NodejsId.Type.CONSTRUCTOR };
         if(!NodejsFileAnalyzer.isTopOfType(this.context, types))
             log.error("Top most element in stack is not of the following types [" + StringUtil.join((Object[])types, ", ") + "]" + ", line [" + ctx.getStart().getLine() + "]");
+        else
+            context.pop();
+    }
+
+    @Override
+    public void enterMethodProperty(JavaScriptParser.MethodPropertyContext ctx) {
+        if(ctx.generatorMethod().Identifier() == null)
+            throw new IllegalStateException("Parser error: Method property without name in context " + this.context + ", line [" + ctx.getStart().getLine() + "]");
+        final String name = ctx.generatorMethod().Identifier().getText();
+        String parameters = "";
+        if(ctx.generatorMethod().formalParameterList() != null)
+            parameters = ctx.generatorMethod().formalParameterList().getText();
+        final NodejsId id = new NodejsId(this.context.peek(), NodejsId.Type.METHOD, name + "(" + parameters + ")");
+        final Construct c = new Construct(id, ctx.getText());
+        this.constructs.put(id,c);
+        this.context.push(id);
+    }
+
+    @Override
+    public void exitMethodProperty(JavaScriptParser.MethodPropertyContext ctx) {
+        if(!NodejsFileAnalyzer.isTopOfType(this.context, NodejsId.Type.METHOD))
+            log.error("Top most element in stack is not of the following types [" + NodejsId.Type.METHOD + "]" + ", line [" + ctx.getStart().getLine() + "]");
+        else
+            context.pop();
+    }
+
+    @Override
+    public void enterPropertyGetter(JavaScriptParser.PropertyGetterContext ctx) {
+        if(ctx.getter() == null)
+            throw new IllegalStateException("Parser error: Property getter without name in context " + this.context + ", line [" + ctx.getStart().getLine() + "]");
+        final String name = "get@" + ctx.getter().propertyName().getText();
+        final NodejsId id = new NodejsId(this.context.peek(), NodejsId.Type.METHOD, name + "()");
+        final Construct c = new Construct(id, ctx.getText());
+        this.constructs.put(id,c);
+        this.context.push(id);
+    }
+
+    @Override
+    public void exitPropertyGetter(JavaScriptParser.PropertyGetterContext ctx) {
+        if(!NodejsFileAnalyzer.isTopOfType(this.context, NodejsId.Type.METHOD))
+            log.error("Top most element in stack is not of the following types [" + NodejsId.Type.METHOD + "]" + ", line [" + ctx.getStart().getLine() + "]");
+        else
+            context.pop();
+    }
+
+    @Override
+    public void enterPropertySetter(JavaScriptParser.PropertySetterContext ctx) {
+        if(ctx.setter() == null)
+            throw new IllegalStateException("Parser error: Property setter without name in context " + this.context + ", line [" + ctx.getStart().getLine() + "]");
+        final String name = "set@" + ctx.setter().propertyName().getText();
+        final String parameter = ctx.Identifier().getText();
+        final NodejsId id = new NodejsId(this.context.peek(), NodejsId.Type.METHOD, name + "(" + parameter +")");
+        final Construct c = new Construct(id, ctx.getText());
+        this.constructs.put(id,c);
+        this.context.push(id);
+    }
+
+    @Override
+    public void exitPropertySetter(JavaScriptParser.PropertySetterContext ctx) {
+        if(!NodejsFileAnalyzer.isTopOfType(this.context, NodejsId.Type.METHOD))
+            log.error("Top most element in stack is not of the following types [" + NodejsId.Type.METHOD + "]" + ", line [" + ctx.getStart().getLine() + "]");
         else
             context.pop();
     }

@@ -9,7 +9,7 @@ import com.sap.psr.vulas.shared.json.JsonBuilder;
 public class NodejsId extends ConstructId {
 
     /** Supported NodeJS construct types. */
-    public static enum Type { PACKAGE, MODULE, CLASS, CONSTRUCTOR, METHOD, FUNCTION };
+    public static enum Type { PACKAGE, MODULE, CLASS, OBJECT, CONSTRUCTOR, METHOD, FUNCTION };
 
     public static final String SCRIPT_NAME = "<script>";
 
@@ -23,6 +23,7 @@ public class NodejsId extends ConstructId {
             case PACKAGE:       return ConstructType.PACK;
             case MODULE:        return ConstructType.MODU;
             case CLASS:         return ConstructType.CLAS;
+            case OBJECT:        return ConstructType.OBJT;
             case CONSTRUCTOR:   return ConstructType.CONS;
             case METHOD:        return ConstructType.METH;
             case FUNCTION:      return ConstructType.FUNC;

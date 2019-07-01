@@ -1,4 +1,4 @@
-// 12 constructs + 1 function's class instantiation
+// 18 constructs + 1 function's class instantiation
 // 1) Function declaration
 function basic(a, b) {
     return a+b;
@@ -38,17 +38,28 @@ var item_list = {
     },
     it_hello: () => {
         return 'Item hello'
+    },
+    add(x) {
+        this.items.push(x);
+    },
+    get(idx) {
+        return this.items[idx];
     }
-    //add(x) {
-    //    this.items.push(x);
-    //},
-    //get(idx) {
-    //    return this.items[idx];
-    //}
 };
 
+var  garage = {
+    _car: [],
+    get car() {
+        return this._car
+    },
+    set car(c) {
+        this._car.push(c)
+    }
+}
+
+
 // 5) Constructor
-var con_func = new Function('a', 'b', 'return a+b');
+//var con_func = new Function('a', 'b', 'return a+b');
 
 console.log(basic(0, 1));
 console.log(func_exp(0, 2));

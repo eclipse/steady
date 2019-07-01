@@ -29,7 +29,7 @@ public class NodejsFileAnalyzerTest {
         final FileAnalyzer f2 = FileAnalyzerFactory.buildFileAnalyzer(new File("src/test/resources/test-helloworld/cat.js"));
         final Map<ConstructId, Construct> c2 = f2.getConstructs();
 
-        assertEquals(22, c2.size());
+        assertEquals(23, c2.size());
     }
 
     @Test
@@ -47,10 +47,16 @@ public class NodejsFileAnalyzerTest {
         final NodejsId func_exp_arg = new NodejsId(modu, NodejsId.Type.FUNCTION, "func_exp_arg(name)");
         final NodejsId arrow_func = new NodejsId(modu, NodejsId.Type.FUNCTION, "arrow_func(a,b)");
         final NodejsId arrow_empty = new NodejsId(modu, NodejsId.Type.FUNCTION, "arrow_empty()");
-        final NodejsId item_list_len = new NodejsId(modu, NodejsId.Type.FUNCTION, "item_list.len(arr)");
-        final NodejsId item_list_it_hello = new NodejsId(modu, NodejsId.Type.FUNCTION, "item_list.it_hello()");
+        final NodejsId item_list = new NodejsId(modu, NodejsId.Type.OBJECT, "item_list");
+        final NodejsId item_list_len = new NodejsId(item_list, NodejsId.Type.FUNCTION, "len(arr)");
+        final NodejsId item_list_it_hello = new NodejsId(item_list, NodejsId.Type.FUNCTION, "it_hello()");
+        final NodejsId item_list_add = new NodejsId(item_list, NodejsId.Type.METHOD, "add(x)");
+        final NodejsId item_list_get = new NodejsId(item_list, NodejsId.Type.METHOD, "get(idx)");
+        final NodejsId garage = new NodejsId(modu, NodejsId.Type.OBJECT, "garage");
+        final NodejsId garage_get = new NodejsId(garage, NodejsId.Type.METHOD, "get@car()");
+        final NodejsId garage_set = new NodejsId(garage, NodejsId.Type.METHOD, "set@car(c)");
 
-        assertEquals(12, c1.size());
+        assertEquals(18, c1.size());
         assertTrue(c1.containsKey(pack));
         assertTrue(c1.containsKey(modu));
         assertTrue(c1.containsKey(basic_func));
@@ -61,8 +67,15 @@ public class NodejsFileAnalyzerTest {
         assertTrue(c1.containsKey(func_exp_arg));
         assertTrue(c1.containsKey(arrow_func));
         assertTrue(c1.containsKey(arrow_empty));
+        assertTrue(c1.containsKey(item_list));
         assertTrue(c1.containsKey(item_list_len));
         assertTrue(c1.containsKey(item_list_it_hello));
+        assertTrue(c1.containsKey(item_list_add));
+        assertTrue(c1.containsKey(item_list_get));
+        assertTrue(c1.containsKey(garage));
+        assertTrue(c1.containsKey(garage_get));
+        assertTrue(c1.containsKey(garage_set));
+
 
         /*
         final FileAnalyzer f2 = FileAnalyzerFactory.buildFileAnalyzer(new File("src/test/resources/antlr4-grammars-examples/ArrowFunctions.js"));
@@ -183,18 +196,22 @@ public class NodejsFileAnalyzerTest {
 
         final NodejsId pack1 = new NodejsId(null, NodejsId.Type.PACKAGE, "test-helloworld");
         final NodejsId modu1 = new NodejsId(pack1, NodejsId.Type.MODULE, "anonymous_func");
-        final NodejsId named_func = new NodejsId(modu1, NodejsId.Type.FUNCTION, "b.named_func(anon,x,y)");
+        final NodejsId b_obj = new NodejsId(modu1, NodejsId.Type.OBJECT, "b");
+        final NodejsId named_func = new NodejsId(b_obj, NodejsId.Type.FUNCTION, "named_func(anon,x,y)");
         final NodejsId anon1 = new NodejsId(modu1, NodejsId.Type.FUNCTION, "1(a,b,success,fail)");
         final NodejsId anon1_1 = new NodejsId(named_func, NodejsId.Type.FUNCTION, "1(res)");
         final NodejsId anon1_2 = new NodejsId(named_func, NodejsId.Type.FUNCTION, "2(err)");
+        final NodejsId anon2 = new NodejsId(modu1, NodejsId.Type.FUNCTION, "2(a,b,success,fail)");
 
-        assertEquals(6, c1.size());
+        assertEquals(8, c1.size());
         assertTrue(c1.containsKey(pack1));
         assertTrue(c1.containsKey(modu1));
+        assertTrue(c1.containsKey(b_obj));
         assertTrue(c1.containsKey(named_func));
         assertTrue(c1.containsKey(anon1));
         assertTrue(c1.containsKey(anon1_1));
         assertTrue(c1.containsKey(anon1_2));
+        assertTrue(c1.containsKey(anon2));
 
         /*
         final FileAnalyzer f2 = FileAnalyzerFactory.buildFileAnalyzer(new File("src/test/resources/test-helloworld/callback_hell.js"));
@@ -217,7 +234,6 @@ public class NodejsFileAnalyzerTest {
         assertTrue(c2.containsKey(anon_4));
         assertTrue(c2.containsKey(anon_5));
          */
-
     }
 
     @Test

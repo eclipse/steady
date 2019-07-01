@@ -5,7 +5,7 @@ package com.sap.psr.vulas.shared.enums;
  */
 public enum ConstructType {
 	
-	PACK((byte)10), CLAS((byte)20), ENUM((byte)30), INTF((byte)40), METH((byte)50), CONS((byte)60), INIT((byte)70), FUNC((byte)80), MODU((byte)90);
+	PACK((byte)10), CLAS((byte)20), ENUM((byte)30), INTF((byte)40), METH((byte)50), CONS((byte)60), INIT((byte)70), FUNC((byte)80), MODU((byte)90), OBJT((byte)100);
 	
 	private byte value;
 	
@@ -26,6 +26,7 @@ public enum ConstructType {
 		else if(this.value==70) return "INIT";
 		else if(this.value==80) return "FUNC";
 		else if(this.value==90) return "MODU";
+		else if(this.value==100)return "OBJT";
 		else throw new IllegalArgumentException("[" + this.value + "] is not a valid contruct construct type");
 	}
 	
@@ -35,6 +36,6 @@ public enum ConstructType {
 	 * @return an array of {@link com.sap.psr.vulas.shared.enums.ConstructType} objects.
 	 */
 	public static ConstructType[] getAllAsArray() {
-		return new ConstructType[] { PACK, CLAS, ENUM, INTF, METH, CONS, INIT, FUNC, MODU };
+		return new ConstructType[] { PACK, CLAS, ENUM, INTF, METH, CONS, INIT, FUNC, MODU, OBJT };
 	}
 }
