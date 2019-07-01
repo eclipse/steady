@@ -261,17 +261,6 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
             // Assign a property of object as a function
             else if(ctx.getParent() instanceof JavaScriptParser.PropertyExpressionAssignmentContext) {
                 name = ((JavaScriptParser.PropertyExpressionAssignmentContext) ctx.getParent()).propertyName().getText();
-
-                /*
-                // Check and find a name of an object
-                ParserRuleContext var_assign_or_declare = ctx.getParent().getParent().getParent().getParent();
-                ParserRuleContext obj_literal = ctx.getParent().getParent().getParent();
-                if(obj_literal instanceof JavaScriptParser.ObjectLiteralExpressionContext
-                        && (var_assign_or_declare instanceof JavaScriptParser.VariableDeclarationContext
-                            || var_assign_or_declare instanceof JavaScriptParser.AssignmentExpressionContext)) {
-                    name = ((JavaScriptParser.VariableDeclarationContext) var_assign_or_declare).Identifier().getText() + '.' + name;
-                }
-                 */
             }
             // Anon-function
             else {
@@ -313,22 +302,11 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
         // Assign a property of object as a function
         else if(ctx.getParent() instanceof JavaScriptParser.PropertyExpressionAssignmentContext) {
             name = ((JavaScriptParser.PropertyExpressionAssignmentContext) ctx.getParent()).propertyName().getText();
-
-            /*
-            // Check and find a name of an object
-            ParserRuleContext var_assign_or_declare = ctx.getParent().getParent().getParent().getParent();
-            ParserRuleContext obj_literal = ctx.getParent().getParent().getParent();
-            if(obj_literal instanceof JavaScriptParser.ObjectLiteralExpressionContext
-                    && (var_assign_or_declare instanceof JavaScriptParser.VariableDeclarationContext
-                    || var_assign_or_declare instanceof JavaScriptParser.AssignmentExpressionContext)) {
-                name = ((JavaScriptParser.VariableDeclarationContext) var_assign_or_declare).Identifier().getText() + '.' + name;
-            }
-            */
-
         }
         // Anon-function
-        else
+        else {
             name = constructIdBuilder.buildAnonymousName(this.context.peek());
+        }
 
         if(ctx.arrowFunctionParameters().formalParameterList() != null)
             parameters = ctx.arrowFunctionParameters().formalParameterList().getText();

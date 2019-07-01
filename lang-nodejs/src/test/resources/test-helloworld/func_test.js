@@ -57,6 +57,12 @@ var  garage = {
     }
 }
 
+var get_test = {
+    "get@item": function() {return 1},
+    get item() {
+        return 2
+    }
+}
 
 // 5) Constructor
 //var con_func = new Function('a', 'b', 'return a+b');
@@ -64,4 +70,4 @@ var  garage = {
 console.log(basic(0, 1));
 console.log(func_exp(0, 2));
 console.log(arrow_func(0, 4));
-console.log(con_func(0, 5));
+//console.log(con_func(0, 5));

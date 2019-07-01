@@ -55,8 +55,11 @@ public class NodejsFileAnalyzerTest {
         final NodejsId garage = new NodejsId(modu, NodejsId.Type.OBJECT, "garage");
         final NodejsId garage_get = new NodejsId(garage, NodejsId.Type.METHOD, "get@car()");
         final NodejsId garage_set = new NodejsId(garage, NodejsId.Type.METHOD, "set@car(c)");
+        final NodejsId get_test = new NodejsId(modu, NodejsId.Type.OBJECT, "get_test");
+        final NodejsId get_test_fun = new NodejsId(get_test, NodejsId.Type.FUNCTION, "\"get@item\"()");
+        final NodejsId get_test_met = new NodejsId(get_test, NodejsId.Type.METHOD, "get@item()");
 
-        assertEquals(18, c1.size());
+        assertEquals(21, c1.size());
         assertTrue(c1.containsKey(pack));
         assertTrue(c1.containsKey(modu));
         assertTrue(c1.containsKey(basic_func));
@@ -75,29 +78,9 @@ public class NodejsFileAnalyzerTest {
         assertTrue(c1.containsKey(garage));
         assertTrue(c1.containsKey(garage_get));
         assertTrue(c1.containsKey(garage_set));
-
-
-        /*
-        final FileAnalyzer f2 = FileAnalyzerFactory.buildFileAnalyzer(new File("src/test/resources/antlr4-grammars-examples/ArrowFunctions.js"));
-        final Map<ConstructId, Construct> c2 = f2.getConstructs();
-
-        final NodejsId pack2 = new NodejsId(null, NodejsId.Type.PACKAGE, "antlr4-grammars-examples");
-        final NodejsId modu2 = new NodejsId(pack2, NodejsId.Type.MODULE, "ArrowFunctions");
-        final NodejsId odds = new NodejsId(modu2, NodejsId.Type.FUNCTION, "1(v)");
-        final NodejsId pairs = new NodejsId(modu2, NodejsId.Type.FUNCTION, "2(v)");
-        final NodejsId nums = new NodejsId(modu2, NodejsId.Type.FUNCTION, "3(v,i)");
-        final NodejsId nums_each = new NodejsId(modu2, NodejsId.Type.FUNCTION, "4(v)");
-        final NodejsId nums_each_this = new NodejsId(modu2, NodejsId.Type.FUNCTION, "5(v)");
-
-        assertEquals(7, c2.size());
-        assertTrue(c2.containsKey(pack2));
-        assertTrue(c2.containsKey(modu2));
-        assertTrue(c2.containsKey(odds));
-        assertTrue(c2.containsKey(pairs));
-        assertTrue(c2.containsKey(nums));
-        assertTrue(c2.containsKey(nums_each));
-        assertTrue(c2.containsKey(nums_each_this));
-         */
+        assertTrue(c1.containsKey(get_test));
+        assertTrue(c1.containsKey(get_test_fun));
+        assertTrue(c1.containsKey(get_test_met));
     }
 
     @Test
@@ -186,7 +169,6 @@ public class NodejsFileAnalyzerTest {
         assertTrue(c1.containsKey(anon_c1_get_year));
         assertTrue(c1.containsKey(anon_c1_set_year));
         assertTrue(c1.containsKey(anon_c2));
-
     }
 
     @Test
@@ -212,32 +194,5 @@ public class NodejsFileAnalyzerTest {
         assertTrue(c1.containsKey(anon1_1));
         assertTrue(c1.containsKey(anon1_2));
         assertTrue(c1.containsKey(anon2));
-
-        /*
-        final FileAnalyzer f2 = FileAnalyzerFactory.buildFileAnalyzer(new File("src/test/resources/test-helloworld/callback_hell.js"));
-        final Map<ConstructId, Construct> c2 = f2.getConstructs();
-
-        final NodejsId pack2 = new NodejsId(null, NodejsId.Type.PACKAGE, "test-helloworld");
-        final NodejsId modu2 = new NodejsId(pack2, NodejsId.Type.MODULE, "callback_hell");
-        final NodejsId anon_1 = new NodejsId(modu2, NodejsId.Type.FUNCTION, "1(err,files)");
-        final NodejsId anon_2 = new NodejsId(anon_1, NodejsId.Type.FUNCTION, "1(filename,fileIndex)");
-        final NodejsId anon_3 = new NodejsId(anon_2, NodejsId.Type.FUNCTION, "1(err,values)");
-        final NodejsId anon_4 = new NodejsId(anon_3, NodejsId.Type.FUNCTION, "1(width,widthIndex)");
-        final NodejsId anon_5 = new NodejsId(anon_4, NodejsId.Type.FUNCTION, "1(err)");
-
-        assertEquals(7, c2.size());
-        assertTrue(c2.containsKey(pack2));
-        assertTrue(c2.containsKey(modu2));
-        assertTrue(c2.containsKey(anon_1));
-        assertTrue(c2.containsKey(anon_2));
-        assertTrue(c2.containsKey(anon_3));
-        assertTrue(c2.containsKey(anon_4));
-        assertTrue(c2.containsKey(anon_5));
-         */
-    }
-
-    @Test
-    public void testPackageModule() throws FileAnalysisException{
-
     }
 }
