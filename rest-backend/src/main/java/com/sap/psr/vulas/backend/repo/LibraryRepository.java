@@ -167,7 +167,7 @@ public interface LibraryRepository extends CrudRepository<Library, Long>, Librar
 			+ "   AND lc = cc.constructId"
 			+ "   AND (NOT lc.type='PACK' "                        // Java + Python exception
 			+ "   OR NOT EXISTS (SELECT 1 FROM ConstructChange cc1 JOIN cc1.constructId c1 WHERE cc1.bug=cc.bug AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%' AND NOT c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') ) "     
-			+ "   AND NOT (lc.type='MODU' AND lc.qname='setup')" // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs
+			+ "   AND NOT (lc.type='MODU' AND lc.qname='setup') AND NOT (lc.type='MODU' AND lc.qname='tests')" // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs. Similarly tests.py originates such a generic module that would bring up too many FPs
 			)
 		List<Library> findJPQLVulnerableLibrariesByBug(@Param("bugId") String bugId);
 	
