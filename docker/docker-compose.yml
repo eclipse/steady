@@ -14,6 +14,7 @@ services:
       - "8080"
     security_opt:
       - no-new-privileges
+    restart: always
 
   frontend-bugs:
     container_name: vulnerability-assessment-tool-frontend-bugs
@@ -28,6 +29,7 @@ services:
       - "8080"
     security_opt:
       - no-new-privileges
+    restart: always
 
   haproxy:
     container_name: vulnerability-assessment-tool-haproxy
@@ -41,7 +43,6 @@ services:
         - http_proxy=${http_proxy}
         - https_proxy=${https_proxy}
     image: vulnerability-assessment-tool-haproxy:${VULAS_RELEASE}
-    restart: unless-stopped
     ports:
       - "8033:8080"
       - "8034:7070"
@@ -54,6 +55,7 @@ services:
       - rest-lib-utils
     security_opt:
       - no-new-privileges
+    restart: always
 
   patch-lib-analyzer:
     container_name: vulnerability-assessment-tool-patch-lib-analyzer
@@ -82,6 +84,7 @@ services:
       - vulas.patchEval.onlyAddNewResults=true
     security_opt:
       - no-new-privileges
+    restart: always
   
   postgresql:
     container_name: vulnerability-assessment-tool-postgresql
@@ -101,6 +104,7 @@ services:
       - vulnerability-assessment-tool-postgres-data:/var/lib/postgresql/data
     security_opt:
       - no-new-privileges
+    restart: always
 
   rest-backend:
     container_name: vulnerability-assessment-tool-rest-backend
@@ -134,6 +138,7 @@ services:
       - postgresql
     security_opt:
       - no-new-privileges
+    restart: always
 
   rest-lib-utils:
     container_name: vulnerability-assessment-tool-rest-lib-utils
@@ -152,6 +157,7 @@ services:
       - "./data/rest-lib-utils:/root/"
     security_opt:
       - no-new-privileges
+    restart: always
   
 volumes:
   vulnerability-assessment-tool-postgres-data:
