@@ -158,6 +158,19 @@ services:
     security_opt:
       - no-new-privileges
     restart: always
-  
+
+  cache:
+    container_name: vulnerability-assessment-tool-cache
+    hostname: cache
+    image: nginx:alpine
+    expose:
+      - "80"
+    volumes:
+      - ./cache/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./data/cache/:/tmp/cache_all/
+    security_opt:
+      - no-new-privileges
+    restart: always
+
 volumes:
   vulnerability-assessment-tool-postgres-data:
