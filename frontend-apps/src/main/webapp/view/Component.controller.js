@@ -119,7 +119,7 @@ sap.ui.controller("view.Component", {
 		  
 		var add_excemption_info = true;
 		var cache = model.lastChange
-		if (hard) {
+		if (hard === true) {
 			cache = false
 		}
 		var sUrl = model.Config.getUsedVulnerabilitiesServiceUrl(groupId, artifactId, versionId, incl_hist, incl_unconfirmed, add_excemption_info, cache);
