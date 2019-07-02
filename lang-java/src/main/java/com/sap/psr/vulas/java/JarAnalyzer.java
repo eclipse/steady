@@ -230,6 +230,9 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 				}
 			}
 		}
+		catch(NullPointerException npe) {
+			JarAnalyzer.log.error(this.toString() + ": [" + npe.getClass().getSimpleName() + "] during analysis", npe);
+		}
 		catch(Exception e) {
 			if(e instanceof NullPointerException) {
 				JarAnalyzer.log.error(this.toString() + ": [" + e.getClass().getSimpleName() + "] during analysis");

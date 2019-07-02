@@ -69,12 +69,12 @@ public class SliceInstrumentor extends AbstractInstrumentor {
 		if(!this.vulasConfiguration.isEmpty(CoreConfiguration.INSTR_SLICE_WHITELIST) || !this.vulasConfiguration.isEmpty(CoreConfiguration.INSTR_SLICE_BLACKLIST)) {
 			// Whitelist
 			if(!this.vulasConfiguration.isEmpty(CoreConfiguration.INSTR_SLICE_WHITELIST)) {
-				final com.sap.psr.vulas.shared.json.model.ConstructId[] wl = (com.sap.psr.vulas.shared.json.model.ConstructId[])JacksonUtil.asObject(FileUtil.readFile(Paths.get(CoreConfiguration.INSTR_SLICE_WHITELIST)), com.sap.psr.vulas.shared.json.model.ConstructId[].class);
+				final com.sap.psr.vulas.shared.json.model.ConstructId[] wl = (com.sap.psr.vulas.shared.json.model.ConstructId[])JacksonUtil.asObject(FileUtil.readFile(Paths.get(this.vulasConfiguration.getConfiguration().getString(CoreConfiguration.INSTR_SLICE_WHITELIST))), com.sap.psr.vulas.shared.json.model.ConstructId[].class);
 				whitelistedConstructsToInstrument.addAll(JavaId.toCoreType(Arrays.asList(wl)));
 			}
 			// Blacklist
 			if(!this.vulasConfiguration.isEmpty(CoreConfiguration.INSTR_SLICE_BLACKLIST)) {
-				final com.sap.psr.vulas.shared.json.model.ConstructId[] bl = (com.sap.psr.vulas.shared.json.model.ConstructId[])JacksonUtil.asObject(FileUtil.readFile(Paths.get(CoreConfiguration.INSTR_SLICE_BLACKLIST)), com.sap.psr.vulas.shared.json.model.ConstructId[].class);
+				final com.sap.psr.vulas.shared.json.model.ConstructId[] bl = (com.sap.psr.vulas.shared.json.model.ConstructId[])JacksonUtil.asObject(FileUtil.readFile(Paths.get(this.vulasConfiguration.getConfiguration().getString(CoreConfiguration.INSTR_SLICE_BLACKLIST))), com.sap.psr.vulas.shared.json.model.ConstructId[].class);
 				blacklistedConstructsNotToInstrument.addAll(JavaId.toCoreType(Arrays.asList(bl)));
 			}
 		} else {
@@ -84,7 +84,7 @@ public class SliceInstrumentor extends AbstractInstrumentor {
 				blacklistedConstructsNotToInstrument.addAll(JavaId.toCoreType(d.getReachableConstructIds()));
 			}
 		}
-		log.info("Construct whitelist comprises [" + this.whitelistedConstructsToInstrument + "] items, construct blacklist comprises [" + this.blacklistedConstructsNotToInstrument + "] items");
+		log.info("Construct whitelist comprises [" + this.whitelistedConstructsToInstrument.size() + "] items, construct blacklist comprises [" + this.blacklistedConstructsNotToInstrument.size() + "] items");
 	}
 
 	/**
@@ -99,14 +99,14 @@ public class SliceInstrumentor extends AbstractInstrumentor {
 		final boolean whitelisted = this.whitelistedConstructsToInstrument.isEmpty() || this.whitelistedConstructsToInstrument.contains(_jid) || this.whitelistedConstructsToInstrument.contains(_jid.getCompilationUnit()) || this.whitelistedConstructsToInstrument.contains(_jid.getJavaPackageId());
 		final boolean blacklisted = !this.blacklistedConstructsNotToInstrument.isEmpty() && (this.blacklistedConstructsNotToInstrument.contains(_jid) || this.blacklistedConstructsNotToInstrument.contains(_jid.getCompilationUnit()) || this.blacklistedConstructsNotToInstrument.contains(_jid.getJavaPackageId())); 
 		final boolean r = whitelisted && !blacklisted;
-		log.info(_jid + "is whitelisted [" + whitelisted + "] and blacklisted [" + blacklisted + "]: Accepted for instrumentation [" + r + "]");
+		log.info(_jid + " is whitelisted [" + whitelisted + "] and blacklisted [" + blacklisted + "]: Accepted for instrumentation [" + r + "]");
 		return r;
 	}
 
 	public void instrument(StringBuffer _code, JavaId _jid, CtBehavior _behavior, ClassVisitor _cv) throws CannotCompileException {
 		_code.append("final boolean is_open = Boolean.parseBoolean(System.getProperty(\"").append(CoreConfiguration.INSTR_SLICE_GUARD_OPEN).append("\"));");
 		_code.append("System.err.println(\"Execution of " + _jid.toString() + "\" + (is_open ? \"allowed\" : \"prevented\") + \" by Vulas guarding condition\");");
-		_code.append("if(!is_open) throw new IllegalStateException(\"Execution of " + _jid.toString() + "\" + prevented by Vulas guarding condition\");");
+		_code.append("if(!is_open) throw new IllegalStateException(\"Execution of " + _jid.toString() + " prevented by Vulas guarding condition\");");
 	}
 
 	/**
