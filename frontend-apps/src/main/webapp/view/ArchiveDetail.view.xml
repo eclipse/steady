@@ -272,7 +272,7 @@
 									press="toggleAllVersion" /-->
 					<Table xmlns="sap.ui.table" selectionMode="None" id="idArchiveMetrics" cellClick="onLibItemTap"
 						editable="false" allowColumnReordering="false" rows="{metricModel>/}" noData="No newer non-vulnerable library is known to Vulas. Click Show/Hide All versions to see all the available ones."
-						visibleRowCount="{path: 'archiveConstructCounts>/constructTypeCounters', formatter: 'model.Formatter.getListLength'}">
+						visibleRowCount="{path: 'archiveConstructCounts>/constructTypeCounters', formatter: 'model.Formatter.getListLength'}" class="clickable">
 					
 						<Column xmlns="sap.ui.table" sorted="true" sortProperty="archiveConstructCounts>type">
 							<Label text="Library Id" xmlns="sap.ui.commons" />
