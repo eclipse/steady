@@ -401,10 +401,7 @@ public class ClassVisitor {
 	}
 
 	public synchronized void addIntMember(String _field_name, boolean _final) throws CannotCompileException {
-		//final String src = "public static boolean " + _field_name + " = " + _value + ";";
-		//final CtField f = CtField.make(src, this.c);
-
-		CtField f = new CtField(CtClass.intType, _field_name, this.c);
+		final CtField f = new CtField(CtClass.intType, _field_name, this.c);
 		if(!_final)
 			f.setModifiers(Modifier.PUBLIC | Modifier.STATIC | Modifier.TRANSIENT);
 		else
