@@ -89,29 +89,26 @@ public class ArtifactController {
 	public ResponseEntity<Set<Artifact>> getArtifactVersions(@PathVariable String mvnGroup, @PathVariable String artifact, 
 			@RequestParam(value="classifier", required=false, defaultValue="") String classifierFilter, 
 			@RequestParam(value="packaging", required=false, defaultValue="") String packagingFilter,
-			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
-			@RequestHeader(value="X-Vulas-Echo", required=false, defaultValue="") String echo) {
+			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody) {
 
-		// Echo
-		final HttpHeaders headers = HeaderEcho.getHeaders(echo);
 		try {
 			RepositoryDispatcher r = new RepositoryDispatcher();
 			Set<Artifact>	response = r.getAllArtifactVersions(mvnGroup, artifact, classifierFilter, packagingFilter);
 			if(response==null){
 				//TODO: does it ever happen that response is null?
-				return new ResponseEntity<Set<Artifact>>(headers,HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<Set<Artifact>>(HttpStatus.BAD_REQUEST);
 			}
 			if(response.isEmpty())
-				return new ResponseEntity<Set<Artifact>>(headers,HttpStatus.NOT_FOUND);
+				return new ResponseEntity<Set<Artifact>>(HttpStatus.NOT_FOUND);
 			if(skipResponseBody)
-				return new ResponseEntity<Set<Artifact>>(headers,HttpStatus.OK);
+				return new ResponseEntity<Set<Artifact>>(HttpStatus.OK);
 			else
-				return new ResponseEntity<Set<Artifact>>(response, headers, HttpStatus.OK);
+				return new ResponseEntity<Set<Artifact>>(response, HttpStatus.OK);
 		}
 		catch(Exception e) {
 			log.error("Error: " + e.getMessage(), e);
 			e.getStackTrace();
-			return new ResponseEntity<Set<Artifact>>(headers,HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Set<Artifact>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
