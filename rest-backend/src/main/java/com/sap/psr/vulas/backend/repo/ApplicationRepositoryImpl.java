@@ -322,10 +322,10 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		VulnerableDependency vd = new VulnerableDependency(DependencyRepository.FILTER.findOne(depRepository.findByAppAndLib(a, digest)), bug);
 		
 		// Required for setting the flags for all elements of the change list (if any)
-		List<Trace> trace_list = null;
-		List<Path> path_list = null;
-		List<ConstructId> cidList = null;
-		List<AffectedConstructChange> aff_ccList = null;
+		List<Trace> trace_list = new ArrayList<Trace>();
+		List<Path> path_list = new ArrayList<Path>();
+		List<ConstructId> cidList = new ArrayList<ConstructId>();
+		List<AffectedConstructChange> aff_ccList = new ArrayList<AffectedConstructChange>();
 		
 		//set affected flag and trace.reachable (if applicable)
 		if(origin.equals(VulnDepOrigin.CC) || origin.equals(VulnDepOrigin.AFFLIBID)){
