@@ -77,7 +77,7 @@ The following is a subset of pending feature requests:
 - Support of JavaScript (client- and server-side)
 - UI dashboards for workspaces
 
-[**Documentation**](https://sap.github.io/vulnerability-assessment-tool/user/) · [**Support**](https://sap.github.io/vulnerability-assessment-tool/user/support/) · [**Contributing**](https://sap.github.io/vulnerability-assessment-tool/contributor/) · [**Deploy guide**](https://sap.github.io/vulnerability-assessment-tool/admin/tutorials/docker/) · [**Scansion guide**](https://sap.github.io/vulnerability-assessment-tool/user/tutorials/) · [**Vulnerability database**](https://sap.github.io/vulnerability-assessment-tool/vuln_db/) · [**Blog**](https://blogs.sap.com/tag/vulas/) · [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2605/badge)](https://bestpractices.coreinfrastructure.org/projects/2605)
+[**Documentation**](https://sap.github.io/vulnerability-assessment-tool/user/) · [**Support**](https://sap.github.io/vulnerability-assessment-tool/user/support/) · [**Contributing**](https://sap.github.io/vulnerability-assessment-tool/contributor/) · [**Deploy guide**](https://sap.github.io/vulnerability-assessment-tool/admin/tutorials/docker/) · [**Scan guide**](https://sap.github.io/vulnerability-assessment-tool/user/tutorials/) · [**Vulnerability database**](https://sap.github.io/vulnerability-assessment-tool/vuln_db/) · [**Blog**](https://blogs.sap.com/tag/vulas/) · [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2605/badge)](https://bestpractices.coreinfrastructure.org/projects/2605)
 
 ## License
 
