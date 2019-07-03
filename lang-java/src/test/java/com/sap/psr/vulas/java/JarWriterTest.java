@@ -40,21 +40,19 @@ public class JarWriterTest implements JarEntryWriter {
 			jw.addFile("", Paths.get("./src/test/resources/Callgraph.class"), true);
 			jw.addFile("WEB-INF/lib", Paths.get("./src/test/resources/examples.jar"), true);
 
-			// Test that SHA1 == 85437428028C1839A2E51CD3C7A340316001D3C3
-			assertEquals(jw.getSHA1(), "85437428028C1839A2E51CD3C7A340316001D3C3");
+			assertEquals("F22A5E25F37455867B5C2CF476BAC25189AC2B28", jw.getSHA1());
 
-			// Callback for .class files
+			// Callback for .class files and rewrite
 			jw.register(".*.class$", this);	
-
-			// Rewrite the file
 			final Path rewritten = jw.rewrite(Paths.get("./target"));
 			
 			// Callbacks for 6 class files
 			assertEquals(6, this.countCallbacks);
 
-			// Create a new JarWriter and check whether is recognized as rewritten
-			JarWriter jw2 = new JarWriter(rewritten);
+			// Create a new JarWriter and check whether is recognized as rewritten (the original SHA1 is taken from the manifest)
+			final JarWriter jw2 = new JarWriter(rewritten);
 			assertTrue(jw2.isRewrittenByVulas());
+			assertEquals("F22A5E25F37455867B5C2CF476BAC25189AC2B28", jw2.getSHA1());
 		} catch(Exception e) {
 			e.printStackTrace();
 			assertTrue(false);

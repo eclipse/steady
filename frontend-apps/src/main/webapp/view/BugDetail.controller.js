@@ -91,7 +91,7 @@ sap.ui.controller("view.BugDetail", {
 			// Bug details
 			var bugDetailModel = new sap.ui.model.json.JSONModel();
 			if (!model.Config.isMock) {
-				sUrl = model.Config.getVulnerabilityDetailsServiceUrl(app.groupid,app.artifactid,app.version,archiveId,bugId);
+				sUrl = model.Config.getVulnerabilityDetailsServiceUrl(app.groupid,app.artifactid,app.version,archiveId,bugId,model.Config.getVulnDepOrigin(),model.Config.getBundledDigest(),model.Config.getBundledGroup(),model.Config.getBundledArtifact(),model.Config.getBundledVersion());
 				/*	if (!bAllShown) {
     				sUrl = sUrl + "?bugid=" + bugId + "&archiveid=" + archiveId + "&groupid=" + app.groupid + "&artifactid=" + app.artifactid + "&version=" + app.version;
     			} else {

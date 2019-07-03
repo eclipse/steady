@@ -108,9 +108,18 @@ sap.ui.controller("view.Component", {
 		// URL to load data
 		var incl_hist = this.getView().byId("includeHistorical").getSelected();
 		var incl_unconfirmed = this.getView().byId("includeUnconfirmed").getSelected();
+		
+		if(this.getView().byId("showAdvanced").getSelected()){
+			this.getView().byId("idReach").setVisible(true);
+			this.getView().byId("idExec").setVisible(true);
+		} else {
+			this.getView().byId("idReach").setVisible(false);
+		    this.getView().byId("idExec").setVisible(false);
+		}
+		  
 		var add_excemption_info = true;
 		var cache = model.lastChange
-		if (hard) {
+		if (hard === true) {
 			cache = false
 		}
 		var sUrl = model.Config.getUsedVulnerabilitiesServiceUrl(groupId, artifactId, versionId, incl_hist, incl_unconfirmed, add_excemption_info, cache);
@@ -744,6 +753,15 @@ sap.ui.controller("view.Component", {
 		var archiveid = oEvent.getParameters().rowBindingContext.getObject("dep/lib/digest");
 			//oEvent.getParameter("listItem").getBindingContext()
 			//	.getObject().dep.lib.digest;
+		var origin = oEvent.getParameters().rowBindingContext.getObject("vulnDepOrigin");
+		model.Config.setVulnDepOrigin(origin);
+		if(origin == 'BUNDLEDCC')
+			model.Config.setBundledDigest(oEvent.getParameters().rowBindingContext.getObject("bundledLib/digest"));
+		else if(origin == 'BUNDLEDAFFLIBID'){
+			model.Config.setBundledGroup(oEvent.getParameters().rowBindingContext.getObject("bundledLibId/group"));
+			model.Config.setBundledArtifact(oEvent.getParameters().rowBindingContext.getObject("bundledLibId/artifact"));
+			model.Config.setBundledVersion(oEvent.getParameters().rowBindingContext.getObject("bundledLibId/version"));
+		}
 		const workspaceSlug = model.Config.getSpace()
 		this.router.navTo("bugDetail", {
 			workspaceSlug: workspaceSlug,

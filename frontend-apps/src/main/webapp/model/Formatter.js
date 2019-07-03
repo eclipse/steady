@@ -101,7 +101,6 @@ model.Formatter = {
 		}
 	},
 	
-
 	affectedVersionSource: function(_affected_version_source, _affected_release_confirmed) {
 		if (_affected_release_confirmed === 1) {
 			if(_affected_version_source === "MANUAL")
@@ -173,6 +172,10 @@ model.Formatter = {
 		return _val!==undefined && _val!== null && _val !=="";
 	},
 	
+	ArrayVisibility : function(_val) {
+		return Array.isArray(_val) && _val.length>0;
+	},
+	
 //	executionStatus : function(sSrc) {
 //		if (sSrc !== null && sSrc !== '') {
 //			return "img/notmaven.png";
@@ -203,6 +206,36 @@ model.Formatter = {
 		} else {
 			return "";
 		}
+	},
+	
+	mavenIdLinkArray : function(libraries) {
+		let a=[];
+		if(libraries){
+			for(i=0;i<libraries.length;i++)
+				a.push(model.Formatter.mavenIdLink(libraries[i].group,libraries[i].artifact,libraries[i].version));
+		}
+		return a;
+	},
+	
+	parentArray : function(parent) {
+		let a="";
+		if(parent){
+			a+=model.Formatter.mavenIdLink(parent.lib.libraryId.group,parent.lib.libraryId.artifact,parent.lib.libraryId.version);
+			a+= " > "
+			a+= model.Formatter.parentArray(parent.parent);
+		}
+		else
+			a+= ("application");
+		return a;
+	},
+	
+	parentDepth : function(parent) {
+		let a=0;
+		if(parent){
+			a+=1;
+			a+=model.Formatter.parentDepth(parent.parent);
+		}
+		return a;
 	},
 	
 	buildmavenIdLink: function(groupid, artifactid) {
@@ -454,5 +487,27 @@ model.Formatter = {
 			return "Artifact ID: "+lib.libraryId.group+":"+lib.libraryId.artifact+":"+lib.libraryId.version;
 		}
 		return "Artifact ID: unknown";
+	},
+	
+	vulnDepOrigin : function(origin){
+		if(origin == "CC")
+			return "Dependency contains vulnerable code";
+		else if(origin == "AFFLIBID")
+			return "Dependency is known to be affected by the configuration vulnerability (no vulnerable code)";
+		else if(origin == "BUNDLEDCC")
+			return "Dependency rebundles an archive containing vulnerable code (altering the construct signatures)";
+		else if(origin == "BUNDLEDAFFLIBID")
+			return "Dependency rebundles an archive known to be affected by the configuration vulnerability (no vulnerable code)";
+
+	},
+	
+	bundledGAV : function(libLibId,libid){
+		if(libLibId!=null && libLibId!=undefined)
+			return "Rebundles: " + model.Formatter.mavenIdLink(libLibId.group,libLibId.artifact,libLibId.version);
+		else if (libid!=null && libid!=undefined)
+			return "Rebundles: " + model.Formatter.mavenIdLink(libid.group,libid.artifact,libid.version);
+		else
+			return null;
+		
 	}
 };

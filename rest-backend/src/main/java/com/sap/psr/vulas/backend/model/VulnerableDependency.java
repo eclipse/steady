@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.sap.psr.vulas.backend.model.view.Views;
 import com.sap.psr.vulas.backend.repo.ApplicationRepositoryCustom;
 import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
+import com.sap.psr.vulas.shared.enums.VulnDepOrigin;
 
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -33,6 +34,12 @@ public class VulnerableDependency  implements Serializable, Comparable<Vulnerabl
 	int reachable;
 
 	int traced;
+	
+	LibraryId bundledLibId;
+	
+	Library bundledLib; 
+	
+	VulnDepOrigin origin; 
 	
 	private Excemption excemption = null;
 
@@ -182,6 +189,30 @@ public class VulnerableDependency  implements Serializable, Comparable<Vulnerabl
 
 	public void setExcemption(Excemption excemption) {
 		this.excemption = excemption;
+	}
+	
+	public LibraryId getBundledLibId() {
+		return bundledLibId;
+	}
+
+	public void setBundledLibId(LibraryId bundledLibId) {
+		this.bundledLibId = bundledLibId;
+	}
+	
+	public Library getBundledLib() {
+		return bundledLib;
+	}
+
+	public void setBundledLib (Library bundledLib) {
+		this.bundledLib = bundledLib;
+	}
+
+	public VulnDepOrigin getVulnDepOrigin() {
+		return origin;
+	}
+
+	public void setVulnDepOrigin(VulnDepOrigin origin) {
+		this.origin = origin;
 	}
 
 	/**

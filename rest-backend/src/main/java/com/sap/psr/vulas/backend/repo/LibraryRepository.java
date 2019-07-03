@@ -12,6 +12,7 @@ import com.sap.psr.vulas.backend.model.AffectedConstructChange;
 import com.sap.psr.vulas.backend.model.Bug;
 import com.sap.psr.vulas.backend.model.ConstructId;
 import com.sap.psr.vulas.backend.model.Library;
+import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.backend.util.ResultSetFilter;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.Scope;
@@ -166,7 +167,7 @@ public interface LibraryRepository extends CrudRepository<Library, Long>, Librar
 			+ "   AND lc = cc.constructId"
 			+ "   AND (NOT lc.type='PACK' "                        // Java + Python exception
 			+ "   OR NOT EXISTS (SELECT 1 FROM ConstructChange cc1 JOIN cc1.constructId c1 WHERE cc1.bug=cc.bug AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%' AND NOT c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') ) "     
-			+ "   AND NOT (lc.type='MODU' AND lc.qname='setup')" // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs
+			+ "   AND NOT (lc.type='MODU' AND (lc.qname='setup' OR lc.qname='tests'))" // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs. Similarly tests.py originates such a generic module that would bring up too many FPs
 			)
 		List<Library> findJPQLVulnerableLibrariesByBug(@Param("bugId") String bugId);
 	
@@ -206,5 +207,8 @@ public interface LibraryRepository extends CrudRepository<Library, Long>, Librar
 			" where l2.digest=:digest and c2.type='PACK') as unknown_count " + 
 			" where (s.candidate_pack_count >= unknown_count.unknown_pack_count*90/100) AND (s.candidate_pack_count <= unknown_count.unknown_pack_count*100/100) ",nativeQuery=true)
 	List<String> findDigestSamePack(@Param("digest") String digest);
+
+	@Query("SELECT l FROM Library l WHERE l.libraryId =:bundledLibId")
+	List<Library> findByLibraryId(@Param("bundledLibId") LibraryId bundledLibId);
 
 }

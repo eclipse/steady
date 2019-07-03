@@ -103,6 +103,9 @@ public class Library implements Serializable {
 	@ManyToOne(optional = true, cascade = {}, fetch = FetchType.EAGER)
 	private LibraryId libraryId;
 
+	@ManyToMany(cascade = {})
+	private Collection<LibraryId> bundledLibraryIds;
+	
 	@Transient
 	@JsonView(Views.Overview.class)
 	private Integer directUsageCounter = null;
@@ -375,5 +378,13 @@ public class Library implements Serializable {
 
 	public void setDirectUsageCounter(Integer directUsageCounter) {
 		this.directUsageCounter = directUsageCounter;
+	}
+	
+	public Collection<LibraryId> getBundledLibraryIds() {
+		return bundledLibraryIds;
+	}
+
+	public void setBundledLibraryIds(Collection<LibraryId> bundledLibraryIds) {
+		this.bundledLibraryIds = bundledLibraryIds;
 	}
 }

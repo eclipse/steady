@@ -5,6 +5,7 @@ import java.util.TreeSet;
 
 import com.sap.psr.vulas.backend.model.AffectedLibrary;
 import com.sap.psr.vulas.backend.model.Bug;
+import com.sap.psr.vulas.backend.model.Library;
 import com.sap.psr.vulas.backend.model.VulnerableDependency;
 
 /**
@@ -22,5 +23,5 @@ public interface AffectedLibraryRepositoryCustom {
 	
 	public void computeAffectedLib(TreeSet<VulnerableDependency> _vdList);
 	
-	public void computeAffectedLib(VulnerableDependency _vd);
+	public void computeAffectedLib(VulnerableDependency _vd, Library _lib);
 }

@@ -2,7 +2,8 @@
 	xmlns:c="sap.suite.ui.commons" xmlns:form="sap.ui.layout.form"
 	xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core"
 	xmlns:commons="sap.ui.commons" xmlns:m="sap.ui.commons.layout" 
-	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	xmlns:html="http://www.w3.org/1999/xhtml">
 	<Page id="componentPage">
 		<headerContent>
 			<Button icon="sap-icon://refresh" press="loadData" tooltip="Reload App data" app:hard="true"/>
@@ -39,13 +40,13 @@
 											<Button text="Reset table" press="resetVulnTable" tooltip="Reset table groups and filters" />
 										</m:MatrixLayoutCell>
 										<m:MatrixLayoutCell>
-											<Button id="toggle" text="Reload data" press="loadVulns" tooltip="Reload table data using the selected filters" />
+											<CheckBox id="includeHistorical" text="Include historical vulnerabilities" selected="false" select="loadVulns"/>
 										</m:MatrixLayoutCell>
 										<m:MatrixLayoutCell>
-											<CheckBox id="includeHistorical" text="Include historical vulnerabilities" selected="false" />
+											<CheckBox id="includeUnconfirmed" text="Include unconfirmed vulnerabilities (hourglass)" selected="true" select="loadVulns"/>
 										</m:MatrixLayoutCell>
 										<m:MatrixLayoutCell>
-											<CheckBox id="includeUnconfirmed" text="Include unconfirmed vulnerabilities (hourglass)" selected="true" />
+											<CheckBox id="showAdvanced" text="Show advanced analysis" selected="false" select="loadVulns"/>
 										</m:MatrixLayoutCell>
 									</m:MatrixLayoutRow>
 								</m:MatrixLayout>
@@ -63,7 +64,8 @@
 									enableGrouping="true" filter="filterEvent"
 									rows="{
 										path: '/'	
-										}">
+										}"
+									class="clickable">
 
 									<columns>
 										<Column width="5%" grouped="false">
@@ -103,7 +105,10 @@
 											<Label text="Archive Filename&#13;&#10;(Digest)" xmlns="sap.ui.commons" />
 											<template>
 												<ObjectIdentifier title="{dep/filename}"
-													text="{dep/lib/digest}" xmlns="sap.m" />
+													text="{
+		 												parts: ['bundledLib/libraryId', 'bundledLibId'], 
+		 												formatter: 'model.Formatter.bundledGAV'
+		 												}" xmlns="sap.m" />
 											</template>
 										</Column>
 										<Column width="25%" sorted="true" sortProperty="bug/cvssScore"
@@ -138,10 +143,11 @@
 													<Image xmlns="sap.m" decorative="true" id="affectedVersion"
 														width="30px"
 														src="{
-			 												parts: ['affected_version', 'affected_version_confirmed'],
-			 												formatter: 'model.Formatter.affectedRelease'
-			 												}">
+			 												parts: ['affected_version', 'affected_version_confirmed'], 
+ 			 												formatter: 'model.Formatter.affectedRelease'
+ 			 												}"> 
 													</Image>
+<!-- 													<Text text="{vulnDepOrigin}" xmlns="sap.m" /> -->
 													<!-- Text
 														text="{
 			 												parts: ['affectedVersionSource','affected_version_confirmed'],
@@ -151,7 +157,7 @@
 												</l:HorizontalLayout>
 											</template>
 										</Column>
-										<Column width="10%" grouped="false">
+										<Column width="10%" grouped="false" visible="false" id="idReach">
 											<multiLabels>
 												<Label text="Static Analysis: Potential" xmlns="sap.ui.commons" />
 												<Label text="execution of vuln. code" xmlns="sap.ui.commons" />
@@ -166,7 +172,7 @@
 												</Image>
 											</template>
 										</Column>
-										<Column width="10%" grouped="false">
+										<Column width="10%" grouped="false" visible="false" id="idExec">
 											<multiLabels>
 												<Label text="Dynamic Analysis: Actual" xmlns="sap.ui.commons" />
 												<Label text="execution of vuln. code" xmlns="sap.ui.commons" />
@@ -237,6 +243,15 @@
 												text="{
 		 												path: 'transitive',
 		 												formatter: 'model.Formatter.directTransitive'}"></TextView>
+										</template>
+									</Column>
+									<Column xmlns="sap.ui.table" width="10%">
+										<Label text="Depth" xmlns="sap.ui.commons" />
+										<template>
+											<TextView xmlns="sap.ui.commons"
+												text="{
+		 												path: 'parent',
+		 												formatter: 'model.Formatter.parentDepth'}"></TextView>
 										</template>
 									</Column>
 									<Column xmlns="sap.ui.table" width="10%" sorted="true"
@@ -430,7 +445,7 @@
 
 							<IconTabFilter text="{i18n>GoalExecutions}" icon="sap-icon://workflow-tasks" id="id_compExe">
 								<Table xmlns="sap.ui.table" id="idExecutionsList" rows="{ path: '/' }"
-									cellClick="onExecutionListItemTap" selectionMode="None">
+									cellClick="onExecutionListItemTap" selectionMode="None" class="clickable">
 									<columns>
 										<Column xmlns="sap.ui.table" width="10%" sortProperty="exception" filterProperty="exception">
 											<Label text="Status" xmlns="sap.ui.commons" />
@@ -607,7 +622,8 @@
 									selectionMode="None" enableGrouping="false" filter="filterEvent"
 									rows="{
 										path: '/'	
-										}">
+										}"
+									class="clickable">
 
 									<columns>
 										<Column width="10%" sorted="true" sortProperty="dep/scope">

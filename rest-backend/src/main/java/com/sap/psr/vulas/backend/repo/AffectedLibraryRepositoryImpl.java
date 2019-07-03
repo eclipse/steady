@@ -192,30 +192,30 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 	
 	public void computeAffectedLib(TreeSet<VulnerableDependency> _vdList){
 		for (VulnerableDependency vd : _vdList){
-			this.computeAffectedLib(vd);
+			this.computeAffectedLib(vd,vd.getDep().getLib());
 		}
 	}
 	
-	public void computeAffectedLib(VulnerableDependency vd){
-			Boolean avByLib = this.affLibRepository.isBugLibAffected(vd.getBug().getBugId(), vd.getDep().getLib().getDigest());
+	public void computeAffectedLib(VulnerableDependency _vd, Library _lib){
+			Boolean avByLib = this.affLibRepository.isBugLibAffected(_vd.getBug().getBugId(), _lib.getDigest());
 			boolean found=false;
 			if(avByLib !=null){
-				vd.setAffectedVersion((avByLib)?1:0);
-				vd.setAffectedVersionConfirmed(1);
+				_vd.setAffectedVersion((avByLib)?1:0);
+				_vd.setAffectedVersionConfirmed(1);
 				found=true;
 			}
-			else if(vd.getDep().getLib().getLibraryId()!=null) {
-				AffectedLibraryRepositoryImpl.log.debug("look for affected for bug [" +vd.getBug().getBugId()+"] and lib [" +vd.getDep().getLib().getLibraryId()+ "]");
-				Boolean avByLibId = this.affLibRepository.isBugLibIdAffected(vd.getBug().getBugId(), vd.getDep().getLib().getLibraryId());
+			else if(_lib.getLibraryId()!=null) {
+				AffectedLibraryRepositoryImpl.log.debug("look for affected for bug [" +_vd.getBug().getBugId()+"] and lib [" +_lib.getLibraryId()+ "]");
+				Boolean avByLibId = this.affLibRepository.isBugLibIdAffected(_vd.getBug().getBugId(), _lib.getLibraryId());
 				if(avByLibId !=null){
-					vd.setAffectedVersion((avByLibId)?1:0);
-					vd.setAffectedVersionConfirmed(1);
+					_vd.setAffectedVersion((avByLibId)?1:0);
+					_vd.setAffectedVersionConfirmed(1);
 					found=true;
 				}
 			}
 			if(!found){
-				vd.setAffectedVersionConfirmed(0);
-				vd.setAffectedVersion(1); // when the confirmed flag is 0, the value of affected-version is irrelevant but we set it to 1 so that the UI doesn't filter it out when filtering out historical vulnerabilities
+				_vd.setAffectedVersionConfirmed(0);
+				_vd.setAffectedVersion(1); // when the confirmed flag is 0, the value of affected-version is irrelevant but we set it to 1 so that the UI doesn't filter it out when filtering out historical vulnerabilities
 			}
 	}
 }
