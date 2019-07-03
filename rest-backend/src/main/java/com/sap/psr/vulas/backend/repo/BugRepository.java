@@ -48,7 +48,7 @@ public interface BugRepository extends CrudRepository<Bug, Long>, BugRepositoryC
 			+ "   AND lc = cc.constructId"		
 			+ "   AND (NOT lc.type='PACK' "                        // Java + Python exception
 			+ "   OR NOT EXISTS (SELECT 1 FROM ConstructChange cc1 JOIN cc1.constructId c1 WHERE cc1.bug=cc.bug AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%' AND NOT c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') ) "      //select bug if all other cc of the same bug are PACK, ADD or Test changes
-			+ "   AND NOT (lc.type='MODU' AND (lc.qname='setup' OR lc.qname='tests'))" // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs
+			+ "   AND NOT (lc.type='MODU' AND (lc.qname='setup' OR lc.qname='tests' OR lc.qname='test.__init__'))" // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs
 			)
 	List<Bug> findByLibrary(@Param("bundledDigest") Library bundledDigest);
 	
