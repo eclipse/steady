@@ -46,7 +46,7 @@
 											<CheckBox id="includeUnconfirmed" text="Include unconfirmed vulnerabilities (hourglass)" selected="true" select="loadVulns"/>
 										</m:MatrixLayoutCell>
 										<m:MatrixLayoutCell>
-											<CheckBox id="showAdvanced" text="Show advanced analysis" selected="false" select="loadVulns"/>
+											<CheckBox id="toggleAdvancedResults" text="Toggle advanced analysis" selected="false" select="toggleAdvancedResults"/>
 										</m:MatrixLayoutCell>
 									</m:MatrixLayoutRow>
 								</m:MatrixLayout>
