@@ -190,18 +190,20 @@ public class JarDiffResult {
 		final ConstructId pack = JarDiffResult.getPackageOf(_cid);
 		boolean del = this.deletedPackages!=null && pack!=null &&  this.deletedPackages.contains(pack);
 		
-		// Class deleted
-		if(!del) {
-			final ConstructId clas = JarDiffResult.getClassOf(_cid);
-			del = this.deletedClasses!=null && this.deletedClasses.contains(clas);
-		}
-		
-		// Construct deleted
-		if(!del && this.modifiedClasses!=null) {
-			for(ClassDiffResult cdr: this.modifiedClasses) {
-				if(cdr.isDeleted(_cid)) {
-					del = true;
-					break;
+		if(_cid.getType()!= ConstructType.PACK){
+			// Class deleted
+			if(!del) {
+				final ConstructId clas = JarDiffResult.getClassOf(_cid);
+				del = this.deletedClasses!=null && this.deletedClasses.contains(clas);
+			}
+			
+			// Construct deleted
+			if(!del && this.modifiedClasses!=null) {
+				for(ClassDiffResult cdr: this.modifiedClasses) {
+					if(cdr.isDeleted(_cid)) {
+						del = true;
+						break;
+					}
 				}
 			}
 		}
