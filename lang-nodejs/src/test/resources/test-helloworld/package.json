@@ -11,6 +11,9 @@
     "http": "*",
     "connect": "2.0.0"
   },
+  "devDependencies": {
+    "left-pad": "*"
+  },
   "author": "",
   "license": "ISC"
 }
