@@ -36,16 +36,19 @@ public class NpmWrapperTest {
         final Set<NpmInstalledPackage> filtered_packages = NpmInstalledPackage.filterUsingArtifact(packages, new StringList().add("test-helloworld"), false);
         assertEquals(9, filtered_packages.size());
 
-//        // Get Digest for every package
+        /*
+         * TODO: Find a way to get a digest of npm packages
+         */
+        // Get Digest for every package
 //        for(NpmInstalledPackage p: filtered_packages) {
 //            final String digest = p.getDigest();
 //            assertTrue(digest != null && !digest.equals(""));
 //        }
-//
-//        // Get constructs for every packages
-//        for(NpmInstalledPackage p: filtered_packages) {
-//            final Collection<ConstructId> constructs = p.getLibrary().getConstructs();
-//            assertTrue(constructs != null && constructs.size() > 0);
-//        }
+
+        // Get constructs for every packages
+        for(NpmInstalledPackage p: filtered_packages) {
+            final Collection<ConstructId> constructs = p.getLibrary().getConstructs();
+            assertTrue(constructs != null && constructs.size() > 0);
+        }
     }
 }

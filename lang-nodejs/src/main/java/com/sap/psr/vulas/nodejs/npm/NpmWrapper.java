@@ -1,6 +1,7 @@
 package com.sap.psr.vulas.nodejs.npm;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.sap.psr.vulas.nodejs.ProcessWrapper;
 import com.sap.psr.vulas.nodejs.ProcessWrapperException;
@@ -215,14 +216,20 @@ public class NpmWrapper {
             pack_props.put("version", pack_version);
             pack_props.put("location", pack_path.toAbsolutePath().toString());
             pack_props.put("resolved_url", pack_url);
-//            pack_props.put("description", pack_json.get("description").getAsString());
+            pack_props.put("description", safeStringGet(pack_json, "description"));
 //            pack_props.put("repository", pack_json.getAsJsonObject("repository").get("url").getAsString());
 //            pack_props.put("author", pack_json.get("author").isJsonArray()
 //                    ? pack_json.getAsJsonObject("author").get("name").getAsString()
 //                    : pack_json.get("author").getAsString());
-//            pack_props.put("license", pack_json.get("license").getAsString());
+            pack_props.put("license", safeStringGet(pack_json, "license"));
             pack_props.put("required_by", pack_json.get("_requiredBy").getAsString());
             pack_props.put("depth", pack_json.get("depth").getAsString());
+
+            List<String> dep_names = new ArrayList<>();
+            for(String dep_pack: pack_json.getAsJsonObject("dependencies").keySet()) {
+                dep_names.add(pack_json.getAsJsonObject("dependencies").getAsJsonObject(dep_pack).get("name").getAsString());
+            }
+            pack_props.put("dependencies", String.join(",", dep_names));
 
             NpmInstalledPackage pack = new NpmInstalledPackage(pack_name, pack_version);
             pack.setDownloadPath(pack_path);
@@ -242,21 +249,31 @@ public class NpmWrapper {
         return set;
     }
 
-    /**
-	 * Helper class for deserializing the output of pip list --format json.
-     */
-    static class NpmPackageJson {
-        String name;
-        String version;
-        String installer;
-        String location;
-        public String getName() { return name; }
-        public void setName(String name) { this.name = name; }
-        public String getVersion() { return version; }
-        public void setVersion(String version) { this.version = version; }
-        public String getInstaller() { return installer; }
-        public void setInstaller(String installer) { this.installer = installer; }
-        public String getLocation() { return location; }
-        public void setLocation(String location) { this.location = location; }
+    private String safeStringGet(JsonObject _obj, String _key) {
+        String result = "";
+        try {
+            result = _obj.get(_key).getAsString();
+        } catch(NullPointerException e) {
+            log.debug("NullPointerException in JsonObject [key: "+ _key + "], returning default empty string");
+        }
+        return result;
     }
+
+//    /**
+//	 * Helper class for deserializing the output of pip list --format json.
+//     */
+//    static class NpmPackageJson {
+//        String name;
+//        String version;
+//        String installer;
+//        String location;
+//        public String getName() { return name; }
+//        public void setName(String name) { this.name = name; }
+//        public String getVersion() { return version; }
+//        public void setVersion(String version) { this.version = version; }
+//        public String getInstaller() { return installer; }
+//        public void setInstaller(String installer) { this.installer = installer; }
+//        public String getLocation() { return location; }
+//        public void setLocation(String location) { this.location = location; }
+//    }
 }

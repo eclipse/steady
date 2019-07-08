@@ -1,30 +1,35 @@
 package com.sap.psr.vulas.nodejs.npm;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.sap.psr.vulas.*;
 import com.sap.psr.vulas.nodejs.NodejsFileAnalyzer;
+import com.sap.psr.vulas.nodejs.NodejsPackageAnalyzer;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.PropertySource;
 import com.sap.psr.vulas.shared.json.model.Library;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.json.model.Property;
+import com.sap.psr.vulas.shared.util.DirUtil;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class NpmInstalledPackage implements Comparable {
 
     private final static Log log = LogFactory.getLog(NpmInstalledPackage.class);
 
-    private static final String LOCATION = "Location";
-    private static final String REQUIRES = "Requires";
+    private static final String LOCATION = "location";
+    private static final String REQUIRES = "dependencies";
 
     private String name = null;
     private String version = null;
@@ -65,7 +70,7 @@ public class NpmInstalledPackage implements Comparable {
     }
 
     /**
-     * Returns the download path of the Python package. This path is extracted from the output of "pip install".
+     * Returns the download path of the npm package. This path is extracted from the output of "npm install".
      * @return
      */
     public Path getDownloadPath() {
@@ -84,11 +89,18 @@ public class NpmInstalledPackage implements Comparable {
     public Library getLibrary() throws FileAnalysisException {
         Library lib = new Library();
 
-        lib.setDigest(this.getDigest());
-        lib.setDigestAlgorithm(DigestAlgorithm.MD5);
-        lib.setLibraryId(new LibraryId(this.getName(), this.getName(), this.getVersion()));
-        if(this.getConstructs()!=null) {
-            lib.setConstructs(ConstructId.getSharedType(this.getConstructs().keySet()));
+        if(this.fileAnalyzer != null && this.fileAnalyzer instanceof NodejsPackageAnalyzer) {
+            lib = ((NodejsPackageAnalyzer) this.fileAnalyzer).getLibrary();
+            lib.setLibraryId(new LibraryId(this.getName(), this.getName(), this.getVersion()));
+        }
+        else {
+            lib = new Library();
+            lib.setDigest(this.getDigest());
+            lib.setDigestAlgorithm(DigestAlgorithm.MD5);
+            lib.setLibraryId(new LibraryId(this.getName(), this.getName(), this.getVersion()));
+            if(this.getConstructs()!=null) {
+                lib.setConstructs(ConstructId.getSharedType(this.getConstructs().keySet()));
+            }
         }
 
         final Set<Property> p = new HashSet<Property>();
@@ -110,9 +122,10 @@ public class NpmInstalledPackage implements Comparable {
             throw new IllegalStateException("Property [" + REQUIRES + "] not known");
 
         final String[] packs = this.properties.get(REQUIRES).split(",");
-        for(int i=0; i<packs.length; i++)
-            if(_pack.getName().equalsIgnoreCase(packs[i].trim()))
+        for(int i=0; i<packs.length; i++) {
+            if (_pack.getName().equalsIgnoreCase(packs[i].trim()))
                 return true;
+        }
         return false;
     }
 
@@ -165,12 +178,12 @@ public class NpmInstalledPackage implements Comparable {
      * @throws FileAnalysisException
      */
     private Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
-        if(this.fileAnalyzer == null){
-            // Get from .js file
-            if(this.jsFile != null) {
-                this.fileAnalyzer = FileAnalyzerFactory.buildFileAnalyzer(this.jsFile.toFile());
+        if(this.constructs == null){
+            // Get from directory
+            if(this.downloadPath != null) {
+                this.fileAnalyzer = FileAnalyzerFactory.buildFileAnalyzer(this.downloadPath.toFile());
                 this.constructs = this.fileAnalyzer.getConstructs();
-                log.info("Got [" + this.constructs.size() + "] constructs from file [" + this.jsFile + "]");
+                log.info("Got [" + this.constructs.size() + "] constructs from package [" + this.getName() + "]");
             }
             // Error
             else {
@@ -179,6 +192,8 @@ public class NpmInstalledPackage implements Comparable {
         }
         return this.constructs;
     }
+
+
 
     /**
      * Filter the given packages according to whether the artifact name is (or is not, depending on the boolean flag) contained in the given filter.
@@ -209,8 +224,17 @@ public class NpmInstalledPackage implements Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return 0;
+    public int compareTo(Object _other) {
+        if(_other instanceof NpmInstalledPackage) {
+            final NpmInstalledPackage other = (NpmInstalledPackage) _other;
+            int i = this.name.compareTo(other.getName());
+            if(i==0)
+                i = this.version.compareTo(other.getVersion());
+            return i;
+        }
+        else {
+            throw new IllegalArgumentException("Cannot compare with object of type [" + _other.getClass() + "]");
+        }
     }
 
     public String getStandardDistributionName() {
