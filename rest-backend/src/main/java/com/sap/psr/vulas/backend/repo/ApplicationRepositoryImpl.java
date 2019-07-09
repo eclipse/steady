@@ -474,9 +474,9 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		TreeSet<VulnerableDependency> vd_list_bundled_cc = new TreeSet<VulnerableDependency>();
 		TreeSet<VulnerableDependency> vd_list_bundled_av = new TreeSet<VulnerableDependency>();
 		
-		List<Dependency> depsWithBundledLibIds = this.depRepository.findWithBundledByApp(_app);
+		List<Dependency> depsWithBundledLibIds = this.depRepository.findWithDifferentBundledLibByApp(_app);
 		
-		log.debug("Found ["+depsWithBundledLibIds.size()+"] libs with bundled libids.");
+		log.info("Found ["+depsWithBundledLibIds.size()+"] libs with bundled libids different from itself.");
 		
 		for(Dependency depWithBundledLibId : depsWithBundledLibIds){
 			Collection<LibraryId> bundledLibIds = depWithBundledLibId.getLib().getBundledLibraryIds();
@@ -486,17 +486,17 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 				if(bundledDigests==null || bundledDigests.size()==0){
 					log.warn("The bundled libraryId ["+bundledLibId+"] does not appear as GAV for any of the existing digests.");
 				} else if(bundledDigests.contains(depWithBundledLibId.getLib())){
-					log.debug("The bundled library "+bundledDigests.get(0).toString()+" is the library itself "+depWithBundledLibId.getLib().toString()+", no need to query for vuln deps");
+					log.warn("The bundled library "+bundledDigests.get(0).toString()+" is the library itself "+depWithBundledLibId.getLib().toString()+", no need to query for vuln deps");
 				} else {
 					Library bundledDigest = null;
 					for(Library l: bundledDigests){
-						if(l.getWellknownDigest() == true){
+						if(l.getWellknownDigest()!=null && l.getWellknownDigest() == true){
 							bundledDigest = l;
 							break;
 						}			
 					}
 					
-					if(bundledDigest!=null){
+					if(bundledDigest != null){
 						log.debug("Found ["+bundledDigests.size()+"] digests for the bundled libid, using: " + bundledDigest.getDigest());
 					
 						List<Bug> vulns_cc = this.bugRepository.findByLibrary(bundledDigest);
@@ -516,7 +516,11 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 					for (Bug b: vulns_av_true){
 						VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
 						vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDAFFLIBID);
-						vulndep.setAffectedVersion(1);
+						Boolean rebundlingAffected = this.affLibRepository.isBugLibIdAffected(b.getBugId(), depWithBundledLibId.getLib().getLibraryId());
+						if(rebundlingAffected != null && !rebundlingAffected)
+							vulndep.setAffectedVersion(0);
+						else						
+							vulndep.setAffectedVersion(1);
 						vulndep.setAffectedVersionConfirmed(1);
 						vulndep.setBundledLibId(bundledLibId);
 						vd_list_bundled_av.add(vulndep);
@@ -565,9 +569,9 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		// Merge bugs found joining constructs and libids 
 		final TreeSet<VulnerableDependency> vd_all = new TreeSet<VulnerableDependency>();	
 		vd_all.addAll(vd_list_cc); //this must be done before the add for bundled vulndeps to ensure that we do not consider as bundledcc the cases where the code signature was not altered.
-		vd_all.addAll(vd_list_libid);
 		vd_all.addAll(vd_list_bundled_cc);
 		vd_all.addAll(vd_list_bundled_av);
+		vd_all.addAll(vd_list_libid); // this must be added after the vd_list_bundled_av, to ensure that we get the info that a pair dep,bug comes out of something rebundled, though we overwrite it as FP at the level of the rebundling artifact
 
 		// Read excemption info from configuration and enrich vuln dep
 		if(_add_excemption_info) {

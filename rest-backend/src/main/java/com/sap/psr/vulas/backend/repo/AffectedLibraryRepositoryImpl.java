@@ -197,7 +197,7 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 	}
 	
 	public void computeAffectedLib(VulnerableDependency _vd, Library _lib){
-		//check existance of AffectedLibraries for the outer library in the case of rebundled libs (required to mark FP entries for the outer library)
+		//check existence of AffectedLibraries for the outer library in the case of rebundled libs (required to mark FP entries for the outer library)
 		Boolean rebundled = (_vd.getDep().getLib().equals(_lib))?false:true;
 		Boolean avForRebundled = null;
 		if(rebundled){
