@@ -108,13 +108,15 @@ public class DependencyUtil {
 						parent_set.add(d.getParent());
 				}
 				else {
-					log.warn("Dependency " + d + " occurs multiple times in the set, one on the same library already exists: " + existing_dep);
+					log.error("Dependency " + d + " occurs multiple times in the set, one on the same library already exists: " + existing_dep);
 					return false;
 				}
 			}
 			for(Dependency d: parent_set){
-				if(!main_set.contains(d))
+				if(!main_set.contains(d)) {
+					log.error("Dependency parent " + d + " is not declared as dependency itself");
 					return false;
+				}
 			}
 		}	
 		return true;

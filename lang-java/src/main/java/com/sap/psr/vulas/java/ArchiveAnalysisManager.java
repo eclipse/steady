@@ -210,7 +210,6 @@ public class ArchiveAnalysisManager {
 				if(parent!=null)
 					ja.setParent(parent);
 
-				
 				ja.setRename(this.rename);
 				ja.setWorkDir(this.workDir);
 
