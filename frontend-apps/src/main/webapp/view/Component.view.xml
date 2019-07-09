@@ -245,15 +245,15 @@
 		 												formatter: 'model.Formatter.directTransitive'}"></TextView>
 										</template>
 									</Column>
-									<Column xmlns="sap.ui.table" width="10%">
-										<Label text="Depth" xmlns="sap.ui.commons" />
-										<template>
-											<TextView xmlns="sap.ui.commons"
-												text="{
-		 												path: 'parent',
-		 												formatter: 'model.Formatter.parentDepth'}"></TextView>
-										</template>
-									</Column>
+<!-- 									<Column xmlns="sap.ui.table" width="10%"> -->
+<!-- 										<Label text="Depth" xmlns="sap.ui.commons" /> -->
+<!-- 										<template> -->
+<!-- 											<TextView xmlns="sap.ui.commons" -->
+<!-- 												text="{ -->
+<!-- 		 												path: 'parent', -->
+<!-- 		 												formatter: 'model.Formatter.parentDepth'}"></TextView> -->
+<!-- 										</template> -->
+<!-- 									</Column> -->
 									<Column xmlns="sap.ui.table" width="10%" sorted="true"
 										sortProperty="lib/wellknownDigest">
 										<multiLabels>
