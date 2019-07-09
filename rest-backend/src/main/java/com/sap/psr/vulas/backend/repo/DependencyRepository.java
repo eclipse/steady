@@ -88,7 +88,11 @@ public interface DependencyRepository extends PagingAndSortingRepository<Depende
 	List<DependencyIntersection> findDepIntersections(@Param("mvnGroup") String group, @Param("artifact") String artifact,@Param("version") String version,@Param("space") Space space);
 
 	
-	@Query("SELECT distinct dep FROM Dependency dep JOIN FETCH dep.lib l JOIN FETCH l.bundledLibraryIds  lb WHERE dep.app = :app AND lb IS NOT NULL")
+	@Query("SELECT distinct dep FROM Dependency dep JOIN FETCH dep.lib l JOIN FETCH l.bundledLibraryIds  lb WHERE dep.app = :app AND lb IS NOT NULL ")
 	List<Dependency> findWithBundledByApp(@Param("app") Application app);
+	
+	
+	@Query("SELECT distinct dep FROM Dependency dep JOIN FETCH dep.lib l JOIN FETCH l.bundledLibraryIds lb WHERE dep.app = :app AND lb IS NOT NULL AND NOT (SIZE(l.bundledLibraryIds)=1 AND l.libraryId MEMBER OF l.bundledLibraryIds) ")
+	List<Dependency> findWithDifferentBundledLibByApp(@Param("app") Application app);
 	
 }
