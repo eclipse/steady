@@ -40,7 +40,7 @@
     
     
       
-        <title>Deploy on Docker - vulnerability-assessment-tool 3.1.1</title>
+        <title>Deploy on Docker - vulnerability-assessment-tool 3.1.2</title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.1" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.2" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.1.1
+                vulnerability-assessment-tool 3.1.2
               </span>
               <span class="md-header-nav__topic">
                 Deploy on Docker
@@ -311,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.1" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.2" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.1.1
+    vulnerability-assessment-tool 3.1.2
   </label>
   
     <div class="md-nav__source">
@@ -1234,14 +1234,14 @@ Before proceeding, be sure to move there with:</p>
 <p>In <code>docker/.env</code> you must configure at least <code>POSTGRES_USER=</code>, you should also configure the <code>HAPROXY</code>'s user and password as well as the credentials to access the bugs' frontend</p>
 </div>
 <p>At this point, you are ready to perform the actual build with the following command:</p>
-<div class="codehilite"><pre><span></span>docker build --tag vulnerability-assessment-tool-generator:3.1.1 -f docker/Dockerfile --build-arg <span class="nv">http_proxy</span><span class="o">=</span> --build-arg <span class="nv">https_proxy</span><span class="o">=</span> .
-docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span>-DexcludedGroups<span class="o">=</span>com.sap.psr.vulas.shared.categories.Slow vulnerability-assessment-tool-generator:3.1.1
+<div class="codehilite"><pre><span></span>docker build --tag vulnerability-assessment-tool-generator:3.1.2 -f docker/Dockerfile --build-arg <span class="nv">http_proxy</span><span class="o">=</span> --build-arg <span class="nv">https_proxy</span><span class="o">=</span> .
+docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span>-DexcludedGroups<span class="o">=</span>com.sap.psr.vulas.shared.categories.Slow vulnerability-assessment-tool-generator:3.1.2
 </pre></div>
 
 <div class="admonition warning">
 <p class="admonition-title">Build error</p>
 <p>If the command above fails, add <code>-DreuseForks=False</code> flag to <code>mvn_flags</code>. As shown in the example below.</p>
-<div class="codehilite"><pre><span></span>docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span><span class="s1">&#39;-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow -DreuseForks=False&#39;</span> vulnerability-assessment-tool-generator:3.1.1
+<div class="codehilite"><pre><span></span>docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span><span class="s1">&#39;-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow -DreuseForks=False&#39;</span> vulnerability-assessment-tool-generator:3.1.2
 </pre></div>
 
 </div>
