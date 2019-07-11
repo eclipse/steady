@@ -1,5 +1,6 @@
 package com.sap.psr.vulas.mvn;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -16,13 +17,13 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.AbstractAppGoal;
 import com.sap.psr.vulas.goals.GoalExecutionException;
+import com.sap.psr.vulas.java.ArchiveAnalysisManager;
 import com.sap.psr.vulas.shared.enums.GoalClient;
 import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.json.model.Application;
@@ -259,12 +260,13 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
 
                 // Create dependency and put into map
                 dep = new Dependency(this.goal.getGoalContext().getApplication(), lib, Scope.fromString(a.getScope().toUpperCase(), Scope.RUNTIME), !direct_artifacts.contains(a), null, a.getFile().toPath().toString());
-                
+                                
                 // Set parent dependency (if there is any and it is NOT an intra-project Maven dependency with path target/classes)
                 final LibraryId parent = this.getParent(a.getDependencyTrail());
                 if(parent!=null) {
                 	for(Dependency parent_dep: dep_for_path.values()) {
-                		if(parent_dep.getLib().getLibraryId().equals(parent) && !Paths.get(parent_dep.getPath()).toFile().isDirectory()) {
+                		final File artifact_file = Paths.get(parent_dep.getPath()).toFile();
+                		if(parent_dep.getLib().getLibraryId().equals(parent) && !artifact_file.isDirectory() && ArchiveAnalysisManager.canAnalyze(artifact_file)) {
                 			dep.setParent(parent_dep);
                 			break;
                 		}
