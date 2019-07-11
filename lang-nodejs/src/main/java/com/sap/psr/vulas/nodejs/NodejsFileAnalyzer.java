@@ -66,6 +66,8 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
     @Override
     public boolean canAnalyze(File _file) {
         final String ext = FileUtil.getFileExtension(_file);
+        if(!FileUtil.isAccessibleFile(_file.toString()) || FileUtil.isAccessibleDirectory(_file))
+            return false;
         if(ext == null || ext.equals(""))
             return false;
         for(String supported_ext: this.getSupportedFileExtensions()) {

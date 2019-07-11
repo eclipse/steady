@@ -10,7 +10,12 @@ public class ProcessWrapperTest {
     @Test
     public void testIllegalChar() throws ProcessWrapperException {
         ProcessWrapper pw = new ProcessWrapper();
-        pw.setCommand(Paths.get("npm"), "list", "\\asas");
+        try {
+            pw.setCommand(Paths.get("npm"), "list", "\\asas");
+        } catch (ProcessWrapperException e) {
+            return;
+        }
+        assertTrue(false);
     }
 
     @Test
