@@ -165,7 +165,7 @@
 						</executions>
 					</plugin>
 					<!-- Deploy to the Central Repository according to https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release. -->
-					<plugin>
+					<!-- plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
 						<version>1.6.7</version>
@@ -175,7 +175,7 @@
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 							<autoReleaseAfterClose>true</autoReleaseAfterClose>
 						</configuration>
-					</plugin>
+					</plugin-->
 				</plugins>
 			</build>
 		</profile>

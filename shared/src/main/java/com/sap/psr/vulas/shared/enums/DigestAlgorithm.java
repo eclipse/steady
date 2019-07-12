@@ -6,7 +6,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
 
 /**
  * Enumeration of different digest algorithms, to be used when computing the digest of libraries with {@link FileUtil#getDigest(java.io.File, DigestAlgorithm)}.
- * @see {@link MessageDigest}
+ * @see MessageDigest
  */
 public enum DigestAlgorithm {
 	SHA1((byte)10), SHA256((byte)20), MD5((byte)30);

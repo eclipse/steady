@@ -40,7 +40,7 @@ public class FileUtil {
 
 	/**
 	 * Returns the file extension of the given {@link File} or null if the file does not have an extension.
-	 * @param the file whose extension is to be returned
+	 * @param _file the file whose extension is to be returned
 	 * @return the file extension of the given file (converted to lower case)
 	 * @throws IllegalArgumentException if the file argument is null or the file does not exist
 	 */
@@ -87,7 +87,7 @@ public class FileUtil {
 	}
 
 	/** 
-	 * Creates a new temporary directory with the given prefix inside the directory returned by {@link #getVulasTmpDir()}.  
+	 * Creates a new temporary directory with the given prefix inside the directory returned by {@link VulasConfiguration#getTmpDir()}.  
 	 * @return
 	 * @throws IOException
 	 */
@@ -146,7 +146,7 @@ public class FileUtil {
 
 	/**
 	 * Removes path information from the argument as to return the file name.
-	 * @param complete file path
+	 * @param _file_path complete file path
 	 * @return file name
 	 */
 	public static String getFileName(String _file_path) {
@@ -155,7 +155,7 @@ public class FileUtil {
 
 	/**
 	 * Removes path information and, if requested, the file extension from the given file name.
-	 * @param complete file path
+	 * @param _file_path complete file path
 	 * @return file name
 	 */
 	public static String getFileName(String _file_path, boolean _keep_ext) {
@@ -175,7 +175,8 @@ public class FileUtil {
 	/**
 	 * Returns the name of the {@link Charset} configured via configuration parameter {@link VulasConfiguration#CHARSET}.
 	 * 
-	 * @see {@link #readFile(Path)}, {@link #writeToFile(File, byte[])}, etc.
+	 * @see FileUtil#readFile(Path)
+	 * @see FileUtil#writeToFile(File, byte[])
 	 * @return
 	 */
 	public static String getCharsetName() {
@@ -185,7 +186,8 @@ public class FileUtil {
 	/**
 	 * Returns the {@link Charset} configured via configuration parameter {@link VulasConfiguration#CHARSET}.
 	 * 
-	 * @see {@link #readFile(Path)}, {@link #writeToFile(File, byte[])}, etc.
+	 * @see FileUtil#readFile(Path)
+	 * @see FileUtil#writeToFile(File, byte[])
 	 * @return
 	 */
 	public static Charset getCharset() {
@@ -220,7 +222,7 @@ public class FileUtil {
 	 * Preserves the line breaks of the original file.
 	 * As such, it can be used for calculating digests.
 	 * 
-	 * @see {@link DigestUtil#getDigestAsString(String,java.nio.charset.Charset, DigestAlgorithm)}
+	 * @see DigestUtil#getDigestAsString(String,java.nio.charset.Charset, DigestAlgorithm)
 	 * 
 	 * @param _p
 	 * @return
@@ -235,7 +237,8 @@ public class FileUtil {
 	/**
 	 * Reads the given {@link InputStream} into a {@link String}.
 	 * 
-	 * @param _p
+	 * @param _is
+	 * @param _cs
 	 * @return
 	 * @throws IOException
 	 */
@@ -246,7 +249,7 @@ public class FileUtil {
 	/**
 	 * Reads the given {@link InputStream} into a byte array.
 	 * 
-	 * @param _p
+	 * @param _is
 	 * @return
 	 * @throws IOException
 	 */
@@ -299,7 +302,7 @@ public class FileUtil {
 	/**
 	 * Expects a {@link String} array with multiple paths and returns a set for all those paths that represent
 	 * accessible files or directories in the file system.
-	 * @param _p
+	 * @param _paths
 	 */
 	public static Set<Path> getPaths(String[] _paths) {
 		final Set<Path> r = new HashSet<Path>();
@@ -416,7 +419,6 @@ public class FileUtil {
 	 * Returns all JARs known to the given {@link URLClassLoader}.
 	 * 
 	 * @param _cl
-	 * @param _resources
 	 * @return
 	 */
 	public static Set<String> getJarFilePaths(URLClassLoader _cl) {

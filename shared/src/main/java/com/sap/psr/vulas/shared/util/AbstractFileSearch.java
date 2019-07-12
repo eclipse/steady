@@ -36,8 +36,8 @@ public class AbstractFileSearch extends SimpleFileVisitor<Path> {
 	
 	/**
 	 * Starts searching for files in the given paths, with unlimited depth.
-	 * @param _path the FS path to search in
-	 * @returns a set of paths for all files found
+	 * @param _paths the FS path to search in
+	 * @return a set of paths for all files found
 	 */
 	public Set<Path> search(Set<Path> _paths) { return this.search(_paths, java.lang.Integer.MAX_VALUE); }
 	
@@ -45,7 +45,7 @@ public class AbstractFileSearch extends SimpleFileVisitor<Path> {
 	 * Starts searching for files in the given paths.
 	 * @param _paths one or multiple FS paths to search in
 	 * @param _depth the depth of nested directories to search in
-	 * @returns a set of paths for all files found
+	 * @return a set of paths for all files found
 	 */
 	public Set<Path> search(Set<Path> _paths, int _depth) {
 		for(Path p: _paths)
@@ -56,16 +56,16 @@ public class AbstractFileSearch extends SimpleFileVisitor<Path> {
 	
 	/**
 	 * Starts searching for files in the given path, with unlimited depth.
-	 * @param _path the FS path to search in
-	 * @returns a set of paths for all files found
+	 * @param _p the FS path to search in
+	 * @return a set of paths for all files found
 	 */
 	public Set<Path> search(Path _p) { return this.search(_p, java.lang.Integer.MAX_VALUE); }
 	
 	/**
 	 * Starts searching for files in the given path, up to the specified depth.
-	 * @param _path the FS path to search in
+	 * @param _p the FS path to search in
 	 * @param _depth the depth of nested directories to search in
-	 * @returns a set of paths for all files found
+	 * @return a set of paths for all files found
 	 */
 	public Set<Path> search(@NotNull Path _p, int _depth) {
 		try {

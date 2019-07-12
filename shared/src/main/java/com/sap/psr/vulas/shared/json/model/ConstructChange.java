@@ -168,7 +168,7 @@ public class ConstructChange implements Serializable, Comparable<ConstructChange
 	 * In that case, the method will return both /poi/trunk and /poi/branches/REL_3_10_BRANCH, so that the archive check can
 	 * be done one after the other.
 	 * 
-	 * @param changes
+	 * @param _changes
 	 * @return
 	 */
         @JsonIgnore

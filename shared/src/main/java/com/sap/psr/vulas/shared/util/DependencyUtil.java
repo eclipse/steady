@@ -20,7 +20,6 @@ public class DependencyUtil {
 	 * the relational database table storing dependencies does not.
 	 * 
 	 * @param _deps
-	 * @param _lib
 	 * @return
 	 */
 	public static Set<Dependency> removeDuplicateLibraryDependencies(Collection<Dependency> _deps) {

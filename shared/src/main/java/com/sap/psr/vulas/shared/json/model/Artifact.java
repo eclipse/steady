@@ -269,7 +269,6 @@ public class Artifact implements Serializable,Comparable<Object> {
 	 * classifier is one of 'sources', 'javadoc', 'test-sources', and 'tests', and
 	 * packaging is one of 'pom', 'jar' and 'war'.
 	 * Without all this information, a download is not possible.
-	 * @param _doc
 	 * @return
 	 */
 	public boolean isReadyForDownload() {

@@ -52,8 +52,7 @@ public class StringUtil {
 
 	/**
 	 * Converts byte to Megabyte and returns a string representation in the form "XXXX.Y MB".
-	 * @param _d the number of bytes
-	 * @see #byteToMBString(long)
+	 * @param _bytes the number of bytes
 	 * @return
 	 */
 	public static final String byteToMBString(long _bytes)   { return formatMBString((double)_bytes/(double)MEGABYTE); }

@@ -57,7 +57,7 @@ import com.sap.psr.vulas.shared.connectivity.ServiceConnectionException;
  * 
  * System properties (added by default): Settings specified with the JVM option -D.
  * 
- * Map properties (no default, added through {@link VulasConfiguration#addAfterSystemProperties(Map)}. Results in
+ * Map properties (no default, added through {@link VulasConfiguration#addLayerAfterSysProps(String, Map, String, boolean)}. Results in
  * rebuilding the entire composite configuration.
  * 
  * Properties files (added by default): Found in the current work directory (.) and its sub-directories.
@@ -273,7 +273,6 @@ public class VulasConfiguration {
 	 * @param _map
 	 * @param _ignore_value if specified, elements will only be added if the value's string representation from this argument
 	 * @param _ignore_null whether or not null values shall be ignored
-	 * @return
 	 * @throws IllegalArgumentException
 	 */
 	public void addLayerAfterSysProps(@NotNull String _layer_name, @NotNull Map<?,?> _map, String _ignore_value, boolean _ignore_null) {

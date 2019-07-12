@@ -69,14 +69,14 @@ public class JacksonUtil {
 	
 	/**
 	 * Deserializes the given JSON, thereby using no custom {@link StdDeserializer}s.
-	 * @param _object
-	 * @param _custom_serializers
+	 * @param _json
+	 * @param _clazz
 	 * @return
 	 */
-	public static Object asObject(final String json, final Class<?> clazz) {
+	public static Object asObject(final String _json, final Class<?> _clazz) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, clazz);
+            return mapper.readValue(_json, _clazz);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

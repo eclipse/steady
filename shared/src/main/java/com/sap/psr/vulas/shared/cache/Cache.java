@@ -3,7 +3,6 @@ package com.sap.psr.vulas.shared.cache;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -71,9 +70,11 @@ public class Cache<S, T> {
 	
 	/**
 	 * Reads the cache entry for the given key. In case such an object does not exist, the method
-	 * calls {@link CveReader#fetch(String)} in order to read the object from the remote store.
-	 * @param _key
-	 * @return
+	 * calls {@link ObjectFetcher#fetch(Object)} in order to read the object from the remote store.
+	 * 
+	 * @param _key the key of the entry to be returned
+	 * @param _force_fetch if true, the entry will be fetched no matter whether it already exists in the cache
+	 * @return the entry for the given key
 	 */
 	public synchronized T get(S _key, boolean _force_fetch) throws CacheException {
 		final long current_time = System.currentTimeMillis();
