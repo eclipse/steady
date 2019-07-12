@@ -440,16 +440,4 @@ public class PathBuilder {
 		sb.append("/constructs/diff");
 		return sb.toString();
 	}
-
-//	/**
-//	 * vulas-backend:/bugs
-//	 * @return 
-//	 */
-//	public static final String allBugs(){
-//		final StringBuilder b = new StringBuilder();
-//		b.append("/bugs/");
-//		return b.toString();
-//	}
-	
-
 }

@@ -165,17 +165,10 @@
 						</executions>
 					</plugin>
 					<!-- Deploy to the Central Repository according to https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release. -->
-					<!-- plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.7</version>
-						<extensions>true</extensions>
-						<configuration>
-							<serverId>ossrh</serverId>
-							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose>
-						</configuration>
-					</plugin-->
+					<!-- plugin> <groupId>org.sonatype.plugins</groupId> <artifactId>nexus-staging-maven-plugin</artifactId> 
+						<version>1.6.7</version> <extensions>true</extensions> <configuration> <serverId>ossrh</serverId> 
+						<nexusUrl>https://oss.sonatype.org/</nexusUrl> <autoReleaseAfterClose>true</autoReleaseAfterClose> 
+						</configuration> </plugin -->
 				</plugins>
 			</build>
 		</profile>
@@ -401,7 +394,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.0</version>
+				<version>0.8.4</version>
 				<configuration>
 					<excludes>
 						<!-- Exclude ANTLR generated classes -->
@@ -435,15 +428,16 @@
 						</goals>
 						<configuration>
 							<rules>
-								<!-- implementation is needed only for Maven 2 -->
-								<rule implementation="org.jacoco.maven.RuleConfiguration">
-									<element>BUNDLE</element>
+								<rule>
+									<element>CLASS</element>
+									<excludes>
+										<exclude>*Test</exclude>
+									</excludes>
 									<limits>
-										<!-- implementation is needed only for Maven 2 -->
-										<limit implementation="org.jacoco.report.check.Limit">
-											<counter>COMPLEXITY</counter>
+										<limit>
+											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.0</minimum>
+											<minimum>50%</minimum>
 										</limit>
 									</limits>
 								</rule>
