@@ -172,18 +172,6 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		this.mMethodName = mMethodName;
 	}
 
-	public boolean isStructuralChange() {
-		boolean b = false;
-		for(SourceCodeChange scc: this.listOfChanges) {
-			if(scc instanceof Update) {}
-			else {
-				b = true;
-				break;
-			}
-		}
-		return b;
-	}
-
 	public String operationTypetoJSON(OperationType t){
 		final StringBuilder b  = new StringBuilder();
 		b.append("\"operationType\" : \"");
