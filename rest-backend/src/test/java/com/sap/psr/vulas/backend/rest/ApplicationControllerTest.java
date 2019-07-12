@@ -721,7 +721,7 @@ public class ApplicationControllerTest {
     	assertTrue(bundledDigests.size()==1);
 		
 		for (Object[] e: bundledDigests){			
-			Library bundledDigest = LibraryRepository.FILTER.findOne(this.libRepository.findById(((BigInteger)e[1]).longValue())); 
+			Library bundledDigest = this.libRepository.findById(((BigInteger)e[1]).longValue()).orElse(null); 
 			List<Bug> vulns_cc = this.bugRepository.findByLibrary(bundledDigest);
 			
 			assertTrue(vulns_cc.size()==1);

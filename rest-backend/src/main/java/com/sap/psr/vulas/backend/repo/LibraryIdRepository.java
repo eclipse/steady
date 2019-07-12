@@ -17,9 +17,6 @@ public interface LibraryIdRepository extends CrudRepository<LibraryId, Long> {
 
 	public static final ResultSetFilter<LibraryId> FILTER = new ResultSetFilter<LibraryId>();
 
-	@Query("SELECT l FROM LibraryId l WHERE l.id=:id")
-	List<LibraryId> findById(@Param("id") Long id);
-	
 	@Query("SELECT libid FROM LibraryId AS libid WHERE libid.mvnGroup = :mvnGroup AND libid.artifact = :artifact AND libid.version = :version")
 	List<LibraryId> findBySecondaryKey(@Param("mvnGroup") String mvnGroup, @Param("artifact") String artifact, @Param("version") String version);
 	
