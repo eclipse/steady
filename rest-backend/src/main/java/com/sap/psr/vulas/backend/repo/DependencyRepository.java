@@ -22,9 +22,7 @@ public interface DependencyRepository extends PagingAndSortingRepository<Depende
 	
 	public static final ResultSetFilter<Dependency> FILTER = new ResultSetFilter<Dependency>();
 
-//	@Query("SELECT dep FROM Dependency dep JOIN FETCH dep.lib l WHERE dep.id = :id")
-//	Optional<List<Dependency>> findById(@Param("id") ID id);
-	
+
 	@Query("SELECT dep FROM Dependency dep JOIN FETCH dep.lib l WHERE l.digest = :lib")
 	List<Dependency> findByDigest(@Param("lib") String lib);
 	

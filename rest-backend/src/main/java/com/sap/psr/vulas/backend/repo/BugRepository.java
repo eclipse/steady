@@ -24,9 +24,7 @@ public interface BugRepository extends CrudRepository<Bug, Long>, BugRepositoryC
 
 	public static final ResultSetFilter<Bug> FILTER = new ResultSetFilter<Bug>();
 	
-//	@Query("SELECT b FROM Bug b JOIN FETCH b.constructChanges WHERE b.id=:id")
-//	Optional<List<Bug>> findById(@Param("id") Long id);
-	
+
 	@Query("SELECT b FROM Bug b  WHERE b.bugId=:bugId") //adding 'JOIN FETCH b.constructChanges', the junit tests fails: e.g., it tries to insert twice the same bug as if the equal return false?
 	List<Bug> findByBugId(@Param("bugId") String bugid);
 	

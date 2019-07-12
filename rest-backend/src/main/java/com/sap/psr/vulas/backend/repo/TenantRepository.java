@@ -15,9 +15,7 @@ import com.sap.psr.vulas.backend.util.ResultSetFilter;
 public interface TenantRepository extends CrudRepository<Tenant, Long>, TenantRepositoryCustom {
 
 	public static final ResultSetFilter<Tenant> FILTER = new ResultSetFilter<Tenant>();
-	
-//	List<Tenant> findById(@Param("id") Long id);
-	
+		
 	@Query("SELECT s FROM Tenant AS s WHERE s.tenantToken = :token")
 	List<Tenant> findBySecondaryKey(@Param("token") String token);
 	
