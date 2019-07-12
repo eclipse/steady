@@ -1,5 +1,6 @@
 package com.sap.psr.vulas.java;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,6 +24,7 @@ import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Dependency;
 import com.sap.psr.vulas.shared.util.FileSearch;
+import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
@@ -91,6 +93,19 @@ public class ArchiveAnalysisManager {
 	public void setIncludeDir(Path _p) {
 		this.inclDir = _p;
 		ArchiveAnalysisManager.log.info("Include dir set to [" + _p + "]");
+	}
+	
+	public static String[] getSupportedFileExtensions() { return new String[] { "jar", "war", "aar" }; }
+
+	public static final boolean canAnalyze(File _file) {
+		final String ext = FileUtil.getFileExtension(_file);
+		if(ext == null || ext.equals(""))
+			return false;
+		for(String supported_ext: getSupportedFileExtensions()) {
+			if(supported_ext.equalsIgnoreCase(ext))
+				return true;
+		}
+		return false;
 	}
 
 	/**
@@ -210,7 +225,6 @@ public class ArchiveAnalysisManager {
 				if(parent!=null)
 					ja.setParent(parent);
 
-				
 				ja.setRename(this.rename);
 				ja.setWorkDir(this.workDir);
 

@@ -1,5 +1,6 @@
 package com.sap.psr.vulas.mvn;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -16,13 +17,13 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.AbstractAppGoal;
 import com.sap.psr.vulas.goals.GoalExecutionException;
+import com.sap.psr.vulas.java.ArchiveAnalysisManager;
 import com.sap.psr.vulas.shared.enums.GoalClient;
 import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.json.model.Application;
@@ -259,25 +260,27 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
 
                 // Create dependency and put into map
                 dep = new Dependency(this.goal.getGoalContext().getApplication(), lib, Scope.fromString(a.getScope().toUpperCase(), Scope.RUNTIME), !direct_artifacts.contains(a), null, a.getFile().toPath().toString());
-                
-                // Set parent dependency (if any)
+                                
+                // Set parent dependency (if there is any and it is NOT an intra-project Maven dependency with path target/classes)
                 final LibraryId parent = this.getParent(a.getDependencyTrail());
                 if(parent!=null) {
-                	for(Dependency d: dep_for_path.values()) {
-                		if(d.getLib().getLibraryId().equals(parent)) {
-                			dep.setParent(d);
+                	for(Dependency parent_dep: dep_for_path.values()) {
+                		final File artifact_file = Paths.get(parent_dep.getPath()).toFile();
+                		if(parent_dep.getLib().getLibraryId().equals(parent) && !artifact_file.isDirectory() && ArchiveAnalysisManager.canAnalyze(artifact_file)) {
+                			dep.setParent(parent_dep);
                 			break;
                 		}
                 	}
                 }
                 
+                getLog().info("Dependency [" + StringUtil.padLeft(++count, 4) + "]: Dependency [libid=" + dep.getLib().getLibraryId() + ", parent=" + (dep.getParent()==null ? "null" : dep.getParent().getLib().getLibraryId()) + ", path=" + a.getFile().getPath() + ", direct=" + direct_artifacts.contains(a) + ", scope=" + dep.getScope() + "] created for Maven artifact [g=" + a.getGroupId() + ", a=" + a.getArtifactId() + ", base version=" + a.getBaseVersion() + ", version=" + a.getVersion() + ", classifier=" + a.getClassifier() + "]");
+                getLog().info("    " + StringUtil.join(a.getDependencyTrail(), " => "));
+                
                 // Check consistency
                 if( (dep.getParent()==null && dep.getTransitive()) || (dep.getParent()!=null && !dep.getTransitive()) ) {
+                	// Note that those warnings are printed for all dependency trails that include intrta-project dependencies (since they are ignored for the time being)
                 	getLog().warn("Dependency is transitive [" + dep.getTransitive() + "], but parent is [" + (dep.getParent()==null ? "null" : "present") + "]");
                 }
-                
-                getLog().info("Dependency [" + StringUtil.padLeft(++count, 4) + "]: Dependency [libid=" + dep.getLib().getLibraryId() + ", parent=" + (dep.getParent()==null ? "null" : dep.getParent().getLib().getLibraryId()) + ", path " + a.getFile().getPath() + ", direct=" + direct_artifacts.contains(a) + ", scope=" + dep.getScope() + "] created for Maven artifact [g=" + a.getGroupId() + ", a=" + a.getArtifactId() + ", base version=" + a.getBaseVersion() + ", version=" + a.getVersion() + ", classifier=" + a.getClassifier() + "]");
-                getLog().info("    " + StringUtil.join(a.getDependencyTrail(), " => "));
                 
                 dep_for_path.put(a.getFile().toPath(), dep);
             }
@@ -285,7 +288,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
             //TODO: Is it necessary to check whether the above dependency (via getArtifacts) is actually the one added to the classpath (via project.getRuntimeClasspathElements())?
             //TODO: It may be that a different version (file) is chosen due to conflict resolution. Still, those cases should also be visible in the frontend (archive view).
 
-            ((AbstractAppGoal) this.goal).setKnownDependencies(dep_for_path);
+            ((AbstractAppGoal)this.goal).setKnownDependencies(dep_for_path);
         }
     }
     

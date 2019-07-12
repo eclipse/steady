@@ -1,6 +1,10 @@
 package com.sap.psr.vulas.monitor.slice;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,7 +20,9 @@ import com.sap.psr.vulas.goals.AbstractGoal;
 import com.sap.psr.vulas.java.JavaId;
 import com.sap.psr.vulas.monitor.AbstractInstrumentor;
 import com.sap.psr.vulas.monitor.ClassVisitor;
+import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.Dependency;
+import com.sap.psr.vulas.shared.util.FileUtil;
 
 import javassist.CannotCompileException;
 import javassist.CtBehavior;
@@ -33,59 +39,76 @@ public class SliceInstrumentor extends AbstractInstrumentor {
 	// ====================================== INSTANCE MEMBERS
 
 	/**
-	 * Constructs that have been traced.
+	 * Blacklist of constructs not to be instrumented.
 	 */
-	private Set<ConstructId> tracedConstructs = null;
+	private Set<ConstructId> blacklistedConstructsNotToInstrument = new HashSet<ConstructId>();
 
 	/**
-	 * Constructs that have been found reachable.
+	 * Whitelist of constructs to be instrumented.
 	 */
-	private Set<Dependency> dependencies = null;
-	
+	private Set<ConstructId> whitelistedConstructsToInstrument = new HashSet<ConstructId>();;
+
 	public SliceInstrumentor() {
 		try {
-			this.tracedConstructs = JavaId.toCoreType(BackendConnector.getInstance().getAppTraces(CoreConfiguration.buildGoalContextFromConfiguration(this.vulasConfiguration), CoreConfiguration.getAppContext(this.vulasConfiguration)));
-			this.dependencies = BackendConnector.getInstance().getAppDependencies(CoreConfiguration.buildGoalContextFromConfiguration(this.vulasConfiguration), CoreConfiguration.getAppContext(this.vulasConfiguration));
-		} catch (ConfigurationException e) {
-			SliceInstrumentor.log.error("Error during instantiation: " + e.getMessage());
-			throw new IllegalStateException("Error during instantiation: " + e.getMessage(), e);
-		} catch (IllegalStateException e) {
-			SliceInstrumentor.log.error("Error during instantiation: " + e.getMessage());
-			throw new IllegalStateException("Error during instantiation: " + e.getMessage(), e);
-		} catch (BackendConnectionException e) {
-			SliceInstrumentor.log.error("Error during instantiation: " + e.getMessage());
+			this.determineConstructs();
+		} catch (Exception e) {
+			SliceInstrumentor.log.error("[" + e.getClass().getSimpleName() + "] during instantiation: " + e.getMessage());
 			throw new IllegalStateException("Error during instantiation: " + e.getMessage(), e);
 		}
 	}
-	
+
 	/**
-	 * Accepts every construct that has been traced or found reachable.
+	 * Builds the whitelist (blacklist) of constructs that will (not) be instrumented. The respective {@link ConstructId}s are
+	 * either loaded from disk or read from the backend, depending on the presence of the configuration settings {@link CoreConfiguration#INSTR_SLICE_WHITELIST} and  {@link CoreConfiguration#INSTR_SLICE_BLACKLIST}.
+	 * 
+	 * @throws ConfigurationException
+	 * @throws IllegalStateException
+	 * @throws BackendConnectionException
+	 */
+	private void determineConstructs() throws ConfigurationException, IllegalStateException, BackendConnectionException, IOException {
+		if(!this.vulasConfiguration.isEmpty(CoreConfiguration.INSTR_SLICE_WHITELIST) || !this.vulasConfiguration.isEmpty(CoreConfiguration.INSTR_SLICE_BLACKLIST)) {
+			// Whitelist
+			if(!this.vulasConfiguration.isEmpty(CoreConfiguration.INSTR_SLICE_WHITELIST)) {
+				final com.sap.psr.vulas.shared.json.model.ConstructId[] wl = (com.sap.psr.vulas.shared.json.model.ConstructId[])JacksonUtil.asObject(FileUtil.readFile(Paths.get(this.vulasConfiguration.getConfiguration().getString(CoreConfiguration.INSTR_SLICE_WHITELIST))), com.sap.psr.vulas.shared.json.model.ConstructId[].class);
+				whitelistedConstructsToInstrument.addAll(JavaId.toCoreType(Arrays.asList(wl)));
+			}
+			// Blacklist
+			if(!this.vulasConfiguration.isEmpty(CoreConfiguration.INSTR_SLICE_BLACKLIST)) {
+				final com.sap.psr.vulas.shared.json.model.ConstructId[] bl = (com.sap.psr.vulas.shared.json.model.ConstructId[])JacksonUtil.asObject(FileUtil.readFile(Paths.get(this.vulasConfiguration.getConfiguration().getString(CoreConfiguration.INSTR_SLICE_BLACKLIST))), com.sap.psr.vulas.shared.json.model.ConstructId[].class);
+				blacklistedConstructsNotToInstrument.addAll(JavaId.toCoreType(Arrays.asList(bl)));
+			}
+		} else {
+			this.blacklistedConstructsNotToInstrument.addAll(JavaId.toCoreType(BackendConnector.getInstance().getAppTraces(CoreConfiguration.buildGoalContextFromConfiguration(this.vulasConfiguration), CoreConfiguration.getAppContext(this.vulasConfiguration))));
+			final Set<Dependency> reached_dependencies = BackendConnector.getInstance().getAppDependencies(CoreConfiguration.buildGoalContextFromConfiguration(this.vulasConfiguration), CoreConfiguration.getAppContext(this.vulasConfiguration));
+			for(Dependency d: reached_dependencies) {
+				blacklistedConstructsNotToInstrument.addAll(JavaId.toCoreType(d.getReachableConstructIds()));
+			}
+		}
+		log.info("Construct whitelist comprises [" + this.whitelistedConstructsToInstrument.size() + "] items, construct blacklist comprises [" + this.blacklistedConstructsNotToInstrument.size() + "] items");
+	}
+
+	/**
+	 * Returns true if the following two conditions hold, false otherwise:
+	 * (1) The given {@link JavaId} is whitelisted or there is no whitelist
+	 * (2) The given {@link JavaId} is NOT blacklisted or there is no blacklist.
+	 * 
+	 * If there is neither a blacklist nor a whitelist, the method always returns false. 
 	 */
 	@Override
 	public boolean acceptToInstrument(JavaId _jid, CtBehavior _behavior, ClassVisitor _cv) {
-		return !this.tracedConstructs.contains(_jid) && !this.isReachable(_jid);
-	}
-	
-	/**
-	 * Returns true if the given {@link JavaId} is among the reachable constructs of any of the application {@link Dependency}s, false otherwise.
-	 */
-	private boolean isReachable(JavaId _jid) {
-		boolean is_reachable = false;
-		for(Dependency d: this.dependencies) {
-			if(d.getReachableConstructIds().contains(_jid)) {
-				is_reachable = true;
-				break;
-			}
-		}
-		return is_reachable;
+		final boolean whitelisted = this.whitelistedConstructsToInstrument.isEmpty() || this.whitelistedConstructsToInstrument.contains(_jid) || this.whitelistedConstructsToInstrument.contains(_jid.getCompilationUnit()) || this.whitelistedConstructsToInstrument.contains(_jid.getJavaPackageId());
+		final boolean blacklisted = !this.blacklistedConstructsNotToInstrument.isEmpty() && (this.blacklistedConstructsNotToInstrument.contains(_jid) || this.blacklistedConstructsNotToInstrument.contains(_jid.getCompilationUnit()) || this.blacklistedConstructsNotToInstrument.contains(_jid.getJavaPackageId())); 
+		final boolean r = whitelisted && !blacklisted;
+		log.info(_jid + " is whitelisted [" + whitelisted + "] and blacklisted [" + blacklisted + "]: Accepted for instrumentation [" + r + "]");
+		return r;
 	}
 
 	public void instrument(StringBuffer _code, JavaId _jid, CtBehavior _behavior, ClassVisitor _cv) throws CannotCompileException {
-		_code.append("final boolean is_open = Boolean.parseBoolean(System.getProperty(\"").append(CoreConfiguration.INSTR_GUARD_OPEN).append("\"));");
+		_code.append("final boolean is_open = Boolean.parseBoolean(System.getProperty(\"").append(CoreConfiguration.INSTR_SLICE_GUARD_OPEN).append("\"));");
 		_code.append("System.err.println(\"Execution of " + _jid.toString() + "\" + (is_open ? \"allowed\" : \"prevented\") + \" by Vulas guarding condition\");");
-		_code.append("if(!is_open) throw new IllegalStateException(\"Execution of " + _jid.toString() + "\" + prevented by Vulas guarding condition\");");
+		_code.append("if(!is_open) throw new IllegalStateException(\"Execution of " + _jid.toString() + " prevented by Vulas guarding condition\");");
 	}
-	
+
 	/**
 	 * Implementation does not do anything.
 	 */

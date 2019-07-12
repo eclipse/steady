@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.sap.research.security.vulas</groupId>
 		<artifactId>root</artifactId>
-		<version>3.0.20-SNAPSHOT</version>
+		<version>3.1.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>lang-java</artifactId>
 
@@ -31,11 +31,6 @@
 			<groupId>ch.uzh.ifi.seal</groupId>
 			<artifactId>changedistiller</artifactId>
 			<version>0.0.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bitbucket.mstrobel</groupId>
-			<artifactId>procyon-compilertools</artifactId>
-			<version>0.5.35</version>
 		</dependency>
 		<!-- The following are dependencies of ChangeDistiller (which is not in 
 			any repository) -->

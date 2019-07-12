@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 import java.util.function.Predicate;
 
 import javax.persistence.EntityNotFoundException;
@@ -714,33 +716,26 @@ public class ApplicationControllerTest {
 		app.setDependencies(app_dependency);
     	Application a = this.appRepository.customSave(app);
     	
-    	//test code from AppliationRepositoryImpl.findAppVulnerableDependencies
+    	List<Object[]> bundledDigests = this.libRepository.findBundledLibByApp(a);
+		
+    	assertTrue(bundledDigests.size()==1);
+		
+		for (Object[] e: bundledDigests){			
+			Library bundledDigest = LibraryRepository.FILTER.findOne(this.libRepository.findById(((BigInteger)e[1]).longValue())); 
+			List<Bug> vulns_cc = this.bugRepository.findByLibrary(bundledDigest);
+			
+			assertTrue(vulns_cc.size()==1);
+		}
+    	
+    	//test previous code (API not used anylonger in AppliationRepositoryImpl.findAppVulnerableDependencies)
     	List<Dependency> depsWithBundledLibIds = this.depRepository.findWithBundledByApp(a);
-		
 		assertTrue(depsWithBundledLibIds.size()==2);
-		
 		for(Dependency depWithBundledLibId : depsWithBundledLibIds){
 			Collection<LibraryId> bundledLibIds = depWithBundledLibId.getLib().getBundledLibraryIds();
 			if(depWithBundledLibId.getFilename().equals("commons-fileupload-1.2.2.jar"))
 				assertTrue(bundledLibIds.size()==1);
 			else
 				assertTrue(bundledLibIds.size()==3);
-			
-			for(LibraryId bundledLibId : bundledLibIds){
-				List<Library> bundledDigests = this.libRepository.findByLibraryId(bundledLibId);
-				
-				if(bundledDigests.size()==0){
-					System.out.println("The bundled libraryId ["+bundledLibId+"] does not appear as GAV for any of the existing digests.");
-				}else if(bundledDigests.contains(depWithBundledLibId.getLib())){
-					System.out.println("The bundled library is the library itself, no need to query for vuln deps");
-				}else{
-					System.out.println("Found ["+bundledDigests.size()+"] bundled digests, using the first : " + bundledDigests.get(0).getDigest());
-					Library bundledDigest = bundledDigests.get(0);
-					List<Bug> vulns = this.bugRepository.findByLibrary(bundledDigest);
-					System.out.println("found ["+vulns.size()+"] vulns");
-					assertTrue(vulns.size()==1);
-				}
-			}
 		}
 		
 		// Read vulndeps

@@ -94,8 +94,18 @@ sap.ui.controller("view.Component", {
 		})
 	},
 	
+	toggleAdvancedResults: function () {
+		if(this.getView().byId("toggleAdvancedResults").getSelected()){
+			this.getView().byId("idReach").setVisible(true);
+			this.getView().byId("idExec").setVisible(true);
+		} else {
+			this.getView().byId("idReach").setVisible(false);
+		    this.getView().byId("idExec").setVisible(false);
+		}
+	},
+
 	// Vulnerabilities tab: Loads data from backend, post-processes CVSS info and prepares mitigation tab
-	 loadVulns:function(hard) {
+	loadVulns:function(hard) {
 		
 		// Empty table, set to busy and reset counter
 		var oConstructView = this.getView().byId("idPatchAnalysisList");
@@ -108,18 +118,10 @@ sap.ui.controller("view.Component", {
 		// URL to load data
 		var incl_hist = this.getView().byId("includeHistorical").getSelected();
 		var incl_unconfirmed = this.getView().byId("includeUnconfirmed").getSelected();
-		
-		if(this.getView().byId("showAdvanced").getSelected()){
-			this.getView().byId("idReach").setVisible(true);
-			this.getView().byId("idExec").setVisible(true);
-		} else {
-			this.getView().byId("idReach").setVisible(false);
-		    this.getView().byId("idExec").setVisible(false);
-		}
 		  
 		var add_excemption_info = true;
 		var cache = model.lastChange
-		if (hard) {
+		if (hard === true) {
 			cache = false
 		}
 		var sUrl = model.Config.getUsedVulnerabilitiesServiceUrl(groupId, artifactId, versionId, incl_hist, incl_unconfirmed, add_excemption_info, cache);

@@ -64,3 +64,15 @@
 .sapMMsgStripMessage>.sapMLnk {
 	margin-left: 0 !important;
 }
+
+.clickable tr {
+	cursor: pointer;
+}
+
+.clickable tr .sapMText{
+	cursor: pointer !important;
+}
+
+.sapUiTableCell {
+	padding: 10px 0 !important;
+}

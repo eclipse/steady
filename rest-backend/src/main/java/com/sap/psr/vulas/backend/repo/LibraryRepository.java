@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sap.psr.vulas.backend.model.AffectedConstructChange;
+import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.Bug;
 import com.sap.psr.vulas.backend.model.ConstructId;
 import com.sap.psr.vulas.backend.model.Library;
@@ -168,7 +169,7 @@ public interface LibraryRepository extends CrudRepository<Library, Long>, Librar
 			+ "   AND lc = cc.constructId"
 			+ "   AND (NOT lc.type='PACK' "                        // Java + Python exception
 			+ "   OR NOT EXISTS (SELECT 1 FROM ConstructChange cc1 JOIN cc1.constructId c1 WHERE cc1.bug=cc.bug AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%' AND NOT c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') ) "     
-			+ "   AND NOT (lc.type='MODU' AND lc.qname='setup')" // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs
+			+ "   AND NOT (lc.type='MODU' AND (lc.qname='setup' OR lc.qname='tests' OR lc.qname='test.__init__'))" // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs. Similarly tests.py originates such a generic module that would bring up too many FPs
 			)
 		List<Library> findJPQLVulnerableLibrariesByBug(@Param("bugId") String bugId);
 	
@@ -211,5 +212,13 @@ public interface LibraryRepository extends CrudRepository<Library, Long>, Librar
 
 	@Query("SELECT l FROM Library l WHERE l.libraryId =:bundledLibId")
 	List<Library> findByLibraryId(@Param("bundledLibId") LibraryId bundledLibId);
+
+	@Query(value="select distinct d.id as dep_id, l2.id as bundled_lib_id"
+			+ "   from app_dependency d "
+			+ "   inner join lib l1 on d.lib=l1.digest "
+			+ "   inner join lib_bundled_library_ids bl on l1.id=bl.library_id "
+			+ "   inner join lib l2 on bl.bundled_library_ids_id=l2.library_id_id "
+			+ "   where d.app=:app and not l1.id = l2.id and l2.wellknown_digest='true'  ", nativeQuery=true)
+	List<Object[]> findBundledLibByApp(@Param("app") Application app);
 
 }

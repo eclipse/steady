@@ -15,13 +15,6 @@ public interface SignatureChange {
 	public Set<Object> getModifications();
 
 	public String toJSON();
-
-	/**
-	 * Returns true if the signature's structure was changed, e.g., if statements have been moved, inserted or deleted.
-	 * Returns false otherwise.  
-	 * @return
-	 */
-	public boolean isStructuralChange();
 	
 	public boolean isEmpty();
 }

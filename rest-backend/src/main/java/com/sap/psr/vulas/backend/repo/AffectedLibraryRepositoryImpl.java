@@ -197,25 +197,40 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 	}
 	
 	public void computeAffectedLib(VulnerableDependency _vd, Library _lib){
-			Boolean avByLib = this.affLibRepository.isBugLibAffected(_vd.getBug().getBugId(), _lib.getDigest());
-			boolean found=false;
-			if(avByLib !=null){
-				_vd.setAffectedVersion((avByLib)?1:0);
+		//check existence of AffectedLibraries for the outer library in the case of rebundled libs (required to mark FP entries for the outer library)
+		Boolean rebundled = (_vd.getDep().getLib().equals(_lib))?false:true;
+		Boolean avForRebundled = null;
+		if(rebundled){
+			avForRebundled = this.affLibRepository.isBugLibIdAffected(_vd.getBug().getBugId(), _vd.getDep().getLib().getLibraryId());
+		}	
+		
+		if(avForRebundled !=null){
+			_vd.setAffectedVersion((avForRebundled)?1:0);
+			_vd.setAffectedVersionConfirmed(1);
+			return;
+		}
+		
+		//check affected for the actual library containing the vulnerable code
+		Boolean avByLib = this.affLibRepository.isBugLibAffected(_vd.getBug().getBugId(), _lib.getDigest());
+					
+		boolean found=false;
+		if(avByLib !=null){
+			_vd.setAffectedVersion((avByLib)?1:0);
+			_vd.setAffectedVersionConfirmed(1);
+			found=true;
+		}
+		else if(_lib.getLibraryId()!=null) {
+			AffectedLibraryRepositoryImpl.log.debug("look for affected for bug [" +_vd.getBug().getBugId()+"] and lib [" +_lib.getLibraryId()+ "]");
+			Boolean avByLibId = this.affLibRepository.isBugLibIdAffected(_vd.getBug().getBugId(), _lib.getLibraryId());
+			if(avByLibId !=null){
+				_vd.setAffectedVersion((avByLibId)?1:0);
 				_vd.setAffectedVersionConfirmed(1);
 				found=true;
 			}
-			else if(_lib.getLibraryId()!=null) {
-				AffectedLibraryRepositoryImpl.log.debug("look for affected for bug [" +_vd.getBug().getBugId()+"] and lib [" +_lib.getLibraryId()+ "]");
-				Boolean avByLibId = this.affLibRepository.isBugLibIdAffected(_vd.getBug().getBugId(), _lib.getLibraryId());
-				if(avByLibId !=null){
-					_vd.setAffectedVersion((avByLibId)?1:0);
-					_vd.setAffectedVersionConfirmed(1);
-					found=true;
-				}
-			}
-			if(!found){
-				_vd.setAffectedVersionConfirmed(0);
-				_vd.setAffectedVersion(1); // when the confirmed flag is 0, the value of affected-version is irrelevant but we set it to 1 so that the UI doesn't filter it out when filtering out historical vulnerabilities
-			}
+		}
+		if(!found){
+			_vd.setAffectedVersionConfirmed(0);
+			_vd.setAffectedVersion(1); // when the confirmed flag is 0, the value of affected-version is irrelevant but we set it to 1 so that the UI doesn't filter it out when filtering out historical vulnerabilities
+		}
 	}
 }
