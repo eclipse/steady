@@ -8,45 +8,49 @@
 	<version>3.1.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>Vulas</name>
-	<description>Vulas analyses your Java and Python applications for open-source dependencies with known vulnerabilities, using both static analysis and testing to determine code context and usage for greater accuracy.</description>
-	<url>https://github.com/SAP/vulas</url>
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>Analyses your Java and Python applications for open-source dependencies with known vulnerabilities, using both static analysis and testing to determine code context and usage for greater accuracy.</description>
+	<url>https://sap.github.io/vulnerability-assessment-tool/</url>
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
 			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>manual</distribution><!-- Must be build and installed locally 
-				(manual), cannot be redistributed on Maven (repo) -->
 		</license>
 	</licenses>
-	<organization>
-		<name>SAP Security Research</name>
-	</organization>
 	<developers>
 		<developer>
-			<id>plate</id>
-			<name>Henrik PLATE</name>
+			<name>Henrik Plate</name>
 			<email>henrik.plate@sap.com</email>
+			<organization>SAP</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 		<developer>
 			<id>ponta</id>
-			<name>Serena Elisa PONTA</name>
+			<name>Serena Elisa Ponta</name>
 			<email>serena.ponta@sap.com</email>
+			<organization>SAP</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 		<developer>
 			<id>sabetta</id>
-			<name>Antonino SABETTA</name>
+			<name>Antonino Sabetta</name>
 			<email>antonino.sabetta@sap.com</email>
+			<organization>SAP</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 		<developer>
 			<id>dangremont</id>
-			<name>Cedric DANGREMONT</name>
+			<name>Cedric Dangremont</name>
 			<email>cedric.dangremont@sap.com</email>
+			<organization>SAP</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 		<developer>
 			<id>pezze</id>
-			<name>Alessandro PEZZE</name>
+			<name>Alessandro Pezze</name>
 			<email>a.pezze@sap.com</email>
+			<organization>SAP</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 	</developers>
 
@@ -63,7 +67,6 @@
 		<module>lang-java-reach</module>
 		<module>lang-java-reach-wala</module>
 		<module>lang-java-reach-soot</module>
-
 		<module>lang-python</module>
 
 		<!-- Analysis of security patches and libraries -->
@@ -73,14 +76,11 @@
 
 		<!-- Allow the scanning of applications -->
 		<module>cli-scanner</module>
-		<module>plugin-maven</module> <!-- NOTE: The naming violates the Maven naming convention (which asks for 
-			vulas-maven-plugin), but this is just a warning. -->
+		<module>plugin-maven</module>
 
 		<!-- Web frontends -->
 		<module>frontend-apps</module>
 		<module>frontend-bugs</module>
-		<!-- module>frontend-patch-analyzer</module--> <!-- IMPORTANT: This frontend is years old, one has to check whether it still 
-			works. -->
 
 		<!-- REST services -->
 		<module>rest-lib-utils-init</module>
@@ -94,12 +94,14 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		
-		<!-- Repos to which Vulas artifacts will be deployed, must be provided as system property (-D) (no defaults)  -->
+
+		<!-- Repos to which Vulas artifacts will be deployed, must be provided 
+			as system property (-D) (no defaults) -->
 		<snapshots.repo></snapshots.repo>
 		<releases.repo></releases.repo>
-		
-		<!-- Repos used for resolving dependencies, specify as system property (-D) to change the defaults -->
+
+		<!-- Repos used for resolving dependencies, specify as system property 
+			(-D) to change the defaults -->
 		<gradle.repo>https://maven.google.com/</gradle.repo>
 	</properties>
 
@@ -116,25 +118,87 @@
 				</repository>
 			</repositories>
 		</profile>
+
+		<!-- Activate when deploying to the Central Repo. Also see https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release -->
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.2.1</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.9.1</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- Deploy to the Central Repository according to https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release. -->
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.7</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
 	</profiles>
 
 	<distributionManagement>
-        <snapshotRepository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>build.snapshots.repo</id>
-            <name>snapshots</name>
-            <url>${snapshots.repo}</url>
-        </snapshotRepository>
-        <repository>
-            <id>build.releases.repo</id>
-            <name>releases</name>
-            <url>${releases.repo}</url>
-        </repository>
-        <site>
-            <id>vulas.website</id>
-            <name>Vulas Documentation</name>
-            <url>file:${project.basedir}/docs/site</url>
-        </site>
+		<snapshotRepository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>build.snapshots.repo</id>
+			<name>snapshots</name>
+			<url>${snapshots.repo}</url>
+		</snapshotRepository>
+		<repository>
+			<id>build.releases.repo</id>
+			<name>releases</name>
+			<url>${releases.repo}</url>
+		</repository>
+		<site>
+			<id>vulas.website</id>
+			<name>Vulas Documentation</name>
+			<url>file:${project.basedir}/docs/site</url>
+		</site>
 	</distributionManagement>
 
 	<!-- Dependencies common to all child projects -->
@@ -266,21 +330,21 @@
 	</dependencyManagement>
 
 	<scm>
-		<url>https://github.com/SAP/vulas</url>
-		<connection>scm:git:https://github.com/SAP/vulas</connection>
-		<developerConnection>scm:git:https://github.com/SAP/vulas</developerConnection>
+		<connection>scm:git:git://github.com/sap/vulnerability-assessment-tool.git</connection>
+		<developerConnection>scm:git:ssh://github.com:sap/vulnerability-assessment-tool.git</developerConnection>
+		<url>https://github.com/SAP/vulnerability-assessment-tool/tree/master</url>
 	</scm>
 
 	<issueManagement>
-		<url>https://github.com/SAP/vulas/issues</url>
+		<url>https://github.com/SAP/vulnerability-assessment-tool/issues</url>
 		<system>GitHub</system>
 	</issueManagement>
 
 	<build>
 		<plugins>
 
-			<!-- Show whether there are newer versions available, run fully-qualified with
-				'mvn -DallowMajorUpdates=false -DprocessDependencyManagement=false org.codehaus.mojo:versions-maven-plugin:2.5:display-dependency-updates' -->
+			<!-- Show whether there are newer versions available, run fully-qualified 
+				with 'mvn -DallowMajorUpdates=false -DprocessDependencyManagement=false org.codehaus.mojo:versions-maven-plugin:2.5:display-dependency-updates' -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
@@ -302,8 +366,8 @@
 				</configuration>
 			</plugin>
 
-			<!-- Successor of Findbugs, run fully-qualified with
-			    'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.failOnError=false -P soot,gradle com.github.spotbugs:spotbugs-maven-plugin:3.1.11:check' -->
+			<!-- Successor of Findbugs, run fully-qualified with 'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml 
+				-Dspotbugs.failOnError=false -P soot,gradle com.github.spotbugs:spotbugs-maven-plugin:3.1.11:check' -->
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
@@ -388,6 +452,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 
 		<pluginManagement>
