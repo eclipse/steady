@@ -1,14 +1,13 @@
 package com.sap.psr.vulas.nodejs.npm;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.sap.psr.vulas.nodejs.ProcessWrapper;
 import com.sap.psr.vulas.nodejs.ProcessWrapperException;
 import com.sap.psr.vulas.nodejs.utils.NodejsConfiguration;
 import com.sap.psr.vulas.shared.util.DirUtil;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -202,7 +201,12 @@ public class NpmWrapper {
             try {
                 pack_url = String.valueOf(pack_json.get("_resolved").getAsString());
                 pack_dep_location = String.valueOf(pack_json.get("_location").getAsString());
-                pack_required_by = String.valueOf(pack_json.get("_requiredBy"));
+
+                List<String> required_by_list = new ArrayList<>();
+                for(JsonElement dep: pack_json.getAsJsonArray("_requiredBy")) {
+                    required_by_list.add(dep.getAsString());
+                }
+                pack_required_by = StringUtils.join(required_by_list, ",");
             } catch(Exception e){
 
             }

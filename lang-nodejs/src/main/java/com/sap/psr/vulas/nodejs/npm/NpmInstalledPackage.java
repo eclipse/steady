@@ -30,6 +30,7 @@ public class NpmInstalledPackage implements Comparable {
 
     private static final String LOCATION = "location";
     private static final String REQUIRES = "dependencies";
+    private static final String REQUIRED_BY = "required_by";
 
     private String name = null;
     private String version = null;
@@ -118,12 +119,12 @@ public class NpmInstalledPackage implements Comparable {
      * @return
      */
     public boolean requires(NpmInstalledPackage _pack) throws IllegalStateException {
-        if(this.properties == null || !this.properties.containsKey(REQUIRES))
-            throw new IllegalStateException("Property [" + REQUIRES + "] not known");
+        if(this.properties == null || !this.properties.containsKey(REQUIRED_BY))
+            throw new IllegalStateException("Property [" + REQUIRED_BY + "] not known");
 
-        final String[] packs = this.properties.get(REQUIRES).split(",");
+        final String[] packs = this.properties.get(REQUIRED_BY).split(",");
         for(int i=0; i<packs.length; i++) {
-            if (_pack.getName().equalsIgnoreCase(packs[i].trim()))
+            if (this.properties.get("dep_location").equalsIgnoreCase(packs[i].trim()))
                 return true;
         }
         return false;
@@ -237,11 +238,11 @@ public class NpmInstalledPackage implements Comparable {
         }
     }
 
-    public String getStandardDistributionName() {
-        return NpmInstalledPackage.getStandardDistributionName(this.getName());
-    }
+//    public String getStandardDistributionName() {
+//        return NpmInstalledPackage.getStandardDistributionName(this.getName());
+//    }
 
-    public static String getStandardDistributionName(String _name) {
-        return _name.toLowerCase().replaceAll("\\p{Punct}", "_");
-    }
+//    public static String getStandardDistributionName(String _name) {
+//        return _name.toLowerCase().replaceAll("\\p{Punct}", "_");
+//    }
 }
