@@ -11,12 +11,9 @@ import com.google.inject.Injector;
 
 /**
  * Required to invoke the Eclipse JDT plugin.
- *
  */
 public class DistillerUtil {
-
 	protected static final Injector mInjector = Guice.createInjector(new JavaChangeDistillerModule());
 	protected static final StructureEntityVersion structureEntity = new StructureEntityVersion(JavaEntityType.METHOD, "", 0);
 	protected static final Distiller mDistiller = mInjector.getInstance(DistillerFactory.class).create(structureEntity);
-
 }
