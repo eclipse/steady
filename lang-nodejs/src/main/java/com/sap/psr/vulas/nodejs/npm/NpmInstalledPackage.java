@@ -87,7 +87,7 @@ public class NpmInstalledPackage implements Comparable {
      * @throws FileAnalysisException
      */
     public Library getLibrary() throws FileAnalysisException {
-        Library lib = new Library();
+        Library lib;
 
         if(this.fileAnalyzer != null && this.fileAnalyzer instanceof NodejsPackageAnalyzer) {
             lib = ((NodejsPackageAnalyzer) this.fileAnalyzer).getLibrary();

@@ -6,12 +6,17 @@ import com.sap.psr.vulas.shared.categories.Slow;
 import com.sap.psr.vulas.shared.json.model.ConstructId;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringList;
+import org.apache.commons.lang.math.NumberUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -50,5 +55,18 @@ public class NpmWrapperTest {
             final Collection<ConstructId> constructs = p.getLibrary().getConstructs();
             assertTrue(constructs != null && constructs.size() > 0);
         }
+    }
+
+    @Test
+    @Category(Slow.class)
+    public void testMessyDependencies() throws IllegalArgumentException, ProcessWrapperException, FileAnalysisException, IOException {
+        final Path project = Paths.get("src", "test", "resources", "test-anon-constructs");
+        final NpmWrapper vew = new NpmWrapper(project);
+
+        final Set<NpmInstalledPackage> packages = vew.getInstalledPackages();
+        final Set<NpmInstalledPackage> filtered_packages = NpmInstalledPackage.filterUsingArtifact(packages, new StringList().add("test-anon-constructs"), false);
+
+        assertEquals(91, packages.size());
+        assertEquals(90, filtered_packages.size());
     }
 }

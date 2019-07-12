@@ -1,7 +1,7 @@
 package com.sap.psr.vulas.nodejs.npm;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.sap.psr.vulas.nodejs.ProcessWrapper;
 import com.sap.psr.vulas.nodejs.ProcessWrapperException;
@@ -169,111 +169,57 @@ public class NpmWrapper {
         // List paths of installed dependencies
         ProcessWrapper pw = new ProcessWrapper();
         final String project_path = Paths.get(this.pathToVirtualenv.toString(), this.projectName).toString();
-        pw.setCommand(this.pathToNpmExecutable, "--prefix", project_path, "list", "--json", "--long");
+        pw.setCommand(this.pathToNpmExecutable, "--prefix", project_path, "list", "--parseable");
         pw.setPath(this.pathToVirtualenv);
         Thread t = new Thread(pw, "npm-list");
         t.start();
         t.join();
 
-        packages = this.parseNpmListOutput(pw.getOutFile());
+        packages = this.parseNpmListParseableOutput(pw.getOutFile());
 
         return packages;
     }
 
-    private Set<NpmInstalledPackage> parseNpmListOutput(Path _file) throws IOException {
-        // Read the object
-        String file = FileUtil.readFile(_file);
-        final JsonObject npm_list = new Gson().fromJson(FileUtil.readFile(_file), JsonObject.class);
-        final Set<NpmInstalledPackage> set = new HashSet<NpmInstalledPackage>();
-        final Queue<JsonObject> pack_queue = new LinkedList<JsonObject>();
-        npm_list.addProperty("depth", 0);
-        if(!npm_list.has("_resolved"))
-            npm_list.addProperty("_resolved", "");
-        if(!npm_list.has("_requiredBy")) {
-            npm_list.addProperty("_requiredBy", "");
-        }
-        if(!npm_list.has("repository")) {
-            JsonObject url = new JsonObject();
-            url.addProperty("url", "");
-            npm_list.add("repository", url);
-        }
-        pack_queue.add(npm_list);
+    private Set<NpmInstalledPackage> parseNpmListParseableOutput(Path _file) throws IOException {
+        final Set<NpmInstalledPackage> set = new HashSet<>();
 
-        // Traverse in npm-list json object
-        while(!pack_queue.isEmpty()) {
-            // Get the new package object
-            JsonObject pack_json = pack_queue.remove();
+        // Read the list of installed dependencies/project paths
+        final String file = FileUtil.readFile(_file);
+        String[] pack_path_list = file.split("\n");
 
-            // Get properties of the package
-            final String pack_name = pack_json.get("name").getAsString();
-            final String pack_version = pack_json.get("version").getAsString();
-            final Path pack_path = Paths.get(pack_json.get("path").getAsString());
-            final String pack_url = pack_json.get("_resolved").getAsString();
+        // Read package.json for each package in node_modules
+        for(String pack_path: pack_path_list) {
+
+            // Get package information from package.json
+            final Path pack_json_file = Paths.get(pack_path, "package.json");
+            final JsonObject pack_json = new Gson().fromJson(FileUtil.readFile(pack_json_file), JsonObject.class);
 
             final Map<String, String> pack_props = new HashMap<>();
 
+            final String pack_name = pack_json.get("name").getAsString();
+            final String pack_version = pack_json.get("version").getAsString();
+            String pack_url = "", pack_dep_location = "/", pack_required_by = "";
+            try {
+                pack_url = String.valueOf(pack_json.get("_resolved").getAsString());
+                pack_dep_location = String.valueOf(pack_json.get("_location").getAsString());
+                pack_required_by = String.valueOf(pack_json.get("_requiredBy"));
+            } catch(Exception e){
+
+            }
+
             pack_props.put("name", pack_name);
             pack_props.put("version", pack_version);
-            pack_props.put("location", pack_path.toAbsolutePath().toString());
-            pack_props.put("resolved_url", pack_url);
-            pack_props.put("description", safeStringGet(pack_json, "description"));
-//            pack_props.put("repository", pack_json.getAsJsonObject("repository").get("url").getAsString());
-//            pack_props.put("author", pack_json.get("author").isJsonArray()
-//                    ? pack_json.getAsJsonObject("author").get("name").getAsString()
-//                    : pack_json.get("author").getAsString());
-            pack_props.put("license", safeStringGet(pack_json, "license"));
-            pack_props.put("required_by", pack_json.get("_requiredBy").getAsString());
-            pack_props.put("depth", pack_json.get("depth").getAsString());
-
-            List<String> dep_names = new ArrayList<>();
-            for(String dep_pack: pack_json.getAsJsonObject("dependencies").keySet()) {
-                dep_names.add(pack_json.getAsJsonObject("dependencies").getAsJsonObject(dep_pack).get("name").getAsString());
-            }
-            pack_props.put("dependencies", String.join(",", dep_names));
+            pack_props.put("location", pack_path);
+            pack_props.put("dep_location", pack_dep_location);
+            pack_props.put("required_by", pack_required_by);
 
             NpmInstalledPackage pack = new NpmInstalledPackage(pack_name, pack_version);
-            pack.setDownloadPath(pack_path);
+            pack.setDownloadPath(Paths.get(pack_path));
             pack.setDownloadUrl(pack_url);
             pack.addProperties(pack_props);
 
             set.add(pack);
-
-            // Enqueue new dependencies
-            for(String dep : pack_json.getAsJsonObject("dependencies").keySet()) {
-                JsonObject dep_pack = pack_json.getAsJsonObject("dependencies").getAsJsonObject(dep);
-                dep_pack.addProperty("depth", pack_json.get("depth").getAsInt()+1);
-                pack_queue.add(dep_pack);
-            }
         }
-
         return set;
     }
-
-    private String safeStringGet(JsonObject _obj, String _key) {
-        String result = "";
-        try {
-            result = _obj.get(_key).getAsString();
-        } catch(NullPointerException e) {
-            log.debug("NullPointerException in JsonObject [key: "+ _key + "], returning default empty string");
-        }
-        return result;
-    }
-
-//    /**
-//	 * Helper class for deserializing the output of pip list --format json.
-//     */
-//    static class NpmPackageJson {
-//        String name;
-//        String version;
-//        String installer;
-//        String location;
-//        public String getName() { return name; }
-//        public void setName(String name) { this.name = name; }
-//        public String getVersion() { return version; }
-//        public void setVersion(String version) { this.version = version; }
-//        public String getInstaller() { return installer; }
-//        public void setInstaller(String installer) { this.installer = installer; }
-//        public String getLocation() { return location; }
-//        public void setLocation(String location) { this.location = location; }
-//    }
 }
