@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -470,75 +471,71 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		this.affLibRepository.computeAffectedLib(vd_list_cc);
 		this.updateFlags(vd_list_cc, true);
 		
-		// 2+3) Retrieve vuln for bundled libids
+		
+		// 2) Retrieve vuln w/ cc for bundled libids
 		TreeSet<VulnerableDependency> vd_list_bundled_cc = new TreeSet<VulnerableDependency>();
+		
+		List<Object[]> bundledDigests = this.libRepository.findBundledLibByApp(_app);
+		
+		log.info("Found ["+bundledDigests.size()+"] libs digest for bundled libids.");
+		
+		for (Object[] e: bundledDigests){
+			Dependency depWithBundledLibId = DependencyRepository.FILTER.findOne(this.depRepository.findById(((BigInteger)e[0]).longValue()));
+			
+			Library bundledDigest = LibraryRepository.FILTER.findOne(this.libRepository.findById(((BigInteger)e[1]).longValue())); 
+			List<Bug> vulns_cc = this.bugRepository.findByLibrary(bundledDigest);
+			
+			for(Bug b: vulns_cc){
+				VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
+				vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDCC);
+				this.affLibRepository.computeAffectedLib(vulndep,bundledDigest);
+				vulndep.setBundledLibId(bundledDigest.getLibraryId());
+				vulndep.setBundledLib(bundledDigest);
+				vd_list_bundled_cc.add(vulndep);
+			}
+			//for bundled libraries we do have have traced and reachable information so we skip the query
+			//	this.updateFlags(vd_list_bundled_cc, true);
+			
+		}
+		
+		// 3) Retrieve vuln w/o cc for bundled libids
 		TreeSet<VulnerableDependency> vd_list_bundled_av = new TreeSet<VulnerableDependency>();
 		
-		List<Dependency> depsWithBundledLibIds = this.depRepository.findWithDifferentBundledLibByApp(_app);
+		List<Object[]> bundledLibIds = this.libIdRepository.findBundledLibIdByApp(_app);
 		
-		log.info("Found ["+depsWithBundledLibIds.size()+"] libs with bundled libids different from itself.");
-		
-		for(Dependency depWithBundledLibId : depsWithBundledLibIds){
-			Collection<LibraryId> bundledLibIds = depWithBundledLibId.getLib().getBundledLibraryIds();
-			for(LibraryId bundledLibId : bundledLibIds){
-				List<Library> bundledDigests = this.libRepository.findByLibraryId(bundledLibId);
-				
-				if(bundledDigests==null || bundledDigests.size()==0){
-					log.warn("The bundled libraryId ["+bundledLibId+"] does not appear as GAV for any of the existing digests.");
-				} else if(bundledDigests.contains(depWithBundledLibId.getLib())){
-					log.warn("The bundled library "+bundledDigests.get(0).toString()+" is the library itself "+depWithBundledLibId.getLib().toString()+", no need to query for vuln deps");
-				} else {
-					Library bundledDigest = null;
-					for(Library l: bundledDigests){
-						if(l.getWellknownDigest()!=null && l.getWellknownDigest() == true){
-							bundledDigest = l;
-							break;
-						}			
-					}
-					
-					if(bundledDigest != null){
-						log.debug("Found ["+bundledDigests.size()+"] digests for the bundled libid, using: " + bundledDigest.getDigest());
-					
-						List<Bug> vulns_cc = this.bugRepository.findByLibrary(bundledDigest);
-						
-						for(Bug b: vulns_cc){
-							VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
-							vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDCC);
-							this.affLibRepository.computeAffectedLib(vulndep,bundledDigest);
-							vulndep.setBundledLibId(bundledLibId);
-							vulndep.setBundledLib(bundledDigest);
-							vd_list_bundled_cc.add(vulndep);
-						}
-					}
-					
-					List<Bug> vulns_av_true = this.bugRepository.findByLibId(bundledLibId,true);
-					
-					for (Bug b: vulns_av_true){
-						VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
-						vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDAFFLIBID);
-						Boolean rebundlingAffected = this.affLibRepository.isBugLibIdAffected(b.getBugId(), depWithBundledLibId.getLib().getLibraryId());
-						if(rebundlingAffected != null && !rebundlingAffected)
-							vulndep.setAffectedVersion(0);
-						else						
-							vulndep.setAffectedVersion(1);
-						vulndep.setAffectedVersionConfirmed(1);
-						vulndep.setBundledLibId(bundledLibId);
-						vd_list_bundled_av.add(vulndep);
-					}
-					List<Bug> vulns_av_false = this.bugRepository.findByLibId(bundledLibId,false);
-					
-					for (Bug b: vulns_av_false){
-						VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
-						vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDAFFLIBID);
-						vulndep.setAffectedVersion(0);
-						vulndep.setAffectedVersionConfirmed(1);
-						vulndep.setBundledLibId(bundledLibId);
-						vd_list_bundled_av.add(vulndep);
-					}
-					//for bundled libraries we do have have traced and reachable information so we skip the query
-					//	this.updateFlags(vd_list_bundled_cc, true);
-				}
+		for(Object[] e: bundledLibIds){
+			
+			Dependency depWithBundledLibId = DependencyRepository.FILTER.findOne(this.depRepository.findById(((BigInteger)e[0]).longValue()));
+			
+			LibraryId bundledLibId = LibraryIdRepository.FILTER.findOne(this.libIdRepository.findById(((BigInteger)e[1]).longValue())); 
+			
+			List<Bug> vulns_av_true = this.bugRepository.findByLibId(bundledLibId,true);
+			
+			for (Bug b: vulns_av_true){
+				VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
+				vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDAFFLIBID);
+				Boolean rebundlingAffected = this.affLibRepository.isBugLibIdAffected(b.getBugId(), depWithBundledLibId.getLib().getLibraryId());
+				if(rebundlingAffected != null && !rebundlingAffected)
+					vulndep.setAffectedVersion(0);
+				else						
+					vulndep.setAffectedVersion(1);
+				vulndep.setAffectedVersionConfirmed(1);
+				vulndep.setBundledLibId(bundledLibId);
+				vd_list_bundled_av.add(vulndep);
 			}
+			List<Bug> vulns_av_false = this.bugRepository.findByLibId(bundledLibId,false);
+			
+			for (Bug b: vulns_av_false){
+				VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
+				vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDAFFLIBID);
+				vulndep.setAffectedVersion(0);
+				vulndep.setAffectedVersionConfirmed(1);
+				vulndep.setBundledLibId(bundledLibId);
+				vd_list_bundled_av.add(vulndep);
+			}
+			//for bundled libraries we do have have traced and reachable information so we skip the query
+			//	this.updateFlags(vd_list_bundled_cc, true);
+			
 		}
 		
 		if(_log){
