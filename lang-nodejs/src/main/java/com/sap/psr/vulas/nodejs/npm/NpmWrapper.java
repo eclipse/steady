@@ -197,10 +197,17 @@ public class NpmWrapper {
 
             final String pack_name = pack_json.get("name").getAsString();
             final String pack_version = pack_json.get("version").getAsString();
-            String pack_url = "", pack_dep_location = "/", pack_required_by = "";
+            String pack_url = "";
+            String pack_dep_location = "/";
+            String pack_required_by = "";
+            String pack_integrity = "";
+            String pack_shasum = "";
+
             try {
                 pack_url = String.valueOf(pack_json.get("_resolved").getAsString());
                 pack_dep_location = String.valueOf(pack_json.get("_location").getAsString());
+                pack_integrity = String.valueOf(pack_json.get("_integrity").getAsString());
+                pack_shasum = String.valueOf(pack_json.get("shasum").getAsString());
 
                 List<String> required_by_list = new ArrayList<>();
                 for(JsonElement dep: pack_json.getAsJsonArray("_requiredBy")) {
@@ -216,6 +223,8 @@ public class NpmWrapper {
             pack_props.put("location", pack_path);
             pack_props.put("dep_location", pack_dep_location);
             pack_props.put("required_by", pack_required_by);
+            pack_props.put("integrity", pack_integrity);
+            pack_props.put("shasum", pack_shasum);
 
             NpmInstalledPackage pack = new NpmInstalledPackage(pack_name, pack_version);
             pack.setDownloadPath(Paths.get(pack_path));

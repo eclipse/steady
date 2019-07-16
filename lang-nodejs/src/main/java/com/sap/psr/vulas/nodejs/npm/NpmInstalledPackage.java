@@ -153,22 +153,26 @@ public class NpmInstalledPackage implements Comparable {
             throw new IllegalStateException(this + " does not have local download path nor property [" + LOCATION + "]");
 
         if(this.digest == null) {
-            // Take the downloaded file
-            if(this.downloadPath != null) {
-                this.digest = FileUtil.getDigest(this.downloadPath.toFile(), DigestAlgorithm.MD5);
-                log.info("Computed MD5 [" + this.digest + "] from downloaded file [" + this.downloadPath + "]");
-            }
-            // Search in site-packages (location property)
-            else {
-                //this.jsFile = this.searchJsFile();
-                if(this.jsFile != null) {
-                    this.digest = FileUtil.getDigest(this.jsFile.toFile(), DigestAlgorithm.MD5);
-                    log.info("Computed MD5 [" + this.digest + "] from file [" + this.jsFile + "]");
-                }
-                else {
-                    log.error("Cannot compute MD5 of " + this);
-                }
-            }
+            if(this.properties.get("integrity").equalsIgnoreCase(""))
+                this.digest = "";
+            else
+                this.digest = this.properties.get("integrity").split("-")[1];
+//            // Take the downloaded file
+//            if(this.downloadPath != null) {
+//                this.digest = FileUtil.getDigest(this.downloadPath.toFile(), DigestAlgorithm.MD5);
+//                log.info("Computed MD5 [" + this.digest + "] from downloaded file [" + this.downloadPath + "]");
+//            }
+//            // Search in site-packages (location property)
+//            else {
+//                //this.jsFile = this.searchJsFile();
+//                if(this.jsFile != null) {
+//                    this.digest = FileUtil.getDigest(this.jsFile.toFile(), DigestAlgorithm.MD5);
+//                    log.info("Computed MD5 [" + this.digest + "] from file [" + this.jsFile + "]");
+//                }
+//                else {
+//                    log.error("Cannot compute MD5 of " + this);
+//                }
+//            }
         }
         return this.digest;
     }
