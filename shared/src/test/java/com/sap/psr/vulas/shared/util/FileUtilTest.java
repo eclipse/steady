@@ -64,4 +64,17 @@ public class FileUtilTest {
 		final Set<String> jars = FileUtil.getJarFilePaths((URLClassLoader)FileUtil.class.getClassLoader());
 		assertTrue(!jars.isEmpty());
 	}
+
+	@Test
+	public void testGetFileName() {
+		final String name1 = FileUtil.getFileName("hello.min.js", false);
+		assertEquals("hello.min", name1);
+
+		final String name2 = FileUtil.getFileName("hello.js", false);
+		assertEquals("hello", name2);
+
+		final String name3 = FileUtil.getFileName(Paths.get("./project/js/hello.io.min.js").toString(), false);
+		assertEquals("hello.io.min", name3);
+	}
+
 }
