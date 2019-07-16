@@ -385,4 +385,10 @@ public class Dependency implements Serializable{
 		this.reachExecConstructsCounter  = countReachableExecConstructLibrary;
 	}
 	
+	@Override
+	public String toString() {
+		final StringBuffer b = new StringBuffer();
+		b.append("[app=").append(this.app.toString()).append(", lib=").append(this.lib.toString()).append(", filename=").append(this.filename).append(", scope=").append(this.scope).append(", trans=").append(this.getTransitive()).append("]");
+		return b.toString();
+	}
 }

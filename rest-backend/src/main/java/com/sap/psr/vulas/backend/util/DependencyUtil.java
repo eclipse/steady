@@ -94,7 +94,7 @@ public class DependencyUtil {
 	 * @param _deps
 	 * @return
 	 */
-	public static boolean isValidDependencyCollection( Application _app) {
+	public static boolean isValidDependencyCollection(Application _app) {
 		Collection<Dependency> _deps = _app.getDependencies();
 		final Set<Dependency> main_set = new HashSet<Dependency>();
 		final Set<Dependency> parent_set = new HashSet<Dependency>();
@@ -120,8 +120,5 @@ public class DependencyUtil {
 			}
 		}	
 		return true;
-	}	
-	
-
-
+	}
 }
