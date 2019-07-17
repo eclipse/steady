@@ -1,19 +1,16 @@
 package com.sap.psr.vulas.nodejs.tasks;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.sap.psr.vulas.FileAnalysisException;
-import com.sap.psr.vulas.shared.enums.Scope;
-import com.sap.psr.vulas.shared.util.DirWithFileSearch;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.sap.psr.vulas.ConstructId;
+import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.FileAnalyzer;
 import com.sap.psr.vulas.FileAnalyzerFactory;
 import com.sap.psr.vulas.goals.GoalConfigurationException;
@@ -23,8 +20,10 @@ import com.sap.psr.vulas.nodejs.npm.NpmInstalledPackage;
 import com.sap.psr.vulas.nodejs.npm.NpmWrapper;
 import com.sap.psr.vulas.nodejs.utils.NodejsConfiguration;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
+import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Dependency;
+import com.sap.psr.vulas.shared.util.DirWithFileSearch;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;

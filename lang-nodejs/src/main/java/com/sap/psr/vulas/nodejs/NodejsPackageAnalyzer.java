@@ -1,18 +1,28 @@
 package com.sap.psr.vulas.nodejs;
 
-import com.sap.psr.vulas.*;
-import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
-import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
-import com.sap.psr.vulas.shared.json.model.Library;
-import com.sap.psr.vulas.shared.json.model.LibraryId;
-import com.sap.psr.vulas.shared.util.FileUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import java.util.TreeMap;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.sap.psr.vulas.Construct;
+import com.sap.psr.vulas.ConstructId;
+import com.sap.psr.vulas.FileAnalysisException;
+import com.sap.psr.vulas.FileAnalyzer;
+import com.sap.psr.vulas.FileAnalyzerFactory;
+import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
+import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
+import com.sap.psr.vulas.shared.json.model.Library;
+import com.sap.psr.vulas.shared.util.FileUtil;
 
 public class NodejsPackageAnalyzer implements FileAnalyzer {
 
@@ -57,7 +67,7 @@ public class NodejsPackageAnalyzer implements FileAnalyzer {
                 for (File file : current_dir.listFiles()) {
                     // Enqueue new directory
                     if (file.isDirectory()) {
-                        // Skip node_modules dir
+                        // Skip node_modules directory
                         if (!file.getName().equalsIgnoreCase("node_modules")) {
                             dir_queue.add(file);
                         }

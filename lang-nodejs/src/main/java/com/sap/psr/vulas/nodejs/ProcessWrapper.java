@@ -1,10 +1,5 @@
 package com.sap.psr.vulas.nodejs;
 
-import com.sap.psr.vulas.shared.util.FileUtil;
-import com.sap.psr.vulas.shared.util.StringUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,6 +7,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.sap.psr.vulas.shared.util.FileUtil;
+import com.sap.psr.vulas.shared.util.StringUtil;
 
 public class ProcessWrapper implements Runnable {
 

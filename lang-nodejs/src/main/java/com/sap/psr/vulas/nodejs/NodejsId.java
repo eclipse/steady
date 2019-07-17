@@ -1,6 +1,7 @@
 package com.sap.psr.vulas.nodejs;
 
 import com.google.gson.JsonObject;
+
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;

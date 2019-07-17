@@ -1,21 +1,31 @@
 package com.sap.psr.vulas.nodejs.npm;
 
-import com.google.gson.*;
-import com.sap.psr.vulas.nodejs.ProcessWrapper;
-import com.sap.psr.vulas.nodejs.ProcessWrapperException;
-import com.sap.psr.vulas.nodejs.utils.NodejsConfiguration;
-import com.sap.psr.vulas.shared.util.DirUtil;
-import com.sap.psr.vulas.shared.util.FileUtil;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
+import java.io.IOException;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
-import java.util.concurrent.Callable;
+import com.sap.psr.vulas.nodejs.ProcessWrapper;
+import com.sap.psr.vulas.nodejs.ProcessWrapperException;
+import com.sap.psr.vulas.shared.util.DirUtil;
+import com.sap.psr.vulas.shared.util.FileUtil;
 
 public class NpmWrapper {
 
@@ -36,7 +46,6 @@ public class NpmWrapper {
     private String projectName = null;
 
     private Set<NpmInstalledPackage> installedPackages = null;
-
 
     /**
      * Assumes that the npm executable is part of the PATH environment variable.
@@ -149,8 +158,7 @@ public class NpmWrapper {
             Thread t = new Thread(pw);
             t.start();
             t.join();
-//            final Path download_info =  pw.getOutFile();
-            //final Path download_info = Paths.get(_project_path.toString(), "node_modules");
+
             // Get all dependencies
             packages = this.getListPackages();
         } catch(ProcessWrapperException e) {
@@ -165,6 +173,7 @@ public class NpmWrapper {
 
     public Set<NpmInstalledPackage> getListPackages() throws ProcessWrapperException, IOException, InterruptedException {
         Set<NpmInstalledPackage> packages = null;
+
         // List paths of installed dependencies
         ProcessWrapper pw = new ProcessWrapper();
         final String project_path = Paths.get(this.pathToVirtualenv.toString(), this.projectName).toString();
@@ -204,18 +213,19 @@ public class NpmWrapper {
             String pack_shasum = "";
 
             try {
-                pack_url = String.valueOf(pack_json.get("_resolved").getAsString());
-                pack_dep_location = String.valueOf(pack_json.get("_location").getAsString());
-                pack_integrity = String.valueOf(pack_json.get("_integrity").getAsString());
-                pack_shasum = String.valueOf(pack_json.get("shasum").getAsString());
+                pack_url = StringUtils.defaultIfEmpty(pack_json.get("_resolved").getAsString(), "");
+                pack_dep_location = StringUtils.defaultIfEmpty(pack_json.get("_location").getAsString(), "/");
 
                 List<String> required_by_list = new ArrayList<>();
                 for(JsonElement dep: pack_json.getAsJsonArray("_requiredBy")) {
                     required_by_list.add(dep.getAsString());
                 }
                 pack_required_by = StringUtils.join(required_by_list, ",");
-            } catch(Exception e){
 
+                pack_integrity = StringUtils.defaultIfEmpty(pack_json.get("_integrity").getAsString(), "");
+                pack_shasum = String.valueOf(pack_json.get("_shasum").getAsString());
+            } catch(NullPointerException e){
+                log.error("Cannot get properties of [" + pack_name + "], set the default value instead");
             }
 
             pack_props.put("name", pack_name);

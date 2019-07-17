@@ -1,11 +1,11 @@
 package com.sap.psr.vulas.nodejs.sign;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-
-import java.io.IOException;
 
 public class NodejsConstructDigestSerializer extends StdSerializer<NodejsConstructDigest> {
 

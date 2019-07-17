@@ -1,35 +1,33 @@
 package com.sap.psr.vulas.nodejs.npm;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-import com.sap.psr.vulas.*;
-import com.sap.psr.vulas.nodejs.NodejsFileAnalyzer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.sap.psr.vulas.Construct;
+import com.sap.psr.vulas.ConstructId;
+import com.sap.psr.vulas.FileAnalyzer;
+import com.sap.psr.vulas.FileAnalysisException;
+import com.sap.psr.vulas.FileAnalyzerFactory;
 import com.sap.psr.vulas.nodejs.NodejsPackageAnalyzer;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.PropertySource;
 import com.sap.psr.vulas.shared.json.model.Library;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.json.model.Property;
-import com.sap.psr.vulas.shared.util.DirUtil;
-import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringList;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.lang.reflect.Type;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
 
 public class NpmInstalledPackage implements Comparable {
 
     private final static Log log = LogFactory.getLog(NpmInstalledPackage.class);
 
     private static final String LOCATION = "location";
-    private static final String REQUIRES = "dependencies";
     private static final String REQUIRED_BY = "required_by";
 
     private String name = null;
@@ -40,8 +38,6 @@ public class NpmInstalledPackage implements Comparable {
 
     private String downloadUrl = null;
     private Path downloadPath = null;
-
-    private Path jsFile = null;
 
     private FileAnalyzer fileAnalyzer = null;
 
@@ -153,26 +149,17 @@ public class NpmInstalledPackage implements Comparable {
             throw new IllegalStateException(this + " does not have local download path nor property [" + LOCATION + "]");
 
         if(this.digest == null) {
-            if(this.properties.get("integrity").equalsIgnoreCase(""))
+            // Set blank digest
+            if(this.properties.get("integrity").equalsIgnoreCase("")) {
                 this.digest = "";
-            else
-                this.digest = this.properties.get("integrity").split("-")[1];
-//            // Take the downloaded file
-//            if(this.downloadPath != null) {
-//                this.digest = FileUtil.getDigest(this.downloadPath.toFile(), DigestAlgorithm.MD5);
-//                log.info("Computed MD5 [" + this.digest + "] from downloaded file [" + this.downloadPath + "]");
-//            }
-//            // Search in site-packages (location property)
-//            else {
-//                //this.jsFile = this.searchJsFile();
-//                if(this.jsFile != null) {
-//                    this.digest = FileUtil.getDigest(this.jsFile.toFile(), DigestAlgorithm.MD5);
-//                    log.info("Computed MD5 [" + this.digest + "] from file [" + this.jsFile + "]");
-//                }
-//                else {
-//                    log.error("Cannot compute MD5 of " + this);
-//                }
-//            }
+                log.error("Cannot compute checksum of " + this);
+            }
+            // Get digest from generated package.json
+            else {
+                String [] ingri = this.properties.get("integrity").split("-");
+                this.digest = ingri[1];
+                log.info("Retrieved " + ingri[0]+ " [" + this.digest + "] from generated package.json file [" + this.downloadPath + "]");
+            }
         }
         return this.digest;
     }
@@ -197,8 +184,6 @@ public class NpmInstalledPackage implements Comparable {
         }
         return this.constructs;
     }
-
-
 
     /**
      * Filter the given packages according to whether the artifact name is (or is not, depending on the boolean flag) contained in the given filter.
@@ -241,12 +226,4 @@ public class NpmInstalledPackage implements Comparable {
             throw new IllegalArgumentException("Cannot compare with object of type [" + _other.getClass() + "]");
         }
     }
-
-//    public String getStandardDistributionName() {
-//        return NpmInstalledPackage.getStandardDistributionName(this.getName());
-//    }
-
-//    public static String getStandardDistributionName(String _name) {
-//        return _name.toLowerCase().replaceAll("\\p{Punct}", "_");
-//    }
 }

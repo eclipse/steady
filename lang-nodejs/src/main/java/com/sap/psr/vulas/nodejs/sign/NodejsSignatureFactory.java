@@ -1,5 +1,10 @@
 package com.sap.psr.vulas.nodejs.sign;
 
+import java.io.File;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.FileAnalyzerFactory;
@@ -11,10 +16,6 @@ import com.sap.psr.vulas.shared.json.model.ConstructId;
 import com.sap.psr.vulas.sign.Signature;
 import com.sap.psr.vulas.sign.SignatureChange;
 import com.sap.psr.vulas.sign.SignatureFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.File;
 
 /**
  * Creates construct signatures for several NodeJS constructs. The signature is simply a digest computed over

@@ -1,13 +1,13 @@
 package com.sap.psr.vulas.nodejs.sign;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.json.JsonBuilder;
 import com.sap.psr.vulas.shared.util.DigestUtil;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.sign.Signature;
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 
 public class NodejsConstructDigest implements Signature {
 
