@@ -23,6 +23,10 @@ import com.sap.psr.vulas.shared.util.DirUtil;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>VirtualenvWrapper class.</p>
+ *
+ */
 public class VirtualenvWrapper {
 
 	private static final String SETUP_PY = "setup.py";
@@ -43,6 +47,10 @@ public class VirtualenvWrapper {
 
 	/**
 	 * Assumes that the virtualenv executable is part of the PATH environment variable.
+	 *
+	 * @param _path_to_python_project a {@link java.nio.file.Path} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 * @throws com.sap.psr.vulas.python.ProcessWrapperException if any.
 	 */
 	public VirtualenvWrapper(Path _path_to_python_project) throws IllegalArgumentException, ProcessWrapperException {
 		this(Paths.get("virtualenv"), _path_to_python_project);
@@ -51,7 +59,11 @@ public class VirtualenvWrapper {
 	/**
 	 * Creates a virtual environment for the project located at the given path.
 	 * This path is expected to contain a setup.py file.
-	 * @param _path_to_virtualenv
+	 *
+	 * @param _path_to_virtualenv a {@link java.nio.file.Path} object.
+	 * @param _path_to_python_project a {@link java.nio.file.Path} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 * @throws com.sap.psr.vulas.python.ProcessWrapperException if any.
 	 */
 	public VirtualenvWrapper(Path _path_to_virtualenv, Path _path_to_python_project) throws IllegalArgumentException, ProcessWrapperException {
 
@@ -87,14 +99,35 @@ public class VirtualenvWrapper {
 		//this.getPyWrapper().runScript(setup_path, Arrays.asList(new String[] {"install"}));
 	}
 	
+	/**
+	 * <p>Getter for the field <code>projectName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getProjectName() { return projectName; }
 
+	/**
+	 * <p>Getter for the field <code>pathToVirtualenv</code>.</p>
+	 *
+	 * @return a {@link java.nio.file.Path} object.
+	 */
 	public Path getPathToVirtualenv() { return pathToVirtualenv; }
 	
+	/**
+	 * <p>Getter for the field <code>installedPackages</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	public Set<PipInstalledPackage> getInstalledPackages() {
 		return this.installedPackages;
 	}
 	
+	/**
+	 * <p>getPipWrapper.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.python.pip.PipWrapper} object.
+	 * @throws com.sap.psr.vulas.python.ProcessWrapperException if any.
+	 */
 	public PipWrapper getPipWrapper() throws ProcessWrapperException {
 		if(IS_WIN)
 			return new PipWrapper(Paths.get(this.pathToVirtualenv.toString(), "Scripts", "pip"), this.pathToVirtualenv);
@@ -102,6 +135,12 @@ public class VirtualenvWrapper {
 			return new PipWrapper(Paths.get(this.pathToVirtualenv.toString(), "bin", "pip"), this.pathToVirtualenv);
 	}
 	
+	/**
+	 * <p>getPyWrapper.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.python.pip.PyWrapper} object.
+	 * @throws com.sap.psr.vulas.python.ProcessWrapperException if any.
+	 */
 	public PyWrapper getPyWrapper() throws ProcessWrapperException {
 		if(IS_WIN)
 			return new PyWrapper(Paths.get(this.pathToVirtualenv.toString(), "Scripts", "python"), this.pathToVirtualenv);

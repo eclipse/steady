@@ -11,6 +11,10 @@ import com.sap.psr.vulas.backend.model.Space;
 import com.sap.psr.vulas.backend.util.ReferenceUpdater;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>SpaceRepositoryImpl class.</p>
+ *
+ */
 public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 	
 	private static Logger log = LoggerFactory.getLogger(SpaceRepositoryImpl.class);
@@ -24,6 +28,7 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 	@Autowired
 	ReferenceUpdater refUpdater;
 	
+	/** {@inheritDoc} */
 	public Space customSave(Space _s) {
 		final StopWatch sw = new StopWatch("Save " + _s).start();
 
@@ -65,9 +70,10 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 	}
 	
 	/**
-	 * Returns the default space for the given tenant token. In case the tenant token is not provided, it uses the default tenant. If 
+	 * {@inheritDoc}
+	 *
+	 * Returns the default space for the given tenant token. In case the tenant token is not provided, it uses the default tenant. If
 	 * the default space for the given tenant or the default tenant do not exist, it returns null.
-	 * @return the default space for the given tenant token; null otherwise
 	 */
 	public Space getDefaultSpace(String _tenant_token) {
 		Space s = null;
@@ -92,10 +98,10 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 	}
 		
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns the space for the given space token. In case a space token is not provided, it returns the default space of the
 	 * default tenant (if existing, null otherwise)
-	 * @return the space for the given space token; default space if token is null; null otherwise.
-	 * @throws Exception 
 	 */
 	public Space getSpace(String _spaceToken) {
 		Space space = null;		

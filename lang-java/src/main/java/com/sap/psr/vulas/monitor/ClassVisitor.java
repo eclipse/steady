@@ -43,8 +43,6 @@ import javassist.bytecode.annotation.Annotation;
  * Identifies all methods and constructors in a given Java class (using Javassist).
  * Can inject instrumentation code into constructors and methods in order to collect
  * trace information during application tests.
- *
- *
  */
 public class ClassVisitor {
 
@@ -86,6 +84,11 @@ public class ClassVisitor {
 
 	private String[] fieldAnnotations = null;
 
+	/**
+	 * <p>Constructor for ClassVisitor.</p>
+	 *
+	 * @param _c a {@link javassist.CtClass} object.
+	 */
 	public ClassVisitor(CtClass _c) {
 		// Build the JavaId
 		if(_c.isInterface())
@@ -121,8 +124,8 @@ public class ClassVisitor {
 	 * Returns a set with the {@link ConstructId}s of all constructs contained in the given Java class, i.e.,
 	 * all methods, all constructors, the class or enumeration and the package (unless it is the default package,
 	 * i.e., no package).
-	 * 
-	 * @return
+	 *
+	 * @return a {@link java.util.Set} object.
 	 */
 	public Set<ConstructId> getConstructs() {
 		if(this.constructs==null) {
@@ -144,6 +147,11 @@ public class ClassVisitor {
 		return this.constructs;
 	}
 
+	/**
+	 * <p>isInstrumented.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public synchronized boolean isInstrumented() {
 		if(this.isInstrumented==null) {
 			try {
@@ -157,6 +165,13 @@ public class ClassVisitor {
 		return this.isInstrumented.booleanValue();
 	}
 
+	/**
+	 * <p>visitMethods.</p>
+	 *
+	 * @param _instrument a boolean.
+	 * @return a {@link java.util.Set} object.
+	 * @throws javassist.CannotCompileException if any.
+	 */
 	public synchronized Set<ConstructId> visitMethods(boolean _instrument) throws CannotCompileException {
 		final Set<ConstructId> constructs = new HashSet<ConstructId>();
 		final CtMethod[] methods = this.c.getDeclaredMethods();
@@ -184,6 +199,13 @@ public class ClassVisitor {
 		return constructs;
 	}
 
+	/**
+	 * <p>visitConstructors.</p>
+	 *
+	 * @param _instrument a boolean.
+	 * @return a {@link java.util.Set} object.
+	 * @throws javassist.CannotCompileException if any.
+	 */
 	public synchronized Set<ConstructId> visitConstructors(boolean _instrument) throws CannotCompileException {
 		final Set<ConstructId> constructs = new HashSet<ConstructId>();
 		final CtConstructor[] constructors = this.c.getDeclaredConstructors();
@@ -302,7 +324,8 @@ public class ClassVisitor {
 	 *
 	 * This method must be called prior to the invocation of visitMethods and visitConstructors, as the instrumentation
 	 * code varies depending on whether the digest is known or not.
-	 * @param _sha1
+	 *
+	 * @param _sha1 a {@link java.lang.String} object.
 	 */
 	public synchronized void setOriginalArchiveDigest(String _sha1) { this.originalArchiveDigest = _sha1; }
 
@@ -312,14 +335,17 @@ public class ClassVisitor {
 	 * *
 	 * This method must be called prior to the invocation of visitMethods and visitConstructors, as the instrumentation
 	 * code varies depending on whether the app context is known or not.
-	 * @param _ctx
+	 *
+	 * @param _ctx a {@link com.sap.psr.vulas.shared.json.model.Application} object.
 	 */
 	public synchronized void setAppContext(Application _ctx) { this.appContext = _ctx; }
 
 	/**
 	 * Adds one additional member to the class: A boolean to indicate that the class has been instrumented
 	 * (so that later processes and threads do not need to do it again).
-	 * @return the byte code of the instrumented class
+	 *
+	 * @throws javassist.CannotCompileException if any.
+	 * @throws java.io.IOException if any.
 	 */
 	public synchronized void finalizeInstrumentation() throws CannotCompileException, IOException {
 		// Add member to indicate that the class has been instrumented
@@ -362,10 +388,19 @@ public class ClassVisitor {
 
 	/**
 	 * Returns the byte code of the visited class.
+	 *
 	 * @return the byte code of the visited class
 	 */
 	public byte[] getBytecode() { return this.bytes.clone(); }
 
+	/**
+	 * <p>addBooleanMember.</p>
+	 *
+	 * @param _field_name a {@link java.lang.String} object.
+	 * @param _value a boolean.
+	 * @param _final a boolean.
+	 * @throws javassist.CannotCompileException if any.
+	 */
 	public synchronized void addBooleanMember(String _field_name, boolean _value, boolean _final) throws CannotCompileException {
 		final CtField f = new CtField(CtClass.booleanType, _field_name, this.c);
 		if(!_final)
@@ -397,6 +432,13 @@ public class ClassVisitor {
 		}
 	}
 
+	/**
+	 * <p>addIntMember.</p>
+	 *
+	 * @param _field_name a {@link java.lang.String} object.
+	 * @param _final a boolean.
+	 * @throws javassist.CannotCompileException if any.
+	 */
 	public synchronized void addIntMember(String _field_name, boolean _final) throws CannotCompileException {
 		final CtField f = new CtField(CtClass.intType, _field_name, this.c);
 		if(!_final)
@@ -412,8 +454,11 @@ public class ClassVisitor {
 
 	/**
 	 * Generates a name for a class member.
-	 * @param _s
-	 * @return
+	 *
+	 * @param _prefix a {@link java.lang.String} object.
+	 * @param _construct_name a {@link java.lang.String} object.
+	 * @param _random_part a boolean.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public String getUniqueMemberName(String _prefix, String _construct_name, boolean _random_part) {
 		final StringBuffer b = new StringBuffer();
@@ -461,6 +506,7 @@ public class ClassVisitor {
 	 * Previously, a string tokenizer split the given {@link String} at every comma,
 	 * which led to problems in case of Map parameters (e.g., Map<String,Object>).
 	 * The current implementation uses the regular expression {@link ClassVisitor#QUALIFIED_TYPE_PATTERN}.
+	 *
 	 * @param _string a String with qualified parameter types
 	 * @return a a String where the package info of qualified parameter types has been removed
 	 */
@@ -479,6 +525,12 @@ public class ClassVisitor {
 		return b.toString();
 	}
 
+	/**
+	 * <p>removePackageContext.</p>
+	 *
+	 * @param _string a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String removePackageContext(String _string) {
 		final StringBuilder b = new StringBuilder();
 
@@ -508,18 +560,54 @@ public class ClassVisitor {
 		return b.toString();
 	}
 
+	/**
+	 * <p>Getter for the field <code>javaId</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.java.JavaId} object.
+	 */
 	public JavaId getJavaId() { return this.javaId; }
 
+	/**
+	 * <p>getCtClass.</p>
+	 *
+	 * @return a {@link javassist.CtClass} object.
+	 */
 	public CtClass getCtClass() { return this.c; }
 
+	/**
+	 * <p>getArchiveDigest.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getArchiveDigest() { return this.originalArchiveDigest; }
 
+	/**
+	 * <p>Getter for the field <code>appContext</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 */
 	public Application getAppContext() { return this.appContext; }
 
+	/**
+	 * <p>Getter for the field <code>qname</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getQname() { return this.qname;	}
 
+	/**
+	 * <p>Getter for the field <code>originalArchiveDigest</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getOriginalArchiveDigest() { return this.originalArchiveDigest; }
 
+	/**
+	 * <p>prettyPrint.</p>
+	 *
+	 * @param _src a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public final static String prettyPrint(String _src) {
 		final String n = System.getProperty("line.separator");
 		final String indent = "  ";

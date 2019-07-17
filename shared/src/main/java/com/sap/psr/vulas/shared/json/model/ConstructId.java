@@ -13,6 +13,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 
+/**
+ * <p>ConstructId class.</p>
+ *
+ */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConstructId implements Serializable, Comparable {
@@ -28,8 +32,18 @@ public class ConstructId implements Serializable, Comparable {
 
 	private String qname;
 
+	/**
+	 * <p>Constructor for ConstructId.</p>
+	 */
 	public ConstructId() { super(); }
 
+	/**
+	 * <p>Constructor for ConstructId.</p>
+	 *
+	 * @param lang a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 * @param type a {@link com.sap.psr.vulas.shared.enums.ConstructType} object.
+	 * @param qname a {@link java.lang.String} object.
+	 */
 	public ConstructId(ProgrammingLanguage lang, ConstructType type, String qname) {
 		super();
 		this.lang = lang;
@@ -37,24 +51,70 @@ public class ConstructId implements Serializable, Comparable {
 		this.qname = qname;
 	}
 
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getId() { return id; }
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 */
 	public void setId(Long id) { this.id = id; } 
 
+	/**
+	 * <p>Getter for the field <code>lang</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 */
 	public ProgrammingLanguage getLang() { return lang; }
+	/**
+	 * <p>Setter for the field <code>lang</code>.</p>
+	 *
+	 * @param lang a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 */
 	public void setLang(ProgrammingLanguage lang) { this.lang = lang; }
 
+	/**
+	 * <p>Getter for the field <code>type</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.ConstructType} object.
+	 */
 	public ConstructType getType() { return type; }
+	/**
+	 * <p>Setter for the field <code>type</code>.</p>
+	 *
+	 * @param type a {@link com.sap.psr.vulas.shared.enums.ConstructType} object.
+	 */
 	public void setType(ConstructType type) { this.type = type; }
 
+	/**
+	 * <p>Getter for the field <code>qname</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getQname() { return qname; }
+	/**
+	 * <p>Setter for the field <code>qname</code>.</p>
+	 *
+	 * @param qname a {@link java.lang.String} object.
+	 */
 	public void setQname(String qname) { this.qname = qname; }
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public final String toString() {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("[").append(this.getId()).append(":").append(this.getLang()).append("|").append(this.getType()).append("|").append(this.getQname()).append("]");
 		return builder.toString();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -65,6 +125,7 @@ public class ConstructId implements Serializable, Comparable {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -92,6 +153,7 @@ public class ConstructId implements Serializable, Comparable {
 		return true;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(Object _other) {
 		if(_other==null || !(_other instanceof ConstructId))
@@ -112,7 +174,18 @@ public class ConstructId implements Serializable, Comparable {
 	 */
 	private transient Map<String,String> attributes = null; // (public,private,package-private,protected),static,final,synchronized,abstract,deprecated,synthetic,strict,native,super
 	
+	/**
+	 * <p>Getter for the field <code>relates</code>.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
 	public Map<String, Set<ConstructId>> getRelates() { return relates; }
+	/**
+	 * <p>addRelates.</p>
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _cid a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+	 */
 	public void addRelates(String _key, ConstructId _cid) {
 		if(this.relates==null)
 			this.relates = new HashMap<String, Set<ConstructId>>();
@@ -123,22 +196,61 @@ public class ConstructId implements Serializable, Comparable {
 		}
 		cids.add(_cid);
 	}
+	/**
+	 * <p>Setter for the field <code>relates</code>.</p>
+	 *
+	 * @param relates a {@link java.util.Map} object.
+	 */
 	public void setRelates(Map<String, Set<ConstructId>> relates) { this.relates = relates; }
 
+	/**
+	 * <p>Getter for the field <code>attributes</code>.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
 	public Map<String,String> getAttributes() { return attributes; }
+	/**
+	 * <p>addAttribute.</p>
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _value a {@link java.lang.String} object.
+	 */
 	public void addAttribute(String _key, String _value) {
 		if(this.attributes==null)
 			this.attributes = new HashMap<String,String>();
 		this.attributes.put(_key, _value);
 	}
+	/**
+	 * <p>addAttribute.</p>
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _value a boolean.
+	 */
 	public void addAttribute(String _key, boolean _value) {
 		this.addAttribute(_key, Boolean.toString(_value));
 	}
+	/**
+	 * <p>hasAttribute.</p>
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public boolean hasAttribute(String _key) {
 		return this.attributes!=null && this.attributes.containsKey(_key);
 	}
+	/**
+	 * <p>isAttributeTrue.</p>
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public boolean isAttributeTrue(String _key) { 
 		return this.hasAttribute(_key) && Boolean.valueOf(this.attributes.get(_key)).booleanValue();
 	}
+	/**
+	 * <p>Setter for the field <code>attributes</code>.</p>
+	 *
+	 * @param attributes a {@link java.util.Map} object.
+	 */
 	public void setAttributes(Map<String,String> attributes) { this.attributes = attributes; }
 }

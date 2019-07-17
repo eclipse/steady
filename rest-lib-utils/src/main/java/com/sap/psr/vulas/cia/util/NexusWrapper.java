@@ -26,6 +26,10 @@ import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.Artifact;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>NexusWrapper class.</p>
+ *
+ */
 public class NexusWrapper implements RepositoryWrapper {
 
 	
@@ -48,6 +52,7 @@ public class NexusWrapper implements RepositoryWrapper {
 			CONFIGURED=true;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
 		return SUPP_LANG;
@@ -146,6 +151,7 @@ public class NexusWrapper implements RepositoryWrapper {
 	
 	
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<Artifact> getAllArtifactVersions(String group, String artifact, String classifier, String packaging) throws InterruptedException {
 		
@@ -168,6 +174,7 @@ public class NexusWrapper implements RepositoryWrapper {
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<Artifact> getGreaterArtifactVersions(String group, String artifact, String greaterThanVersion,
 			String classifier, String packaging) throws Exception {
@@ -199,18 +206,21 @@ public class NexusWrapper implements RepositoryWrapper {
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Artifact getLatestArtifactVersion(String group, String artifact, String classifier, String packaging) {
 		return this.resolveInNexus(group, artifact, "RELEASE", classifier, packaging);
 		 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Artifact getArtifactVersion(String group, String artifact, String version, String classifier,
 			String packaging,ProgrammingLanguage lang) throws Exception {
 		return this.resolveInNexus(group, artifact, version, classifier, packaging);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Path downloadArtifact(Artifact a) throws Exception {
 		final Map<String,String> params = new HashMap<String,String>();
@@ -243,6 +253,7 @@ public class NexusWrapper implements RepositoryWrapper {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Artifact getArtifactForDigest(String digest) throws InterruptedException {
 		//currently it only returns the lib id, to check whether package classifier and timestamp can be obtained (if needed)
@@ -264,6 +275,7 @@ public class NexusWrapper implements RepositoryWrapper {
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isConfigured() {
 		return CONFIGURED;

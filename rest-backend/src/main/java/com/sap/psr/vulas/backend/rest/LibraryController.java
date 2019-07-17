@@ -48,6 +48,10 @@ import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>LibraryController class.</p>
+ *
+ */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/libs")
@@ -69,7 +73,10 @@ public class LibraryController {
 
 	/**
 	 * Returns a collection of all {@link Library}s present in the backend.
-	 * @return 
+	 *
+	 * @param mostUsed a {@link java.lang.Integer} object.
+	 * @param excludedScopes an array of {@link com.sap.psr.vulas.shared.enums.Scope} objects.
+	 * @return a {@link java.lang.Iterable} object.
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Overview.class)
@@ -108,8 +115,10 @@ public class LibraryController {
 
 	/**
 	 * Creates a new {@link Bug} with a given bug ID (e.g., CVE identifier).
-	 * @param library
+	 *
+	 * @param library a {@link com.sap.psr.vulas.backend.model.Library} object.
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param skipResponseBody a {@link java.lang.Boolean} object.
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"})
 	@JsonView(Views.LibDetails.class)
@@ -134,7 +143,8 @@ public class LibraryController {
 
 	/**
 	 * Returns the {@link Library} with the given digest.
-	 * @param digest
+	 *
+	 * @param digest a {@link java.lang.String} object.
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if library with given digest does not exist, 200 {@link HttpStatus#OK} if the library is found
 	 */
 	@RequestMapping(value = "/{digest}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
@@ -150,7 +160,8 @@ public class LibraryController {
 
 	/**
 	 * Returns the {@link Application} with dependencies on the given digest.
-	 * @param digest
+	 *
+	 * @param digest a {@link java.lang.String} object.
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if no application depends on the given digest or digest does not exists, 200 {@link HttpStatus#OK} if the applications are found
 	 */
 	@RequestMapping(value = "/{digest}/apps", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
@@ -169,10 +180,13 @@ public class LibraryController {
 
 	/**
 	 * Re-creates the {@link Library} with a given digest.
-	 * @param digest
+	 *
+	 * @param digest a {@link java.lang.String} object.
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if library with given digest does not exist,
 	 * 		   422 {@link HttpStatus.UNPROCESSABLE_ENTITY} if the value of path variable (digest) is not equal to the corresponding field in the body
 	 * 		   200 {@link HttpStatus#OK} if the library was successfully re-created
+	 * @param library a {@link com.sap.psr.vulas.backend.model.Library} object.
+	 * @param skipResponseBody a {@link java.lang.Boolean} object.
 	 */
 	@RequestMapping(value = "/{digest}", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"})
 	@JsonView(Views.LibDetails.class)
@@ -196,9 +210,11 @@ public class LibraryController {
 
 	/**
 	 * Updates the meta-data of a {@link Library} with a given digest. In particular it updates the digest verified flag and release timestamp fields.
-	 * @param digest
+	 *
+	 * @param digest a {@link java.lang.String} object.
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if library with given digest does not exist,
 	 * 		   200 {@link HttpStatus#OK} if the library metadata were successfully updated
+	 * @param skipResponseBody a {@link java.lang.Boolean} object.
 	 */
 	@RequestMapping(value = "/{digest}/updateMetadata", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"})
 	@JsonView(Views.LibDetails.class)
@@ -219,8 +235,9 @@ public class LibraryController {
 	}	
 	
 	/**
-	 * 
-	 * @param digest
+	 * <p>isLibraryExisting.</p>
+	 *
+	 * @param digest a {@link java.lang.String} object.
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if library with given digest does not exist, 200 {@link HttpStatus#OK} if the library is found
 	 */
 	@RequestMapping(value = "/{digest}", method = RequestMethod.OPTIONS)
@@ -236,8 +253,9 @@ public class LibraryController {
 
 	/**
 	 * Deletes the {@link Library} with the given external ID. This ID is provided by the user when creating a bug, e.g., a CVE identifier.
-	 * @param id
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given bug ID does not exist, 200 {@link HttpStatus#OK} if the bug was successfully deleted
+	 * @param digest a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{digest}", method = RequestMethod.DELETE, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Resource<Library>> deleteLibrary(@PathVariable String digest) {
@@ -253,8 +271,11 @@ public class LibraryController {
 
 	/**
 	 * Returns a collection of {@link Bug}s relevant for the {@link Library} with the given digest.
-	 * @param digest
+	 *
+	 * @param digest a {@link java.lang.String} object.
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if library with given digest does not exist, 200 {@link HttpStatus#OK} if the library is found
+	 * @param selectedBugs an array of {@link java.lang.String} objects.
+	 * @param geCvss a float.
 	 */
 	@RequestMapping(value = "/{digest}/bugs", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -361,6 +382,7 @@ public class LibraryController {
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if the library file needs to be uploaded (not known to Maven central and not already uploaded), 200 otherwise
 	 */
 	@RequestMapping(value = "/{digest}/upload", method = RequestMethod.OPTIONS)
+	@RequestMapping(value = "/{digest}/upload", method = RequestMethod.OPTIONS)
 	ResponseEntity<Library> isJARrequired(@PathVariable String digest, HttpEntity<byte[]> requestEntity) {
 		final Library l = LibraryRepository.FILTER.findOne(this.libRepository.findByDigest(digest));
 		if(l.getWellknownDigest()==false){
@@ -371,6 +393,12 @@ public class LibraryController {
 		return new ResponseEntity<Library>(HttpStatus.OK);		
 	}
 
+	/**
+	 * <p>getLibraryLibId.</p>
+	 *
+	 * @param digest a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
 	@RequestMapping(value = "/{digest}/identifyLibId", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
 

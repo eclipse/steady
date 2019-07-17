@@ -8,6 +8,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 
+/**
+ * <p>VulnerableDependency class.</p>
+ *
+ */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VulnerableDependency  implements Serializable, Comparable {
@@ -34,8 +38,17 @@ public class VulnerableDependency  implements Serializable, Comparable {
 
 	int traced;
 
+	/**
+	 * <p>Constructor for VulnerableDependency.</p>
+	 */
 	public VulnerableDependency() { super(); }
 
+	/**
+	 * <p>Constructor for VulnerableDependency.</p>
+	 *
+	 * @param d a {@link com.sap.psr.vulas.shared.json.model.Dependency} object.
+	 * @param b a {@link com.sap.psr.vulas.shared.json.model.Bug} object.
+	 */
 	public VulnerableDependency(Dependency d, Bug b){
 		super();
 		this.dep = d;
@@ -43,20 +56,63 @@ public class VulnerableDependency  implements Serializable, Comparable {
 		this.evalAffectedVersion();
 	}
 
+	/**
+	 * <p>Getter for the field <code>dep</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Dependency} object.
+	 */
 	public Dependency getDep() { return dep; }
+	/**
+	 * <p>Setter for the field <code>dep</code>.</p>
+	 *
+	 * @param dep a {@link com.sap.psr.vulas.shared.json.model.Dependency} object.
+	 */
 	public void setDep(Dependency dep) { this.dep = dep; }
 
 	
+	/**
+	 * <p>getBugId.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getBugId() { return bug.getId(); }
+	/**
+	 * <p>Getter for the field <code>bug</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Bug} object.
+	 */
 	public Bug getBug() { return bug; }
+	/**
+	 * <p>Setter for the field <code>bug</code>.</p>
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.shared.json.model.Bug} object.
+	 */
 	public void setBug(Bug bug) { this.bug = bug; }
 
 
+	/**
+	 * <p>Getter for the field <code>constructList</code>.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	public List<ConstructChangeInDependency> getConstructList() { return constructList; }
+	/**
+	 * <p>Setter for the field <code>constructList</code>.</p>
+	 *
+	 * @param ccd a {@link java.util.List} object.
+	 */
 	public void setConstructList(List<ConstructChangeInDependency> ccd) { this.constructList = ccd; }
 
+	/**
+	 * <p>isAffectedVersion.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isAffectedVersion() { return this.getAffectedVersion() == 1; }
 	
+	/**
+	 * <p>evalAffectedVersion.</p>
+	 */
 	public void evalAffectedVersion() { 
 		Boolean pre_commit_pom=null, line_add = null, check_version=null, manual_libId=null, equal=null;
 		AffectedVersionSource source=null;
@@ -129,58 +185,208 @@ public class VulnerableDependency  implements Serializable, Comparable {
 		this.setAffectedVersion(1); // when the confirmed flag is 0, the value of affected-version is irrelevant but we set it to 1 so that the UI doesn't filter it out when filtering out historical vulnerabilities
 	}
 	
+	/**
+	 * <p>isAffectedVersionConfirmed.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isAffectedVersionConfirmed() { return this.getAffectedVersionConfirmed()==1; }
+	/**
+	 * <p>Getter for the field <code>affectedVersionConfirmed</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getAffectedVersionConfirmed() { return this.affectedVersionConfirmed; }
+	/**
+	 * <p>Setter for the field <code>affectedVersionConfirmed</code>.</p>
+	 *
+	 * @param i a int.
+	 */
 	public void setAffectedVersionConfirmed(int i) { this.affectedVersionConfirmed = i; }
 
+	/**
+	 * <p>Getter for the field <code>affectedVersion</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getAffectedVersion() { return this.affectedVersion; }
+	/**
+	 * <p>Setter for the field <code>affectedVersion</code>.</p>
+	 *
+	 * @param i a int.
+	 */
 	public void setAffectedVersion(int i) { this.affectedVersion= i; }
 	
+	/**
+	 * <p>Getter for the field <code>affectedVersionSource</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 */
 	public AffectedVersionSource getAffectedVersionSource() { return this.affectedVersionSource; }
+	/**
+	 * <p>Setter for the field <code>affectedVersionSource</code>.</p>
+	 *
+	 * @param s a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 */
 	public void setAffectedVersionSource(AffectedVersionSource s) { this.affectedVersionSource = s; }
 	
+	/**
+	 * <p>isReachable.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isReachable() { return this.getReachable()==1; }
+	/**
+	 * <p>Getter for the field <code>reachable</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getReachable() { return this.reachable; }
+	/**
+	 * <p>Setter for the field <code>reachable</code>.</p>
+	 *
+	 * @param i a int.
+	 */
 	public void setReachable(int i) { this.reachable = i; }
 
+	/**
+	 * <p>isReachableConfirmed.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isReachableConfirmed() { return this.getReachableConfirmed() == 1; }
+	/**
+	 * <p>Getter for the field <code>reachableConfirmed</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getReachableConfirmed() {
 		// Need to be calculated differently than in backend model, since the collection of reachable constructs is not serialized
 		//return (this.dep.getReachableConstructIds()==null || this.dep.getReachableConstructIds().size()==0) ? 0 : 1;
 		return this.reachableConfirmed;
 	}
+	/**
+	 * <p>Setter for the field <code>reachableConfirmed</code>.</p>
+	 *
+	 * @param i a int.
+	 */
 	public void setReachableConfirmed(int i) { this.reachableConfirmed = i; }
 	
+	/**
+	 * <p>isTraced.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isTraced() { return this.getTraced()==1; }
+	/**
+	 * <p>Getter for the field <code>traced</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getTraced() { return this.traced; }
+	/**
+	 * <p>Setter for the field <code>traced</code>.</p>
+	 *
+	 * @param i a int.
+	 */
 	public void setTraced(int i) { this.traced = i; }
 
+	/**
+	 * <p>isTracedConfirmed.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isTracedConfirmed() { return this.getTracedConfirmed() == 1; }
+	/**
+	 * <p>getTracedConfirmed.</p>
+	 *
+	 * @return a int.
+	 */
 	@JsonProperty(value = "traced_confirmed")
 	public int getTracedConfirmed() { return this.dep.getTraced()!=null && this.dep.getTraced() ? 1 : 0; }
 
 	// =================== Added on top of the original class from vulas-backend
 
+	/**
+	 * <p>isNotReachable.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isNotReachable() { return !isReachable() && isReachableConfirmed(); }
+	/**
+	 * <p>isNotTraced.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isNotTraced() { return !isTraced() && isTracedConfirmed(); }
 
 	private Boolean is_blacklisted;
+	/**
+	 * <p>setBlacklisted.</p>
+	 *
+	 * @param _b a boolean.
+	 */
 	public void setBlacklisted(boolean _b) { this.is_blacklisted = Boolean.valueOf(_b); }
+	/**
+	 * <p>isBlacklisted.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean isBlacklisted() { return is_blacklisted; }
 
+	/**
+	 * <p>isNoneAffectedVersion.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isNoneAffectedVersion() { return this.getAffectedVersion()==0 && this.getAffectedVersionConfirmed()==1; }
 
 	private Boolean above_threshold;
+	/**
+	 * <p>setAboveThreshold.</p>
+	 *
+	 * @param _b a boolean.
+	 */
 	public void setAboveThreshold(boolean _b) { this.above_threshold = Boolean.valueOf(_b); }
+	/**
+	 * <p>isAboveThreshold.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean isAboveThreshold() { return above_threshold; }
 
+	/**
+	 * <p>isThrowsException.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean isThrowsException() { return this.isAboveThreshold() && !this.isBlacklisted(); }
+	/**
+	 * <p>isThrowsExceptionExcluded.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean isThrowsExceptionExcluded() { return this.isAboveThreshold() && this.isBlacklisted(); }
 
 	public Application app = null;
+	/**
+	 * <p>Getter for the field <code>app</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 */
 	public Application getApp() { return this.app; }
+	/**
+	 * <p>Setter for the field <code>app</code>.</p>
+	 *
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 */
 	public void setApp(Application _app) { this.app = _app; }
 	
+	/**
+	 * <p>getAffectedVersionSourceAsString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getAffectedVersionSourceAsString() {
 		if(this.affectedVersionSource==null)
 			return "";
@@ -204,6 +410,7 @@ public class VulnerableDependency  implements Serializable, Comparable {
 			return String.valueOf(this.affectedVersionSource);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(Object _o) {
 		VulnerableDependency other = null;
@@ -221,6 +428,7 @@ public class VulnerableDependency  implements Serializable, Comparable {
 			return bugid_comparison;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -231,6 +439,7 @@ public class VulnerableDependency  implements Serializable, Comparable {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

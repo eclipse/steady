@@ -13,6 +13,7 @@ import com.sap.psr.vulas.goals.UploadGoal;
 @Mojo( name = "upload", defaultPhase = LifecyclePhase.VERIFY, requiresOnline = true )
 public class MvnPluginUpload extends AbstractVulasMojo {
 	
+	/** {@inheritDoc} */
 	@Override
 	protected void createGoal() {
 		this.goal = new UploadGoal();

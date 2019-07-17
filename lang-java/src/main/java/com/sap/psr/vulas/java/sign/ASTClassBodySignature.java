@@ -3,6 +3,10 @@ package com.sap.psr.vulas.java.sign;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>ASTClassBodySignature class.</p>
+ *
+ */
 public class ASTClassBodySignature/* extends ASTSignature*/{
 
 	private static final Log log = LogFactory.getLog(ASTClassBodySignature.class);

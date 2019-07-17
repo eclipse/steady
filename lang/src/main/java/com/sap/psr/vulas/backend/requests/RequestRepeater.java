@@ -8,7 +8,6 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 /**
  * Used to repeat HTTP requests for a certain number of times.
- *
  */
 public class RequestRepeater {
 
@@ -18,6 +17,12 @@ public class RequestRepeater {
 	private long max = 50;
 	private long waitMilli = 60000;
 
+	/**
+	 * <p>Constructor for RequestRepeater.</p>
+	 *
+	 * @param _max a long.
+	 * @param _milli a long.
+	 */
 	public RequestRepeater(long _max, long _milli) {
 		this.max = _max;
 		this.waitMilli = _milli;
@@ -26,6 +31,9 @@ public class RequestRepeater {
 	/**
 	 * Returns true (and waits {@link RequestRepeater#waitMilli) milliseconds) if the response code of the previous HTTP call was 503
 	 * and the number of maximum retries has not been reached, false otherwise.
+	 *
+	 * @param _503 a boolean.
+	 * @return a boolean.
 	 */
 	public boolean repeat(boolean _503) {
 

@@ -8,6 +8,10 @@ import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.Modifier;
 
+/**
+ * <p>Abstract AbstractInstrumentor class.</p>
+ *
+ */
 public abstract class AbstractInstrumentor implements IInstrumentor {
 	
 	protected VulasConfiguration vulasConfiguration = new VulasConfiguration();
@@ -15,6 +19,10 @@ public abstract class AbstractInstrumentor implements IInstrumentor {
 	/**
 	 * Adds Java code to determine the URL of the resource from which the given class was loaded, and the class loader which loaded it.
 	 * This information is available in the Java variables vul_cls_res and vul_cls_ldr.
+	 *
+	 * @param _buffer a {@link java.lang.StringBuffer} object.
+	 * @param _jid a {@link com.sap.psr.vulas.java.JavaId} object.
+	 * @param _behavior a {@link javassist.CtBehavior} object.
 	 */
 	protected synchronized void injectUrlAndLoader(StringBuffer _buffer, JavaId _jid, CtBehavior _behavior) { 
 		// Only add the following if not yet existing
@@ -68,6 +76,10 @@ public abstract class AbstractInstrumentor implements IInstrumentor {
 	/**
 	 * Adds Java code to obtain the stacktrace.
 	 * This information is available in the Java variable vul_st.
+	 *
+	 * @param _buffer a {@link java.lang.StringBuffer} object.
+	 * @param _jid a {@link com.sap.psr.vulas.java.JavaId} object.
+	 * @param _behavior a {@link javassist.CtBehavior} object.
 	 */
 	protected synchronized void injectStacktrace(StringBuffer _buffer, JavaId _jid, CtBehavior _behavior) {
 		final String decl = "StackTraceElement[] vul_st = null;";

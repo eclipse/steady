@@ -45,7 +45,6 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  * {@link SingleTraceInstrumentor} and {@link StackTraceInstrumentor}.
  * Prepares and uploads trace information to the backend and triggers
  * the analysis of JAR files.
- *
  */
 public class TraceCollector {
 
@@ -113,6 +112,11 @@ public class TraceCollector {
 
 	//======================================= STATIC METHODS
 
+	/**
+	 * <p>Getter for the field <code>instance</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.monitor.trace.TraceCollector} object.
+	 */
 	public synchronized static TraceCollector getInstance() {
 		if(TraceCollector.instance==null) {
 			// Disable trace collection during the instantiation process. As we use a couple of OSS components
@@ -145,13 +149,16 @@ public class TraceCollector {
 
 	/**
 	 * Callback method for instrumented class methods.
+	 *
 	 * @param _qname the qualified name of the method or constructor instrumented, thus, performing the callback
-	 * @param _resource_url the resource (JAR) from which the class was loaded (can be null)
-	 * @param _loader the class loader loading the class
 	 * @param _archive_digest the SHA1 digest of the original JAR archive (optional, must be added to the class during offline instrumentation)
 	 * @param _app_groupid the Maven group Id of the application context (optional, can be added to the class during offline instrumentation)
 	 * @param _app_artifactid the Maven artifact Id of the application context (optional, see above)
 	 * @param _app_version the Maven version of the application context (optional, see above)
+	 * @param _class_loader a {@link java.lang.ClassLoader} object.
+	 * @param _url a {@link java.net.URL} object.
+	 * @param _params a {@link java.util.Map} object.
+	 * @return a boolean.
 	 */
 	public static boolean callbackMethod(String _qname, ClassLoader _class_loader, URL _url, String _archive_digest, String _app_groupid, String _app_artifactid, String _app_version, Map<String,Serializable> _params) {
 		boolean trace_collected = false;
@@ -164,13 +171,16 @@ public class TraceCollector {
 
 	/**
 	 * Callback method for instrumented class constructors.
+	 *
 	 * @param _qname the qualified name of the method or constructor instrumented, thus, performing the callback
-	 * @param _resource_url the resource (JAR) from which the class was loaded (can be null)
-	 * @param _loader the class loader loading the class
 	 * @param _archive_digest the SHA1 digest of the original JAR archive (optional, must be added to the class during static instrumentation)
 	 * @param _app_groupid the Maven group Id of the application context (optional, can be added to the class during static instrumentation)
 	 * @param _app_artifactid the Maven artifact Id of the application context (optional, see above)
 	 * @param _app_version the Maven version of the application context (optional, see above)
+	 * @param _class_loader a {@link java.lang.ClassLoader} object.
+	 * @param _url a {@link java.net.URL} object.
+	 * @param _params a {@link java.util.Map} object.
+	 * @return a boolean.
 	 */
 	public static boolean callbackConstructor(String _qname, ClassLoader _class_loader, URL _url, String _archive_digest, String _app_groupid, String _app_artifactid, String _app_version, Map<String,Serializable> _params) {
 		boolean trace_collected = false;
@@ -183,13 +193,16 @@ public class TraceCollector {
 
 	/**
 	 * Callback method for instrumented class constructors.
+	 *
 	 * @param _qname the qualified name of the method or constructor instrumented, thus, performing the callback
-	 * @param _resource_url the resource (JAR) from which the class was loaded (can be null)
-	 * @param _loader the class loader loading the class
 	 * @param _archive_digest the SHA1 digest of the original JAR archive (optional, must be added to the class during static instrumentation)
 	 * @param _app_groupid the Maven group Id of the application context (optional, can be added to the class during static instrumentation)
 	 * @param _app_artifactid the Maven artifact Id of the application context (optional, see above)
 	 * @param _app_version the Maven version of the application context (optional, see above)
+	 * @param _class_loader a {@link java.lang.ClassLoader} object.
+	 * @param _url a {@link java.net.URL} object.
+	 * @param _params a {@link java.util.Map} object.
+	 * @return a boolean.
 	 */
 	public static boolean callbackClinit(String _qname, ClassLoader _class_loader, URL _url, String _archive_digest, String _app_groupid, String _app_artifactid, String _app_version, Map<String,Serializable> _params) {
 		boolean trace_collected = false;
@@ -202,6 +215,18 @@ public class TraceCollector {
 
 	//======================================= INSTANCE METHODS
 
+	/**
+	 * <p>addTrace.</p>
+	 *
+	 * @param _id a {@link com.sap.psr.vulas.ConstructId} object.
+	 * @param _class_loader a {@link java.lang.ClassLoader} object.
+	 * @param _url a {@link java.net.URL} object.
+	 * @param _archive_digest a {@link java.lang.String} object.
+	 * @param _app_groupid a {@link java.lang.String} object.
+	 * @param _app_artifactid a {@link java.lang.String} object.
+	 * @param _app_version a {@link java.lang.String} object.
+	 * @param _params a {@link java.util.Map} object.
+	 */
 	public synchronized void addTrace(ConstructId _id, ClassLoader _class_loader, URL _url, String _archive_digest, String _app_groupid, String _app_artifactid, String _app_version, Map<String,Serializable> _params) {
 
 		// Return right away if we already collected >= maxItems traces
@@ -322,6 +347,12 @@ public class TraceCollector {
 		}
 	}
 
+	/**
+	 * <p>uploadInformation.</p>
+	 *
+	 * @param _exe a {@link com.sap.psr.vulas.goals.AbstractGoal} object.
+	 * @param batchSize a int.
+	 */
 	public synchronized void uploadInformation(AbstractGoal _exe, int batchSize) {
 		this.exe = _exe;
 		if(batchSize > -1){
@@ -334,6 +365,9 @@ public class TraceCollector {
 		}
 	}
 
+	/**
+	 * <p>awaitUpload.</p>
+	 */
 	public void awaitUpload() {
 		if(this.pool!=null) {
 			this.pool.shutdown();
@@ -376,7 +410,8 @@ public class TraceCollector {
 
 	/**
 	 * Upload _batch_size paths gathered from stack trace information (all if _batch_size is negative).
-	 * @return
+	 *
+	 * @param _batch_size a int.
 	 */
 	public synchronized void uploadPaths(int _batch_size) {
 		// No paths collected since last call
@@ -604,6 +639,11 @@ public class TraceCollector {
 		return b.toString();
 	}
 
+	/**
+	 * <p>getStatistics.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
 	public Map<String,Long> getStatistics() {
 		final Map<String, Long> stats = new HashMap<String,Long>();
 		stats.put("archivesAnalyzed", new Long(this.jarFiles.size()));			

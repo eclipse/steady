@@ -40,6 +40,10 @@ import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>Report class.</p>
+ *
+ */
 public class Report {
 
 	private static final Log log = LogFactory.getLog(Report.class);
@@ -52,7 +56,9 @@ public class Report {
 	 * Whether or not archives with question marks will be ignored.
 	 */
 	public static final String IGN_UNASS_ALL = "all";
+	/** Constant <code>IGN_UNASS_KNOWN="known"</code> */
 	public static final String IGN_UNASS_KNOWN = "known";
+	/** Constant <code>IGN_UNASS_OFF="off"</code> */
 	public static final String IGN_UNASS_OFF = "off";
 	
 	/**
@@ -61,9 +67,13 @@ public class Report {
 	 */
 	private String ignoreUnassessed = IGN_UNASS_KNOWN; 
 
+	/** Constant <code>THRESHOLD_NONE="noException"</code> */
 	public static final String THRESHOLD_NONE    = "noException";
+	/** Constant <code>THRESHOLD_DEP_ON="dependsOn"</code> */
 	public static final String THRESHOLD_DEP_ON  = "dependsOn";
+	/** Constant <code>THRESHOLD_POT_EXE="potentiallyExecutes"</code> */
 	public static final String THRESHOLD_POT_EXE = "potentiallyExecutes";
+	/** Constant <code>THRESHOLD_ACT_EXE="actuallyExecutes"</code> */
 	public static final String THRESHOLD_ACT_EXE = "actuallyExecutes";
 
 	private static final String TEMPLATE_FILE_HTML = "velocity_template.html";
@@ -105,6 +115,13 @@ public class Report {
 	
 	private GoalContext goalContext = null;
 
+	/**
+	 * <p>Constructor for Report.</p>
+	 *
+	 * @param _ctx a {@link com.sap.psr.vulas.goals.GoalContext} object.
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @param _modules a {@link java.util.Set} object.
+	 */
 	public Report(GoalContext _ctx, Application _app, Set<Application> _modules) {
 		this.goalContext = _ctx;
 		this.app = _app;
@@ -119,13 +136,28 @@ public class Report {
 		Report.log.info("Report to be done for " + this.app + ", [" + this.modules.size() + "] modules in total: " + this.modules);
 	}
 
+	/**
+	 * <p>Getter for the field <code>exceptionThreshold</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getExceptionThreshold() { return exceptionThreshold; }
+	/**
+	 * <p>Setter for the field <code>exceptionThreshold</code>.</p>
+	 *
+	 * @param _threshold a {@link java.lang.String} object.
+	 */
 	public void setExceptionThreshold(String _threshold) {
 		if(_threshold!=null)
 			this.exceptionThreshold = _threshold;
 		Report.log.info("Exception threshold: " + this.exceptionThreshold);
 	}
 
+	/**
+	 * <p>addExcludedBugs.</p>
+	 *
+	 * @param _items a {@link java.lang.String} object.
+	 */
 	public void addExcludedBugs(String _items) {
 		if(_items!=null && !_items.equals("")) {
 			this.excludedBugs.addAll(_items, ",", true);
@@ -133,6 +165,11 @@ public class Report {
 		}
 	}
 	
+	/**
+	 * <p>addExcludedBugs.</p>
+	 *
+	 * @param _items an array of {@link java.lang.String} objects.
+	 */
 	public void addExcludedBugs(String[] _items) {
 		if(_items!=null) {
 			this.excludedBugs.addAll(_items, true);
@@ -140,6 +177,11 @@ public class Report {
 		}
 	}
 
+	/**
+	 * <p>addExcludedScopes.</p>
+	 *
+	 * @param _items a {@link java.lang.String} object.
+	 */
 	public void addExcludedScopes(String _items) {
 		if(_items!=null && !_items.equals("")) {
 			this.excludedScopes.addAll(_items, ",", true);
@@ -147,6 +189,11 @@ public class Report {
 		}
 	}
 	
+	/**
+	 * <p>addExcludedScopes.</p>
+	 *
+	 * @param _items an array of {@link java.lang.String} objects.
+	 */
 	public void addExcludedScopes(String[] _items) {
 		if(_items!=null) {
 			this.excludedScopes.addAll(_items, true);
@@ -154,6 +201,11 @@ public class Report {
 		}
 	}
 	
+	/**
+	 * <p>Setter for the field <code>ignoreUnassessed</code>.</p>
+	 *
+	 * @param _ignore a {@link java.lang.String} object.
+	 */
 	public void setIgnoreUnassessed(String _ignore) {
 		if(_ignore!=null) {
 			if(_ignore.equalsIgnoreCase(IGN_UNASS_ALL)) {
@@ -191,7 +243,8 @@ public class Report {
 	
 	/**
 	 * Fetch JSON report data from central Vulas backend.
-	 * @throws IOException
+	 *
+	 * @throws java.io.IOException
 	 */
 	public void fetchAppVulnerabilities() throws IOException {
 		/*final String vulnsJson = BackendConnector.getInstance().getAppVulnDeps(this.app);//getAggregatedAppVulnerabilities(this.modules);
@@ -234,6 +287,9 @@ public class Report {
 		return _av;
 	}
 
+	/**
+	 * <p>processVulnerabilities.</p>
+	 */
 	public void processVulnerabilities() {
 		// Will be shown but do not raise a build exception
 		final Set<AggregatedVuln> vulnsToReport = new TreeSet<AggregatedVuln>();
@@ -354,7 +410,8 @@ public class Report {
 
 	/**
 	 * Returns true if a build exception shall be thrown, which is the case if a threshold other than NONE is defined and vulnerabilities exist above this threshold.
-	 * @return
+	 *
+	 * @return a boolean.
 	 */
 	public boolean isThrowBuildException() {
 		return !this.exceptionThreshold.equalsIgnoreCase("none") && !this.vulnsAboveThreshold.isEmpty();
@@ -362,6 +419,8 @@ public class Report {
 
 	/**
 	 * Returns a human-readable description of the configuration.
+	 *
+	 * @return a {@link java.util.Map} object.
 	 */
 	public Map<String,String> getConfiguration() {
 		final Map<String,String> cfg = new HashMap<String,String>();
@@ -372,8 +431,18 @@ public class Report {
 		return cfg;
 	}
 
+	/**
+	 * <p>Getter for the field <code>stats</code>.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
 	public Map<String,Long> getStats() { return this.stats; }
 	
+	/**
+	 * <p>getExceptionMessage.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getExceptionMessage() {
 		final StringBuilder builder = new StringBuilder();
 
@@ -388,6 +457,11 @@ public class Report {
 		return builder.toString();
 	}
 
+	/**
+	 * <p>getResultAsString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getResultAsString() {
 		final StringBuilder builder = new StringBuilder();
 
@@ -418,12 +492,25 @@ public class Report {
 		return builder.toString();
 	}
 	
+	/**
+	 * <p>writeResult.</p>
+	 *
+	 * @param _dir a {@link java.nio.file.Path} object.
+	 */
 	public void writeResult(@NotNull Path _dir) {
 		this.writeResultAsHtml(_dir);
 		this.writeResultAsXml(_dir);
 		this.writeResultAsJson(_dir);
 	}
 	
+	/**
+	 * <p>writeResult.</p>
+	 *
+	 * @param _dir a {@link java.nio.file.Path} object.
+	 * @param _template a {@link java.lang.String} object.
+	 * @param _report a {@link java.lang.String} object.
+	 * @return a {@link java.nio.file.Path} object.
+	 */
 	public Path writeResult(@NotNull Path _dir, String _template, String _report) {
 		Template template = null;
 
@@ -463,14 +550,32 @@ public class Report {
 		return (file==null ? null : file.toPath().toAbsolutePath());
 	}
 
+	/**
+	 * <p>writeResultAsHtml.</p>
+	 *
+	 * @param _dir a {@link java.nio.file.Path} object.
+	 * @return a {@link java.nio.file.Path} object.
+	 */
 	public Path writeResultAsHtml(@NotNull Path _dir) {
 		return this.writeResult(_dir, TEMPLATE_FILE_HTML, REPORT_FILE_HTML);
 	}
 	
+	/**
+	 * <p>writeResultAsXml.</p>
+	 *
+	 * @param _dir a {@link java.nio.file.Path} object.
+	 * @return a {@link java.nio.file.Path} object.
+	 */
 	public Path writeResultAsXml(@NotNull Path _dir) {
 		return this.writeResult(_dir, TEMPLATE_FILE_XML, REPORT_FILE_XML);
 	}
 	
+	/**
+	 * <p>writeResultAsJson.</p>
+	 *
+	 * @param _dir a {@link java.nio.file.Path} object.
+	 * @return a {@link java.nio.file.Path} object.
+	 */
 	public Path writeResultAsJson(@NotNull Path _dir) {
 		return this.writeResult(_dir, TEMPLATE_FILE_JSON, REPORT_FILE_JSON);
 	}

@@ -12,6 +12,10 @@ import com.sap.psr.vulas.backend.HttpResponse;
 import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>HttpRequestList class.</p>
+ *
+ */
 public class HttpRequestList extends AbstractHttpRequest {
 	
 	private static final Log log = LogFactory.getLog(HttpRequestList.class);
@@ -23,14 +27,28 @@ public class HttpRequestList extends AbstractHttpRequest {
 	
 	private List<HttpRequest> list = new LinkedList<HttpRequest>();
 	
+	/**
+	 * <p>Constructor for HttpRequestList.</p>
+	 */
 	public HttpRequestList() { this(true); }
 	
+	/**
+	 * <p>Constructor for HttpRequestList.</p>
+	 *
+	 * @param _stop_on_success a boolean.
+	 */
 	public HttpRequestList(boolean _stop_on_success) {
 		this.stopOnSuccess = _stop_on_success;
 	}
 	
+	/**
+	 * <p>addRequest.</p>
+	 *
+	 * @param _r a {@link com.sap.psr.vulas.backend.requests.HttpRequest} object.
+	 */
 	public void addRequest(HttpRequest _r) { this.list.add(_r); }
 	
+	/** {@inheritDoc} */
 	@Override
 	public HttpRequest setGoalContext(GoalContext _ctx) {
 		this.context = _ctx;
@@ -40,6 +58,8 @@ public class HttpRequestList extends AbstractHttpRequest {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Loops over the list of requests and calls {@link HttpRequest#send()}. Depending on
 	 * the boolean {@link HttpRequestList#stopOnSuccess}, the sending stops or does not
 	 * stop in case of a successful call.
@@ -55,12 +75,14 @@ public class HttpRequestList extends AbstractHttpRequest {
 		return response;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public String getFilename() {
 		String prefix = this.ms + "-hrl";
 		return prefix;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void savePayloadToDisk() throws IOException {
 		for(HttpRequest r: this.list) {
@@ -68,6 +90,7 @@ public class HttpRequestList extends AbstractHttpRequest {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void loadPayloadFromDisk() throws IOException {
 		for(HttpRequest r: this.list) {
@@ -75,6 +98,7 @@ public class HttpRequestList extends AbstractHttpRequest {
 		}
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void deletePayloadFromDisk() throws IOException {
 		for(HttpRequest r: this.list) {

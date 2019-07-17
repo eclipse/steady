@@ -16,6 +16,7 @@ import com.sap.psr.vulas.goals.AbstractAppGoal;
 @Mojo( name = "t2c", defaultPhase = LifecyclePhase.PROCESS_CLASSES, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresOnline = true )
 public class MvnPluginT2C extends AbstractVulasMojo {
 
+	/** {@inheritDoc} */
 	@Override
 	protected void createGoal() {
 		this.goal = new T2CGoal();

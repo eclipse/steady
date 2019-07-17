@@ -17,6 +17,10 @@ import com.sap.psr.vulas.backend.model.PathNode;
 import com.sap.psr.vulas.backend.util.ReferenceUpdater;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>PathRepositoryImpl class.</p>
+ *
+ */
 public class PathRepositoryImpl implements PathRepositoryCustom {
 	
 	@Autowired
@@ -41,9 +45,12 @@ public class PathRepositoryImpl implements PathRepositoryCustom {
 	BugRepository bugRepository;
 
 	/**
-	 * 
-	 * @param bug
+	 * <p>customSave.</p>
+	 *
 	 * @return the saved bug
+	 * @param _app a {@link com.sap.psr.vulas.backend.model.Application} object.
+	 * @param _paths an array of {@link com.sap.psr.vulas.backend.model.Path} objects.
+	 * @throws javax.persistence.PersistenceException if any.
 	 */
 	public List<Path> customSave(Application _app, Path[] _paths) throws PersistenceException {
 		final StopWatch sw = new StopWatch("Save [" + _paths.length + "] paths for app " + _app).start();

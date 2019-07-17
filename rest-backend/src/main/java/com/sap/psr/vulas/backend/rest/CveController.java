@@ -19,6 +19,10 @@ import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>CveController class.</p>
+ *
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/cves")
@@ -36,6 +40,7 @@ public class CveController {
 	 * This thread shall be started by using the REST endpoint {@link #startRefresh()}.
 	 * Note: If it would be started right away, multiple backend instances would update the database in parallel.
 	 */
+	@Autowired
 	@Autowired
 	CveController(BugRepository bugRepository) {
 		final BugRepository bug_repo = bugRepository;
@@ -87,8 +92,9 @@ public class CveController {
 	
 	/**
 	 * Returns the {@link Cve} with the given ID, e.g., CVE-2014-0050.
-	 * @param digest
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if library with given digest does not exist, 200 {@link HttpStatus#OK} if the library is found
+	 * @param id a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Cve> getCve(@PathVariable String id) {
@@ -103,7 +109,7 @@ public class CveController {
 	
 	/**
 	 * Returns the {@link Cve} with the given ID, e.g., CVE-2014-0050.
-	 * @param digest
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if library with given digest does not exist, 200 {@link HttpStatus#OK} if the library is found
 	 */
 	@RequestMapping(value = "/refreshCache", method = RequestMethod.POST)

@@ -10,6 +10,10 @@ import org.apache.commons.logging.LogFactory;
 import com.sap.psr.vulas.shared.json.model.Dependency;
 import com.sap.psr.vulas.shared.json.model.Library;
 
+/**
+ * <p>DependencyUtil class.</p>
+ *
+ */
 public class DependencyUtil {
 
 	private static final Log log = LogFactory.getLog(DependencyUtil.class);
@@ -18,9 +22,9 @@ public class DependencyUtil {
 	 * Returns a set of dependencies such that every {@link Dependency} points to a different {@link Library}.
 	 * This is needed because {@link Dependency#equals(Object)} considers all kinds of members of {@link Dependency}, while
 	 * the relational database table storing dependencies does not.
-	 * 
-	 * @param _deps
-	 * @return
+	 *
+	 * @param _deps a {@link java.util.Collection} object.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public static Set<Dependency> removeDuplicateLibraryDependencies(Collection<Dependency> _deps) {
 		final Set<Dependency> clean_set = new HashSet<Dependency>();
@@ -40,10 +44,10 @@ public class DependencyUtil {
 	
 	/**
 	 * Returns true of the given set of dependencies already contains a {@link Dependency} for the given {@link Library}, false otherwise.
-	 * 
-	 * @param _deps
-	 * @param _lib
-	 * @return
+	 *
+	 * @param _deps a {@link java.util.Set} object.
+	 * @param _lib a {@link com.sap.psr.vulas.shared.json.model.Library} object.
+	 * @return a boolean.
 	 */
 	public static boolean containsLibraryDependency(Set<Dependency> _deps, Library _lib) {
 		return DependencyUtil.getLibraryDependency(_deps, _lib)!=null;
@@ -51,10 +55,10 @@ public class DependencyUtil {
 		
 	/**
 	 * Returns the {@link Dependency} for the given {@link Library}, null if no such dependency exists.
-	 * 
-	 * @param _deps
-	 * @param _lib
-	 * @return
+	 *
+	 * @param _deps a {@link java.util.Set} object.
+	 * @param _lib a {@link com.sap.psr.vulas.shared.json.model.Library} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Dependency} object.
 	 */
 	public static Dependency getLibraryDependency(Set<Dependency> _deps, Library _lib) {
 		for(Dependency d: _deps) {
@@ -67,10 +71,10 @@ public class DependencyUtil {
 	
 	/**
 	 * Returns true of the given set of dependencies already contains a {@link Dependency} with the same library' digest, parent and relativePath, false otherwise.
-	 * 
-	 * @param _deps
-	 * @param _dep
-	 * @return
+	 *
+	 * @param _deps a {@link java.util.Set} object.
+	 * @param _dep a {@link com.sap.psr.vulas.shared.json.model.Dependency} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Dependency} object.
 	 */
 	public static Dependency getDependency(Set<Dependency> _deps, Dependency _dep) {
 		for(Dependency d: _deps) {
@@ -82,12 +86,12 @@ public class DependencyUtil {
 	}
 	
 	/**
-	 * Checks whether the set of dependencies is valid: 
-	 * - every {@link Dependency} tuple (sha1, parent and relativePath) appears only once. 
+	 * Checks whether the set of dependencies is valid:
+	 * - every {@link Dependency} tuple (sha1, parent and relativePath) appears only once.
 	 * - every {@link Dependency} appearing as parent also appear in the _deps set
-	 * 
-	 * @param _deps
-	 * @return
+	 *
+	 * @param _deps a {@link java.util.Collection} object.
+	 * @return a boolean.
 	 */
 	public static boolean isValidDependencyCollection(Collection<Dependency> _deps) {
 		

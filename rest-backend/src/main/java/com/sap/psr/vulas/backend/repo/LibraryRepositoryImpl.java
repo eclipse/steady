@@ -21,6 +21,10 @@ import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>LibraryRepositoryImpl class.</p>
+ *
+ */
 public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 	
 	private static Logger log = LoggerFactory.getLogger(LibraryRepositoryImpl.class);
@@ -46,6 +50,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 	@Autowired
 	ReferenceUpdater refUpdater;
 	
+	/** {@inheritDoc} */
 	public Library customSave(Library _lib) {
 		final StopWatch sw = new StopWatch("Save library " + _lib).start();
 		final String digest = _lib.getDigest();
@@ -142,6 +147,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 		return _lib;
 	}
 	
+	/** {@inheritDoc} */
 	public Library saveIncomplete(Library _lib) throws PersistenceException {
 		Library incomplete = new Library(_lib.getDigest());
 		if (_lib.getLibraryId()!=null){

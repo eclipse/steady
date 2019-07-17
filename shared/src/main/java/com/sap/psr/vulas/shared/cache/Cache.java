@@ -35,21 +35,29 @@ public class Cache<S, T> {
 	private long cacheFetchErrorCount = 0;
 	private long cacheFetchDuration = 0;
 	
+	/** Constant <code>MILLI_IN_MIN=60L * 1000L</code> */
 	public static final long MILLI_IN_MIN  = 60L * 1000L;
+	/** Constant <code>MILLI_IN_HOUR=60L * MILLI_IN_MIN</code> */
 	public static final long MILLI_IN_HOUR = 60L * MILLI_IN_MIN;
+	/** Constant <code>MILLI_IN_DAY=24L * MILLI_IN_HOUR</code> */
 	public static final long MILLI_IN_DAY  = 24L * MILLI_IN_HOUR;
 	
 	/**
-	 * @param _reader
-	 * @param _refresh_min
+	 * <p>Constructor for Cache.</p>
+	 *
+	 * @param _reader a {@link com.sap.psr.vulas.shared.cache.ObjectFetcher} object.
+	 * @param _refresh_min a long.
 	 */
 	public Cache(ObjectFetcher<S, T> _reader, long _refresh_min) {
 		this(_reader, _refresh_min, -1);
 	}
 	
 	/**
-	 * @param _reader
-	 * @param _refresh_min
+	 * <p>Constructor for Cache.</p>
+	 *
+	 * @param _reader a {@link com.sap.psr.vulas.shared.cache.ObjectFetcher} object.
+	 * @param _refresh_min a long.
+	 * @param _max_size a int.
 	 */
 	public Cache(ObjectFetcher<S, T> _reader, long _refresh_min, int _max_size) {
 		if(_reader==null)
@@ -64,6 +72,13 @@ public class Cache<S, T> {
 		this.maxSize = _max_size;
 	}
 	
+	/**
+	 * <p>get.</p>
+	 *
+	 * @param _key a S object.
+	 * @return a T object.
+	 * @throws com.sap.psr.vulas.shared.cache.CacheException if any.
+	 */
 	public synchronized T get(S _key) throws CacheException {
 		return this.get(_key, false);
 	}
@@ -71,10 +86,11 @@ public class Cache<S, T> {
 	/**
 	 * Reads the cache entry for the given key. In case such an object does not exist, the method
 	 * calls {@link ObjectFetcher#fetch(Object)} in order to read the object from the remote store.
-	 * 
+	 *
 	 * @param _key the key of the entry to be returned
 	 * @param _force_fetch if true, the entry will be fetched no matter whether it already exists in the cache
 	 * @return the entry for the given key
+	 * @throws com.sap.psr.vulas.shared.cache.CacheException if any.
 	 */
 	public synchronized T get(S _key, boolean _force_fetch) throws CacheException {
 		final long current_time = System.currentTimeMillis();
@@ -132,10 +148,35 @@ public class Cache<S, T> {
 		return e.getObject();
 	}
 
+	/**
+	 * <p>getCacheRequest.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getCacheRequest() { return this.cacheRequestCount; }
+	/**
+	 * <p>getCacheHit.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getCacheHit() { return this.cacheHitCount; }
+	/**
+	 * <p>getCacheMiss.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getCacheMiss() { return this.cacheMissCount; }
+	/**
+	 * <p>getCacheFetch.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getCacheFetch() { return this.cacheFetchCount; }
+	/**
+	 * <p>getCacheDelete.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getCacheDelete() { return this.cacheDeleteCount; }
 	
 	private class CacheEntry<U> {

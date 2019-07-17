@@ -1,7 +1,7 @@
 package com.sap.psr.vulas.shared.enums;
 
 /**
- * 
+ * <p>PropertySource class.</p>
  */
 public enum PropertySource {
 	
@@ -11,6 +11,11 @@ public enum PropertySource {
 	
 	private PropertySource(byte _value) { this.value = _value; }
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() {
 		if(this.value==10) return "Java manifest file";
 		else if(this.value==20) return "Goal config";

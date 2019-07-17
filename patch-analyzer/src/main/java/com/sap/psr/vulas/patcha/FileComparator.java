@@ -16,6 +16,10 @@ import com.sap.psr.vulas.FileAnalyzerFactory;
 import com.sap.psr.vulas.vcs.FileChange;
 
 
+/**
+ * <p>FileComparator class.</p>
+ *
+ */
 public class FileComparator {
 
 	private static final Log log = LogFactory.getLog(FileComparator.class);
@@ -33,9 +37,12 @@ public class FileComparator {
 	 * Constructor using a FileChange (as produced by IVCSClient).
 	 * Potential refactoring: Make FileChange include both revision and repository path, adopt this constructor and delete the other one below.
 	 * As a result, fewer classes carry repository information. Right now, revision and path info is kept redundantly in several classes.
+	 *
 	 * @param _c the FileChange holding the old and new file to be compared (+ the relative repo path)
 	 * @param _rev the revision in which the file was changed
-	 * @throws IOException
+	 * @throws java.io.IOException
+	 * @param _time_stamp a {@link java.lang.String} object.
+	 * @throws com.sap.psr.vulas.FileAnalysisException if any.
 	 */
 	public FileComparator(FileChange _c, String _rev, String _time_stamp) throws FileAnalysisException, IOException {
 		this(_c.getOldFile(), _c.getNewFile(), _rev, _c.getRepo(), _c.getRepoPath(), _time_stamp);
@@ -43,11 +50,15 @@ public class FileComparator {
 
 	/**
 	 * Potential refactoring: Delete constructor (or make private), see proposal of prev. constructor.
-	 * @param _def
-	 * @param _fix
-	 * @param _rev
-	 * @param _repo_path
-	 * @throws IOException
+	 *
+	 * @param _def a {@link java.io.File} object.
+	 * @param _fix a {@link java.io.File} object.
+	 * @param _rev a {@link java.lang.String} object.
+	 * @param _repo_path a {@link java.lang.String} object.
+	 * @throws java.io.IOException
+	 * @param _repo a {@link java.lang.String} object.
+	 * @param _time_stamp a {@link java.lang.String} object.
+	 * @throws com.sap.psr.vulas.FileAnalysisException if any.
 	 */
 	public FileComparator(File _def, File _fix, String _rev, String _repo, String _repo_path, String _time_stamp) throws IOException, FileAnalysisException {
 		if(_def==null && _fix==null)
@@ -71,7 +82,8 @@ public class FileComparator {
 
 	/**
 	 * Identifies whether programming constructs changed between the defective and fixed version.
-	 * @return
+	 *
+	 * @return a {@link java.util.Set} object.
 	 */
 	public Set<ConstructChange> identifyChanges() {
 		if(this.changes==null) {

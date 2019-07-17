@@ -37,6 +37,10 @@ import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>Abstract AbstractVulasMojo class.</p>
+ *
+ */
 public abstract class AbstractVulasMojo extends AbstractMojo {
 
     private static final String INCLUDES = "vulas.maven.includes";
@@ -45,6 +49,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
 
     private static final String IGNORE_POMS = "vulas.maven.ignorePoms";
     
+    /** Constant <code>PLUGIN_CFG_LAYER="Maven-Plugin-Config"</code> */
     protected static final String PLUGIN_CFG_LAYER = "Maven-Plugin-Config";
 
     @Parameter(defaultValue = "${project}", property = "project", required = true, readonly = true)
@@ -74,7 +79,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
      * If no such element exists, e.g., because the POM file does not contain a plugin section for Vulas, default settings
      * are established using {@link MavenProject} and {@link VulasConfiguration#setPropertyIfEmpty(String, Object)}.
      *
-     * @throws Exception
+     * @throws java.lang.Exception
      */
     public final void prepareConfiguration() throws Exception {
     	
@@ -126,6 +131,9 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
 
     /**
      * This method, called by Maven, first invokes {@link AbstractVulasMojo#createGoal()} and then {@link AbstractVulasMojo#executeGoal()}.
+     *
+     * @throws org.apache.maven.plugin.MojoExecutionException if any.
+     * @throws org.apache.maven.plugin.MojoFailureException if any.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
@@ -166,8 +174,8 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
      * Evaluates the configuration settings {@link AbstractVulasMojo#INCLUDES}, {@link AbstractVulasMojo#EXCLUDES} and {@link #IGNORE_POMS} to
      * determine whether the given {@link MavenProject} shall be processed.
      *
-     * @param _prj
-     * @return
+     * @param _prj a {@link org.apache.maven.project.MavenProject} object.
+     * @return a boolean.
      */
     protected boolean isPassingFilter(MavenProject _prj) {
         boolean do_process = true;
@@ -200,8 +208,6 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
      * Creates the respective goal.
      * <p>
      * MUST be overridden by subclasses.
-     *
-     * @return
      */
     protected abstract void createGoal();
 
@@ -210,7 +216,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
      * <p>
      * CAN be overridden by subclasses.
      *
-     * @return
+     * @throws java.lang.Exception if any.
      */
     protected void executeGoal() throws Exception {
         this.goal.executeSync();
@@ -292,6 +298,12 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
         }
     }
     
+    /**
+     * <p>getParent.</p>
+     *
+     * @param _trail a {@link java.util.List} object.
+     * @return a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
+     */
     protected final LibraryId getParent(List<String> _trail) {
     	LibraryId parent = null;
     	// Should not occur
@@ -309,6 +321,12 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     	return parent;
     }
     
+	/**
+	 * <p>parseGAPV.</p>
+	 *
+	 * @param _string a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
+	 */
 	protected final LibraryId parseGAPV(@NotNull String _string) {
 		final String[] gapv = _string.split(":");
 		if(gapv.length!=4) {

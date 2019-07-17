@@ -39,10 +39,25 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 	 */
 	private static Cache<String, Cve> CVE_CACHE= new Cache<String, Cve>(new CveReader2(), 1440);
 	
+	/**
+	 * <p>read.</p>
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.backend.cve.Cve} object.
+	 * @throws com.sap.psr.vulas.shared.cache.CacheException if any.
+	 */
 	public static Cve read(String _key) throws CacheException {
 		return CVE_CACHE.get(_key);
 	}
 	
+	/**
+	 * <p>read.</p>
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _force_fetch a boolean.
+	 * @return a {@link com.sap.psr.vulas.backend.cve.Cve} object.
+	 * @throws com.sap.psr.vulas.shared.cache.CacheException if any.
+	 */
 	public static Cve read(String _key, boolean _force_fetch) throws CacheException {
 		return CVE_CACHE.get(_key, _force_fetch);
 	}
@@ -50,6 +65,10 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 	/**
 	 * Returns CVE information for the given key (or null in case the key is null).
 	 * This information is retrieved from a (remote) service configured with {@link #CVE_SERVICE_URL}.
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.backend.cve.Cve} object.
+	 * @throws com.sap.psr.vulas.shared.cache.CacheException if any.
 	 */
 	public Cve fetch(String _key) throws CacheException {
 		if(_key==null)

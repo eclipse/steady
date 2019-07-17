@@ -44,8 +44,6 @@ import javassist.NotFoundException;
  * http://stackoverflow.com/questions/421280/how-do-i-find-the-caller-of-a-method-using-stacktrace-or-reflection
  * http://stackoverflow.com/questions/15899518/modifying-line-numbers-in-javassist
  * http://stackoverflow.com/questions/1069066/get-current-stack-trace-in-java
- * 
- *
  */
 public class StackTraceUtil {
 
@@ -68,18 +66,35 @@ public class StackTraceUtil {
 	/** Remember ConstructIds built from stack trace elements. */
 	static private final Map<StackTraceElement, ConstructId> constructIds = new HashMap<StackTraceElement, ConstructId>();
 	
+	/**
+	 * <p>Constructor for StackTraceUtil.</p>
+	 */
 	public StackTraceUtil() {}
 
+	/**
+	 * <p>Constructor for StackTraceUtil.</p>
+	 *
+	 * @param _hier a {@link com.sap.psr.vulas.monitor.LoaderHierarchy} object.
+	 * @param _loader a {@link com.sap.psr.vulas.monitor.Loader} object.
+	 */
 	public StackTraceUtil(LoaderHierarchy _hier, Loader _loader) {
 		//_hier.logHierarchy(_hier.getRoot(), 0);
 		this.loader = _loader;
 	}
 
+	/**
+	 * <p>Setter for the field <code>stopAtJUnit</code>.</p>
+	 *
+	 * @param _b a boolean.
+	 */
 	public void setStopAtJUnit(boolean _b) { this.stopAtJUnit = _b; }
 
 	/**
 	 * Returns the JUnit test case representing the starting point of a previously computed path.
 	 * If no JUnit test case is present, the method returns null.
+	 *
+	 * @param _path a {@link java.util.List} object.
+	 * @return a {@link com.sap.psr.vulas.ConstructId} object.
 	 */
 	public ConstructId getJUnitContext(List<PathNode> _path) {
 		ConstructId junit = null, node = null;
@@ -98,9 +113,10 @@ public class StackTraceUtil {
 
 	/**
 	 * Transforms the stacktrace (obtained by, for instance, new Throwable().getStackTrace()) into a linked list of construct identifiers.
-	 * @param _st
+	 *
+	 * @param _st an array of {@link java.lang.StackTraceElement} objects.
 	 * @param _change_list_element the construct ID for which the stack trace was collected (if known by caller, can be null)
-	 * @return
+	 * @return a {@link java.util.List} object.
 	 */
 	public List<PathNode> transformStackTrace(StackTraceElement[] _st, PathNode _change_list_element) {
 		// The path to be constructed and returned
@@ -419,8 +435,9 @@ public class StackTraceUtil {
 
 	/**
 	 * Given a stacktrace object return the predecessor of the element that called this stacktrace.
-	 * @param _st
-	 * @return 
+	 *
+	 * @param _st an array of {@link java.lang.StackTraceElement} objects.
+	 * @return a {@link com.sap.psr.vulas.ConstructId} object.
 	 */
 	public ConstructId getPredecessorConstruct(StackTraceElement[] _st) {
 		// StackTraceUtil.constructIds can be null if the method is called a second time during instantiation

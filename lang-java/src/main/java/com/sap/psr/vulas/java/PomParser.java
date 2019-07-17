@@ -30,10 +30,12 @@ public class PomParser extends DefaultHandler {
 	
 	private LibraryId libid = new LibraryId();
 		
+	/** {@inheritDoc} */
 	public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
 		this.stack.push(localName);
 	}
 	
+	/** {@inheritDoc} */
 	public void characters (char ch[], int start, int length) throws SAXException {
 		//log.info(stack.toString());		
 		if(Arrays.equals(stack.toArray(), pg) || Arrays.equals(stack.toArray(), g)) {
@@ -50,10 +52,16 @@ public class PomParser extends DefaultHandler {
 		}
 	}
 
+	/** {@inheritDoc} */
 	public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
 		this.stack.pop();
 	}
 	
+	/**
+	 * <p>getLibraryId.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
+	 */
 	public LibraryId getLibraryId() {
 		return this.libid;
 	}

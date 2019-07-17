@@ -19,6 +19,10 @@ import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.java.sign.ASTSignatureChange;
 
 
+/**
+ * <p>ByteCodeComparator class.</p>
+ *
+ */
 public class ByteCodeComparator implements Runnable{ 
 
 	private static final Log log = LogFactory.getLog(ByteCodeComparator.class);
@@ -28,11 +32,18 @@ public class ByteCodeComparator implements Runnable{
 	private Gson gson = GsonHelper.getCustomGsonBuilder().create();
 	String bugId;
 	
+	/**
+	 * <p>Constructor for ByteCodeComparator.</p>
+	 *
+	 * @param ar a {@link com.sap.psr.vulas.patcheval.representation.ArtifactResult2} object.
+	 * @param _b a {@link java.lang.String} object.
+	 */
 	public ByteCodeComparator(ArtifactResult2 ar, String _b) {
 		this.ar = ar;
 		this.bugId = _b;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void run() {
 	

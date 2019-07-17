@@ -27,6 +27,13 @@ public enum GoalType {
 	// Sequence of zero, one or more single goals
 	SEQUENCE;
 
+	/**
+	 * <p>parseGoal.</p>
+	 *
+	 * @param _goal a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public static GoalType parseGoal(String _goal) throws IllegalArgumentException {
 		if(_goal==null || _goal.equals(""))
 			throw new IllegalArgumentException("No goal specified");

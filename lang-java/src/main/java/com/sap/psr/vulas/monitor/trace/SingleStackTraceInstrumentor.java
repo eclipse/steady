@@ -23,7 +23,6 @@ import javassist.CtBehavior;
  * Tracks how many times a construct has been invoked. Downloads the list of relevant bugs from the backend and
  * collects the stack trace for all their change list elements. Stack traces collected will be transformed into
  * call paths that are again uploaded to the backend.
- *
  */
 public class SingleStackTraceInstrumentor extends AbstractTraceInstrumentor {
 
@@ -40,6 +39,9 @@ public class SingleStackTraceInstrumentor extends AbstractTraceInstrumentor {
 
 	private int maxStacktraces = -1;
 
+	/**
+	 * <p>Constructor for SingleStackTraceInstrumentor.</p>
+	 */
 	public SingleStackTraceInstrumentor() {
 		final GoalContext gc = CoreConfiguration.buildGoalContextFromConfiguration(this.vulasConfiguration);
 		this.maxStacktraces = this.vulasConfiguration.getConfiguration().getInt(CoreConfiguration.INSTR_MAX_STACKTRACES, 10);
@@ -58,10 +60,17 @@ public class SingleStackTraceInstrumentor extends AbstractTraceInstrumentor {
 		}
 	}
 
+	/**
+	 * <p>isStacktraceRequestedFor.</p>
+	 *
+	 * @param _construct a {@link com.sap.psr.vulas.ConstructId} object.
+	 * @return a boolean.
+	 */
 	public boolean isStacktraceRequestedFor(ConstructId _construct) {
 		return this.constructsCollectStacktrace!=null && this.constructsCollectStacktrace.contains(_construct);
 	}
 
+	/** {@inheritDoc} */
 	public void instrument(StringBuffer _code, JavaId _jid, CtBehavior _behavior, ClassVisitor _cv) throws CannotCompileException {
 
 		// Add stack trace only if the construct is in a bug change list

@@ -8,8 +8,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Offers methods to create and interact with a hierarchy of {@link ClassLoader}s and {@link Loader}s.
- *  
- *
  */
 public class LoaderHierarchy {
 	
@@ -17,6 +15,12 @@ public class LoaderHierarchy {
 
 	private Map<ClassLoader, Loader> loaderMap = new HashMap<ClassLoader, Loader>();
 	
+	/**
+	 * <p>add.</p>
+	 *
+	 * @param _cl a {@link java.lang.ClassLoader} object.
+	 * @return a {@link com.sap.psr.vulas.monitor.Loader} object.
+	 */
 	public Loader add(ClassLoader _cl) {
 		Loader l = this.loaderMap.get(_cl); 
 		if(l==null) {
@@ -36,10 +40,22 @@ public class LoaderHierarchy {
 		return l;
 	}
 	
+	/**
+	 * <p>getLoader.</p>
+	 *
+	 * @param _cl a {@link java.lang.ClassLoader} object.
+	 * @return a {@link com.sap.psr.vulas.monitor.Loader} object.
+	 */
 	public Loader getLoader(ClassLoader _cl) {
 		return this.loaderMap.get(_cl);
 	}
 	
+	/**
+	 * <p>isLeaf.</p>
+	 *
+	 * @param _cl a {@link java.lang.ClassLoader} object.
+	 * @return a boolean.
+	 */
 	public boolean isLeaf(ClassLoader _cl) {
 		final Loader l = this.loaderMap.get(_cl);
 		if(l==null)
@@ -48,6 +64,12 @@ public class LoaderHierarchy {
 			return l.isLeaf();
 	}
 	
+	/**
+	 * <p>isRoot.</p>
+	 *
+	 * @param _cl a {@link java.lang.ClassLoader} object.
+	 * @return a boolean.
+	 */
 	public boolean isRoot(ClassLoader _cl) {
 		final Loader l = this.loaderMap.get(_cl);
 		if(l==null)
@@ -56,6 +78,11 @@ public class LoaderHierarchy {
 			return l.isRoot();
 	}
 	
+	/**
+	 * <p>getRoot.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.monitor.Loader} object.
+	 */
 	public Loader getRoot() {
 		Loader r = null;
 		for(Loader l : this.loaderMap.values()) {
@@ -67,6 +94,12 @@ public class LoaderHierarchy {
 		return r;
 	}
 	
+	/**
+	 * <p>logHierarchy.</p>
+	 *
+	 * @param _l a {@link com.sap.psr.vulas.monitor.Loader} object.
+	 * @param _lvl a int.
+	 */
 	public void logHierarchy(Loader _l, int _lvl) {
 		LoaderHierarchy.log.info(_lvl + "    " + this.getIndent(_lvl) + _l.toString());
 		for(Loader c : _l.getChilds()) this.logHierarchy(c, _lvl+1);

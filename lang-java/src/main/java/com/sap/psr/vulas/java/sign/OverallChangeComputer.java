@@ -33,9 +33,10 @@ public class OverallChangeComputer {
 	private Log log = LogFactory.getLog(OverallChangeComputer.class);
 
 	/**
-	 * Method wrapping the all the logic for the class. 
+	 * Method wrapping the all the logic for the class.
 	 * The only exposed API for this class.
-	 * @param changes
+	 *
+	 * @param changes a {@link java.util.SortedSet} object.
 	 * @return SignatureChange
 	 */
 	public SignatureChange execute(SortedSet<ConstructChange> changes){

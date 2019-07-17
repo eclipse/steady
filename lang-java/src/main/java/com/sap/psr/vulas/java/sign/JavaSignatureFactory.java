@@ -63,6 +63,8 @@ public class JavaSignatureFactory implements SignatureFactory {
 	final Map<ConstructId, Construct> compiledCache = new HashMap<ConstructId, Construct>();
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns true if the given {@link ConstructId} is of type Java method or Java constructor.
 	 */
 	@Override
@@ -73,10 +75,9 @@ public class JavaSignatureFactory implements SignatureFactory {
 	}	
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Creates the construct signature on the basis of the source code provided by {@link Construct#getContent()}.
-	 * @param _c the construct for which the siganture shall be created
-	 * @param _src
-	 * @return
 	 */
 	@Override
 	public Signature createSignature(Construct _c) {
@@ -96,10 +97,9 @@ public class JavaSignatureFactory implements SignatureFactory {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Creates the construct signature on the basis of a given Java source file.
-	 * @param _cid the construct ID whose signature shall be created
-	 * @param _java_file the Java source code file
-	 * @return
 	 * @see JavaSignatureFactory#create(Construct)
 	 */
 	@Override
@@ -329,6 +329,8 @@ public class JavaSignatureFactory implements SignatureFactory {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Computes a so-called signature change, i.e., changes required to transform the signature of the first given {@link Construct} into the signature of the second.
 	 */
 	@Override

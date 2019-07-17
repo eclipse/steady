@@ -30,16 +30,18 @@ import com.sap.psr.vulas.sign.SignatureFactory;
 
 /**
  * Wraps {@link VulasConfiguration} for accessing core-specific configuration settings.
- * 
  */
 public class PythonConfiguration {
 
 	private static final Log log = LogFactory.getLog(PythonConfiguration.class);
 
+	/** Constant <code>PY_BOM_IGNORE_PACKS="vulas.core.bom.python.ignorePacks"</code> */
 	public final static String PY_BOM_IGNORE_PACKS = "vulas.core.bom.python.ignorePacks";
 	
+	/** Constant <code>PY_PIP_PATH="vulas.core.bom.python.pip"</code> */
 	public final static String PY_PIP_PATH = "vulas.core.bom.python.pip";
 	
+	/** Constant <code>PY_PY_PATH="vulas.core.bom.python.python"</code> */
 	public final static String PY_PY_PATH = "vulas.core.bom.python.python";
 }
 

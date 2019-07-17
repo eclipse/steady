@@ -5,15 +5,25 @@ import com.sap.psr.vulas.backend.HttpResponse;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.Library;
 
+/**
+ * <p>PutLibraryCondition class.</p>
+ *
+ */
 public class PutLibraryCondition implements ResponseCondition {
 
 	private Library lib;
 	private int constructs_count;
 	
+	/**
+	 * <p>Constructor for PutLibraryCondition.</p>
+	 *
+	 * @param _l a {@link com.sap.psr.vulas.shared.json.model.Library} object.
+	 */
 	public PutLibraryCondition(Library _l){
 		this.lib=_l;
 	}
 		
+	/** {@inheritDoc} */
 	@Override
 	public boolean meetsCondition(HttpResponse _response) {
 		if(_response==null || !_response.hasBody())
@@ -36,5 +46,10 @@ public class PutLibraryCondition implements ResponseCondition {
 		return meets;
 	}
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() { return "[body LT_DOUBLE " + this.constructs_count + "] OR [existing_GAV==null, current_GAV!=null] OR [existing_bundledLibIds==null, current_bundledLibIds!=null]"; }
 }

@@ -13,10 +13,10 @@ import javassist.CtBehavior;
 
 /**
  * Tracks whether a method has been invoked or not. The instrumentation code is only executed once.
- *
  */
 public class SingleTraceInstrumentor extends AbstractTraceInstrumentor {
 
+	/** {@inheritDoc} */
 	public void instrument(StringBuffer _code, JavaId _jid, CtBehavior _behavior,ClassVisitor _cv) throws CannotCompileException {
 				
 		// Add boolean and check it to ensure that the instr code is only executed once

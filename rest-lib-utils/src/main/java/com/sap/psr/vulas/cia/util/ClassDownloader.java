@@ -24,7 +24,6 @@ import com.sap.psr.vulas.shared.json.model.Artifact;
 
 /**
  * Retrieves the source or compiled code of Java classes from Maven artifacts.
- *
  */
 public class ClassDownloader {
 
@@ -36,12 +35,23 @@ public class ClassDownloader {
 
 	private static ClassDownloader instance = null;
 
+	/**
+	 * <p>Getter for the field <code>instance</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.cia.util.ClassDownloader} object.
+	 */
 	public static synchronized ClassDownloader getInstance() {
 		if(ClassDownloader.instance==null)
 			ClassDownloader.instance = new ClassDownloader();
 		return ClassDownloader.instance;
 	}
 
+	/**
+	 * <p>getContentType.</p>
+	 *
+	 * @param _format a {@link com.sap.psr.vulas.cia.util.ClassDownloader.Format} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getContentType(Format _format) {
 		if(Format.JAVA==_format)
 			return "text/x-java-source";
@@ -51,6 +61,13 @@ public class ClassDownloader {
 			throw new IllegalArgumentException("Unknown format [" + _format + "]");
 	}
 
+	/**
+	 * <p>toFormat.</p>
+	 *
+	 * @param _format_string a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.cia.util.ClassDownloader.Format} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public static Format toFormat(String _format_string) throws IllegalArgumentException {
 		if(Format.JAVA.toString().equalsIgnoreCase(_format_string))
 			return Format.JAVA;
@@ -62,6 +79,17 @@ public class ClassDownloader {
 
 	//------------------------ NON-STATIC
 
+	/**
+	 * <p>getClass.</p>
+	 *
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param _qname a {@link java.lang.String} object.
+	 * @param _format a {@link com.sap.psr.vulas.cia.util.ClassDownloader.Format} object.
+	 * @return a {@link java.nio.file.Path} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public Path getClass(@NotNull String mvnGroup, @NotNull String artifact, @NotNull String version, @NotNull String _qname, @NotNull Format _format) throws IllegalArgumentException {
 		Path classfile = null;
 		final String filesuffix = "." + _format.toString().toLowerCase();

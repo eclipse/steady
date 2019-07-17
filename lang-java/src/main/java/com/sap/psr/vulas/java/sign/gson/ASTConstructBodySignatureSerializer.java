@@ -11,12 +11,24 @@ import com.sap.psr.vulas.shared.json.JsonBuilder;
 
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 
+/**
+ * <p>ASTConstructBodySignatureSerializer class.</p>
+ *
+ */
 public class ASTConstructBodySignatureSerializer extends StdSerializer<ASTConstructBodySignature> {
 
+	/**
+	 * <p>Constructor for ASTConstructBodySignatureSerializer.</p>
+	 */
 	public ASTConstructBodySignatureSerializer() {
 		this(null);
 	}
 
+	/**
+	 * <p>Constructor for ASTConstructBodySignatureSerializer.</p>
+	 *
+	 * @param t a {@link java.lang.Class} object.
+	 */
 	public ASTConstructBodySignatureSerializer(Class<ASTConstructBodySignature> t) {
 		super(t);
 	}
@@ -69,6 +81,7 @@ public class ASTConstructBodySignatureSerializer extends StdSerializer<ASTConstr
 		jgen.writeStringField("EntityType", n.getEntity().getType().toString());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void serialize(ASTConstructBodySignature value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
 		jgen.writeStartObject();

@@ -14,15 +14,15 @@ import com.strobel.decompiler.Decompiler;
 import com.strobel.decompiler.DecompilerSettings;
 import com.strobel.decompiler.PlainTextOutput;
 
+/**
+ * <p>ProcyonDecompiler class.</p>
+ *
+ */
 public class ProcyonDecompiler implements IDecompiler {
 
 	private static final Log log =LogFactory.getLog(ProcyonDecompiler.class);
 	
-	/**
-	 *
-	 * @param _classFile - the *.class file to be decompiled containing bytecode
-	 * @return the corresponding decompiled _javaFile
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public File decompileClassFile(File inputClassFile) {
 

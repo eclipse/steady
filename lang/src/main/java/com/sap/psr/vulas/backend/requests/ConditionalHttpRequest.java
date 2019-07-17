@@ -16,6 +16,10 @@ import com.sap.psr.vulas.backend.HttpResponse;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.GoalContext;
 
+/**
+ * <p>ConditionalHttpRequest class.</p>
+ *
+ */
 public class ConditionalHttpRequest extends BasicHttpRequest {
 
 	private static final Log log = LogFactory.getLog(ConditionalHttpRequest.class);
@@ -24,22 +28,37 @@ public class ConditionalHttpRequest extends BasicHttpRequest {
 
 	private BasicHttpRequest conditionRequest = null;
 
+	/**
+	 * <p>Constructor for ConditionalHttpRequest.</p>
+	 *
+	 * @param _method a {@link com.sap.psr.vulas.backend.HttpMethod} object.
+	 * @param _path a {@link java.lang.String} object.
+	 * @param _query_string_params a {@link java.util.Map} object.
+	 */
 	public ConditionalHttpRequest(HttpMethod _method, String _path, Map<String,String> _query_string_params) {
 		super(_method, _path, _query_string_params);
 	}
 
+	/**
+	 * <p>Setter for the field <code>conditionRequest</code>.</p>
+	 *
+	 * @param _cr a {@link com.sap.psr.vulas.backend.requests.BasicHttpRequest} object.
+	 * @return a {@link com.sap.psr.vulas.backend.requests.ConditionalHttpRequest} object.
+	 */
 	public ConditionalHttpRequest setConditionRequest(BasicHttpRequest _cr) { this.conditionRequest = _cr; return this; }
 
 	/**
 	 * Adds a condition to the list of conditions that must be met before the actual request is sent.
-	 * @param _request
-	 * @param _condition
+	 *
+	 * @param _condition a {@link com.sap.psr.vulas.backend.requests.ResponseCondition} object.
+	 * @return a {@link com.sap.psr.vulas.backend.requests.ConditionalHttpRequest} object.
 	 */
 	public ConditionalHttpRequest addCondition(ResponseCondition _condition) {
 		this.conditions.add(_condition);
 		return this;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public HttpRequest setGoalContext(GoalContext _ctx) {
 		this.context = _ctx;
@@ -49,6 +68,8 @@ public class ConditionalHttpRequest extends BasicHttpRequest {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * First performs the conditional requests. Only if all the responses meets the condition, the actual request will be performed.
 	 */
 	@Override
@@ -88,6 +109,7 @@ public class ConditionalHttpRequest extends BasicHttpRequest {
 		}	
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void savePayloadToDisk() throws IOException {
 		super.savePayloadToDisk();
@@ -95,6 +117,7 @@ public class ConditionalHttpRequest extends BasicHttpRequest {
 			this.conditionRequest.savePayloadToDisk();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void loadPayloadFromDisk() throws IOException {
 		super.loadPayloadFromDisk();
@@ -102,6 +125,7 @@ public class ConditionalHttpRequest extends BasicHttpRequest {
 			this.conditionRequest.loadPayloadFromDisk();
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void deletePayloadFromDisk() throws IOException {
 		super.deletePayloadFromDisk();

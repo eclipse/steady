@@ -41,6 +41,7 @@ public class MethodNameFilter {
 	/**
 	 * If there is a MethodNameFilter instance available it will return it,
 	 * otherwise instantiate it and then return
+	 *
 	 * @return an instantiation of the class MethodNameFilter
 	 */
 	public synchronized static MethodNameFilter getInstance() {
@@ -52,6 +53,7 @@ public class MethodNameFilter {
 	/**
 	 * Check if the argument is a string contained in the list of the blacklisted
 	 * methods
+	 *
 	 * @param value a string representing the complete name of a method
 	 * @return a boolean value stating if value is blacklisted or not
 	 */
@@ -63,6 +65,7 @@ public class MethodNameFilter {
 	 * Check if the argument is a string representing a method of an external library
 	 * (meaning not of my application). To define the domain of the application we use
 	 * the entries on which we built the graph.
+	 *
 	 * @param app_entries Entry methods that we used to define the app domain. Use {@link BackendConnector#getApplicationConstructIds(MavenId)} to get them.
 	 * @param value a string representing the complete name of a method
 	 * @return a boolean value stating if value is part of a library or not
@@ -75,6 +78,7 @@ public class MethodNameFilter {
 	 * Check if the argument is a string representing a method of my application
 	 * (meaning not of an external library). To define the domain of the application we use
 	 * the entries on which we built the graph.
+	 *
 	 * @param app_entries Entry methods that we used to define the app domain. Use {@link BackendConnector#getApplicationConstructIds(MavenId)} to get them.
 	 * @param value  a string representing the complete name of a method
 	 * @return a boolean value stating if value is part of the application or not

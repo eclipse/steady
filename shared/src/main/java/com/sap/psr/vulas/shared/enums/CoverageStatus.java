@@ -1,5 +1,9 @@
 package com.sap.psr.vulas.shared.enums;
 
+/**
+ * <p>CoverageStatus class.</p>
+ *
+ */
 public enum CoverageStatus {
 
 	COVERED((byte)10), OPEN((byte)20), OUT_OF_SCOPE((byte)30), UNKNOWN((byte)40), ERROR((byte)50);
@@ -8,8 +12,18 @@ public enum CoverageStatus {
 	
 	private CoverageStatus(byte _value) { this.value = _value; }
 	
+	/**
+	 * <p>getStatusCode.</p>
+	 *
+	 * @return a byte.
+	 */
 	public byte getStatusCode() { return this.value; }
 	
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() {
 		     if(this.value==10) return "Covered";
 		else if(this.value==20) return "Open";
@@ -19,8 +33,18 @@ public enum CoverageStatus {
 		else throw new IllegalArgumentException("[" + this.value + "] is not a valid coverage status");
 	}
 	
+	/**
+	 * <p>getText.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getText() { return this.toString(); }
 	
+	/**
+	 * <p>getDescription.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getDescription() {
 		     if(this.value==10) return "Vulnerability part of Vulas database";
 		else if(this.value==20) return "Vulnerability under investigation";

@@ -16,14 +16,11 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  * @see {@link CoreConfiguration#APP_CTX_GROUP} as well as ARTIF and VERSION
  * @see {@link CoreConfiguration#TENANT_TOKEN}
  * @see {@link CoreConfiguration#SPACE_TOKEN}
- * 
+ *
  * The secret tokens of the tenant and space, if any, will be included as HTTP headers
  * into every request sent to the Vulas backend.
- * 
  * @see {@link Constants#HTTP_TENANT_HEADER}
  * @see {@link Constants#HTTP_SPACE_HEADER}
- * 
- *
  */
 public class GoalContext implements Serializable {
 
@@ -37,21 +34,77 @@ public class GoalContext implements Serializable {
 	
 	private transient VulasConfiguration vulasConfiguration = null;
 
+	/**
+	 * <p>hasTenant.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean hasTenant() { return this.tenant!=null; }
+	/**
+	 * <p>Getter for the field <code>tenant</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Tenant} object.
+	 */
 	public Tenant getTenant() { return this.tenant; }
+	/**
+	 * <p>Setter for the field <code>tenant</code>.</p>
+	 *
+	 * @param _t a {@link com.sap.psr.vulas.shared.json.model.Tenant} object.
+	 */
 	public void setTenant(Tenant _t) { this.tenant = _t; }
 
+	/**
+	 * <p>hasSpace.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean hasSpace() { return this.space!=null; }
+	/**
+	 * <p>Getter for the field <code>space</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Space} object.
+	 */
 	public Space getSpace() { return this.space; }
+	/**
+	 * <p>Setter for the field <code>space</code>.</p>
+	 *
+	 * @param _s a {@link com.sap.psr.vulas.shared.json.model.Space} object.
+	 */
 	public void setSpace(Space _s) { this.space = _s; }
 
+	/**
+	 * <p>hasApplication.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean hasApplication() { return this.application!=null; }
+	/**
+	 * <p>Getter for the field <code>application</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 */
 	public Application getApplication() { return this.application; }
+	/**
+	 * <p>Setter for the field <code>application</code>.</p>
+	 *
+	 * @param _a a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 */
 	public void setApplication(Application _a) { this.application = _a; }
 	
+	/**
+	 * <p>Getter for the field <code>vulasConfiguration</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.util.VulasConfiguration} object.
+	 */
 	public VulasConfiguration getVulasConfiguration() { return vulasConfiguration; }
+	/**
+	 * <p>Setter for the field <code>vulasConfiguration</code>.</p>
+	 *
+	 * @param vulasConfiguration a {@link com.sap.psr.vulas.shared.util.VulasConfiguration} object.
+	 */
 	public void setVulasConfiguration(VulasConfiguration vulasConfiguration) { this.vulasConfiguration = vulasConfiguration; }
 	
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		final StringBuffer b = new StringBuffer();

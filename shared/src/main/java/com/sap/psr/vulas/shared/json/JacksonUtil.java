@@ -10,14 +10,14 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 /**
  * Helper class for (de)serializing objects with Jackson.
- * 
  */
 public class JacksonUtil {
 	
 	/**
 	 * Serializes the given object to JSON, thereby using no custom {@link StdSerializer}s and no view {@link Class}.
-	 * @param _object
-	 * @return
+	 *
+	 * @param _object a {@link java.lang.Object} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String asJsonString(final Object _object) {
 		return JacksonUtil.asJsonString(_object, null, null);
@@ -25,9 +25,10 @@ public class JacksonUtil {
 
 	/**
 	 * Serializes the given object to JSON, thereby using the given {@link StdSerializer}s and no view {@link Class}.
-	 * @param _object
-	 * @param _custom_serializers
-	 * @return
+	 *
+	 * @param _object a {@link java.lang.Object} object.
+	 * @param _custom_serializers a {@link java.util.Map} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String asJsonString(final Object _object, final Map<Class<?>, StdSerializer<?>> _custom_serializers) {
 		return JacksonUtil.asJsonString(_object, _custom_serializers, null);
@@ -35,10 +36,11 @@ public class JacksonUtil {
 	
 	/**
 	 * Serializes the given object to JSON, thereby using the given {@link StdSerializer}s and the given view {@link Class}.
-	 * @param _object
-	 * @param _custom_serializers
-	 * @param _view
-	 * @return
+	 *
+	 * @param _object a {@link java.lang.Object} object.
+	 * @param _custom_serializers a {@link java.util.Map} object.
+	 * @param _view a {@link java.lang.Class} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static String asJsonString(final Object _object, final Map<Class<?>, StdSerializer<?>> _custom_serializers, Class _view) {
@@ -69,9 +71,10 @@ public class JacksonUtil {
 	
 	/**
 	 * Deserializes the given JSON, thereby using no custom {@link StdDeserializer}s.
-	 * @param _json
-	 * @param _clazz
-	 * @return
+	 *
+	 * @param _json a {@link java.lang.String} object.
+	 * @param _clazz a {@link java.lang.Class} object.
+	 * @return a {@link java.lang.Object} object.
 	 */
 	public static Object asObject(final String _json, final Class<?> _clazz) {
         try {

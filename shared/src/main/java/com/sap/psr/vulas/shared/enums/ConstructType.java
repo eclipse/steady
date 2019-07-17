@@ -1,6 +1,7 @@
 package com.sap.psr.vulas.shared.enums;
 
 /**
+ * <p>ConstructType class.</p>
  */
 public enum ConstructType {
 	
@@ -10,6 +11,11 @@ public enum ConstructType {
 	
 	private ConstructType(byte _value) { this.value = _value; }
 	
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() {
 		     if(this.value==10) return "PACK";
 		else if(this.value==20) return "CLAS";
@@ -25,7 +31,8 @@ public enum ConstructType {
 	
 	/**
 	 * Returns an array with all existing construct types.
-	 * @return
+	 *
+	 * @return an array of {@link com.sap.psr.vulas.shared.enums.ConstructType} objects.
 	 */
 	public static ConstructType[] getAllAsArray() {
 		return new ConstructType[] { PACK, CLAS, ENUM, INTF, METH, CONS, INIT, FUNC, MODU };

@@ -17,26 +17,61 @@ import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.backend.util.ResultSetFilter;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 
+/**
+ * <p>BugRepository interface.</p>
+ *
+ */
 @Repository
 //@RepositoryRestResource(collectionResourceRel = "bugss", path = "bugss")
 public interface BugRepository extends CrudRepository<Bug, Long>, BugRepositoryCustom {
 
+	/** Constant <code>FILTER</code> */
 	public static final ResultSetFilter<Bug> FILTER = new ResultSetFilter<Bug>();
 	
+	/**
+	 * <p>findById.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	@Query("SELECT b FROM Bug b JOIN FETCH b.constructChanges WHERE b.id=:id")
 	List<Bug> findById(@Param("id") Long id);
 	
+	/**
+	 * <p>findByBugId.</p>
+	 *
+	 * @param bugid a {@link java.lang.String} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	@Query("SELECT b FROM Bug b  WHERE b.bugId=:bugId") //adding 'JOIN FETCH b.constructChanges', the junit tests fails: e.g., it tries to insert twice the same bug as if the equal return false?
 	List<Bug> findByBugId(@Param("bugId") String bugid);
 	
+	/**
+	 * <p>findCoverageByBugId.</p>
+	 *
+	 * @param bugid a {@link java.lang.String} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	@Query("SELECT b FROM Bug b  WHERE b.bugId=:bugId") //adding 'JOIN FETCH b.constructChanges', the junit tests fails: e.g., it tries to insert twice the same bug as if the equal return false?
 	@Cacheable(value="bug", unless="#result.isEmpty()")
 	List<Bug> findCoverageByBugId(@Param("bugId") String bugid);
 
+	/**
+	 * <p>findBugByLang.</p>
+	 *
+	 * @param lang a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 * @return a {@link java.lang.Iterable} object.
+	 */
 	@Query("SELECT distinct b FROM Bug b JOIN b.constructChanges cc JOIN cc.constructId cid WHERE cid.lang=:lang")
 	Iterable<Bug> findBugByLang(@Param("lang") ProgrammingLanguage lang);
 
 	
+	/**
+	 * <p>findByLibrary.</p>
+	 *
+	 * @param bundledDigest a {@link com.sap.psr.vulas.backend.model.Library} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	@Query("SELECT distinct b"
 			+ "   FROM Library l "
 			+ "   JOIN "
@@ -53,6 +88,13 @@ public interface BugRepository extends CrudRepository<Bug, Long>, BugRepositoryC
 	List<Bug> findByLibrary(@Param("bundledDigest") Library bundledDigest);
 	
 	
+	/**
+	 * <p>findByLibId.</p>
+	 *
+	 * @param bundledLibId a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+	 * @param affected a {@link java.lang.Boolean} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	@Query("SELECT distinct b FROM "
 			+ "   LibraryId libid, "
 			+ "	  Bug b "

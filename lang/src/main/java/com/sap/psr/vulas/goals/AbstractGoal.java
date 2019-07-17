@@ -28,26 +28,29 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 /**
  * Represents the execution of a goal, which is triggered by client components such as the CLI and the Maven plugin.
  * There exist different types of goals, e.g., {@link GoalType#CLEAN} or {@link GoalType#A2C}.
- * 
- * Goal executions can be started and stopped manually using the methods {@link AbstractGoal#start()}, 
+ *
+ * Goal executions can be started and stopped manually using the methods {@link AbstractGoal#start()},
  * {@link AbstractGoal#stop()}, {@link AbstractGoal#stop(Exception)} and {@link AbstractGoal#upload()}.
- * 
+ *
  * Goal executions can also be executed automatically using the methods
  * {@link AbstractGoal#executeSync()} or {@link AbstractGoal#executeAsync()}, which results in the sequential
  * execution of the above-mentioned methods {@link AbstractGoal#start()}, etc.
- * 
+ *
  * Subclasses typically override the methods prepareExecution, executeTasks and cleanAfterExecution.
- * 
+ *
  * See VULAS-204 in case we run into problems related to special characters in paths.
- * 
  */
 public abstract class AbstractGoal implements Runnable {
 
 	private static final Log log = LogFactory.getLog(AbstractGoal.class);
 
+	/** Constant <code>CLASS_EXT</code> */
 	protected static final String[] CLASS_EXT   = new String[] {"CLASS"};
+	/** Constant <code>JAR_EXT</code> */
 	protected static final String[] JAR_EXT     = new String[] {"jar"};
+	/** Constant <code>WAR_EXT</code> */
 	protected static final String[] WAR_EXT     = new String[] {"war"};
+	/** Constant <code>JAR_WAR_EXT</code> */
 	protected static final String[] JAR_WAR_EXT = new String[] {"jar", "war"};
 
 	private GoalClient client = null;
@@ -103,10 +106,21 @@ public abstract class AbstractGoal implements Runnable {
 	 * @param _goal the goal of this execution
 	 * @see 
 	 */
+	/**
+	 * <p>Constructor for AbstractGoal.</p>
+	 *
+	 * @param _goal a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+	 */
 	protected AbstractGoal(GoalType _goal) {
 		this(_goal, true);
 	}
 
+	/**
+	 * <p>Constructor for AbstractGoal.</p>
+	 *
+	 * @param _goal a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+	 * @param _monitor_mem a boolean.
+	 */
 	protected AbstractGoal(GoalType _goal, boolean _monitor_mem) {
 		this.goalType = _goal;
 
@@ -118,6 +132,11 @@ public abstract class AbstractGoal implements Runnable {
 		this.systemInfo.put("runtime.availableProcessors", Integer.toString(Runtime.getRuntime().availableProcessors()));
 	}
 
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public synchronized String getId() {
 		if(this.id==null) {
 			if(this.client!=null)
@@ -128,24 +147,51 @@ public abstract class AbstractGoal implements Runnable {
 		return this.id;
 	}
 
+	/**
+	 * <p>Setter for the field <code>observer</code>.</p>
+	 *
+	 * @param observer a {@link com.sap.psr.vulas.goals.ExecutionObserver} object.
+	 */
 	public void setObserver(ExecutionObserver observer) { this.observer = observer; }
+	/**
+	 * <p>Getter for the field <code>goalType</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+	 */
 	public GoalType getGoalType() { return this.goalType; }
+	/**
+	 * <p>getGoalClient.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.GoalClient} object.
+	 */
 	public GoalClient getGoalClient() { return this.client; }
+	/**
+	 * <p>setGoalClient.</p>
+	 *
+	 * @param _client a {@link com.sap.psr.vulas.shared.enums.GoalClient} object.
+	 */
 	public void setGoalClient(GoalClient _client) { this.client = _client; }
 
 	/**
 	 * Returns true if this {@link AbstractGoal} is executed in the given {@link GoalClient}, false otherwise.
-	 * @param _client
-	 * @return
+	 *
+	 * @param _client a {@link com.sap.psr.vulas.shared.enums.GoalClient} object.
+	 * @return a boolean.
 	 */
 	public boolean runsIn(GoalClient _client) { return this.client!=null && _client!=null && _client.equals(this.client); }
 
 	//TODO (17/05/2017): Add callback parameter?
+	/**
+	 * <p>executeAsync.</p>
+	 */
 	public final void executeAsync() {
 		final Thread t = new Thread(this, "vulas-" + this.goalType.toString().toLowerCase());
 		t.start();
 	}
 
+	/**
+	 * <p>run.</p>
+	 */
 	public final void run() {
 		try {
 			this.execute();
@@ -156,6 +202,12 @@ public abstract class AbstractGoal implements Runnable {
 		}
 	}
 
+	/**
+	 * <p>executeSync.</p>
+	 *
+	 * @throws com.sap.psr.vulas.goals.GoalConfigurationException if any.
+	 * @throws com.sap.psr.vulas.goals.GoalExecutionException if any.
+	 */
 	public final void executeSync() throws GoalConfigurationException, GoalExecutionException {
 		this.execute();
 	}
@@ -193,7 +245,8 @@ public abstract class AbstractGoal implements Runnable {
 	 * Returns the configuration of this goal execution. If the configuration has not been set before, a new instance of
 	 * {@link VulasConfiguration} is created and returned. As such, the configuration settings of different goal executions
 	 * can be isolated.
-	 * @return
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.util.VulasConfiguration} object.
 	 */
 	protected synchronized final VulasConfiguration getConfiguration() {
 		if(this.configuration==null)
@@ -201,12 +254,19 @@ public abstract class AbstractGoal implements Runnable {
 		return this.configuration;
 	}
 
+	/**
+	 * <p>Setter for the field <code>configuration</code>.</p>
+	 *
+	 * @param _c a {@link com.sap.psr.vulas.shared.util.VulasConfiguration} object.
+	 * @return a {@link com.sap.psr.vulas.goals.AbstractGoal} object.
+	 */
 	public final AbstractGoal setConfiguration(VulasConfiguration _c) { this.configuration = _c; return this;}
 
 	/**
 	 * Returns the context of this goal execution. If the context has not been set before, it is constructed
 	 * by reading tenant, space and app information from the configuration obtained from {@link AbstractGoal#getConfiguration()}.
-	 * @return
+	 *
+	 * @return a {@link com.sap.psr.vulas.goals.GoalContext} object.
 	 */
 	public synchronized final GoalContext getGoalContext() {
 		if(this.goalContext==null) {
@@ -240,6 +300,11 @@ public abstract class AbstractGoal implements Runnable {
 		return this.goalContext;
 	}
 
+	/**
+	 * <p>Setter for the field <code>goalContext</code>.</p>
+	 *
+	 * @param _ctx a {@link com.sap.psr.vulas.goals.GoalContext} object.
+	 */
 	public final void setGoalContext(GoalContext _ctx) {
 		this.goalContext = _ctx;
 	}
@@ -249,6 +314,8 @@ public abstract class AbstractGoal implements Runnable {
 	/**
 	 * Cleans the cache of the {@link BackendConnector}.
 	 * CAN be overridden in subclasses to perform additional, goal-specific checks and preparations.
+	 *
+	 * @throws com.sap.psr.vulas.goals.GoalConfigurationException if any.
 	 */
 	protected void prepareExecution() throws GoalConfigurationException {
 		BackendConnector.getInstance().cleanCache();
@@ -261,23 +328,29 @@ public abstract class AbstractGoal implements Runnable {
 
 	/**
 	 * CAN be overridden in subclasses.
+	 *
+	 * @throws com.sap.psr.vulas.goals.GoalConfigurationException if any.
 	 */
 	protected void checkPreconditions() throws GoalConfigurationException {}
 
 	/**
 	 * MUST be overridden in subclasses to implement the goal-specific tasks.
+	 *
+	 * @throws java.lang.Exception if any.
 	 */
 	protected abstract void executeTasks() throws Exception;
 
 	/**
 	 * Empty implementation.
-	 * 
+	 *
 	 * CAN be overridden in subclasses in order to perform goal-specific clean-up.
 	 */
 	protected void cleanAfterExecution() {}
 
 	/**
 	 * Empty implementation.
+	 *
+	 * @return a {@link java.lang.Object} object.
 	 */
 	protected Object getResultObject() { return null; }
 
@@ -285,6 +358,8 @@ public abstract class AbstractGoal implements Runnable {
 
 	/**
 	 * Starts the goal execution.
+	 *
+	 * @throws com.sap.psr.vulas.goals.GoalConfigurationException if any.
 	 */
 	public void start() throws GoalConfigurationException {
 		// Start time taking
@@ -330,7 +405,8 @@ public abstract class AbstractGoal implements Runnable {
 
 	/**
 	 * Stops the goal execution in response to the provided exception.
-	 * @param _e
+	 *
+	 * @param _e a {@link java.lang.Exception} object.
 	 * @see #stop()
 	 */
 	public void stop(Exception _e) {
@@ -359,24 +435,53 @@ public abstract class AbstractGoal implements Runnable {
 			this.memoThread.stop();
 	}
 
+	/**
+	 * <p>addGoalStats.</p>
+	 *
+	 * @param _prefix a {@link java.lang.String} object.
+	 * @param _stats a {@link java.util.Map} object.
+	 */
 	public void addGoalStats(String _prefix, Map<String,Long> _stats) {
 		for(Map.Entry<String, Long> entry : _stats.entrySet()) {
 			this.addGoalStats( (_prefix==null || _prefix.equals("") ? entry.getKey() : _prefix + "." + entry.getKey()) , entry.getValue());
 		}
 	}
 
+	/**
+	 * <p>addGoalStats.</p>
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _val a long.
+	 */
 	public void addGoalStats(String _key, long _val) {
 		this.addGoalStats(_key, (double)_val);
 	}
 
+	/**
+	 * <p>addGoalStats.</p>
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _val a int.
+	 */
 	public void addGoalStats(String _key, int _val) {
 		this.addGoalStats(_key, (double)_val);
 	}
 
+	/**
+	 * <p>addGoalStats.</p>
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _val a double.
+	 */
 	public void addGoalStats(String _key, double _val) {
 		this.goalStats.put(_key, new Double(_val));
 	}
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() {
 		final StringBuffer b = new StringBuffer();
 		b.append("Goal [id=").append(this.getId()).append(", type=").append(this.getGoalType());
@@ -388,8 +493,9 @@ public abstract class AbstractGoal implements Runnable {
 
 	/**
 	 * Creates a JSON string representing this goal execution.
-	 * @return
-	 * @throws IllegalStateException
+	 *
+	 * @throws java.lang.IllegalStateException
+	 * @return a {@link java.lang.String} object.
 	 */
 	public String toJson() throws IllegalStateException {
 		final StringBuilder b = new StringBuilder();
@@ -460,6 +566,9 @@ public abstract class AbstractGoal implements Runnable {
 		return b.toString();
 	}
 
+	/**
+	 * <p>skipGoalUpload.</p>
+	 */
 	protected final void skipGoalUpload() {
 		this.goalUploadEnabled = false;
 	}
@@ -467,6 +576,9 @@ public abstract class AbstractGoal implements Runnable {
 	/**
 	 * Uploads the JSON presentation of this goal execution to the Vulas backend.
 	 * Returns true of everything went fine (upload succeeded or is not necessary), false otherwise.
+	 *
+	 * @param _before a boolean.
+	 * @return a boolean.
 	 */
 	public boolean upload(boolean _before) {
 		boolean ret = false;

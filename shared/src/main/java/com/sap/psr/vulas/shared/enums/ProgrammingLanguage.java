@@ -1,7 +1,7 @@
 package com.sap.psr.vulas.shared.enums;
 
 /**
- * 
+ * <p>ProgrammingLanguage class.</p>
  */
 public enum ProgrammingLanguage {
 	
@@ -11,6 +11,11 @@ public enum ProgrammingLanguage {
 	
 	private ProgrammingLanguage(byte _value) { this.value = _value; }
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() {
 		if(this.value==10) return "JAVA";
 		else if(this.value==20) return "PY";

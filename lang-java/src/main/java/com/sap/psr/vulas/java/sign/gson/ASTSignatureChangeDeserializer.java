@@ -40,45 +40,44 @@ import com.sap.psr.vulas.sign.SignatureChange;
  /**
 
 /**
-
-JSON representation of ASTSignatureChange:
-
-public class ASTSignatureChange extends DistillerUtil implements SignatureChange
-
-public class ASTConstructBodySignature extends ASTSignature
-public abstract class ASTSignature extends Node implements Signature
-
-
-SourceCodeChange
-
-	1. private ChangeType fChangeType = ChangeType.UNCLASSIFIED_CHANGE;
-
-    //Structure entity in which the change operation happened, e.g., attribute, class, or method.
-    2. private StructureEntityVersion fRootEntity;
-
-    3. private SourceCodeEntity fChangedEntity;
-		 -  fUniqueName : String  //same information as fValue above
-		 -  fType : EntityType    //same information ast fLabel above
-		 -  fModifiers : int	 // this is always zero (Not sure if i should have it in the json object)
-		 -  fAssociatedEntities : List<SourceCodeEntity>
-		 -  SourceRange fRange : SourceRange
-				- end : int
-				- start : int
-
-    //Source code entity that becomes the parent entity when the change is applied.
-    4. private SourceCodeEntity fParentEntity;
-
-
-
-
-	public class ASTSignatureChange{
-
-		private ChangeType changeType;
-		private StructureEntityVersion StructureEntityVersion;
-		private SourceCodeEntity changedEntity;
-		private SourceCodeEntity r
-	}
-
+ *
+ *JSON representation of ASTSignatureChange:
+ *
+ *public class ASTSignatureChange extends DistillerUtil implements SignatureChange
+ *
+ *public class ASTConstructBodySignature extends ASTSignature
+ *public abstract class ASTSignature extends Node implements Signature
+ *
+ *
+ *SourceCodeChange
+ *
+ *	1. private ChangeType fChangeType = ChangeType.UNCLASSIFIED_CHANGE;
+ *
+ *    //Structure entity in which the change operation happened, e.g., attribute, class, or method.
+ *    2. private StructureEntityVersion fRootEntity;
+ *
+ *    3. private SourceCodeEntity fChangedEntity;
+ *		 -  fUniqueName : String  //same information as fValue above
+ *		 -  fType : EntityType    //same information ast fLabel above
+ *		 -  fModifiers : int	 // this is always zero (Not sure if i should have it in the json object)
+ *		 -  fAssociatedEntities : List<SourceCodeEntity>
+ *		 -  SourceRange fRange : SourceRange
+ *				- end : int
+ *				- start : int
+ *
+ *    //Source code entity that becomes the parent entity when the change is applied.
+ *    4. private SourceCodeEntity fParentEntity;
+ *
+ *
+ *
+ *
+ *	public class ASTSignatureChange{
+ *
+ *		private ChangeType changeType;
+ *		private StructureEntityVersion StructureEntityVersion;
+ *		private SourceCodeEntity changedEntity;
+ *		private SourceCodeEntity r
+ *	}
  *
  * @return JSON representation of the diff between two ASTs
  *
@@ -113,7 +112,7 @@ SourceCodeChange
  *
  *  		}
  *  }
-**/
+ */
 public class ASTSignatureChangeDeserializer  implements JsonDeserializer<SignatureChange>{
 
 		private static final Log log = LogFactory.getLog(ASTSignatureChangeDeserializer.class);
@@ -163,6 +162,7 @@ public class ASTSignatureChangeDeserializer  implements JsonDeserializer<Signatu
 		//private SignatureChange signChange = null;
 		//private ChangeType changeType = null;
 
+		/** {@inheritDoc} */
 		@Override
 		public SignatureChange deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
 			      throws JsonParseException{

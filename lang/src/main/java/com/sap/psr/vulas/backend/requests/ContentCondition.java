@@ -5,6 +5,10 @@ import java.util.regex.Pattern;
 
 import com.sap.psr.vulas.backend.HttpResponse;
 
+/**
+ * <p>ContentCondition class.</p>
+ *
+ */
 public class ContentCondition implements ResponseCondition {
 
 	public enum Mode { MATCH, EQ_STRING, LT_DOUBLE, GT_DOUBLE }
@@ -17,6 +21,13 @@ public class ContentCondition implements ResponseCondition {
 
 	private Pattern pattern = null; //Pattern.compile("\\\"constructCounter\\\"\\s*:\\s*[\\d]*");
 
+	/**
+	 * <p>Constructor for ContentCondition.</p>
+	 *
+	 * @param _regex a {@link java.lang.String} object.
+	 * @param _mode a {@link com.sap.psr.vulas.backend.requests.ContentCondition.Mode} object.
+	 * @param _value a {@link java.lang.String} object.
+	 */
 	public ContentCondition(String _regex, Mode _mode, String _value) {
 		this.regex = _regex; 
 		this.pattern = Pattern.compile(this.regex);
@@ -25,9 +36,9 @@ public class ContentCondition implements ResponseCondition {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns true if the content of the given {@link HttpResponse} matches the regular expression of the condition, false otherwise.
-	 * @param _response
-	 * @return
 	 */
 	@Override
 	public boolean meetsCondition(HttpResponse _response) {
@@ -58,5 +69,10 @@ public class ContentCondition implements ResponseCondition {
 		return meets;
 	}
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() { return "[body " + this.mode + " " + this.value + "]"; }
 }

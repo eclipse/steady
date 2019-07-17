@@ -22,6 +22,10 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.StructureEntityVersion;
 import ch.uzh.ifi.seal.changedistiller.model.entities.Update;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 
+/**
+ * <p>ASTSignatureChange class.</p>
+ *
+ */
 public class ASTSignatureChange extends DistillerUtil implements SignatureChange  {
 	
 	public static enum OperationType { Insert, Update, Move, Delete };
@@ -38,14 +42,30 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 	//A StructureEntityVersion has all the SourceCodeChange's
 	private StructureEntityVersion structureEntity = null;
 	
+	/**
+	 * <p>addChange.</p>
+	 *
+	 * @param scc a {@link ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange} object.
+	 */
 	public void addChange(SourceCodeChange scc) {
 		this.listOfChanges.add(scc);
 	}
 
+	/**
+	 * <p>removeChange.</p>
+	 *
+	 * @param scc a {@link ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange} object.
+	 */
 	public void removeChange(SourceCodeChange scc){
 		this.listOfChanges.remove(scc);
 	}
 	
+	/**
+	 * <p>toSourceCodeChanges.</p>
+	 *
+	 * @param _objects a {@link java.util.Set} object.
+	 * @return a {@link java.util.Set} object.
+	 */
 	public static Set<SourceCodeChange> toSourceCodeChanges(Set<Object> _objects) {
 		final Set<SourceCodeChange> changes = new HashSet<SourceCodeChange>();
 		for(Object o: _objects) {
@@ -59,8 +79,8 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 	 * JSON object,  when deserializing a ASTSignatureChange, we only have the list of
 	 * SourceCodeChanges
 	 * read from the DB.
-	 * @param srcCodeChanges - List of SourceCodeChanges
 	 *
+	 * @param srcCodeChanges - List of SourceCodeChanges
 	 */
 	public ASTSignatureChange(Set<SourceCodeChange> srcCodeChanges){
 		this(null,null);
@@ -69,22 +89,43 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		this.structureEntity.setSourceCodeChanges(srcCodeChgs);
 	}
 
+	/**
+	 * <p>Constructor for ASTSignatureChange.</p>
+	 *
+	 * @param strEntityVersion a {@link ch.uzh.ifi.seal.changedistiller.model.entities.StructureEntityVersion} object.
+	 */
 	public ASTSignatureChange(StructureEntityVersion  strEntityVersion){
 		//this(null,null);
 		this.setStructureEntity(strEntityVersion);
 		this.listOfChanges = new HashSet<SourceCodeChange>(this.getStructureEntity().getSourceCodeChanges());
 	}
 
+	/**
+	 * <p>Getter for the field <code>structureEntity</code>.</p>
+	 *
+	 * @return a {@link ch.uzh.ifi.seal.changedistiller.model.entities.StructureEntityVersion} object.
+	 */
 	public StructureEntityVersion getStructureEntity() {
 		return structureEntity;
 	}
 
 
+	/**
+	 * <p>Setter for the field <code>structureEntity</code>.</p>
+	 *
+	 * @param structureEntity a {@link ch.uzh.ifi.seal.changedistiller.model.entities.StructureEntityVersion} object.
+	 */
 	public void setStructureEntity(StructureEntityVersion structureEntity) {
 		this.structureEntity = structureEntity;
 	}
 
 
+	/**
+	 * <p>Constructor for ASTSignatureChange.</p>
+	 *
+	 * @param defSignature a {@link com.sap.psr.vulas.sign.Signature} object.
+	 * @param fixSignature a {@link com.sap.psr.vulas.sign.Signature} object.
+	 */
 	public ASTSignatureChange(Signature defSignature, Signature fixSignature){
 		this.mDefSignature = defSignature;
 		this.mFixSignature = fixSignature;
@@ -92,6 +133,7 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		mMethodName = ((ASTSignature)mFixSignature).getValue();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -101,6 +143,7 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -120,6 +163,13 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		return true;
 	}
 
+	/**
+	 * <p>isSameElements.</p>
+	 *
+	 * @param _a a {@link java.util.Collection} object.
+	 * @param _b a {@link java.util.Collection} object.
+	 * @return a boolean.
+	 */
 	public static boolean isSameElements(Collection<SourceCodeChange> _a, Collection<SourceCodeChange> _b) {
 		if(_a.size()!=_b.size())
 			return false;
@@ -137,41 +187,86 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		return true;
 	}
 
+	/**
+	 * <p>Getter for the field <code>mDefSignature</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.sign.Signature} object.
+	 */
 	public Signature getmDefSignature() {
 		return mDefSignature;
 	}
 
 
+	/**
+	 * <p>Setter for the field <code>mDefSignature</code>.</p>
+	 *
+	 * @param mDefSignature a {@link com.sap.psr.vulas.sign.Signature} object.
+	 */
 	public void setmDefSignature(Signature mDefSignature) {
 		this.mDefSignature = mDefSignature;
 	}
 
 
+	/**
+	 * <p>Getter for the field <code>mFixSignature</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.sign.Signature} object.
+	 */
 	public Signature getmFixSignature() {
 		return mFixSignature;
 	}
 
 
+	/**
+	 * <p>Setter for the field <code>mFixSignature</code>.</p>
+	 *
+	 * @param mFixSignature a {@link com.sap.psr.vulas.sign.Signature} object.
+	 */
 	public void setmFixSignature(Signature mFixSignature) {
 		this.mFixSignature = mFixSignature;
 	}
 
+	/**
+	 * <p>Getter for the field <code>listOfChanges</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	public Set<SourceCodeChange> getListOfChanges() {
 		return listOfChanges;
 	}
 
+	/**
+	 * <p>Setter for the field <code>listOfChanges</code>.</p>
+	 *
+	 * @param listOfChanges a {@link java.util.Set} object.
+	 */
 	public void setListOfChanges(Set<SourceCodeChange> listOfChanges) {
 		this.listOfChanges = listOfChanges;
 	}
 
+	/**
+	 * <p>Getter for the field <code>mMethodName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getmMethodName() {
 		return mMethodName;
 	}
 
+	/**
+	 * <p>Setter for the field <code>mMethodName</code>.</p>
+	 *
+	 * @param mMethodName a {@link java.lang.String} object.
+	 */
 	public void setmMethodName(String mMethodName) {
 		this.mMethodName = mMethodName;
 	}
 
+	/**
+	 * <p>isStructuralChange.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isStructuralChange() {
 		boolean b = false;
 		for(SourceCodeChange scc: this.listOfChanges) {
@@ -184,6 +279,12 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		return b;
 	}
 
+	/**
+	 * <p>operationTypetoJSON.</p>
+	 *
+	 * @param t a {@link com.sap.psr.vulas.java.sign.ASTSignatureChange.OperationType} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String operationTypetoJSON(OperationType t){
 		final StringBuilder b  = new StringBuilder();
 		b.append("\"operationType\" : \"");
@@ -209,9 +310,10 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns the set of edit operations required to change the defective AST int the fixed one.
 	 * Attention: This method will change the defective signature passed as argument to the constructor.
-	 * @return edit operations to transform the defective AST into the fixed one
 	 */
 	@Override
 	public Set<Object> getModifications() {
@@ -252,6 +354,7 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		return set;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toJSON() {
 		final Map<Class<?>, StdSerializer<?>> custom_serializers = new HashMap<Class<?>, StdSerializer<?>>();
@@ -261,6 +364,8 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 
 	/**
 	 * Returns a formatted 'SourceCodeChange' elements
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 	public String toString() {
 		int count = 0;
@@ -288,6 +393,7 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		return buffer.toString();
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean isEmpty() {
 		return this.getListOfChanges().size()==0;

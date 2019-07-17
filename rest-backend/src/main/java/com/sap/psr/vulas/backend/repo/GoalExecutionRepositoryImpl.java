@@ -23,6 +23,10 @@ import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 
+/**
+ * <p>GoalExecutionRepositoryImpl class.</p>
+ *
+ */
 public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCustom {
 
 	private static Logger log = LoggerFactory.getLogger(GoalExecutionRepositoryImpl.class);
@@ -37,6 +41,7 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 	ReferenceUpdater refUpdater;
 
 	//@CacheEvict(value="gexe", key="#_app")
+	/** {@inheritDoc} */
 	@Override
 	public GoalExecution customSave(Application _app, GoalExecution _provided_gexe) {
 		GoalExecution managed_gexe = null;
@@ -65,6 +70,7 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 	}
 
 	//@Cacheable(value="gexe", key="#_app", sync=true) //, unless="#result.isEmpty()") // Note that in Spring proxy mode (default), only external calls will be cached. Calls within the class (this....) will not.
+	/** {@inheritDoc} */
 	@Override
 	public GoalExecution findLatestGoalExecution(Application _app, GoalType _type) {
 		Long id = null;

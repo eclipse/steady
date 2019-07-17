@@ -18,7 +18,6 @@ import com.sap.psr.vulas.goals.CheckverGoal;
  * 3) From command line: mvn com.sap.research.security.vulas:vulas-maven-plugin:version-check
  */
 @Mojo( name = "checkver", defaultPhase = LifecyclePhase.TEST, requiresDependencyResolution = ResolutionScope.TEST, requiresOnline = true )
-
 public class MvnPluginCheckver extends AbstractVulasMojo implements Serializable {
 
 	// Not needed anymore, replaced by CheckverGoal.getClassLoader()
@@ -58,11 +57,13 @@ public class MvnPluginCheckver extends AbstractVulasMojo implements Serializable
 		return artifact;
 	}*/
 
+	/** {@inheritDoc} */
 	@Override
 	protected void createGoal() {
 		this.goal = new CheckverGoal();
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	protected void executeGoal() throws Exception {
 		/*final CheckverGoal goal = new CheckverGoal(app);

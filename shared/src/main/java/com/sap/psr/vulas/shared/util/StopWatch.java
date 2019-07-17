@@ -11,7 +11,6 @@ import org.apache.commons.logging.LogFactory;
  * Notes:
  * System.nanoTime is well suited to measure elapsed time, cf. http://stackoverflow.com/questions/510462/is-system-nanotime-completely-useless#4588605
  * It is not well suited to get the current actual time. For that, we use System.runtimeMillis.
- *
  */
 public class StopWatch {
 
@@ -36,6 +35,11 @@ public class StopWatch {
 	
 	private static final String FAILED = "Failed";
 
+	/**
+	 * <p>Constructor for StopWatch.</p>
+	 *
+	 * @param _descr a {@link java.lang.String} object.
+	 */
 	public StopWatch(String _descr) {
 		this(_descr, Double.MAX_VALUE, false);
 	}
@@ -57,6 +61,12 @@ public class StopWatch {
 		if(_start) this.start();
 	}
 	
+	/**
+	 * <p>setTotal.</p>
+	 *
+	 * @param _total a double.
+	 * @return a {@link com.sap.psr.vulas.shared.util.StopWatch} object.
+	 */
 	public StopWatch setTotal(double _total) {
 		this.progressTracker = new ProgressTracker(_total);
 		return this;
@@ -65,7 +75,8 @@ public class StopWatch {
 	/**
 	 * Returns this stop watch in order to behave similar to a builder:
 	 * StopWatch sw = new StopWatch("foo").start();
-	 * @return
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.util.StopWatch} object.
 	 */
 	public StopWatch start() {
 		if(!this.isStarted()) {
@@ -76,10 +87,22 @@ public class StopWatch {
 		return this;
 	}
 	
+	/**
+	 * <p>progress.</p>
+	 *
+	 * @return a long.
+	 */
 	public long progress() {
 		return this.progress(1, false);
 	}
 
+	/**
+	 * <p>progress.</p>
+	 *
+	 * @param _by a double.
+	 * @param _force_log a boolean.
+	 * @return a long.
+	 */
 	public long progress(double _by, boolean _force_log) {
 		// Completion
 		final long prev_compl = this.progressTracker.getCompletionAsLong();
@@ -97,10 +120,21 @@ public class StopWatch {
 		return this.lap(this.progressTracker.toString() + ", " + StringUtil.nanoToFlexDurationString(remaining_long) + " until completion", force_log);
 	}
 
+	/**
+	 * <p>lap.</p>
+	 *
+	 * @param _message a {@link java.lang.String} object.
+	 * @return a long.
+	 */
 	public long lap(String _message) {
 		return this.lap(_message, false);
 	}
 	
+	/**
+	 * <p>getMaxLapTime.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getMaxLapTime() {
 		long max = 0;
 		// Note that the call of stop does not close the final lap
@@ -110,6 +144,11 @@ public class StopWatch {
 		return max;
 	}
 	
+	/**
+	 * <p>getAvgLapTime.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getAvgLapTime() {
 		long total_laps = 0;
 		// Note that the call of stop does not close the final lap
@@ -118,6 +157,13 @@ public class StopWatch {
 		return Math.round( (double)total_laps / (double)this.lapTimes.size() );
 	}
 
+	/**
+	 * <p>lap.</p>
+	 *
+	 * @param _message a {@link java.lang.String} object.
+	 * @param _force_log a boolean.
+	 * @return a long.
+	 */
 	public long lap(String _message, boolean _force_log) {
 		final long lap_taken_at = System.nanoTime();
 		final long lap_time = lap_taken_at - (this.lapsTakenAt.isEmpty() ? this.start : this.lapsTakenAt.getLast());
@@ -131,6 +177,9 @@ public class StopWatch {
 		return lap_time;
 	}
 
+	/**
+	 * <p>stop.</p>
+	 */
 	public void stop() {
 		if(this.isRunning()) {
 			this.stop = System.nanoTime();
@@ -138,6 +187,11 @@ public class StopWatch {
 		}
 	}
 
+	/**
+	 * <p>stop.</p>
+	 *
+	 * @param _e a {@link java.lang.Exception} object.
+	 */
 	public void stop(Exception _e) {
 		if(this.isRunning()) {
 			this.stop = System.nanoTime();
@@ -169,7 +223,8 @@ public class StopWatch {
 
 	/**
 	 * Returns the start time (in milliseconds).
-	 * @return
+	 *
+	 * @return a long.
 	 */
 	public long getStartMillis() {
 		return this.startMillis;
@@ -177,7 +232,8 @@ public class StopWatch {
 
 	/**
 	 * Returns the runtime (in nanoseconds).
-	 * @return
+	 *
+	 * @return a long.
 	 */
 	public long getRuntime() {
 		if(!this.isRunning())
@@ -188,7 +244,8 @@ public class StopWatch {
 
 	/**
 	 * Returns the runtime (in milliseconds).
-	 * @return
+	 *
+	 * @return a long.
 	 */
 	public long getRuntimeMillis() {
 		final long nano = this.getRuntime();
@@ -197,7 +254,8 @@ public class StopWatch {
 
 	/**
 	 * Returns false if one of the stop methods have been called previously, true otherwise.
-	 * @return
+	 *
+	 * @return a boolean.
 	 */
 	public boolean isStarted() {
 		return this.start!=-1;
@@ -205,7 +263,8 @@ public class StopWatch {
 	
 	/**
 	 * Returns false if one of the stop methods have been called previously, true otherwise.
-	 * @return
+	 *
+	 * @return a boolean.
 	 */
 	public boolean isRunning() {
 		return this.stop==-1;

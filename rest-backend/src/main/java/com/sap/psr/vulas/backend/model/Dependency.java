@@ -38,6 +38,10 @@ import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.DependencyOrigin;
 import com.sap.psr.vulas.shared.enums.Scope;
 
+/**
+ * <p>Dependency class.</p>
+ *
+ */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown=true, value={"traced", "reachableConstructIds", "touchPoints"}, allowGetters=true)
 @Entity
@@ -135,8 +139,20 @@ public class Dependency implements Serializable{
 	@JsonView(Views.Default.class)
 	private Integer reachExecConstructsCounter;
 	
+	/**
+	 * <p>Constructor for Dependency.</p>
+	 */
 	public Dependency() { super(); }
 
+	/**
+	 * <p>Constructor for Dependency.</p>
+	 *
+	 * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
+	 * @param lib a {@link com.sap.psr.vulas.backend.model.Library} object.
+	 * @param scope a {@link com.sap.psr.vulas.shared.enums.Scope} object.
+	 * @param transitive a {@link java.lang.Boolean} object.
+	 * @param filename a {@link java.lang.String} object.
+	 */
 	public Dependency(Application app, Library lib, Scope scope, Boolean transitive, String filename) {
 		super();
 		this.app = app;
@@ -148,43 +164,154 @@ public class Dependency implements Serializable{
 		this.traced = false;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getId() { return id; }
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 */
 	public void setId(Long id) { this.id = id; }
 	
+	/**
+	 * <p>Getter for the field <code>app</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.Application} object.
+	 */
 	public Application getApp() { return app; }
+	/**
+	 * <p>Setter for the field <code>app</code>.</p>
+	 *
+	 * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
+	 */
 	public void setApp(Application app) { this.app = app; }
 	
+	/**
+	 * <p>Getter for the field <code>lib</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.Library} object.
+	 */
 	public Library getLib() { return lib; }
+	/**
+	 * <p>Setter for the field <code>lib</code>.</p>
+	 *
+	 * @param lib a {@link com.sap.psr.vulas.backend.model.Library} object.
+	 */
 	public void setLib(Library lib) { this.lib = lib; }
 	
+	/**
+	 * <p>Getter for the field <code>parent</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.Dependency} object.
+	 */
 	public Dependency getParent() { return parent; }
+	/**
+	 * <p>Setter for the field <code>parent</code>.</p>
+	 *
+	 * @param parent a {@link com.sap.psr.vulas.backend.model.Dependency} object.
+	 */
 	public void setParent(Dependency parent) { this.parent = parent; }
 
+	/**
+	 * <p>Getter for the field <code>origin</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.DependencyOrigin} object.
+	 */
 	public DependencyOrigin getOrigin() { return origin; }
+	/**
+	 * <p>Setter for the field <code>origin</code>.</p>
+	 *
+	 * @param origin a {@link com.sap.psr.vulas.shared.enums.DependencyOrigin} object.
+	 */
 	public void setOrigin(DependencyOrigin origin) { this.origin = origin; }
 	
+	/**
+	 * <p>Getter for the field <code>scope</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.Scope} object.
+	 */
 	public Scope getScope() { return scope; }
+	/**
+	 * <p>Setter for the field <code>scope</code>.</p>
+	 *
+	 * @param scope a {@link com.sap.psr.vulas.shared.enums.Scope} object.
+	 */
 	public void setScope(Scope scope) { this.scope = scope; }
 	
+	/**
+	 * <p>Getter for the field <code>transitive</code>.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean getTransitive() { return transitive; }
+	/**
+	 * <p>Setter for the field <code>transitive</code>.</p>
+	 *
+	 * @param transitive a {@link java.lang.Boolean} object.
+	 */
 	public void setTransitive(Boolean transitive) { this.transitive = transitive; }
 		
+	/**
+	 * <p>Getter for the field <code>filename</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getFilename() { return filename; }
+	/**
+	 * <p>Setter for the field <code>filename</code>.</p>
+	 *
+	 * @param filename a {@link java.lang.String} object.
+	 */
 	public void setFilename(String filename) { this.filename = filename; }
 
+	/**
+	 * <p>Getter for the field <code>declared</code>.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean getDeclared() { return declared; }
+	/**
+	 * <p>Setter for the field <code>declared</code>.</p>
+	 *
+	 * @param declared a {@link java.lang.Boolean} object.
+	 */
 	public void setDeclared(Boolean declared) { this.declared = declared; }
 
+	/**
+	 * <p>Getter for the field <code>path</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getPath() {return path;}
+	/**
+	 * <p>Setter for the field <code>path</code>.</p>
+	 *
+	 * @param path a {@link java.lang.String} object.
+	 */
 	public void setPath(String path) {this.path = path;}
 	
+	/**
+	 * <p>Getter for the field <code>relativePath</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getRelativePath() {return relativePath;}
+	/**
+	 * <p>Setter for the field <code>relativePath</code>.</p>
+	 *
+	 * @param relativePath a {@link java.lang.String} object.
+	 */
 	public void setRelativePath(String relativePath) {this.relativePath = relativePath;}
 
 
 	/**
 	 * Returns true if {@link Dependency#traced} is not null and equal to true, false otherwise.
-	 * @return
+	 *
+	 * @return a boolean.
 	 */
 	public boolean isTraced() {
 		return this.traced!=null && this.traced;
@@ -192,25 +319,42 @@ public class Dependency implements Serializable{
 	
 	/**
 	 * Returns the value of the member {@link Dependency#traced}, which can be null.
-	 * @return
+	 *
+	 * @return a {@link java.lang.Boolean} object.
 	 */
 	//TODO to check whether to add flags "calls_count" and "reachableArchive" included in old backend
 	public Boolean getTraced() { return traced; }
 	
 	/**
 	 * Sets the value of the member {@link Dependency#traced}, which can be null.
-	 * @return
+	 *
+	 * @param traced a {@link java.lang.Boolean} object.
 	 */
 	public void setTraced(Boolean traced) { this.traced = traced; }
 	
+	/**
+	 * <p>Getter for the field <code>reachableConstructIds</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	public Set<ConstructId> getReachableConstructIds() {
 		return reachableConstructIds;
 	}
 	
+	/**
+	 * <p>Setter for the field <code>reachableConstructIds</code>.</p>
+	 *
+	 * @param reachableConstructIds a {@link java.util.Set} object.
+	 */
 	public void setReachableConstructIds(Set<ConstructId> reachableConstructIds) {
 		this.reachableConstructIds = reachableConstructIds;
 	}
 	
+	/**
+	 * <p>addReachableConstructIds.</p>
+	 *
+	 * @param reachableConstructIds a {@link java.util.Set} object.
+	 */
 	public void addReachableConstructIds(Set<ConstructId> reachableConstructIds) {
 		if(this.getReachableConstructIds()==null)
             this.setReachableConstructIds(reachableConstructIds);
@@ -218,6 +362,11 @@ public class Dependency implements Serializable{
             this.getReachableConstructIds().addAll(reachableConstructIds);
 	}
 
+	/**
+	 * <p>countReachableConstructTypes.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.ConstructIdFilter} object.
+	 */
 	@JsonProperty(value = "reachableConstructTypeCounters")
 	@JsonView(Views.DepDetails.class)
 	public ConstructIdFilter countReachableConstructTypes() {
@@ -226,12 +375,27 @@ public class Dependency implements Serializable{
 		return this.reachableFilter;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>traces</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	@JsonIgnore
 	public Collection<Trace> getTraces() { return traces; }
 	
+	/**
+	 * <p>Setter for the field <code>traces</code>.</p>
+	 *
+	 * @param traces a {@link java.util.Collection} object.
+	 */
 	@JsonIgnore
 	public void setTraces(Collection<Trace> traces) { this.traces = traces; }
 
+	/**
+	 * <p>countTracedConstructTypes.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.ConstructIdFilter} object.
+	 */
 	@JsonProperty(value = "tracedConstructTypeCounters")
 	@JsonView(Views.CountDetails.class)
 	public ConstructIdFilter countTracedConstructTypes() {
@@ -244,6 +408,11 @@ public class Dependency implements Serializable{
 		return this.tracedFilter;
 	}
 	
+	/**
+	 * <p>getTracedConstructs.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	@JsonIgnore
 	public Set<ConstructId> getTracedConstructs() {
 		if(this.getTraces()==null)
@@ -254,8 +423,23 @@ public class Dependency implements Serializable{
 		return traced_cids;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>touchPoints</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<TouchPoint> getTouchPoints() { return touchPoints; }
+	/**
+	 * <p>Setter for the field <code>touchPoints</code>.</p>
+	 *
+	 * @param touchPoints a {@link java.util.Set} object.
+	 */
 	public void setTouchPoints(Set<TouchPoint> touchPoints) { this.touchPoints = touchPoints; }
+        /**
+         * <p>addTouchPoints.</p>
+         *
+         * @param touchPoints a {@link java.util.Set} object.
+         */
         public void addTouchPoints(Set<TouchPoint> touchPoints) {
             if(this.getTouchPoints()==null)
                 this.setTouchPoints(touchPoints);
@@ -263,6 +447,9 @@ public class Dependency implements Serializable{
                 this.getTouchPoints().addAll(touchPoints);
         }
 	
+	/**
+	 * <p>prePersist.</p>
+	 */
 	@PrePersist
 	public void prePersist() {
 		if(this.getTraced()==null) {
@@ -270,12 +457,18 @@ public class Dependency implements Serializable{
 		}
 	}
 	
+	/**
+	 * <p>setAppRecursively.</p>
+	 *
+	 * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
+	 */
 	public void setAppRecursively(Application app) { 
 		this.app = app;
 		if(this.parent!=null)
 			this.parent.setAppRecursively(app);}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -292,6 +485,7 @@ public class Dependency implements Serializable{
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -349,6 +543,12 @@ public class Dependency implements Serializable{
 		return true;
 	}
 	
+	/**
+	 * <p>equalLibParentRelPath.</p>
+	 *
+	 * @param obj a {@link java.lang.Object} object.
+	 * @return a boolean.
+	 */
 	public boolean equalLibParentRelPath(Object obj) {
 		if (this == obj)
 			return true;
@@ -377,10 +577,20 @@ public class Dependency implements Serializable{
 		return true;
 	}
 	
+	/**
+	 * <p>setTotalTracedExecConstructCount.</p>
+	 *
+	 * @param countTracesOfConstructorsLibrary a {@link java.lang.Integer} object.
+	 */
 	public void setTotalTracedExecConstructCount(Integer countTracesOfConstructorsLibrary) {
 		this.tracedExecConstructsCounter  = countTracesOfConstructorsLibrary;
 	}
 	
+	/**
+	 * <p>setTotalReachExecConstructCount.</p>
+	 *
+	 * @param countReachableExecConstructLibrary a {@link java.lang.Integer} object.
+	 */
 	public void setTotalReachExecConstructCount(Integer countReachableExecConstructLibrary) {
 		this.reachExecConstructsCounter  = countReachableExecConstructLibrary;
 	}

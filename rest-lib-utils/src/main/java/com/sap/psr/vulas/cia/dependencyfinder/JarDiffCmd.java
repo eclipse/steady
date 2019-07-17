@@ -12,12 +12,24 @@ import com.jeantessier.diff.Differences;
 import com.sap.psr.vulas.shared.json.model.Artifact;
 import com.sap.psr.vulas.shared.json.model.diff.JarDiffResult;
 
+/**
+ * <p>JarDiffCmd class.</p>
+ *
+ */
 public class JarDiffCmd extends DiffCommand {
 	
 	private Artifact oldLib, newLib;
 	private Path oldPath, newPath;
 	private JarDiffVisitor visitor;
 	
+	/**
+	 * <p>Constructor for JarDiffCmd.</p>
+	 *
+	 * @param _old a {@link com.sap.psr.vulas.shared.json.model.Artifact} object.
+	 * @param _old_path a {@link java.nio.file.Path} object.
+	 * @param _new a {@link com.sap.psr.vulas.shared.json.model.Artifact} object.
+	 * @param _new_path a {@link java.nio.file.Path} object.
+	 */
 	public JarDiffCmd(Artifact _old, Path _old_path, Artifact _new, Path _new_path) {
 		this.oldLib = _old;
 		this.oldPath = _old_path;
@@ -25,6 +37,11 @@ public class JarDiffCmd extends DiffCommand {
 		this.newPath = _new_path;
 	}
  
+	/**
+	 * <p>doProcessing.</p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	protected void doProcessing() throws Exception {
 		// Old JAR
 		PackageMapper oldPackages = new PackageMapper();
@@ -54,6 +71,12 @@ public class JarDiffCmd extends DiffCommand {
         differences.accept(visitor);
 	}
 	
+	/**
+	 * <p>getResult.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.diff.JarDiffResult} object.
+	 * @throws java.lang.IllegalStateException if any.
+	 */
 	public JarDiffResult getResult() throws IllegalStateException {
 		if(visitor==null) throw new IllegalStateException("Processing did not start");
 		return this.visitor.getJarDiffResult();

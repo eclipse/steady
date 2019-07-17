@@ -51,6 +51,10 @@ import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.StringUtil;
 
 
+/**
+ * <p>ApplicationRepositoryImpl class.</p>
+ *
+ */
 public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 	static final String EXCLUDED_SCOPES = "report.exceptionScopeBlacklist";
@@ -99,6 +103,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	ReferenceUpdater refUpdater;
 
 	
+	/** {@inheritDoc} */
 	public Application customSave(Application _app) {
 		final StopWatch sw = new StopWatch("Save app " + _app).start();
 
@@ -234,6 +239,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		return managed_lib;
 	}
 
+	/** {@inheritDoc} */
 	public void updateFlags(TreeSet<VulnerableDependency> _vd_list, Boolean _withChangeList) {
 		for (VulnerableDependency vd : _vd_list){
 			this.updateFlags(vd, _withChangeList);
@@ -241,11 +247,12 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Calls {@link VulnerableDependency#setTraced(int)} and {@link VulnerableDependency#setReachable(int)} depending
 	 * on the following conditions: If the {@link Bug} has a change list, it is checked whether vulnerable constructs
 	 * were traced during dynamic analysis or found reachable during static analysis. If it does not have a change
 	 * list, it is checked whether any of the library's constructs has been traced or found reachable.
-	 * @param _vd
 	 */
 	@Override
 	public void updateFlags(VulnerableDependency _vd, Boolean _withChangeList) {
@@ -294,8 +301,9 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns a {@link SortedSet} of all {@link Application}s of the given {@link Space}.
-	 * @param _skip_empty if true, applications having neither constructs nor dependencies will be skipped
 	 */
 	@Override
 	public SortedSet<Application> getApplications(boolean _skip_empty, String _space, long _asOfTimestamp) {
@@ -311,6 +319,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		return sorted_apps;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public VulnerableDependency getVulnerableDependencyBugDetails(Application a, String digest, String bugid, VulnDepOrigin origin, String bundledDigest, String bundledGroup, String bundledArtifact, String bundledVersion) throws EntityNotFoundException {
 
@@ -427,6 +436,8 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Deletes all the traces and paths collected during the various analyses.
 	 * If requested, also deletes the goal history.
 	 */
@@ -451,6 +462,8 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Finds all @{VulnerableDependency}s for a given {@link Space} and {@link Application}.
 	 */
 	@Override
@@ -667,6 +680,12 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		return excluded_bugs;
 	}
 	
+	/**
+	 * <p>findAffectedApps.</p>
+	 *
+	 * @param _bugs an array of {@link java.lang.String} objects.
+	 * @return a {@link java.util.HashMap} object.
+	 */
 	public HashMap<Long, HashMap<String, Boolean>> findAffectedApps(String[] _bugs) {
 		final HashMap<Long, HashMap<String, Boolean>> affected_apps = new HashMap<Long, HashMap<String, Boolean>>();
 		final List<Object[]> affected_apps_raw = this.v_appVulnDepRepository.findAffectedApps(_bugs);
@@ -695,6 +714,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		return affected_apps;		
 	}
 	
+	/** {@inheritDoc} */
 	@Transactional
 	public void refreshVulnChangebyChangeList(Collection<ConstructChange> _listOfConstructChanges){
 		final StopWatch sw = new StopWatch("Started refresh app vulnChange by CC list").start();
@@ -711,6 +731,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		sw.stop();
 	}
 	
+	/** {@inheritDoc} */
 	@Transactional
 	public void refreshVulnChangebyAffLib(AffectedLibrary _affLib){
 		final StopWatch sw = new StopWatch("Started refresh app vulnChange by addLib").start();
@@ -727,6 +748,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	}
 	
 	
+	/** {@inheritDoc} */
 	public void refreshLastScanbyApp(Application _app){
 		_app.setLastScan(Calendar.getInstance());
 		appRepository.save(_app);
