@@ -81,6 +81,42 @@ public class NodejsFileAnalyzerTest {
         assertTrue(c1.containsKey(get_test));
         assertTrue(c1.containsKey(get_test_fun));
         assertTrue(c1.containsKey(get_test_met));
+
+        final FileAnalyzer f2 = FileAnalyzerFactory.buildFileAnalyzer(new File("src/test/resources/antlr4-grammars-examples/ArrowFunctions.js"));
+        final Map<ConstructId, Construct> c2 = f2.getConstructs();
+
+        final NodejsId pack2 = new NodejsId(null, NodejsId.Type.PACKAGE, "antlr4-grammars-examples");
+        final NodejsId modu2 = new NodejsId(pack2, NodejsId.Type.MODULE, "ArrowFunctions");
+        final NodejsId odds = new NodejsId(modu2, NodejsId.Type.FUNCTION, "1(v)");
+        final NodejsId pairs = new NodejsId(modu2, NodejsId.Type.FUNCTION, "2(v)");
+        final NodejsId obj_in_func = new NodejsId(pairs, NodejsId.Type.OBJECT, "1");
+        final NodejsId nums = new NodejsId(modu2, NodejsId.Type.FUNCTION, "3(v,i)");
+        final NodejsId nums_each = new NodejsId(modu2, NodejsId.Type.FUNCTION, "4(v)");
+        final NodejsId nums_each_this = new NodejsId(modu2, NodejsId.Type.FUNCTION, "5(v)");
+
+        assertEquals(8, c2.size());
+        assertTrue(c2.containsKey(pack2));
+        assertTrue(c2.containsKey(modu2));
+        assertTrue(c2.containsKey(odds));
+        assertTrue(c2.containsKey(pairs));
+        assertTrue(c2.containsKey(obj_in_func));
+        assertTrue(c2.containsKey(nums));
+        assertTrue(c2.containsKey(nums_each));
+        assertTrue(c2.containsKey(nums_each_this));
+
+        final FileAnalyzer f3 = FileAnalyzerFactory.buildFileAnalyzer(new File("src/test/resources/antlr4-grammars-examples/ExtendedParameterHandling.js"));
+        final Map<ConstructId, Construct> c3 = f3.getConstructs();
+
+        final NodejsId pack3 = new NodejsId(null, NodejsId.Type.PACKAGE, "antlr4-grammars-examples");
+        final NodejsId modu3 = new NodejsId(pack3, NodejsId.Type.MODULE, "ExtendedParameterHandling");
+        final NodejsId func1 = new NodejsId(modu3, NodejsId.Type.FUNCTION, "f(x,y=7,z=42)");
+        final NodejsId func2 = new NodejsId(modu3, NodejsId.Type.FUNCTION, "f(x,y,...a)");
+
+        assertEquals(4, c3.size());
+        assertTrue(c3.containsKey(pack3));
+        assertTrue(c3.containsKey(modu3));
+        assertTrue(c3.containsKey(func1));
+        assertTrue(c3.containsKey(func2));
     }
 
     @Test
