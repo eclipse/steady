@@ -137,10 +137,12 @@
 							</execution>
 						</executions>
 					</plugin>
+					<!--  Run the following to fix all JavaDoc: "mvn -DdefaultAuthor=SAP -X -DfixTags=param,return,throws -P gradle clean compile org.apache.maven.plugins:maven-javadoc-plugin:3.1.1:fix"
+					The tag 'links' results in an exception in module lang-java.-->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.9.1</version>
+						<version>3.1.1</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>

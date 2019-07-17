@@ -382,7 +382,6 @@ public class LibraryController {
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if the library file needs to be uploaded (not known to Maven central and not already uploaded), 200 otherwise
 	 */
 	@RequestMapping(value = "/{digest}/upload", method = RequestMethod.OPTIONS)
-	@RequestMapping(value = "/{digest}/upload", method = RequestMethod.OPTIONS)
 	ResponseEntity<Library> isJARrequired(@PathVariable String digest, HttpEntity<byte[]> requestEntity) {
 		final Library l = LibraryRepository.FILTER.findOne(this.libRepository.findByDigest(digest));
 		if(l.getWellknownDigest()==false){

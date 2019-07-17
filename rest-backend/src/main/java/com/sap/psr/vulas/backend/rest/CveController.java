@@ -41,7 +41,6 @@ public class CveController {
 	 * Note: If it would be started right away, multiple backend instances would update the database in parallel.
 	 */
 	@Autowired
-	@Autowired
 	CveController(BugRepository bugRepository) {
 		final BugRepository bug_repo = bugRepository;
 		

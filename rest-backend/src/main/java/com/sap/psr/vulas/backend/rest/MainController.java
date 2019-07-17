@@ -79,7 +79,6 @@ public class MainController extends SpringBootServletInitializer {
 	 * @return
 	 */
 	@Bean
-	@Bean
 	ReferenceUpdater refUpdater() { return new ReferenceUpdater(); }
 	
 	/**
@@ -99,7 +98,6 @@ public class MainController extends SpringBootServletInitializer {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	@SuppressWarnings("unchecked")
 	private Predicate<String> bugPaths() {
         return or(
         		regex("/bugs.*"),
@@ -112,7 +110,6 @@ public class MainController extends SpringBootServletInitializer {
 	 * Paths that require tenant selection.
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@SuppressWarnings("unchecked")
 	private Predicate<String> userPaths() {
         return or(

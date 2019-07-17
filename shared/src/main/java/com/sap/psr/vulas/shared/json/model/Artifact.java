@@ -213,7 +213,6 @@ public class Artifact implements Serializable,Comparable<Object> {
 	 * @return
 	 */
 	@JsonIgnore
-	@JsonIgnore
 	private Path getRelM2Path() {
 		return Paths.get(this.getRelM2Dir().toString(), this.getM2Filename());
 	}
@@ -223,7 +222,6 @@ public class Artifact implements Serializable,Comparable<Object> {
 	 * E.g, com/jolira/guice/3.0.0.
 	 * @return
 	 */
-	@JsonIgnore
 	@JsonIgnore
 	private Path getRelM2Dir() {
 		final StringBuilder b = new StringBuilder();
