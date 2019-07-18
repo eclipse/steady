@@ -43,3 +43,11 @@
 .myDeleteColor {
     color: #ff0000;    
 }
+
+.bugList .sapUiTableRow.sapUiTableContentRow.sapUiTableTr {
+	height: 80px !important;
+}
+
+.bugList .sapUiTableVSb {
+	max-height: none !important;
+}
