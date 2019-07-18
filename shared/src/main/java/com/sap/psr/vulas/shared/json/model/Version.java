@@ -9,9 +9,8 @@ import org.apache.commons.logging.LogFactory;
 
 
 /**
- * This class represents software versions as major.minor[.maintenance[.build]].
- * 
- * @see https://en.wikipedia.org/wiki/Software_versioning
+ * This class represents software versions as major.minor[.maintenance[.build]]. 
+ * See https://en.wikipedia.org/wiki/Software_versioning for more information.
  */
 public class Version implements Comparable<Version>{
 
@@ -91,7 +90,7 @@ public class Version implements Comparable<Version>{
 	 * This method compares versions that only contains numbers. It returns 0 if they are equal or contains letters
 	 * 
 	 * 	@param other version to compare
-	 * 	@return 0 if they are equal or contains letters; 1 if this.version>other.version; -1 otherwise
+	 * 	@return 0 if they are equal or contains letters; 1 if this.version &gt; other.version; -1 otherwise
 	 */
 	public int compareNumberVersion(Version other) {
 	

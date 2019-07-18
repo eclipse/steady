@@ -139,7 +139,7 @@ public class Application implements Serializable, Comparable<Application> {
 	
 	/**
 	 * Adds the given dependencies to the dependencies of this application.
-	 * @param _dependency
+	 * @param _dependencies
 	 */
 	public void addDependencies(Set<Dependency> _dependencies) {
 		for(Dependency d: _dependencies)
@@ -189,7 +189,7 @@ public class Application implements Serializable, Comparable<Application> {
 	
 	/**
 	 * Returns true if the application has {@link ConstructId}s and no {@link Dependency}s, false otherwise.
-	 * The invocation of {@link Application#isEmpty()} right after {@link Application#clear()} must return true. 
+	 * The invocation of {@link Application#isEmpty()} right after {@link Application#clean()} must return true. 
 	 * @return
 	 */
 	public Boolean isEmpty() {

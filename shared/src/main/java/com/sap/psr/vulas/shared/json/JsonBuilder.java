@@ -77,7 +77,7 @@ public class JsonBuilder {
 	
 	/**
 	 * Appends a String to an already opened array.
-	 * @param _json
+	 * @param _string
 	 * @return
 	 */
 	public JsonBuilder appendToArray(String _string) {
@@ -88,7 +88,7 @@ public class JsonBuilder {
 	
 	/**
 	 * Appends an Integer to an already opened array.
-	 * @param _json
+	 * @param _i
 	 * @return
 	 */
 	public JsonBuilder appendToArray(Integer _i) {

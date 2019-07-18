@@ -7,8 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * A collection of different metrics of type {@link Percentage} or {@link Ratio}.
- * 
+ * A collection of metrics of type {@link Percentage}, {@link Counter} or {@link Ratio}.
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)

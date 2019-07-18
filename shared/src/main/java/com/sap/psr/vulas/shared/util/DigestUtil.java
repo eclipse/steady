@@ -1,6 +1,7 @@
 package com.sap.psr.vulas.shared.util;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -19,7 +20,7 @@ public class DigestUtil {
 	private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 	
 	/**
-	 * Returns a digest for the given {@link String}, using the given {@link Charset} (typically {@link StandardCharsets#UTF_8) and {@link DigestAlgorithm}.
+	 * Returns a digest for the given {@link String}, using the given {@link Charset} (typically {@link StandardCharsets#UTF_8}) and {@link DigestAlgorithm}.
 	 *
 	 * @param _source
 	 * @param _charset

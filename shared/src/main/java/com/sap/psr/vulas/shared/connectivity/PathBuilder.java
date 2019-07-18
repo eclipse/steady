@@ -97,7 +97,7 @@ public class PathBuilder {
 
 	/**
 	 * vulas-backend:/apps/{group}/{artifact}/{version}/deps
-	 * @param _bugId
+	 * @param _app
 	 * @return
 	 */
 	public static final String appDeps(@NotNull Application _app) {
@@ -108,7 +108,6 @@ public class PathBuilder {
 
 	/**
 	 * vulas-backend:/apps/{group}/{artifact}/{version}/vulndeps
-	 * @param _bugId
 	 * @return
 	 */
 	public static final String appVulnDeps(@NotNull Application _app, boolean _include_historical, boolean _include_affected, boolean _include_affected_unconfirmed) {
@@ -441,16 +440,4 @@ public class PathBuilder {
 		sb.append("/constructs/diff");
 		return sb.toString();
 	}
-
-//	/**
-//	 * vulas-backend:/bugs
-//	 * @return 
-//	 */
-//	public static final String allBugs(){
-//		final StringBuilder b = new StringBuilder();
-//		b.append("/bugs/");
-//		return b.toString();
-//	}
-	
-
 }

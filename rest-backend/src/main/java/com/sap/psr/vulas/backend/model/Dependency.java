@@ -154,6 +154,12 @@ public class Dependency implements Serializable{
 	public Application getApp() { return app; }
 	public void setApp(Application app) { this.app = app; }
 	
+	public void setAppRecursively(Application app) { 
+		this.app = app;
+		if(this.parent!=null)
+			this.parent.setAppRecursively(app);
+	}
+	
 	public Library getLib() { return lib; }
 	public void setLib(Library lib) { this.lib = lib; }
 	
@@ -269,12 +275,6 @@ public class Dependency implements Serializable{
 			this.setTraced(false);
 		}
 	}
-	
-	public void setAppRecursively(Application app) { 
-		this.app = app;
-		if(this.parent!=null)
-			this.parent.setAppRecursively(app);}
-
 
 	@Override
 	public int hashCode() {
@@ -385,4 +385,10 @@ public class Dependency implements Serializable{
 		this.reachExecConstructsCounter  = countReachableExecConstructLibrary;
 	}
 	
+	@Override
+	public String toString() {
+		final StringBuffer b = new StringBuffer();
+		b.append("[app=").append(this.app.toString()).append(", lib=").append(this.lib.toString()).append(", filename=").append(this.filename).append(", scope=").append(this.scope).append(", trans=").append(this.getTransitive()).append("]");
+		return b.toString();
+	}
 }

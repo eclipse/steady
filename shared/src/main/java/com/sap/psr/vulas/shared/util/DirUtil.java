@@ -28,7 +28,8 @@ public class DirUtil {
 
 	/**
 	 * Returns true if the given directory contains a file with the given name, false otherwise.
-	 * @param
+	 * @param _dir
+	 * @param _filename
 	 */
 	public static final boolean containsFile(final File _dir, final String _filename) {
 		if(_dir.isDirectory()) {
@@ -173,7 +174,7 @@ public class DirUtil {
 	 * @param _dir
 	 * @param _alg
 	 * @return
-	 * @see {@link FileUtil#getDigest(File, DigestAlgorithm)}
+	 * @see FileUtil#getDigest(File, DigestAlgorithm)
 	 */
 	public static String getDigest(final File _dir, final String[] _ignore, DigestAlgorithm _alg) {
 		if(!_dir.isDirectory())

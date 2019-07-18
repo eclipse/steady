@@ -9,7 +9,7 @@ import com.sap.psr.vulas.shared.json.model.ConstructId;
  * apply both in the context of a single commit and multiple commits, whereas {@link ConstructChangeType#NUL} is only
  * meaningful in the context of multiple commits.
  * 
- * When used in the context of multiple commits, the {@link ChangeType} indicates the overall modification done over the
+ * When used in the context of multiple commits, the {@link ConstructChangeType} indicates the overall modification done over the
  * course of the ordered commits.
  * 
  * {@link ConstructChangeType#ADD} means that the construct has been added,

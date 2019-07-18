@@ -31,7 +31,6 @@ public class StringList implements Iterable<String> {
 	 * Creates a new instance with the give item list. Strings of the item list will be trimmed before
 	 * being added to the new {@link StringList}.
 	 * @param _itemlist
-	 * @param _is_blacklist
 	 */
 	public StringList(String[] _itemlist) {
 		if(_itemlist!=null)
