@@ -103,6 +103,12 @@ public class Dependency implements Serializable, Comparable<Dependency> {
 	 * @param app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
 	 */
 	public void setApp(Application app) { this.app = app; }
+	
+	public void setAppRecursively(Application app) { 
+		this.app = app;
+		if(this.parent!=null)
+			this.parent.setAppRecursively(app);
+	}
 
 	/**
 	 * <p>Getter for the field <code>lib</code>.</p>
@@ -288,10 +294,12 @@ public class Dependency implements Serializable, Comparable<Dependency> {
 		else if(this.isParent(_other))
 			return +1;
 		else {
-			if(this.getLib().getLibraryId()!=null && _other.getLib().getLibraryId()!=null) {
-				return this.getLib().getLibraryId().compareTo(_other.getLib().getLibraryId());
-			} else if(this.getFilename()!=null && _other.getFilename()!=null) {
+			if(this.getFilename()!=null && _other.getFilename()!=null) {
 				return this.getFilename().compareTo(_other.getFilename());
+			} else if(this.getLib().getDigest()!=null && _other.getLib().getDigest()!=null) {
+				return this.getLib().getDigest().compareTo(_other.getLib().getDigest());
+			} else if(this.getLib().getLibraryId()!=null && _other.getLib().getLibraryId()!=null) {
+				return this.getLib().getLibraryId().compareTo(_other.getLib().getLibraryId());
 			} else {
 				throw new IllegalStateException("Cannot compare " + this + " with " + _other);
 			}

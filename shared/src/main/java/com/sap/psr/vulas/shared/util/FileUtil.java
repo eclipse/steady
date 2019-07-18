@@ -215,8 +215,8 @@ public class FileUtil {
 		if(idx!=-1) n = n.substring(idx+1);
 
 		// Remove file extension
-		if(!_keep_ext && n.indexOf(".")!=-1)
-			n = n.substring(0, n.indexOf("."));
+		if(!_keep_ext && n.lastIndexOf(".")!=-1)
+			n = n.substring(0, n.lastIndexOf("."));
 
 		return n;
 	}

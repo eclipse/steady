@@ -22,14 +22,6 @@ public interface SignatureChange {
 	 * @return a {@link java.lang.String} object.
 	 */
 	public String toJSON();
-
-	/**
-	 * Returns true if the signature's structure was changed, e.g., if statements have been moved, inserted or deleted.
-	 * Returns false otherwise.
-	 *
-	 * @return a boolean.
-	 */
-	public boolean isStructuralChange();
 	
 	/**
 	 * <p>isEmpty.</p>

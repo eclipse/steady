@@ -263,23 +263,6 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 	}
 
 	/**
-	 * <p>isStructuralChange.</p>
-	 *
-	 * @return a boolean.
-	 */
-	public boolean isStructuralChange() {
-		boolean b = false;
-		for(SourceCodeChange scc: this.listOfChanges) {
-			if(scc instanceof Update) {}
-			else {
-				b = true;
-				break;
-			}
-		}
-		return b;
-	}
-
-	/**
 	 * <p>operationTypetoJSON.</p>
 	 *
 	 * @param t a {@link com.sap.psr.vulas.java.sign.ASTSignatureChange.OperationType} object.

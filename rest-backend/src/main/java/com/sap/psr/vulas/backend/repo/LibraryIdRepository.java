@@ -1,7 +1,6 @@
 package com.sap.psr.vulas.backend.repo;
 
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -9,8 +8,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.LibraryId;
-import com.sap.psr.vulas.backend.model.Property;
 import com.sap.psr.vulas.backend.util.ResultSetFilter;
 
 /**
@@ -22,6 +21,9 @@ public interface LibraryIdRepository extends CrudRepository<LibraryId, Long> {
 
 	/** Constant <code>FILTER</code> */
 	public static final ResultSetFilter<LibraryId> FILTER = new ResultSetFilter<LibraryId>();
+
+	@Query("SELECT l FROM LibraryId l WHERE l.id=:id")
+	List<LibraryId> findById(@Param("id") Long id);
 	
 	/**
 	 * <p>findBySecondaryKey.</p>
@@ -59,4 +61,11 @@ public interface LibraryIdRepository extends CrudRepository<LibraryId, Long> {
 	 */
 	@Query("SELECT distinct libid FROM LibraryId AS libid where not libid.mvnGroup LIKE 'com.sap%'")
 	List<LibraryId> findAllLibIdsOSSI();
+	
+	@Query(value="select distinct d.id as dep_id, bl.bundled_library_ids_id as boundled_lid_id "
+			+ "   from app_dependency d "
+			+ "   inner join lib l1 on d.lib=l1.digest "
+			+ "   inner join lib_bundled_library_ids bl on l1.id=bl.library_id "
+			+ "   where d.app=:app and not l1.library_id_id = bl.bundled_library_ids_id  ", nativeQuery=true)
+	List<Object[]> findBundledLibIdByApp(@Param("app") Application app);
 }

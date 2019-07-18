@@ -196,6 +196,18 @@ public class Dependency implements Serializable{
 	 * @return a {@link com.sap.psr.vulas.backend.model.Library} object.
 	 */
 	public Library getLib() { return lib; }
+
+	/**
+	 * <p>setAppRecursively.</p>
+	 *
+	 * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
+	 */
+	public void setAppRecursively(Application app) { 
+		this.app = app;
+		if(this.parent!=null)
+			this.parent.setAppRecursively(app);
+	}
+
 	/**
 	 * <p>Setter for the field <code>lib</code>.</p>
 	 *
@@ -456,17 +468,6 @@ public class Dependency implements Serializable{
 			this.setTraced(false);
 		}
 	}
-	
-	/**
-	 * <p>setAppRecursively.</p>
-	 *
-	 * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
-	 */
-	public void setAppRecursively(Application app) { 
-		this.app = app;
-		if(this.parent!=null)
-			this.parent.setAppRecursively(app);}
-
 
 	/** {@inheritDoc} */
 	@Override
@@ -595,4 +596,10 @@ public class Dependency implements Serializable{
 		this.reachExecConstructsCounter  = countReachableExecConstructLibrary;
 	}
 	
+	@Override
+	public String toString() {
+		final StringBuffer b = new StringBuffer();
+		b.append("[app=").append(this.app.toString()).append(", lib=").append(this.lib.toString()).append(", filename=").append(this.filename).append(", scope=").append(this.scope).append(", trans=").append(this.getTransitive()).append("]");
+		return b.toString();
+	}
 }

@@ -97,7 +97,7 @@ public class DependencyUtil {
 	 * @param _app a {@link com.sap.psr.vulas.backend.model.Application} object.
 	 * @return a boolean.
 	 */
-	public static boolean isValidDependencyCollection( Application _app) {
+	public static boolean isValidDependencyCollection(Application _app) {
 		Collection<Dependency> _deps = _app.getDependencies();
 		final Set<Dependency> main_set = new HashSet<Dependency>();
 		final Set<Dependency> parent_set = new HashSet<Dependency>();
@@ -111,20 +111,17 @@ public class DependencyUtil {
 						parent_set.add(d.getParent());
 				}
 				else {
-					log.error("Dependency " + d + " occurs multiple times in the set, one on the same library already exists: " + existing_dep);
+					log.error("Dependency " + d.getLib().getLibraryId() + " occurs multiple times in the set, one on the same library already exists: " + existing_dep.getLib().getLibraryId());
 					return false;
 				}
 			}
 			for(Dependency d: parent_set){
 				if(!main_set.contains(d)) {
-					log.error("Dependency parent " + d + " is not declared as dependency itself");
+					log.error("Dependency parent " + d.getLib().getLibraryId() + " is not declared as dependency itself");
 					return false;
 				}
 			}
 		}	
 		return true;
-	}	
-	
-
-
+	}
 }

@@ -27,6 +27,7 @@ import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Dependency;
+import com.sap.psr.vulas.shared.util.DependencyUtil;
 import com.sap.psr.vulas.shared.util.StringList;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.ThreadUtil;
@@ -307,6 +308,12 @@ public class JavaBomTask extends AbstractBomTask {
 			} catch (FileAnalysisException e) {
 				log.error(e.getMessage(), e);
 			}
+		}
+		
+		// Check whether the parent-child dependency relationships are consistent
+		final boolean consistent_deps = DependencyUtil.isValidDependencyCollection(a);
+		if(!consistent_deps) {
+			throw new GoalExecutionException("Inconsistent application dependencies cannot be uploaded", null);
 		}
 
 		// Set the one to be returned

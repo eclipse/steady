@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sap.psr.vulas.backend.model.AffectedConstructChange;
+import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.Bug;
 import com.sap.psr.vulas.backend.model.ConstructId;
 import com.sap.psr.vulas.backend.model.Library;
@@ -278,5 +279,13 @@ public interface LibraryRepository extends CrudRepository<Library, Long>, Librar
 	 */
 	@Query("SELECT l FROM Library l WHERE l.libraryId =:bundledLibId")
 	List<Library> findByLibraryId(@Param("bundledLibId") LibraryId bundledLibId);
+
+	@Query(value="select distinct d.id as dep_id, l2.id as bundled_lib_id"
+			+ "   from app_dependency d "
+			+ "   inner join lib l1 on d.lib=l1.digest "
+			+ "   inner join lib_bundled_library_ids bl on l1.id=bl.library_id "
+			+ "   inner join lib l2 on bl.bundled_library_ids_id=l2.library_id_id "
+			+ "   where d.app=:app and not l1.id = l2.id and l2.wellknown_digest='true'  ", nativeQuery=true)
+	List<Object[]> findBundledLibByApp(@Param("app") Application app);
 
 }

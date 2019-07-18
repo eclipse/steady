@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.sap.psr.vulas.sign;
+package com.sap.psr.vulas.java.sign;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -28,13 +28,12 @@ import com.sap.psr.vulas.FileAnalyzerFactory;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.java.JavaConstructorId;
 import com.sap.psr.vulas.java.JavaId;
-import com.sap.psr.vulas.java.sign.ASTConstructBodySignature;
-import com.sap.psr.vulas.java.sign.ASTSignature;
-import com.sap.psr.vulas.java.sign.ASTSignatureChange;
-import com.sap.psr.vulas.java.sign.ASTSignatureComparator;
-import com.sap.psr.vulas.java.sign.ASTUtil;
 import com.sap.psr.vulas.java.sign.gson.GsonHelper;
 import com.sap.psr.vulas.shared.util.FileUtil;
+import com.sap.psr.vulas.sign.Signature;
+import com.sap.psr.vulas.sign.SignatureChange;
+import com.sap.psr.vulas.sign.SignatureComparator;
+import com.sap.psr.vulas.sign.SignatureFactory;
 
 /**
  *  UPDATE THE CONFIGUARATION PARAMETERS BEFORE TESTING
@@ -45,9 +44,7 @@ public class ASTSignatureComparatorTest {
 
 	final Gson gson = GsonHelper.getCustomGsonBuilder().create();
 
-
 	private static final String TEST_DATA = "./src/test/resources/methodBody/";
-
 
 	private String _constructQName = "org.apache.commons.fileupload.MultipartStream(InputStream,byte[],int,ProgressNotifier)";
 	private String _fixedJavaFile 	  = "MultipartStreamFix.java";
@@ -107,26 +104,9 @@ public class ASTSignatureComparatorTest {
 
 	@Before
 	public void setup() throws FileAnalysisException{
-
 		this.setupFixedConstruct();
 		this.setupDefectiveConstruct();
 		this.setupConstructUnderTest();
-
-		//Compute the Signature Changes - List of modification needed to transform one AST into the other
-		/*astChange = new ASTSignatureChange(signatureDef, signatureFix);
-				  Set<SourceCodeChange> modifications = astChange.getModifications();
-
-				  //JSON representation of the diff between Fix and Def ASTs
-				  String jsonDiff = astChange.toJSON();
-				  log.info("diffJSON\n" + jsonDiff +"\n");
-
-				  //String representation of the diff between Fix and Def ASTs
-
-				  String diff = astChange.toString();
-				  log.info("\n diff" +diff);
-
-				  //Should be 4 change elements in the set
-				  assertThat(astChange.getModifications().size(), is(4));*/
 	}
 
 	@Test

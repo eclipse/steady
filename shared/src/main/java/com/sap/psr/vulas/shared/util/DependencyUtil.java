@@ -1,12 +1,15 @@
 package com.sap.psr.vulas.shared.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Dependency;
 import com.sap.psr.vulas.shared.json.model.Library;
 
@@ -93,12 +96,14 @@ public class DependencyUtil {
 	 * @param _deps a {@link java.util.Collection} object.
 	 * @return a boolean.
 	 */
-	public static boolean isValidDependencyCollection(Collection<Dependency> _deps) {
-		
+	public static boolean isValidDependencyCollection(Application _app) {
+		Collection<Dependency> _deps = _app.getDependencies();
 		final Set<Dependency> main_set = new HashSet<Dependency>();
 		final Set<Dependency> parent_set = new HashSet<Dependency>();
+		final List<String> errs = new ArrayList<String>();
 		if(_deps!=null) {
 			for(Dependency d: _deps) {
+				d.setAppRecursively(_app);
 				final Dependency existing_dep = DependencyUtil.getDependency(main_set, d);
 				if(existing_dep==null) {
 					main_set.add(d);
@@ -106,16 +111,20 @@ public class DependencyUtil {
 						parent_set.add(d.getParent());
 				}
 				else {
-					log.warn("Dependency " + d + " occurs multiple times in the set, one on the same library already exists: " + existing_dep);
-					return false;
+					errs.add("Dependency " + d + " occurs multiple times in the set, one on the same library already exists: " + existing_dep);
 				}
 			}
 			for(Dependency d: parent_set){
-				if(!main_set.contains(d))
-					return false;
+				if(!main_set.contains(d)) {
+					errs.add("Dependency parent " + d + " is not declared as dependency itself");
+				}
 			}
-		}	
-		return true;
-	}	
-	
+		}
+		if(!errs.isEmpty()) {
+			log.error("The parent-child relationships of application dependencies have inconsistencies:");
+			for(String err: errs)
+				log.error("    " + err);
+		}
+		return errs.isEmpty();
+	}
 }
