@@ -148,10 +148,10 @@ public class CSVHelper2 {
              sb.append(COMMA_DELIMITER);
              if(cpr.getVulnAst()!=null){
              	String path = File.separator+"asts" + File.separator  
-             			+bugId+"_vulnAst_"+cpr.getQname().replace('*', '-') + "_" + getShortRepoPathName(cpr.getPath()).replace('/', '-') + ".txt";
+             			+bugId+"_vulnAst_"+cpr.getQname().replaceAll("[^a-zA-Z0-9\\._]+", "-") + "_" + getShortRepoPathName(cpr.getPath()).replaceAll("[^a-zA-Z0-9\\._]+", "-") + ".txt";
              	if(path.length()>260){
              		path = (File.separator+"asts" + File.separator  
-                 			+bugId+"_vulnAst_"+cpr.getQname().replace('*', '-') + "_" + getShortRepoPathName(cpr.getPath()).replace('/', '-')).substring(0, 200) + ".txt";
+                 			+bugId+"_vulnAst_"+cpr.getQname().replaceAll("[^a-zA-Z0-9\\._]+", "-") + "_" + getShortRepoPathName(cpr.getPath()).replaceAll("[^a-zA-Z0-9\\._]+", "-")).substring(0, 200) + ".txt";
              	}
              	File astV =  new File(PEConfiguration.getBaseFolder().toString()+path);
              	if(!astV.exists()){
@@ -162,10 +162,10 @@ public class CSVHelper2 {
              sb.append(COMMA_DELIMITER);
              if(cpr.getFixedAst()!=null) {
              	String path =  File.separator+"asts"+File.separator  +
-             			bugId+"_fixedAst_"+cpr.getQname().replace('*', '-') + "_" + getShortRepoPathName(cpr.getPath()).replace('/', '-')+".txt";
+             			bugId+"_fixedAst_"+cpr.getQname().replaceAll("[^a-zA-Z0-9\\._]+", "-") + "_" + getShortRepoPathName(cpr.getPath()).replaceAll("[^a-zA-Z0-9\\._]+", "-")+".txt";
              	if(path.length()>260){
              		path = ( File.separator+"asts"+File.separator  
-                 			+bugId+"_fixedAst_"+cpr.getQname().replace('*', '-') + "_" + getShortRepoPathName(cpr.getPath()).replace('/', '-')).substring(0, 200) + ".txt";
+                 			+bugId+"_fixedAst_"+cpr.getQname().replaceAll("[^a-zA-Z0-9\\._]+", "-") + "_" + getShortRepoPathName(cpr.getPath()).replaceAll("[^a-zA-Z0-9\\._]+", "-")).substring(0, 200) + ".txt";
              	}
              	File astF =  new File(PEConfiguration.getBaseFolder().toString()+path);
               	if(!astF.exists()){
