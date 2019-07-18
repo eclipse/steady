@@ -257,7 +257,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
                 // Create lib w/o SHA1
                 lib = new Library();
                 lib.setLibraryId(new LibraryId(a.getGroupId(), a.getArtifactId(), a.getVersion()));
-
+                
                 // Create dependency and put into map
                 dep = new Dependency(this.goal.getGoalContext().getApplication(), lib, Scope.fromString(a.getScope().toUpperCase(), Scope.RUNTIME), !direct_artifacts.contains(a), null, a.getFile().toPath().toString());
                                 
@@ -309,6 +309,12 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     	return parent;
     }
     
+    /**
+     * Parses one element of the {@link Artifact}'s dependency trail, which is a {@link String} comprising groupId, artifactId, type and version.
+     * 
+     * @param _string
+     * @return a {@link LibraryId} created from groupId, artifactId and version (or null if the given String does not have the expected format)
+     */
 	protected final LibraryId parseGAPV(@NotNull String _string) {
 		final String[] gapv = _string.split(":");
 		if(gapv.length!=4) {
