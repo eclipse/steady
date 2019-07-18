@@ -39,7 +39,7 @@ public class IDecompilerTest {
 		try {
 			// Decompile and get constructs
 			final IDecompiler decompiler = new ProcyonDecompiler();
-			final File java_source_file = decompiler.decompileClassFile(new File("./target/test-classes/com/sap/psr/vulas/sign/decompiler/IDecompilerTest$NonStaticInner.class"));
+			final File java_source_file = decompiler.decompileClassFile(new File("./target/test-classes/com/sap/psr/vulas/java/decompiler/IDecompilerTest$NonStaticInner.class"));
 			final FileAnalyzer jfa = FileAnalyzerFactory.buildFileAnalyzer(java_source_file);
 			final Map<ConstructId,Construct> constructs = jfa.getConstructs();
 
