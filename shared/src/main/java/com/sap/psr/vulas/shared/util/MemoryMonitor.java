@@ -3,6 +3,10 @@ package com.sap.psr.vulas.shared.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>MemoryMonitor class.</p>
+ *
+ */
 public class MemoryMonitor implements Runnable {
 	
 	private static final Log log = LogFactory.getLog(MemoryMonitor.class);
@@ -16,11 +20,15 @@ public class MemoryMonitor implements Runnable {
 	private long maxUsed   = -1;
 	private double avgUsed = -1;
 
+	/**
+	 * <p>Constructor for MemoryMonitor.</p>
+	 */
 	public MemoryMonitor() {
 		this.runtime = Runtime.getRuntime();
 		this.jvmMax  = this.runtime.maxMemory();
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void run() {
 		long mem_total = 0, mem_free = 0, mem_used = 0, sum_used = 0, no_samples = 0, waited = 0;
@@ -54,8 +62,26 @@ public class MemoryMonitor implements Runnable {
 		}
 	}
 	
+	/**
+	 * <p>stop.</p>
+	 */
 	public void stop() { this.continueMonitoring = false; }	
+	/**
+	 * <p>Getter for the field <code>jvmMax</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getJvmMax() { return this.jvmMax; }
+	/**
+	 * <p>Getter for the field <code>maxUsed</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getMaxUsed() { return this.maxUsed; }
+	/**
+	 * <p>Getter for the field <code>avgUsed</code>.</p>
+	 *
+	 * @return a double.
+	 */
 	public double getAvgUsed() { return this.avgUsed; }
 }

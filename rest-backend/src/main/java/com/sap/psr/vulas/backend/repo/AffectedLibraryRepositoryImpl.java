@@ -25,6 +25,10 @@ import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.backend.model.VulnerableDependency;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>AffectedLibraryRepositoryImpl class.</p>
+ *
+ */
 public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryCustom {
 	
 	private static Logger log = LoggerFactory.getLogger(AffectedLibraryRepositoryImpl.class);
@@ -60,9 +64,12 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 	@Autowired
 	ApplicationRepository appRepository;
 	/**
-	 * 
-	 * @param bug
+	 * <p>customSave.</p>
+	 *
 	 * @return the saved affected libraries
+	 * @param _bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @param _aff_libs an array of {@link com.sap.psr.vulas.backend.model.AffectedLibrary} objects.
+	 * @throws javax.persistence.PersistenceException if any.
 	 */
 	public List<AffectedLibrary> customSave(Bug _bug, AffectedLibrary[] _aff_libs) throws PersistenceException {
 		
@@ -190,12 +197,14 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 		return _aff_lib;
 	}
 	
+	/** {@inheritDoc} */
 	public void computeAffectedLib(TreeSet<VulnerableDependency> _vdList){
 		for (VulnerableDependency vd : _vdList){
 			this.computeAffectedLib(vd,vd.getDep().getLib());
 		}
 	}
 	
+	/** {@inheritDoc} */
 	public void computeAffectedLib(VulnerableDependency _vd, Library _lib){
 		//check existence of AffectedLibraries for the outer library in the case of rebundled libs (required to mark FP entries for the outer library)
 		Boolean rebundled = (_vd.getDep().getLib().equals(_lib))?false:true;

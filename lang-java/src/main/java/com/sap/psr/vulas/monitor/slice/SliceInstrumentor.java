@@ -48,6 +48,9 @@ public class SliceInstrumentor extends AbstractInstrumentor {
 	 */
 	private Set<ConstructId> whitelistedConstructsToInstrument = new HashSet<ConstructId>();;
 
+	/**
+	 * <p>Constructor for SliceInstrumentor.</p>
+	 */
 	public SliceInstrumentor() {
 		try {
 			this.determineConstructs();
@@ -88,11 +91,13 @@ public class SliceInstrumentor extends AbstractInstrumentor {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns true if the following two conditions hold, false otherwise:
 	 * (1) The given {@link JavaId} is whitelisted or there is no whitelist
 	 * (2) The given {@link JavaId} is NOT blacklisted or there is no blacklist.
-	 * 
-	 * If there is neither a blacklist nor a whitelist, the method always returns false. 
+	 *
+	 * If there is neither a blacklist nor a whitelist, the method always returns false.
 	 */
 	@Override
 	public boolean acceptToInstrument(JavaId _jid, CtBehavior _behavior, ClassVisitor _cv) {
@@ -103,6 +108,7 @@ public class SliceInstrumentor extends AbstractInstrumentor {
 		return r;
 	}
 
+	/** {@inheritDoc} */
 	public void instrument(StringBuffer _code, JavaId _jid, CtBehavior _behavior, ClassVisitor _cv) throws CannotCompileException {
 		_code.append("final boolean is_open = Boolean.parseBoolean(System.getProperty(\"").append(CoreConfiguration.INSTR_SLICE_GUARD_OPEN).append("\"));");
 		_code.append("System.err.println(\"Execution of " + _jid.toString() + "\" + (is_open ? \"allowed\" : \"prevented\") + \" by Vulas guarding condition\");");
@@ -110,17 +116,22 @@ public class SliceInstrumentor extends AbstractInstrumentor {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Implementation does not do anything.
 	 */
 	@Override
 	public void upladInformation(AbstractGoal _exe, int _batch_size) { ; }
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Implementation does not do anything.
 	 */
 	@Override
 	public void awaitUpload() { ; }
 
+	/** {@inheritDoc} */
 	@Override
 	public Map<String,Long> getStatistics() {
 		final Map<String, Long> stats = new HashMap<String, Long>();

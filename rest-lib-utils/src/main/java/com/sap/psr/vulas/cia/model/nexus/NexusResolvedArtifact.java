@@ -2,6 +2,10 @@ package com.sap.psr.vulas.cia.model.nexus;
 
 
 
+/**
+ * <p>NexusResolvedArtifact class.</p>
+ *
+ */
 public class NexusResolvedArtifact {
 
 	//@XmlAttribute(name="groupId")
@@ -31,74 +35,164 @@ public class NexusResolvedArtifact {
 	//@XmlAttribute(name="repositoryPath")
 	String repositoryPath;
 
+	/**
+	 * <p>Getter for the field <code>groupId</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getGroupId() {
 		return groupId;
 	}
 
+	/**
+	 * <p>Setter for the field <code>groupId</code>.</p>
+	 *
+	 * @param groupId a {@link java.lang.String} object.
+	 */
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
 	}
 
+	/**
+	 * <p>Getter for the field <code>artifactId</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getArtifactId() {
 		return artifactId;
 	}
 
+	/**
+	 * <p>Setter for the field <code>artifactId</code>.</p>
+	 *
+	 * @param artifactId a {@link java.lang.String} object.
+	 */
 	public void setArtifactId(String artifactId) {
 		this.artifactId = artifactId;
 	}
 
+	/**
+	 * <p>Getter for the field <code>version</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getVersion() {
 		return version;
 	}
 
+	/**
+	 * <p>Setter for the field <code>version</code>.</p>
+	 *
+	 * @param version a {@link java.lang.String} object.
+	 */
 	public void setVersion(String version) {
 		this.version = version;
 	}
 
+	/**
+	 * <p>Getter for the field <code>extension</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getExtension() {
 		return extension;
 	}
 
+	/**
+	 * <p>Setter for the field <code>extension</code>.</p>
+	 *
+	 * @param extension a {@link java.lang.String} object.
+	 */
 	public void setExtension(String extension) {
 		this.extension = extension;
 	}
 
+	/**
+	 * <p>Getter for the field <code>snapshot</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getSnapshot() {
 		return snapshot;
 	}
 
+	/**
+	 * <p>Setter for the field <code>snapshot</code>.</p>
+	 *
+	 * @param snapshot a {@link java.lang.String} object.
+	 */
 	public void setSnapshot(String snapshot) {
 		this.snapshot = snapshot;
 	}
 
+	/**
+	 * <p>Getter for the field <code>snapshotBuildNumber</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getSnapshotBuildNumber() {
 		return snapshotBuildNumber;
 	}
 
+	/**
+	 * <p>Setter for the field <code>snapshotBuildNumber</code>.</p>
+	 *
+	 * @param snapshotBuildNumber a {@link java.lang.String} object.
+	 */
 	public void setSnapshotBuildNumber(String snapshotBuildNumber) {
 		this.snapshotBuildNumber = snapshotBuildNumber;
 	}
 
+	/**
+	 * <p>Getter for the field <code>snapshotTimeStamp</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getSnapshotTimeStamp() {
 		return snapshotTimeStamp;
 	}
 
+	/**
+	 * <p>Setter for the field <code>snapshotTimeStamp</code>.</p>
+	 *
+	 * @param snapshotTimeStamp a {@link java.lang.String} object.
+	 */
 	public void setSnapshotTimeStamp(String snapshotTimeStamp) {
 		this.snapshotTimeStamp = snapshotTimeStamp;
 	}
 
+	/**
+	 * <p>Getter for the field <code>sha1</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getSha1() {
 		return sha1;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sha1</code>.</p>
+	 *
+	 * @param sha1 a {@link java.lang.String} object.
+	 */
 	public void setSha1(String sha1) {
 		this.sha1 = sha1;
 	}
 
+	/**
+	 * <p>Getter for the field <code>repositoryPath</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getRepositoryPath() {
 		return repositoryPath;
 	}
 
+	/**
+	 * <p>Setter for the field <code>repositoryPath</code>.</p>
+	 *
+	 * @param repositoryPath a {@link java.lang.String} object.
+	 */
 	public void setRepositoryPath(String repositoryPath) {
 		this.repositoryPath = repositoryPath;
 	}

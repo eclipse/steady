@@ -29,6 +29,13 @@ public class VulasCli {
 
 	private static AbstractGoal goal = null;
 
+	/**
+	 * <p>main.</p>
+	 *
+	 * @param _args an array of {@link java.lang.String} objects.
+	 * @throws com.sap.psr.vulas.goals.GoalConfigurationException if any.
+	 * @throws com.sap.psr.vulas.goals.GoalExecutionException if any.
+	 */
 	public static void main(String[] _args) throws GoalConfigurationException, GoalExecutionException {
 
 		// Prepare parsing of cmd line arguments

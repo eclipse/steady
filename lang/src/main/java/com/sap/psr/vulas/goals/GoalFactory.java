@@ -5,11 +5,19 @@ import javax.validation.constraints.NotNull;
 import com.sap.psr.vulas.shared.enums.GoalClient;
 import com.sap.psr.vulas.shared.enums.GoalType;
 
+/**
+ * <p>GoalFactory class.</p>
+ *
+ */
 public class GoalFactory {
 
 	/**
 	 * Creates a {@link AbstractGoal} for the given {@link GoalType}.
-	 * @param _type
+	 *
+	 * @param _type a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+	 * @return a {@link com.sap.psr.vulas.goals.AbstractGoal} object.
+	 * @throws java.lang.IllegalStateException if any.
+	 * @throws java.lang.IllegalArgumentException if any.
 	 */
 	public static AbstractGoal create(@NotNull GoalType _type) throws IllegalStateException, IllegalArgumentException {
 		AbstractGoal goal = null;
@@ -86,7 +94,12 @@ public class GoalFactory {
 	
 	/**
 	 * Creates a {@link AbstractGoal} for the given {@link GoalType} and (@link GoalClient}.
-	 * @param _type
+	 *
+	 * @param _type a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+	 * @param _client a {@link com.sap.psr.vulas.shared.enums.GoalClient} object.
+	 * @return a {@link com.sap.psr.vulas.goals.AbstractGoal} object.
+	 * @throws java.lang.IllegalStateException if any.
+	 * @throws java.lang.IllegalArgumentException if any.
 	 */
 	public static AbstractGoal create(@NotNull GoalType _type, @NotNull GoalClient _client) throws IllegalStateException, IllegalArgumentException {
 		final AbstractGoal goal = GoalFactory.create(_type);

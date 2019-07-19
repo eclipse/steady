@@ -43,6 +43,10 @@ import com.sap.psr.vulas.backend.rest.ApplicationController;
 import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.StringUtil;
 
+/**
+ * <p>Application class.</p>
+ *
+ */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown=true)
 @Entity
@@ -119,8 +123,18 @@ public class Application implements Serializable, Comparable {
 	@Transient
 	private PackageStatistics tracedPackageStats = null;
 
+	/**
+	 * <p>Constructor for Application.</p>
+	 */
 	public Application() { super(); }
 
+	/**
+	 * <p>Constructor for Application.</p>
+	 *
+	 * @param group a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 */
 	public Application(String group, String artifact, String version) {
 		super();		
 		try {
@@ -133,39 +147,115 @@ public class Application implements Serializable, Comparable {
 		}
 	}
 
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getId() { return id; }
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 */
 	public void setId(Long id) { this.id = id; }
 	
+	/**
+	 * <p>Getter for the field <code>space</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.Space} object.
+	 */
 	public Space getSpace() { return space; }
+	/**
+	 * <p>Setter for the field <code>space</code>.</p>
+	 *
+	 * @param space a {@link com.sap.psr.vulas.backend.model.Space} object.
+	 */
 	public void setSpace(Space space) { this.space = space; }
 
+	/**
+	 * <p>Getter for the field <code>mvnGroup</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getMvnGroup() { return mvnGroup; }
+	/**
+	 * <p>Setter for the field <code>mvnGroup</code>.</p>
+	 *
+	 * @param group a {@link java.lang.String} object.
+	 */
 	public void setMvnGroup(String group) {
 		if(StringUtil.meetsLengthConstraint(group,  Constants.MAX_LENGTH_GROUP))
 			this.mvnGroup = group;
 	}
 
+	/**
+	 * <p>Getter for the field <code>artifact</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getArtifact() { return artifact; }
+	/**
+	 * <p>Setter for the field <code>artifact</code>.</p>
+	 *
+	 * @param artifact a {@link java.lang.String} object.
+	 */
 	public void setArtifact(String artifact) {
 		if(StringUtil.meetsLengthConstraint(artifact,  Constants.MAX_LENGTH_GROUP))
 			this.artifact = artifact;
 	}
 
+	/**
+	 * <p>Getter for the field <code>version</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getVersion() { return version; }
+	/**
+	 * <p>Setter for the field <code>version</code>.</p>
+	 *
+	 * @param version a {@link java.lang.String} object.
+	 */
 	public void setVersion(String version) {
 		if(StringUtil.meetsLengthConstraint(version,  Constants.MAX_LENGTH_GROUP))
 			this.version = version;
 	}
 
+	/**
+	 * <p>Getter for the field <code>constructs</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<ConstructId> getConstructs() { return constructs; }
+	/**
+	 * <p>Setter for the field <code>constructs</code>.</p>
+	 *
+	 * @param constructs a {@link java.util.Collection} object.
+	 */
 	public void setConstructs(Collection<ConstructId> constructs) { this.constructs = constructs; }
 
+	/**
+	 * <p>Getter for the field <code>traces</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	@JsonIgnore
 	public Collection<Trace> getTraces() { return traces; }
 
+	/**
+	 * <p>Setter for the field <code>traces</code>.</p>
+	 *
+	 * @param traces a {@link java.util.Collection} object.
+	 */
 	@JsonIgnore
 	public void setTraces(Collection<Trace> traces) { this.traces = traces; }
 
+	/**
+	 * <p>getDependency.</p>
+	 *
+	 * @param _digest a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.backend.model.Dependency} object.
+	 */
 	public Dependency getDependency(@NotNull String _digest) {
 		if(this.getDependencies()!=null) {
 			for(Dependency d: this.getDependencies()) {
@@ -176,7 +266,17 @@ public class Application implements Serializable, Comparable {
 		}
 		return null;
 	}
+	/**
+	 * <p>Getter for the field <code>dependencies</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<Dependency> getDependencies() { return dependencies; }
+	/**
+	 * <p>Setter for the field <code>dependencies</code>.</p>
+	 *
+	 * @param _dependencies a {@link java.util.Collection} object.
+	 */
 	public void setDependencies(Collection<Dependency> _dependencies) {
 		if(this.dependencies==null)
 			this.dependencies = _dependencies;
@@ -187,6 +287,9 @@ public class Application implements Serializable, Comparable {
 		}
 	}
 
+	/**
+	 * <p>orderDependenciesByDepth.</p>
+	 */
 	public void orderDependenciesByDepth(){
 		//order dependencies by length of parents
 		List<Dependency> ordered_deps = new ArrayList<Dependency>(this.getDependencies());
@@ -210,18 +313,63 @@ public class Application implements Serializable, Comparable {
 		this.setDependencies(ordered_deps);
 	}
 	
+	/**
+	 * <p>Getter for the field <code>createdAt</code>.</p>
+	 *
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public java.util.Calendar getCreatedAt() { return createdAt; }
+	/**
+	 * <p>Setter for the field <code>createdAt</code>.</p>
+	 *
+	 * @param createdAt a {@link java.util.Calendar} object.
+	 */
 	public void setCreatedAt(java.util.Calendar createdAt) { this.createdAt = createdAt; }
 	
+	/**
+	 * <p>Getter for the field <code>modifiedAt</code>.</p>
+	 *
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public java.util.Calendar getModifiedAt() { return modifiedAt; }
+	/**
+	 * <p>Setter for the field <code>modifiedAt</code>.</p>
+	 *
+	 * @param modifiedAt a {@link java.util.Calendar} object.
+	 */
 	public void setModifiedAt(java.util.Calendar modifiedAt) { this.modifiedAt = modifiedAt; }
 
+	/**
+	 * <p>Getter for the field <code>lastScan</code>.</p>
+	 *
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public java.util.Calendar getLastScan() { return lastScan; }
+	/**
+	 * <p>Setter for the field <code>lastScan</code>.</p>
+	 *
+	 * @param lastScan a {@link java.util.Calendar} object.
+	 */
 	public void setLastScan(java.util.Calendar lastScan) { this.lastScan = lastScan; }
 	
+	/**
+	 * <p>Getter for the field <code>lastVulnChange</code>.</p>
+	 *
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public java.util.Calendar getLastVulnChange() { return lastVulnChange; }
+	/**
+	 * <p>Setter for the field <code>lastVulnChange</code>.</p>
+	 *
+	 * @param lastVulnChange a {@link java.util.Calendar} object.
+	 */
 	public void setLastVulnChange(java.util.Calendar lastVulnChange) { this.lastVulnChange = lastVulnChange; }
 		
+	/**
+	 * <p>getLastChange.</p>
+	 *
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	@JsonProperty(value = "lastChange")
 	public java.util.Calendar getLastChange() { 
 		if(this.getLastVulnChange()==null)
@@ -239,18 +387,38 @@ public class Application implements Serializable, Comparable {
 		this.setDependencies(new HashSet<Dependency>());
 	}
 
+	/**
+	 * <p>countConstructs.</p>
+	 *
+	 * @return a int.
+	 */
 	@JsonProperty(value = "constructCounter")
 	@JsonView(Views.CountDetails.class)
 	public int countConstructs() { return ( this.getConstructs()==null ? 0 : this.getConstructs().size()); }
 
+	/**
+	 * <p>countConstructTypes.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.ConstructIdFilter} object.
+	 */
 	@JsonProperty(value = "constructTypeCounters")
 	@JsonView(Views.CountDetails.class)
 	public ConstructIdFilter countConstructTypes() { return new ConstructIdFilter(this.getConstructs()); }
 
+	/**
+	 * <p>countDependencies.</p>
+	 *
+	 * @return a int.
+	 */
 	@JsonProperty(value = "countDependencies")
 	@JsonView(Views.CountDetails.class)
 	public int countDependencies() { return (this.getDependencies()==null ? -1 : this.getDependencies().size()); }
 
+	/**
+	 * <p>countConstructTypesPerPackage.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.PackageStatistics} object.
+	 */
 	@JsonProperty(value = "packageCounters")
 	@JsonView(Views.CountDetails.class)
 	public PackageStatistics countConstructTypesPerPackage() {
@@ -259,6 +427,11 @@ public class Application implements Serializable, Comparable {
 		return this.packageStats;
 	}
 
+	/**
+	 * <p>countTracedConstructTypesPerPackage.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.PackageStatistics} object.
+	 */
 	@JsonProperty(value = "packageTraceCounters")
 	@JsonView(Views.CountDetails.class)
 	public PackageStatistics countTracedConstructTypesPerPackage() {
@@ -281,6 +454,9 @@ public class Application implements Serializable, Comparable {
 		return this.tracedPackageStats;
 	}
 
+	/**
+	 * <p>prePersist.</p>
+	 */
 	@PrePersist
 	public void prePersist() {
 		if(this.getCreatedAt()==null) {
@@ -296,6 +472,7 @@ public class Application implements Serializable, Comparable {
 //		this.setModifiedAt(Calendar.getInstance());
 //	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -307,6 +484,7 @@ public class Application implements Serializable, Comparable {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -340,6 +518,8 @@ public class Application implements Serializable, Comparable {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Compares using an {@link Application}'s space, group, artifact and version.
 	 */
 	@Override
@@ -353,9 +533,16 @@ public class Application implements Serializable, Comparable {
 		return v;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public final String toString() { return this.toString(false); }
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @param _deep a boolean.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public final String toString(boolean _deep) {
 		final StringBuilder builder = new StringBuilder();
 		if(_deep) {
@@ -371,6 +558,12 @@ public class Application implements Serializable, Comparable {
 		return builder.toString();
 	}
 	
+	/**
+	 * <p>equalsIgnoreSpace.</p>
+	 *
+	 * @param obj a {@link java.lang.Object} object.
+	 * @return a boolean.
+	 */
 	public boolean equalsIgnoreSpace(Object obj) {
 		if (this == obj)
 			return true;

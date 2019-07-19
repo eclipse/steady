@@ -14,7 +14,6 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 /**
  * Creates implementations of {@link IInstrumentor} for all classes specified via the
  * configuration option {@link CoreConfiguration#INSTR_CHOOSEN_INSTR}.
- *
  */
 public class InstrumentorFactory {
 
@@ -27,7 +26,8 @@ public class InstrumentorFactory {
 	 * configuration option {@link CoreConfiguration#INSTR_CHOOSEN_INSTR}.
 	 * Those will be looped during static and dynamic instrumentation, e.g., in the classes
 	 * {@link ExecutionMonitor} and {@link ClassVisitor}.
-	 * @return
+	 *
+	 * @return a {@link java.util.List} object.
 	 */
 	public static synchronized List<IInstrumentor> getInstrumentors() {
 		if(instrumentors==null) {

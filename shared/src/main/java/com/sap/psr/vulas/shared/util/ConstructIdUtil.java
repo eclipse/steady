@@ -10,10 +10,21 @@ import org.apache.commons.logging.LogFactory;
 
 import com.sap.psr.vulas.shared.json.model.ConstructId;
 
+/**
+ * <p>ConstructIdUtil class.</p>
+ *
+ */
 public class ConstructIdUtil {
 
 	private static final Log log = LogFactory.getLog(ConstructIdUtil.class);
 	
+	/**
+	 * <p>filterWithRegex.</p>
+	 *
+	 * @param _in a {@link java.util.Set} object.
+	 * @param _qname_filter an array of {@link java.lang.String} objects.
+	 * @return a {@link java.util.Set} object.
+	 */
 	public static Set<ConstructId> filterWithRegex(Set<ConstructId> _in, String[] _qname_filter) {
 		final Set<ConstructId> result = new HashSet<ConstructId>();
 		final Set<Pattern> filter = new HashSet<Pattern>();

@@ -20,6 +20,10 @@ import com.sap.psr.vulas.backend.model.ConstructId;
 import com.sap.psr.vulas.shared.cache.CacheException;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>BugRepositoryImpl class.</p>
+ *
+ */
 public class BugRepositoryImpl implements BugRepositoryCustom {
 
 	private static Logger log = LoggerFactory.getLogger(BugRepositoryImpl.class);
@@ -43,11 +47,11 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 	ApplicationRepository appRepository;
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Saves the given {@link Bug} together with all the nested {@link ConstructId}s.
 	 * This method has to be used in favor of the save method provided by the
 	 * {@link CrudRepository}.
-	 * @param bug
-	 * @return the saved bug
 	 */
 	@CacheEvict(value="bug",key="#_bug.bugId")
 	@Override
@@ -142,6 +146,7 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 			   ( _bug.getDescription()==null || _bug.getCvssScore()==null || _bug.getCvssVersion()==null );
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean updateCachedCveData(Bug _b, boolean _force) {
 		boolean update_happened = false;

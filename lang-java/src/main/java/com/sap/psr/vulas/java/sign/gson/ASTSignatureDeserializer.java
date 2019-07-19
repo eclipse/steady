@@ -22,28 +22,27 @@ import com.sap.psr.vulas.sign.Signature;
 /**
  *  This class is used to deserialize an AST JSON representation of a construct body object into its corresponding
  *  java Signatures object
- /**
-
-JSON representation of ASTConstructBodySignature:
-
-Node:
-    - fLabel : EntityType
-    - fValue : String
-
-    -- fMatched : boolean
-    -- fOrdered : boolean
-
-    - fEntity : SourceCodeEntity
-		 -  fUniqueName : String  //same information as fValue above
-		 -  fType : EntityType    //same information ast fLabel above
-		 -  fModifiers : int	 // this is always zero (Not sure if i should have it in the json object)
-		 -  fAssociatedEntities : List<SourceCodeEntity>
-		 -  SourceRange fRange : SourceRange
-				- end : int
-				- start : int
-    -  fAssociatedNodes : List<Node>
-
-**/
+/**
+ *
+ *JSON representation of ASTConstructBodySignature:
+ *
+ *Node:
+ *    - fLabel : EntityType
+ *    - fValue : String
+ *
+ *    -- fMatched : boolean
+ *    -- fOrdered : boolean
+ *
+ *    - fEntity : SourceCodeEntity
+ *		 -  fUniqueName : String  //same information as fValue above
+ *		 -  fType : EntityType    //same information ast fLabel above
+ *		 -  fModifiers : int	 // this is always zero (Not sure if i should have it in the json object)
+ *		 -  fAssociatedEntities : List<SourceCodeEntity>
+ *		 -  SourceRange fRange : SourceRange
+ *				- end : int
+ *				- start : int
+ *    -  fAssociatedNodes : List<Node>
+ */
 public class ASTSignatureDeserializer implements JsonDeserializer<Signature> {
 
 	//Values for JsonElement Names, used as a member name during deserialization
@@ -66,6 +65,7 @@ public class ASTSignatureDeserializer implements JsonDeserializer<Signature> {
 	//Signature
 	//private Signature sign = null;
 
+	  /** {@inheritDoc} */
 	  @Override
 	  public Signature deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
 	      throws JsonParseException {

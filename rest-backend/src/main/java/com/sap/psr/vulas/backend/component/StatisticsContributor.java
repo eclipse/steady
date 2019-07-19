@@ -15,12 +15,17 @@ import org.springframework.boot.actuate.info.InfoContributor;
 
 
 
+/**
+ * <p>StatisticsContributor class.</p>
+ *
+ */
 @Component
 public class StatisticsContributor implements InfoContributor {
  
     @Autowired
     V_AppVulndepRepository appVulDepRepository;
  
+    /** {@inheritDoc} */
     @Override
     public void contribute(Info.Builder builder) {
         Map<String, Integer> vulasStats = new HashMap<String, Integer>();

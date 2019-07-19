@@ -32,7 +32,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Thread to analyze for the set of received libraries using CIA service.
- * 
  */
 public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibResult2>>{
     private static final Log log = LogFactory.getLog(LibraryAnalyzerThread2.class);
@@ -46,11 +45,13 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
     private ProgrammingLanguage lang;
       
     /**
-     *  
-     * @param _id 
+     * <p>Constructor for LibraryAnalyzerThread2.</p>
+     *
+     * @param _id a int.
      * @param methsConsMOD list of MOD constructs in the overall change list (i.e., consolidating construct,path changed over multiple commits) for current bug
      * @param methsConsAD list of ADD/DEL constructs in the overall change list
-     * @param libIds list of libraries to be analyzed by the thread 
+     * @param a a {@link com.sap.psr.vulas.shared.json.model.Artifact} object.
+     * @param l a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
      */
     public LibraryAnalyzerThread2(int _id, LinkedList<OverallConstructChange> methsConsMOD, 
     		LinkedList<OverallConstructChange> methsConsAD, Artifact a , ProgrammingLanguage l){
@@ -66,6 +67,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
     
 
    
+    /** {@inheritDoc} */
     @Override
     public List<ConstructPathLibResult2> call() throws Exception {
     	List<ConstructPathLibResult2> results = new ArrayList<ConstructPathLibResult2>();

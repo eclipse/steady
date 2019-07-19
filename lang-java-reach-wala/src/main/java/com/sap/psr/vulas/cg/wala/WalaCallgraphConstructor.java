@@ -46,6 +46,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 public class WalaCallgraphConstructor implements ICallgraphConstructor {
 
     private static final Log log = LogFactory.getLog(WalaCallgraphConstructor.class);
+    /** Constant <code>FRAMEWORK="wala"</code> */
     public static final String FRAMEWORK = "wala";
 
     // Packages to be excluded for call graph construction, which is read from wala-cfg.properties
@@ -58,12 +59,23 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
     
     private VulasConfiguration vulasConfiguration = null;
 
+    /**
+     * <p>getFramework.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getFramework() { return WalaCallgraphConstructor.FRAMEWORK; }
     
+    /**
+     * <p>Getter for the field <code>appContext</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+     */
     public Application getAppContext() {
         return this.appContext;
     }
     
+    /** {@inheritDoc} */
     public void setVulasConfiguration(VulasConfiguration _cfg) {
     	this.vulasConfiguration = _cfg;
     }
@@ -85,10 +97,12 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
     private long buildTimeNano = -1;
 
 
+    /** {@inheritDoc} */
     public void setAppContext(Application _ctx) {
         this.appContext = _ctx;
     }
 
+    /** {@inheritDoc} */
     public void setAppClasspath(String _cp) {
         if (this.classpath != null) {
             this.classpath += System.getProperty("path.separator");
@@ -98,6 +112,7 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
         WalaCallgraphConstructor.log.info("Add to wala classpath the application: [" + this.classpath + "]");
     }
 
+    /** {@inheritDoc} */
     public void setDepClasspath(String _dependenciesClasspath) {
         if (this.classpath != null) {
             this.classpath += System.getProperty("path.separator");
@@ -108,6 +123,8 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Filter and find all entrypoints in scope
      */
     public void setEntrypoints(Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs) throws CallgraphConstructException {
@@ -275,16 +292,17 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
 
     /**
      * Returns a human-readable description of the constructor's specific configuration.
+     *
+     * @return a {@link org.apache.commons.configuration.Configuration} object.
      */
     public Configuration getConstructorConfiguration() {
         return this.vulasConfiguration.getConfiguration().subset("vulas.reach.wala");
     }
 
     /**
-     * Parse command line arguments, and then build callgraph based on these properties
+     * {@inheritDoc}
      *
-     * @param _bugid
-     * @param _only_new
+     * Parse command line arguments, and then build callgraph based on these properties
      */
     public void buildCallgraph(boolean _policy) throws CallgraphConstructException {
         WalaCallgraphConstructor.log.info("Starting call graph construction for " + this.appContext.toString(false));
@@ -374,6 +392,8 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
 
     /**
      * Normalizing a wala callgraph to a general graph represented by ConstructId
+     *
+     * @return a {@link com.ibm.wala.util.graph.Graph} object.
      */
     public Graph<com.sap.psr.vulas.shared.json.model.ConstructId> getCallgraph() {
         Graph<com.sap.psr.vulas.shared.json.model.ConstructId> graph = SlowSparseNumberedGraph.make();
@@ -409,10 +429,16 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
         return graph;
     }
 
+    /**
+     * <p>Getter for the field <code>entrypoints</code>.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<com.sap.psr.vulas.shared.json.model.ConstructId> getEntrypoints() {
         return this.filteredEP;
     }
 
+    /** {@inheritDoc} */
     public void setExcludePackages(String _packages) {
 
         // Overwrite configuration (if requested)

@@ -12,10 +12,19 @@ import org.apache.http.client.config.RequestConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <p>ConnectionUtil class.</p>
+ *
+ */
 public class ConnectionUtil {
 	
 	private static Logger log = LoggerFactory.getLogger(ConnectionUtil.class);
 
+	/**
+	 * <p>getProxyConfig.</p>
+	 *
+	 * @return a {@link org.apache.http.client.config.RequestConfig} object.
+	 */
 	public static RequestConfig getProxyConfig() {
 		RequestConfig config = null;
 		final String phost = System.getProperty("http.proxyHost", null);
@@ -33,6 +42,13 @@ public class ConnectionUtil {
 		return config;
 	}
 	
+	/**
+	 * <p>readInputStream.</p>
+	 *
+	 * @param _is a {@link java.io.InputStream} object.
+	 * @return a {@link java.lang.String} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public static String readInputStream(@NotNull InputStream _is) throws IOException {
 		final StringBuilder result_builder = new StringBuilder();
         try {

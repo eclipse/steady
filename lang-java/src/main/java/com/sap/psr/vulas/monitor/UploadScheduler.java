@@ -10,7 +10,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Calls a sequence methods of a given {@link ExecutionMonitor} in order upload collected
  * information to the Vulas backend. The {@link UploadScheduler} runs either once or periodically,
- * depending on the way it was constructed. 
+ * depending on the way it was constructed.
  */
 public class UploadScheduler extends Observable implements Runnable, Observer {
 	
@@ -21,13 +21,46 @@ public class UploadScheduler extends Observable implements Runnable, Observer {
 	private boolean enabled = true;
 	private ExecutionMonitor monitor = null;
 
+	/**
+	 * <p>Constructor for UploadScheduler.</p>
+	 *
+	 * @param _monitor a {@link com.sap.psr.vulas.monitor.ExecutionMonitor} object.
+	 */
 	public UploadScheduler(ExecutionMonitor _monitor) { this(_monitor, -1, -1); }
+	/**
+	 * <p>Constructor for UploadScheduler.</p>
+	 *
+	 * @param _monitor a {@link com.sap.psr.vulas.monitor.ExecutionMonitor} object.
+	 * @param _millis a long.
+	 * @param _batch_size a int.
+	 */
 	public UploadScheduler(ExecutionMonitor _monitor, long _millis, int _batch_size) { this.monitor = _monitor; this.millis = _millis; this.batchSize = _batch_size; }
 
+	/**
+	 * <p>enabled.</p>
+	 */
 	public void enabled() { this.enabled=true; }
+	/**
+	 * <p>disable.</p>
+	 */
 	public void disable() { this.enabled=false; }
+	/**
+	 * <p>isEnabled.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isEnabled() { return this.enabled; }
+	/**
+	 * <p>getInterval.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getInterval() { return this.millis; }
+	/**
+	 * <p>Getter for the field <code>batchSize</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getBatchSize() { return this.batchSize; }
 
 	/**
@@ -72,6 +105,8 @@ public class UploadScheduler extends Observable implements Runnable, Observer {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Disables periodic uploads (called by the shutdown uploader).
 	 */
 	public void update(Observable obj, Object arg) {

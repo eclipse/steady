@@ -14,16 +14,28 @@ import com.sap.psr.vulas.shared.cache.CacheException;
 import com.sap.psr.vulas.shared.cache.ObjectFetcher;
 import com.sap.psr.vulas.shared.json.model.Artifact;
 
+/**
+ * <p>FileAnalyzerFetcher class.</p>
+ *
+ */
 public class FileAnalyzerFetcher implements ObjectFetcher<Artifact, FileAnalyzer> {
 	
 	private static Logger log = LoggerFactory.getLogger(FileAnalyzerFetcher.class);
 
 	private static Cache<Artifact, FileAnalyzer> ANALYZERS_CACHE= new Cache<Artifact, FileAnalyzer>(new FileAnalyzerFetcher(), 10080 , 50);
 	
+	/**
+	 * <p>read.</p>
+	 *
+	 * @param _key a {@link com.sap.psr.vulas.shared.json.model.Artifact} object.
+	 * @return a {@link com.sap.psr.vulas.FileAnalyzer} object.
+	 * @throws com.sap.psr.vulas.shared.cache.CacheException if any.
+	 */
 	public static FileAnalyzer read(Artifact _key) throws CacheException {
 		return ANALYZERS_CACHE.get(_key);
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public FileAnalyzer fetch(Artifact _key) throws CacheException {
 		// The artifact whose JAR is to be downloaded		

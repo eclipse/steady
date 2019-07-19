@@ -6,6 +6,10 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * <p>PackageStatistics class.</p>
+ *
+ */
 public class PackageStatistics {
 
 	/**
@@ -13,6 +17,11 @@ public class PackageStatistics {
 	 */
 	private Map<ConstructId, ConstructIdFilter> constructIds = new HashMap<ConstructId, ConstructIdFilter>();
 
+	/**
+	 * <p>Constructor for PackageStatistics.</p>
+	 *
+	 * @param _constructs_ids a {@link java.util.Collection} object.
+	 */
 	public PackageStatistics(Collection<ConstructId> _constructs_ids) {
 		ConstructIdFilter stats = null;
 		ConstructId pid = null;
@@ -29,6 +38,11 @@ public class PackageStatistics {
 		}
 	}
 	
+	/**
+	 * <p>countConstructTypesPerPackage.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
 	@JsonProperty(value = "packageCounters")
 	public Map<ConstructId, ConstructIdFilter> countConstructTypesPerPackage() {
 		return this.constructIds;

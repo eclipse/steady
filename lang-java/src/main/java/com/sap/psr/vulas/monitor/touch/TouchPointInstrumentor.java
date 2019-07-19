@@ -16,10 +16,15 @@ import com.sap.psr.vulas.monitor.IInstrumentor;
 import javassist.CannotCompileException;
 import javassist.CtBehavior;
 
+/**
+ * <p>TouchPointInstrumentor class.</p>
+ *
+ */
 public class TouchPointInstrumentor extends AbstractInstrumentor {
 
 	private static final Log log = LogFactory.getLog(TouchPointInstrumentor.class);
 
+	/** {@inheritDoc} */
 	public void instrument(StringBuffer _code, JavaId _jid, CtBehavior _behavior, ClassVisitor _cv) throws CannotCompileException {
 		
 		// Inject some basic stuff common to several instrumentors
@@ -75,21 +80,26 @@ public class TouchPointInstrumentor extends AbstractInstrumentor {
 		_code.append("tp_params);");
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void upladInformation(AbstractGoal _exe, int _batch_size) {
 		TouchPointCollector.getInstance().uploadInformation(_exe, _batch_size);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void awaitUpload() {;}
 
 	//TODO: Add statistics
+	/** {@inheritDoc} */
 	@Override
 	public Map<String,Long> getStatistics() { return new HashMap<String,Long>(); }
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Accepts every class.
-	 * 
+	 *
 	 * Note that the instrumentation can involve two levels of filtering:
 	 * First, {@link DynamicTransformer#transform(ClassLoader, String, Class, java.security.ProtectionDomain, byte[])}
 	 * filters according to class names, JAR names and

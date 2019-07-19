@@ -53,10 +53,9 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 /**
  * This class analyzes all bugs (or the configured one) to determine the affected libraries.
- * If it doesn't already exists, it creates a csv file containing the summary of the analysis performed by the BugLibAnalyzer. 
+ * If it doesn't already exists, it creates a csv file containing the summary of the analysis performed by the BugLibAnalyzer.
  * If a csv for the bug already exists, it checks whether there exist new libraries to be analyzed and adds them (if any).
  * Finally it computes the json of affected libraries.
- * 
  */
 public class BugLibManager {
 	
@@ -79,12 +78,20 @@ public class BugLibManager {
 
 	private ExecutorService pool = null;
 	
+	/**
+	 * <p>Constructor for BugLibManager.</p>
+	 */
 	public BugLibManager(){
 		this.lids = new TreeSet<ArtifactResult2>();
 		BugLibManager.bytecodes  = new HashMap<String,ConstructBytecodeASTManager>();
     }
     
 	
+	/**
+	 * <p>resetToBug.</p>
+	 *
+	 * @param b a {@link com.sap.psr.vulas.shared.json.model.BugChangeList} object.
+	 */
 	public void resetToBug(BugChangeList b){
 		this.bugChangeList = b;
     	this.setChangeList();
@@ -93,10 +100,10 @@ public class BugLibManager {
 	}
     /**
      * This methods reads a CSV file f containing the results of the BugLibAnalyzer and stores the data into the set this.lids
-     * Each line of the csv is an instance of class ArtifactResult2. 
-     * 
-     * @param f
-     * @throws IOException
+     * Each line of the csv is an instance of class ArtifactResult2.
+     *
+     * @param f a {@link java.io.File} object.
+     * @throws java.io.IOException
      */
     public void readFile(File f) throws IOException {
   		/* for csv scan */
@@ -121,12 +128,12 @@ public class BugLibManager {
 		}
 	}
     
-    /**
-     * This method reads the string representation of the CSV computed by the BugLibAnalyzer
-     * 
-     * @param f
-     * @throws IOException
-     */
+	/**
+	 * This method reads the string representation of the CSV computed by the BugLibAnalyzer
+	 *
+	 * @param f a {@link java.lang.String} object.
+	 * @throws java.io.IOException
+	 */
 	public void readString(String f) throws IOException {
 		/* for csv scan */
 		BufferedReader br = null;
@@ -152,7 +159,8 @@ public class BugLibManager {
         
 	/**
 	 * This method fills the data structures lidsXGA and lr based on the lids.
-	 * 
+	 *
+	 * @return a {@link java.util.List} object.
 	 */
 	public List<List<ReleaseTree>> computeGA() {
 
@@ -795,6 +803,13 @@ public class BugLibManager {
         return true;
     }
     
+    /**
+     * <p>analyze.</p>
+     *
+     * @param bugsToAnalyze a {@link java.util.List} object.
+     * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
+     * @throws java.lang.InterruptedException if any.
+     */
     public static void analyze(List<Bug> bugsToAnalyze) throws BackendConnectionException, InterruptedException{
         
     	//necessary read_write as the ast_diff is done using POST

@@ -34,6 +34,10 @@ import com.sap.psr.vulas.shared.util.ThreadUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import com.sap.psr.vulas.tasks.AbstractBomTask;
 
+/**
+ * <p>JavaBomTask class.</p>
+ *
+ */
 public class JavaBomTask extends AbstractBomTask {
 
 	private static final Log log = LogFactory.getLog(JavaBomTask.class);
@@ -46,6 +50,7 @@ public class JavaBomTask extends AbstractBomTask {
 	
 	private static final List<GoalClient> pluginGoalClients = Arrays.asList(GoalClient.MAVEN_PLUGIN, GoalClient.GRADLE_PLUGIN);
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getLanguage() { return new HashSet<ProgrammingLanguage>(Arrays.asList(new ProgrammingLanguage[] { ProgrammingLanguage.JAVA })); }
 
@@ -63,6 +68,7 @@ public class JavaBomTask extends AbstractBomTask {
 		return this.appJarNames!=null && !this.isOneOfGoalClients(pluginGoalClients);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void configure(VulasConfiguration _cfg) throws GoalConfigurationException {
 		super.configure(_cfg);
@@ -101,6 +107,7 @@ public class JavaBomTask extends AbstractBomTask {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void execute() throws GoalExecutionException {
 

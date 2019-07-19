@@ -34,6 +34,10 @@ import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringUtil;
 
 //TODO: Decide what to do with default arg values in functions and methods? Right now, they are part of the qname, which is probably wrong.
+/**
+ * <p>Python335FileAnalyzer class.</p>
+ *
+ */
 public class Python335FileAnalyzer extends Python335BaseListener implements FileAnalyzer {  
 
 	private final static Log log = LogFactory.getLog(Python335FileAnalyzer.class);
@@ -54,6 +58,8 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 	private File file = null;
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Will not be instantiated by the {@link FileAnalyzerFactory}, but by {@link PythonFileAnalyzer}.
 	 */
 	@Override
@@ -61,6 +67,9 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 		return new String[] {};
 	}
 
+	/**
+	 * <p>Constructor for Python335FileAnalyzer.</p>
+	 */
 	public Python335FileAnalyzer() {
 		super();
 	}
@@ -69,9 +78,9 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 	 * Sets context information in case an {@link InputStream} is parsed using {@link Python3FileAnalyzer#getConstructs(InputStream)}.
 	 * In this case, package and module information cannot be obtained from the file and file system.
 	 * The method is called by {@link PythonArchiveAnalyzer}.
-	 * 
-	 * @param _module
-	 * @param _pack
+	 *
+	 * @param _module a {@link com.sap.psr.vulas.python.PythonId} object.
+	 * @param _pack a {@link com.sap.psr.vulas.python.PythonId} object.
 	 */
 	public void setContext(PythonId _module, PythonId _pack) {
 		this.constructs = new TreeMap<ConstructId, Construct>();
@@ -84,6 +93,7 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 		this.constructs.put(module, new Construct(module, ""));	
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean canAnalyze(File _file) {
 		final String ext = FileUtil.getFileExtension(_file);
@@ -96,6 +106,7 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void analyze(final File _file) throws FileAnalysisException {
 		if(!FileUtil.isAccessibleFile(_file.toPath()))
@@ -104,8 +115,9 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Enter a parse tree produced by {@link Python335Parser#stmt}.
-	 * @param ctx the parse tree
 	 */
 	@Override
 	public void enterStmt(Python335Parser.StmtContext ctx) { // TODO reads stmts before class defs and func defs are entered
@@ -120,6 +132,7 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 		stmts.add(stmt);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void enterClassdef(Python335Parser.ClassdefContext ctx) {
 		// Happens if class name is 'async', due to the Python grammar's problem with the ASYNC keyword, cf. testPythonFileWithAsync
@@ -138,6 +151,7 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 		this.context.push(id);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void exitClassdef(Python335Parser.ClassdefContext ctx) {
 		if(!PythonFileAnalyzer.isTopOfType(this.context, PythonId.Type.CLASS))
@@ -146,6 +160,7 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 			context.pop();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void enterFuncdef(Python335Parser.FuncdefContext ctx) {
 		// Happens if method or function name is 'async', due to the Python grammar's problem with the ASYNC keyword, cf. testPythonFileWithAsync
@@ -181,6 +196,7 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 		this.context.push(id);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void exitFuncdef(Python335Parser.FuncdefContext _ctx) {
 		final PythonId.Type[] types = new PythonId.Type[] { PythonId.Type.FUNCTION, PythonId.Type.CONSTRUCTOR, PythonId.Type.METHOD };
@@ -213,6 +229,7 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 			return _name + "$" + count;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean containsConstruct(ConstructId _id) throws FileAnalysisException {
 		return this.constructs.containsKey(_id);
@@ -222,6 +239,10 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 	 * Maybe promote this method, which uses the shared type as argument, to the interface.
 	 * Alternatively, make all core-internal interfaces work with core types, not with shared
 	 * types. Example to be changed: SignatureFactory.
+	 *
+	 * @param _id a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+	 * @return a {@link com.sap.psr.vulas.Construct} object.
+	 * @throws com.sap.psr.vulas.FileAnalysisException if any.
 	 */
 	public Construct getConstruct(com.sap.psr.vulas.shared.json.model.ConstructId _id) throws FileAnalysisException {
 		for(ConstructId cid: this.constructs.keySet())
@@ -230,11 +251,21 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Construct getConstruct(ConstructId _id) throws FileAnalysisException {
 		return this.constructs.get(_id);
 	}
 
+	/**
+	 * <p>Getter for the field <code>constructs</code>.</p>
+	 *
+	 * @param m a {@link java.io.InputStream} object.
+	 * @return a {@link java.util.Map} object.
+	 * @throws com.sap.psr.vulas.FileAnalysisException if any.
+	 * @throws java.io.IOException if any.
+	 * @throws org.antlr.v4.runtime.RecognitionException if any.
+	 */
 	public Map<ConstructId, Construct> getConstructs(InputStream m) throws FileAnalysisException, IOException, RecognitionException {
 		final ANTLRInputStream input = new ANTLRInputStream(m);
 		final Python335Lexer lexer = new Python335Lexer(input);
@@ -262,6 +293,7 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 		return this.constructs;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
 		if(this.constructs==null) {
@@ -298,16 +330,19 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 		return this.constructs;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasChilds() {
 		return false;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) {
 		return null;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return "Python335 parser for [" + this.file + "]";

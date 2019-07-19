@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 
 
 /**
- * This class represents software versions as major.minor[.maintenance[.build]]. 
+ * This class represents software versions as major.minor[.maintenance[.build]].
  * See https://en.wikipedia.org/wiki/Software_versioning for more information.
  */
 public class Version implements Comparable<Version>{
@@ -20,19 +20,28 @@ public class Version implements Comparable<Version>{
 
 	private String version;
 
+	/**
+	 * <p>Constructor for Version.</p>
+	 *
+	 * @param _v a {@link java.lang.String} object.
+	 */
 	public Version(String _v){
 		this.version=_v;
 	}
 
+	/**
+	 * <p>Getter for the field <code>version</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getVersion() {
 		return this.version;
 	}
 
 	/**
-	 * This method returns the major release of the library, i.e., the string before the first '.', if any; 0 otherwise 
-	 * 
+	 * This method returns the major release of the library, i.e., the string before the first '.', if any; 0 otherwise
+	 *
 	 * @return the string (usually a digit) before the first '.' if any; 0 otherwise
-	 * 
 	 */
 	public String getMajorRelease() {
 		String[] versions = this.version.split("\\.");
@@ -42,7 +51,7 @@ public class Version implements Comparable<Version>{
 
 	/**
 	 * This method returns the minor release, i.e., major.minor if minor exists; major.0 otherwise
-	 * 
+	 *
 	 * @return major.minor if minor exists; major.0 otherwise
 	 */
 	public String getMinorRelease() {
@@ -62,7 +71,7 @@ public class Version implements Comparable<Version>{
 
 	/**
 	 * This method returns the maintenance release, i.e., major.minor.maintenance, where minor and maintenance are set to 0 if they do not exist in this.version
-	 * 
+	 *
 	 * @return major.minor.maintenance
 	 */
 	public String getMaintenanceRelease() {
@@ -74,8 +83,8 @@ public class Version implements Comparable<Version>{
 	}
 
 	/**
-	 * This method returns true if the Version is a maintenance release, i.e., only has 3 fields (major.minor.maintenance) or the fourth is 0 or"RELEASE" (major.minor.maintenance.0||RELEASE) 
-	 * 
+	 * This method returns true if the Version is a maintenance release, i.e., only has 3 fields (major.minor.maintenance) or the fourth is 0 or"RELEASE" (major.minor.maintenance.0||RELEASE)
+	 *
 	 * @return major.minor.maintenance
 	 */
 	public Boolean isMaintenanceRelease() {
@@ -88,9 +97,8 @@ public class Version implements Comparable<Version>{
 
 	/**
 	 * This method compares versions that only contains numbers. It returns 0 if they are equal or contains letters
-	 * 
-	 * 	@param other version to compare
-	 * 	@return 0 if they are equal or contains letters; 1 if this.version &gt; other.version; -1 otherwise
+	 *
+	 * @return a int.
 	 */
 	public int compareNumberVersion(Version other) {
 	
@@ -120,11 +128,13 @@ public class Version implements Comparable<Version>{
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return this.version;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -133,6 +143,7 @@ public class Version implements Comparable<Version>{
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -150,6 +161,7 @@ public class Version implements Comparable<Version>{
 		return true;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(Version o) {
 

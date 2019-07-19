@@ -18,8 +18,13 @@ import com.sap.psr.vulas.cg.ReachabilityConfiguration;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>CallgraphConstructorFactory class.</p>
+ *
+ */
 public class CallgraphConstructorFactory {
 
+    /** Constant <code>classLoaderToFindPlugins</code> */
     public static ClassLoader classLoaderToFindPlugins = Thread.currentThread().getContextClassLoader();
 
     private static final Log log = LogFactory.getLog(CallgraphConstructorFactory.class);
@@ -30,6 +35,7 @@ public class CallgraphConstructorFactory {
      * @param analysisFramework the framework to use, e.g., wala, soot
      * @param appContext        the application for the call graph construction
      * @return the build call graph constructor
+     * @param useURLClassloader a boolean.
      */
     public static ICallgraphConstructor buildCallgraphConstructor(String analysisFramework, Application appContext, boolean useURLClassloader) {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();

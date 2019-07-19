@@ -1,5 +1,9 @@
 package com.sap.psr.vulas.shared.enums;
 
+/**
+ * <p>AffectedVersionSource class.</p>
+ *
+ */
 public enum AffectedVersionSource {
 	MANUAL,
 	PRE_COMMIT_POM,

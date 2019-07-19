@@ -21,6 +21,10 @@ import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
 import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>Abstract AbstractReachGoal class.</p>
+ *
+ */
 public abstract class AbstractReachGoal extends AbstractAppGoal {
 
     private static final Log log = LogFactory.getLog(AbstractReachGoal.class);
@@ -34,6 +38,11 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
 
     private Set<com.sap.psr.vulas.shared.json.model.ConstructId> appConstructs = null;
 
+    /**
+     * <p>Constructor for AbstractReachGoal.</p>
+     *
+     * @param _type a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+     */
     protected AbstractReachGoal(GoalType _type) {
         super(_type);
     }
@@ -41,7 +50,7 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
     /**
      * Calls the backend in order to retrieve all application constructs of the given application.
      *
-     * @return
+     * @return a {@link java.util.Set} object.
      */
     protected final Set<com.sap.psr.vulas.shared.json.model.ConstructId> getAppConstructs() {
         if (this.appConstructs == null) {
@@ -121,6 +130,8 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
      * Gets the entry points of the {@link ReachabilityAnalyzer}.
      * <p>
      * MUST be overridden by subclasses, e.g., by {@link A2CGoal} and {@link T2CGoal}.
+     *
+     * @return a {@link java.util.Set} object.
      */
     protected abstract Set<com.sap.psr.vulas.shared.json.model.ConstructId> getEntryPoints();
 
@@ -128,10 +139,14 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
      * Sets the entry points of the {@link ReachabilityAnalyzer}.
      * <p>
      * MUST be overridden by subclasses, e.g., by {@link A2CGoal} and {@link T2CGoal}.
+     *
+     * @param _ra a {@link com.sap.psr.vulas.cg.ReachabilityAnalyzer} object.
      */
     protected abstract void setEntryPoints(ReachabilityAnalyzer _ra);
 
     /**
+     * {@inheritDoc}
+     *
      * Prepares the classpaths.
      */
     @Override
@@ -140,6 +155,7 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
         this.prepareClasspath();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected final void executeTasks() throws Exception {
 
@@ -181,6 +197,8 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Deletes pre-processed JAR files (if any).
      */
     @Override

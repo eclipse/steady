@@ -28,10 +28,16 @@ public class DirWithFileSearch extends AbstractFileSearch {
 
 	private String filename = null;
 
+	/**
+	 * <p>Constructor for DirWithFileSearch.</p>
+	 *
+	 * @param _filename a {@link java.lang.String} object.
+	 */
 	public DirWithFileSearch(@NotNull String _filename) {
 		this.filename = _filename;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public FileVisitResult preVisitDirectory(Path _f, BasicFileAttributes attrs) {
 		if(_f.toFile().isDirectory() && !this.foundFile(_f)) {

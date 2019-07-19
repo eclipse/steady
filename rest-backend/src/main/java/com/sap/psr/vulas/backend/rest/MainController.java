@@ -42,6 +42,10 @@ import springfox.documentation.swagger.web.ApiKeyVehicle;
 import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+/**
+ * <p>MainController class.</p>
+ *
+ */
 @Configuration
 @ComponentScan({"com.sap.psr.vulas.backend.component,com.sap.psr.vulas.backend.rest"})
 @EnableAutoConfiguration
@@ -128,6 +132,11 @@ public class MainController extends SpringBootServletInitializer {
         );
     }
 	
+	/**
+	 * <p>bugApi.</p>
+	 *
+	 * @return a {@link springfox.documentation.spring.web.plugins.Docket} object.
+	 */
 	@Bean
 	public Docket bugApi() {
 		return new Docket(DocumentationType.SWAGGER_2)
@@ -141,6 +150,11 @@ public class MainController extends SpringBootServletInitializer {
 				;
 	}
 	
+	/**
+	 * <p>userApi.</p>
+	 *
+	 * @return a {@link springfox.documentation.spring.web.plugins.Docket} object.
+	 */
 	@Bean
 	public Docket userApi() {
 		AuthorizationScope[] authScopes = new AuthorizationScope[1];
@@ -176,6 +190,11 @@ public class MainController extends SpringBootServletInitializer {
 				;
 	}
 	
+	/**
+	 * <p>adminApi.</p>
+	 *
+	 * @return a {@link springfox.documentation.spring.web.plugins.Docket} object.
+	 */
 	@Bean
 	public Docket adminApi() {
 		AuthorizationScope[] authScopes = new AuthorizationScope[1];
@@ -225,6 +244,11 @@ public class MainController extends SpringBootServletInitializer {
         return new ApiKey("space", Constants.HTTP_SPACE_HEADER, "header");
     }
 
+    /**
+     * <p>securityInfo.</p>
+     *
+     * @return a {@link springfox.documentation.swagger.web.SecurityConfiguration} object.
+     */
     @Bean
     public SecurityConfiguration securityInfo() {
         return new SecurityConfiguration("abc", "123", "pets", "petstore", Constants.HTTP_TENANT_HEADER, ApiKeyVehicle.HEADER, "", ",");
@@ -237,11 +261,12 @@ public class MainController extends SpringBootServletInitializer {
 	
 	/**
 	 * Can be used to do some initialization at application startup, but does not do anything right now.
-	 * @return
+	 *
+	 * @return a {@link org.springframework.http.converter.json.Jackson2ObjectMapperBuilder} object.
 	 */
 //	@Bean
 //	CommandLineRunner init() { return null; }
-	
+
 	@Bean
 	public Jackson2ObjectMapperBuilder jacksonBuilder() {
 	    Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
@@ -259,10 +284,16 @@ public class MainController extends SpringBootServletInitializer {
 //  }
 
 
+	/**
+	 * <p>main.</p>
+	 *
+	 * @param args an array of {@link java.lang.String} objects.
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(MainController.class, args);
 	}
 
+	/** {@inheritDoc} */
 	@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(MainController.class);

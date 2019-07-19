@@ -17,6 +17,13 @@ public class JsonWriter<T> {
 
 	private static final Log log = LogFactory.getLog(JsonWriter.class);
 	
+	/**
+	 * <p>write.</p>
+	 *
+	 * @param _object a T object.
+	 * @param _path a {@link java.nio.file.Path} object.
+	 * @return a boolean.
+	 */
 	public boolean write(T _object, Path _path) {
 		boolean success = false;
 		if(_object!=null && _path!=null) {

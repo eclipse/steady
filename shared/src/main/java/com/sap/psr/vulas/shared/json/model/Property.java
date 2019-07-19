@@ -33,8 +33,18 @@ public class Property implements Serializable {
 	@JsonIgnore
 	private String valueSha1;
 	
+	/**
+	 * <p>Constructor for Property.</p>
+	 */
 	public Property() { super(); }
 	
+	/**
+	 * <p>Constructor for Property.</p>
+	 *
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.PropertySource} object.
+	 * @param _name a {@link java.lang.String} object.
+	 * @param _value a {@link java.lang.String} object.
+	 */
 	public Property(PropertySource source, String _name, String _value) {
 		super();
 		this.source = source;
@@ -43,24 +53,75 @@ public class Property implements Serializable {
 		this.valueSha1 = DigestUtil.getDigestAsString(this.value, StandardCharsets.UTF_8, DigestAlgorithm.MD5);
 	}
 	
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getId() { return id; }
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 */
 	public void setId(Long id) { this.id = id; }
 
+	/**
+	 * <p>Getter for the field <code>source</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.PropertySource} object.
+	 */
 	public PropertySource getSource() { return source; }
+	/**
+	 * <p>Setter for the field <code>source</code>.</p>
+	 *
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.PropertySource} object.
+	 */
 	public void setSource(PropertySource source) { this.source = source; }
 
+	/**
+	 * <p>Getter for the field <code>name</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getName() { return name; }
+	/**
+	 * <p>Setter for the field <code>name</code>.</p>
+	 *
+	 * @param _name a {@link java.lang.String} object.
+	 */
 	public void setName(String _name) { this.name = _name; }
 
+	/**
+	 * <p>Getter for the field <code>value</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getValue() { return value; }
+	/**
+	 * <p>Setter for the field <code>value</code>.</p>
+	 *
+	 * @param _value a {@link java.lang.String} object.
+	 */
 	public void setValue(String _value) {
 		this.value = _value;
 		this.valueSha1 = DigestUtil.getDigestAsString(this.value, StandardCharsets.UTF_8, DigestAlgorithm.MD5);
 	}
 
+	/**
+	 * <p>Getter for the field <code>valueSha1</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getValueSha1() { return valueSha1; }
+	/**
+	 * <p>Setter for the field <code>valueSha1</code>.</p>
+	 *
+	 * @param valueSha1 a {@link java.lang.String} object.
+	 */
 	public void setValueSha1(String valueSha1) { this.valueSha1 = valueSha1; }
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -71,6 +132,7 @@ public class Property implements Serializable {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

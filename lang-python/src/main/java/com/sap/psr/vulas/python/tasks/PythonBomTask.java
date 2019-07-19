@@ -34,20 +34,27 @@ import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import com.sap.psr.vulas.tasks.AbstractBomTask;
 
+/**
+ * <p>PythonBomTask class.</p>
+ *
+ */
 public class PythonBomTask extends AbstractBomTask {
 
 	private static final Log log = LogFactory.getLog(PythonBomTask.class);
 
 	private static final String[] EXT_FILTER = new String[] { "whl", "egg", "py" };
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getLanguage() { return new HashSet<ProgrammingLanguage>(Arrays.asList(new ProgrammingLanguage[] { ProgrammingLanguage.PY })); }
 
+	/** {@inheritDoc} */
 	@Override
 	public void configure(VulasConfiguration _cfg) throws GoalConfigurationException {
 		super.configure(_cfg);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void execute() throws GoalExecutionException {
 

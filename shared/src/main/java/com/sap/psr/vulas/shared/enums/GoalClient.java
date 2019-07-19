@@ -2,7 +2,6 @@ package com.sap.psr.vulas.shared.enums;
 
 /**
  * The client running goal(s).
- *
  */
 public enum GoalClient {
 
@@ -13,6 +12,11 @@ public enum GoalClient {
 
 	private GoalClient(byte _value) { this.value = _value; }
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() {
 		if(this.value==10) return "CLI";
 		else if(this.value==20) return "MAVEN";

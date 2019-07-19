@@ -9,14 +9,26 @@ import com.sap.psr.vulas.shared.enums.PathSource;
 import com.sap.psr.vulas.shared.util.ConstructIdUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>T2CGoal class.</p>
+ *
+ */
 public class T2CGoal extends AbstractReachGoal {
 
 	private Set<com.sap.psr.vulas.shared.json.model.ConstructId> entryPoints = null;
 
 	private Set<com.sap.psr.vulas.shared.json.model.ConstructId> tracedConstructs = null;
 
+	/**
+	 * <p>Constructor for T2CGoal.</p>
+	 */
 	public T2CGoal() { super(GoalType.T2C); }
 
+	/**
+	 * <p>Getter for the field <code>entryPoints</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	protected final Set<com.sap.psr.vulas.shared.json.model.ConstructId> getEntryPoints() {
 		if(this.entryPoints==null) {
 			try {
@@ -38,6 +50,8 @@ public class T2CGoal extends AbstractReachGoal {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Sets the traced constructs as entry points of the {@link ReachabilityAnalyzer}.
 	 */
 	protected final void setEntryPoints(ReachabilityAnalyzer _ra) {

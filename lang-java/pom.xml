@@ -28,6 +28,11 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.bitbucket.mstrobel</groupId>
+			<artifactId>procyon-compilertools</artifactId>
+			<version>0.5.36</version>
+		</dependency>
+		<dependency>
 			<groupId>ch.uzh.ifi.seal</groupId>
 			<artifactId>changedistiller</artifactId>
 			<version>0.0.4</version>

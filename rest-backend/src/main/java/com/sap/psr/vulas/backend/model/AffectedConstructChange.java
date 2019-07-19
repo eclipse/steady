@@ -20,6 +20,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ * <p>AffectedConstructChange class.</p>
+ *
+ */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
@@ -93,8 +97,21 @@ public class AffectedConstructChange implements Serializable{
 	
 	private ChangeType overall_chg;
 	
+	/**
+	 * <p>Constructor for AffectedConstructChange.</p>
+	 */
 	public AffectedConstructChange () { super();}
 	
+	/**
+	 * <p>Constructor for AffectedConstructChange.</p>
+	 *
+	 * @param _cc a {@link com.sap.psr.vulas.backend.model.ConstructChange} object.
+	 * @param _af a {@link com.sap.psr.vulas.backend.model.AffectedLibrary} object.
+	 * @param _affected a {@link java.lang.Boolean} object.
+	 * @param _inArch a {@link java.lang.Boolean} object.
+	 * @param _classinArch a {@link java.lang.Boolean} object.
+	 * @param _testedBody a {@link java.lang.String} object.
+	 */
 	public AffectedConstructChange(ConstructChange _cc, AffectedLibrary _af, Boolean _affected, Boolean _inArch, Boolean _classinArch, String _testedBody) {
 		super();
 		this.cc = _cc;
@@ -106,81 +123,241 @@ public class AffectedConstructChange implements Serializable{
 	}
 	
 	
+	/**
+	 * <p>Getter for the field <code>pathGroup</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getPathGroup() {
 		return pathGroup;
 	}
 
+	/**
+	 * <p>Setter for the field <code>pathGroup</code>.</p>
+	 *
+	 * @param pathGroup a {@link java.lang.String} object.
+	 */
 	public void setPathGroup(String pathGroup) {
 		this.pathGroup = pathGroup;
 	}
 
+	/**
+	 * <p>Getter for the field <code>qnameInJar</code>.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean getQnameInJar() {
 		return qnameInJar;
 	}
 
+	/**
+	 * <p>Setter for the field <code>qnameInJar</code>.</p>
+	 *
+	 * @param qnameInJar a {@link java.lang.Boolean} object.
+	 */
 	public void setQnameInJar(Boolean qnameInJar) {
 		this.qnameInJar = qnameInJar;
 	}
 
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getId() { return id; }
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 */
 	public void setId(Long id) { this.id = id; }
 
+	/**
+	 * <p>Getter for the field <code>cc</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.ConstructChange} object.
+	 */
 	public ConstructChange getCc() { return cc; } 
+	/**
+	 * <p>Setter for the field <code>cc</code>.</p>
+	 *
+	 * @param _cc a {@link com.sap.psr.vulas.backend.model.ConstructChange} object.
+	 */
 	public void setCc(ConstructChange _cc) { this.cc = _cc; }
 
 	
+	/**
+	 * <p>Getter for the field <code>affectedLib</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.AffectedLibrary} object.
+	 */
 	public AffectedLibrary getAffectedLib() { return affectedLib; } 
+	/**
+	 * <p>Setter for the field <code>affectedLib</code>.</p>
+	 *
+	 * @param _al a {@link com.sap.psr.vulas.backend.model.AffectedLibrary} object.
+	 */
 	public void setAffectedLib(AffectedLibrary _al) { this.affectedLib = _al; }
 	
+	/**
+	 * <p>Getter for the field <code>affected</code>.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean getAffected() { return affected; }
+	/**
+	 * <p>Setter for the field <code>affected</code>.</p>
+	 *
+	 * @param affected a {@link java.lang.Boolean} object.
+	 */
 	public void setAffected(Boolean affected) { this.affected = affected; }
 	
+	/**
+	 * <p>Getter for the field <code>inArchive</code>.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean getInArchive() { return inArchive; }
+	/**
+	 * <p>Setter for the field <code>inArchive</code>.</p>
+	 *
+	 * @param _b a {@link java.lang.Boolean} object.
+	 */
 	public void setInArchive(Boolean _b) { this.inArchive = _b; }
 	
 //	public String getAstEqual() { return this.astEqual; }
 //	public void setAstEqual(String _b) { this.astEqual = _b; }
 	
 	
+	/**
+	 * <p>Getter for the field <code>dtv</code>.</p>
+	 *
+	 * @return a {@link java.lang.Integer} object.
+	 */
 	public Integer getDtv() { return this.dtv; }
+	/**
+	 * <p>Setter for the field <code>dtv</code>.</p>
+	 *
+	 * @param _b a {@link java.lang.Integer} object.
+	 */
 	public void setDtv(Integer _b) { this.dtv = _b; }
 	
 	
+	/**
+	 * <p>Getter for the field <code>dtf</code>.</p>
+	 *
+	 * @return a {@link java.lang.Integer} object.
+	 */
 	public Integer getDtf() { return this.dtf; }
+	/**
+	 * <p>Setter for the field <code>dtf</code>.</p>
+	 *
+	 * @param _b a {@link java.lang.Integer} object.
+	 */
 	public void setDtf(Integer _b) { this.dtf = _b; }
 	
+	/**
+	 * <p>Getter for the field <code>classInArchive</code>.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean getClassInArchive() { return classInArchive; }
+	/**
+	 * <p>Setter for the field <code>classInArchive</code>.</p>
+	 *
+	 * @param _b a {@link java.lang.Boolean} object.
+	 */
 	public void setClassInArchive(Boolean _b) { this.classInArchive = _b; }
 	
+	/**
+	 * <p>Getter for the field <code>equalChangeType</code>.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean getEqualChangeType() { return equalChangeType; }
+	/**
+	 * <p>Setter for the field <code>equalChangeType</code>.</p>
+	 *
+	 * @param _b a {@link java.lang.Boolean} object.
+	 */
 	public void setEqualChangeType(Boolean _b) { this.equalChangeType = _b; }
 	
+	/**
+	 * <p>Getter for the field <code>overall_chg</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.AffectedConstructChange.ChangeType} object.
+	 */
 	public ChangeType getOverall_chg() { return overall_chg; }
+	/**
+	 * <p>Setter for the field <code>overall_chg</code>.</p>
+	 *
+	 * @param _c a {@link com.sap.psr.vulas.backend.model.AffectedConstructChange.ChangeType} object.
+	 */
 	public void setOverall_chg(ChangeType _c) { this.overall_chg = _c; }
 	
+	/**
+	 * <p>Getter for the field <code>testedBody</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getTestedBody() { return testedBody; }
+	/**
+	 * <p>Setter for the field <code>testedBody</code>.</p>
+	 *
+	 * @param testedBody a {@link java.lang.String} object.
+	 */
 	public void setTestedBody(String testedBody) { this.testedBody = testedBody; }
 
+	/**
+	 * <p>Getter for the field <code>vulnBody</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getVulnBody() {
 		return vulnBody;
 	}
 
+	/**
+	 * <p>Setter for the field <code>vulnBody</code>.</p>
+	 *
+	 * @param vulnBody a {@link java.lang.String} object.
+	 */
 	public void setVulnBody(String vulnBody) {
 		this.vulnBody = vulnBody;
 	}
 
+	/**
+	 * <p>Getter for the field <code>fixedBody</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getFixedBody() {
 		return fixedBody;
 	}
 
+	/**
+	 * <p>Setter for the field <code>fixedBody</code>.</p>
+	 *
+	 * @param fixedBody a {@link java.lang.String} object.
+	 */
 	public void setFixedBody(String fixedBody) {
 		this.fixedBody = fixedBody;
 	}
 
+	/**
+	 * <p>Getter for the field <code>sameBytecodeLids</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<LibraryId> getSameBytecodeLids() {
 		return sameBytecodeLids;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sameBytecodeLids</code>.</p>
+	 *
+	 * @param sameBytecodeLids a {@link java.util.Collection} object.
+	 */
 	public void setSameBytecodeLids(Collection<LibraryId> sameBytecodeLids) {
 		this.sameBytecodeLids = sameBytecodeLids;
 	}	

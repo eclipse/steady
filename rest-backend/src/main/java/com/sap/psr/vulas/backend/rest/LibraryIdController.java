@@ -32,6 +32,10 @@ import com.sap.psr.vulas.backend.util.ServiceWrapper;
 import com.sap.psr.vulas.shared.json.model.Version;
 
 
+/**
+ * <p>LibraryIdController class.</p>
+ *
+ */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/libids")
@@ -55,9 +59,14 @@ public class LibraryIdController {
 	/**
 	 * Returns a list of all {@link Bug}s affecting the given Maven artifact.
 	 * This list can be filtered by proving a CVSS threshold (geCvss) or bug identifiers (selecteBugs).
-	 * 
-	 * @param 
-	 * @return 
+	 *
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param affected a {@link java.lang.Boolean} object.
+	 * @param selectedBugs an array of {@link java.lang.String} objects.
+	 * @param geCvss a float.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/bugs", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -114,14 +123,14 @@ public class LibraryIdController {
 	 * Returns all versions of the Maven artifact with the given group and artifact identifiers and packaging "JAR".
 	 * The boolean flags secureOnly and vulnerableOnly can be used to filter the result set.
 	 * The method can be used, for instance, to inform developers over all none-vulnerable library versions as a replacement for a vulnerable one.
-	 * 
-	 * @param mvnGroup
-	 * @param artifact
+	 *
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
 	 * @param latest if true, only the latest version will be returned
 	 * @param greaterThanVersion if specified, only versions greater than the provided value are returned
 	 * @param secureOnly if true, only those versions w/o known vulnerabilities are returned
 	 * @param vulnerableOnly if true, only those versions with known vulnerabilities are returned
-	 * @return
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.LibraryIdDetails.class)

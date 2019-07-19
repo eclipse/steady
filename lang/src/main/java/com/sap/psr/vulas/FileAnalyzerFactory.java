@@ -23,7 +23,8 @@ public class FileAnalyzerFactory {
 
 	/**
 	 * Loops over all {@link FileAnalyzer}s and returns an array of all supported file extensions.
-	 * @return
+	 *
+	 * @return an array of {@link java.lang.String} objects.
 	 */
 	public static synchronized String[] getSupportedFileExtensions() {
 		if(supportedFileExtensions==null) {
@@ -45,14 +46,22 @@ public class FileAnalyzerFactory {
 	}
 	
 
+	/**
+	 * <p>isSupportedFileExtension.</p>
+	 *
+	 * @param _ext a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public static boolean isSupportedFileExtension(String _ext) {
 		return Arrays.asList(getSupportedFileExtensions()).contains(_ext);
 	}
 
 	/**
 	 * Creates instances of {@link FileAnalyzer} depending on the file.
-	 * @param _file
-	 * @return
+	 *
+	 * @param _file a {@link java.io.File} object.
+	 * @return a {@link com.sap.psr.vulas.FileAnalyzer} object.
+	 * @throws java.lang.IllegalArgumentException if any.
 	 */
 	public final static FileAnalyzer buildFileAnalyzer(File _file) throws IllegalArgumentException {
 		return FileAnalyzerFactory.buildFileAnalyzer(_file, null);
@@ -60,8 +69,11 @@ public class FileAnalyzerFactory {
 
 	/**
 	 * Creates instances of {@link FileAnalyzer} depending on the file.
-	 * @param _file
-	 * @return
+	 *
+	 * @param _file a {@link java.io.File} object.
+	 * @param _exts an array of {@link java.lang.String} objects.
+	 * @return a {@link com.sap.psr.vulas.FileAnalyzer} object.
+	 * @throws java.lang.IllegalArgumentException if any.
 	 */
 	public final static FileAnalyzer buildFileAnalyzer(File _file, String[] _exts) throws IllegalArgumentException {
 		FileAnalyzer fa = null; 

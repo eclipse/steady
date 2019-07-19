@@ -19,10 +19,21 @@ public class JsonReader<T> {
 	
 	private Class<T> clazz;
 	
+	/**
+	 * <p>Constructor for JsonReader.</p>
+	 *
+	 * @param _clazz a {@link java.lang.Class} object.
+	 */
 	public JsonReader(Class<T> _clazz) {
 		this.clazz = _clazz;
 	}
 	
+	/**
+	 * <p>read.</p>
+	 *
+	 * @param _path a {@link java.nio.file.Path} object.
+	 * @return a T object.
+	 */
 	@SuppressWarnings("unchecked")
 	public T read(Path _path) {
 		T object = null;

@@ -39,7 +39,6 @@ import com.sap.psr.vulas.shared.util.StringUtil;
 /**
  * Analyzer for the .egg and .whl archive (zip) formats,
  * neither are supposed to contain .pyc files.
- *
  */
 public class PythonArchiveAnalyzer implements FileAnalyzer {
 
@@ -54,11 +53,13 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 	/** PythonArchiveAnalyzers to deal with nested archives. */
 	private Set<FileAnalyzer> nestedAnalyzers = new HashSet<FileAnalyzer>();
 
+	/** {@inheritDoc} */
 	@Override
 	public String[] getSupportedFileExtensions() {
 		return new String[] { "egg", "whl", "gz" };
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean canAnalyze(File _file) {
 		final String ext = FileUtil.getFileExtension(_file);
@@ -73,15 +74,26 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void analyze(final File _file) {
 		this.archive = _file;
 	}
 	
+	/**
+	 * <p>getArchivePath.</p>
+	 *
+	 * @return a {@link java.nio.file.Path} object.
+	 */
 	public Path getArchivePath() {
 		return this.archive!=null ? this.archive.toPath() : null;
 	}
 	
+	/**
+	 * <p>getDigest.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getDigest() {
 		return this.archive!=null ? FileUtil.getDigest(this.archive, DigestAlgorithm.MD5) : null;
 	}
@@ -136,6 +148,7 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
         return _en.endsWith("__init__.py");
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
 		if(this.constructs.isEmpty()) {
@@ -267,14 +280,16 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 	
 	/**
 	 * Sets the Maven Id for the JAR to be analyzed. The Maven ID is already known in some contexts (e.g., during Maven plugin execution).
-	 * @param _id
+	 *
+	 * @param _id a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
 	 */
 	public void setLibraryId(LibraryId _id) { this.libraryId = _id; }
 	
 	/**
 	 * Returns a {@link Library} representing the analyzed Java archive.
-	 * @return
-	 * @throws FileAnalysisException
+	 *
+	 * @throws com.sap.psr.vulas.FileAnalysisException
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Library} object.
 	 */
 	public Library getLibrary() throws FileAnalysisException {
 		final Library lib = new Library();
@@ -291,21 +306,25 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 		return lib;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean containsConstruct(ConstructId _id) throws FileAnalysisException {
 		return this.constructs.containsKey(_id);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Construct getConstruct(ConstructId _id) throws FileAnalysisException {
 		return this.constructs.get(_id);
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasChilds() {
 		return this.nestedAnalyzers!=null && !this.nestedAnalyzers.isEmpty();
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) {
 		final Set<FileAnalyzer> nested_fa = new HashSet<FileAnalyzer>();
@@ -370,6 +389,12 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 		return _out_dir;
 	}*/
 	
+	/**
+	 * <p>getSharedConstructs.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 * @throws com.sap.psr.vulas.FileAnalysisException if any.
+	 */
 	public List<com.sap.psr.vulas.shared.json.model.ConstructId> getSharedConstructs() throws FileAnalysisException {
 		List<com.sap.psr.vulas.shared.json.model.ConstructId> l= new ArrayList<com.sap.psr.vulas.shared.json.model.ConstructId>();
 			for(ConstructId c: this.getConstructs().keySet()) {

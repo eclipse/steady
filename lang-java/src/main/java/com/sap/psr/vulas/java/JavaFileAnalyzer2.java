@@ -70,11 +70,13 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 	/** Used for the construction of nested named and anonynous classes. */
 	private final ConstructIdBuilder constructIdBuilder = new ConstructIdBuilder();
 	
+	/** {@inheritDoc} */
 	@Override
 	public String[] getSupportedFileExtensions() {
 		return new String[] { "java" };
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean canAnalyze(File _file) {
 		final String ext = FileUtil.getFileExtension(_file);
@@ -87,11 +89,18 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void analyze(final File _file) throws FileAnalysisException {
 		this.setFile(_file);
 	}
 	
+	/**
+	 * <p>Setter for the field <code>file</code>.</p>
+	 *
+	 * @param _file a {@link java.io.File} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public void setFile(File _file) throws IllegalArgumentException {
 		final String ext = FileUtil.getFileExtension(_file);
 		if(!ext.equals("java"))
@@ -117,6 +126,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void enterPackageDeclaration(@NotNull JavaParser.PackageDeclarationContext ctx) {
 		// Create JavaId
@@ -130,6 +140,8 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Enums are added to {@link #constructs}.
 	 */
 	@Override
@@ -142,6 +154,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 		this.saveConstruct(id, this.getConstructContent(ctx));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void exitEnumDeclaration(@NotNull JavaParser.EnumDeclarationContext ctx) {
 		final JavaId id = (JavaId)this.contextStack.pop().getConstructId();
@@ -149,6 +162,8 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Interfaces are not added to {@link #constructs}.
 	 */
 	@Override
@@ -160,21 +175,25 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 		this.contextStack.push(id);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void exitInterfaceDeclaration(@NotNull JavaParser.InterfaceDeclarationContext ctx) {
 		final JavaId id = (JavaId)this.contextStack.pop().getConstructId();
 		this.isOfExpectedType(id, new JavaId.Type[] { JavaId.Type.INTERFACE }, true);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void enterClassDeclaration(@NotNull JavaParser.ClassDeclarationContext ctx) {
 		// Remember the declaration context (needed for the handling of anon. classes in enterClassBody)
 		this.constructIdBuilder.setCurrentDeclarationContext(ctx.IDENTIFIER().getText());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void exitClassDeclaration(@NotNull JavaParser.ClassDeclarationContext ctx) {}
 
+	/** {@inheritDoc} */
 	@Override
 	public void enterClassBody(@NotNull JavaParser.ClassBodyContext ctx) {
 		// Create JavaId and push to the stack
@@ -189,6 +208,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 		this.constructIdBuilder.resetCurrentDeclarationContext();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void exitClassBody(@NotNull JavaParser.ClassBodyContext ctx) {
 		final JavaId id = (JavaId) this.contextStack.pop().getConstructId();
@@ -196,6 +216,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 		this.constructIdBuilder.resetCurrentDeclarationContext();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void enterMethodDeclaration(@NotNull JavaParser.MethodDeclarationContext ctx) {
 		// Peek JavaId and ensure it is a class or enum
@@ -210,11 +231,13 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 		this.saveConstruct(id, this.getConstructContent(ctx));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void exitMethodDeclaration(com.sap.psr.vulas.java.antlr.JavaParser.MethodDeclarationContext ctx) {
 		final JavaId id = (JavaId) this.contextStack.pop().getConstructId();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void enterConstructorDeclaration(@NotNull JavaParser.ConstructorDeclarationContext ctx) {
 		// Peek JavaId and ensure it is a class or enum
@@ -229,6 +252,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 		this.saveConstruct(id, this.getConstructContent(ctx));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void exitConstructorDeclaration(com.sap.psr.vulas.java.antlr.JavaParser.ConstructorDeclarationContext ctx) {
 		final JavaId id = (JavaId)this.contextStack.pop().getConstructId();
@@ -303,6 +327,42 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 		return is;
 	}*/
 
+	/*private boolean isClassDeclarationsOnly(ParserRuleContext _context) {
+		boolean is = true;
+		for(ContextStackEntry jid : this.contextStack.all()) {
+			if (       !((JavaId)jid.getConstructId()).getType().equals(JavaId.Type.PACKAGE)
+					&& !((JavaId)jid.getConstructId()).getType().equals(JavaId.Type.CLASS)
+					&& !((JavaId)jid.getConstructId()).getType().equals(JavaId.Type.METHOD) ) {
+
+				// Get the name of the current declaration
+				String item = null;
+				if (_context instanceof JavaParser.ClassDeclarationContext)
+					item = "class [" + ((JavaParser.ClassDeclarationContext) _context).Identifier().getText() + "]";
+				// else if (_context instanceof
+				// JavaParser.MethodDeclarationContext)
+				// item = "method [" + ((JavaParser.MethodDeclarationContext)
+				// _context).Identifier().getText() + "]";
+				else if (_context instanceof JavaParser.ConstructorDeclarationContext)
+					item = "constructor ["
+							+ ((JavaParser.ConstructorDeclarationContext) _context).Identifier().getText() + "]";
+				else if (_context instanceof JavaParser.ClassBodyContext)
+					item = "classBody";
+
+//				if(_context instanceof JavaParser.ClassDeclarationContext)
+//				item = "class [" + ((JavaParser.ClassDeclarationContext)_context).Identifier().getText() + "]";
+//			else if(_context instanceof JavaParser.MethodDeclarationContext)
+//				item = "method [" + ((JavaParser.MethodDeclarationContext)_context).Identifier().getText() + "]";
+//			else if(_context instanceof JavaParser.ConstructorDeclarationContext)
+//				item = "constructor [" +  ((JavaParser.ConstructorDeclarationContext)_context).Identifier().getText() + "]";
+
+				JavaFileAnalyzer2.log.info("Declaration of " + item + " will be skipped, it is inside a nested declarations including enums and/or interfaces");
+
+				is = false;
+				break;
+			}
+		}
+		return is;
+	}*/
 	private List<String> getParameters(JavaParser.FormalParameterListContext _ctx) {
 		if(_ctx==null) return null;
 		else {
@@ -334,6 +394,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
 		if(this.constructs==null) {
@@ -365,17 +426,21 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 		return this.constructs;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean containsConstruct(ConstructId _id) throws FileAnalysisException { return this.getConstructs().containsKey(_id); }
 
+	/** {@inheritDoc} */
 	@Override
 	public Construct getConstruct(ConstructId _id) throws FileAnalysisException { return this.getConstructs().get(_id); }
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasChilds() {
 		return false;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) {
 		return null;

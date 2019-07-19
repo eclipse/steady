@@ -28,21 +28,40 @@ import org.slf4j.LoggerFactory;
 import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>SmtpClient class.</p>
+ *
+ */
 public class SmtpClient {
 	
 	private static Logger log = LoggerFactory.getLogger(SmtpClient.class);
 	
+	/** Constant <code>SMTP_HOST="vulas.backend.smtp.host"</code> */
 	public final static String SMTP_HOST = "vulas.backend.smtp.host";
+	/** Constant <code>SMTP_PORT="vulas.backend.smtp.port"</code> */
 	public final static String SMTP_PORT = "vulas.backend.smtp.port";
+	/** Constant <code>SMTP_USER="vulas.backend.smtp.user"</code> */
 	public final static String SMTP_USER = "vulas.backend.smtp.user";
+	/** Constant <code>SMTP_PWD="vulas.backend.smtp.pwd"</code> */
 	public final static String SMTP_PWD  = "vulas.backend.smtp.pwd";
 	
 	private Properties props = null;
 	
+	/**
+	 * <p>Constructor for SmtpClient.</p>
+	 *
+	 * @throws java.lang.IllegalStateException if any.
+	 */
 	public SmtpClient() throws IllegalStateException {
 		this.props = SmtpClient.getSmtpProperties(VulasConfiguration.getGlobal().getConfiguration());
 	}
 		
+	/**
+	 * <p>send.</p>
+	 *
+	 * @param _msg a {@link com.sap.psr.vulas.backend.util.Message} object.
+	 * @throws javax.mail.MessagingException if any.
+	 */
 	public void send(@NotNull com.sap.psr.vulas.backend.util.Message _msg) throws MessagingException {
 		if(_msg.hasAttachment())
 			this.sendWithAttachement(_msg);
@@ -112,9 +131,10 @@ public class SmtpClient {
 	/**
 	 * Returns {@link Properties} with all SMTP settings. Throws an {@link IllegalStateException} if
 	 * {@link #SMTP_HOST} or {@link SMTP_PORT} are not set.
-	 * 
-	 * @param _cfg
-	 * @return
+	 *
+	 * @param _cfg a {@link org.apache.commons.configuration.Configuration} object.
+	 * @return a {@link java.util.Properties} object.
+	 * @throws java.lang.IllegalStateException if any.
 	 */
 	public static Properties getSmtpProperties(Configuration _cfg) throws IllegalStateException {
 		final String host = _cfg.getString(SMTP_HOST);

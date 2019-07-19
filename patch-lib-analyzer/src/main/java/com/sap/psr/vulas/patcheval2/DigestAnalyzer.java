@@ -32,6 +32,10 @@ import com.sap.psr.vulas.shared.json.model.Library;
 import com.sap.psr.vulas.shared.json.model.Property;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>DigestAnalyzer class.</p>
+ *
+ */
 public class DigestAnalyzer {
 	
 	private static final Log log = LogFactory.getLog(DigestAnalyzer.class);
@@ -39,11 +43,19 @@ public class DigestAnalyzer {
 	String digest;
 	String version;
 
+	/**
+	 * <p>Constructor for DigestAnalyzer.</p>
+	 *
+	 * @param _digestl a {@link java.lang.String} object.
+	 */
 	public DigestAnalyzer(String _digestl) {
 		super();
 		this.digest = _digestl;
 	}
 
+	/**
+	 * <p>analyze.</p>
+	 */
 	public void analyze(){
 		//necessary read_write as we use GET PUT POST
 		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.READ_WRITE.toString());
@@ -187,6 +199,11 @@ public class DigestAnalyzer {
 			return result;
 	    }
 	 
+		/**
+		 * <p>main.</p>
+		 *
+		 * @param _args an array of {@link java.lang.String} objects.
+		 */
 		public static void main(String[] _args){
 			// Prepare parsing of cmd line arguments
 			final Options options = new Options();

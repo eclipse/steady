@@ -9,6 +9,10 @@ import com.sap.psr.vulas.shared.util.DigestUtil;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.sign.Signature;
 
+/**
+ * <p>PythonConstructDigest class.</p>
+ *
+ */
 public class PythonConstructDigest implements Signature {
 	
 	public static enum ComputedFromType { FILE, BODY }
@@ -23,6 +27,13 @@ public class PythonConstructDigest implements Signature {
 	
 	private DigestAlgorithm digestAlgorithm = null;
 	
+	/**
+	 * <p>Constructor for PythonConstructDigest.</p>
+	 *
+	 * @param _path a {@link java.nio.file.Path} object.
+	 * @param _alg a {@link com.sap.psr.vulas.shared.enums.DigestAlgorithm} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public PythonConstructDigest(Path _path, DigestAlgorithm _alg) throws IllegalArgumentException {
 		if(!FileUtil.isAccessibleFile(_path))
 			throw new IllegalArgumentException("Path argument [" + _path + "] is not a valid file");
@@ -32,6 +43,12 @@ public class PythonConstructDigest implements Signature {
 		this.computedFromType = ComputedFromType.FILE;
 	}
 	
+	/**
+	 * <p>Constructor for PythonConstructDigest.</p>
+	 *
+	 * @param _string a {@link java.lang.String} object.
+	 * @param _alg a {@link com.sap.psr.vulas.shared.enums.DigestAlgorithm} object.
+	 */
 	public PythonConstructDigest(String _string, DigestAlgorithm _alg) {
 		if(_string==null)
 			throw new IllegalArgumentException("String argument cannot be null");
@@ -46,43 +63,85 @@ public class PythonConstructDigest implements Signature {
 	
 	
 	
+	/**
+	 * <p>Getter for the field <code>computedFrom</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getComputedFrom() {
 		return computedFrom;
 	}
 
+	/**
+	 * <p>Setter for the field <code>computedFrom</code>.</p>
+	 *
+	 * @param computedFrom a {@link java.lang.String} object.
+	 */
 	public void setComputedFrom(String computedFrom) {
 		this.computedFrom = computedFrom;
 	}
 
+	/**
+	 * <p>Getter for the field <code>computedFromType</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.python.sign.PythonConstructDigest.ComputedFromType} object.
+	 */
 	public ComputedFromType getComputedFromType() {
 		return computedFromType;
 	}
 
+	/**
+	 * <p>Setter for the field <code>computedFromType</code>.</p>
+	 *
+	 * @param computedFromType a {@link com.sap.psr.vulas.python.sign.PythonConstructDigest.ComputedFromType} object.
+	 */
 	public void setComputedFromType(ComputedFromType computedFromType) {
 		this.computedFromType = computedFromType;
 	}
 
+	/**
+	 * <p>Getter for the field <code>digest</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getDigest() {
 		return digest;
 	}
 
+	/**
+	 * <p>Setter for the field <code>digest</code>.</p>
+	 *
+	 * @param digest a {@link java.lang.String} object.
+	 */
 	public void setDigest(String digest) {
 		this.digest = digest;
 	}
 
+	/**
+	 * <p>Getter for the field <code>digestAlgorithm</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.DigestAlgorithm} object.
+	 */
 	public DigestAlgorithm getDigestAlgorithm() {
 		return digestAlgorithm;
 	}
 
+	/**
+	 * <p>Setter for the field <code>digestAlgorithm</code>.</p>
+	 *
+	 * @param digestAlgorithm a {@link com.sap.psr.vulas.shared.enums.DigestAlgorithm} object.
+	 */
 	public void setDigestAlgorithm(DigestAlgorithm digestAlgorithm) {
 		this.digestAlgorithm = digestAlgorithm;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return this.digest + " (" + this.digestAlgorithm + ")";
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public String toJson() {
 		final JsonBuilder b = new JsonBuilder();
@@ -95,6 +154,7 @@ public class PythonConstructDigest implements Signature {
 		return b.toString();
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -104,6 +164,7 @@ public class PythonConstructDigest implements Signature {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

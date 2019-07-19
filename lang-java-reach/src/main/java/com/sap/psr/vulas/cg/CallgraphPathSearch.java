@@ -12,6 +12,10 @@ import org.apache.commons.logging.LogFactory;
 
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>CallgraphPathSearch class.</p>
+ *
+ */
 public class CallgraphPathSearch implements Runnable {
 	
 	private static final Log log = LogFactory.getLog(CallgraphPathSearch.class);
@@ -32,38 +36,80 @@ public class CallgraphPathSearch implements Runnable {
 	
 	private ReachabilityAnalyzer analyzer = null;
 	
+	/**
+	 * <p>setCallgraph.</p>
+	 *
+	 * @param _g a {@link com.sap.psr.vulas.cg.Callgraph} object.
+	 * @return a {@link com.sap.psr.vulas.cg.CallgraphPathSearch} object.
+	 */
 	public CallgraphPathSearch setCallgraph(Callgraph _g) {
 		this.graph = _g;
 		return this;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>label</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getLabel() { return this.label; }
 	
+	/**
+	 * <p>Setter for the field <code>label</code>.</p>
+	 *
+	 * @param _label a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.cg.CallgraphPathSearch} object.
+	 */
 	public CallgraphPathSearch setLabel(String _label) {
 		this.label = _label;
 		return this;
 	} 
 	
+	/**
+	 * <p>Setter for the field <code>shortestPaths</code>.</p>
+	 *
+	 * @param shortestPaths a boolean.
+	 * @return a {@link com.sap.psr.vulas.cg.CallgraphPathSearch} object.
+	 */
 	public CallgraphPathSearch setShortestPaths(boolean shortestPaths) {
 		this.shortestPaths = shortestPaths;
 		return this;
 	}
 	
+	/**
+	 * <p>Setter for the field <code>entrypoints</code>.</p>
+	 *
+	 * @param entrypoints a {@link java.util.Set} object.
+	 * @return a {@link com.sap.psr.vulas.cg.CallgraphPathSearch} object.
+	 */
 	public CallgraphPathSearch setEntrypoints(Set<com.sap.psr.vulas.shared.json.model.ConstructId> entrypoints) {
 		this.entrypoints = entrypoints;
 		return this;
 	}
 	
+	/**
+	 * <p>Setter for the field <code>targetpoints</code>.</p>
+	 *
+	 * @param targetpoints a {@link java.util.Set} object.
+	 * @return a {@link com.sap.psr.vulas.cg.CallgraphPathSearch} object.
+	 */
 	public CallgraphPathSearch setTargetpoints(Set<com.sap.psr.vulas.shared.json.model.ConstructId> targetpoints) {
 		this.targetpoints = targetpoints;
 		return this;
 	}
 	
+	/**
+	 * <p>setCallback.</p>
+	 *
+	 * @param _analyzer a {@link com.sap.psr.vulas.cg.ReachabilityAnalyzer} object.
+	 * @return a {@link com.sap.psr.vulas.cg.CallgraphPathSearch} object.
+	 */
 	public CallgraphPathSearch setCallback(ReachabilityAnalyzer _analyzer) {
 		this.analyzer = _analyzer;
 		return this;
 	} 
 	
+	/** {@inheritDoc} */
 	@Override
 	public void run() {
 		sw = new StopWatch(this.label + ": Search for paths from [" + this.entrypoints.size() + "] entry points to [" + this.targetpoints.size() + "] target points");
@@ -155,10 +201,20 @@ public class CallgraphPathSearch implements Runnable {
 		}
 	}
 
+	/**
+	 * <p>Getter for the field <code>paths</code>.</p>
+	 *
+	 * @return a {@link java.util.ArrayList} object.
+	 */
 	public ArrayList<List<com.sap.psr.vulas.shared.json.model.ConstructId>> getPaths() {
 		return paths;
 	}
 	
+	/**
+	 * <p>getStopWatch.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.util.StopWatch} object.
+	 */
 	public StopWatch getStopWatch() {
 		return this.sw;
 	}

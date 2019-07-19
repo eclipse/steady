@@ -13,6 +13,10 @@ import org.apache.commons.logging.LogFactory;
 import com.ibm.wala.util.graph.Graph;
 import com.sap.psr.vulas.shared.json.model.ConstructId;
 
+/**
+ * <p>PrunedGraphGetPaths class.</p>
+ *
+ */
 public class PrunedGraphGetPaths extends AbstractGetPaths {
 	
 	private static final Log log = LogFactory.getLog(PrunedGraphGetPaths.class);
@@ -21,10 +25,17 @@ public class PrunedGraphGetPaths extends AbstractGetPaths {
 
 	private Map<Integer, HashSet<Integer>> edges = new HashMap<Integer, HashSet<Integer>>();
 	
+	/**
+	 * <p>Constructor for PrunedGraphGetPaths.</p>
+	 *
+	 * @param _graph a {@link com.ibm.wala.util.graph.Graph} object.
+	 * @param _nodeid a {@link java.util.ArrayList} object.
+	 */
 	public PrunedGraphGetPaths(Graph<Integer> _graph, ArrayList<ConstructId> _nodeid) {
 		super(_graph, _nodeid);
 	}
 
+	/** {@inheritDoc} */
 	public HashSet<LinkedList<ConstructId>> getAllPaths(ConstructId _src, ConstructId _tgt) {
 		this.start_millis = System.currentTimeMillis();
 		int src_id = this.nodeId.indexOf(_src), tgt_id = this.nodeId.indexOf(_tgt);

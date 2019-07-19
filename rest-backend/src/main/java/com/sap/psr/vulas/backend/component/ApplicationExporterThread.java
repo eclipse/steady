@@ -26,6 +26,10 @@ import com.sap.psr.vulas.shared.json.JsonBuilder;
 import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.StringUtil;
 
+/**
+ * <p>ApplicationExporterThread class.</p>
+ *
+ */
 @Component(value="csvProducerThread")
 @Scope("prototype")
 @Transactional(readOnly=true, propagation=Propagation.REQUIRED)
@@ -65,75 +69,162 @@ public class ApplicationExporterThread implements Runnable {
 	
 	private boolean includeExemptions = false;
 	
+	/**
+	 * <p>Setter for the field <code>separator</code>.</p>
+	 *
+	 * @param separator a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.backend.component.ApplicationExporterThread} object.
+	 */
 	public ApplicationExporterThread setSeparator(String separator) {
 		this.separator = separator;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>includeSpaceProperties</code>.</p>
+	 *
+	 * @param includeSpaceProperties an array of {@link java.lang.String} objects.
+	 * @return a {@link com.sap.psr.vulas.backend.component.ApplicationExporterThread} object.
+	 */
 	public ApplicationExporterThread setIncludeSpaceProperties(String[] includeSpaceProperties) {
 		this.includeSpaceProperties = includeSpaceProperties;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>includeGoalConfiguration</code>.</p>
+	 *
+	 * @param includeGoalConfiguration an array of {@link java.lang.String} objects.
+	 * @return a {@link com.sap.psr.vulas.backend.component.ApplicationExporterThread} object.
+	 */
 	public ApplicationExporterThread setIncludeGoalConfiguration(String[] includeGoalConfiguration) {
 		this.includeGoalConfiguration = includeGoalConfiguration;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>includeGoalSystemInfo</code>.</p>
+	 *
+	 * @param includeGoalSystemInfo an array of {@link java.lang.String} objects.
+	 * @return a {@link com.sap.psr.vulas.backend.component.ApplicationExporterThread} object.
+	 */
 	public ApplicationExporterThread setIncludeGoalSystemInfo(String[] includeGoalSystemInfo) {
 		this.includeGoalSystemInfo = includeGoalSystemInfo;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>apps</code>.</p>
+	 *
+	 * @param apps a {@link java.util.List} object.
+	 * @return a {@link com.sap.psr.vulas.backend.component.ApplicationExporterThread} object.
+	 */
 	public ApplicationExporterThread setApps(List<Application> apps) {
 		this.apps = apps;
 		return this;
 	}	
 
+	/**
+	 * <p>Setter for the field <code>bugs</code>.</p>
+	 *
+	 * @param bugs an array of {@link java.lang.String} objects.
+	 * @return a {@link com.sap.psr.vulas.backend.component.ApplicationExporterThread} object.
+	 */
 	public ApplicationExporterThread setBugs(String[] bugs) {
 		this.bugs = bugs;
 		return this;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>affectedApps</code>.</p>
+	 *
+	 * @return a {@link java.util.HashMap} object.
+	 */
 	public HashMap<Long, HashMap<String, Boolean>> getAffectedApps() {
 		return affectedApps;
 	}
 
+	/**
+	 * <p>Setter for the field <code>affectedApps</code>.</p>
+	 *
+	 * @param affectedApps a {@link java.util.HashMap} object.
+	 * @return a {@link com.sap.psr.vulas.backend.component.ApplicationExporterThread} object.
+	 */
 	public ApplicationExporterThread setAffectedApps(HashMap<Long, HashMap<String, Boolean>> affectedApps) {
 		this.affectedApps = affectedApps;
 		return this;
 	}	
 
+	/**
+	 * <p>Getter for the field <code>format</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.ExportFormat} object.
+	 */
 	public ExportFormat getFormat() {
 		return format;
 	}
 
+	/**
+	 * <p>Setter for the field <code>format</code>.</p>
+	 *
+	 * @param format a {@link com.sap.psr.vulas.shared.enums.ExportFormat} object.
+	 */
 	public void setFormat(ExportFormat format) {
 		this.format = format;
 	}
 
+	/**
+	 * <p>Getter for the field <code>buffer</code>.</p>
+	 *
+	 * @return a {@link java.lang.StringBuffer} object.
+	 */
 	public StringBuffer getBuffer() {
 		return buffer;
 	}
 	
+	/**
+	 * <p>isIncludeAllBugs.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isIncludeAllBugs() {
 		return includeAllBugs;
 	}
 
+	/**
+	 * <p>Setter for the field <code>includeAllBugs</code>.</p>
+	 *
+	 * @param includeAllBugs a boolean.
+	 * @return a {@link com.sap.psr.vulas.backend.component.ApplicationExporterThread} object.
+	 */
 	public ApplicationExporterThread setIncludeAllBugs(boolean includeAllBugs) {
 		this.includeAllBugs = includeAllBugs;
 		return this;
 	}
 
+	/**
+	 * <p>isIncludeExemptions.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isIncludeExemptions() {
 		return includeExemptions;
 	}
 
+	/**
+	 * <p>Setter for the field <code>includeExemptions</code>.</p>
+	 *
+	 * @param includeExemptions a boolean.
+	 * @return a {@link com.sap.psr.vulas.backend.component.ApplicationExporterThread} object.
+	 */
 	public ApplicationExporterThread setIncludeExemptions(boolean includeExemptions) {
 		this.includeExemptions = includeExemptions;
 		return this;
 	}
 
+	/**
+	 * <p>run.</p>
+	 */
 	@Transactional(readOnly=true, propagation=Propagation.REQUIRED) // Needed in order to lazy load properties when called async
 	public void run() {
 		// Show progress

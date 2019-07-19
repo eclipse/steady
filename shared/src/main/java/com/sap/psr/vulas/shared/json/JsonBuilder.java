@@ -2,7 +2,6 @@ package com.sap.psr.vulas.shared.json;
 
 /**
  * Home-grown JSON builder.
- * 
  */
 public class JsonBuilder {
 	private final StringBuffer b = new StringBuffer();
@@ -22,6 +21,11 @@ public class JsonBuilder {
 		if(this.b.length()>0 && this.getLast()!='[' && this.getLast()!='{') b.append(",");
 	}
 
+	/**
+	 * <p>startArray.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.JsonBuilder} object.
+	 */
 	public JsonBuilder startArray() {
 		this.fixComma();
 		b.append("[");
@@ -29,6 +33,12 @@ public class JsonBuilder {
 		return this;
 	}
 	
+	/**
+	 * <p>startArrayProperty.</p>
+	 *
+	 * @param _property a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.JsonBuilder} object.
+	 */
 	public JsonBuilder startArrayProperty(String _property) {
 		this.fixComma();
 		b.append(JsonBuilder.escape(_property)).append(":[");
@@ -36,12 +46,22 @@ public class JsonBuilder {
 		return this;
 	}
 	
+	/**
+	 * <p>endArray.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.JsonBuilder} object.
+	 */
 	public JsonBuilder endArray() {
 		b.append("]");
 		this.openArrays--;
 		return this;
 	}
 
+	/**
+	 * <p>startObject.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.JsonBuilder} object.
+	 */
 	public JsonBuilder startObject() {
 		this.fixComma();
 		b.append("{");
@@ -49,6 +69,12 @@ public class JsonBuilder {
 		return this;
 	}
 	
+	/**
+	 * <p>startObjectProperty.</p>
+	 *
+	 * @param _property a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.JsonBuilder} object.
+	 */
 	public JsonBuilder startObjectProperty(String _property) {
 		this.fixComma();
 		b.append(JsonBuilder.escape(_property)).append(":{");
@@ -56,6 +82,11 @@ public class JsonBuilder {
 		return this;
 	}
 
+	/**
+	 * <p>endObject.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.JsonBuilder} object.
+	 */
 	public JsonBuilder endObject() {
 		b.append("}");
 		this.openObjects--;
@@ -77,8 +108,9 @@ public class JsonBuilder {
 	
 	/**
 	 * Appends a String to an already opened array.
-	 * @param _string
-	 * @return
+	 *
+	 * @param _string a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.JsonBuilder} object.
 	 */
 	public JsonBuilder appendToArray(String _string) {
 		this.fixComma();
@@ -88,8 +120,9 @@ public class JsonBuilder {
 	
 	/**
 	 * Appends an Integer to an already opened array.
-	 * @param _i
-	 * @return
+	 *
+	 * @param _i a {@link java.lang.Integer} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.JsonBuilder} object.
 	 */
 	public JsonBuilder appendToArray(Integer _i) {
 		this.fixComma();
@@ -99,8 +132,9 @@ public class JsonBuilder {
 	
 	/**
 	 * Appends a self-contained JSON array or object to an already opened array.
-	 * @param _json
-	 * @return
+	 *
+	 * @param _json a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.JsonBuilder} object.
 	 */
 	public JsonBuilder appendJsonToArray(String _json) {
 		this.fixComma();
@@ -108,6 +142,13 @@ public class JsonBuilder {
 		return this;
 	}
 	
+	/**
+	 * <p>appendObjectProperty.</p>
+	 *
+	 * @param _property a {@link java.lang.String} object.
+	 * @param _value a {@link java.lang.Integer} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.JsonBuilder} object.
+	 */
 	public JsonBuilder appendObjectProperty(String _property, Integer _value) {
 		this.fixComma();
 		b.append(JsonBuilder.escape(_property)).append(":");
@@ -118,6 +159,13 @@ public class JsonBuilder {
 		return this;
 	}
 	
+	/**
+	 * <p>appendObjectProperty.</p>
+	 *
+	 * @param _property a {@link java.lang.String} object.
+	 * @param _value a {@link java.lang.Boolean} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.JsonBuilder} object.
+	 */
 	public JsonBuilder appendObjectProperty(String _property, Boolean _value) {
 		this.fixComma();
 		b.append(JsonBuilder.escape(_property)).append(":");
@@ -130,9 +178,10 @@ public class JsonBuilder {
 
 	/**
 	 * Appends an object property with the given name and value, whereby the value is escaped.
-	 * @param _property
-	 * @param _value
-	 * @return
+	 *
+	 * @param _property a {@link java.lang.String} object.
+	 * @param _value a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.JsonBuilder} object.
 	 */
 	public JsonBuilder appendObjectProperty(String _property, String _value) {
 		return this.appendObjectProperty(_property, _value, true);
@@ -140,10 +189,11 @@ public class JsonBuilder {
 	
 	/**
 	 * Appends an object property with the given name and value. The value is escaped depending on the boolean parameter _escape.
-	 * @param _property
-	 * @param _value
-	 * @param _escape
-	 * @return
+	 *
+	 * @param _property a {@link java.lang.String} object.
+	 * @param _value a {@link java.lang.String} object.
+	 * @param _escape a boolean.
+	 * @return a {@link com.sap.psr.vulas.shared.json.JsonBuilder} object.
 	 */
 	public JsonBuilder appendObjectProperty(String _property, String _value, boolean _escape) {
 		this.fixComma();
@@ -159,6 +209,13 @@ public class JsonBuilder {
 		return this;
 	}
 	
+	/**
+	 * <p>getJson.</p>
+	 *
+	 * @param _pretty a boolean.
+	 * @param _indent a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getJson(boolean _pretty, String _indent) {
 		if(!_pretty)
 			return this.toString();
@@ -221,16 +278,37 @@ public class JsonBuilder {
 		return b.toString();
 	}
 	
+	/**
+	 * <p>getJson.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getJson() {
 		return this.getJson(false, "");
 	}
 	
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() { return b.toString(); }
 	
+	/**
+	 * <p>checkValidity.</p>
+	 *
+	 * @throws com.sap.psr.vulas.shared.json.JsonSyntaxException if any.
+	 */
 	public void checkValidity() throws JsonSyntaxException {
 		JsonBuilder.checkJsonValidity(this.getJson());
 	}
 	
+	/**
+	 * <p>checkJsonValidity.</p>
+	 *
+	 * @param _json a {@link java.lang.String} object.
+	 * @throws com.sap.psr.vulas.shared.json.JsonSyntaxException if any.
+	 */
 	public static void checkJsonValidity(String _json) throws JsonSyntaxException {
 //		final JsonParser p = new JsonParser();
 //		p.parse(_json);
@@ -239,6 +317,7 @@ public class JsonBuilder {
 	/**
 	 * Escapes JSON special characters in the given string, and encloses all of it in double quotes.
 	 * The method body has been copied from "org.codehaus.jettison.json.JSONObject.quote(String)".
+	 *
 	 * @param _string to be escaped
 	 * @return escaped string
 	 */

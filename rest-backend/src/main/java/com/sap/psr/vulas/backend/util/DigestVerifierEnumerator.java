@@ -14,7 +14,6 @@ import com.sap.psr.vulas.shared.util.CollectionUtil;
 
 /**
  * Loops over available implementations of {@link DigestVerifier} in order to verify the digest of a given {@link Library}.
- *
  */
 public class DigestVerifierEnumerator implements DigestVerifier {
 
@@ -25,6 +24,7 @@ public class DigestVerifierEnumerator implements DigestVerifier {
 	/** Release timestamp of the given digest (null if unknown). */
 	private java.util.Calendar timestamp;
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
 		final Set<ProgrammingLanguage> l = new HashSet<ProgrammingLanguage>();
@@ -35,6 +35,7 @@ public class DigestVerifierEnumerator implements DigestVerifier {
 		return l;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<DigestAlgorithm> getSupportedDigestAlgorithms() {
 		final Set<DigestAlgorithm> l = new HashSet<DigestAlgorithm>();
@@ -45,16 +46,18 @@ public class DigestVerifierEnumerator implements DigestVerifier {
 		return l;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getVerificationUrl() { return url; }
 	
+	/** {@inheritDoc} */
 	@Override
 	public java.util.Calendar getReleaseTimestamp() { return this.timestamp; }
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Loops over available implementations of {@link DigestVerifier} in order to verify the digest of a given {@link Library}.
-	 * @param _lib
-	 * @return
 	 */
 	public Boolean verify(Library _lib) throws VerificationException {
 		if(_lib==null || _lib.getDigest()==null)

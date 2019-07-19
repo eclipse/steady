@@ -10,14 +10,26 @@ import com.sap.psr.vulas.shared.enums.PathSource;
 import com.sap.psr.vulas.shared.util.ConstructIdUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>A2CGoal class.</p>
+ *
+ */
 public class A2CGoal extends AbstractReachGoal {
 	
 	private static final Log log = LogFactory.getLog(A2CGoal.class);
 
 	private Set<com.sap.psr.vulas.shared.json.model.ConstructId> entryPoints = null;
 	
+	/**
+	 * <p>Constructor for A2CGoal.</p>
+	 */
 	public A2CGoal() { super(GoalType.A2C); }
 	
+	/**
+	 * <p>Getter for the field <code>entryPoints</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	protected final Set<com.sap.psr.vulas.shared.json.model.ConstructId> getEntryPoints() {
 		if(this.entryPoints==null) {
 			// Filter app constructs (if requested)
@@ -32,6 +44,8 @@ public class A2CGoal extends AbstractReachGoal {
 	}
 	
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Sets the application constructs as entry points of the {@link ReachabilityAnalyzer}.
 	 */
 	protected final void setEntryPoints(ReachabilityAnalyzer _ra) {

@@ -15,14 +15,25 @@ public class FilenamePatternSearch extends AbstractFileSearch {
 
 	private Pattern pattern = null;
 
+	/**
+	 * <p>Constructor for FilenamePatternSearch.</p>
+	 *
+	 * @param _regex a {@link java.lang.String} object.
+	 */
 	public FilenamePatternSearch(@NotNull String _regex) {
 		this(Pattern.compile(_regex));
 	}
 	
+	/**
+	 * <p>Constructor for FilenamePatternSearch.</p>
+	 *
+	 * @param _pattern a {@link java.util.regex.Pattern} object.
+	 */
 	public FilenamePatternSearch(@NotNull Pattern _pattern) {
 		this.pattern = _pattern;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public FileVisitResult visitFile(Path _f, BasicFileAttributes attrs) {
 		if(!_f.toFile().isDirectory() && !this.foundFile(_f) && _f.getFileName()!=null) {

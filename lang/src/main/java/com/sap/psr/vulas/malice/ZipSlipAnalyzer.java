@@ -26,9 +26,8 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  * Supports the following archive types:
  * - ZIP and derivates JAR, WAR, EAR, AAR
  * - TAR and TAR.GZ
- * 
- * @see https://github.com/snyk/zip-slip-vulnerability
  *
+ * @see https://github.com/snyk/zip-slip-vulnerability
  */
 public class ZipSlipAnalyzer implements MaliciousnessAnalyzer {
 
@@ -36,6 +35,7 @@ public class ZipSlipAnalyzer implements MaliciousnessAnalyzer {
 
 	private Path destinationPath = VulasConfiguration.getGlobal().getTmpDir().toAbsolutePath().resolve(StringUtil.getRandonString(10));
 
+	/** {@inheritDoc} */
 	@Override
 	public MaliciousnessAnalysisResult isMalicious(File _file) {
 		MaliciousnessAnalysisResult mal = null;
@@ -75,6 +75,7 @@ public class ZipSlipAnalyzer implements MaliciousnessAnalyzer {
 		return mal;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public MaliciousnessAnalysisResult isMalicious(InputStream _is, boolean _log) {
 		final StringBuffer buffer = new StringBuffer();

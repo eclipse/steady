@@ -14,8 +14,15 @@ import org.apache.commons.logging.LogFactory;
 public enum VulnDepOrigin {
 	CC, BUNDLEDCC, AFFLIBID, BUNDLEDAFFLIBID;
 
+	/** Constant <code>log</code> */
 	private static final Log log = LogFactory.getLog(VulnDepOrigin.class);
 	
+	/**
+	 * <p>fromStringArray.</p>
+	 *
+	 * @param _values an array of {@link java.lang.String} objects.
+	 * @return a {@link java.util.Set} object.
+	 */
 	public static final Set<VulnDepOrigin> fromStringArray(String[] _values) {
 		final Set<VulnDepOrigin> vulndeporigins = new HashSet<VulnDepOrigin>();
 		if(_values!=null) {
@@ -31,6 +38,13 @@ public enum VulnDepOrigin {
 	}
 
 
+	/**
+	 * <p>fromString.</p>
+	 *
+	 * @param _value a {@link java.lang.String} object.
+	 * @param _default a {@link com.sap.psr.vulas.shared.enums.VulnDepOrigin} object.
+	 * @return a {@link com.sap.psr.vulas.shared.enums.VulnDepOrigin} object.
+	 */
 	public static VulnDepOrigin fromString(String _value, VulnDepOrigin _default) {
 		try {
 			return VulnDepOrigin.valueOf(_value.toUpperCase());

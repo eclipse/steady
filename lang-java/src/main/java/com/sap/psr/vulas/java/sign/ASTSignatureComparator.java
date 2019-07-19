@@ -30,6 +30,10 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.Levensh
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.NGramsCalculator;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.TokenBasedCalculator;
 
+/**
+ * <p>ASTSignatureComparator class.</p>
+ *
+ */
 public class ASTSignatureComparator implements SignatureComparator {
 
 
@@ -59,17 +63,38 @@ public class ASTSignatureComparator implements SignatureComparator {
 	private SignatureChange mSignChange = null;
 	private double mStringSimilarity;
 
+	/**
+	 * <p>Constructor for ASTSignatureComparator.</p>
+	 */
 	public ASTSignatureComparator() {}
 
+	/**
+	 * <p>Constructor for ASTSignatureComparator.</p>
+	 *
+	 * @param stringSimilarity a double.
+	 */
 	public ASTSignatureComparator(double stringSimilarity){
 		this.mStringSimilarity = stringSimilarity;
 	}
 
+	/**
+	 * <p>Constructor for ASTSignatureComparator.</p>
+	 *
+	 * @param _sign a {@link com.sap.psr.vulas.sign.Signature} object.
+	 * @param _signChg a {@link com.sap.psr.vulas.sign.SignatureChange} object.
+	 */
 	public ASTSignatureComparator(Signature _sign, SignatureChange _signChg){
 		this.mSignFixed = _sign;
 		this.mSignChange = _signChg;
 	}
 
+	/**
+	 * <p>Constructor for ASTSignatureComparator.</p>
+	 *
+	 * @param _vuln a {@link com.sap.psr.vulas.sign.Signature} object.
+	 * @param _fixed a {@link com.sap.psr.vulas.sign.Signature} object.
+	 * @param _signChg a {@link com.sap.psr.vulas.sign.SignatureChange} object.
+	 */
 	public ASTSignatureComparator(Signature _vuln, Signature _fixed, SignatureChange _signChg){
 		this.mSignVuln = _vuln;
 		this.mSignFixed = _fixed;
@@ -80,6 +105,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 	/*
 	 * @see com.sap.psr.vulas.sign.SignatureComparator#computeSimilarity(com.sap.psr.vulas.sign.Signature, com.sap.psr.vulas.sign.Signature)
 	 */
+	/** {@inheritDoc} */
 	@Override
 	public float computeSimilarity(Signature _a, Signature _b) {
 		Node _vulnerableConstruct = ((ASTSignature)_a).getRoot();
@@ -106,6 +132,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 	 *  _a is the defective construct ( this is used for the patch analyzer)
 	 *  _b is the fixed construct
 	 */
+	/** {@inheritDoc} */
 	@Override
 	public SignatureChange computeChange(Signature _a, Signature _b) {
 		SignatureChange astChange = new ASTSignatureChange(_a, _b);
@@ -114,15 +141,27 @@ public class ASTSignatureComparator implements SignatureComparator {
 	}
 
 
+	/**
+	 * <p>getTotalNumChanges.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getTotalNumChanges(){
 		return this.totalNumFixes;
 	}
 
+	/**
+	 * <p>getMatchedNumChanges.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getMatchedNumChanges(){
 		return this.matchedNumFixes;
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns true of the given signature contains the given change, false otherwise.
 	 */
 	@Override
@@ -136,10 +175,20 @@ public class ASTSignatureComparator implements SignatureComparator {
 		return containsChange(root_of_signature_under_test, list_of_modifications);
 	}
 
+	/**
+	 * <p>getStringSimilarityThreshold.</p>
+	 *
+	 * @return a double.
+	 */
 	public double getStringSimilarityThreshold() {
 		return this.mStringSimilarity;
 	}
 	
+	/**
+	 * <p>setStringSimilarityThreshold.</p>
+	 *
+	 * @param _threshold a double.
+	 */
 	public void setStringSimilarityThreshold(double _threshold) {
 		this.mStringSimilarity = _threshold;
 	}
@@ -510,11 +559,12 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 	/**
 	 *  Search for the specified change element inside Signature (Search using the Node Label)
-	 * @param change , the SourceCodeChange entity that has been changed
+	 *
 	 * @param astRoot The AST to be searched
 	 * @return the Node matching the change elements EntityType and Value
 	 *
 	 * public : for testing purpose, switch to private once done testing
+	 * @param change a {@link ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange} object.
 	 */
 	public Node searchForNode(SourceCodeChange change, Node astRoot){
 
@@ -553,11 +603,12 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 	/**
 	 *  Search for the _entityUniqueName inside Signature (Search using the Node Label)
-	 * @param change , the SourceCodeChange entity that has been changed
+	 *
 	 * @param astRoot The AST to be searched
 	 * @return true if entity is within the AST
 	 *
 	 * public : for testing purpose, switch to private once done testing
+	 * @param change a {@link ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange} object.
 	 */
 	public boolean searchForEntity(SourceCodeChange change, Node astRoot){
 
@@ -589,7 +640,8 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 	/**
 	 *  Search for the _entityUniqueName inside Signature (Search using the Node Label)
-	 * @param _entityUniqueName
+	 *
+	 * @param _entityUniqueName a {@link java.lang.String} object.
 	 * @param astRoot The AST to be searched
 	 * @return true if entity is within the AST
 	 *

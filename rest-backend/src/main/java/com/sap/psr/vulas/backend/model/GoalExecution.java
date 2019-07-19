@@ -38,6 +38,10 @@ import com.sap.psr.vulas.backend.model.view.Views;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.enums.PropertySource;
 
+/**
+ * <p>GoalExecution class.</p>
+ *
+ */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown=true, value={ "createdAt"}, allowGetters=true)
 @Entity
@@ -122,8 +126,18 @@ public class GoalExecution implements Serializable {
 	@JsonView(Views.GoalDetails.class)
 	private Map<String,Long> statistics;
 
+	/**
+	 * <p>Constructor for GoalExecution.</p>
+	 */
 	public GoalExecution() { super(); }
 	
+	/**
+	 * <p>Constructor for GoalExecution.</p>
+	 *
+	 * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
+	 * @param goal a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+	 * @param startedAtClient a {@link java.util.Calendar} object.
+	 */
 	public GoalExecution(Application app, GoalType goal, Calendar startedAtClient) {
 		super();
 		this.app = app;
@@ -131,49 +145,180 @@ public class GoalExecution implements Serializable {
 		this.startedAtClient = startedAtClient;
 	}
 
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getId() { return id; }
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 */
 	public void setId(Long id) { this.id = id; }
 
+	/**
+	 * <p>Getter for the field <code>app</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.Application} object.
+	 */
 	public Application getApp() { return app; }
+	/**
+	 * <p>Setter for the field <code>app</code>.</p>
+	 *
+	 * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
+	 */
 	public void setApp(Application app) { this.app = app; }
 
+	/**
+	 * <p>Getter for the field <code>goal</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+	 */
 	public GoalType getGoal() { return goal; }
+	/**
+	 * <p>Setter for the field <code>goal</code>.</p>
+	 *
+	 * @param goal a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+	 */
 	public void setGoal(GoalType goal) { this.goal = goal; }
 
+	/**
+	 * <p>Getter for the field <code>createdAt</code>.</p>
+	 *
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public java.util.Calendar getCreatedAt() { return createdAt; }
+	/**
+	 * <p>Setter for the field <code>createdAt</code>.</p>
+	 *
+	 * @param createdAt a {@link java.util.Calendar} object.
+	 */
 	public void setCreatedAt(java.util.Calendar createdAt) { this.createdAt = createdAt; }
 
+	/**
+	 * <p>Getter for the field <code>startedAtClient</code>.</p>
+	 *
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public java.util.Calendar getStartedAtClient() { return startedAtClient; }
+	/**
+	 * <p>Setter for the field <code>startedAtClient</code>.</p>
+	 *
+	 * @param startedAtClient a {@link java.util.Calendar} object.
+	 */
 	public void setStartedAtClient(java.util.Calendar startedAtClient) { this.startedAtClient = startedAtClient; }
 
+	/**
+	 * <p>Getter for the field <code>runtimeNano</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getRuntimeNano() { return runtimeNano; }
+	/**
+	 * <p>Setter for the field <code>runtimeNano</code>.</p>
+	 *
+	 * @param runtimeNano a long.
+	 */
 	public void setRuntimeNano(long runtimeNano) { this.runtimeNano = runtimeNano; }
 
+	/**
+	 * <p>Getter for the field <code>executionId</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getExecutionId() { return executionId; }
+	/**
+	 * <p>Setter for the field <code>executionId</code>.</p>
+	 *
+	 * @param _id a {@link java.lang.String} object.
+	 */
 	public void setExecutionId(String _id) { this.executionId = _id; }
 
+	/**
+	 * <p>getExecutionException.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getExecutionException() { return exception; }
+	/**
+	 * <p>setExecutionException.</p>
+	 *
+	 * @param exception a {@link java.lang.String} object.
+	 */
 	public void setExecutionException(String exception) { this.exception = exception; }
 
+	/**
+	 * <p>Getter for the field <code>memMax</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getMemMax() { return memMax; }
+	/**
+	 * <p>Setter for the field <code>memMax</code>.</p>
+	 *
+	 * @param memMax a long.
+	 */
 	public void setMemMax(long memMax) { this.memMax = memMax; }
 
+	/**
+	 * <p>Getter for the field <code>memUsedMax</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getMemUsedMax() { return memUsedMax; }
+	/**
+	 * <p>Setter for the field <code>memUsedMax</code>.</p>
+	 *
+	 * @param memUsedMax a long.
+	 */
 	public void setMemUsedMax(long memUsedMax) { this.memUsedMax = memUsedMax; }
 
+	/**
+	 * <p>Getter for the field <code>memUsedAvg</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getMemUsedAvg() { return memUsedAvg; }
+	/**
+	 * <p>Setter for the field <code>memUsedAvg</code>.</p>
+	 *
+	 * @param memUsedAvg a long.
+	 */
 	public void setMemUsedAvg(long memUsedAvg) { this.memUsedAvg = memUsedAvg; }
 
+	/**
+	 * <p>Getter for the field <code>clientVersion</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getClientVersion() { return clientVersion; }
+	/**
+	 * <p>Setter for the field <code>clientVersion</code>.</p>
+	 *
+	 * @param clientVersion a {@link java.lang.String} object.
+	 */
 	public void setClientVersion(String clientVersion) { this.clientVersion = clientVersion; }
 
+	/**
+	 * <p>Getter for the field <code>configuration</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<Property> getConfiguration() { return configuration; }
+	/**
+	 * <p>Setter for the field <code>configuration</code>.</p>
+	 *
+	 * @param configuration a {@link java.util.Collection} object.
+	 */
 	public void setConfiguration(Collection<Property> configuration) { this.configuration = configuration; }
 
 	/**
 	 * Returns the value of the configuration property with the given name (or null, if no such property exists).
-	 * @param _name
-	 * @return
+	 *
+	 * @param _name a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	@JsonIgnore
 	public String getConfiguration(@NotNull String _name) {
@@ -185,13 +330,24 @@ public class GoalExecution implements Serializable {
 		return this.configurationMap.get(_name);
 	}
 	
+	/**
+	 * <p>Getter for the field <code>systemInfo</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<Property> getSystemInfo() { return systemInfo; }
+	/**
+	 * <p>Setter for the field <code>systemInfo</code>.</p>
+	 *
+	 * @param systemInfo a {@link java.util.Collection} object.
+	 */
 	public void setSystemInfo(Collection<Property> systemInfo) { this.systemInfo = systemInfo; }
 
 	/**
 	 * Returns the value of the system info with the given name (or null, if no such property exists).
-	 * @param _name
-	 * @return
+	 *
+	 * @param _name a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	@JsonIgnore
 	public String getSystemInfo(@NotNull String _name) {
@@ -203,7 +359,17 @@ public class GoalExecution implements Serializable {
 		return this.systemInfoMap.get(_name);
 	}
 	
+	/**
+	 * <p>Getter for the field <code>statistics</code>.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
 	public Map<String, Long> getStatistics() { return statistics; }
+	/**
+	 * <p>Setter for the field <code>statistics</code>.</p>
+	 *
+	 * @param statistics a {@link java.util.Map} object.
+	 */
 	public void setStatistics(Map<String, Long> statistics) { this.statistics = statistics; }
 	
 	/**
@@ -216,6 +382,7 @@ public class GoalExecution implements Serializable {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -226,6 +393,7 @@ public class GoalExecution implements Serializable {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
