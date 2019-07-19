@@ -536,7 +536,7 @@ import com.sap.psr.vulas.shared.json.model.Version;
      *
      *  This method compares the versions of ArtifactResults2 according to the following priorities
      * 1) compare version numbers of the form major.minor[.maintenance[.build]], if only digits are contained
-     * 2) compare timestap (of latest update in maven central)
+     * 2) compare timestamp (of latest update in maven central)
      * 3) alphanumerical comparison
      *
      * @param other a {@link com.sap.psr.vulas.patcheval.representation.ArtifactResult2} object.

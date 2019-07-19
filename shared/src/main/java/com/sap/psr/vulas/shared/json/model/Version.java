@@ -117,7 +117,8 @@ public class Version implements Comparable<Version>{
 				Pattern p = Pattern.compile("^[0-9]*$");
 				Matcher m = p.matcher(varray[v]);
 				Matcher m1 = p.matcher(otherVersions[v]);
-				if(m.matches() &&  m1.matches()){
+				//we proceed if the version matches the pattern with some non-empty groups (i.e., the version contains numbers at all)
+				if(m.matches() && m.start()>0 &&  m1.matches() && m1.start()>0){ 
 					if (Integer.parseInt(varray[v])==Integer.parseInt(otherVersions[v]))
 						break;
 					return (Integer.parseInt(varray[v])>Integer.parseInt(otherVersions[v]))?1:-1;
