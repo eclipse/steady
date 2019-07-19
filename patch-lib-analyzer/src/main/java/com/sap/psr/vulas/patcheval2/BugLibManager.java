@@ -905,6 +905,7 @@ public class BugLibManager {
         
     }
     
+    //this method is used for bugs without construct changes to propagate manual (and already propagated) assessments (affected-false) to newer versions within the same major release
     private void computeAndUploadPropagateResults() throws BackendConnectionException{
     	List<AffectedLibrary> existingManual = new ArrayList<AffectedLibrary>();
 		existingManual.addAll(Arrays.asList(BackendConnector.getInstance().getBugAffectedLibraries(bugChangeList.getBugId(),AffectedVersionSource.MANUAL.toString())));
@@ -979,19 +980,21 @@ public class BugLibManager {
 				}
 			}			
 		}
-		BugLibManager.log.info("Propagating results for [" + propagate + "] artifacts.");
-		if (VulasConfiguration.getGlobal().getConfiguration().getBoolean(PEConfiguration.UPLOAD_RESULTS) == true) {
-			BackendConnector.getInstance().uploadPatchEvalResults(bugChangeList.getBugId(),sourceResult.toString(), source);
-		} else {
-			// save to file
-
-			final File json_file = Paths.get(PEConfiguration.getBaseFolder().toString() + File.separator+ bugChangeList.getBugId() + "_" + source + "_" + ".json").toFile();
-			try {
-				FileUtil.writeToFile(json_file, sourceResult.toString());
-			} catch (IOException exception) {
-				exception.printStackTrace();
+		BugLibManager.log.info("Propagated results for [" + propagate + "] artifacts.");
+		if(propagate>0){
+			if (VulasConfiguration.getGlobal().getConfiguration().getBoolean(PEConfiguration.UPLOAD_RESULTS) == true) {
+				BackendConnector.getInstance().uploadPatchEvalResults(bugChangeList.getBugId(),sourceResult.toString(), source);
+			} else {
+				// save to file
+	
+				final File json_file = Paths.get(PEConfiguration.getBaseFolder().toString() + File.separator+ bugChangeList.getBugId() + "_" + source + "_" + ".json").toFile();
+				try {
+					FileUtil.writeToFile(json_file, sourceResult.toString());
+				} catch (IOException exception) {
+					exception.printStackTrace();
+				}
+				log.info("Results for source PROPAGATE_MANUAL written to [" + json_file + "]");
 			}
-			log.info("Results for source PROPAGATE_MANUAL written to [" + json_file + "]");
 		}
 
     }
