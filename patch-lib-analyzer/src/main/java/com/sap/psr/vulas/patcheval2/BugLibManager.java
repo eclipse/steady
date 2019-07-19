@@ -924,7 +924,7 @@ public class BugLibManager {
             		Artifact[] artifactsLibraries = BackendConnector.getInstance().getAllArtifactsGroupArtifact(al.getLibraryId().getMvnGroup(), al.getLibraryId().getArtifact());
             		if ( artifactsLibraries != null ){
                         for ( Artifact a : artifactsLibraries){
-                        	if ( !gavToBeAssessed.contains(a) ){
+                        	if ( !gavToBeAssessed.contains(a)){
                         		gavToBeAssessed.add(a);
 	                   	 	}
                         }
@@ -940,41 +940,44 @@ public class BugLibManager {
 		int propagate=0;
 		JsonArray sourceResult = new JsonArray();
 		
-		//TODO remove existing gavs from list of tobeassessed
 		for(Artifact a : gavToBeAssessed){
-
-			isGreater=false;
-			isSmaller=false;
-			for(AffectedLibrary i :existingManual){
-				if(i.getLibraryId()!=null && i.getLibraryId().getMvnGroup().equals(a.getLibId().getMvnGroup()) && 
-						i.getLibraryId().getArtifact().equals(a.getLibId().getArtifact()) ){
-					Version toCompare = new Version(i.getLibraryId().getVersion());
-					Version current = new Version(a.getLibId().getVersion());
-					
-					if(current.getMaintenanceRelease().equals(toCompare.getMaintenanceRelease()) ||
-							toCompare.isMaintenanceRelease()){
-						if(current.compareTo(toCompare)==0){
-							isGreater=false;
-							break;
-						}
-						else if (!i.getAffected() && current.compareTo(toCompare)>0){
-							isGreater=true;
-						}
-						else if (i.getAffected() && current.compareTo(toCompare)<0){
-							isSmaller=true;
+			if(!gavAssessed.contains(a)){
+				isGreater=false;
+				isSmaller=false;
+				for(AffectedLibrary i :existingManual){
+					if(i.getLibraryId()!=null && i.getLibraryId().getMvnGroup().equals(a.getLibId().getMvnGroup()) && 
+							i.getLibraryId().getArtifact().equals(a.getLibId().getArtifact()) ){
+						Version toCompare = new Version(i.getLibraryId().getVersion());
+						Version current = new Version(a.getLibId().getVersion());
+						
+						if(current.getMajorRelease().equals(toCompare.getMajorRelease()) &&
+								Integer.parseInt((current.getMinorRelease().split("\\."))[1])> Integer.parseInt((toCompare.getMinorRelease().split("\\."))[1]) ){
+							
+							if(current.getMaintenanceRelease().equals(toCompare.getMaintenanceRelease()) ||
+									toCompare.isMaintenanceRelease()){
+								if(current.compareTo(toCompare)==0){
+									isGreater=false;
+									break;
+								}
+								else if (!i.getAffected() && current.compareTo(toCompare)>0){
+									isGreater=true;
+								}
+								else if (i.getAffected() && current.compareTo(toCompare)<0){
+									isSmaller=true;
+								}
+							}
 						}
 					}
 				}
-			}
-			
-			if(isGreater&&!isSmaller){
-				propagate++;
-				log.info("Creating Json for PROPAGATE_MANUAL for artifact [" + a.toString()+"]");
-				JsonObject result = createJsonResult(a, source, false);
 				
-				sourceResult.add(result);
-			}
-			
+				if(isGreater&&!isSmaller){
+					propagate++;
+					log.info("Creating Json for PROPAGATE_MANUAL for artifact [" + a.toString()+"]");
+					JsonObject result = createJsonResult(a, source, false);
+					
+					sourceResult.add(result);
+				}
+			}			
 		}
 		BugLibManager.log.info("Propagating results for [" + propagate + "] artifacts.");
 		if (VulasConfiguration.getGlobal().getConfiguration().getBoolean(PEConfiguration.UPLOAD_RESULTS) == true) {
