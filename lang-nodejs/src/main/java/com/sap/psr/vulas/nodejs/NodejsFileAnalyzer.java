@@ -484,6 +484,11 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
                 throw new FileAnalysisException("ANTLR exception while analyzing class file [" + this.file.getName() + "]");
             } catch(IOException e) {
                 throw new FileAnalysisException("IO exception while analyzing class file [" + this.file.getName() + "]");
+            } catch(Exception e) {
+                if(this.constructs.size() == 0)
+                    throw new FileAnalysisException("Unexpected exception while analyzing class file [" + this.file.getName() + "]");
+                else
+                    log.error("Unable to retrieves every constructs: got [" + this.constructs.size() + "] constructs from [" + this.file.getName() + "]");
             }
         }
         return this.constructs;
