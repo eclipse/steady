@@ -19,9 +19,7 @@ import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.FileAnalyzer;
 import com.sap.psr.vulas.FileAnalyzerFactory;
-import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
-import com.sap.psr.vulas.shared.json.model.Library;
 import com.sap.psr.vulas.shared.util.FileUtil;
 
 public class NodejsPackageAnalyzer implements FileAnalyzer {
@@ -86,28 +84,6 @@ public class NodejsPackageAnalyzer implements FileAnalyzer {
             }
         }
         return this.constructs;
-    }
-
-    public String getDigest() {
-        // Currently, null will be returned as archive is null.
-        return this.archive != null ? FileUtil.getDigest(this.archive, DigestAlgorithm.MD5) : null;
-    }
-
-    /**
-     * Returns a {@link Library} representing the analyzed Java archive.
-     * @return
-     * @throws FileAnalysisException
-     */
-    public Library getLibrary() throws FileAnalysisException {
-        final Library lib = new Library();
-
-        if(this.getDigest() != null) {
-            lib.setDigest(this.getDigest());
-            lib.setDigestAlgorithm(DigestAlgorithm.MD5);
-        }
-        lib.setConstructs(this.getSharedConstructs());
-
-        return lib;
     }
 
     @Override

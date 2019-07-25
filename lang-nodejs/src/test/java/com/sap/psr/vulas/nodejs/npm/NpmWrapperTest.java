@@ -3,6 +3,7 @@ package com.sap.psr.vulas.nodejs.npm;
 import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.nodejs.ProcessWrapperException;
 import com.sap.psr.vulas.shared.categories.Slow;
+import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.json.model.ConstructId;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringList;
@@ -42,13 +43,15 @@ public class NpmWrapperTest {
         assertEquals(9, filtered_packages.size());
 
         /*
-         * TODO: Find a way to get a digest of npm packages
+         * TODO: Get digest from packages outside npm registry
          */
         // Get Digest for every package
-//        for(NpmInstalledPackage p: filtered_packages) {
-//            final String digest = p.getDigest();
-//            assertTrue(digest != null && !digest.equals(""));
-//        }
+        for(NpmInstalledPackage p: filtered_packages) {
+            final String digest = p.getDigest();
+            final DigestAlgorithm algo = p.getDigestAlgorithm();
+            assertTrue(digest != null && !digest.equals(""));
+            assertNotNull(algo);
+        }
 
         // Get constructs for every packages
         for(NpmInstalledPackage p: filtered_packages) {

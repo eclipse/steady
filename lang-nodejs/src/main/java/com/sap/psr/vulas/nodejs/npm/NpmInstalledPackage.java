@@ -34,6 +34,7 @@ public class NpmInstalledPackage implements Comparable {
     private String version = null;
     private Map<String, String> properties = new HashMap<String, String>();
     private String digest = null;
+    private DigestAlgorithm digestAlgo = null;
     private Map<ConstructId, Construct> constructs = null;
 
     private String downloadUrl = null;
@@ -86,19 +87,12 @@ public class NpmInstalledPackage implements Comparable {
     public Library getLibrary() throws FileAnalysisException {
         Library lib;
 
-        if(this.fileAnalyzer != null && this.fileAnalyzer instanceof NodejsPackageAnalyzer) {
-            lib = ((NodejsPackageAnalyzer) this.fileAnalyzer).getLibrary();
-            lib.setLibraryId(new LibraryId(this.getName(), this.getName(), this.getVersion()));
-        }
-        else {
-            lib = new Library();
-            lib.setDigest(this.getDigest());
-            lib.setDigestAlgorithm(DigestAlgorithm.MD5);
-            lib.setLibraryId(new LibraryId(this.getName(), this.getName(), this.getVersion()));
-            if(this.getConstructs()!=null) {
-                lib.setConstructs(ConstructId.getSharedType(this.getConstructs().keySet()));
-            }
-        }
+        lib = new Library();
+        lib.setDigestAlgorithm(this.getDigestAlgorithm());
+        lib.setDigest(this.getDigest());
+        lib.setLibraryId(new LibraryId(this.getName(), this.getName(), this.getVersion()));
+        if(this.getConstructs()!=null)
+            lib.setConstructs(ConstructId.getSharedType(this.getConstructs().keySet()));
 
         final Set<Property> p = new HashSet<Property>();
         for(String key: this.getProperties().keySet()) {
@@ -162,6 +156,31 @@ public class NpmInstalledPackage implements Comparable {
             }
         }
         return this.digest;
+    }
+
+    public DigestAlgorithm getDigestAlgorithm() {
+        if(this.downloadPath==null && (this.properties==null || !this.properties.containsKey(LOCATION)))
+            throw new IllegalStateException(this + " does not have local download path nor property [" + LOCATION + "]");
+        if(this.digestAlgo == null) {
+            if(this.properties.get("integrity").equalsIgnoreCase("")) {
+                log.error("Cannot compute checksum of " + this);
+            }
+            // Get digest from generated package.json
+            else {
+                String [] ingri = this.properties.get("integrity").split("-");
+                String algo = ingri[0];
+                if(algo.equalsIgnoreCase("sha512"))
+                    this.digestAlgo = DigestAlgorithm.SHA512;
+                else if(algo.equalsIgnoreCase("sha1"))
+                    this.digestAlgo = DigestAlgorithm.SHA1;
+                else if(algo.equalsIgnoreCase("sha256"))
+                    this.digestAlgo = DigestAlgorithm.SHA256;
+                else
+                    log.error("Cannot find digest algorithm of " + this);
+                log.info("Retrieved [" + algo + "] digest from generated package.json file [" + this.downloadPath + "]");
+            }
+        }
+        return this.digestAlgo;
     }
 
     /**

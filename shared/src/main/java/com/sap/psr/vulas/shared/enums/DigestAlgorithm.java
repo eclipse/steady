@@ -10,7 +10,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  * @see MessageDigest
  */
 public enum DigestAlgorithm {
-	SHA1((byte)10), SHA256((byte)20), MD5((byte)30);
+	SHA1((byte)10), SHA256((byte)20), SHA512((byte)30), MD5((byte)40);
 
 	private byte value;
 
@@ -24,7 +24,8 @@ public enum DigestAlgorithm {
 	public String toString() {
 		if(this.value==10) return "SHA1";
 		else if(this.value==20) return "SHA256";
-		else if(this.value==30) return "MD5";
+		else if(this.value==30) return "SHA512";
+		else if(this.value==40) return "MD5";
 		else throw new IllegalArgumentException("[" + this.value + "] is not a valid digest algorithm");
 	}
 }
