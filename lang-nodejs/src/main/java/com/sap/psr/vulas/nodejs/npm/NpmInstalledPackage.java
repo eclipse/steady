@@ -15,7 +15,6 @@ import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalyzer;
 import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.FileAnalyzerFactory;
-import com.sap.psr.vulas.nodejs.NodejsPackageAnalyzer;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.PropertySource;
 import com.sap.psr.vulas.shared.json.model.Library;
@@ -29,6 +28,7 @@ public class NpmInstalledPackage implements Comparable {
 
     private static final String LOCATION = "location";
     private static final String REQUIRED_BY = "required_by";
+    private static final String DEP_LOCATION = "dep_location";
 
     private String name = null;
     private String version = null;
@@ -109,12 +109,14 @@ public class NpmInstalledPackage implements Comparable {
      * @return
      */
     public boolean requires(NpmInstalledPackage _pack) throws IllegalStateException {
-        if(this.properties == null || !this.properties.containsKey(REQUIRED_BY))
-            throw new IllegalStateException("Property [" + REQUIRED_BY + "] not known");
+        if(!this.properties.containsKey(DEP_LOCATION))
+            throw new IllegalStateException("Property [" + DEP_LOCATION + "] not known in [" + this.getName() + "]");
+        if(!_pack.properties.containsKey(REQUIRED_BY))
+            throw new IllegalStateException("Property [" + REQUIRED_BY + "] not known in [" + _pack.getName() + "]");
 
-        final String[] packs = this.properties.get(REQUIRED_BY).split(",");
+        final String[] packs = _pack.properties.get(REQUIRED_BY).split(",");
         for(int i=0; i<packs.length; i++) {
-            if (this.properties.get("dep_location").equalsIgnoreCase(packs[i].trim()))
+            if (this.properties.get(DEP_LOCATION).equalsIgnoreCase(packs[i].trim()))
                 return true;
         }
         return false;
