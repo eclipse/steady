@@ -1,5 +1,6 @@
 package com.sap.psr.vulas.nodejs.npm;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
@@ -18,6 +19,8 @@ import java.util.HashMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
+import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,15 +35,11 @@ public class NpmWrapper {
     private final static Log log = LogFactory.getLog(NpmWrapper.class);
 
     private static final String PACKAGE_JSON = "package.json";
-
     private static final boolean IS_WIN = System.getProperty("os.name").contains("Windows");
 
     private Path pathToNpm = null;
-
     private Path pathToVirtualenv = null;
-
     private Path pathToNpmExecutable = null;
-
     private Path pathToNodejsProject = null;
 
     private String projectName = null;
@@ -104,7 +103,6 @@ public class NpmWrapper {
         try {
             Files.walkFileTree(this.pathToNodejsProject, new HashSet<FileVisitOption>(), Integer.MAX_VALUE, new CopyFileVisitor(this.pathToNodejsProject, this.pathToVirtualenv));
         } catch (Exception e) {
-            new_dir = null;
             log.error("Cannot copy project dir [" + this.pathToNodejsProject + "] to virtual env [" + this.pathToNpmExecutable + "]:" + e.getMessage());
             throw new ProcessWrapperException("Cannot copy project dir [" + this.pathToNodejsProject + "] to virtual env [" + this.pathToNpmExecutable + "]:" + e.getMessage());
         }
@@ -211,6 +209,7 @@ public class NpmWrapper {
             String pack_required_by = "";
             String pack_integrity = "";
             String pack_shasum = "";
+            File tarball_dest = null;
 
             try {
                 pack_url = StringUtils.defaultIfEmpty(pack_json.get("_resolved").getAsString(), "");
@@ -228,6 +227,22 @@ public class NpmWrapper {
                 log.error("Cannot get properties of [" + pack_name + "], set the default value instead");
             }
 
+            if(pack_integrity.equalsIgnoreCase("") && !pack_dep_location.equalsIgnoreCase("/")) {
+                log.info("Cannot retrieve integrity field from json file, trying to make tarball file instead");
+
+                try {
+                    tarball_dest = Paths.get(pack_path.substring(0, pack_path.lastIndexOf(File.separator)), pack_name + ".tgz").toFile();
+
+                    DirUtil.createTarBall(Paths.get(pack_path).toFile(), tarball_dest, new String[] {"node_modules"}, null);
+                    pack_integrity = DigestAlgorithm.SHA512.toString().replace("-", "") +"-"+ FileUtil.getDigest(tarball_dest, DigestAlgorithm.SHA512);
+                    pack_shasum = FileUtil.getDigest(tarball_dest, DigestAlgorithm.SHA1);
+                } catch(ArchiveException e) {
+                    log.error(e.getMessage());
+                } catch(Exception e) {
+                    log.error(e.getMessage());
+                }
+            }
+
             pack_props.put("name", pack_name);
             pack_props.put("version", pack_version);
             pack_props.put("location", pack_path);
@@ -240,6 +255,7 @@ public class NpmWrapper {
             pack.setDownloadPath(Paths.get(pack_path));
             pack.setDownloadUrl(pack_url);
             pack.addProperties(pack_props);
+            pack.setTarballFile(tarball_dest != null ? tarball_dest.toPath() : null);
 
             set.add(pack);
         }

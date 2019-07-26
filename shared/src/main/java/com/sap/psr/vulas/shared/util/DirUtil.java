@@ -1,5 +1,6 @@
-package com.sap.psr.vulas.shared.util;
+    package com.sap.psr.vulas.shared.util;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,12 +12,19 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 import java.util.jar.JarEntry;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -213,5 +221,70 @@ public class DirUtil {
 
 		// Create the digest
 		return DigestUtil.getDigestAsString(res.toString(), StandardCharsets.UTF_8, DigestAlgorithm.MD5);
+	}
+
+	public static File createTarBall(final File _src, final File _dst, final String[] _ignore_dir, final String[] _ignore_ext) throws ArchiveException {
+		if(_dst.isFile()) {
+			throw new IllegalArgumentException("[" + _dst + "] is existed, cannot overwrite a file");
+		}
+
+		TarArchiveOutputStream tos = null;
+		try {
+			// Prepare tarball setting
+			FileOutputStream fos = new FileOutputStream(_dst);
+			GZIPOutputStream gos = new GZIPOutputStream(new BufferedOutputStream(fos));
+			tos = new TarArchiveOutputStream(gos);
+			tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
+
+			Queue<File> fileQueue = new LinkedList<File>();
+			fileQueue.add(_src);
+
+			// Iterate over files in directory and add them in a tarball
+			outer:
+                while(!fileQueue.isEmpty()) {
+                    File file = fileQueue.remove();
+
+					// Add files to the queue
+                    if(FileUtil.isAccessibleDirectory(file)) {
+						if(_ignore_dir != null) {
+							for(String dir : _ignore_dir) {
+								if (file.getName().equalsIgnoreCase(dir))
+									continue outer;
+							}
+						}
+						for(File subfile : file.listFiles())
+							fileQueue.add(subfile);
+					}
+                    // Add file in the tarball
+                    else if(FileUtil.isAccessibleFile(file.toString())) {
+                        if(_ignore_ext != null) {
+							for(String ext : _ignore_ext) {
+								if(file.getName().endsWith(ext))
+									continue outer;
+							}
+                        }
+                        final String entry_name = _src.toPath().toAbsolutePath().relativize(file.toPath().toAbsolutePath()).toString();
+                        tos.putArchiveEntry(new TarArchiveEntry(file, entry_name));
+
+                        FileInputStream fis = new FileInputStream(file);
+                        BufferedInputStream bis = new BufferedInputStream(fis);
+
+                        IOUtils.copy(bis, tos);
+                        tos.closeArchiveEntry();
+                        bis.close();
+                        fis.close();
+                    }
+                    else {
+                        log.warn("Cannot add [" + file.getName() + "] in the tarball");
+                    }
+                }
+                tos.finish();
+				tos.close();
+                gos.close();
+                fos.close();
+		} catch(Exception e) {
+			throw new ArchiveException("Cannot make the tarball [" + _dst.toString() + "]");
+		}
+		return _dst;
 	}
 }

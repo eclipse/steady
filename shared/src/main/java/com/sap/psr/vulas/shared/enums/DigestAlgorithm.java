@@ -24,7 +24,7 @@ public enum DigestAlgorithm {
 	public String toString() {
 		if(this.value==10) return "SHA1";
 		else if(this.value==20) return "SHA256";
-		else if(this.value==30) return "SHA512";
+		else if(this.value==30) return "SHA-512";
 		else if(this.value==40) return "MD5";
 		else throw new IllegalArgumentException("[" + this.value + "] is not a valid digest algorithm");
 	}

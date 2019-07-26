@@ -41,6 +41,7 @@ public class NpmInstalledPackage implements Comparable {
     private Path downloadPath = null;
 
     private FileAnalyzer fileAnalyzer = null;
+    private Path tarballFile = null;
 
     public NpmInstalledPackage(String _name, String _version) {
         this.name = _name;
@@ -183,6 +184,10 @@ public class NpmInstalledPackage implements Comparable {
             }
         }
         return this.digestAlgo;
+    }
+
+    public void setTarballFile(Path _dst) {
+        this.tarballFile = _dst;
     }
 
     /**

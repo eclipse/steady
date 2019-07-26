@@ -72,4 +72,24 @@ public class NpmWrapperTest {
         assertEquals(91, packages.size());
         assertEquals(90, filtered_packages.size());
     }
+
+    @Test
+    @Category(Slow.class)
+    public void testGitDependencies() throws IllegalArgumentException, ProcessWrapperException {
+        final Path project = Paths.get("src", "test", "resources", "test-non-registry-project");
+        final NpmWrapper vew = new NpmWrapper(project);
+
+        final Set<NpmInstalledPackage> packages = vew.getInstalledPackages();
+        final Set<NpmInstalledPackage> filtered_packages = NpmInstalledPackage.filterUsingArtifact(packages, new StringList().add("test-non-registry-project"), false);
+
+        assertEquals(59, packages.size());
+        assertEquals(58, filtered_packages.size());
+
+        for(NpmInstalledPackage p: filtered_packages) {
+            final String digest = p.getDigest();
+            final DigestAlgorithm algo = p.getDigestAlgorithm();
+            assertTrue(digest != null && !digest.equals(""));
+            assertNotNull(algo);
+        }
+    }
 }
