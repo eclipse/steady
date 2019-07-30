@@ -11,7 +11,7 @@
     </parent>
     <artifactId>lang-nodejs</artifactId>
 
-    <name>NodeJS - Core classes for NodeJS analysis</name>
+    <name>Node.js - Core classes for Node.js analysis</name>
     <description></description>
 
     <dependencies>

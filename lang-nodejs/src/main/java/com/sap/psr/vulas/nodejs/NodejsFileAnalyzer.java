@@ -528,7 +528,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
 
     @Override
     public String toString() {
-        return "NodeJS parser for [" + this.file + "]";
+        return "Node.js parser for [" + this.file + "]";
     }
 
     /**

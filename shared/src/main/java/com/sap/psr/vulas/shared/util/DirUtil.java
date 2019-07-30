@@ -223,6 +223,15 @@ public class DirUtil {
 		return DigestUtil.getDigestAsString(res.toString(), StandardCharsets.UTF_8, DigestAlgorithm.MD5);
 	}
 
+    /**
+     * Create a tarball for the given directory. Specific directory or file extension can be ignored.
+     *
+     * @param _src a {@link java.io.File} object.
+	 * @param _dst a {@link java.io.File} object.
+     * @param _ignore_dir an array of {@link java.lang.String} objects.
+	 * @param _ignore_ext an array of {@link java.lang.String} objects.
+	 * @return a {@link java.io.File} object.
+     */
 	public static File createTarBall(final File _src, final File _dst, final String[] _ignore_dir, final String[] _ignore_ext) throws ArchiveException {
 		if(_dst.isFile()) {
 			throw new IllegalArgumentException("[" + _dst + "] is existed, cannot overwrite a file");
