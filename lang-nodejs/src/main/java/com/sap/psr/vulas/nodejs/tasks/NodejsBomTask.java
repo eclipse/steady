@@ -57,15 +57,15 @@ public class NodejsBomTask extends AbstractBomTask {
         final Set<Path> prj_paths = new HashSet<Path>();
         final DirWithFileSearch search = new DirWithFileSearch("package.json");
         for(Path p : this.getSearchPath()) {
-            log.info("Searching for Nodejs projects in search path [" + p + "]");
+            log.info("Searching for Node.js projects in search path [" + p + "]");
             search.clear();
             prj_paths.addAll(search.search(p));
         }
-        log.info("Found [" + prj_paths.size() + "] Nodejs projects in search path(s)");
+        log.info("Found [" + prj_paths.size() + "] Node.js projects in search path(s)");
 
         NpmWrapper npm;
         for(Path p: prj_paths) {
-            log.info("Analyzing Nodejs project in [" + p + "]");
+            log.info("Analyzing Node.js project in [" + p + "]");
             try {
                 // Npm installation path provided: Call npm to get installed packages
                 if (!this.vulasConfiguration.isEmpty(NodejsConfiguration.JS_NPM_PATH)) {
@@ -92,9 +92,9 @@ public class NodejsBomTask extends AbstractBomTask {
         final Set<ConstructId> app_constructs = new HashSet<ConstructId>();
         for(Path p: this.getSearchPath()) {
             try {
-                // Make sure to not accidentally add other than Nodejs constructs
+                // Make sure to not accidentally add other than NodeJS constructs
                 if(FileUtil.isAccessibleDirectory(p) || FileUtil.hasFileExtension(p, EXT_FILTER)) {
-                    log.info("Searching for Nodejs constructs in search path [" + p + "] with filter [" + StringUtil.join(EXT_FILTER, ", ") + "]");
+                    log.info("Searching for Node.js constructs in search path [" + p + "] with filter [" + StringUtil.join(EXT_FILTER, ", ") + "]");
                     final FileAnalyzer da = FileAnalyzerFactory.buildFileAnalyzer(p.toFile(), EXT_FILTER);
                     app_constructs.addAll(da.getConstructs().keySet());
                 }
@@ -140,11 +140,7 @@ public class NodejsBomTask extends AbstractBomTask {
             } catch(FileAnalysisException e) {
                 log.error(e.getMessage(), e);
             }
-
-            return deps;
         }
-
-
         return deps;
     }
 }
