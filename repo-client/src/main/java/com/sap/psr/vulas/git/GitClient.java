@@ -483,6 +483,10 @@ public class GitClient implements IVCSClient {
 				this.checkoutPyInits(parentRev, oldPath);
 				this.checkoutPyInits(_rev, newPath);
 
+				// Try to checkout package.json file (which are needed to build the construct ID)
+				this.checkoutJsPackageJson(parentRev, oldPath);
+				this.checkoutJsPackageJson(_rev, newPath);
+
 				// TODO what to do with directories?
 			}
 			sw.stop();
@@ -502,6 +506,20 @@ public class GitClient implements IVCSClient {
 	public Map<String, String> listEntries(String path, String _asof, String _until) {
 		Map<String, String> l = new HashMap<String, String>();
 		return l;
+	}
+
+	private void checkoutJsPackageJson(String _rev_branch, String _path) {
+		// Only check for JavaScript files
+		if(!_path.endsWith("js"))
+			return;
+
+		// Checkout package.json in root dir
+		Path package_json_file = Paths.get("package.json");
+		try {
+			final File f = checkoutIfNotExists(_rev_branch, toGitPath(package_json_file));
+		} catch(IllegalStateException ise) {
+			log.warn("[" + package_json_file.toString() + "] does not exist in remote repo");
+		}
 	}
 
 	private void checkoutPyInits(String _rev_branch, String _path) {
