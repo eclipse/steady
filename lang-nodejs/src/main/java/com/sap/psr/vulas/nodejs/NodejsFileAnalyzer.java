@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,9 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.ConstructId;
@@ -534,7 +538,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
     /**
      * Creates a {@link NodejsId} of type {@link ConstructType#MODU} for the given js file.
      */
-    public static NodejsId getModule(File _file) throws IllegalArgumentException {
+    public static NodejsId getModule(File _file) throws IllegalArgumentException, FileNotFoundException, IOException{
         if(!FileUtil.hasFileExtension(_file.toPath(), new String[] { "js" })) {
             throw new IllegalArgumentException("Expected file with file extension [js], got [" + _file.toString() + "]");
         }
@@ -552,7 +556,18 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
             search_path = search_path.getParent();
         }
         // Get the root package's directory name
-        package_name.add(0, search_path.getFileName().toString());
+        if(DirUtil.containsFile(search_path.toFile(), "package.json")) {
+            try {
+                final JsonObject pack_json = new Gson().fromJson(FileUtil.readFile(Paths.get(search_path.toString(), "package.json")), JsonObject.class);
+                package_name.add(0, pack_json.get("name").getAsString());
+            }
+            catch (IOException e){
+                throw new IOException("Cannot open [package.json] file");
+            }
+        }
+        else {
+            throw new FileNotFoundException("[package.json] file not found");
+        }
 
         // Create the package (if any), the module and return the latter
         NodejsId pack = null;
