@@ -288,13 +288,15 @@ public class Dependency implements Serializable, Comparable<Dependency> {
 	 * library identifiers and filenames.
 	 */
 	@Override
-	public int compareTo(Dependency _other) {		
+	public int compareTo(Dependency _other) {	
 		if(_other.isParent(this))
 			return -1;
 		else if(this.isParent(_other))
 			return +1;
 		else {
-			if(this.getFilename()!=null && _other.getFilename()!=null) {
+			if(this.getPath()!=null && _other.getPath()!=null){
+				return this.getPath().compareTo(_other.getPath());
+			} else if(this.getFilename()!=null && _other.getFilename()!=null) {
 				return this.getFilename().compareTo(_other.getFilename());
 			} else if(this.getLib().getDigest()!=null && _other.getLib().getDigest()!=null) {
 				return this.getLib().getDigest().compareTo(_other.getLib().getDigest());
