@@ -7,9 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "a": "git://github.com/alfateam/a.git",
     "debug": "4.1.1",
-    "finalhandler": "1.1.2s"
+    "ms": "2.1.2",
+    "left-pad": "1.3.0",
+    "connect": "3.7.0"
   },
   "author": "",
   "license": "ISC"
