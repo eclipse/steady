@@ -45,6 +45,12 @@
 			<version>${project.version}</version>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.sap.research.security.vulas</groupId>
+			<artifactId>lang-nodejs</artifactId>
+			<version>${project.version}</version>
+			<scope>runtime</scope>
+		</dependency>
 
 		<!-- Test dependencies -->
 		<dependency>
