@@ -147,15 +147,17 @@ public class NpmInstalledPackage implements Comparable {
 
         if(this.digest == null) {
             // Set blank digest
-            if(this.properties.get("integrity").equalsIgnoreCase("")) {
+            if(this.properties.get("shasum").equalsIgnoreCase("")) {
                 this.digest = "";
                 log.error("Cannot compute checksum of " + this);
             }
             // Get digest from generated package.json
             else {
-                String [] ingri = this.properties.get("integrity").split("-");
-                this.digest = ingri[1];
-                log.info("Retrieved " + ingri[0]+ " [" + this.digest + "] from generated package.json file [" + this.downloadPath + "]");
+                this.digest = this.properties.get("shasum");
+                if(this.properties.get("created_tarball").equalsIgnoreCase("null"))
+                    log.info("Retrieved " + DigestAlgorithm.SHA1.toString() + " [" + this.digest + "] from package.json file [" + this.downloadPath + "]");
+                else
+                    log.info("Retrieved " + DigestAlgorithm.SHA1.toString() + " [" + this.digest + "] from tarball [" + this.properties.get("created_tarball") + "]");
             }
         }
         return this.digest;
@@ -165,22 +167,16 @@ public class NpmInstalledPackage implements Comparable {
         if(this.downloadPath==null && (this.properties==null || !this.properties.containsKey(LOCATION)))
             throw new IllegalStateException(this + " does not have local download path nor property [" + LOCATION + "]");
         if(this.digestAlgo == null) {
-            if(this.properties.get("integrity").equalsIgnoreCase("")) {
+            if(this.properties.get("shasum").equalsIgnoreCase("")) {
                 log.error("Cannot compute checksum of " + this);
             }
             // Get digest from generated package.json
             else {
-                String [] ingri = this.properties.get("integrity").split("-");
-                String algo = ingri[0];
-                if(algo.equalsIgnoreCase("sha512"))
-                    this.digestAlgo = DigestAlgorithm.SHA512;
-                else if(algo.equalsIgnoreCase("sha1"))
-                    this.digestAlgo = DigestAlgorithm.SHA1;
-                else if(algo.equalsIgnoreCase("sha256"))
-                    this.digestAlgo = DigestAlgorithm.SHA256;
+                this.digestAlgo = DigestAlgorithm.SHA1;
+                if(this.properties.get("created_tarball").equalsIgnoreCase("null"))
+                    log.info("Retrieved [" + this.digestAlgo.toString() + "] digest from generated package.json file [" + this.downloadPath + "]");
                 else
-                    log.error("Cannot find digest algorithm of " + this);
-                log.info("Retrieved [" + algo + "] digest from generated package.json file [" + this.downloadPath + "]");
+                    log.info("Retrieved [" + this.digestAlgo.toString() + "] digest from tarball [" + this.downloadPath + "]");
             }
         }
         return this.digestAlgo;

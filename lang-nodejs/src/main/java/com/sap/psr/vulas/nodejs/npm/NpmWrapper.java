@@ -221,8 +221,8 @@ public class NpmWrapper {
                 }
                 pack_required_by = StringUtils.join(required_by_list, ",");
 
-                pack_integrity = StringUtils.defaultIfEmpty(pack_json.get("_integrity").getAsString(), "");
                 pack_shasum = String.valueOf(pack_json.get("_shasum").getAsString());
+                pack_integrity = StringUtils.defaultIfEmpty(pack_json.get("_integrity").getAsString(), "");
             } catch(NullPointerException e){
                 log.error("Cannot get properties of [" + pack_name + "], set the default value instead");
             }
@@ -250,6 +250,7 @@ public class NpmWrapper {
             pack_props.put("required_by", pack_required_by);
             pack_props.put("integrity", pack_integrity);
             pack_props.put("shasum", pack_shasum);
+            pack_props.put("created_tarball", String.valueOf(tarball_dest));
 
             NpmInstalledPackage pack = new NpmInstalledPackage(pack_name, pack_version);
             pack.setDownloadPath(Paths.get(pack_path));
