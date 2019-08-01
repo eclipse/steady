@@ -209,8 +209,10 @@ public class NpmWrapper {
             String pack_required_by = "";
             String pack_integrity = "";
             String pack_shasum = "";
+            String pack_git_hash = "";
             File tarball_dest = null;
 
+            // TODO break an exception handling
             try {
                 pack_url = StringUtils.defaultIfEmpty(pack_json.get("_resolved").getAsString(), "");
                 pack_dep_location = StringUtils.defaultIfEmpty(pack_json.get("_location").getAsString(), "/");
@@ -223,6 +225,9 @@ public class NpmWrapper {
 
                 pack_shasum = String.valueOf(pack_json.get("_shasum").getAsString());
                 pack_integrity = StringUtils.defaultIfEmpty(pack_json.get("_integrity").getAsString(), "");
+                if(pack_json.getAsJsonObject("_requested").get("type").getAsString().equalsIgnoreCase("git")) {
+                    pack_git_hash = "#" + pack_url.split("#")[1];
+                }
             } catch(NullPointerException e){
                 log.error("Cannot get properties of [" + pack_name + "], set the default value instead");
             }
@@ -251,6 +256,7 @@ public class NpmWrapper {
             pack_props.put("integrity", pack_integrity);
             pack_props.put("shasum", pack_shasum);
             pack_props.put("created_tarball", String.valueOf(tarball_dest));
+            pack_props.put("git_hash", pack_git_hash);
 
             NpmInstalledPackage pack = new NpmInstalledPackage(pack_name, pack_version);
             pack.setDownloadPath(Paths.get(pack_path));
