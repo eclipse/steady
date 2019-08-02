@@ -236,7 +236,7 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
     }
 
     /**
-     * Given an IMethod, identify whether it's an object constructor<init>, class initializer<clinit> or a method, return the ConstructId
+     * Given an IMethod, identify whether it's an object constructor&lt;clinit&gt;, class initializer&lt;clinit&gt; or a method, return the ConstructId
      *
      * @param _method
      * @return
