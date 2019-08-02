@@ -24,7 +24,7 @@ public class ConstructIdFilter {
 	/**
 	 * <p>Constructor for ConstructIdFilter.</p>
 	 *
-	 * @param _constructs_ids a {@link java.util.Collection} object.
+	 * @param _constructs_ids a {@link Collection} object.
 	 */
 	public ConstructIdFilter(Collection<ConstructId> _constructs_ids) {
 		SortedSet<ConstructId> cids = null;
@@ -38,7 +38,7 @@ public class ConstructIdFilter {
 	/**
 	 * <p>addConstructId.</p>
 	 *
-	 * @param _cid a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
+	 * @param _cid a {@link ConstructId} object.
 	 */
 	public void addConstructId(ConstructId _cid) {
 		SortedSet<ConstructId> cids = null;
@@ -115,6 +115,13 @@ public class ConstructIdFilter {
 	@JsonProperty(value = "FUNC")
 	public int countFunction() { return ( this.constructIds.containsKey(ConstructType.FUNC) ? this.constructIds.get(ConstructType.FUNC).size()  : 0); }
 
+	/**
+	 * <p>countObject.</p>
+	 *
+	 * @return a int.
+	 */
+	@JsonProperty(value = "OBJT")
+	public int countObject() { return ( this.constructIds.containsKey(ConstructType.OBJT) ? this.constructIds.get(ConstructType.OBJT).size()  : 0); }
 	
 	/**
 	 * Returns the total number of constructs having one of the following types: {@link ConstructId.ConstructType.METH}, {@link ConstructId.ConstructType.CONS} and {@link ConstructId.ConstructType.INIT}.
@@ -134,6 +141,6 @@ public class ConstructIdFilter {
 	 */
 	@JsonProperty(value = "countTotal")
 	public int countTotal() {
-		return this.countPack() + this.countClass() + this.countEnum() + this.countMeth() + this.countCons() + this.countInit()+ this.countModule() + this.countFunction();
+		return this.countPack() + this.countClass() + this.countEnum() + this.countMeth() + this.countCons() + this.countInit()+ this.countModule() + this.countFunction() + this.countObject();
 	}
 }
