@@ -104,7 +104,7 @@ public abstract class AbstractHttpRequest implements HttpRequest {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * Calls {@link HttpRequest#loadPayloadToDisk()}.
+	 * Calls {@link HttpRequest#loadPayloadFromDisk()}.
 	 */
 	@Override
 	public final void loadFromDisk() throws IOException {
