@@ -42,9 +42,6 @@ public class NpmWrapperTest {
         final Set<NpmInstalledPackage> filtered_packages = NpmInstalledPackage.filterUsingArtifact(packages, new StringList().add("test-helloworld"), false);
         assertEquals(9, filtered_packages.size());
 
-        /*
-         * TODO: Get digest from packages outside npm registry
-         */
         // Get Digest for every package
         for(NpmInstalledPackage p: filtered_packages) {
             final String digest = p.getDigest();

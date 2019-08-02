@@ -16,8 +16,6 @@ import com.sap.psr.vulas.shared.util.StringUtil;
 
 public class ProcessWrapper implements Runnable {
 
-    // This class is the cloned version of lang-python ProcessWrapper
-
     private static Log log = LogFactory.getLog(ProcessWrapper.class);
 
     private static final Pattern ALLOWED = Pattern.compile("[\\.\\-\\w=]+");
@@ -27,6 +25,8 @@ public class ProcessWrapper implements Runnable {
     private Path exe = null;
 
     private String[] args = null;
+
+    private Path workingDir = null;
 
     private Path outPath = null;
 
@@ -93,6 +93,10 @@ public class ProcessWrapper implements Runnable {
             pb.redirectOutput(this.outFile.toFile());
             pb.redirectError(this.errFile.toFile());
 
+            // Set working directory of the process
+            if(this.workingDir != null)
+                pb.directory(this.workingDir.toFile());
+
             // Start and wait
             final Process process = pb.start();
             this.exitCode = process.waitFor();
@@ -101,7 +105,6 @@ public class ProcessWrapper implements Runnable {
                 final String error_msg = FileUtil.readFile(this.errFile);
                 log.error("Error running [" + this.getCommand() + "]: " + error_msg);
             }
-
         }
         catch(IOException ioe) {
             log.error("Error running [" + this.getCommand() + "]: " + ioe.getMessage());
@@ -109,6 +112,14 @@ public class ProcessWrapper implements Runnable {
         catch(InterruptedException ie) {
             log.error("Error running [" + this.getCommand() + "]: " + ie.getMessage());
         }
+    }
+
+    public void setWorkingDir(Path _workingDir) {
+        this.workingDir = _workingDir;
+    }
+
+    public Path getWorkingDir() {
+        return this.workingDir;
     }
 
     public Path getOutFile() {

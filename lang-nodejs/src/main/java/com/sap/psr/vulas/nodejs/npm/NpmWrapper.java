@@ -151,7 +151,10 @@ public class NpmWrapper {
         try {
             // Download and install all dependencies
             ProcessWrapper pw = new ProcessWrapper();
-            pw.setCommand(this.pathToNpmExecutable,"--prefix", _project_path.toAbsolutePath().toString(),"install", _project_path.toAbsolutePath().toString(),"--no-audit", "--force");
+//            pw.setWorkingDir(Paths.get("C:\\Users\\I517033\\AppData\\Local\\Temp\\vulas-npm-virtualenv-test-helloworld-8744455940834443910\\test-helloworld"));
+            pw.setWorkingDir(_project_path);
+            pw.setCommand(this.pathToNpmExecutable,"install", "-ddd", "--force", "--no-audit");
+//            pw.setPath(Paths.get("C:\\Users\\I517033\\AppData\\Local\\Temp\\vulas-npm-virtualenv-test-helloworld-8744455940834443910"));
             pw.setPath(this.pathToVirtualenv);
             Thread t = new Thread(pw);
             t.start();
@@ -174,8 +177,9 @@ public class NpmWrapper {
 
         // List paths of installed dependencies
         ProcessWrapper pw = new ProcessWrapper();
-        final String project_path = Paths.get(this.pathToVirtualenv.toString(), this.projectName).toString();
-        pw.setCommand(this.pathToNpmExecutable, "--prefix", project_path, "list", "--parseable");
+        final Path project_path = Paths.get(this.pathToVirtualenv.toString(), this.projectName);
+        pw.setCommand(this.pathToNpmExecutable, "list", "--parseable");
+        pw.setWorkingDir(project_path);
         pw.setPath(this.pathToVirtualenv);
         Thread t = new Thread(pw, "npm-list");
         t.start();
