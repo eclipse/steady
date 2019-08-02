@@ -1,5 +1,6 @@
 package com.sap.psr.vulas.backend.rest;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,13 +23,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.sap.psr.vulas.backend.model.AffectedLibrary;
 import com.sap.psr.vulas.backend.model.Bug;
+import com.sap.psr.vulas.backend.model.Dependency;
+import com.sap.psr.vulas.backend.model.Library;
 import com.sap.psr.vulas.backend.model.LibraryId;
+import com.sap.psr.vulas.backend.model.VulnerableDependency;
 import com.sap.psr.vulas.backend.model.view.Views;
 import com.sap.psr.vulas.backend.repo.AffectedLibraryRepository;
 import com.sap.psr.vulas.backend.repo.BugRepository;
+import com.sap.psr.vulas.backend.repo.DependencyRepository;
 import com.sap.psr.vulas.backend.repo.LibraryIdRepository;
+import com.sap.psr.vulas.backend.repo.LibraryRepository;
 import com.sap.psr.vulas.backend.util.ArtifactMaps;
 import com.sap.psr.vulas.backend.util.ServiceWrapper;
+import com.sap.psr.vulas.shared.enums.VulnDepOrigin;
 import com.sap.psr.vulas.shared.json.model.Version;
 
 
@@ -152,7 +159,7 @@ public class LibraryIdController {
 
 		try {		
 
-			// All library IDs known locally
+			// All library IDs known locally w/ affected libraries
 			List<LibraryId> known_libids = this.libIdRepository.findLibIds(mvnGroup, artifact);
 			
 			// Check whether the given group/artifact has synonyms maintained in the configuration
@@ -174,6 +181,28 @@ public class LibraryIdController {
 						vuln_libids.add(l.toSharedType());
 						break;
 					}
+				}
+			}
+			
+			//all libids rebundled in a libraryId having the given GA
+			List<Object[]> libids_w_rebundles = this.libIdRepository.findBundledLibIdByGA(mvnGroup, artifact);
+						
+			log.info("Found ["+libids_w_rebundles.size()+"] libids with rebundled libids.");
+			
+			for(Object[] e: libids_w_rebundles) {
+				//check whether the libId rebundles a vulnerable library. If so, add it to vuln_libids
+				LibraryId lid = LibraryIdRepository.FILTER.findOne(libIdRepository.findById(((BigInteger)e[0]).longValue()));
+				
+				if(!vuln_libids.contains(lid)){
+					LibraryId lid_bundled = LibraryIdRepository.FILTER.findOne(libIdRepository.findById(((BigInteger)e[1]).longValue()));
+								
+					for(AffectedLibrary afflib: lid_bundled.getAffLibraries()) {
+						Boolean affected = this.afflibRepository.isBugLibIdAffected(afflib.getBugId().getBugId(), afflib.getLibraryId());
+						if(affected !=null && affected){
+							vuln_libids.add(lid.toSharedType());
+							break;
+						}
+					}	
 				}
 			}
 
