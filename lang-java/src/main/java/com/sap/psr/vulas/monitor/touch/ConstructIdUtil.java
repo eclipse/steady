@@ -124,7 +124,7 @@ public class ConstructIdUtil {
 
 	/**
 	 * Given a qualified name return the ConstructId that represent it. For now is
-	 * implemented only on constructors and method (also including <clinit> and <init>).
+	 * implemented only on constructors and method (also including &lt;clinit&gt; and &lt;init&gt;).
 	 * If the type requested is null or is not in the range of teh allowed types the method return null
 	 *
 	 * @param _qname the qname of the construct.

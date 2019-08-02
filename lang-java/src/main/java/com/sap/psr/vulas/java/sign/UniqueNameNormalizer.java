@@ -103,7 +103,7 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 	}
 
 	/**
-	 * Applies changes that are independent of a given {@link EntityType) to the given {@link String}.
+	 * Applies changes that are independent of a given {@link EntityType} to the given {@link String}.
 	 * In more detail, the string is trimmed, occurrences of "this." are removed and constants are inlined.
 	 *
 	 * @param _string a {@link java.lang.String} object.

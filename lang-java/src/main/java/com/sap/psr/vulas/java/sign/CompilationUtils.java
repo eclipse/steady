@@ -1,10 +1,8 @@
 package com.sap.psr.vulas.java.sign;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -81,8 +79,7 @@ public final class CompilationUtils {
 
 
     /**
-     * Returns the generated {@link JavaCompilation} from the file identified by the given filename. This method assumes
-     * that the filename is relative to <code>{@value #TEST_DATA_BASE_DIR}</code>.
+     * Returns the generated {@link JavaCompilation} from the file identified by the given filename.
      *
      * @param _filename
      *            of the file to compile

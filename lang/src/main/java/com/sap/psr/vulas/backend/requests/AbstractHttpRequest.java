@@ -104,7 +104,7 @@ public abstract class AbstractHttpRequest implements HttpRequest {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * Calls {@link HttpRequest#loadPayloadToDisk()}.
+	 * Calls {@link HttpRequest#loadPayloadFromDisk()}.
 	 */
 	@Override
 	public final void loadFromDisk() throws IOException {
@@ -114,7 +114,7 @@ public abstract class AbstractHttpRequest implements HttpRequest {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * First calls {@link HttpRequest#deletePayloadToDisk()}, then deletes the saved request itself.
+	 * First calls {@link HttpRequest#deletePayloadFromDisk()}, then deletes the saved request itself.
 	 */
 	@Override
 	public final void deleteFromDisk() throws IOException {

@@ -2,6 +2,7 @@ package com.sap.psr.vulas.monitor;
 
 import java.util.Map;
 
+import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.goals.AbstractGoal;
 import com.sap.psr.vulas.java.JavaId;
 

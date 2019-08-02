@@ -84,7 +84,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	}
 
 	/**
-	 * Creates a request for the RESTful service {@link BackendConnector.Service.BACKEND}.
+	 * Creates a request for the RESTful service {@link Service#BACKEND}.
 	 *
 	 * @param _method a {@link com.sap.psr.vulas.backend.HttpMethod} object.
 	 * @param _path a {@link java.lang.String} object.
