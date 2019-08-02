@@ -32,7 +32,7 @@ public interface FileAnalyzer {
 	 * Sets the {@link File} to be analyzed. Note that this does not necessarily trigger the analysis.
 	 *
 	 * @param _file a {@link java.io.File} object.
-	 * @throws com.sap.psr.vulas.FileAnalysisException
+	 * @throws com.sap.psr.vulas.FileAnalysisException if any.
 	 */
 	public void analyze(File _file) throws FileAnalysisException;
 	
@@ -67,7 +67,7 @@ public interface FileAnalyzer {
 	/**
 	 * Returns true if there are any child {@link FileAnalyzer}s, false otherwise.
 	 * Some analyzers will never have any childs, e.g., those that parse single source code files.
-	 * In case of other analyzes, e.g., the {@linnk DirAnalyzer}, it depends on whether there are
+	 * In case of other analyzes, e.g., the {@link DirAnalyzer}, it depends on whether there are
 	 * any "analyzable" files.
 	 *
 	 * @return a boolean.

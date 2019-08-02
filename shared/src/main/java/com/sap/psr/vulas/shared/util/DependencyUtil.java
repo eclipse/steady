@@ -93,7 +93,7 @@ public class DependencyUtil {
 	 * - every {@link Dependency} tuple (sha1, parent and relativePath) appears only once.
 	 * - every {@link Dependency} appearing as parent also appear in the _deps set
 	 *
-	 * @param _deps a {@link java.util.Collection} object.
+	 * @param _app an {@link Application} whose dependencies are checked.
 	 * @return a boolean.
 	 */
 	public static boolean isValidDependencyCollection(Application _app) {
