@@ -459,6 +459,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
 
     @Override
     public Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
+        log.info("Getting constructs from [" + this.file.toString() + "]");
         if(this.constructs == null) {
             try {
                 this.constructs = new TreeMap<ConstructId, Construct>();

@@ -92,7 +92,7 @@ public class NodejsBomTask extends AbstractBomTask {
         final Set<ConstructId> app_constructs = new HashSet<ConstructId>();
         for(Path p: this.getSearchPath()) {
             try {
-                // Make sure to not accidentally add other than NodeJS constructs
+                // Make sure to not accidentally add other than Node.js constructs
                 if(FileUtil.isAccessibleDirectory(p) || FileUtil.hasFileExtension(p, EXT_FILTER)) {
                     log.info("Searching for Node.js constructs in search path [" + p + "] with filter [" + StringUtil.join(EXT_FILTER, ", ") + "]");
                     final FileAnalyzer da = FileAnalyzerFactory.buildFileAnalyzer(p.toFile(), EXT_FILTER);
@@ -104,7 +104,7 @@ public class NodejsBomTask extends AbstractBomTask {
         }
         a.addConstructs(ConstructId.getSharedType(app_constructs));
 
-        // Set hte one to be returned
+        // Set the one to be returned
         this.setCompletedApplication(a);
     }
     private Set<Dependency> toDependencies(Set<NpmInstalledPackage> _packs) {

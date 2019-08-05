@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.sap.psr.vulas.nodejs.NodejsPackageAnalyzer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -195,7 +196,10 @@ public class NpmInstalledPackage implements Comparable {
         if(this.constructs == null){
             // Get from directory
             if(this.downloadPath != null) {
-                this.fileAnalyzer = FileAnalyzerFactory.buildFileAnalyzer(this.downloadPath.toFile());
+                // TODO: use FileAnalyzerFactory.buildFileAnalyzer instead of init PackageAnalyzer directly
+                this.fileAnalyzer = new NodejsPackageAnalyzer();
+                this.fileAnalyzer.analyze(this.downloadPath.toFile());
+//                this.fileAnalyzer = FileAnalyzerFactory.buildFileAnalyzer(this.downloadPath.toFile());
                 this.constructs = this.fileAnalyzer.getConstructs();
                 log.info("Got [" + this.constructs.size() + "] constructs from package [" + this.getName() + "]");
             }

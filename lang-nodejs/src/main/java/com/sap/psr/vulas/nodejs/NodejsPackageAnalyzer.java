@@ -1,8 +1,13 @@
 package com.sap.psr.vulas.nodejs;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,37 +58,74 @@ public class NodejsPackageAnalyzer implements FileAnalyzer {
     public Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
         if(this.constructs == null) {
             this.constructs = new TreeMap<>();
-            final Queue<File> dir_queue = new LinkedList<File>();
-            dir_queue.add(this.pack_path);
+
+            final NodejsFileVisitor walker = new NodejsFileVisitor(this.getSupportedFileExtensions());
+            try {
+                Files.walkFileTree(this.pack_path.toPath(), walker);
+            } catch (IOException e) {
+                throw new FileAnalysisException("Cannot find a list of files in [" + this.pack_path + "]");
+            }
+
+            log.info("Found [" + walker.size() + "] files in [" + this.pack_path + "]");
+
             final NodejsId pack_id = new NodejsId(null, NodejsId.Type.PACKAGE, this.pack_path.getName());
             final Construct pack_con = new Construct(pack_id, "");
             this.constructs.put(pack_id, pack_con);
 
-            // BFS in package directory
-            while (!dir_queue.isEmpty()) {
-                final File current_dir = dir_queue.remove();
-                for (File file : current_dir.listFiles()) {
-                    // Enqueue new directory
-                    if (file.isDirectory()) {
-                        // Skip node_modules directory
-                        if (!file.getName().equalsIgnoreCase("node_modules")) {
-                            dir_queue.add(file);
-                        }
-                    }
-                    // Analyze .js file
-                    else {
-                        final String ext = FileUtil.getFileExtension(file);
-                        for(String supported_ext: this.getSupportedFileExtensions()) {
-                            if(supported_ext.equalsIgnoreCase(ext)) {
-                                final FileAnalyzer analyzer = FileAnalyzerFactory.buildFileAnalyzer(file);
-                                this.constructs.putAll(analyzer.getConstructs());
-                            }
-                        }
-                    }
-                }
+            for(Path file : walker.getFileList()) {
+                final FileAnalyzer analyzer = FileAnalyzerFactory.buildFileAnalyzer(file.toFile());
+                this.constructs.putAll(analyzer.getConstructs());
             }
         }
         return this.constructs;
+    }
+
+    static private class NodejsFileVisitor implements FileVisitor<Path> {
+
+        private String [] support_ext = {};
+        private List<Path> files = new ArrayList<Path>();
+
+        public NodejsFileVisitor(String [] support_ext) {
+            this.support_ext = support_ext;
+        }
+
+        public List<Path> getFileList() {
+            return this.files;
+        }
+
+        public int size() {
+            return this.files.size();
+        }
+
+        @Override
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+            if(dir.getFileName().toString().equalsIgnoreCase("node_modules")) {
+                return FileVisitResult.SKIP_SUBTREE;
+            }
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+            final String ext = FileUtil.getFileExtension(file.toFile());
+            for(String supported_ext: this.support_ext) {
+                if(supported_ext.equalsIgnoreCase(ext)) {
+                    this.files.add(file);
+                    break;
+                }
+            }
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult visitFileFailed(Path file, IOException exc) {
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+            return FileVisitResult.CONTINUE;
+        }
     }
 
     @Override
