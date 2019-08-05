@@ -86,7 +86,9 @@ If you take that road, make sure to create a pull request so that the original o
 
     Example: The Java component [`org.springframework.cloud:spring-cloud-cloudfoundry-connector`](https://search.maven.org/artifact/org.springframework.cloud/spring-cloud-cloudfoundry-connector/2.0.6.RELEASE/jar) rebundles `jackson-databind`. In case the latest version of `spring-cloud-cloudfoundry-connector` contains a vulnerable version of `jackson-databind`, one has to clone `https://github.com/spring-cloud/spring-cloud-connectors/tree/master/spring-cloud-cloudfoundry-connector`, edit `build.gradle` in order to update the version of `jackson-databind`, and build a fixed Uber JAR to be used by the application.
 
-    Again: **Make sure to contribute such fixes to the original open source project!**
+    **Important**:
+    
+    - If you create a fix yourself, make sure to contribute such fixes to the original open source project.
 
 ### Fixing the application (exceptional)
 
