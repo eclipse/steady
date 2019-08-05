@@ -15,9 +15,11 @@ import com.sap.psr.vulas.goals.GoalExecutionException;
 import com.sap.psr.vulas.goals.GoalFactory;
 import com.sap.psr.vulas.shared.enums.GoalClient;
 import com.sap.psr.vulas.shared.enums.GoalType;
+import com.sap.psr.vulas.shared.json.model.Application;
+import com.sap.psr.vulas.shared.json.model.Space;
 
 /**
- * Command line interface (CLI) to execute goals for {@link Application}s or workspaces.
+ * Command line interface (CLI) to execute goals related to {@link Application}s or {@link Space}s.
  * Mandatory configuration parameters such as the backend URL or the workspace token have
  * to be specified as system properties (-D) or using a configuration file "vulas-&lt;foo&gt;.properties".
  */
@@ -29,6 +31,13 @@ public class VulasCli {
 
 	private static AbstractGoal goal = null;
 
+	/**
+	 * <p>main.</p>
+	 *
+	 * @param _args an array of {@link java.lang.String} objects.
+	 * @throws com.sap.psr.vulas.goals.GoalConfigurationException if any.
+	 * @throws com.sap.psr.vulas.goals.GoalExecutionException if any.
+	 */
 	public static void main(String[] _args) throws GoalConfigurationException, GoalExecutionException {
 
 		// Prepare parsing of cmd line arguments

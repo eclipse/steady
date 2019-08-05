@@ -6,17 +6,23 @@ import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.JsonBuilder;
 
+/**
+ * <p>PythonId class.</p>
+ *
+ */
 public class PythonId extends ConstructId {
 	
 	/** Supported Python construct types. */
 	public static enum Type { PACKAGE, MODULE, CLASS, CONSTRUCTOR, METHOD, FUNCTION };
 	
+	/** Constant &lt;script&gt;. */
 	public static final String SCRIPT_NAME = "<script>";
 	
 	/**
-	 * Transforms the shared type {@link ConstructType} into the corresponding local type {@link PythonId#Type}.
-	 * @param _type
-	 * @return
+	 * Transforms the shared type {@link ConstructType} into the corresponding local type {@link PythonId.Type}.
+	 *
+	 * @param _type a {@link com.sap.psr.vulas.python.PythonId.Type} object.
+	 * @return a {@link com.sap.psr.vulas.shared.enums.ConstructType} object.
 	 */
 	public static ConstructType toSharedType(Type _type) {
 		switch(_type) {
@@ -30,6 +36,12 @@ public class PythonId extends ConstructId {
 		}
 	}
 	
+	/**
+	 * <p>typeFromString.</p>
+	 *
+	 * @param _t a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.python.PythonId.Type} object.
+	 */
 	public static Type typeFromString(String _t) {
 		if("PACK".equalsIgnoreCase(_t))
 			return Type.PACKAGE;
@@ -65,12 +77,24 @@ public class PythonId extends ConstructId {
 		this.simpleName = _simple_name;
 	}
 
+	/**
+	 * <p>Getter for the field <code>type</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.python.PythonId.Type} object.
+	 */
 	public Type getType() { return this.type; }
 	
+	/**
+	 * <p>getSharedType.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.ConstructType} object.
+	 */
 	public ConstructType getSharedType() { return toSharedType(this.type); }
 
 	/**
 	 * Returns the package of the construct, or null if no such package exists.
+	 *
+	 * @return a {@link com.sap.psr.vulas.python.PythonId} object.
 	 */
 	public PythonId getPackage() {
 		PythonId pack = null;
@@ -88,14 +112,17 @@ public class PythonId extends ConstructId {
 		return pack;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public PythonId getDefinitionContext() { return this.definitionContext; }
 	
+	/** {@inheritDoc} */
 	@Override
 	public String getName() {
 		return this.simpleName;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getQualifiedName() {
 		final StringBuffer b = new StringBuffer();
@@ -105,16 +132,19 @@ public class PythonId extends ConstructId {
 		return b.toString();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return this.getLanguage() + " " + this.getSharedType().toString() + " [" + this.getQualifiedName() + "]";
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getSimpleName() {
 		return this.simpleName;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public JsonObject toGSON() {
 		final JsonObject jb = new JsonObject();
@@ -124,6 +154,7 @@ public class PythonId extends ConstructId {
 		return jb;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toJSON() {
 		final JsonBuilder jb = new JsonBuilder();

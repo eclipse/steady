@@ -28,6 +28,8 @@ public class PythonSignatureFactory implements SignatureFactory {
 	private static final Log log = LogFactory.getLog(PythonSignatureFactory.class);
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns true if the given {@link ConstructId} is of type Java method or Java constructor.
 	 */
 	@Override
@@ -38,6 +40,7 @@ public class PythonSignatureFactory implements SignatureFactory {
 				  ConstructType.METH.equals(_id.getType()) || ConstructType.CONS.equals(_id.getType()) );
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Signature createSignature(Construct _construct) {
 		if(_construct!=null && _construct.getContent()!=null)
@@ -46,6 +49,7 @@ public class PythonSignatureFactory implements SignatureFactory {
 			return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Signature createSignature(ConstructId _cid, File _file) {
 		if(!_cid.getLang().equals(ProgrammingLanguage.PY))
@@ -77,6 +81,7 @@ public class PythonSignatureFactory implements SignatureFactory {
 		return signature;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SignatureChange computeChange(Construct _from, Construct _to) {
 		// TODO Auto-generated method stub

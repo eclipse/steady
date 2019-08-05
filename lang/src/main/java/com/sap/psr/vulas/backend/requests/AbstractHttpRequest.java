@@ -15,6 +15,10 @@ import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>Abstract AbstractHttpRequest class.</p>
+ *
+ */
 public abstract class AbstractHttpRequest implements HttpRequest {
 
 	private static final Log log = LogFactory.getLog(AbstractHttpRequest.class);
@@ -27,29 +31,49 @@ public abstract class AbstractHttpRequest implements HttpRequest {
 	/** Goal context, required to set the Http headers. */
 	protected transient GoalContext context = null;
 	
+	/**
+	 * <p>Constructor for AbstractHttpRequest.</p>
+	 */
 	protected AbstractHttpRequest() {
 		this.ms = System.nanoTime();
 	}
 
+	/**
+	 * <p>getObjectFilename.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getObjectFilename() {
 		return this.getFilename() + ".obj";
 	}
 
+	/**
+	 * <p>getObjectPath.</p>
+	 *
+	 * @return a {@link java.nio.file.Path} object.
+	 */
 	public Path getObjectPath() {
 		return Paths.get(this.getVulasConfiguration().getDir(CoreConfiguration.UPLOAD_DIR).toString(), this.getObjectFilename());
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public HttpRequest setGoalContext(GoalContext _ctx) {
 		this.context = _ctx;
 		return this;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public GoalContext getGoalContext() {
 		return this.context;
 	}
 	
+	/**
+	 * <p>getVulasConfiguration.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.util.VulasConfiguration} object.
+	 */
 	protected VulasConfiguration getVulasConfiguration() {
 		if(this.context!=null && this.context.getVulasConfiguration()!=null)
 			return this.context.getVulasConfiguration();
@@ -58,6 +82,8 @@ public abstract class AbstractHttpRequest implements HttpRequest {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * First calls {@link HttpRequest#savePayloadToDisk()}, then serializes the request and writes it to disk.
 	 */
 	@Override
@@ -76,7 +102,9 @@ public abstract class AbstractHttpRequest implements HttpRequest {
 	}
 
 	/**
-	 * Calls {@link HttpRequest#loadPayloadToDisk()}.
+	 * {@inheritDoc}
+	 *
+	 * Calls {@link HttpRequest#loadPayloadFromDisk()}.
 	 */
 	@Override
 	public final void loadFromDisk() throws IOException {
@@ -84,7 +112,9 @@ public abstract class AbstractHttpRequest implements HttpRequest {
 	}
 
 	/**
-	 * First calls {@link HttpRequest#deletePayloadToDisk()}, then deletes the saved request itself.
+	 * {@inheritDoc}
+	 *
+	 * First calls {@link HttpRequest#deletePayloadFromDisk()}, then deletes the saved request itself.
 	 */
 	@Override
 	public final void deleteFromDisk() throws IOException {

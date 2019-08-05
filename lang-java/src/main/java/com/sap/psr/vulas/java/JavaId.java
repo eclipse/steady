@@ -25,6 +25,10 @@ import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.JsonBuilder;
 
 
+/**
+ * <p>Abstract JavaId class.</p>
+ *
+ */
 public abstract class JavaId extends ConstructId {
 
 	private static final Log log = LogFactory.getLog(JavaId.class);
@@ -37,32 +41,79 @@ public abstract class JavaId extends ConstructId {
 
 	private Set<String> annotations = new HashSet<String>();
 
+	/**
+	 * <p>Constructor for JavaId.</p>
+	 *
+	 * @param _t a {@link com.sap.psr.vulas.java.JavaId.Type} object.
+	 */
 	protected JavaId(Type _t) {
 		super(ProgrammingLanguage.JAVA);
 		this.type = _t;	
 	}
+	/**
+	 * <p>Getter for the field <code>type</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.java.JavaId.Type} object.
+	 */
 	public Type getType() { return this.type; }
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() { return this.getLanguage() + " " + JavaId.typeToString(this.type) + " [" + this.getQualifiedName() + "]"; }
 
+	/**
+	 * <p>Getter for the field <code>annotations</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	public Set<String> getAnnotations() { return this.annotations; }
 
+	/**
+	 * <p>addAnnotation.</p>
+	 *
+	 * @param _a a {@link java.lang.String} object.
+	 */
 	public void addAnnotation(String _a) { this.annotations.add(_a); }
 
+	/**
+	 * <p>hasAnnotation.</p>
+	 *
+	 * @param _a a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public boolean hasAnnotation(String _a) { return this.annotations.contains(_a); }
 
 	/**
 	 * Returns the Java package in the context of which the construct is defined.
-	 * @return
+	 *
+	 * @return a {@link com.sap.psr.vulas.java.JavaPackageId} object.
 	 */
 	public abstract JavaPackageId getJavaPackageId();
 
+	/**
+	 * <p>getDefinitionContext.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.ConstructId} object.
+	 */
 	public abstract ConstructId getDefinitionContext();
 	
+	/**
+	 * <p>getSharedType.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.ConstructType} object.
+	 */
 	public ConstructType getSharedType() {
 		return JavaId.toSharedType(this.getType());
 	}
 
+	/**
+	 * <p>toJSON.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public final String toJSON() {
 		final JsonBuilder jb = new JsonBuilder();
 		jb.startObject();
@@ -80,6 +131,7 @@ public abstract class JavaId extends ConstructId {
 		return jb.getJson();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public JsonObject toGSON(){
 		final JsonObject jb = new JsonObject();
@@ -90,6 +142,7 @@ public abstract class JavaId extends ConstructId {
 		return jb;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public final int hashCode() {
 		final int prime = 31;
@@ -98,6 +151,7 @@ public abstract class JavaId extends ConstructId {
 		result = prime * result + (this.getQualifiedName().hashCode());
 		return result;
 	}
+	/** {@inheritDoc} */
 	@Override
 	public final boolean equals(Object obj) {
 		if (this == obj)
@@ -115,18 +169,21 @@ public abstract class JavaId extends ConstructId {
 	}
 
 	/**
-	 * 
-	 * @param List of parameter types
+	 * <p>parameterTypesToString.</p>
+	 *
 	 * @return Comma-separated parameter types
+	 * @param _p a {@link java.util.List} object.
 	 */
 	protected static String parameterTypesToString(List<String> _p) {
 		return JavaId.parameterTypesToString(_p, false);
 	}
 
 	/**
-	 * 
-	 * @param List of parameter types
+	 * <p>parameterTypesToString.</p>
+	 *
 	 * @return Comma-separated parameter types
+	 * @param _p a {@link java.util.List} object.
+	 * @param _rem_qualification a boolean.
 	 */
 	protected static String parameterTypesToString(List<String> _p, boolean _rem_qualification) {
 		if(_p==null || _p.isEmpty()) return "()";
@@ -143,6 +200,12 @@ public abstract class JavaId extends ConstructId {
 		return str.toString();
 	}
 
+	/**
+	 * <p>typeToString.</p>
+	 *
+	 * @param _t a {@link com.sap.psr.vulas.java.JavaId.Type} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String typeToString(Type _t) {
 		switch(_t) {
 		case PACKAGE:       return "PACK";
@@ -157,6 +220,12 @@ public abstract class JavaId extends ConstructId {
 		}
 	}
 
+	/**
+	 * <p>typeFromString.</p>
+	 *
+	 * @param _t a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.java.JavaId.Type} object.
+	 */
 	public static Type typeFromString(String _t) {
 		if("PACK".equalsIgnoreCase(_t))
 			return Type.PACKAGE;
@@ -181,8 +250,9 @@ public abstract class JavaId extends ConstructId {
 	/**
 	 * Transforms an object with a given core type (defined in vulas-core) into
 	 * an object having the corresponding shared type (defined in vulas-share).
-	 * @param _core_type
-	 * @return
+	 *
+	 * @param _core_type a {@link com.sap.psr.vulas.java.JavaId.Type} object.
+	 * @return a {@link com.sap.psr.vulas.shared.enums.ConstructType} object.
 	 */
 	public static com.sap.psr.vulas.shared.enums.ConstructType toSharedType(JavaId.Type _core_type) {
 		switch(_core_type) {
@@ -199,8 +269,9 @@ public abstract class JavaId extends ConstructId {
 	/**
 	 * Transforms an object with a given shared type (defined in vulas-share) into
 	 * an object having the corresponding core type (defined in vulas-core).
-	 * @param _cid
-	 * @return
+	 *
+	 * @param _cid a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+	 * @return a {@link com.sap.psr.vulas.ConstructId} object.
 	 */
 	public static com.sap.psr.vulas.ConstructId toCoreType(com.sap.psr.vulas.shared.json.model.ConstructId _cid) {
 		switch(_cid.getType()) {
@@ -217,8 +288,9 @@ public abstract class JavaId extends ConstructId {
 	/**
 	 * Transforms a collection of objects with a given shared type (defined in vulas-share) into
 	 * a {@link HashSet} of objects having the corresponding core type (defined in vulas-core).
-	 * @param _cid
-	 * @return
+	 *
+	 * @param _cids a {@link java.util.Collection} object.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public static Set<com.sap.psr.vulas.ConstructId> toCoreType(Collection<com.sap.psr.vulas.shared.json.model.ConstructId> _cids) {
 		final Set<com.sap.psr.vulas.ConstructId> cids = new HashSet<com.sap.psr.vulas.ConstructId>();
@@ -229,13 +301,20 @@ public abstract class JavaId extends ConstructId {
 
 	/**
 	 * Returns a {@link JavaClassId} for the given {@link Class}.
-	 * @param _c
-	 * @return
+	 *
+	 * @param _c a {@link java.lang.Class} object.
+	 * @return a {@link com.sap.psr.vulas.java.JavaClassId} object.
 	 */
 	public static JavaClassId getClassId(@NotNull Class _c) {
 		return JavaId.parseClassQName(_c.getName());
 	}
 
+	/**
+	 * <p>parseEnumQName.</p>
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.java.JavaEnumId} object.
+	 */
 	public static JavaEnumId parseEnumQName(@NotNull String _s) {
 		if(_s == null || _s.equals("")) throw new IllegalArgumentException("String null or empty");
 
@@ -282,6 +361,12 @@ public abstract class JavaId extends ConstructId {
 		return cid;
 	}
 
+	/**
+	 * <p>parseClassQName.</p>
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.java.JavaClassId} object.
+	 */
 	public static JavaClassId parseClassQName(@NotNull String _s) {
 		if(_s == null || _s.equals("")) throw new IllegalArgumentException("String null or empty");
 
@@ -331,16 +416,19 @@ public abstract class JavaId extends ConstructId {
 	/**
 	 * Creates a {@link JavaMethodId} from the given string, whereby the definition context is defaulted to
 	 * type {@link JavaId.Type#CLASS}.
-	 * @param _s
-	 * @return
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.java.JavaMethodId} object.
 	 */
 	public static JavaMethodId parseMethodQName(String _s) { return JavaId.parseMethodQName(JavaId.Type.CLASS, _s); }
 
 	/**
 	 * Creates a {@link JavaMethodId} from the given string, with a definition context of the given type.
 	 * Accepted types are {@link JavaId.Type#CLASS} and {@link JavaId.Type#ENUM}.
-	 * @param _s
-	 * @return
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @param _ctx_type a {@link com.sap.psr.vulas.java.JavaId.Type} object.
+	 * @return a {@link com.sap.psr.vulas.java.JavaMethodId} object.
 	 */
 	public static JavaMethodId parseMethodQName(JavaId.Type _ctx_type, String _s) {
 
@@ -371,8 +459,9 @@ public abstract class JavaId extends ConstructId {
 	/**
 	 * Creates a {@link JavaConstructorId} from the given string, whereby the definition context is defaulted to
 	 * type {@link JavaId.Type#CLASS}.
-	 * @param _s
-	 * @return
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.java.JavaConstructorId} object.
 	 */
 	public static JavaConstructorId parseConstructorQName(String _s) {
 		return JavaId.parseConstructorQName(JavaId.Type.CLASS, _s, null);
@@ -381,12 +470,14 @@ public abstract class JavaId extends ConstructId {
 	/**
 	 * Creates a {@link JavaConstructorId} from the given string, with a definition context of the given type.
 	 * Accepted types are {@link JavaId.Type#CLASS} and {@link JavaId.Type#ENUM}.
-	 * 
+	 *
 	 * If the boolean argument is true, the first constructor parameter will be ignored. This functionality is useful for non-static
 	 * inner classes, to which the compiler adds the outer class as first parameter.
-	 * @param _s
-	 * @param _skip_first_param
-	 * @return
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @param _ctx_type a {@link com.sap.psr.vulas.java.JavaId.Type} object.
+	 * @param _param_to_skip a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.java.JavaConstructorId} object.
 	 */
 	public static JavaConstructorId parseConstructorQName(JavaId.Type _ctx_type, String _s, String _param_to_skip) {
 
@@ -424,6 +515,12 @@ public abstract class JavaId extends ConstructId {
 		return coid;
 	}
 
+	/**
+	 * <p>parseClassInitQName.</p>
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.java.JavaClassInit} object.
+	 */
 	public static JavaClassInit parseClassInitQName(String _s) {
 		if(_s == null || _s.equals("")) throw new IllegalArgumentException("String null or empty");
 
@@ -484,8 +581,9 @@ public abstract class JavaId extends ConstructId {
 
 	/**
 	 * Removes package information (if any) from a fully qualified name, and returns the resulting class (or interface) name.
-	 * @param _qname
-	 * @return
+	 *
+	 * @param _qname a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String removePackageContext(String _qname) {
 		return ClassVisitor.removePackageContext(_qname);
@@ -500,6 +598,10 @@ public abstract class JavaId extends ConstructId {
 
 	/**
 	 * Returns all {@link JavaId}s whose qualified name starts with any of the given strings.
+	 *
+	 * @param _set a {@link java.util.Set} object.
+	 * @param _filter an array of {@link java.lang.String} objects.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public static Set<ConstructId> filter(Set<ConstructId> _set, String[] _filter) {
 		final Set<ConstructId> set = new HashSet<ConstructId>();
@@ -511,6 +613,10 @@ public abstract class JavaId extends ConstructId {
 	
 	/**
 	 * Returns all {@link JavaId}s whose qualified name starts with the given string.
+	 *
+	 * @param _set a {@link java.util.Set} object.
+	 * @param _filter a {@link java.lang.String} object.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public static Set<ConstructId> filter(Set<ConstructId> _set, String _filter) {
 		final Set<ConstructId> set = new HashSet<ConstructId>();
@@ -524,6 +630,10 @@ public abstract class JavaId extends ConstructId {
 
 	/**
 	 * Returns all {@link JavaId}s of the given type(s).
+	 *
+	 * @param _set a {@link java.util.Set} object.
+	 * @param _filter an array of {@link com.sap.psr.vulas.java.JavaId.Type} objects.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public static Set<ConstructId> filter(Set<ConstructId> _set, JavaId.Type[] _filter) {
 		final Set<ConstructId> set = new HashSet<ConstructId>();
@@ -543,10 +653,11 @@ public abstract class JavaId extends ConstructId {
 	}
 
 	/**
-	 * Returns all {@link JavaMethodId}s and {@link JavaConstructuctorId}s belonging to the given class.
-	 * @param _set
-	 * @param _context
-	 * @return
+	 * Returns all {@link JavaMethodId}s and {@link JavaConstructorId}s belonging to the given class.
+	 *
+	 * @param _set a {@link java.util.Set} object.
+	 * @param _context a {@link com.sap.psr.vulas.java.JavaId} object.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public static Set<ConstructId> filterWithContext(Set<ConstructId> _set, JavaId _context) {
 		final Set<ConstructId> set = new HashSet<ConstructId>();
@@ -567,11 +678,11 @@ public abstract class JavaId extends ConstructId {
 	/**
 	 * Returns the URL of the JAR from which the construct was loaded, or null if it is a package or has not been loaded from a JAR.
 	 * The URL has the form "file:/.../foo.jar", hence, it can be transformed into a {@link URI} and {@link File}.
-	 *  
-	 * First, it uses {@link ClassPoolUpdater#getJarResourcePath} to search for the JAR URL, hence, {@link ClassPoolUpdater#loadedResources}
-	 * should contain all the needed resources. If that fails, it uses {@link Class#forName} and {@link Class#getResource(String)} to search
+	 *
+	 * First, it uses {@link ClassPoolUpdater#getJarResourcePath(ConstructId)} to search for the JAR URL, hence, {@link ClassPoolUpdater}
+	 * should contain all the needed resources. If that fails, it uses {@link Class#forName(String)} and {@link Class#getResource(String)} to search
 	 * for the JAR URL.
-	 * 
+	 *
 	 * @return the URL from which the construct was loaded
 	 */
 	public URL getJarUrl() {
@@ -619,7 +730,10 @@ public abstract class JavaId extends ConstructId {
 	
 	/**
 	 * Transform URLs like "jar:file:/.../foo.jar!bar.class" into "file:/.../foo.jar".
-	 * @param _url
+	 *
+	 * @param _url a {@link java.net.URL} object.
+	 * @return a {@link java.net.URL} object.
+	 * @throws java.net.MalformedURLException if any.
 	 */
 	public final static URL getJarUrl(URL _url) throws MalformedURLException {
 		if(_url!=null && _url.toString().startsWith("jar:")) {
@@ -641,13 +755,12 @@ public abstract class JavaId extends ConstructId {
 	
 	/**
 	 * Returns the {@link JavaId} corresponding to the compilation unit of the construct.
-	 * 
+	 *
 	 * If the construct is an interface, class or enum, the object is returned as is.
 	 * If the construct is a method, constructor or static initializer, its definition context will be returned (hence, an interface, class or enum).
 	 * If the construct is a package, null will be returned.
-	 *  
-	 * @param _cid
-	 * @return
+	 *
+	 * @return a {@link com.sap.psr.vulas.java.JavaId} object.
 	 */
 	public JavaId getCompilationUnit () {
 		JavaId comp_unit = null;

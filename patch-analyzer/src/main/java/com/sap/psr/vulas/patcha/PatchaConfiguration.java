@@ -4,8 +4,8 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 /**
  * Wraps {@link VulasConfiguration} for accessing patch analysis specific configuration settings.
- * 
  */
 public class PatchaConfiguration {
+	/** Constant <code>PATCHA_VCS_CLIENTS="vulas.patcha.vcs.clients"</code> */
 	public final static String PATCHA_VCS_CLIENTS = "vulas.patcha.vcs.clients";
 }

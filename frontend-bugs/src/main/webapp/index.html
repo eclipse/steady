@@ -9,12 +9,29 @@
 <link rel="stylesheet" type="text/css" href="css/style.css">
 <link href="img/icon.png" rel="shortcut icon" type="image/x-icon" />
 
-<script id="sap-ui-bootstrap" type="text/javascript"
+<link rel="preload" href="https://openui5.hana.ondemand.com/resources/sap/ui/core/themes/sap_belize/library.css" as="style">
+<link rel="preload" href="https://openui5.hana.ondemand.com/resources/sap/m/themes/sap_belize/library.css" as="style">
+<link rel="preload" href="https://openui5.hana.ondemand.com/resources/sap/ui/layout/themes/sap_belize/library.css" as="style">
+<link rel="preload" href="https://openui5.hana.ondemand.com/resources/sap/ui/unified/themes/sap_belize/library.css" as="style">
+<link rel="preload" href="https://openui5.hana.ondemand.com/resources/sap/ui/commons/themes/sap_belize/library.css" as="style">
+<link rel="preload" href="https://openui5.hana.ondemand.com/resources/sap-ui-core.js" as="script">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/d3@3.5.17/d3.min.js" as="script">
+<link rel="preload" href="https://openui5.hana.ondemand.com/resources/sap/ui/core/library-preload.js" as="script">
+<link rel="preload" href="https://openui5.hana.ondemand.com/resources/sap/m/library-preload.js" as="script">
+<link rel="preload" href="https://openui5.hana.ondemand.com/resources/sap/ui/unified/library-preload.js" as="script">
+<link rel="preload" href="https://openui5.hana.ondemand.com/resources/sap/ui/layout/library-preload.js" as="script">
+<link rel="preload" href="https://openui5.hana.ondemand.com/resources/sap/ui/commons/library-preload.js" as="script">
+<link rel="preload" href="https://openui5.hana.ondemand.com/resources/sap/ui/core/themes/sap_belize/fonts/72-Regular.woff2" as="font" crossorigin>
+<link rel="preload" href="https://openui5.hana.ondemand.com/resources/sap/ui/core/themes/base/fonts/SAP-icons.woff2" as="font" crossorigin>
+<link rel="preload" href="https://openui5.hana.ondemand.com/resources/sap/ui/core/themes/sap_belize/fonts/72-Bold.woff2" as="font" crossorigin>
+
+<script defer id="sap-ui-bootstrap" type="text/javascript"
 	src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js"
 	data-sap-ui-theme="sap_belize"
 	data-sap-ui-compatVersion="edge"
 	data-sap-ui-libs='sap.m, sap.ui.layout, sap.ui.commons'
 	data-sap-ui-xx-bindingSyntax="complex"
+	data-sap-ui-async="true"
 	data-sap-ui-resourceroots='{
 					"vulasbugfrontend": "./",
 	    			"view" : "./view",
@@ -23,18 +40,22 @@
    		}'>
 	
 </script>
-<script src="./d3.v3.min.js" charset="utf-8"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/d3@3.5.17/d3.min.js"></script>
 
 <script>
-	new sap.m.Shell("Shell", {
-		title : "VULAS",
-		logo:"img/icon.png",
-		showLogout : false,
-		app : new sap.ui.core.ComponentContainer({
-			name : 'vulasbugfrontend'
-		}),
-		appWidthLimited: false
-	}).placeAt('content');
+	document.addEventListener('DOMContentLoaded', function () {
+		sap.ui.getCore().attachInit(function(){
+			new sap.m.Shell("Shell", {
+				title : "VULAS",
+				logo:"img/icon.png",
+				showLogout : false,
+				app : new sap.ui.core.ComponentContainer({
+					name : 'vulasbugfrontend'
+				}),
+				appWidthLimited: false
+			}).placeAt('content')
+		});
+	})
 </script>
 </head>
 

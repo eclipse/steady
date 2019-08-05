@@ -20,6 +20,10 @@ import ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType;
 import ch.uzh.ifi.seal.changedistiller.model.entities.IUniqueNameNormalizer;
 import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
+/**
+ * <p>UniqueNameNormalizer class.</p>
+ *
+ */
 public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 
 	private static final Log log = LogFactory.getLog(UniqueNameNormalizer.class);
@@ -34,6 +38,11 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
         
 	private UniqueNameNormalizer() {}
 
+	/**
+	 * <p>Getter for the field <code>instance</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.java.sign.UniqueNameNormalizer} object.
+	 */
 	public static synchronized UniqueNameNormalizer getInstance() {
 		if(instance==null)
 			instance = new UniqueNameNormalizer();
@@ -44,8 +53,23 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 	 * Fully qualified class names to be searched for class names found in strings.
 	 */
 	private final Set<String> classNames = new HashSet<String>();
+	/**
+	 * <p>addStrings.</p>
+	 *
+	 * @param _class_names a {@link java.util.Collection} object.
+	 */
 	public final void addStrings(Collection<String> _class_names) { classNames.addAll(_class_names); }
+	/**
+	 * <p>addStrings.</p>
+	 *
+	 * @param _class_names an array of {@link java.lang.String} objects.
+	 */
 	public final void addStrings(String[] _class_names) { classNames.addAll(Arrays.asList(_class_names)); }
+	/**
+	 * <p>addConstructIds.</p>
+	 *
+	 * @param _classes a {@link java.util.Collection} object.
+	 */
 	public final void addConstructIds(Collection<ConstructId> _classes) {
 		for(ConstructId cid: _classes) {
 			classNames.add(cid.getQualifiedName());
@@ -54,9 +78,12 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 	
 	/**
 	 * Sets the class loader used for inlining constants, see {@link UniqueNameNormalizer#findConstants(String, String)}.
+	 *
+	 * @param _cl a {@link java.lang.ClassLoader} object.
 	 */
 	public void setClassLoader(ClassLoader _cl) { this.classLoader = _cl; }
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean haveEqualUniqueName(SourceCodeEntity _e1, SourceCodeEntity _e2) {
 		// Equality before normalization
@@ -76,10 +103,11 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 	}
 
 	/**
-	 * Applies changes that are independent of a given {@link EntityType) to the given {@link String}.
+	 * Applies changes that are independent of a given {@link EntityType} to the given {@link String}.
 	 * In more detail, the string is trimmed, occurrences of "this." are removed and constants are inlined.
-	 * @param _string
-	 * @return
+	 *
+	 * @param _string a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public String normalizeUniqueName(String _string) {
 		String tmp = _string.trim();
@@ -94,6 +122,8 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Applies changes to the unique name of the given {@link SourceCodeEntity}, potentially dependent
 	 * on its specific {@link EntityType}.
 	 */
@@ -114,12 +144,24 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 		return tmp;
 	}
         
+        /**
+         * <p>removeLeadingClassName.</p>
+         *
+         * @param _string a {@link java.lang.String} object.
+         * @return a {@link java.lang.String} object.
+         */
         public String removeLeadingClassName(String _string ){
             String tmp = _string.trim();
             tmp = tmp.replaceAll(cua+"\\.", "");
             return tmp;
         }
         
+        /**
+         * <p>removeNumberCasts.</p>
+         *
+         * @param _string a {@link java.lang.String} object.
+         * @return a {@link java.lang.String} object.
+         */
         public String removeNumberCasts(String _string){
             String regex_string = "[^\"]*\"[^\"]*\"";
             Pattern pattern_string = Pattern.compile(regex_string);
@@ -144,6 +186,12 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
             }
         }
 
+	/**
+	 * <p>inlineConstants.</p>
+	 *
+	 * @param _string a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String inlineConstants(String _string) {
 		final StringBuilder b = new StringBuilder();
 		final Matcher m = CONSTANT_PATTERN.matcher(_string);
@@ -274,6 +322,11 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 		return fields;
 	}
         
+        /**
+         * <p>setClassUnderAnalysisName.</p>
+         *
+         * @param _name a {@link java.lang.String} object.
+         */
         public void setClassUnderAnalysisName(String _name){
             cua = _name;
         }

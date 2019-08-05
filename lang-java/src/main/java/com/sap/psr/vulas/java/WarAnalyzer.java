@@ -37,7 +37,6 @@ import javassist.NotFoundException;
 /**
  * Analyzes a single Web app archive (WAR) as to identify (and potentially instrument) all its classes (in directory WEB-INF/classes),
  * as well as its JARs (in directory WEB-INF/lib).
- *
  */
 public class WarAnalyzer extends JarAnalyzer {
 
@@ -70,9 +69,11 @@ public class WarAnalyzer extends JarAnalyzer {
 	 * then need to be skipped, i.e., not included in the instrumented WAR. */
 	private Set<Path> ignoredIncludes = new HashSet<Path>();
 
+	/** {@inheritDoc} */
 	@Override
 	public String[] getSupportedFileExtensions() { return new String[] { "war" }; }
 
+	/** {@inheritDoc} */
 	@Override
 	public void analyze(final File _file) throws FileAnalysisException {
 		try {
@@ -113,7 +114,8 @@ public class WarAnalyzer extends JarAnalyzer {
 	/**
 	 * Sets the directory containing JARs to be included in the rewritten WAR.
 	 * All JARs contained therein will be modified as well in order to set the application scope in the Vulas configuration file.
-	 * @param _p
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
 	 */
 	public void setIncludeDir(Path _p) {
 		this.inclDir = _p;
@@ -147,16 +149,18 @@ public class WarAnalyzer extends JarAnalyzer {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Determines whether the instrumented JAR is renamed or not. If yes, the new file name follows the following format:
 	 * - If app context is provided: [originalJarName]-vulas-[appGroupId]-[appArtifactId]-[appVersion].jar
 	 * - Otherwise: [originalJarName]-vulas.jar
-	 * @param boolean
 	 */
 	public void setRename(boolean _b) { this.rename = _b; }
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * See here: http://docs.oracle.com/javase/7/docs/technotes/guides/jar/jar.html
-	 * @throws JarAnalysisException
 	 */
 	@Override
 	protected void createInstrumentedArchive() throws JarAnalysisException {
@@ -207,11 +211,13 @@ public class WarAnalyzer extends JarAnalyzer {
 		this.instrControl.logStatistics();
 	}	
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasChilds() {
 		return this.getChilds(true)!=null && !this.getChilds(true).isEmpty();
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) {
 		if(this.mgr==null) {
@@ -247,6 +253,8 @@ public class WarAnalyzer extends JarAnalyzer {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Identifies all {@link ConstructId}s of all methods and constructors contained in the WAR file.
 	 * Returns true if the WAR has classes in WEB-INF/classes, false otherwise. Note that classes in libraries contained in WEB-INF/lib are ignored.
 	 */
@@ -338,9 +346,11 @@ public class WarAnalyzer extends JarAnalyzer {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * In case the archive is rewritten, this method is used to rewrite certain {@link JarEntry}s
 	 * (rather than taking the file from the original archive).
-	 * The callback registration takes place in {@link #createInstrumentedJar()}.
+	 * The callback registration takes place in {@link #createInstrumentedArchive()}.
 	 */
 	@Override
 	public InputStream getInputStream(String _regex, JarEntry _entry) {

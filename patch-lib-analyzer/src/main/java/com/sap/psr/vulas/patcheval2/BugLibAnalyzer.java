@@ -53,7 +53,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Given a bug, this class analyzes all versions (retrieved from Maven central) of JARs containing vulnerable code produces a csv file.
- * 
  */
 public class BugLibAnalyzer {
     private static final Log log = LogFactory.getLog(BugLibAnalyzer.class);
@@ -61,8 +60,16 @@ public class BugLibAnalyzer {
     private BugChangeList bug;
     private ExecutorService executorService = null ;
     
+    /**
+     * <p>Constructor for BugLibAnalyzer.</p>
+     */
     public BugLibAnalyzer(){}
     
+    /**
+     * <p>Setter for the field <code>bug</code>.</p>
+     *
+     * @param _b a {@link com.sap.psr.vulas.shared.json.model.BugChangeList} object.
+     */
     public void setBug(BugChangeList _b){
     	this.bug=_b;
     }
@@ -70,10 +77,10 @@ public class BugLibAnalyzer {
     /**
      * This method retrieves all versions of all libraries to be check for this.bug by using
      * GET /backend/bugs/{bugId}/libraries and  GET /cia/artifacts/{group)/{artifact}
-     *  
+     *
      * @return the list of libraries (having a libraryId) to be analysed for this.bug
-     * @throws BackendConnectionException
-     * @throws InterruptedException 
+     * @throws com.sap.psr.vulas.backend.BackendConnectionException
+     * @throws java.lang.InterruptedException
      */
     public LinkedList<Artifact> getLibToCheck() throws BackendConnectionException, InterruptedException{
     	
@@ -191,11 +198,12 @@ public class BugLibAnalyzer {
     }
     
     /**
-     * 
-     * this method creates a CSV for all versions of all libraries related to this.bug and returns the csv as string 
-     * 
+     *
+     * this method creates a CSV for all versions of all libraries related to this.bug and returns the csv as string
+     *
      * @return the csv file containing the analysis results as string
-     * @throws InterruptedException 
+     * @throws java.lang.InterruptedException
+     * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
      */
     public String createCSV( ) throws BackendConnectionException, InterruptedException{
     	LinkedList<Artifact> finalLibrariesList = this.getLibToCheck();
@@ -208,11 +216,11 @@ public class BugLibAnalyzer {
 
     /**
      * this method analyzes the libraries provided as first argument and appends the result to the file provided as second arguments if it exists or creates a new one otherwise.
-     * 
+     *
      * @param finalLibrariesList the list of libraries to be analyzed
      * @param existing the file where to append the result (it will be created if null)
      * @return the csv file containing the analysis results as string
-     * @throws BackendConnectionException
+     * @throws com.sap.psr.vulas.backend.BackendConnectionException
      */
     public String createCSV(LinkedList<Artifact> finalLibrariesList, File existing) throws BackendConnectionException{
 

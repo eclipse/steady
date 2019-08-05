@@ -35,6 +35,10 @@ import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
 import com.sap.psr.vulas.shared.util.ThreadUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>PipWrapper class.</p>
+ *
+ */
 public class PipWrapper {
 
 	private final static Log log = LogFactory.getLog(PipWrapper.class);
@@ -54,6 +58,8 @@ public class PipWrapper {
 
 	/**
 	 * Assumes that the pip executable is part of the PATH environment variable.
+	 *
+	 * @throws com.sap.psr.vulas.python.ProcessWrapperException if any.
 	 */
 	public PipWrapper() throws ProcessWrapperException {
 		this(Paths.get("pip"), null);
@@ -61,7 +67,10 @@ public class PipWrapper {
 
 	/**
 	 * Creates a new wrapper for the pip executable at the given path.
-	 * @param _path_to_pip
+	 *
+	 * @param _path_to_pip a {@link java.nio.file.Path} object.
+	 * @param _log_dir a {@link java.nio.file.Path} object.
+	 * @throws com.sap.psr.vulas.python.ProcessWrapperException if any.
 	 */
 	public PipWrapper(Path _path_to_pip, Path _log_dir) throws ProcessWrapperException {
 		this.pathToPip = _path_to_pip;
@@ -85,6 +94,11 @@ public class PipWrapper {
 		return this.ignorePacks.contains(_p, ComparisonMode.EQUALS, CaseSensitivity.CASE_SENSITIVE);
 	}
 
+	/**
+	 * <p>isAvailable.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isAvailable() {
 		boolean exists = false;
 		try {
@@ -102,7 +116,9 @@ public class PipWrapper {
 
 	/**
 	 * Calls pip install on the given project {@link Path} and the returns a list of all installed packages (including the dependencies).
-	 * @return
+	 *
+	 * @param _project a {@link java.nio.file.Path} object.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public Set<PipInstalledPackage> installPackages(Path _project) {
 		Set<PipInstalledPackage> packages = null;
@@ -147,8 +163,12 @@ public class PipWrapper {
 	}
 
 	/**
-	 * Calls pip freeze and pip show <package> in order to create and return all {@link PipInstalledPackages} of the Python environment.
-	 * @return
+	 * Calls pip freeze and pip show &lt;package&gt; in order to create and return all {@link PipInstalledPackage} of the Python environment.
+	 *
+	 * @return a {@link java.util.Set} object.
+	 * @throws com.sap.psr.vulas.python.ProcessWrapperException if any.
+	 * @throws java.io.IOException if any.
+	 * @throws java.lang.InterruptedException if any.
 	 */
 	public Set<PipInstalledPackage> getFreezePackages() throws ProcessWrapperException, IOException, InterruptedException {
 		final StopWatch sw = new StopWatch("pip freeze").start();
@@ -222,8 +242,12 @@ public class PipWrapper {
 	}
 
 	/**
-	 * Calls pip list and pip show <package> in order to create and return all {@link PipInstalledPackages} of the Python environment.
-	 * @return
+	 * Calls pip list and pip show &lt;package&gt; in order to create and return all {@link PipInstalledPackage}s of the Python environment.
+	 *
+	 * @return a {@link java.util.Set} object.
+	 * @throws com.sap.psr.vulas.python.ProcessWrapperException if any.
+	 * @throws java.io.IOException if any.
+	 * @throws java.lang.InterruptedException if any.
 	 */
 	public Set<PipInstalledPackage> getListPackages() throws ProcessWrapperException, IOException, InterruptedException {
 		final StopWatch sw = new StopWatch("pip list").start();

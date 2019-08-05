@@ -9,9 +9,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * This class holds all artifact results for the same minor release, e.g., possible roots are 1.0.0, 1.1.0,.. ,2.3.0,..
- * Each node contains its next build and maintenance release (if any), e.g., for node 2.3.0 - build release 2.3.0.1 / - maintenance release 2.3.1    
- * 
- *
+ * Each node contains its next build and maintenance release (if any), e.g., for node 2.3.0 - build release 2.3.0.1 / - maintenance release 2.3.1
  */
 public class ReleaseTree {
 	
@@ -23,6 +21,11 @@ public class ReleaseTree {
 	ArtifactResult2 node;
 	
 	
+	/**
+	 * <p>Constructor for ReleaseTree.</p>
+	 *
+	 * @param n a {@link com.sap.psr.vulas.patcheval.representation.ArtifactResult2} object.
+	 */
 	public ReleaseTree(ArtifactResult2 n){
 		this.node = n;
 		maintenance = null;
@@ -30,6 +33,11 @@ public class ReleaseTree {
 	}
 	
 	
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("\n").append(this.node.toString()).append("\n");
@@ -41,19 +49,18 @@ public class ReleaseTree {
 	}
 	
 	/**
-	 * This method adds an ArtifactResult2 r to a release tree. 
-	 * If the version major.minor.maintenance of r is the same than the current node, 
+	 * This method adds an ArtifactResult2 r to a release tree.
+	 * If the version major.minor.maintenance of r is the same than the current node,
 	 * it navigates the build ReleaseTree and inserts r as parent of  the subtree(if any) having a greater major.minor.maintenance.build;
-	 * If the version major.minor.maintenance of r is greater then the current node, 
+	 * If the version major.minor.maintenance of r is greater then the current node,
 	 * it navigates the maintenance ReleaseTree and inserts r as parent of the subtree (if any) having a greater major.minor.maintenance;
-	 * 
+	 *
 	 * The version comparison is done using the method compareVersion of class ArtifactResult2 which compares ArtifactResult2 based on the following priorities
-     * 1) compare version numbers of the form major.minor[.maintenance[.build]], if only digits are contained
-     * 2) compare timestap (of publication in maven central)
-     * 3) alphanumerical version comparison  
-
-	 * 
-	 * @param r
+	 * 1) compare version numbers of the form major.minor[.maintenance[.build]], if only digits are contained
+	 * 2) compare timestap (of publication in maven central)
+	 * 3) alphanumerical version comparison
+	 *
+	 * @param r a {@link com.sap.psr.vulas.patcheval.representation.ArtifactResult2} object.
 	 */
 	public void add(ArtifactResult2 r){		
 		if(this.node.compareVersion(r)>0){
@@ -94,27 +101,57 @@ public class ReleaseTree {
 	
 
 
+	/**
+	 * <p>getMaintainance.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.patcheval.representation.ReleaseTree} object.
+	 */
 	public ReleaseTree getMaintainance() {
 		return maintenance;
 	}
 
+	/**
+	 * <p>setMaintainance.</p>
+	 *
+	 * @param maintainance a {@link com.sap.psr.vulas.patcheval.representation.ReleaseTree} object.
+	 */
 	public void setMaintainance(ReleaseTree maintainance) {
 		this.maintenance = maintainance;
 	}
 
+	/**
+	 * <p>Getter for the field <code>build</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.patcheval.representation.ReleaseTree} object.
+	 */
 	public ReleaseTree getBuild() {
 		return build;
 	}
 
+	/**
+	 * <p>Setter for the field <code>build</code>.</p>
+	 *
+	 * @param build a {@link com.sap.psr.vulas.patcheval.representation.ReleaseTree} object.
+	 */
 	public void setBuild(ReleaseTree build) {
 		this.build = build;
 	}
 
+	/**
+	 * <p>Getter for the field <code>node</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.patcheval.representation.ArtifactResult2} object.
+	 */
 	public ArtifactResult2 getNode() {
 		return node;
 	}
 
 
+	/**
+	 * <p>Setter for the field <code>node</code>.</p>
+	 *
+	 * @param node a {@link com.sap.psr.vulas.patcheval.representation.ArtifactResult2} object.
+	 */
 	public void setNode(ArtifactResult2 node) {
 		this.node = node;
 	}
@@ -350,8 +387,8 @@ public class ReleaseTree {
  	}
         
 	/**
-	 * This method computes all artifactResults2 of a releaseTree which are before an intersection (considering both maintenance or build branches)  
-	 * 
+	 * This method computes all artifactResults2 of a releaseTree which are before an intersection (considering both maintenance or build branches)
+	 *
 	 * @return pairs of artifact results and the intersection they preceed
 	 */
 	public HashMap<ArtifactResult2,Intersection2> getBeforeIntersection(){
@@ -402,6 +439,11 @@ public class ReleaseTree {
 	}
 	  
 	
+	/**
+	 * <p>getPostIntersection.</p>
+	 *
+	 * @return a {@link java.util.HashMap} object.
+	 */
 	public HashMap<ArtifactResult2,Intersection2> getPostIntersection(){
 		HashMap<ArtifactResult2,Intersection2> arpostIS = new HashMap<ArtifactResult2,Intersection2>();
 		this.getPostIntersection(arpostIS);
@@ -491,6 +533,11 @@ public class ReleaseTree {
 //	}
 	
 	//looks an intersection in the maintenance release
+	/**
+	 * <p>getISLastFirstFixed.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.patcheval.representation.ArtifactResult2} object.
+	 */
 	public ArtifactResult2 getISLastFirstFixed(){
 		ArtifactResult2 lastV = this.getLV();
 		ArtifactResult2 firstF = this.getFFinBuild();
@@ -502,6 +549,11 @@ public class ReleaseTree {
 		else return null;
 	}
 
+	/**
+	 * <p>getLastFirstFixed.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.patcheval.representation.ArtifactResult2} object.
+	 */
 	public ArtifactResult2 getLastFirstFixed(){
 		if(this.isFF()!=null && (this.build==null || this.build.getLV()==null) && (this.maintenance==null || this.maintenance.getLVInMaintainance()==null))
 			return this.node;
@@ -538,6 +590,11 @@ public class ReleaseTree {
 			
 	}
 	
+	/**
+	 * <p>getEqualsV.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	public List<ArtifactResult2> getEqualsV(){
 	    List<ArtifactResult2> listOfEqualsV = new ArrayList<ArtifactResult2>();
 	    this.getEqualsV(listOfEqualsV);
@@ -556,6 +613,11 @@ public class ReleaseTree {
 		
 	}
 	
+	/**
+	 * <p>getEqualsF.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	public List<ArtifactResult2> getEqualsF(){
 	    List<ArtifactResult2> listOfEqualsF = new ArrayList<ArtifactResult2>();
 	    this.getEqualsF(listOfEqualsF);
@@ -574,6 +636,11 @@ public class ReleaseTree {
 		
 	}
 	
+	/**
+	 * <p>getMinorV.</p>
+	 *
+	 * @return a {@link java.util.HashMap} object.
+	 */
 	public HashMap<ArtifactResult2,ArtifactResult2> getMinorV(){
 		HashMap<ArtifactResult2,ArtifactResult2> arwithLV = new HashMap<ArtifactResult2,ArtifactResult2>();
 		this.getMinorV(arwithLV);
@@ -592,6 +659,11 @@ public class ReleaseTree {
 			this.maintenance.getMinorV(arwithLV);   
 	}
 	
+	/**
+	 * <p>getMajorF.</p>
+	 *
+	 * @return a {@link java.util.HashMap} object.
+	 */
 	public HashMap<ArtifactResult2,ArtifactResult2> getMajorF(){
 		HashMap<ArtifactResult2,ArtifactResult2> arwithFF = new HashMap<ArtifactResult2,ArtifactResult2>();
 		this.getMajorF(arwithFF, null);
@@ -635,6 +707,11 @@ public class ReleaseTree {
 	}
 	
 	
+	/**
+	 * <p>getNodes.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	public List<ArtifactResult2> getNodes(){
 		List<ArtifactResult2> list = new ArrayList<ArtifactResult2>();
 		list.add(this.node);

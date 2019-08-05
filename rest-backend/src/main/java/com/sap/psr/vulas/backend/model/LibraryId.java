@@ -52,8 +52,18 @@ public class LibraryId implements Serializable,Comparable {
 //	@JsonBackReference
 	private Collection<AffectedLibrary> affLibraries;
 	
+	/**
+	 * <p>Constructor for LibraryId.</p>
+	 */
 	public LibraryId() { super(); }
 	
+	/**
+	 * <p>Constructor for LibraryId.</p>
+	 *
+	 * @param group a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 */
 	public LibraryId(String group, String artifact, String version) {
 		super();
 		this.mvnGroup = group;
@@ -61,21 +71,72 @@ public class LibraryId implements Serializable,Comparable {
 		this.version = version;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getId() { return id; }
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 */
 	public void setId(Long id) { this.id = id; }
 
+	/**
+	 * <p>Getter for the field <code>mvnGroup</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getMvnGroup() { return mvnGroup; }
+	/**
+	 * <p>Setter for the field <code>mvnGroup</code>.</p>
+	 *
+	 * @param group a {@link java.lang.String} object.
+	 */
 	public void setMvnGroup(String group) { this.mvnGroup = group; }
 
+	/**
+	 * <p>Getter for the field <code>artifact</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getArtifact() { return artifact; }
+	/**
+	 * <p>Setter for the field <code>artifact</code>.</p>
+	 *
+	 * @param artifact a {@link java.lang.String} object.
+	 */
 	public void setArtifact(String artifact) { this.artifact = artifact; }
 
+	/**
+	 * <p>Getter for the field <code>version</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getVersion() { return version; }
+	/**
+	 * <p>Setter for the field <code>version</code>.</p>
+	 *
+	 * @param version a {@link java.lang.String} object.
+	 */
 	public void setVersion(String version) { this.version = version; }
 	
+	/**
+	 * <p>Getter for the field <code>affLibraries</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<AffectedLibrary> getAffLibraries() { return affLibraries; }
+	/**
+	 * <p>Setter for the field <code>affLibraries</code>.</p>
+	 *
+	 * @param a a {@link java.util.Collection} object.
+	 */
 	public void setAffLibraries(Collection<AffectedLibrary> a) { this.affLibraries = a; }
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -86,6 +147,7 @@ public class LibraryId implements Serializable,Comparable {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -113,6 +175,7 @@ public class LibraryId implements Serializable,Comparable {
 		return true;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public final String toString() {
 		final StringBuilder builder = new StringBuilder();
@@ -122,8 +185,9 @@ public class LibraryId implements Serializable,Comparable {
 	
 	/**
 	 * Returns true if the given {@link LibraryId} only differs in the version while group and artifact are identical, false otherwise.
-	 * @param _other
-	 * @return
+	 *
+	 * @param obj a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+	 * @return a boolean.
 	 */
 	public boolean equalsButVersion(LibraryId obj) {
 		if (this == obj)
@@ -146,6 +210,7 @@ public class LibraryId implements Serializable,Comparable {
 		return true;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(Object _other) {
 		if(_other==null || !(_other instanceof LibraryId))
@@ -156,6 +221,11 @@ public class LibraryId implements Serializable,Comparable {
 		return v;
 	}
 	
+	/**
+	 * <p>toSharedType.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
+	 */
 	public com.sap.psr.vulas.shared.json.model.LibraryId toSharedType() {
 		return new com.sap.psr.vulas.shared.json.model.LibraryId(this.mvnGroup, this.artifact, this.version);
 	}

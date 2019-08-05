@@ -15,9 +15,8 @@ import com.sap.psr.vulas.shared.json.model.LibraryId;
 
 /**
  * Corresponds to the JSON object structure returned by the RESTful search of the Maven Central.
- * This class is used to de-serialize requests from Maven central and to represent artifacts to be 
+ * This class is used to de-serialize requests from Maven central and to represent artifacts to be
  * downloaded from Maven central.
- *
  */
 @JsonIgnoreProperties(ignoreUnknown = true,value = { "c" })
 public class ResponseDoc implements Comparable {
@@ -42,35 +41,125 @@ public class ResponseDoc implements Comparable {
 	
 	private Collection<String> ec = null;
 	
+	/**
+	 * <p>Constructor for ResponseDoc.</p>
+	 */
 	public ResponseDoc() {}
 
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getId() { return id; }
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.String} object.
+	 */
 	public void setId(String id) { this.id = id; }
 	
+	/**
+	 * <p>Getter for the field <code>g</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getG() { return g; }
+	/**
+	 * <p>Setter for the field <code>g</code>.</p>
+	 *
+	 * @param g a {@link java.lang.String} object.
+	 */
 	public void setG(String g) { this.g = g; }
 
+	/**
+	 * <p>Getter for the field <code>a</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getA() { return a; }
+	/**
+	 * <p>Setter for the field <code>a</code>.</p>
+	 *
+	 * @param a a {@link java.lang.String} object.
+	 */
 	public void setA(String a) { this.a = a; }
 	
+	/**
+	 * <p>Getter for the field <code>v</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getV() { return v; }
+	/**
+	 * <p>Setter for the field <code>v</code>.</p>
+	 *
+	 * @param v a {@link java.lang.String} object.
+	 */
 	public void setV(String v) { this.v = v; }
 
+	/**
+	 * <p>Getter for the field <code>c</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getC() { return c; }
+	/**
+	 * <p>Setter for the field <code>c</code>.</p>
+	 *
+	 * @param c a {@link java.lang.String} object.
+	 */
 	public void setC(String c) { 
 		//TODO check that c is among ec
 		this.c = c; 
 		}
 		
+	/**
+	 * <p>Getter for the field <code>p</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getP() { return p; }
+	/**
+	 * <p>Setter for the field <code>p</code>.</p>
+	 *
+	 * @param p a {@link java.lang.String} object.
+	 */
 	public void setP(String p) { this.p = p; }
 
+	/**
+	 * <p>Getter for the field <code>timestamp</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getTimestamp() { return timestamp; }
+	/**
+	 * <p>Setter for the field <code>timestamp</code>.</p>
+	 *
+	 * @param timestamp a long.
+	 */
 	public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 	
+	/**
+	 * <p>Getter for the field <code>ec</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<String> getEc() { return ec; }
+	/**
+	 * <p>Setter for the field <code>ec</code>.</p>
+	 *
+	 * @param ec a {@link java.util.Collection} object.
+	 */
 	public void setEc(Collection<String> ec) { this.ec = ec; }
 	
+	/**
+	 * <p>availableWith.</p>
+	 *
+	 * @param _classifier a {@link java.lang.String} object.
+	 * @param _packaging a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	@JsonIgnore
 	public boolean availableWith(String _classifier, String _packaging) {
 		//final String filter_ec = (_classifier!=null && !_classifier.equals("") ? _classifier + "-" : "") + "." + _packaging;
@@ -95,6 +184,8 @@ public class ResponseDoc implements Comparable {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Compares the respective timestamps.
 	 */
 	@Override
@@ -137,6 +228,7 @@ public class ResponseDoc implements Comparable {
 	}
 	
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		final StringBuilder b = new StringBuilder();
@@ -187,8 +279,8 @@ public class ResponseDoc implements Comparable {
 	
 	/**
 	 * Returns a {@link LibraryId} corresponding to this {@link ResponseDoc}.
-	 * @param _libid
-	 * @return
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Artifact} object.
 	 */
 	public Artifact toArtifact() {
 		Artifact r = new Artifact(g,a,v);

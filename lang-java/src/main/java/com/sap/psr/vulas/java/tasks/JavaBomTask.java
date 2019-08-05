@@ -27,12 +27,17 @@ import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Dependency;
+import com.sap.psr.vulas.shared.util.DependencyUtil;
 import com.sap.psr.vulas.shared.util.StringList;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.ThreadUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import com.sap.psr.vulas.tasks.AbstractBomTask;
 
+/**
+ * <p>JavaBomTask class.</p>
+ *
+ */
 public class JavaBomTask extends AbstractBomTask {
 
 	private static final Log log = LogFactory.getLog(JavaBomTask.class);
@@ -45,6 +50,7 @@ public class JavaBomTask extends AbstractBomTask {
 	
 	private static final List<GoalClient> pluginGoalClients = Arrays.asList(GoalClient.MAVEN_PLUGIN, GoalClient.GRADLE_PLUGIN);
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getLanguage() { return new HashSet<ProgrammingLanguage>(Arrays.asList(new ProgrammingLanguage[] { ProgrammingLanguage.JAVA })); }
 
@@ -62,6 +68,7 @@ public class JavaBomTask extends AbstractBomTask {
 		return this.appJarNames!=null && !this.isOneOfGoalClients(pluginGoalClients);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void configure(VulasConfiguration _cfg) throws GoalConfigurationException {
 		super.configure(_cfg);
@@ -100,6 +107,7 @@ public class JavaBomTask extends AbstractBomTask {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void execute() throws GoalExecutionException {
 
@@ -300,6 +308,12 @@ public class JavaBomTask extends AbstractBomTask {
 			} catch (FileAnalysisException e) {
 				log.error(e.getMessage(), e);
 			}
+		}
+		
+		// Check whether the parent-child dependency relationships are consistent
+		final boolean consistent_deps = DependencyUtil.isValidDependencyCollection(a);
+		if(!consistent_deps) {
+			throw new GoalExecutionException("Inconsistent application dependencies cannot be uploaded", null);
 		}
 
 		// Set the one to be returned

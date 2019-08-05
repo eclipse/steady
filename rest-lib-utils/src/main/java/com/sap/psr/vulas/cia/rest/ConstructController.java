@@ -45,6 +45,10 @@ import com.sap.psr.vulas.sign.SignatureFactory;
 
 import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
+/**
+ * <p>ConstructController class.</p>
+ *
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/constructs")
@@ -56,6 +60,13 @@ public class ConstructController {
 	 * Provided that (1) the given GAV is known to the software repo (e.g., Maven Central) and (2) an artifact with classifier 'source' exists for it,
 	 * the method returns the source code of the given Java construct.
 	 * Attention: For the time being, only the types CONSTRUCTOR and METHOD are supported.
+	 *
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param type a {@link java.lang.String} object.
+	 * @param qname a {@link java.lang.String} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/{type:.+}/{qname:.+}", method = RequestMethod.GET)
 	public void getConstructSourceForGav(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String type, @PathVariable String qname, HttpServletResponse response) {
@@ -113,6 +124,11 @@ public class ConstructController {
 	 * Provided that (1) the given SHA1 is known to the software repo (e.g., Maven Central) and (2) an artifact with classifier 'source' exists for the corresponding GAV,
 	 * the method returns the source code of the given Java construct.
 	 * Attention: For the time being, only the types CONSTRUCTOR and METHOD are supported.
+	 *
+	 * @param sha1 a {@link java.lang.String} object.
+	 * @param type a {@link java.lang.String} object.
+	 * @param qname a {@link java.lang.String} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
 	 */
 	@RequestMapping(value = "/{sha1:.+}/{type:.+}/{qname:.+}", method = RequestMethod.GET)
 	public void getConstructSourceForSha1(@PathVariable String sha1, @PathVariable String type, @PathVariable String qname, HttpServletResponse response) {
@@ -205,6 +221,15 @@ public class ConstructController {
 	 * Provided that (1) the given GAV is known to the software repo (e.g., Maven Central) and (2) an artifact with classifier 'source' exists for it,
 	 * the method returns the abstract syntax tree (AST) of the given Java construct.
 	 * Attention: For the time being, only the types CONSTRUCTOR and METHOD are supported.
+	 *
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param type a {@link java.lang.String} object.
+	 * @param qname a {@link java.lang.String} object.
+	 * @param sources a {@link java.lang.Boolean} object.
+	 * @param lang a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/{type:.+}/{qname:.+}/sign", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Signature> getConstructAstForGav(@PathVariable String mvnGroup, 
@@ -301,6 +326,11 @@ public class ConstructController {
 	 * Provided that (1) the given SHA1 is known to the software repo (e.g., Maven Central) and (2) an artifact with classifier 'source' exists for the corresponding GAV,
 	 * the method returns the abstract syntax tree (AST) of the given Java construct.
 	 * Attention: For the time being, only the types CONSTRUCTOR and METHOD are supported.
+	 *
+	 * @param sha1 a {@link java.lang.String} object.
+	 * @param type a {@link java.lang.String} object.
+	 * @param qname a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{sha1}/{type}/{qname}/ast", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<ASTConstructBodySignature> getConstructAstForSha1(@PathVariable String sha1, @PathVariable String type, @PathVariable String qname) {
@@ -356,6 +386,12 @@ public class ConstructController {
 		}
 	}
 
+	/**
+	 * <p>diffConstructAsts.</p>
+	 *
+	 * @param asts an array of {@link com.sap.psr.vulas.java.sign.ASTConstructBodySignature} objects.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
 	@RequestMapping(value = "/diff", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<SignatureChange> diffConstructAsts(@RequestBody ASTConstructBodySignature[] asts) {
 		// Check args

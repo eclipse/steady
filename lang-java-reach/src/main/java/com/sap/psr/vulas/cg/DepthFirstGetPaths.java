@@ -11,16 +11,27 @@ import org.apache.commons.logging.LogFactory;
 import com.ibm.wala.util.graph.Graph;
 import com.sap.psr.vulas.shared.json.model.ConstructId;
 
+/**
+ * <p>DepthFirstGetPaths class.</p>
+ *
+ */
 public class DepthFirstGetPaths extends AbstractGetPaths {
 	
 	private static final Log log = LogFactory.getLog(DepthFirstGetPaths.class);
 			
 	private long start_millis = System.currentTimeMillis(), end_millis = System.currentTimeMillis();	
 	
+	/**
+	 * <p>Constructor for DepthFirstGetPaths.</p>
+	 *
+	 * @param _graph a {@link com.ibm.wala.util.graph.Graph} object.
+	 * @param _nodeid a {@link java.util.ArrayList} object.
+	 */
 	public DepthFirstGetPaths(Graph<Integer> _graph, ArrayList<ConstructId> _nodeid) {
 		super(_graph, _nodeid);
 	}
 
+	/** {@inheritDoc} */
 	public HashSet<LinkedList<ConstructId>> getAllPaths(ConstructId _src, ConstructId _tgt) {
 		this.start_millis = System.currentTimeMillis();
 		HashSet<LinkedList<Integer>> paths = new HashSet<LinkedList<Integer>>();

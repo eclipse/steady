@@ -53,7 +53,6 @@ import javassist.NotFoundException;
 
 /**
  * Analyzes a single Java archives as to identify (and potentially instrument) all its constructs.
- *
  */
 public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, FileAnalyzer {
 
@@ -91,9 +90,11 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 
 	protected InstrumentationControl instrControl = null;
 
+	/** {@inheritDoc} */
 	@Override
 	public String[] getSupportedFileExtensions() { return new String[] { "jar" }; }
 
+	/** {@inheritDoc} */
 	@Override
 	public final boolean canAnalyze(File _file) {
 		final String ext = FileUtil.getFileExtension(_file);
@@ -106,6 +107,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void analyze(final File _file) throws FileAnalysisException {
 		try {
@@ -124,41 +126,64 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		}
 	}
 
+	/**
+	 * <p>Setter for the field <code>instrument</code>.</p>
+	 *
+	 * @param _instrument a boolean.
+	 */
 	public void setInstrument(boolean _instrument) {
 		this.instrument = _instrument;
 		if(this.instrument)
 			this.instrControl = InstrumentationControl.getInstance(this.url);
 	}
 
+	/**
+	 * <p>getPath.</p>
+	 *
+	 * @return a {@link java.nio.file.Path} object.
+	 */
 	public Path getPath() {
 		return Paths.get(this.url);
 	}
 
+	/**
+	 * <p>Setter for the field <code>parent</code>.</p>
+	 *
+	 * @param ja a {@link com.sap.psr.vulas.java.JarAnalyzer} object.
+	 */
 	public void setParent(JarAnalyzer ja){
 		this.parent= ja;
 	}
 
+	/**
+	 * <p>Getter for the field <code>parent</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.java.JarAnalyzer} object.
+	 */
 	public JarAnalyzer getParent(){
 		return this.parent;
 	}
 
 	/**
 	 * Returns the size of the original JAR file (before instrumentation).
+	 *
 	 * @see #getInstrumentedFileSize()
-	 * @return
+	 * @return a long.
 	 */
 	public long getFileSize() { return this.jarWriter.getFileSize(); }
 
 	/**
 	 * Returns the size of the instrumented JAR file (or -1 if no instrumentation took place).
+	 *
 	 * @see #getFileSize()
-	 * @return
+	 * @return a long.
 	 */
 	public long getInstrumentedFileSize() { return this.jarWriter.getInstrumentedFileSize(); }
 
 	/**
 	 * Specifies the work directory into which instrumented JARs are written. If null, a temporary directory will be created.
-	 * @param _p
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
 	 */
 	public void setWorkDir(Path _p) { this.workDir = _p; }
 
@@ -166,20 +191,23 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 	 * Determines whether the instrumented JAR is renamed or not. If yes, the new file name follows the following format:
 	 * - If app context is provided: [originalJarName]-vulas-[appGroupId]-[appArtifactId]-[appVersion].jar
 	 * - Otherwise: [originalJarName]-vulas-instr.jar
-	 * @param boolean
+	 *
+	 * @param _b a boolean.
 	 */
 	public void setRename(boolean _b) { this.rename = _b; }
 
 	/**
 	 * Sets the Maven Id for the JAR to be analyzed. The Maven ID is already known in some contexts (e.g., during Maven plugin execution).
-	 * @param _id
+	 *
+	 * @param _id a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
 	 */
 	public void setLibraryId(LibraryId _id) { this.libraryId = _id; }
 
 	/**
 	 * Returns a {@link Library} representing the analyzed Java archive.
-	 * @return
-	 * @throws FileAnalysisException
+	 *
+	 * @throws com.sap.psr.vulas.FileAnalysisException
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Library} object.
 	 */
 	public Library getLibrary() throws FileAnalysisException {
 		final Library lib = new Library(this.getSHA1());
@@ -205,16 +233,24 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 	/**
 	 * Returns the SHA1 digest of the JAR. Either taken from the manifest (entry VULAS-originalSHA1, in case the original JAR has been instrumented
 	 * offline), or by computing it on the fly.
+	 *
 	 * @return the SHA1 digest of the JAR
 	 */
 	public synchronized String getSHA1() { return this.jarWriter.getSHA1(); }
 
+	/**
+	 * <p>getFileName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getFileName() {
 		return this.jarWriter.getOriginalJarFileName().toString();
 	}
 
 	/**
 	 * This method is called by {@link ArchiveAnalysisManager}.
+	 *
+	 * @return a {@link com.sap.psr.vulas.FileAnalyzer} object.
 	 */
 	public FileAnalyzer call() {
 		try {
@@ -243,7 +279,8 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 
 	/**
 	 * See here: http://docs.oracle.com/javase/7/docs/technotes/guides/jar/jar.html
-	 * @throws JarAnalysisException
+	 *
+	 * @throws com.sap.psr.vulas.java.JarAnalysisException
 	 */
 	protected void createInstrumentedArchive() throws JarAnalysisException {
 
@@ -269,13 +306,19 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		this.instrControl.logStatistics();
 	}
 	
+	/**
+	 * <p>getInstrumentedArchive.</p>
+	 *
+	 * @return a {@link java.io.File} object.
+	 */
 	public final File getInstrumentedArchive() {
 		return this.jarWriter.getRewrittenJarFile();
 	}
 
 	/**
 	 * Returns the class names for all class files found in the given archive.
-	 * @return
+	 *
+	 * @return a {@link java.util.Set} object.
 	 */
 	public Set<String> getClassNames() {
 		// Trigger the scan (in case not yet done)
@@ -283,13 +326,20 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		return this.classNames;
 	}
 
+	/**
+	 * <p>hasJARConstructs.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean hasJARConstructs() { return this.getConstructIds().size()>0; }
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasChilds() {
 		return false;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) {
 		return null;
@@ -297,6 +347,8 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 
 	/**
 	 * Identifies all {@link ConstructId}s of all methods and constructors.
+	 *
+	 * @return a {@link java.util.Set} object.
 	 */
 	public synchronized Set<ConstructId> getConstructIds() {
 		//this method is used to collect statistics about the analyzed jars but these are not available (and thus skipped if the flag skipknownArchive is true 
@@ -429,6 +481,11 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		return this.constructs;
 	}
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() {
 		final StringBuilder b = new StringBuilder();
 		final String classname = this.getClass().getName().substring(1 + this.getClass().getName().lastIndexOf("."));
@@ -439,12 +496,19 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		return b.toString();
 	}
 
+	/**
+	 * <p>getInstrumentationControl.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.monitor.InstrumentationControl} object.
+	 */
 	public InstrumentationControl getInstrumentationControl() { return this.instrControl; }
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * In case the archive is rewritten, this method is used to rewrite certain {@link JarEntry}s
 	 * (rather than taking the file from the original archive).
-	 * The callback registration takes place in {@link #createInstrumentedJar()}.
+	 * The callback registration takes place in {@link #createInstrumentedArchive()}.
 	 */
 	@Override
 	public InputStream getInputStream(String _regex, JarEntry _entry) {
@@ -474,6 +538,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		return is;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
 		if(this.constructBodies==null) {
@@ -485,6 +550,12 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		return this.constructBodies;
 	}
 
+	/**
+	 * <p>getSharedConstructs.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 * @throws com.sap.psr.vulas.FileAnalysisException if any.
+	 */
 	public List<com.sap.psr.vulas.shared.json.model.ConstructId> getSharedConstructs() throws FileAnalysisException {
 		List<com.sap.psr.vulas.shared.json.model.ConstructId> l= new ArrayList<com.sap.psr.vulas.shared.json.model.ConstructId>();
 		for(ConstructId c: this.getConstructIds()) {
@@ -493,17 +564,21 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		return l;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean containsConstruct(ConstructId _id) throws FileAnalysisException { return this.getConstructs().containsKey(_id); }
 
+	/** {@inheritDoc} */
 	@Override
 	public Construct getConstruct(ConstructId _id) throws FileAnalysisException { return this.getConstructs().get(_id); }
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj){
 		return obj instanceof JarAnalyzer && this.getSHA1().equals(((JarAnalyzer)obj).getSHA1());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode(){
 		return this.getSHA1().hashCode();
@@ -511,6 +586,12 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 	
 	// ---------------------------- STATIC METHODS
 	
+	/**
+	 * <p>isJavaIdentifier.</p>
+	 *
+	 * @param _name a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public static boolean isJavaIdentifier(String _name) {
 		if(_name==null || _name.equals(""))
 			return false;
@@ -531,9 +612,9 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 	 * Returns the fully-qualified Java class identifier for a given JAR entry.
 	 * This is done by removing the file extension and by interpreting folders as packages.
 	 * If anything goes wrong, null is returned.
-	 *  
-	 * @param _name
-	 * @return
+	 *
+	 * @param _jar_entry_name a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getFqClassname(String _jar_entry_name) {
 		String cn = null;
@@ -566,14 +647,30 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		return cn;
 	}
 	
+	/**
+	 * <p>setAppContext.</p>
+	 *
+	 * @param _ctx a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 */
 	public static void setAppContext(Application _ctx) { JarAnalyzer.APP_CTX = _ctx; }
+	/**
+	 * <p>getAppContext.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 */
 	public static Application getAppContext() { return JarAnalyzer.APP_CTX; }
 	
 	/**
 	 * Adds a given URL to the classpath of the class pool. This allows maintaining dependencies needed for the compilation of instrumented classes.
-	 * @param _url
-	 * @throws NotFoundException
+	 *
+	 * @param _url a {@link java.lang.String} object.
+	 * @throws javassist.NotFoundException
 	 */
 	public static void insertClasspath(String _url) throws NotFoundException { CLASSPOOL.insertClassPath(_url); }
+	/**
+	 * <p>getClassPool.</p>
+	 *
+	 * @return a {@link javassist.ClassPool} object.
+	 */
 	protected static ClassPool getClassPool() { return JarAnalyzer.CLASSPOOL; }
 }

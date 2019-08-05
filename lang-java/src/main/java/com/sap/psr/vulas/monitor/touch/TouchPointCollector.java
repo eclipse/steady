@@ -34,6 +34,10 @@ import com.sap.psr.vulas.shared.util.FileUtil;
 
 import javassist.CtBehavior;
 
+/**
+ * <p>TouchPointCollector class.</p>
+ *
+ */
 public class TouchPointCollector {
 
 	// STATIC MEMBERS
@@ -61,6 +65,11 @@ public class TouchPointCollector {
 		this.loaderHierarchy = new LoaderHierarchy();
 	}
 
+	/**
+	 * <p>Getter for the field <code>instance</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.monitor.touch.TouchPointCollector} object.
+	 */
 	public synchronized static TouchPointCollector getInstance() {
 		if(TouchPointCollector.instance==null) {
 			// Disable trace collection during the instantiation process. As we use a couple of OSS components
@@ -90,13 +99,25 @@ public class TouchPointCollector {
 
 	/**
 	 * Adds the given touch point to the list of touch points collected during the tests. This method is called by the
-	 * callback method {@link TouchPointCollector#callback(Direction, String, String, URL, ConstructId, URL, String, String, String, Map)}.
-	 * @param _tp
+	 * callback method {@link TouchPointCollector#callback(String, String, ClassLoader, URL, boolean, StackTraceElement[], String, String, String, Map)}.
+	 *
+	 * @param _tp a {@link com.sap.psr.vulas.monitor.touch.TouchPointCollector.TouchPoint} object.
 	 */
 	public void addTouchPoint(TouchPoint _tp) { this.touchPoints.add(_tp); }
 
+	/**
+	 * <p>Getter for the field <code>touchPoints</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	public Set<TouchPoint> getTouchPoints() { return this.touchPoints; }
 
+	/**
+	 * <p>getJarAnalyzerByPath.</p>
+	 *
+	 * @param _jar_path a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.java.JarAnalyzer} object.
+	 */
 	public JarAnalyzer getJarAnalyzerByPath(String _jar_path){
 		if(!this.jarAnalyzerCache.containsKey(_jar_path)){
 			try {
@@ -111,6 +132,20 @@ public class TouchPointCollector {
 		return this.jarAnalyzerCache.get(_jar_path);
 	}
 
+	/**
+	 * <p>callback.</p>
+	 *
+	 * @param _callee_type a {@link java.lang.String} object.
+	 * @param _callee_qname a {@link java.lang.String} object.
+	 * @param _class_loader a {@link java.lang.ClassLoader} object.
+	 * @param _callee_url a {@link java.net.URL} object.
+	 * @param callee_in_app a boolean.
+	 * @param _stacktrace an array of {@link java.lang.StackTraceElement} objects.
+	 * @param _app_groupid a {@link java.lang.String} object.
+	 * @param _app_artifactid a {@link java.lang.String} object.
+	 * @param _app_version a {@link java.lang.String} object.
+	 * @param _callee_params a {@link java.util.Map} object.
+	 */
 	public static void callback(String _callee_type, String _callee_qname, ClassLoader _class_loader, URL _callee_url, boolean callee_in_app, StackTraceElement[] _stacktrace, String _app_groupid, String _app_artifactid, String _app_version, Map<String,Serializable> _callee_params){
 		if(!ExecutionMonitor.isPaused()) {
 
@@ -165,8 +200,11 @@ public class TouchPointCollector {
 	}
 
 	/**
-	 * The instrumentation code created by {@link TouchPointInstrumentor#instrument(JavaId, CtBehavior, ClassVisitor)} will
+	 * The instrumentation code created by {@link TouchPointInstrumentor#instrument(StringBuffer, JavaId, CtBehavior, ClassVisitor)} will
 	 * call this callback method if it is possible to determine the caller (through stack trace analysis).
+	 *
+	 * @param _exe a {@link com.sap.psr.vulas.goals.AbstractGoal} object.
+	 * @param _batch_size a int.
 	 */
 	/*public static void callback(Direction _direction, String _callee_type, String _callee_qname, URL _callee_url, ConstructId _caller, URL _caller_url, String _app_groupid, String _app_artifactid, String _app_version, Map<String,Serializable> _callee_params){
 		if(!TouchPointCollector.PAUSE_COLLECTION) {
@@ -195,7 +233,6 @@ public class TouchPointCollector {
 			}
 		}
 	}*/
-
 	public void uploadInformation(AbstractGoal _exe, int _batch_size) {
 		if(this.touchPoints.isEmpty()) {
 			TouchPointCollector.getLog().info("No touch points collected");

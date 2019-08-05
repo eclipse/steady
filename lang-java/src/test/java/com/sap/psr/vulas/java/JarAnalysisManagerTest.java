@@ -9,8 +9,6 @@ import java.util.Set;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import com.sap.psr.vulas.java.ArchiveAnalysisManager;
-import com.sap.psr.vulas.java.JarAnalyzer;
 import com.sap.psr.vulas.shared.categories.Slow;
 import com.sap.psr.vulas.shared.util.FileSearch;
 

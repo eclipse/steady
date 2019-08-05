@@ -16,11 +16,20 @@ import org.apache.commons.logging.LogFactory;
 import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>Main class.</p>
+ *
+ */
 public class Main {
 
 	private static final Log log = LogFactory.getLog(Main.class);
 
 
+	/**
+	 * <p>main.</p>
+	 *
+	 * @param _args an array of {@link java.lang.String} objects.
+	 */
 	public static void main(String[] _args){
 		// Prepare parsing of cmd line arguments
 		final Options options = new Options();

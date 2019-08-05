@@ -26,6 +26,10 @@ import com.sap.psr.vulas.cia.util.ClassDownloader.Format;
 import com.sap.psr.vulas.cia.util.MavenCentralWrapper;
 import com.sap.psr.vulas.shared.json.model.Artifact;
 
+/**
+ * <p>ClassController class.</p>
+ *
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/classes")
@@ -35,6 +39,13 @@ public class ClassController {
 
 	/**
 	 * Returns the source code of the Java construct with the given name, as contained in the given Maven artifact.
+	 *
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param classname a {@link java.lang.String} object.
+	 * @param format a {@link java.lang.String} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/{classname:.+}", method = RequestMethod.GET)
 	public void getClassfile(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String classname, 
@@ -77,6 +88,13 @@ public class ClassController {
 		}
 	}
 	
+	/**
+	 * <p>getClassArtifacts.</p>
+	 *
+	 * @param classname a {@link java.lang.String} object.
+	 * @param rows a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
 	@RequestMapping(value = "/libraryIds/{classname:.+}", method = RequestMethod.GET)
 	public ResponseEntity<Set<Artifact>> getClassArtifacts(@PathVariable String classname, @RequestParam(value="rows", required=false, defaultValue="1000") String rows) {
 		try{

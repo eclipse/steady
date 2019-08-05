@@ -8,7 +8,6 @@ import java.util.Set;
 
 /**
  * Loops over all existing implementations of {@link MaliciousnessAnalyzer} and returns a set of all findings (positive and negative).
- *  
  */
 public class MaliciousnessAnalyzerLoop {
 	
@@ -16,9 +15,9 @@ public class MaliciousnessAnalyzerLoop {
 
 	/**
 	 * Checks whether the given {@link File} is malicious or not.
-	 * 
-	 * @param _file
-	 * @return
+	 *
+	 * @param _file a {@link java.io.File} object.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public Set<MaliciousnessAnalysisResult> isMalicious(File _file) {
 		final Set<MaliciousnessAnalysisResult> results = new HashSet<MaliciousnessAnalysisResult>();
@@ -30,9 +29,9 @@ public class MaliciousnessAnalyzerLoop {
 
 	/**
 	 * Checks whether the given {@link File} is malicious or not.
-	 * 
-	 * @param _is
-	 * @return
+	 *
+	 * @param _is a {@link java.io.InputStream} object.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public Set<MaliciousnessAnalysisResult> isMalicious(InputStream _is) {
 		final Set<MaliciousnessAnalysisResult> results = new HashSet<MaliciousnessAnalysisResult>();

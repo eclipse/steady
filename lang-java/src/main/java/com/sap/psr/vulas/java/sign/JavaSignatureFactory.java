@@ -1,9 +1,16 @@
 package com.sap.psr.vulas.java.sign;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileAttribute;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -13,12 +20,19 @@ import com.sap.psr.vulas.FileAnalyzer;
 import com.sap.psr.vulas.FileAnalyzerFactory;
 import com.sap.psr.vulas.java.JavaClassId;
 import com.sap.psr.vulas.java.JavaId;
+import com.sap.psr.vulas.java.decompiler.IDecompiler;
+import com.sap.psr.vulas.java.decompiler.ProcyonDecompiler;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.ConstructId;
+import com.sap.psr.vulas.shared.util.FileUtil;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import com.sap.psr.vulas.sign.Signature;
 import com.sap.psr.vulas.sign.SignatureChange;
 import com.sap.psr.vulas.sign.SignatureFactory;
+
+import javassist.CtClass;
+import javassist.bytecode.ClassFile;
 
 /**
  * Creates construct signatures for Java methods and constructors (other types are not supported).
@@ -36,6 +50,18 @@ public class JavaSignatureFactory implements SignatureFactory {
 	final Map<ConstructId, Construct> sourceCache = new HashMap<ConstructId, Construct>();
 
 	/**
+	 * Cache of contructs, so that the decompilation and parsing must not be done over and over again.
+	 */
+	final Map<ConstructId, Construct> compiledCache = new HashMap<ConstructId, Construct>();
+	
+	/**
+	 * Java Decompiler, e.g., {@link ProcyonDecompiler}.
+	 */
+	final IDecompiler decompiler = new ProcyonDecompiler();
+
+	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns true if the given {@link ConstructId} is of type Java method or Java constructor.
 	 */
 	@Override
@@ -46,10 +72,9 @@ public class JavaSignatureFactory implements SignatureFactory {
 	}	
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Creates the construct signature on the basis of the source code provided by {@link Construct#getContent()}.
-	 * @param _c the construct for which the siganture shall be created
-	 * @param _src
-	 * @return
 	 */
 	@Override
 	public Signature createSignature(Construct _c) {
@@ -69,11 +94,11 @@ public class JavaSignatureFactory implements SignatureFactory {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Creates the construct signature on the basis of a given Java source file.
-	 * @param _cid the construct ID whose signature shall be created
-	 * @param _java_file the Java source code file
-	 * @return
-	 * @see JavaSignatureFactory#create(Construct)
+	 * 
+	 * @see JavaSignatureFactory#createFromSourceCache(ConstructId)
 	 */
 	@Override
 	public Signature createSignature(ConstructId _cid, File _java_file) {
@@ -97,6 +122,44 @@ public class JavaSignatureFactory implements SignatureFactory {
 					if(c!=null) {
 						// Fill cache
 						this.sourceCache.put(_cid,  c);
+						signature = this.createSignature(c);
+					}
+					else
+						JavaSignatureFactory.log.error("Construct [" + _cid + "] not found in Java source file [" + _java_file + "]");
+				} catch (IllegalArgumentException e) {
+					JavaSignatureFactory.log.error(e.getMessage());
+				} catch (FileAnalysisException e) {
+					JavaSignatureFactory.log.error(e.getMessage());
+				}
+			}
+		}
+		else if(_java_file.getName().endsWith(".class")) {
+			// Is the construct body cached?
+			signature = this.createFromCompiledCache(_cid);
+
+			// No, it is not cached
+			if(signature==null) {
+
+				try {
+					final String filename_without_extension = FilenameUtils.removeExtension(_java_file.getName());
+					File java_source_file = new File(_java_file.getParent(), filename_without_extension + ".java");
+
+					//Check if the java File already exists before decompiling
+					if(!java_source_file.exists())
+						java_source_file = decompiler.decompileClassFile(_java_file);
+
+					// Now the same as for java files
+
+					// Parse the Java file in order to identify all its constructs
+					final FileAnalyzer fa = FileAnalyzerFactory.buildFileAnalyzer(java_source_file);
+
+					// Get the construct we're interested at
+					final Construct c = fa.getConstruct(JavaId.toCoreType(_cid));
+
+					// Create the signature
+					if(c!=null) {
+						// Fill cache
+						this.compiledCache.put(_cid,  c);
 						signature = this.createSignature(c);
 					}
 					else
@@ -154,6 +217,46 @@ public class JavaSignatureFactory implements SignatureFactory {
 	}
 
 	/**
+	 * Reads the construct from cache and creates the signature.
+	 */
+	private Signature createFromCompiledCache(ConstructId _cid) {
+		Signature signature = null;
+		if(this.compiledCache.containsKey(_cid))
+			signature = this.createSignature(this.compiledCache.get(_cid));
+		return signature;
+	}
+
+	/**
+	 * Reads the bytecode of the given {@link CtClass} and writes it to a temporary file.
+	 * @param _cid
+	 * @param _class
+	 * @return the temporary file to which the byte code has been written
+	 * @throws IOException
+	 */
+	private Path writeBytesToTmpFile(JavaClassId _cid, CtClass _class) throws IOException {
+		final Path class_file = Files.createTempFile(VulasConfiguration.getGlobal().getTmpDir(), _cid.getQualifiedName(), ".class", new FileAttribute[] {});
+		FileUtil.writeToFile(class_file.toFile(), this.readBytes(_class));
+		return class_file;
+	}	
+
+	/**
+	 * Reads the byte code of the given {@link CtClass}.
+	 * @param _class
+	 * @return
+	 * @throws IOException
+	 */
+	private byte[] readBytes(CtClass _class) throws IOException {
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		final DataOutputStream dos = new DataOutputStream(bos);
+		final ClassFile cf = _class.getClassFile();
+		cf.write(dos);
+		dos.flush();
+		return bos.toByteArray();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
 	 * Computes a so-called signature change, i.e., changes required to transform the signature of the first given {@link Construct} into the signature of the second.
 	 */
 	@Override

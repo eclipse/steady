@@ -9,6 +9,10 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>PathSimilarity class.</p>
+ *
+ */
 public class PathSimilarity {
 	
 	private static final Log log = LogFactory.getLog( PathSimilarity.class );
@@ -19,14 +23,27 @@ public class PathSimilarity {
 	//group all paths based on the node joint, the map key is the qname of the node joint, the value are all paths id in this group, id is read from ArrayList paths
 	HashMap<String, HashSet<Integer>> groupedPaths = null;
 	
+	/**
+	 * <p>Constructor for PathSimilarity.</p>
+	 *
+	 * @param _p a {@link java.util.ArrayList} object.
+	 */
 	public PathSimilarity(ArrayList<LinkedList<String>> _p) {
 		this.paths = _p;
 	}
 	
+	/**
+	 * <p>addPath.</p>
+	 *
+	 * @param _p a {@link java.util.LinkedList} object.
+	 */
 	public void addPath (LinkedList<String> _p) {
 		this.paths.add(_p);
 	}
 	
+	/**
+	 * <p>groupPathsByJointNode.</p>
+	 */
 	public void groupPathsByJointNode () {
 		this.groupedPaths = new HashMap<String, HashSet<Integer>>();
 		for (int i = 0; i < this.paths.size(); i++) {
@@ -90,6 +107,12 @@ public class PathSimilarity {
 	}
 	
 	//one way to compute the similarity between two paths
+	/**
+	 * <p>pathSimilarity.</p>
+	 *
+	 * @param _path1 a {@link java.util.LinkedList} object.
+	 * @param _path2 a {@link java.util.LinkedList} object.
+	 */
 	public void pathSimilarity (LinkedList<String> _path1, LinkedList<String> _path2) {
 		int count = 0;
 		HashSet<List<String>> overlaps = overlapPath(_path1, _path2);

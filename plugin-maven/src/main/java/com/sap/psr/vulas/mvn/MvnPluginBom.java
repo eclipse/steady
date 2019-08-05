@@ -24,6 +24,7 @@ import com.sap.psr.vulas.shared.json.model.LibraryId;
 @Mojo( name = "app", defaultPhase = LifecyclePhase.TEST, requiresDependencyResolution = ResolutionScope.TEST, requiresOnline = true )
 public class MvnPluginBom extends AbstractVulasMojo {
 		
+	/** {@inheritDoc} */
 	@Override
 	protected void createGoal() {
 		this.goal = new BomGoal();

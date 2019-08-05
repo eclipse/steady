@@ -25,6 +25,10 @@ import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>TenantRepositoryImpl class.</p>
+ *
+ */
 public class TenantRepositoryImpl implements TenantRepositoryCustom {
 
 	private static Logger log = LoggerFactory.getLogger(TenantRepositoryImpl.class);
@@ -36,6 +40,7 @@ public class TenantRepositoryImpl implements TenantRepositoryCustom {
 	SpaceRepository spaceRepository;
 	
 	
+	/** {@inheritDoc} */
 	public Boolean isTenantComplete(Tenant _tenant){
 		// Check arguments
 		if(_tenant==null) {
@@ -50,9 +55,9 @@ public class TenantRepositoryImpl implements TenantRepositoryCustom {
 	}
 	
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns the tenant for the given tenant token. In case a tenant token is not provided, it returns the default tenant (if existing, null otherwise)
-	 * @return the tenant for the given tenant token; default tenant if token is null; null otherwise.
-	 * @throws Exception 
 	 */
 	public Tenant getTenant(String _tenantToken) {
 		Tenant tenant = null;		

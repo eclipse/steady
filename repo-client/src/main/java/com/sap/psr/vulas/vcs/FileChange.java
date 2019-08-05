@@ -6,7 +6,6 @@ import com.sap.psr.vulas.shared.util.FileUtil;
 
 /**
  * Represents the change of a file that is managed by a version control system.
- *
  */
 public class FileChange {
 	public enum Type { DEL, MOD, ADD };
@@ -22,6 +21,14 @@ public class FileChange {
 	 */
 	private String repoPath = null;
 		
+	/**
+	 * <p>Constructor for FileChange.</p>
+	 *
+	 * @param _repo a {@link java.lang.String} object.
+	 * @param _path a {@link java.lang.String} object.
+	 * @param _o a {@link java.io.File} object.
+	 * @param _n a {@link java.io.File} object.
+	 */
 	public FileChange(String _repo, String _path, File _o, File _n) {
 		this.repo     = _repo;
 		this.repoPath = _path;
@@ -31,7 +38,8 @@ public class FileChange {
 	
 	/**
 	 * Returns the type of change, either an addition, a modification or a deletion.
-	 * @return
+	 *
+	 * @return a {@link com.sap.psr.vulas.vcs.FileChange.Type} object.
 	 */
 	public Type getType() {
 		if(this.oldFile == null) return Type.ADD;
@@ -39,19 +47,40 @@ public class FileChange {
 		else return Type.MOD;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>oldFile</code>.</p>
+	 *
+	 * @return a {@link java.io.File} object.
+	 */
 	public File getOldFile() {
 		return this.oldFile;
 	}
+	/**
+	 * <p>Getter for the field <code>newFile</code>.</p>
+	 *
+	 * @return a {@link java.io.File} object.
+	 */
 	public File getNewFile() {
 		return this.newFile;
 	}
+	/**
+	 * <p>Getter for the field <code>repo</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getRepo() {
 		return this.repo;
 	}
+	/**
+	 * <p>Getter for the field <code>repoPath</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getRepoPath() {
 		return this.repoPath;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return "FileChange [type=" + this.getType() + ", repo=" + this.repo + ", path=" + this.repoPath + ", old=" + this.oldFile + ", new=" + this.newFile + "]";
@@ -59,7 +88,9 @@ public class FileChange {
 	
 	/**
 	 * Returns the file extension of the file concerned by the change.
-	 * @return
+	 *
+	 * @return a {@link java.lang.String} object.
+	 * @throws java.lang.IllegalStateException if any.
 	 */
 	public String getFileExtension() throws IllegalStateException {
 		if(this.getOldFile()!=null)

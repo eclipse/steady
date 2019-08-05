@@ -15,17 +15,25 @@ import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.util.StringList;
 import com.sap.psr.vulas.sign.SignatureAnalysis;
 
+/**
+ * <p>CheckverGoal class.</p>
+ *
+ */
 public class CheckverGoal extends AbstractAppGoal {
 	
 	private static final Log log = LogFactory.getLog(CheckverGoal.class);
 	
 	private StringList bugsWhitelist = new StringList();
 
+	/**
+	 * <p>Constructor for CheckverGoal.</p>
+	 */
 	public CheckverGoal() { super(GoalType.CHECKVER); }
 	
 	/**
 	 * Used to specify the bugs for which the analysis will be done.
-	 * @param _bugs
+	 *
+	 * @param _bugs a {@link java.lang.String} object.
 	 */
 	public void addToBugsWhitelist(String _bugs) {
         if(_bugs!=null && !_bugs.equals(""))
@@ -45,6 +53,7 @@ public class CheckverGoal extends AbstractAppGoal {
 		return new URLClassLoader(urls.toArray(new URL[urls.size()]));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void executeTasks() throws Exception {
 		SignatureAnalysis signatureAnalysis = SignatureAnalysis.getInstance();

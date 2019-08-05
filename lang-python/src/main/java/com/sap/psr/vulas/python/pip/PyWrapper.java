@@ -13,6 +13,10 @@ import com.sap.psr.vulas.python.ProcessWrapperException;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringUtil;
 
+/**
+ * <p>PyWrapper class.</p>
+ *
+ */
 public class PyWrapper {
 	
 	private final static Log log = LogFactory.getLog(PyWrapper.class);
@@ -22,13 +26,18 @@ public class PyWrapper {
 	private Path logDir = null;
 	
 	/**
-	 * Assumes that the python executable is part of the PATH environment variable.
+	 * Assumes that the Python executable is part of the PATH environment variable.
+	 *
+	 * @throws com.sap.psr.vulas.python.ProcessWrapperException if any.
 	 */
 	public PyWrapper() throws ProcessWrapperException { this(Paths.get("python"), null); }
 	
 	/**
 	 * Creates a new wrapper for the python executable at the given path.
-	 * @param _path_to_python
+	 *
+	 * @param _path_to_python a {@link java.nio.file.Path} object.
+	 * @param _log_dir a {@link java.nio.file.Path} object.
+	 * @throws com.sap.psr.vulas.python.ProcessWrapperException if any.
 	 */
 	public PyWrapper(Path _path_to_python, Path _log_dir) throws ProcessWrapperException {
 		this.pathToPython = _path_to_python;
@@ -43,6 +52,11 @@ public class PyWrapper {
 		}
 	}
 
+	/**
+	 * <p>isAvailable.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isAvailable() {
 		boolean exists = false;
 		try {
@@ -59,8 +73,11 @@ public class PyWrapper {
 	}
 	
 	/**
-	 * Calls pip list and pip show <package> in order to create and return all {@link PipInstalledPackages} of the Python environment.
-	 * @return
+	 * <p>Runs a Python script.</p>
+	 *
+	 * @param _script a {@link java.nio.file.Path} object.
+	 * @param _args a {@link java.util.List} object.
+	 * @return an int representing the exit code.
 	 */
 	public int runScript(Path _script, List<String> _args) {
 		int exit_code = -1;

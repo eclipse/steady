@@ -9,18 +9,33 @@ import com.sap.psr.vulas.shared.json.model.Tenant;
 
 /**
  * Builds URI paths matching to the RESTful API offered by the various {@link Service}s.
- * 
  */
 public class PathBuilder {
 
+	/**
+	 * <p>root.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String root() { return "/"; }
 
+	/**
+	 * <p>spaces.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String spaces() {
 		final StringBuilder b = new StringBuilder();
 		b.append(root()).append("spaces");
 		return b.toString();
 	}
 	
+	/**
+	 * <p>space.</p>
+	 *
+	 * @param _space a {@link com.sap.psr.vulas.shared.json.model.Space} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String space(@NotNull Space _space) {
 		final StringBuilder b = new StringBuilder();
 		b.append(spaces()).append("/");
@@ -28,6 +43,11 @@ public class PathBuilder {
 		return b.toString();
 	}
 	
+	/**
+	 * <p>apps.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String apps() {
 		final StringBuilder b = new StringBuilder();
 		b.append(root()).append("apps");
@@ -36,7 +56,9 @@ public class PathBuilder {
 	
 	/**
 	 * vulas-backend:/apps/{group}/{artifact}
-	 * @return
+	 *
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String artifact(@NotNull Application _app) {
 		final StringBuilder b = new StringBuilder();
@@ -45,6 +67,12 @@ public class PathBuilder {
 		return b.toString();
 	}
 
+	/**
+	 * <p>app.</p>
+	 *
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String app(@NotNull Application _app) {
 		final StringBuilder b = new StringBuilder();
 		b.append(apps()).append("/");
@@ -52,6 +80,14 @@ public class PathBuilder {
 		return b.toString();
 	}
 
+	/**
+	 * <p>goalExcecutions.</p>
+	 *
+	 * @param _t a {@link com.sap.psr.vulas.shared.json.model.Tenant} object.
+	 * @param _s a {@link com.sap.psr.vulas.shared.json.model.Space} object.
+	 * @param _a a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String goalExcecutions(@NotNull Tenant _t, Space _s, Application _a) {
 		final StringBuilder b = new StringBuilder();
 		if(_a!=null)
@@ -61,6 +97,15 @@ public class PathBuilder {
 		return b.toString();
 	}
 	
+	/**
+	 * <p>goalExcecution.</p>
+	 *
+	 * @param _t a {@link com.sap.psr.vulas.shared.json.model.Tenant} object.
+	 * @param _s a {@link com.sap.psr.vulas.shared.json.model.Space} object.
+	 * @param _a a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @param _gexe_id a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String goalExcecution(@NotNull Tenant _t, Space _s, Application _a, String _gexe_id) {
 		final StringBuilder b = new StringBuilder();
 		if(_a!=null)
@@ -71,24 +116,48 @@ public class PathBuilder {
 		return b.toString();
 	}
 
+	/**
+	 * <p>appConstructIds.</p>
+	 *
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String appConstructIds(@NotNull Application _app) {
 		final StringBuilder b = new StringBuilder();
 		b.append(app(_app)).append("/constructIds");
 		return b.toString();
 	}
 
+	/**
+	 * <p>appTraces.</p>
+	 *
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String appTraces(@NotNull Application _app) {
 		final StringBuilder b = new StringBuilder();
 		b.append(app(_app)).append("/traces");
 		return b.toString();
 	}
 	
+	/**
+	 * <p>appReachableConstructIds.</p>
+	 *
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String appReachableConstructIds(@NotNull Application _app) {
 		final StringBuilder b = new StringBuilder();
 		b.append(app(_app)).append("/reachableConstructIds");
 		return b.toString();
 	}
 
+	/**
+	 * <p>appBugs.</p>
+	 *
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String appBugs(@NotNull Application _app) {
 		final StringBuilder b = new StringBuilder();
 		b.append(app(_app)).append("/bugs");
@@ -97,8 +166,9 @@ public class PathBuilder {
 
 	/**
 	 * vulas-backend:/apps/{group}/{artifact}/{version}/deps
-	 * @param _bugId
-	 * @return
+	 *
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String appDeps(@NotNull Application _app) {
 		final StringBuilder b = new StringBuilder();
@@ -108,8 +178,12 @@ public class PathBuilder {
 
 	/**
 	 * vulas-backend:/apps/{group}/{artifact}/{version}/vulndeps
-	 * @param _bugId
-	 * @return
+	 *
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @param _include_historical a boolean.
+	 * @param _include_affected a boolean.
+	 * @param _include_affected_unconfirmed a boolean.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String appVulnDeps(@NotNull Application _app, boolean _include_historical, boolean _include_affected, boolean _include_affected_unconfirmed) {
 		final StringBuilder b = new StringBuilder();
@@ -120,48 +194,94 @@ public class PathBuilder {
 		return b.toString();
 	}
 	
+	/**
+	 * <p>vulnDeps.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String vulnDeps() {
 		final StringBuilder b = new StringBuilder();
 		b.append("/apps/vulndeps");
 		return b.toString();
 	}
 
+	/**
+	 * <p>appPaths.</p>
+	 *
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String appPaths(@NotNull Application _app) {
 		final StringBuilder b = new StringBuilder();
 		b.append(app(_app)).append("/paths");
 		return b.toString();
 	}
 
+	/**
+	 * <p>libs.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String libs() {
 		final StringBuilder b = new StringBuilder();
 		b.append(root()).append("libs");
 		return b.toString();
 	}
 
+	/**
+	 * <p>lib.</p>
+	 *
+	 * @param _sha1 a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String lib(String _sha1) {
 		final StringBuilder b = new StringBuilder();
 		b.append(libs()).append("/").append(_sha1);
 		return b.toString();
 	}
 	
+	/**
+	 * <p>libupload.</p>
+	 *
+	 * @param _sha1 a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String libupload(String _sha1) {
 		final StringBuilder b = new StringBuilder();
 		b.append(libs()).append("/").append(_sha1).append("/upload");
 		return b.toString();
 	}
 
+	/**
+	 * <p>libVersionCheck.</p>
+	 *
+	 * @param _sha1 a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String libVersionCheck(String _sha1) {
 		final StringBuilder b = new StringBuilder();
 		b.append(lib(_sha1)).append("/versionCheck");
 		return b.toString();
 	}
 	
+	/**
+	 * <p>libbugs.</p>
+	 *
+	 * @param _sha1 a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String libbugs(String _sha1) {
 		final StringBuilder b = new StringBuilder();
 		b.append(lib(_sha1)).append("/bugs");
 		return b.toString();
 	}
 
+	/**
+	 * <p>bugs.</p>
+	 *
+	 * @param _l a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String bugs(ProgrammingLanguage _l) {
 		final StringBuilder b = new StringBuilder();
 		b.append(root()).append("bugs");
@@ -170,24 +290,50 @@ public class PathBuilder {
 		return b.toString();
 	}
 
+	/**
+	 * <p>bug.</p>
+	 *
+	 * @param _bugid a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String bug(String _bugid) {
 		final StringBuilder b = new StringBuilder();
 		b.append(bugs(null)).append("/").append(_bugid);
 		return b.toString();
 	}
 
+	/**
+	 * <p>bugAffectedLibs.</p>
+	 *
+	 * @param _bugid a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String bugAffectedLibs(String _bugid) {
 		final StringBuilder b = new StringBuilder();
 		b.append(bug(_bugid)).append("/affectedLibIds");
 		return b.toString();
 	}
 
+	/**
+	 * <p>appReachableConstructs.</p>
+	 *
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @param _sha1 a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String appReachableConstructs(@NotNull Application _app, @NotNull String _sha1) {
 		final StringBuilder b = new StringBuilder();
 		b.append(app(_app)).append("/deps/").append(_sha1).append("/reachableConstructIds");
 		return b.toString();
 	}
 
+	/**
+	 * <p>appTouchPoints.</p>
+	 *
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @param _sha1 a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String appTouchPoints(@NotNull Application _app, @NotNull String _sha1) {
 		final StringBuilder b = new StringBuilder();
 		b.append(app(_app)).append("/deps/").append(_sha1).append("/touchPoints");
@@ -195,6 +341,12 @@ public class PathBuilder {
 	} 
 
 	// Formlery "xs/assessment/getVulnerableAppArchiveConstructs.xsjs"
+	/**
+	 * <p>vulnArchiveConstructs.</p>
+	 *
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static final String vulnArchiveConstructs(@NotNull Application _app) {
 		final StringBuilder b = new StringBuilder();
 		b.append(app(_app)).append("/vulndeps");
@@ -205,10 +357,11 @@ public class PathBuilder {
 
 	/**
 	 * vulas-backend:/apps/{group}/{artifact}/{version}/vulndeps/{sha1}/bugs/{bugid}
-	 * @param _app
-	 * @param _sha1
-	 * @param _bugId
-	 * @return
+	 *
+	 * @param _app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @param _sha1 a {@link java.lang.String} object.
+	 * @param _bugId a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String vulnerableDependencyConstructs(@NotNull Application _app, @NotNull String _sha1, @NotNull String _bugId) {
 		final StringBuilder b = new StringBuilder();
@@ -224,7 +377,8 @@ public class PathBuilder {
 
 	/**
 	 * vulas-cia:/constructs
-	 * @return
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String constructs() {
 		final StringBuilder b = new StringBuilder();
@@ -234,7 +388,10 @@ public class PathBuilder {
 
 	/**
 	 * vulas-cia:/constructs()/{sha1}/{type}/{qname}/ast
-	 * @return
+	 *
+	 * @param _sha1 a {@link java.lang.String} object.
+	 * @param _cid a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String constructSignature(@NotNull String _sha1, @NotNull com.sap.psr.vulas.shared.json.model.ConstructId _cid) {
 		final StringBuilder b = new StringBuilder();
@@ -248,7 +405,10 @@ public class PathBuilder {
 
 	/**
 	 * vulas-cia:/constructs()/{group}/{artifact}/{version}/{type}/{qname}/ast
-	 * @return
+	 *
+	 * @param _lib a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @param _cid a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String constructSignature(@NotNull Application _lib, @NotNull com.sap.psr.vulas.shared.json.model.ConstructId _cid) {
 		final StringBuilder b = new StringBuilder();
@@ -264,7 +424,8 @@ public class PathBuilder {
 
 	/**
 	 * vulas-cia:/artifacts
-	 * @return
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String artifacts() {
 		final StringBuilder b = new StringBuilder();
@@ -274,7 +435,8 @@ public class PathBuilder {
 
 	/**
 	 * vulas-cia:/artifacts()/diff
-	 * @return
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String diffArtifacts() {
 		final StringBuilder b = new StringBuilder();
@@ -284,7 +446,10 @@ public class PathBuilder {
 
 	/**
 	 * vulas-cia:artifacts()/{group}/{artifact}/
-	 * @return
+	 *
+	 * @param _g a {@link java.lang.String} object.
+	 * @param _a a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String artifactsGroupVersion(String _g, String _a) {
 		final StringBuilder b = new StringBuilder();
@@ -294,7 +459,11 @@ public class PathBuilder {
 		
 	/**
 	 * vulas-cia:artifacts()/{group}/{artifact}/{version}
-	 * @return
+	 *
+	 * @param _g a {@link java.lang.String} object.
+	 * @param _a a {@link java.lang.String} object.
+	 * @param _v a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String artifactsGAV(String _g, String _a, String _v) {
 		final StringBuilder b = new StringBuilder();
@@ -304,7 +473,10 @@ public class PathBuilder {
 	
 	/**
 	 * vulas-cia:artifacts()/{group}/{artifact}/latest
-	 * @return
+	 *
+	 * @param _g a {@link java.lang.String} object.
+	 * @param _a a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String artifactsLatestGroupVersion(String _g, String _a) {
 		final StringBuilder b = new StringBuilder();
@@ -314,7 +486,11 @@ public class PathBuilder {
 	
 	/**
 	 * vulas-cia:artifacts()/{group}/{artifact}/greaterThan/{version}
-	 * @return
+	 *
+	 * @param _g a {@link java.lang.String} object.
+	 * @param _a a {@link java.lang.String} object.
+	 * @param v a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String artifactsGreaterGroupVersion(String _g, String _a, String v) {
 		final StringBuilder b = new StringBuilder();
@@ -324,7 +500,11 @@ public class PathBuilder {
 
 	/**
 	 * vulas-cia:artifacts()/{group}/{artifact}/{version}/constructIds
-	 * @return
+	 *
+	 * @param _g a {@link java.lang.String} object.
+	 * @param _a a {@link java.lang.String} object.
+	 * @param _v a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String artifactsConstruct(String _g, String _a, String _v) {
 		final StringBuilder b = new StringBuilder();
@@ -354,7 +534,12 @@ public class PathBuilder {
 	
 	/**
 	 * vulas-cia:artifacts()/{group}/{artifact}/{version}/jars/classifier=jar|sources
-	 * @return
+	 *
+	 * @param _g a {@link java.lang.String} object.
+	 * @param _a a {@link java.lang.String} object.
+	 * @param _v a {@link java.lang.String} object.
+	 * @param _sources a {@link java.lang.Boolean} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String downloadArtifactJars(String _g, String _a, String _v, Boolean _sources) {
 		final StringBuilder b = new StringBuilder();
@@ -377,8 +562,10 @@ public class PathBuilder {
 
 	/**
 	 * vulas-backend:/bugs/{bugId}/libraries
-	 * @param _bugId
-	 * @return
+	 *
+	 * @param _bugId a {@link java.lang.String} object.
+	 * @param _bugId a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String bugLibraryVersions(@NotNull String _bugId){
 		final StringBuilder b = new StringBuilder();
@@ -388,8 +575,9 @@ public class PathBuilder {
 
 	/**
 	 * vulas-cia:/classes/libraryIds/{classname}
-	 * @param _className
-	 * @return
+	 *
+	 * @param _className a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String classesLibraryIds(@NotNull String _className){
 		final StringBuilder sb = new StringBuilder();
@@ -399,10 +587,12 @@ public class PathBuilder {
 
 	/**
 	 * vulas-cia:/constructs/{constructName}/ast
-	 * @param qString
-	 * @return
+	 *
+	 * @param qString a {@link java.lang.String} object.
+	 * @param _sources a {@link java.lang.Boolean} object.
+	 * @param _lang a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 * @return a {@link java.lang.String} object.
 	 */
-
 	public static final String astForQnameInLib(String qString, Boolean _sources, ProgrammingLanguage _lang) {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("/constructs/").append(qString).append("/sign?sources="+_sources).append("&lang="+_lang);
@@ -411,8 +601,9 @@ public class PathBuilder {
 
 	/**
 	 * vulas-cia:/constructs/{constructName}
-	 * @param qString
-	 * @return
+	 *
+	 * @param qString a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String sourcesForQnameInLib(String qString) {
 		final StringBuilder sb = new StringBuilder();
@@ -422,8 +613,11 @@ public class PathBuilder {
 	
 	/**
 	 * vulas-cia:/artifacts/{group}/{artifact}/{version}/constructIds/intersect
-	 * @param qString
-	 * @return
+	 *
+	 * @param qString a {@link java.lang.String} object.
+	 * @param packaging a {@link java.lang.String} object.
+	 * @param lang a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String libConstructIdsIntersect(String qString, String packaging, ProgrammingLanguage lang) {
 		final StringBuilder sb = new StringBuilder();
@@ -434,23 +628,12 @@ public class PathBuilder {
 
 	/**
 	 * vulas-cia:/constructs/diff
-	 * @return
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String constructsDiff() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("/constructs/diff");
 		return sb.toString();
 	}
-
-//	/**
-//	 * vulas-backend:/bugs
-//	 * @return 
-//	 */
-//	public static final String allBugs(){
-//		final StringBuilder b = new StringBuilder();
-//		b.append("/bugs/");
-//		return b.toString();
-//	}
-	
-
 }

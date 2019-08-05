@@ -80,6 +80,11 @@ public class ReachabilityAnalyzer implements Runnable {
      */
     private Callgraph callgraph = null;
 
+    /**
+     * <p>Getter for the field <code>callgraph</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.cg.Callgraph} object.
+     */
     public Callgraph getCallgraph() {
         return this.callgraph;
     }
@@ -127,6 +132,11 @@ public class ReachabilityAnalyzer implements Runnable {
 
     private static final Runtime runtime = Runtime.getRuntime();
 
+    /**
+     * <p>Constructor for ReachabilityAnalyzer.</p>
+     *
+     * @param _ctx a {@link com.sap.psr.vulas.goals.GoalContext} object.
+     */
     public ReachabilityAnalyzer(GoalContext _ctx) {
         this.goalContext = _ctx;
         this.app_ctx = _ctx.getApplication();
@@ -136,12 +146,17 @@ public class ReachabilityAnalyzer implements Runnable {
      * Sets the directories where to find compiled application classes. Each path is typically a directory, e.g., 'WEB-INF/classes' in
      * case of uncompressed WARs or 'target/classes' in case of Maven projects.
      *
-     * @param _paths
+     * @param _paths a {@link java.util.Set} object.
      */
     public void setAppClasspaths(Set<Path> _paths) {
         this.app_classpaths = _paths;
     }
 
+    /**
+     * <p>getAppClasspath.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getAppClasspath() {
         StringBuilder b = new StringBuilder();
         int i = 0;
@@ -158,12 +173,17 @@ public class ReachabilityAnalyzer implements Runnable {
      * Sets the directories where to find the classes of application dependencies. Each path is typically a JAR file, e.g., 'WEB-INF/lib'
      * in case of uncompressed WARs or 'target/dependencies' in case of Maven projects.
      *
-     * @param _paths
+     * @param _paths a {@link java.util.Set} object.
      */
     public void setDependencyClasspaths(Set<Path> _paths) {
         this.dep_classpaths = _paths;
     }
 
+    /**
+     * <p>getDependencyClasspath.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getDependencyClasspath() {
         StringBuilder b = new StringBuilder();
         int i = 0;
@@ -177,7 +197,9 @@ public class ReachabilityAnalyzer implements Runnable {
     }
 
     /**
-     * Sets the application constructs, used when analyzing the overall call graph in {@link ReachabilityAnalyzer#collectLibraryEntryPoints}.
+     * Sets the application constructs.
+     *
+     * @param _constructs a {@link java.util.Set} object.
      */
     public void setAppConstructs(Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs) {
         this.appConstructs = _constructs;
@@ -187,8 +209,9 @@ public class ReachabilityAnalyzer implements Runnable {
      * Sets the entry points that will be used as a starting point for the call graph construction.
      * The entry points used depend on the {@link GoalType}.
      *
-     * @param _constructs
-     * @param _desc
+     * @param _constructs a {@link java.util.Set} object.
+     * @param _source a {@link com.sap.psr.vulas.shared.enums.PathSource} object.
+     * @param _throw_exception a boolean.
      */
     public void setEntryPoints(Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs, PathSource _source, boolean _throw_exception) {
         this.entrypoints = _constructs;
@@ -215,13 +238,18 @@ public class ReachabilityAnalyzer implements Runnable {
 		return b.toString();
 	}*/
 
+    /**
+     * <p>setExcludePackages.</p>
+     *
+     * @param _packages a {@link java.lang.String} object.
+     */
     public void setExcludePackages(String _packages) {
         if ((_packages != null) && (!_packages.isEmpty())) this.excludedPackages = _packages;
     }
 
     /**
      * Sets the change list elements of the given bug(s) as target constructs. If no bugs are passed, all bugs
-     * relevant for the application will be considered (cf. {@link BackendConnector#getAppBugs(MavenId, String)}).
+     * relevant for the application will be considered (cf. {@link BackendConnector#getAppBugs(GoalContext, Application)}).
      *
      * @param _filter Comma-separated list of bug identifiers
      */
@@ -243,10 +271,21 @@ public class ReachabilityAnalyzer implements Runnable {
         }
     }
 
+    /**
+     * <p>Setter for the field <code>targetConstructs</code>.</p>
+     *
+     * @param _target_constructs a {@link java.util.Map} object.
+     */
     public void setTargetConstructs(Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> _target_constructs) {
         this.targetConstructs = _target_constructs;
     }
 
+    /**
+     * <p>setCallgraphConstructor.</p>
+     *
+     * @param analysisFramework a {@link java.lang.String} object.
+     * @param _is_cli a boolean.
+     */
     public void setCallgraphConstructor(String analysisFramework, boolean _is_cli) {
         this.constructor = CallgraphConstructorFactory.buildCallgraphConstructor(analysisFramework, this.app_ctx, _is_cli);
         this.constructor.setVulasConfiguration(this.goalContext.getVulasConfiguration());
@@ -287,11 +326,6 @@ public class ReachabilityAnalyzer implements Runnable {
 
     /**
      * Given the bugid and callgraph constructor framework, do the reachability analysis from callgraph construction to callgraph computation
-     *
-     * @param _bugid
-     * @param _only_new
-     * @param _framework
-     * @throws CallgraphConstructException
      */
     public void run() { //throws CallgraphConstructException {
         // Entry points should have been set
@@ -521,6 +555,11 @@ public class ReachabilityAnalyzer implements Runnable {
         sw.stop();
     }
 
+    /**
+     * <p>getStatistics.</p>
+     *
+     * @return a {@link java.util.Map} object.
+     */
     public Map<String, Long> getStatistics() {
         return this.stats;
     }
@@ -536,6 +575,8 @@ public class ReachabilityAnalyzer implements Runnable {
 
     /**
      * Returns a human-readable description of the constructor's specific configuration.
+     *
+     * @return a {@link org.apache.commons.configuration.Configuration} object.
      */
     public Configuration getConfiguration() {
         return (constructor == null ? null : constructor.getConstructorConfiguration());
@@ -562,10 +603,12 @@ public class ReachabilityAnalyzer implements Runnable {
     }
 
     /**
-     * @param _ra
+     * <p>startAnalysis.</p>
+     *
+     * @param _ra a {@link com.sap.psr.vulas.cg.ReachabilityAnalyzer} object.
      * @param _timeout_ms timeout in milliseconds (no timeout if negative or 0)
      * @return true if the analysis terminated, false otherwise
-     * @throws InterruptedException
+     * @throws java.lang.InterruptedException
      */
     public static boolean startAnalysis(ReachabilityAnalyzer _ra, long _timeout_ms) throws InterruptedException {
         boolean success = false;
@@ -655,6 +698,9 @@ public class ReachabilityAnalyzer implements Runnable {
     /**
      * Uploads paths for the given bug to the backend. If there is no such path, an empty array will be uploaded
      * to indicate that the analysis ran but did not yield a result.
+     *
+     * @param _bugid a {@link java.lang.String} object.
+     * @param _paths a {@link java.util.List} object.
      */
     public synchronized void uploadBug(String _bugid, List<List<ConstructId>> _paths) {
 

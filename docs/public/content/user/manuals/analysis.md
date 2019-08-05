@@ -636,22 +636,26 @@ Other settings to fine-tune the threshold for build exceptions are as follows:
 
 #### Objective
 
-Deletes application-specific data in the backend, e.g., traces collected during JUnit tests, or application constructs and dependencies collected through the `app` goal. Right after executing `clean` for a given application, the apps Web frontend will be empty for the respective application.
+Deletes application-specific data in the backend, e.g., traces collected during JUnit tests, application constructs and dependencies collected through the `app` goal. Right after executing `clean` for a given application, the apps Web frontend will be empty for the respective application.
 
 #### Configure as follows
 
 ```ini
-    # When true, details of past goal executions will be deleted
-    # Default: false
-    vulas.core.clean.goalHistory = false
-
-    # When true, all but the latest X app versions will be deleted (latest according to the application creation date)
+    # When true, all but the latest X app versions will be deleted (latest according to the application creation date).
+    # The value of X is configured with the option 'vulas.core.clean.purgeVersions.keepLast', see below.
     # Default: false
     vulas.core.clean.purgeVersions = false
 
-    # Specifies X, i.e., the number of application versions to be kept if purgeVersions is set to true (0 will delete all versions)
+    # Specifies X, i.e., the number of application versions to be kept if purgeVersions is set to true.
+    # Set this to 0 to delete all versions.
     # Default: 3
     vulas.core.clean.purgeVersions.keepLast = 3
+    
+    # When true, the history of past goal executions will be deleted (NOTE: this does not delete the scan results themselves!
+    # you may want to use the two directives above to purge scan results.)
+    # The default value is recommended, in normal scenarios you should leave this to false.
+    # Default: false
+    vulas.core.clean.goalHistory = false
 ```
 
 Run as follows to **clean the current version**:

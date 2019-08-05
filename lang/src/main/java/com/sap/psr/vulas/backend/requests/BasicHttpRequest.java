@@ -40,6 +40,10 @@ import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>BasicHttpRequest class.</p>
+ *
+ */
 public class BasicHttpRequest extends AbstractHttpRequest {
 
 	private static final Log log = LogFactory.getLog(BasicHttpRequest.class);
@@ -69,15 +73,22 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 
 	private boolean checkJson = false;
 	
+	/**
+	 * <p>Constructor for BasicHttpRequest.</p>
+	 *
+	 * @param _method a {@link com.sap.psr.vulas.backend.HttpMethod} object.
+	 * @param _path a {@link java.lang.String} object.
+	 */
 	public BasicHttpRequest(HttpMethod _method, String _path) {
 		this(Service.BACKEND, _method, _path, null);
 	}
 
 	/**
-	 * Creates a request for the RESTful service {@link BackendConnector.Service.BACKEND}.
-	 * @param _method
-	 * @param _path
-	 * @param _query_string_params
+	 * Creates a request for the RESTful service {@link Service#BACKEND}.
+	 *
+	 * @param _method a {@link com.sap.psr.vulas.backend.HttpMethod} object.
+	 * @param _path a {@link java.lang.String} object.
+	 * @param _query_string_params a {@link java.util.Map} object.
 	 */
 	public BasicHttpRequest(HttpMethod _method, String _path, Map<String,String> _query_string_params) {
 		this(Service.BACKEND, _method, _path, _query_string_params);
@@ -85,10 +96,11 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 
 	/**
 	 * Creates a request for the given RESTful {@link Service}.
-	 * @param _service
-	 * @param _method
-	 * @param _path
-	 * @param _query_string_params
+	 *
+	 * @param _service a {@link com.sap.psr.vulas.shared.connectivity.Service} object.
+	 * @param _method a {@link com.sap.psr.vulas.backend.HttpMethod} object.
+	 * @param _path a {@link java.lang.String} object.
+	 * @param _query_string_params a {@link java.util.Map} object.
 	 */
 	public BasicHttpRequest(Service _service, HttpMethod _method, String _path, Map<String,String> _query_string_params) {
 		this.service = _service;
@@ -97,6 +109,15 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		this.params = _query_string_params;
 	}
 
+	/**
+	 * <p>Setter for the field <code>payload</code>.</p>
+	 *
+	 * @param _payload a {@link java.lang.String} object.
+	 * @param _type a {@link java.lang.String} object.
+	 * @param _check a boolean.
+	 * @return a {@link com.sap.psr.vulas.backend.requests.BasicHttpRequest} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public BasicHttpRequest setPayload(String _payload, String _type, boolean _check) throws IllegalArgumentException {
 		if(this.method.equals(HttpMethod.POST) || this.method.equals(HttpMethod.PUT) || this.method.equals(HttpMethod.DELETE) ) {
 			this.payload = _payload;
@@ -108,6 +129,14 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		}
 	}
 
+	/**
+	 * <p>Setter for the field <code>binPayload</code>.</p>
+	 *
+	 * @param _payload a {@link java.io.FileInputStream} object.
+	 * @param _type a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.backend.requests.BasicHttpRequest} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public BasicHttpRequest setBinPayload(FileInputStream _payload, String _type) throws IllegalArgumentException {
 		if(this.method.equals(HttpMethod.POST) ) {
 			this.binPayload = _payload;
@@ -118,16 +147,27 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		}
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public HttpRequest setGoalContext(GoalContext _ctx) {
 		this.context = _ctx;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>dir</code>.</p>
+	 *
+	 * @param dir a {@link java.lang.String} object.
+	 */
 	public void setDir(String dir) {
 		this.dir = dir;
 	}
 
+	/**
+	 * <p>hasPayload.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean hasPayload() {
 		return this.payload!=null && !this.payload.isEmpty();
 	}
@@ -136,6 +176,12 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		return this.method.equals(HttpMethod.POST) || this.method.equals(HttpMethod.PUT);
 	}
 
+	/**
+	 * <p>send.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.HttpResponse} object.
+	 * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
+	 */
 	public HttpResponse send() throws BackendConnectionException {
 		if(this.response==null) {
 			// Check JSON
@@ -191,6 +237,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		return this.payloadPath!=null && Paths.get(this.payloadPath).toFile().exists();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getFilename() {
 		String prefix = this.path;
@@ -201,10 +248,16 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		return prefix;
 	}
 	
+	/**
+	 * <p>getPayloadFilename.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getPayloadFilename() {
 		return this.getFilename() + ".json";
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void savePayloadToDisk()  throws IOException {
 		if(this.hasPayload()) {
@@ -216,12 +269,14 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void loadPayloadFromDisk() throws IOException {
 		if(this.payloadPath!=null)
 			this.payload = FileUtil.readFile(this.payloadPath);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void deletePayloadFromDisk() throws IOException {
 		if(this.payloadPath!=null)
@@ -437,6 +492,14 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		return this.getUri(this.service, this.path, this.params);
 	}
 
+	/**
+	 * <p>getUri.</p>
+	 *
+	 * @param _service a {@link com.sap.psr.vulas.shared.connectivity.Service} object.
+	 * @param _path a {@link java.lang.String} object.
+	 * @param _params a {@link java.util.Map} object.
+	 * @return a {@link java.net.URI} object.
+	 */
 	public URI getUri(Service _service, String _path, Map<String,String> _params) {
 
 		// Check whether URL is present
@@ -493,6 +556,11 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		return exception;
 	}
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() {
 		return "HTTP " + this.method.toString().toUpperCase() + " [uri=" + this.getUri() + "]";
 	}

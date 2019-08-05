@@ -12,6 +12,7 @@ import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -45,6 +46,7 @@ import com.sap.psr.vulas.shared.json.model.AffectedLibrary;
 import com.sap.psr.vulas.shared.json.model.Artifact;
 import com.sap.psr.vulas.shared.json.model.BugChangeList;
 import com.sap.psr.vulas.shared.json.model.ConstructChange;
+import com.sap.psr.vulas.shared.json.model.Library;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.json.model.Version;
 import com.sap.psr.vulas.shared.json.model.metrics.Counter;
@@ -53,10 +55,9 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 /**
  * This class analyzes all bugs (or the configured one) to determine the affected libraries.
- * If it doesn't already exists, it creates a csv file containing the summary of the analysis performed by the BugLibAnalyzer. 
+ * If it doesn't already exists, it creates a csv file containing the summary of the analysis performed by the BugLibAnalyzer.
  * If a csv for the bug already exists, it checks whether there exist new libraries to be analyzed and adds them (if any).
  * Finally it computes the json of affected libraries.
- * 
  */
 public class BugLibManager {
 	
@@ -79,12 +80,20 @@ public class BugLibManager {
 
 	private ExecutorService pool = null;
 	
+	/**
+	 * <p>Constructor for BugLibManager.</p>
+	 */
 	public BugLibManager(){
 		this.lids = new TreeSet<ArtifactResult2>();
 		BugLibManager.bytecodes  = new HashMap<String,ConstructBytecodeASTManager>();
     }
     
 	
+	/**
+	 * <p>resetToBug.</p>
+	 *
+	 * @param b a {@link com.sap.psr.vulas.shared.json.model.BugChangeList} object.
+	 */
 	public void resetToBug(BugChangeList b){
 		this.bugChangeList = b;
     	this.setChangeList();
@@ -93,10 +102,10 @@ public class BugLibManager {
 	}
     /**
      * This methods reads a CSV file f containing the results of the BugLibAnalyzer and stores the data into the set this.lids
-     * Each line of the csv is an instance of class ArtifactResult2. 
-     * 
-     * @param f
-     * @throws IOException
+     * Each line of the csv is an instance of class ArtifactResult2.
+     *
+     * @param f a {@link java.io.File} object.
+     * @throws java.io.IOException
      */
     public void readFile(File f) throws IOException {
   		/* for csv scan */
@@ -121,12 +130,12 @@ public class BugLibManager {
 		}
 	}
     
-    /**
-     * This method reads the string representation of the CSV computed by the BugLibAnalyzer
-     * 
-     * @param f
-     * @throws IOException
-     */
+	/**
+	 * This method reads the string representation of the CSV computed by the BugLibAnalyzer
+	 *
+	 * @param f a {@link java.lang.String} object.
+	 * @throws java.io.IOException
+	 */
 	public void readString(String f) throws IOException {
 		/* for csv scan */
 		BufferedReader br = null;
@@ -152,7 +161,8 @@ public class BugLibManager {
         
 	/**
 	 * This method fills the data structures lidsXGA and lr based on the lids.
-	 * 
+	 *
+	 * @return a {@link java.util.List} object.
 	 */
 	public List<List<ReleaseTree>> computeGA() {
 
@@ -795,7 +805,13 @@ public class BugLibManager {
         return true;
     }
     
-    public static void analyze(List<Bug> bugsToAnalyze) throws BackendConnectionException, InterruptedException{
+    /**
+     * <p>analyze.</p>
+     *
+     * @param bugsToAnalyze a {@link java.util.List} object.
+     * @throws java.lang.InterruptedException if any.
+     */
+    public static void analyze(List<Bug> bugsToAnalyze) throws InterruptedException{
         
     	//necessary read_write as the ast_diff is done using POST
 		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.READ_WRITE.toString());
@@ -810,23 +826,30 @@ public class BugLibManager {
 					BugLibManager.log.error("Error getting bug; the bug [" + bug.getBugId() + "] does not exist in the backend");
 	        	}
 	        	else{
-	        		boolean mod_exists=false;
+	        		boolean mod_exists = false;
+	        		boolean no_cc = false;
 	        	
+	        		if(b.getConstructChanges()!=null && b.getConstructChanges().isEmpty()){
+	        			no_cc=true;
+	        			BugLibManager.log.info("Bug ["+b.getBugId()+"] does not have any construct change, we still continue to propagate the MANUAL results.");
+	        		}
+	        		//the following loop and subsequent if on mod_exists are not really needed any longer as, not matter the result, we still proceed with the analysis. For now they are still present to provide the logging info
 	        		for(ConstructChange c: b.getConstructChanges()){
 	        			if((c.getConstructId().getType().equals(ConstructType.CONS)||c.getConstructId().getType().equals(ConstructType.METH))&&c.getConstructChangeType().equals(ConstructChangeType.MOD)){
 	        				mod_exists=true;
-	        				BugLibManager.log.info("At least one MOD constructor/method for bug ["+b.getBugId()+"] exists, continue patchEval");
+	        				BugLibManager.log.info("At least one MOD constructor/method for bug ["+b.getBugId()+"] exists.");
 	        				break;
 	        			}
-	        		}if(!mod_exists){
-	        			BugLibManager.log.info("No-MOD constructor/method for bug ["+b.getBugId()+"] exists, we still continue to propagate the MANUAL results.");
-	        			mod_exists=true;
 	        		}
-	        		if(mod_exists){	
+	        		if(!mod_exists){
+	        			BugLibManager.log.info("No-MOD constructor/method for bug ["+b.getBugId()+"] exists, we still continue to propagate the MANUAL results.");
+	        		}
 	        		
-			        	bm.resetToBug(b);
-				        File f = bm.getCsv();
-				        bla.setBug(b);
+	        		bm.resetToBug(b);
+			        File f = bm.getCsv();
+			        bla.setBug(b);
+	        		
+	        		if(!no_cc){				        	
 				        
 				      //if CSV does not exist, create it
 				        if (f==null){
@@ -872,27 +895,129 @@ public class BugLibManager {
 				        
 				    //    bm.computeGA();
 				      	bm.computeAndUploadResults();
+		        		
 	        		}
 	        		else{
-	        			log.info("Bug [" + b.getBugId() + " does not include any MOD construct, skip patch Eval.");
+	        			bm.computeAndUploadPropagateResults();    	     
 	        		}
 	        	}
-	            log.info("###################################################################");
-	            log.info("*******************************************************************");
-	            log.info("BUG [" + bug.getBugId() + "] analyzed.");
-	            log.info("Status: " + (count+1)+ "/" + bugsToAnalyze.size());
-	            log.info("*******************************************************************");
-	            log.info("###################################################################");
-			    count++;
+	           
 	        } catch (FileNotFoundException e) {
 				BugLibManager.log.error("CSV file not found : " + e);
 			} catch (IOException e) {
 				BugLibManager.log.error("Error reasding CSV file" + e);
 			
+			} catch (BackendConnectionException bce){
+				if(bce.getHttpResponseStatus()==503)
+					log.error("Service still unavailable (503) after 1h, could not analyze bugs");
+				else
+					BugLibManager.log.error("Cannot analyze bug [" +bug.getBugId()+ "], exception occurred. Cause : " + bce.getCause() );
+				Thread.sleep(10000);
 			}
+        	log.info("###################################################################");
+            log.info("*******************************************************************");
+            log.info("BUG [" + bug.getBugId() + "] completed.");
+            log.info("Status: " + (count+1)+ "/" + bugsToAnalyze.size());
+            log.info("*******************************************************************");
+            log.info("###################################################################");
+		    count++;
         }
 
         
+    }
+    
+    //this method is used for bugs without construct changes to propagate manual (and already propagated) assessments (affected-false) to newer versions within the same major release
+    private void computeAndUploadPropagateResults() throws BackendConnectionException{
+    	List<AffectedLibrary> existingManual = new ArrayList<AffectedLibrary>();
+		existingManual.addAll(Arrays.asList(BackendConnector.getInstance().getBugAffectedLibraries(bugChangeList.getBugId(),AffectedVersionSource.MANUAL.toString())));
+		existingManual.addAll(Arrays.asList(BackendConnector.getInstance().getBugAffectedLibraries(bugChangeList.getBugId(),AffectedVersionSource.PROPAGATE_MANUAL.toString())));
+    	
+		BugLibManager.log.info("Existing [" + existingManual.size() + "] affected libraries in backend for sources MANUAL and PROPAGATE_MANUAL.");
+		
+        List<String> groupsArtifactsToCheck = new ArrayList<>();
+		List<Artifact> gavToBeAssessed = new ArrayList<Artifact>();
+		List<Artifact> gavAssessed = new ArrayList<Artifact>();
+        for (AffectedLibrary al : existingManual){
+            if ( al.getLibraryId() != null ){
+            	String ga = al.getLibraryId().getMvnGroup() + ":" + al.getLibraryId().getArtifact();
+            	gavAssessed.add(new Artifact(al.getLibraryId().getMvnGroup(),al.getLibraryId().getArtifact(),al.getLibraryId().getVersion()));
+            	if(!groupsArtifactsToCheck.contains(ga) ){
+            		groupsArtifactsToCheck.add(ga);
+            		Artifact[] artifactsLibraries = BackendConnector.getInstance().getAllArtifactsGroupArtifact(al.getLibraryId().getMvnGroup(), al.getLibraryId().getArtifact());
+            		if ( artifactsLibraries != null ){
+                        for ( Artifact a : artifactsLibraries){
+                        	if ( !gavToBeAssessed.contains(a)){
+                        		gavToBeAssessed.add(a);
+	                   	 	}
+                        }
+            		}
+            	}
+            }
+        }
+		
+		
+		//add artifactResult to propagate_manual
+		String source = "PROPAGATE_MANUAL";
+		boolean isGreater=false,isSmaller=false;
+		int propagate=0;
+		JsonArray sourceResult = new JsonArray();
+		
+		for(Artifact a : gavToBeAssessed){
+			if(!gavAssessed.contains(a)){
+				isGreater=false;
+				isSmaller=false;
+				for(AffectedLibrary i :existingManual){
+					if(i.getLibraryId()!=null && i.getLibraryId().getMvnGroup().equals(a.getLibId().getMvnGroup()) && 
+							i.getLibraryId().getArtifact().equals(a.getLibId().getArtifact()) ){
+						Version toCompare = new Version(i.getLibraryId().getVersion());
+						Version current = new Version(a.getLibId().getVersion());
+						
+						if(current.getMajorRelease().equals(toCompare.getMajorRelease()) &&
+								Integer.parseInt((current.getMinorRelease().split("\\."))[1])> Integer.parseInt((toCompare.getMinorRelease().split("\\."))[1]) ){
+							
+							if(current.getMaintenanceRelease().equals(toCompare.getMaintenanceRelease()) ||
+									toCompare.isMaintenanceRelease()){
+								if(current.compareTo(toCompare)==0){
+									isGreater=false;
+									break;
+								}
+								else if (!i.getAffected() && current.compareTo(toCompare)>0){
+									isGreater=true;
+								}
+								else if (i.getAffected() && current.compareTo(toCompare)<0){
+									isSmaller=true;
+								}
+							}
+						}
+					}
+				}
+				
+				if(isGreater&&!isSmaller){
+					propagate++;
+					log.info("Creating Json for PROPAGATE_MANUAL for artifact [" + a.toString()+"]");
+					JsonObject result = createJsonResult(a, source, false);
+					
+					sourceResult.add(result);
+				}
+			}			
+		}
+		BugLibManager.log.info("Propagated results for [" + propagate + "] artifacts.");
+		if(propagate>0){
+			if (VulasConfiguration.getGlobal().getConfiguration().getBoolean(PEConfiguration.UPLOAD_RESULTS) == true) {
+				BackendConnector.getInstance().uploadPatchEvalResults(bugChangeList.getBugId(),sourceResult.toString(), source);
+			} else {
+				// save to file
+	
+				final File json_file = Paths.get(PEConfiguration.getBaseFolder().toString() + File.separator+ bugChangeList.getBugId() + "_" + source + "_" + ".json").toFile();
+				try {
+					FileUtil.writeToFile(json_file, sourceResult.toString());
+				} catch (IOException exception) {
+					exception.printStackTrace();
+				}
+				log.info("Results for source PROPAGATE_MANUAL written to [" + json_file + "]");
+			}
+		}
+
     }
     
     private void compareBytecode() {
@@ -937,7 +1062,7 @@ public class BugLibManager {
 		//CSVHelper2.rewriteCSV(bugChangeList.getBugId(), lids);
 				
 	}
-
+    
 	private File getCsv(){
     	String baseFolder = PEConfiguration.getBaseFolder().toString();
         File containingFolder = new File(baseFolder);
@@ -1138,6 +1263,19 @@ public class BugLibManager {
 			result.addProperty("adpathfixed", a.isPathADFixed());
 		}
 		result.add("affectedcc", a.getAffectedcc(methsConsCC));
+		return result;
+    }
+    
+    private JsonObject createJsonResult(Artifact a, String s, Boolean affected){
+		JsonObject result = new JsonObject();
+		result.addProperty("source", s);
+		if(affected!=null)
+			result.addProperty("affected", affected);
+		JsonObject libraryId = new JsonObject();
+		libraryId.addProperty("group", a.getLibId().getMvnGroup());
+		libraryId.addProperty("artifact", a.getLibId().getArtifact());
+		libraryId.addProperty("version", a.getLibId().getVersion());
+		result.add("libraryId", libraryId);
 		return result;
     }
 

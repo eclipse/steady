@@ -16,12 +16,24 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange;
 import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 import ch.uzh.ifi.seal.changedistiller.model.entities.Update;
 
+/**
+ * <p>ASTSignatureChangeSerializer class.</p>
+ *
+ */
 public class ASTSignatureChangeSerializer extends StdSerializer<ASTSignatureChange> {
 
+	/**
+	 * <p>Constructor for ASTSignatureChangeSerializer.</p>
+	 */
 	public ASTSignatureChangeSerializer() {
 		this(null);
 	}
 
+	/**
+	 * <p>Constructor for ASTSignatureChangeSerializer.</p>
+	 *
+	 * @param t a {@link java.lang.Class} object.
+	 */
 	public ASTSignatureChangeSerializer(Class<ASTSignatureChange> t) {
 		super(t);
 	}
@@ -44,6 +56,7 @@ public class ASTSignatureChangeSerializer extends StdSerializer<ASTSignatureChan
 		jgen.writeEndObject();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void serialize(ASTSignatureChange value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
 

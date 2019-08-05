@@ -34,8 +34,18 @@ public class LibraryId implements Serializable, Comparable<LibraryId> {
 
 	private String version;		
 
+	/**
+	 * <p>Constructor for LibraryId.</p>
+	 */
 	public LibraryId() { super(); }
 
+	/**
+	 * <p>Constructor for LibraryId.</p>
+	 *
+	 * @param group a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 */
 	public LibraryId(String group, String artifact, String version) {
 		super();
 		this.mvnGroup = group;
@@ -43,27 +53,69 @@ public class LibraryId implements Serializable, Comparable<LibraryId> {
 		this.version = version;
 	}
 
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getId() { return id; }
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 */
 	public void setId(Long id) { this.id = id; }
 
+	/**
+	 * <p>Getter for the field <code>mvnGroup</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getMvnGroup() { return mvnGroup; }
+	/**
+	 * <p>Setter for the field <code>mvnGroup</code>.</p>
+	 *
+	 * @param group a {@link java.lang.String} object.
+	 */
 	public void setMvnGroup(String group) { this.mvnGroup = group; }
 
+	/**
+	 * <p>Getter for the field <code>artifact</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getArtifact() { return artifact; }
+	/**
+	 * <p>Setter for the field <code>artifact</code>.</p>
+	 *
+	 * @param artifact a {@link java.lang.String} object.
+	 */
 	public void setArtifact(String artifact) { this.artifact = artifact; }
 
+	/**
+	 * <p>Getter for the field <code>version</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getVersion() { return version; }
+	/**
+	 * <p>Setter for the field <code>version</code>.</p>
+	 *
+	 * @param version a {@link java.lang.String} object.
+	 */
 	public void setVersion(String version) { this.version = version; }
 
 	/**
 	 * Returns true if group, artfiact and version have been specified, false otherwise.
-	 * @return
+	 *
+	 * @return a boolean.
 	 */
 	@JsonIgnore
 	public boolean isDefined() {
 		return this.mvnGroup!=null && this.artifact!=null && this.version!=null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -74,6 +126,7 @@ public class LibraryId implements Serializable, Comparable<LibraryId> {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -101,6 +154,7 @@ public class LibraryId implements Serializable, Comparable<LibraryId> {
 		return true;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public final String toString() {
 		final StringBuilder builder = new StringBuilder();
@@ -109,6 +163,8 @@ public class LibraryId implements Serializable, Comparable<LibraryId> {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Compares this library ID with the specified library ID using group, artifact and version.
 	 */
 	@Override

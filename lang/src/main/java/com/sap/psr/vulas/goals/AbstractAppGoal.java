@@ -21,7 +21,6 @@ import com.sap.psr.vulas.shared.util.FileUtil;
 /**
  * Represents an analysis goal executed in the context of a given {@link Application}.
  * It deals particularly with application code and dependencies.
- *
  */
 public abstract class AbstractAppGoal extends AbstractGoal {
 
@@ -34,17 +33,27 @@ public abstract class AbstractAppGoal extends AbstractGoal {
 
 	private List<Path> searchPaths = new ArrayList<Path>();
 
+	/**
+	 * <p>Constructor for AbstractAppGoal.</p>
+	 *
+	 * @param _type a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+	 */
 	protected AbstractAppGoal(GoalType _type) { super(_type); }
 	
+	/**
+	 * <p>getApplicationContext.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 */
 	protected Application getApplicationContext() {
 		return this.getGoalContext().getApplication();
 	}
 	
 	/**
 	 * Returns known {@link Dependency}s.
-	 * 
-	 * @see {@link AbstractAppGoal#setKnownDependencies(Map)}
-	 * @param _paths
+	 *
+	 * @see AbstractAppGoal#setKnownDependencies(Map)
+	 * @return a {@link java.util.Map} object.
 	 */
 	public Map<Path, Dependency> getKnownDependencies() {
 		return this.knownDependencies;
@@ -52,17 +61,19 @@ public abstract class AbstractAppGoal extends AbstractGoal {
 	
 	/**
 	 * Sets known {@link Dependency}s.
-	 * 
+	 *
 	 * Typically called by Vulas plugins for build tools (e.g., the Vulas Maven plugin),
 	 * where app dependencies are described by project meta information (e.g., the pom.xml file).
-	 * 
-	 * @param _paths
+	 *
+	 * @param _paths a {@link java.util.Map} object.
 	 */
 	public void setKnownDependencies(Map<Path, Dependency> _paths) {
 		this.knownDependencies = _paths;
 	}
 	
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Checks whether one or more {@link Path}s with application constructs, and one or more {@link Path}s
 	 * with dependencies are available.
 	 */
@@ -110,8 +121,19 @@ public abstract class AbstractAppGoal extends AbstractGoal {
 		}
 	}
 
+	/**
+	 * <p>getAppPaths.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	public List<Path> getAppPaths() { return this.searchPaths; }
 
+	/**
+	 * <p>addAppPath.</p>
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public void addAppPath(Path _p) throws IllegalArgumentException {
 		if(!FileUtil.isAccessibleDirectory(_p) && !FileUtil.isAccessibleFile(_p))
 			log.warn("[" + _p + "] is not an accessible file or directory");
@@ -122,11 +144,22 @@ public abstract class AbstractAppGoal extends AbstractGoal {
 
 	}
 
+	/**
+	 * <p>addAppPaths.</p>
+	 *
+	 * @param _paths a {@link java.util.Set} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public void addAppPaths(Set<Path> _paths) throws IllegalArgumentException {
 		for(Path p: _paths)
 			this.addAppPath(p);
 	}
 
+	/**
+	 * <p>hasAppPaths.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean hasAppPaths() { return this.getAppPaths()!=null && !this.getAppPaths().isEmpty(); }
 
 	/**

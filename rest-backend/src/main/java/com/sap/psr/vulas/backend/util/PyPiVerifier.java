@@ -23,6 +23,10 @@ import com.sap.psr.vulas.backend.model.Library;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 
+/**
+ * <p>PyPiVerifier class.</p>
+ *
+ */
 public class PyPiVerifier implements DigestVerifier {
 	
 	private static Logger log = LoggerFactory.getLogger(PyPiVerifier.class);
@@ -43,27 +47,35 @@ public class PyPiVerifier implements DigestVerifier {
 	
 	private SimpleDateFormat dateFormat = null;
 	
+	/**
+	 * <p>Constructor for PyPiVerifier.</p>
+	 */
 	public PyPiVerifier() {
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
 		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
 		return SUPP_LANG;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<DigestAlgorithm> getSupportedDigestAlgorithms() {
 		return SUPP_ALG;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getVerificationUrl() { return url; }
 	
+	/** {@inheritDoc} */
 	@Override
 	public java.util.Calendar getReleaseTimestamp() { return this.timestamp; }
 	
+	/** {@inheritDoc} */
 	@Override
 	public Boolean verify(final Library _lib) throws VerificationException {
 		if(_lib==null || _lib.getDigest()==null)

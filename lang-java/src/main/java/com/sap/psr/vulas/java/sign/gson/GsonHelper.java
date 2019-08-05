@@ -23,10 +23,16 @@ import com.sap.psr.vulas.java.JavaPackageId;
 import com.sap.psr.vulas.java.sign.ASTConstructBodySignature;
 import com.sap.psr.vulas.java.sign.ASTSignatureChange;
 
+/**
+ * <p>GsonHelper class.</p>
+ *
+ */
 public class GsonHelper {
 
 	/**
-	 * Returns a Vulas-specific GsonBuilder, i.e., with several custom serializers and deserializers registered.	 * 
+	 * Returns a Vulas-specific GsonBuilder, i.e., with several custom serializers and deserializers registered.	 *
+	 *
+	 * @return a {@link com.google.gson.GsonBuilder} object.
 	 */
 	public static GsonBuilder getCustomGsonBuilder() {		
 		final GsonBuilder gson = new GsonBuilder();

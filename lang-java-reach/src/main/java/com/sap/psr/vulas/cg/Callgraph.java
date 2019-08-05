@@ -37,7 +37,6 @@ import javassist.NotFoundException;
  * A general call graph representation for both wala and soot framework.
  * Usage: Graph path computation; rendering/visualization
  */
-
 public class Callgraph {
 
 	private static final Log log = LogFactory.getLog(Callgraph.class);
@@ -46,6 +45,11 @@ public class Callgraph {
 	private int edgeCount = 0;
 
 	private Graph<Integer> idgraph = SlowSparseNumberedGraph.make();
+	/**
+	 * <p>getGraph.</p>
+	 *
+	 * @return a {@link com.ibm.wala.util.graph.Graph} object.
+	 */
 	public Graph<Integer> getGraph() {
 		return this.idgraph;
 	}
@@ -84,7 +88,8 @@ public class Callgraph {
 
 	/**
 	 * Returns the unique integer ID of the given construct in the context of this callgraph, or -1 if no such identifier exists.
-	 * @param _c
+	 *
+	 * @param _c a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
 	 * @return the unique integer ID of the construct
 	 */
 	public int getIdForConstruct(com.sap.psr.vulas.shared.json.model.ConstructId _c) {
@@ -95,8 +100,9 @@ public class Callgraph {
 
 	/**
 	 * Returns true if the given construct exists in this callgraph, false otherwise.
-	 * @param _c
-	 * @return
+	 *
+	 * @param _c a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+	 * @return a boolean.
 	 */
 	public boolean existsInCallgraph(com.sap.psr.vulas.shared.json.model.ConstructId _c) {
 		return this.getIdForConstruct(_c)!=-1;
@@ -108,12 +114,24 @@ public class Callgraph {
 	 * @see Callgraph#nodeMap
 	 */
 	private final ArrayList<com.sap.psr.vulas.shared.json.model.ConstructId> nodeId = new ArrayList<com.sap.psr.vulas.shared.json.model.ConstructId>();
+	/**
+	 * <p>Getter for the field <code>nodeId</code>.</p>
+	 *
+	 * @return a {@link java.util.ArrayList} object.
+	 */
 	public ArrayList<com.sap.psr.vulas.shared.json.model.ConstructId> getNodeId() { return this.nodeId; }
+	/**
+	 * <p>getConstructForId.</p>
+	 *
+	 * @param _id a int.
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+	 */
 	public com.sap.psr.vulas.shared.json.model.ConstructId getConstructForId(int _id) { return this.nodeId.get(_id); }    
 
 	/**
 	 * Creates a callgraph and populates an internal map of constructs and integer indices (which allow faster processing and more compact representations).
-	 * @param _g
+	 *
+	 * @param _g a {@link com.ibm.wala.util.graph.Graph} object.
 	 */
 	public Callgraph (Graph<com.sap.psr.vulas.shared.json.model.ConstructId> _g) {
 		if( _g!=null ) {
@@ -185,20 +203,38 @@ public class Callgraph {
 		return new NodeMetaInformation(target, this.parseNonStaticInnerClassConstruct(target), jar_url, archiveID);
 	}
 
+	/**
+	 * <p>getInformationForConstructId.</p>
+	 *
+	 * @param target a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+	 * @return a {@link com.sap.psr.vulas.cg.NodeMetaInformation} object.
+	 */
 	public NodeMetaInformation getInformationForConstructId(com.sap.psr.vulas.shared.json.model.ConstructId target){
 		return this.nodeInfoMap.get(this.getIdForConstruct(target));
 	}
 
+	/**
+	 * <p>Getter for the field <code>constructsWithoutJarUrl</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	public Set<com.sap.psr.vulas.shared.json.model.ConstructId> getConstructsWithoutJarUrl() {
 		return constructsWithoutJarUrl;
 	}
 
+	/**
+	 * <p>getInformationForId.</p>
+	 *
+	 * @param id a {@link java.lang.Integer} object.
+	 * @return a {@link com.sap.psr.vulas.cg.NodeMetaInformation} object.
+	 */
 	public NodeMetaInformation getInformationForId(Integer id){
 		return this.nodeInfoMap.get(id);
 	}
 
 	/**
 	 * Returns the number of nodes in this graph.
+	 *
 	 * @see #getEdgeCount()
 	 * @return the number of nodes in this graph
 	 */
@@ -206,6 +242,7 @@ public class Callgraph {
 
 	/**
 	 * Returns the number of edges in this graph.
+	 *
 	 * @see #getNodeCount()
 	 * @return the number of edges in this graph
 	 */
@@ -213,8 +250,9 @@ public class Callgraph {
 
 	/**
 	 * Given a target (changes), compute the shortest distance from all nodes to this target
-	 * @param _tgt
-	 * @return
+	 *
+	 * @param _tgt a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+	 * @return a {@link java.util.Map} object.
 	 */
 	public Map<com.sap.psr.vulas.shared.json.model.ConstructId, Integer> getDist (com.sap.psr.vulas.shared.json.model.ConstructId _tgt) {
 
@@ -272,10 +310,11 @@ public class Callgraph {
 	 * Given a target construct (e.g., a change list element of a security patch), the method computes the shortest
 	 * path from all callgraph nodes to this target (if any).
 	 * The method internally performs a back search, starting from the target node.
-	 * 
-	 * @param _tgt
+	 *
+	 * @param _tgt a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+	 * @param _stop_if_path_found a {@link java.util.Set} object.
 	 * @return a map of shortest paths from constructs (= keys of the map) to the target node
-	 * @see Callgraph#computeShortestPath(Integer, Map)
+	 * @see Callgraph#computeShortestPath(Integer, Map, Set)
 	 */
 	public Map<com.sap.psr.vulas.shared.json.model.ConstructId, LinkedList<Integer>> getShortestPath(com.sap.psr.vulas.shared.json.model.ConstructId _tgt, final Set<com.sap.psr.vulas.shared.json.model.ConstructId> _stop_if_path_found) {
 

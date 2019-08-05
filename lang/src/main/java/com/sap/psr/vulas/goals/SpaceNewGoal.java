@@ -12,14 +12,22 @@ import com.sap.psr.vulas.shared.enums.ExportConfiguration;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.model.Space;
 
+/**
+ * <p>SpaceNewGoal class.</p>
+ *
+ */
 public class SpaceNewGoal extends AbstractSpaceGoal {
 	
 	private static final Log log = LogFactory.getLog(SpaceNewGoal.class);
 	
 	private Space createdSpace = null;
 
+	/**
+	 * <p>Constructor for SpaceNewGoal.</p>
+	 */
 	public SpaceNewGoal() { super(GoalType.SPACENEW); }
 	
+	/** {@inheritDoc} */
 	@Override
 	protected void executeTasks() throws Exception {
 		final Space s = new Space();
@@ -47,6 +55,11 @@ public class SpaceNewGoal extends AbstractSpaceGoal {
 		}
 	}
 	
+	/**
+	 * <p>getResultObject.</p>
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 */
 	protected Object getResultObject() {
 		return this.createdSpace;
 	}

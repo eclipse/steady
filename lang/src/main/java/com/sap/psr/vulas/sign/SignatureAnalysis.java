@@ -13,7 +13,7 @@ import com.sap.psr.vulas.shared.util.FileSearch;
 import com.sap.psr.vulas.shared.util.StringList;
 
 /**
- *
+ * <p>SignatureAnalysis class.</p>
  */
 public class SignatureAnalysis {
     private static final Log log = LogFactory.getLog(SignatureAnalysis.class);
@@ -30,41 +30,90 @@ public class SignatureAnalysis {
     */
     private static SignatureAnalysis instance = null;
     
+    /**
+     * <p>Constructor for SignatureAnalysis.</p>
+     */
     protected SignatureAnalysis(){
         super();
     }
     
+    /**
+     * <p>Getter for the field <code>instance</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.sign.SignatureAnalysis} object.
+     */
     public synchronized static SignatureAnalysis getInstance(){
         if(instance==null){
             instance = new SignatureAnalysis();
         }
         return instance;
     }
+    /**
+     * <p>setUrlClassLoader.</p>
+     *
+     * @param _ucl a {@link java.net.URLClassLoader} object.
+     */
     public void setUrlClassLoader(URLClassLoader _ucl){
         this.uRLClassLoader = _ucl;
     }
 
+    /**
+     * <p>Setter for the field <code>app</code>.</p>
+     *
+     * @param _a a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+     */
     public void setApp(Application _a){
         this.app=_a;
     }
+    /**
+     * <p>setBug.</p>
+     *
+     * @param _bugs a {@link java.lang.String} object.
+     */
     public void setBug(String _bugs){
         this.bugs=new StringList();
         this.bugs.addAll(_bugs, ",", true);
     }
+    /**
+     * <p>Setter for the field <code>bugs</code>.</p>
+     *
+     * @param _bugs a {@link com.sap.psr.vulas.shared.util.StringList} object.
+     */
     public void setBugs(StringList _bugs){
         this.bugs=_bugs;
     }
+    /**
+     * <p>setCLParameter.</p>
+     *
+     * @param _param a {@link java.lang.String} object.
+     * @param _value a {@link java.lang.String} object.
+     */
     public void setCLParameter(String _param, String _value){
         clParameters.put(_param, _value);
     }
+    /**
+     * <p>setIsCli.</p>
+     *
+     * @param _iscli a {@link java.lang.Boolean} object.
+     */
     public void setIsCli(Boolean _iscli){
         this.isCLI = _iscli;
     }
+    /**
+     * <p>setPath.</p>
+     *
+     * @param _p a {@link java.nio.file.Path} object.
+     */
     public void setPath(Path _p){
         this.depPath = _p;
     }
     
     /* execute the signature analysis */
+    /**
+     * <p>execute.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     public void execute() throws Exception {        
         /*ArchiveFixContainmentCheck archive_check = null;
             

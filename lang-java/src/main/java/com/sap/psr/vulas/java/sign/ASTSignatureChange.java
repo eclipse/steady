@@ -22,6 +22,10 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.StructureEntityVersion;
 import ch.uzh.ifi.seal.changedistiller.model.entities.Update;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 
+/**
+ * <p>ASTSignatureChange class.</p>
+ *
+ */
 public class ASTSignatureChange extends DistillerUtil implements SignatureChange  {
 	
 	public static enum OperationType { Insert, Update, Move, Delete };
@@ -38,14 +42,30 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 	//A StructureEntityVersion has all the SourceCodeChange's
 	private StructureEntityVersion structureEntity = null;
 	
+	/**
+	 * <p>addChange.</p>
+	 *
+	 * @param scc a {@link ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange} object.
+	 */
 	public void addChange(SourceCodeChange scc) {
 		this.listOfChanges.add(scc);
 	}
 
+	/**
+	 * <p>removeChange.</p>
+	 *
+	 * @param scc a {@link ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange} object.
+	 */
 	public void removeChange(SourceCodeChange scc){
 		this.listOfChanges.remove(scc);
 	}
 	
+	/**
+	 * <p>toSourceCodeChanges.</p>
+	 *
+	 * @param _objects a {@link java.util.Set} object.
+	 * @return a {@link java.util.Set} object.
+	 */
 	public static Set<SourceCodeChange> toSourceCodeChanges(Set<Object> _objects) {
 		final Set<SourceCodeChange> changes = new HashSet<SourceCodeChange>();
 		for(Object o: _objects) {
@@ -59,8 +79,8 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 	 * JSON object,  when deserializing a ASTSignatureChange, we only have the list of
 	 * SourceCodeChanges
 	 * read from the DB.
-	 * @param srcCodeChanges - List of SourceCodeChanges
 	 *
+	 * @param srcCodeChanges - List of SourceCodeChanges
 	 */
 	public ASTSignatureChange(Set<SourceCodeChange> srcCodeChanges){
 		this(null,null);
@@ -69,22 +89,43 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		this.structureEntity.setSourceCodeChanges(srcCodeChgs);
 	}
 
+	/**
+	 * <p>Constructor for ASTSignatureChange.</p>
+	 *
+	 * @param strEntityVersion a {@link ch.uzh.ifi.seal.changedistiller.model.entities.StructureEntityVersion} object.
+	 */
 	public ASTSignatureChange(StructureEntityVersion  strEntityVersion){
 		//this(null,null);
 		this.setStructureEntity(strEntityVersion);
 		this.listOfChanges = new HashSet<SourceCodeChange>(this.getStructureEntity().getSourceCodeChanges());
 	}
 
+	/**
+	 * <p>Getter for the field <code>structureEntity</code>.</p>
+	 *
+	 * @return a {@link ch.uzh.ifi.seal.changedistiller.model.entities.StructureEntityVersion} object.
+	 */
 	public StructureEntityVersion getStructureEntity() {
 		return structureEntity;
 	}
 
 
+	/**
+	 * <p>Setter for the field <code>structureEntity</code>.</p>
+	 *
+	 * @param structureEntity a {@link ch.uzh.ifi.seal.changedistiller.model.entities.StructureEntityVersion} object.
+	 */
 	public void setStructureEntity(StructureEntityVersion structureEntity) {
 		this.structureEntity = structureEntity;
 	}
 
 
+	/**
+	 * <p>Constructor for ASTSignatureChange.</p>
+	 *
+	 * @param defSignature a {@link com.sap.psr.vulas.sign.Signature} object.
+	 * @param fixSignature a {@link com.sap.psr.vulas.sign.Signature} object.
+	 */
 	public ASTSignatureChange(Signature defSignature, Signature fixSignature){
 		this.mDefSignature = defSignature;
 		this.mFixSignature = fixSignature;
@@ -92,6 +133,7 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		mMethodName = ((ASTSignature)mFixSignature).getValue();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -101,6 +143,7 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -120,6 +163,13 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		return true;
 	}
 
+	/**
+	 * <p>isSameElements.</p>
+	 *
+	 * @param _a a {@link java.util.Collection} object.
+	 * @param _b a {@link java.util.Collection} object.
+	 * @return a boolean.
+	 */
 	public static boolean isSameElements(Collection<SourceCodeChange> _a, Collection<SourceCodeChange> _b) {
 		if(_a.size()!=_b.size())
 			return false;
@@ -137,41 +187,87 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		return true;
 	}
 
+	/**
+	 * <p>Getter for the field <code>mDefSignature</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.sign.Signature} object.
+	 */
 	public Signature getmDefSignature() {
 		return mDefSignature;
 	}
 
 
+	/**
+	 * <p>Setter for the field <code>mDefSignature</code>.</p>
+	 *
+	 * @param mDefSignature a {@link com.sap.psr.vulas.sign.Signature} object.
+	 */
 	public void setmDefSignature(Signature mDefSignature) {
 		this.mDefSignature = mDefSignature;
 	}
 
 
+	/**
+	 * <p>Getter for the field <code>mFixSignature</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.sign.Signature} object.
+	 */
 	public Signature getmFixSignature() {
 		return mFixSignature;
 	}
 
 
+	/**
+	 * <p>Setter for the field <code>mFixSignature</code>.</p>
+	 *
+	 * @param mFixSignature a {@link com.sap.psr.vulas.sign.Signature} object.
+	 */
 	public void setmFixSignature(Signature mFixSignature) {
 		this.mFixSignature = mFixSignature;
 	}
 
+	/**
+	 * <p>Getter for the field <code>listOfChanges</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	public Set<SourceCodeChange> getListOfChanges() {
 		return listOfChanges;
 	}
 
+	/**
+	 * <p>Setter for the field <code>listOfChanges</code>.</p>
+	 *
+	 * @param listOfChanges a {@link java.util.Set} object.
+	 */
 	public void setListOfChanges(Set<SourceCodeChange> listOfChanges) {
 		this.listOfChanges = listOfChanges;
 	}
 
+	/**
+	 * <p>Getter for the field <code>mMethodName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getmMethodName() {
 		return mMethodName;
 	}
 
+	/**
+	 * <p>Setter for the field <code>mMethodName</code>.</p>
+	 *
+	 * @param mMethodName a {@link java.lang.String} object.
+	 */
 	public void setmMethodName(String mMethodName) {
 		this.mMethodName = mMethodName;
 	}
 
+	/**
+	 * <p>operationTypetoJSON.</p>
+	 *
+	 * @param t a {@link com.sap.psr.vulas.java.sign.ASTSignatureChange.OperationType} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String operationTypetoJSON(OperationType t){
 		final StringBuilder b  = new StringBuilder();
 		b.append("\"operationType\" : \"");
@@ -197,52 +293,11 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns the set of edit operations required to change the defective AST int the fixed one.
 	 * Attention: This method will change the defective signature passed as argument to the constructor.
-	 * @return edit operations to transform the defective AST into the fixed one
-	 *//*
-	@Override
-	public Set<Object> getModifications() {
-
-		if(this.listOfChanges==null) {
-
-			structureEntity = new StructureEntityVersion(JavaEntityType.METHOD, this.mMethodName, 0);
-			Distiller mDistiller = mInjector.getInstance(DistillerFactory.class).create(structureEntity);
-
-			if(this.mDefSignature != null && this.mFixSignature != null)
-			{
-				Node defSignatureNode = ((ASTSignature)this.mDefSignature).getRoot();
-				Node fixSignatureNode = ((ASTSignature)this.mFixSignature).getRoot();
-
-				//This call modifies the "Defective" Version, basically it converts it into the Fixed Version
-				// (I don't know why , nothing is mentioned in the API documentation)
-				// TODO : Read the the changedistiller paper  for a better understanding (http://www.merlin.uzh.ch/publication/show/2531)
-				mDistiller.extractClassifiedSourceCodeChanges(defSignatureNode, fixSignatureNode);
-				List<SourceCodeChange>change = structureEntity.getSourceCodeChanges();   //Extract the set of sourceCodeChanges from the StructureEntityVersion
-
-
-				//Debug
-				//System.out.println(change.toString());
-				if(change != null)
-					this.listOfChanges = new HashSet<SourceCodeChange>(change);
-
-				/*	if(change != null)
-				     		{
-					            for(SourceCodeChange ch : change){
-					            		listOfChanges.add(ch);
-					            	}
-				     		}
-			}
-		}
-
-		//Good to know : http://stackoverflow.com/questions/905964/how-to-cast-generic-list-types-in-java?answertab=active#tab-top
-		Set<Object> set = new HashSet<Object>();
-		for (SourceCodeChange  e :  this.listOfChanges) {
-			set.add((Object) e); // need to cast each object specifically
-		}
-		return set;
-	}*/
-
+	 */
 	@Override
 	public Set<Object> getModifications() {
 
@@ -282,146 +337,18 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		return set;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toJSON() {
 		final Map<Class<?>, StdSerializer<?>> custom_serializers = new HashMap<Class<?>, StdSerializer<?>>();
 		custom_serializers.put(ASTSignatureChange.class, new ASTSignatureChangeSerializer());
 		return JacksonUtil.asJsonString(this, custom_serializers);
-
-		/*final StringBuilder buffer = new StringBuilder();
-
-		//The StructureEntityVersion has the Set of SourceCodeChanges
-		buffer.append("{\"StructureEntity\" :{ ");
-
-		buffer.append("\"UniqueName\" : ").append(JsonBuilder.escape(structureEntity.getUniqueName().toString())).append(",");
-		buffer.append("\"EntityType\" : \"").append(structureEntity.getType()).append("\",");
-		buffer.append("\"Modifiers\" : \"").append(structureEntity.getModifiers()).append("\",");
-
-		buffer.append("\"changes\" :[");
-
-		String operationType = null;
-		int y = listOfChanges.size();
-		int x = 0;
-		for(SourceCodeChange change :listOfChanges) {
-
-			// INSERT OPERATION
-			if(change instanceof Insert){
-				buffer.append("{");
-				buffer.append("\"OperationType\" : \"").append(change.getClass().getSimpleName()).append("\","); //Operation Type
-				buffer.append("\"changeType\" : \"").append(change.getChangeType()).append("\","); 						//Change Type
-
-				//InsertedEntity
-				buffer.append("\"InsertedEntity\" : {");
-				buildSourceCodeEntityElement(change.getChangedEntity(), buffer);
-				buffer.append("},"); //end of ChangedEntity
-
-				//Parent Entity
-				buffer.append("\"ParentEntity\" : {");
-				buildSourceCodeEntityElement(change.getParentEntity(), buffer);
-				buffer.append("}"); //end of ParentEntity
-				buffer.append("}"); //end the  JSON object
-			}
-
-			//DELETE OPERATION
-			else if(change instanceof Delete){
-
-				buffer.append("{");
-				buffer.append("\"OperationType\" : \"").append(change.getClass().getSimpleName()).append("\","); //CHANGE TYPE
-				buffer.append("\"changeType\" : \"").append(change.getChangeType()).append("\","); //CHANGE TYPE
-
-				//ChangedEntity
-				buffer.append("\"DeletedEntity\" : {");
-				buildSourceCodeEntityElement(change.getChangedEntity(), buffer);
-				buffer.append("},"); //end of ChangedEntity
-
-				//Parent Entity
-				buffer.append("\"ParentEntity\" : {");
-				buildSourceCodeEntityElement(change.getParentEntity(), buffer);
-				buffer.append("}"); //end of ParentEntity
-				buffer.append("}"); //end the  JSON object
-			}
-
-			//MOVE OPERATION
-			else if(change instanceof Move){
-				buffer.append("{");
-				buffer.append("\"OperationType\" : \"").append(change.getClass().getSimpleName()).append("\","); //CHANGE TYPE
-				buffer.append("\"changeType\" : \"").append(change.getChangeType()).append("\","); //CHANGE TYPE
-
-				//Old Parent Entity
-				buffer.append("\"OldParentEntity\" : {");
-				buildSourceCodeEntityElement(change.getParentEntity(), buffer);
-				buffer.append("},"); //end of ParentEntity
-
-				//Moved Entity
-				buffer.append("\"MovedEntity\" : {");
-				buildSourceCodeEntityElement(change.getChangedEntity(), buffer);
-				buffer.append("},"); //end of ChangedEntity
-
-				//New Parent Entity
-				buffer.append("\"NewParentEntity\" : {");
-				buildSourceCodeEntityElement(((Move) change).getNewParentEntity(), buffer);
-				buffer.append("},"); //end of ParentEntity
-
-				//New Entity
-				buffer.append("\"NewEntity\" : {");
-				buildSourceCodeEntityElement(((Move) change).getNewEntity(), buffer);
-				buffer.append("}"); //end of ParentEntity
-				buffer.append("}"); //end the  JSON object
-			}
-
-			//UPDATE OPERATION
-			else if(change instanceof Update){
-				buffer.append("{");
-				buffer.append("\"OperationType\" : \"").append(change.getClass().getSimpleName()).append("\","); //CHANGE TYPE
-				buffer.append("\"changeType\" : \"").append(change.getChangeType()).append("\","); //CHANGE TYPE
-
-				//NewEntity
-				buffer.append("\"NewEntity\" : {");
-				buildSourceCodeEntityElement(((Update) change).getNewEntity(), buffer);
-				buffer.append("},"); //end of ChangedEntity
-
-				//Updated Entity
-				buffer.append("\"UpdatedEntity\" : {");
-				buildSourceCodeEntityElement(((Update) change).getChangedEntity(), buffer);
-				buffer.append("},"); //end of ChangedEntity
-
-				//Parent Entity
-				buffer.append("\"ParentEntity\" : {");
-				buildSourceCodeEntityElement(change.getParentEntity(), buffer);
-				buffer.append("}"); //end of ParentEntity
-				buffer.append("}"); //end the  JSON object
-			}
-
-
-			//buffer.append("}");
-			if(++x < y)
-				buffer.append(",");
-		}
-
-		buffer.append("]}");  //end the sourceCodeChange element
-
-		buffer.append("}");  //end the StructureEntityVersion element
-		return buffer.toString();*/
 	}
 
 	/**
-	 * Helper method for building a "SourceCodeEntity" element
-	 *
-	 * @param change - SourcCodeChangeElement
-	 * @param buffer
-	 */
-	/*private void buildSourceCodeEntityElement(SourceCodeEntity srcCodeEntity, StringBuilder buffer){
-		buffer.append("\"UniqueName\" : ").append(JsonBuilder.escape(srcCodeEntity.getUniqueName().toString())).append(",");
-		buffer.append("\"EntityType\" : \"").append(srcCodeEntity.getType()).append("\",");
-		buffer.append("\"Modifiers\" : \"").append(srcCodeEntity.getModifiers()).append("\",");
-		buffer.append("\"SourceCodeRange\" : {");
-		buffer.append("\"Start\" : \"").append(srcCodeEntity.getSourceRange().getStart()).append("\",");
-		buffer.append("\"End\" : \"").append(srcCodeEntity.getSourceRange().getEnd()).append("\"");
-		buffer.append("}");
-	}*/
-
-	/**
 	 * Returns a formatted 'SourceCodeChange' elements
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 	public String toString() {
 		int count = 0;
@@ -449,6 +376,7 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		return buffer.toString();
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean isEmpty() {
 		return this.getListOfChanges().size()==0;

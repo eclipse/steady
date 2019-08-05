@@ -12,21 +12,40 @@ import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.util.FileUtil;
 
+/**
+ * <p>ReportGoal class.</p>
+ *
+ */
 public class ReportGoal extends AbstractAppGoal {
 	
 	private Set<Application> modules = null;
 
+	/**
+	 * <p>Constructor for ReportGoal.</p>
+	 */
 	public ReportGoal() { super(GoalType.REPORT); }
 			
+	/**
+	 * <p>setApplicationModules.</p>
+	 *
+	 * @param _modules a {@link java.util.Set} object.
+	 */
 	public void setApplicationModules(Set<Application> _modules) {
 		this.modules = _modules;
 	}
 
+	/**
+	 * <p>setReportDir.</p>
+	 *
+	 * @param _path a {@link java.nio.file.Path} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public void setReportDir(Path _path) throws IllegalArgumentException {
 		if(!FileUtil.isAccessibleDirectory(_path))
 			throw new IllegalArgumentException("Cannot write report to [" + _path + "]");
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void executeTasks() throws Exception {
 		final Configuration cfg = this.getConfiguration().getConfiguration();

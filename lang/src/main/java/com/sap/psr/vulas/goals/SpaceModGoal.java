@@ -7,12 +7,20 @@ import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.model.Space;
 
+/**
+ * <p>SpaceModGoal class.</p>
+ *
+ */
 public class SpaceModGoal extends AbstractSpaceGoal {
 
 	private static final Log log = LogFactory.getLog(SpaceModGoal.class);
 
+	/**
+	 * <p>Constructor for SpaceModGoal.</p>
+	 */
 	public SpaceModGoal() { super(GoalType.SPACEMOD); }
 
+	/** {@inheritDoc} */
 	@Override
 	protected void executeTasks() throws Exception {
 		final Space s = this.getGoalContext().getSpace();

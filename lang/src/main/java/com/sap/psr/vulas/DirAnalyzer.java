@@ -38,20 +38,28 @@ public class DirAnalyzer implements FileAnalyzer {
 	
 	private String[] extensionFilter = null;
 	
+	/**
+	 * <p>Setter for the field <code>extensionFilter</code>.</p>
+	 *
+	 * @param _exts an array of {@link java.lang.String} objects.
+	 */
 	public void setExtensionFilter(String[] _exts) {
 		this.extensionFilter = _exts.clone();
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public String[] getSupportedFileExtensions() {
 		return new String[] {};
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean canAnalyze(File _file) {
 		return FileUtil.isAccessibleDirectory(_file);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void analyze(final File _file) throws FileAnalysisException {
 		if(!FileUtil.isAccessibleDirectory(_file))
@@ -98,6 +106,8 @@ public class DirAnalyzer implements FileAnalyzer {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns the union of constructs of all {@link FileAnalyzer}s created when searching recursivly in the directory.
 	 */
 	@Override
@@ -117,17 +127,21 @@ public class DirAnalyzer implements FileAnalyzer {
 		return this.constructs;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean containsConstruct(ConstructId _id) throws FileAnalysisException { return this.getConstructs().containsKey(_id); }
 
+	/** {@inheritDoc} */
 	@Override
 	public Construct getConstruct(ConstructId _id) throws FileAnalysisException { return this.getConstructs().get(_id); }
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasChilds() {
 		return this.analyzers!=null && !this.analyzers.isEmpty();
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) {
 		final Set<FileAnalyzer> nested_fa = new HashSet<FileAnalyzer>();
@@ -148,10 +162,10 @@ public class DirAnalyzer implements FileAnalyzer {
 	/**
 	 * The given {@link InputStream} has been created from an archive entry with the given name.
 	 * The entry is extracted below the temporary directory, and a {@link FileAnalyzer} is created for it.
-	 * 
-	 * @param _is
-	 * @param _entry
-	 * @return
+	 *
+	 * @param _is a {@link java.io.InputStream} object.
+	 * @param _entry a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.FileAnalyzer} object.
 	 */
 	public static synchronized FileAnalyzer createAnalyzerForArchiveEntry(InputStream _is, String _entry) {
 		final Path tmp_dir = VulasConfiguration.getGlobal().getTmpDir();

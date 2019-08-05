@@ -42,6 +42,10 @@ import com.sap.psr.vulas.shared.enums.ContentMaturityLevel;
 import com.sap.psr.vulas.shared.json.model.metrics.Counter;
 import com.sap.psr.vulas.shared.json.model.metrics.Metrics;
 
+/**
+ * <p>Bug class.</p>
+ *
+ */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown=true, value = { "createdAt", "createdBy", "modifiedAt" }, allowGetters=true) // On allowGetters: https://github.com/FasterXML/jackson-databind/issues/95
 @Entity
@@ -112,13 +116,28 @@ public class Bug implements Serializable {
 	@Column
 	private String modifiedBy;
 	
+	/**
+	 * <p>Constructor for Bug.</p>
+	 */
 	public Bug() { super(); }
 	
+	/**
+	 * <p>Constructor for Bug.</p>
+	 *
+	 * @param bugId a {@link java.lang.String} object.
+	 */
 	public Bug(String bugId) {
 		super();
 		this.bugId = bugId;
 	}
 	
+	/**
+	 * <p>Constructor for Bug.</p>
+	 *
+	 * @param bugId a {@link java.lang.String} object.
+	 * @param description a {@link java.lang.String} object.
+	 * @param refs a {@link java.util.Collection} object.
+	 */
 	public Bug(String bugId, String description, Collection<String> refs) {
 		super();
 		this.bugId = bugId;
@@ -126,68 +145,243 @@ public class Bug implements Serializable {
 		this.reference = refs;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getId() { return id; }
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 */
 	public void setId(Long id) { this.id = id; }
 
+	/**
+	 * <p>Getter for the field <code>bugId</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getBugId() { return bugId; }
+	/**
+	 * <p>Setter for the field <code>bugId</code>.</p>
+	 *
+	 * @param bugid a {@link java.lang.String} object.
+	 */
 	public void setBugId(String bugid) { this.bugId = bugid; }
 	
+	/**
+	 * <p>Getter for the field <code>bugIdAlt</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getBugIdAlt() { return bugIdAlt; }
+	/**
+	 * <p>Setter for the field <code>bugIdAlt</code>.</p>
+	 *
+	 * @param bugidAlt a {@link java.lang.String} object.
+	 */
 	public void setBugIdAlt(String bugidAlt) { this.bugIdAlt = bugidAlt; }
 	
 	/**
 	 * Compares the given String with both {@link #bugId} and {@link #bugIdAlt}.
-	 * 
-	 * @param _id
-	 * @return
+	 *
+	 * @param _id a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
 	@JsonIgnore
 	public boolean hasBugId(String _id) {
 		return (this.getBugId()!=null && this.getBugId().equalsIgnoreCase(_id)) || (this.getBugIdAlt()!=null && this.getBugIdAlt().equalsIgnoreCase(_id)); 
 	}
 	
+	/**
+	 * <p>Getter for the field <code>maturity</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.ContentMaturityLevel} object.
+	 */
 	public ContentMaturityLevel getMaturity() { return maturity; }
+	/**
+	 * <p>Setter for the field <code>maturity</code>.</p>
+	 *
+	 * @param maturity a {@link com.sap.psr.vulas.shared.enums.ContentMaturityLevel} object.
+	 */
 	public void setMaturity(ContentMaturityLevel maturity) { this.maturity = maturity; }
 
+	/**
+	 * <p>Getter for the field <code>origin</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.BugOrigin} object.
+	 */
 	public BugOrigin getOrigin() { return origin; }
+	/**
+	 * <p>Setter for the field <code>origin</code>.</p>
+	 *
+	 * @param origin a {@link com.sap.psr.vulas.shared.enums.BugOrigin} object.
+	 */
 	public void setOrigin(BugOrigin origin) { this.origin = origin; }
 
+	/**
+	 * <p>Getter for the field <code>description</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getDescription() { return description; }
+	/**
+	 * <p>Setter for the field <code>description</code>.</p>
+	 *
+	 * @param descr a {@link java.lang.String} object.
+	 */
 	public void setDescription(String descr) { this.description = descr; }
 
+	/**
+	 * <p>Getter for the field <code>descriptionAlt</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getDescriptionAlt() { return descriptionAlt; }
+	/**
+	 * <p>Setter for the field <code>descriptionAlt</code>.</p>
+	 *
+	 * @param descr a {@link java.lang.String} object.
+	 */
 	public void setDescriptionAlt(String descr) { this.descriptionAlt = descr; }
 
+	/**
+	 * <p>Getter for the field <code>reference</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<String> getReference() {return reference;}
+	/**
+	 * <p>Setter for the field <code>reference</code>.</p>
+	 *
+	 * @param reference a {@link java.util.Collection} object.
+	 */
 	public void setReference(Collection<String> reference) {this.reference = reference;}
 
+	/**
+	 * <p>Getter for the field <code>constructChanges</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<ConstructChange> getConstructChanges() { return constructChanges; }
+	/**
+	 * <p>Setter for the field <code>constructChanges</code>.</p>
+	 *
+	 * @param constructChanges a {@link java.util.Collection} object.
+	 */
 	public void setConstructChanges(Collection<ConstructChange> constructChanges) { this.constructChanges = constructChanges; }
 	
+	/**
+	 * <p>Getter for the field <code>affectedVersions</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<AffectedLibrary> getAffectedVersions() { return affectedVersions; }
+	/**
+	 * <p>Setter for the field <code>affectedVersions</code>.</p>
+	 *
+	 * @param affectedVersions a {@link java.util.Collection} object.
+	 */
 	public void setAffectedVersions(Collection<AffectedLibrary> affectedVersions) { this.affectedVersions = affectedVersions; }
 	
+	/**
+	 * <p>Getter for the field <code>createdAt</code>.</p>
+	 *
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public java.util.Calendar getCreatedAt() { return createdAt; }
+	/**
+	 * <p>Setter for the field <code>createdAt</code>.</p>
+	 *
+	 * @param createdAt a {@link java.util.Calendar} object.
+	 */
 	public void setCreatedAt(java.util.Calendar createdAt) { this.createdAt = createdAt; }
 
+	/**
+	 * <p>Getter for the field <code>createdBy</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getCreatedBy() { return createdBy; }
+	/**
+	 * <p>Setter for the field <code>createdBy</code>.</p>
+	 *
+	 * @param createdBy a {@link java.lang.String} object.
+	 */
 	public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
 	
+	/**
+	 * <p>Getter for the field <code>modifiedAt</code>.</p>
+	 *
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public java.util.Calendar getModifiedAt() { return modifiedAt; }
+	/**
+	 * <p>Setter for the field <code>modifiedAt</code>.</p>
+	 *
+	 * @param modifiedAt a {@link java.util.Calendar} object.
+	 */
 	public void setModifiedAt(java.util.Calendar modifiedAt) { this.modifiedAt = modifiedAt; }
 
+	/**
+	 * <p>Getter for the field <code>modifiedBy</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getModifiedBy() { return modifiedBy; }
+	/**
+	 * <p>Setter for the field <code>modifiedBy</code>.</p>
+	 *
+	 * @param modifiedBy a {@link java.lang.String} object.
+	 */
 	public void setModifiedBy(String modifiedBy) { this.modifiedBy = modifiedBy; }
 	
+	/**
+	 * <p>Getter for the field <code>cvssScore</code>.</p>
+	 *
+	 * @return a {@link java.lang.Float} object.
+	 */
 	public Float getCvssScore() { return cvssScore; }
+	/**
+	 * <p>Setter for the field <code>cvssScore</code>.</p>
+	 *
+	 * @param cvss a {@link java.lang.Float} object.
+	 */
 	public void setCvssScore(Float cvss) { this.cvssScore = cvss; }
 	
+	/**
+	 * <p>Getter for the field <code>cvssVersion</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getCvssVersion() { return cvssVersion; }
+	/**
+	 * <p>Setter for the field <code>cvssVersion</code>.</p>
+	 *
+	 * @param cvssVersion a {@link java.lang.String} object.
+	 */
 	public void setCvssVersion(String cvssVersion) { this.cvssVersion = cvssVersion; }
 
+	/**
+	 * <p>Getter for the field <code>cvssVector</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getCvssVector() { return cvssVector; }
+	/**
+	 * <p>Setter for the field <code>cvssVector</code>.</p>
+	 *
+	 * @param cvssVector a {@link java.lang.String} object.
+	 */
 	public void setCvssVector(String cvssVector) { this.cvssVector = cvssVector; }
 	
+	/**
+	 * <p>getCvssDisplayString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getCvssDisplayString() {
 		if(this.getCvssScore()==null || this.getCvssVersion()==null)
 			return com.sap.psr.vulas.shared.json.model.Bug.CVSS_NA;
@@ -195,6 +389,11 @@ public class Bug implements Serializable {
 			return this.getCvssScore() + " (v" + this.getCvssVersion() + ")";
 	}
 
+	/**
+	 * <p>getAffLibIdsCounter.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.metrics.Metrics} object.
+	 */
 	@JsonProperty(value = "countAffLibIds")
 	@JsonView(Views.BugDetails.class)
 	public Metrics getAffLibIdsCounter() {
@@ -220,10 +419,18 @@ public class Bug implements Serializable {
 		return metrics;
 	}	
 
+	/**
+	 * <p>countConstructChanges.</p>
+	 *
+	 * @return a int.
+	 */
 	@JsonProperty(value = "countConstructChanges")
 	@JsonView(Views.BugDetails.class)
 	public int countConstructChanges() { return (this.getConstructChanges()==null ? -1 : this.getConstructChanges().size()); }
 	
+	/**
+	 * <p>prePersist.</p>
+	 */
 	@PrePersist
 	public void prePersist() {
 		if(this.getCreatedAt()==null)
@@ -231,16 +438,26 @@ public class Bug implements Serializable {
 		this.setModifiedAt(Calendar.getInstance());
 	}
 	
+	/**
+	 * <p>preUpdate.</p>
+	 */
 	@PreUpdate
 	public void preUpdate() {
 		this.setModifiedAt(Calendar.getInstance());
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public final String toString() {
 		return this.toString(false);
 	}
 	
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @param _deep a boolean.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public final String toString(boolean _deep) {
 		final StringBuilder builder = new StringBuilder();
 		if(_deep) {
@@ -260,6 +477,7 @@ public class Bug implements Serializable {
 		return builder.toString();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -268,6 +486,7 @@ public class Bug implements Serializable {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

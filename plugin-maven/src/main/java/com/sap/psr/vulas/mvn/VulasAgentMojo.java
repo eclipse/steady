@@ -29,6 +29,10 @@ import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>VulasAgentMojo class.</p>
+ *
+ */
 @Mojo(name = "prepare-vulas-agent", defaultPhase = LifecyclePhase.INITIALIZE, requiresDependencyResolution = ResolutionScope.RUNTIME, threadSafe = true)
 public class VulasAgentMojo extends AbstractVulasMojo {
 
@@ -199,6 +203,8 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Has to override {@link AbstractVulasMojo#execute} as there is no dedicated {@link GoalType} for the agent preparation.
 	 */
 	@Override
@@ -245,6 +251,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 		return vulasAgentArtifact.getFile();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void createGoal() {
 		throw new RuntimeException("Create goal not valid for Mojo [" + this.getClass().getName() + "]");

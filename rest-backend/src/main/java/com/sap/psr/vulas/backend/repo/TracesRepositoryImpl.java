@@ -21,6 +21,10 @@ import com.sap.psr.vulas.backend.model.Trace;
 import com.sap.psr.vulas.backend.util.ReferenceUpdater;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>TracesRepositoryImpl class.</p>
+ *
+ */
 public class TracesRepositoryImpl implements TracesRepositoryCustom {
 	
 	private static Logger log = LoggerFactory.getLogger(TracesRepositoryImpl.class);
@@ -44,9 +48,12 @@ public class TracesRepositoryImpl implements TracesRepositoryCustom {
 	DependencyRepository depRepository;
 	
 	/**
-	 * 
-	 * @param bug
+	 * <p>customSave.</p>
+	 *
 	 * @return the saved bug
+	 * @param _app a {@link com.sap.psr.vulas.backend.model.Application} object.
+	 * @param _traces an array of {@link com.sap.psr.vulas.backend.model.Trace} objects.
+	 * @throws javax.persistence.PersistenceException if any.
 	 */
 	public List<Trace> customSave(Application _app, Trace[] _traces) throws PersistenceException {
 		final StopWatch sw = new StopWatch("Save [" + _traces.length + "] traces for app " + _app).start();

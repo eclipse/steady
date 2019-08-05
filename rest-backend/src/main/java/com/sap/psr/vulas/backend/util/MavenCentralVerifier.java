@@ -20,6 +20,10 @@ import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 
+/**
+ * <p>MavenCentralVerifier class.</p>
+ *
+ */
 public class MavenCentralVerifier implements DigestVerifier {
 
 	private static Logger log = LoggerFactory.getLogger(MavenCentralVerifier.class);
@@ -38,22 +42,27 @@ public class MavenCentralVerifier implements DigestVerifier {
 	/** Release timestamp of the given digest (null if unknown). */
 	private java.util.Calendar timestamp;
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
 		return SUPP_LANG;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<DigestAlgorithm> getSupportedDigestAlgorithms() {
 		return SUPP_ALG;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getVerificationUrl() { return url; }
 	
+	/** {@inheritDoc} */
 	@Override
 	public java.util.Calendar getReleaseTimestamp() { return this.timestamp; }
 
+	/** {@inheritDoc} */
 	@Override
 	public Boolean verify(final Library _lib) throws VerificationException {
 		if(_lib==null || _lib.getDigest()==null)

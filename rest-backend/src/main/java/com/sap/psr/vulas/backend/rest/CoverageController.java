@@ -46,13 +46,22 @@ public class CoverageController {
 	private static final String LANG_CONF_THRESHOLD = "vulas.backend.coverageService.langConfidenceThreshold";
 	private static final String LICENSE_CONF_THRESHOLD = "vulas.backend.coverageService.licenseConfidenceThreshold";
 	
+	/** Constant <code>BROWSE_ISSUE_URL="vulas.shared.jira.browseIssueUrl"</code> */
 	public static final String BROWSE_ISSUE_URL = "vulas.shared.jira.browseIssueUrl";
+	/** Constant <code>CREATE_ISSUE_URL="vulas.shared.jira.createIssueUrl"</code> */
 	public static final String CREATE_ISSUE_URL = "vulas.shared.jira.createIssueUrl";
+	/** Constant <code>PROJECT_ID="vulas.shared.jira.projectId"</code> */
 	public static final String PROJECT_ID = "vulas.shared.jira.projectId";
+	/** Constant <code>COMPONENT_ID="vulas.shared.jira.componentId"</code> */
 	public static final String COMPONENT_ID = "vulas.shared.jira.componentId";
 
 	private final BugRepository bugRepository;
 
+ 	/**
+	 * <p>dispatcherServlet.</p>
+	 *
+	 * @return a {@link org.springframework.web.servlet.DispatcherServlet} object.
+	 */
 //	@Bean(name = DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
 //	public DispatcherServlet dispatcherServlet() {
 //		DispatcherServlet dispatcherServlet = new DispatcherServlet();
@@ -66,9 +75,10 @@ public class CoverageController {
 	}
 
 	/**
-	 * 
-	 * @param id
+	 * <p>isCovered.</p>
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given bug ID does not exist, 200 {@link HttpStatus#OK} if the bug is found
+	 * @param bugid a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{bugid}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.BugDetails.class)

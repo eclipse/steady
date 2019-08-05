@@ -20,10 +20,17 @@ import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.VulnerableDependency;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>PE_Run class.</p>
+ *
+ */
 public class PE_Run implements Runnable {
 
 	private static final Log log = LogFactory.getLog(PE_Run.class);
 
+	/**
+	 * <p>run.</p>
+	 */
 	public void run() {
 
 		String[] bugs = VulasConfiguration.getGlobal().getConfiguration().getStringArray(PEConfiguration.BUGID);
@@ -81,10 +88,6 @@ public class PE_Run implements Runnable {
 
 		try {
 			BugLibManager.analyze(bugsToAnalyze);
-		} catch (BackendConnectionException e) {
-			if(e.getHttpResponseStatus()==503)
-				log.error("Service still unavailable (503) after 1h, could not analyze bugs");
-			e.printStackTrace();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

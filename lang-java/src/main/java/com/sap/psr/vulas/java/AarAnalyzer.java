@@ -11,6 +11,10 @@ import org.apache.commons.logging.LogFactory;
 import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.shared.util.FileUtil;
 
+/**
+ * <p>AarAnalyzer class.</p>
+ *
+ */
 public class AarAnalyzer extends JarAnalyzer {
 
 	private static final Log log = LogFactory.getLog(AarAnalyzer.class);
@@ -22,9 +26,11 @@ public class AarAnalyzer extends JarAnalyzer {
 	
 	private Path tmpDir = null; // To where the AAR is extracted
 	
+	/** {@inheritDoc} */
 	@Override
 	public String[] getSupportedFileExtensions() { return new String[] { "aar" }; }
 	
+	/** {@inheritDoc} */
 	@Override
 	public void analyze(final File _file) throws FileAnalysisException {
 		try {
@@ -63,12 +69,18 @@ public class AarAnalyzer extends JarAnalyzer {
 	}
 	
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns the SHA1 digest of the AAR by computing it on the fly.
-	 * @return the SHA1 digest of the AAR
 	 */
 	@Override
 	public synchronized String getSHA1() { return this.aarWriter.getSHA1(); }
 	
+	/**
+	 * <p>getFileName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getFileName() {
 		return this.aarWriter.getOriginalJarFileName().toString();// + "!" + CLASSES_JAR;
 	}

@@ -3,10 +3,15 @@ package com.sap.psr.vulas.shared.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>ThreadUtil class.</p>
+ *
+ */
 public class ThreadUtil {
 	
 	private static final Log log = LogFactory.getLog(ThreadUtil.class);
 
+	/** Constant <code>NO_OF_THREADS="vulas.core.noThreads"</code> */
 	public final static String NO_OF_THREADS = "vulas.core.noThreads";
 
 	/**
@@ -20,7 +25,9 @@ public class ThreadUtil {
 	/**
 	 * Returns the number of threads to be used for parallelized processing steps, thereby taking the configuration setting
 	 * {@link NO_OF_THREADS} and the number of cores into account.
-	 * @return
+	 *
+	 * @param _multiply_if_auto a int.
+	 * @return a int.
 	 */
 	public static final int getNoThreads(final int _multiply_if_auto) {
 		return getNoThreads(VulasConfiguration.getGlobal(), _multiply_if_auto);
@@ -29,7 +36,10 @@ public class ThreadUtil {
 	/**
 	 * Returns the number of threads to be used for parallelized processing steps, thereby taking the configuration setting
 	 * {@link NO_OF_THREADS} and the number of cores into account.
-	 * @return
+	 *
+	 * @param _cfg a {@link com.sap.psr.vulas.shared.util.VulasConfiguration} object.
+	 * @param _multiply_if_auto a int.
+	 * @return a int.
 	 */
 	public static final int getNoThreads(final VulasConfiguration _cfg, final int _multiply_if_auto) {
 		int number = 1;
@@ -50,6 +60,11 @@ public class ThreadUtil {
 		return number;
 	}
 
+	/**
+	 * <p>getNoThreads.</p>
+	 *
+	 * @return a int.
+	 */
 	public static int getNoThreads() {
 		return getNoThreads(1);
 	}

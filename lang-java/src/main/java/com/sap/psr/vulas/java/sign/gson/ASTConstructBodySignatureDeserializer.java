@@ -21,12 +21,24 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * <p>ASTConstructBodySignatureDeserializer class.</p>
+ *
+ */
 public class ASTConstructBodySignatureDeserializer extends StdDeserializer<ASTConstructBodySignature> {
 private static final Log log = LogFactory.getLog(ASTConstructBodySignatureDeserializer.class);
+	/**
+	 * <p>Constructor for ASTConstructBodySignatureDeserializer.</p>
+	 */
 	public ASTConstructBodySignatureDeserializer() {
 		this(null);
 	}
 
+	/**
+	 * <p>Constructor for ASTConstructBodySignatureDeserializer.</p>
+	 *
+	 * @param t a {@link java.lang.Class} object.
+	 */
 	public ASTConstructBodySignatureDeserializer(Class<ASTConstructBodySignature> t) {
 		super(t);
 	}
@@ -71,6 +83,7 @@ private static final Log log = LogFactory.getLog(ASTConstructBodySignatureDeseri
 		return ast_node;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ASTConstructBodySignature deserialize(JsonParser jp, DeserializationContext ctx) throws IOException, JsonProcessingException {
 		final JsonNode json_root = jp.getCodec().readTree(jp);

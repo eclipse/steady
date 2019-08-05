@@ -71,6 +71,11 @@ public class HubIntegrationController {
 
 	private final TenantRepository tenantRepository;
 
+  /**
+	 * <p>dispatcherServlet.</p>
+	 *
+	 * @return a {@link org.springframework.web.servlet.DispatcherServlet} object.
+	 */
 //	@Bean(name = DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
 //	public DispatcherServlet dispatcherServlet() {
 //		DispatcherServlet dispatcherServlet = new DispatcherServlet();
@@ -91,8 +96,14 @@ public class HubIntegrationController {
 	 * The identifiers looks as follows:
 	 * <space-name> (<space-token>)
 	 * <space-name> (<space-token>) <separator><group><separator><artifact><separator><version>
-	 * 
-	 * @return sorted set of all items for which data can be exported 
+	 *
+	 * @return sorted set of all items for which data can be exported
+	 * @param skipEmpty a {@link java.lang.Boolean} object.
+	 * @param separator a {@link java.lang.String} object.
+	 * @param max a {@link java.lang.Integer} object.
+	 * @param asOfTimestamp a {@link java.lang.String} object.
+	 * @param aggregate a {@link java.lang.Boolean} object.
+	 * @param tenant a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -164,8 +175,12 @@ public class HubIntegrationController {
 
 	/**
 	 * Returns a collection of {@link VulnerableDependency}s relevant for the {@link Application} with the given GAV.
-	 * @param group/artifact/version
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+	 * @param itemId a {@link java.lang.String} object.
+	 * @param separator a {@link java.lang.String} object.
+	 * @param excludedScopes an array of {@link com.sap.psr.vulas.shared.enums.Scope} objects.
+	 * @param tenant a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{itemId:.+}/vulndeps", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)

@@ -14,6 +14,10 @@ import soot.jimple.internal.JNopStmt;
 import java.util.*;
 
 
+/**
+ * <p>CustomEntryPointCreator class.</p>
+ *
+ */
 public class CustomEntryPointCreator extends DefaultEntryPointCreator {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomEntryPointCreator.class);
@@ -22,6 +26,11 @@ public class CustomEntryPointCreator extends DefaultEntryPointCreator {
     private final Collection<SootClass> dummyClasses = new HashSet<>();
 
 
+    /**
+     * <p>Constructor for CustomEntryPointCreator.</p>
+     *
+     * @param methodsToCall a {@link java.util.Collection} object.
+     */
     public CustomEntryPointCreator(Collection<String> methodsToCall) {
 
         super(methodsToCall);
@@ -29,6 +38,11 @@ public class CustomEntryPointCreator extends DefaultEntryPointCreator {
     }
 
 
+    /**
+     * <p>generateAppropriateDummyClasses.</p>
+     *
+     * @param methodsToCall a {@link java.util.Collection} object.
+     */
     public void generateAppropriateDummyClasses(Collection<String> methodsToCall) {
 
         Map<String, Set<String>> classMap = SootMethodRepresentationParser.v().parseClassNames(methodsToCall, false);
@@ -73,6 +87,12 @@ public class CustomEntryPointCreator extends DefaultEntryPointCreator {
     }
 
 
+    /**
+     * <p>concreteSubClassExists.</p>
+     *
+     * @param classToType a {@link soot.SootClass} object.
+     * @return a boolean.
+     */
     public boolean concreteSubClassExists(SootClass classToType) {
         if (classToType.isAbstract() || classToType.isInterface()) {
             //check if a public exported class exists implementing this interface or extending the abstract class
@@ -99,11 +119,22 @@ public class CustomEntryPointCreator extends DefaultEntryPointCreator {
     }
 
 
+    /**
+     * <p>Getter for the field <code>dummyClasses</code>.</p>
+     *
+     * @return a {@link java.util.Collection} object.
+     */
     public Collection getDummyClasses() {
         return this.dummyClasses;
     }
 
 
+    /**
+     * <p>getDummyClass.</p>
+     *
+     * @param toImplement a {@link soot.SootClass} object.
+     * @return a {@link soot.SootClass} object.
+     */
     public SootClass getDummyClass(SootClass toImplement) {
         String packageName = toImplement.getJavaPackageName();
 

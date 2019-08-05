@@ -30,6 +30,10 @@ import com.sap.psr.vulas.cia.model.mavenCentral.ResponseDoc;
 import com.sap.psr.vulas.shared.json.model.Artifact;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>ArtifactDownloader class.</p>
+ *
+ */
 public class ArtifactDownloader {
 
 	

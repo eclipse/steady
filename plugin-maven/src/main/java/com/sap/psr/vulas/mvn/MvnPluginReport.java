@@ -14,14 +14,20 @@ import com.sap.psr.vulas.goals.ReportGoal;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>MvnPluginReport class.</p>
+ *
+ */
 @Mojo( name = "report", defaultPhase = LifecyclePhase.VERIFY, requiresOnline = true )
 public class MvnPluginReport extends AbstractVulasMojo {
 	
+	/** {@inheritDoc} */
 	@Override
 	protected void createGoal() {
 		this.goal = new ReportGoal();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void executeGoal() throws Exception {
 		// Collect all modules to be reported on

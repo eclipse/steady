@@ -15,9 +15,9 @@ import com.sap.psr.vulas.shared.json.model.ConstructChange;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.json.model.Version;
 
-/**
- * class containing the results on a single archive.
- */
+    /**
+     * class containing the results on a single archive.
+     */
     public class ArtifactResult2 implements Comparable<ArtifactResult2> {
     	private static final Log log = LogFactory.getLog(ArtifactResult2.class);
     
@@ -34,6 +34,15 @@ import com.sap.psr.vulas.shared.json.model.Version;
 
 
 
+    /**
+     * <p>Constructor for ArtifactResult2.</p>
+     *
+     * @param _g a {@link java.lang.String} object.
+     * @param _a a {@link java.lang.String} object.
+     * @param _v a {@link java.lang.String} object.
+     * @param _s a boolean.
+     * @param timestamp a {@link java.lang.Long} object.
+     */
     public ArtifactResult2(String _g, String _a, String _v, boolean _s, Long timestamp) {
         
         this.group = _g;
@@ -46,6 +55,14 @@ import com.sap.psr.vulas.shared.json.model.Version;
           
     }
     
+    /**
+     * <p>Constructor for ArtifactResult2.</p>
+     *
+     * @param _g a {@link java.lang.String} object.
+     * @param _a a {@link java.lang.String} object.
+     * @param _v a {@link java.lang.String} object.
+     * @param _s a boolean.
+     */
     public ArtifactResult2(String _g, String _a, String _v, boolean _s) {
         
         this.group = _g;
@@ -57,47 +74,102 @@ import com.sap.psr.vulas.shared.json.model.Version;
           
     }
        
+    /**
+     * <p>addConstructPathAssessment.</p>
+     *
+     * @param constructPathAssessment2 a {@link com.sap.psr.vulas.patcheval.representation.ConstructPathAssessment2} object.
+     */
     public void addConstructPathAssessment(ConstructPathAssessment2 constructPathAssessment2){
         this.constructPathAssessments.add(constructPathAssessment2);
     }
 
+    /**
+     * <p>Getter for the field <code>constructPathAssessments</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<ConstructPathAssessment2> getConstructPathAssessments() {
         return constructPathAssessments;
     }
     
    
+    /**
+     * <p>Getter for the field <code>group</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getGroup() {
         return group;
     }
 
+    /**
+     * <p>Setter for the field <code>group</code>.</p>
+     *
+     * @param group a {@link java.lang.String} object.
+     */
     public void setGroup(String group) {
         this.group = group;
     }
 
+    /**
+     * <p>Getter for the field <code>artifact</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getArtifact() {
         return artifact;
     }
 
+    /**
+     * <p>Setter for the field <code>artifact</code>.</p>
+     *
+     * @param artifact a {@link java.lang.String} object.
+     */
     public void setArtifact(String artifact) {
         this.artifact = artifact;
     }
 
+    /**
+     * <p>Getter for the field <code>version</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getVersion() {
         return version.getVersion();
     }
     
+    /**
+     * <p>getVersionObject.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.shared.json.model.Version} object.
+     */
     public Version getVersionObject() {
         return version;
     }
 
+    /**
+     * <p>Setter for the field <code>version</code>.</p>
+     *
+     * @param version a {@link com.sap.psr.vulas.shared.json.model.Version} object.
+     */
     public void setVersion(Version version) {
         this.version = version;
     }
     
+    /**
+     * <p>getSourceAvailable.</p>
+     *
+     * @return a {@link java.lang.Boolean} object.
+     */
     public Boolean getSourceAvailable() {
         return sourcesAvailable;
     }
 
+    /**
+     * <p>setSourceAvailable.</p>
+     *
+     * @param s a {@link java.lang.Boolean} object.
+     */
     public void setSourceAvailable(Boolean s) {
         this.sourcesAvailable = s;
     }
@@ -105,6 +177,11 @@ import com.sap.psr.vulas.shared.json.model.Version;
   
 
     
+    /**
+     * <p>getMajorRelease.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getMajorRelease() {
     	return this.version.getMajorRelease();
 //    	String[] versions = this.version.split("\\.");
@@ -112,6 +189,11 @@ import com.sap.psr.vulas.shared.json.model.Version;
         
     }
     
+    /**
+     * <p>getMinorRelease.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getMinorRelease() {
     	return this.version.getMinorRelease();
 //    	 String[] versions = this.version.split("\\.");
@@ -128,6 +210,11 @@ import com.sap.psr.vulas.shared.json.model.Version;
 //         return majorRelease.concat(".0");  
     }
     
+    /**
+     * <p>getMaintenanceRelease.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getMaintenanceRelease() {
     	return this.version.getMaintenanceRelease();
 //    	 String[] versions = this.version.split("\\.");
@@ -144,6 +231,11 @@ import com.sap.psr.vulas.shared.json.model.Version;
 //    		return false;
 //    }
     
+    /**
+     * <p>getVConfidence.</p>
+     *
+     * @return a {@link java.lang.Double} object.
+     */
     public Double getVConfidence(){
 	    int tot=0,totV=0;
 	    for(ConstructPathAssessment2 cpa : this.getConstructPathAssessments()){
@@ -163,6 +255,11 @@ import com.sap.psr.vulas.shared.json.model.Version;
 	    		
     }
     
+    /**
+     * <p>getVPathConfidence.</p>
+     *
+     * @return a {@link java.lang.Double} object.
+     */
     public Double getVPathConfidence(){
 	    int tot=0,totV=0;
 	    Double confidence = new Double(0);
@@ -191,6 +288,11 @@ import com.sap.psr.vulas.shared.json.model.Version;
 	    return confidence;	
     }
     
+    /**
+     * <p>getFConfidence.</p>
+     *
+     * @return a {@link java.lang.Double} object.
+     */
     public Double getFConfidence(){
 	    int tot=0,totF=0;
 	    for(ConstructPathAssessment2 cpa : this.getConstructPathAssessments()){
@@ -210,6 +312,11 @@ import com.sap.psr.vulas.shared.json.model.Version;
 	    		
     }
     
+    /**
+     * <p>getFPathConfidence.</p>
+     *
+     * @return a {@link java.lang.Double} object.
+     */
     public Double getFPathConfidence(){
 	    int tot=0,totF=0;
 	    Double confidence = new Double(0);
@@ -243,10 +350,20 @@ import com.sap.psr.vulas.shared.json.model.Version;
     
 
 
+    /**
+     * <p>Getter for the field <code>timestamp</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object.
+     */
     public Long getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * <p>Setter for the field <code>timestamp</code>.</p>
+     *
+     * @param timestamp a long.
+     */
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
@@ -282,6 +399,11 @@ import com.sap.psr.vulas.shared.json.model.Version;
     }
     
     
+    /**
+     * <p>containsAD.</p>
+     *
+     * @return a boolean.
+     */
     public boolean containsAD(){
     	for(ConstructPathAssessment2 cpa : this.constructPathAssessments){
     		if(cpa.getType().equals("ADD")||cpa.getType().equals("DEL"))
@@ -291,6 +413,11 @@ import com.sap.psr.vulas.shared.json.model.Version;
     }
     
     //tobe done per path?
+    /**
+     * <p>isADFixed.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isADFixed(){
     	Boolean fixed = false;
     	for(ConstructPathAssessment2 cpa : this.constructPathAssessments){
@@ -306,6 +433,11 @@ import com.sap.psr.vulas.shared.json.model.Version;
     	return fixed;
     }    
     
+    /**
+     * <p>isPathADFixed.</p>
+     *
+     * @return a {@link java.lang.Boolean} object.
+     */
     public Boolean isPathADFixed(){
 	    Boolean fixed = false;
 	    for(ConstructPathAssessment2 cpa2 : this.getConstructPathAssessments()){
@@ -337,6 +469,11 @@ import com.sap.psr.vulas.shared.json.model.Version;
      * and there aren't inconsistencies, i.e., it never happens that equality 
      * is found both to V and F across all constructs of the change list  
      */
+    /**
+     * <p>isEqualToV.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isEqualToV(){
     	if(constructResultsConsistent()){
     		for(ConstructPathAssessment2 cpa : this.constructPathAssessments){
@@ -353,6 +490,11 @@ import com.sap.psr.vulas.shared.json.model.Version;
      * if found both to V and F across all constructs of the change list  
      */
     
+    /**
+     * <p>isEqualToF.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isEqualToF(){
     	if(constructResultsConsistent()){
     		for(ConstructPathAssessment2 cpa : this.constructPathAssessments){
@@ -376,6 +518,7 @@ import com.sap.psr.vulas.shared.json.model.Version;
      * 
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
 	public int compareTo(ArtifactResult2 other) {
 
@@ -390,14 +533,14 @@ import com.sap.psr.vulas.shared.json.model.Version;
     
     
     /**
-     * 
-     *  This method compares the versions of ArtifactResults2 according to the following priorities 
+     *
+     *  This method compares the versions of ArtifactResults2 according to the following priorities
      * 1) compare version numbers of the form major.minor[.maintenance[.build]], if only digits are contained
-     * 2) compare timestap (of latest update in maven central)
-     * 3) alphanumerical comparison  
-     * 
-     * @param other
-     * @return
+     * 2) compare timestamp (of latest update in maven central)
+     * 3) alphanumerical comparison
+     *
+     * @param other a {@link com.sap.psr.vulas.patcheval.representation.ArtifactResult2} object.
+     * @return a int.
      */
     public int compareVersion(ArtifactResult2 other) {
     	int i = this.version.compareNumberVersion(other.getVersionObject());
@@ -416,6 +559,14 @@ import com.sap.psr.vulas.shared.json.model.Version;
 
     
     
+    /**
+     * <p>equalGAV.</p>
+     *
+     * @param _group a {@link java.lang.String} object.
+     * @param _artifact a {@link java.lang.String} object.
+     * @param _version a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public boolean equalGAV(String _group, String _artifact, String _version){
     	if(this.group.equals(_group) && this.artifact.equals(_artifact) && this.version.equals(new Version(_version))){
     		return true;
@@ -425,11 +576,17 @@ import com.sap.psr.vulas.shared.json.model.Version;
     }
 
 	
+	/**
+	 * <p>getGa.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getGa() {
 		
 		return this.group+":"+this.artifact;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		
@@ -437,6 +594,12 @@ import com.sap.psr.vulas.shared.json.model.Version;
 	}
 	
 	
+	 /**
+	  * <p>getAffectedcc.</p>
+	  *
+	  * @param ConstructChange a {@link java.util.List} object.
+	  * @return a {@link com.google.gson.JsonArray} object.
+	  */
 	 public JsonArray getAffectedcc(List<ConstructChange> ConstructChange){
 		   JsonArray affectedcc = new JsonArray();
 		   for ( ConstructPathAssessment2 cpa : this.getConstructPathAssessments() ) {

@@ -49,6 +49,10 @@ import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 
+/**
+ * <p>Library class.</p>
+ *
+ */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown=true)
 @Entity
@@ -142,8 +146,16 @@ public class Library implements Serializable {
 	private ConstructIdFilter filter = null;
 
 
+	/**
+	 * <p>Constructor for Library.</p>
+	 */
 	public Library() { super(); }
 
+	/**
+	 * <p>Constructor for Library.</p>
+	 *
+	 * @param digest a {@link java.lang.String} object.
+	 */
 	public Library(String digest) {
 		super();
 		this.digest = digest;
@@ -155,15 +167,31 @@ public class Library implements Serializable {
 	@Transient
 	private Set<ProgrammingLanguage> developedIn = null;
 
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getId() { return id; }
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 */
 	public void setId(Long id) { this.id = id; }
 	
 	// Only exists for backward-compatibility with Vulas 2.x clients
+	/**
+	 * <p>Getter for the field <code>sha1</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getSha1() { return this.getDigest(); }
 
 	/**
 	 * Vulas 2.x clients will only provide the SHA1 digest of the library. It will be used to set the Vulas 3.x fields {@link Library#digest} and {@link Library#digestAlgorithm}.
-	 * @param sha1
+	 *
+	 * @param sha1 a {@link java.lang.String} object.
 	 */
 	public void setSha1(String sha1) {
 		this.sha1 = sha1;
@@ -171,35 +199,140 @@ public class Library implements Serializable {
 		this.setDigestAlgorithm(DigestAlgorithm.SHA1);
 	}
 
+	/**
+	 * <p>Getter for the field <code>digest</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getDigest() { return this.digest; }
+	/**
+	 * <p>Setter for the field <code>digest</code>.</p>
+	 *
+	 * @param digest a {@link java.lang.String} object.
+	 */
 	public void setDigest(String digest) { this.digest = digest; }
 
+	/**
+	 * <p>Getter for the field <code>digestAlgorithm</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.DigestAlgorithm} object.
+	 */
 	public DigestAlgorithm getDigestAlgorithm() { return digestAlgorithm; }
+	/**
+	 * <p>Setter for the field <code>digestAlgorithm</code>.</p>
+	 *
+	 * @param digestAlgorithm a {@link com.sap.psr.vulas.shared.enums.DigestAlgorithm} object.
+	 */
 	public void setDigestAlgorithm(DigestAlgorithm digestAlgorithm) { this.digestAlgorithm = digestAlgorithm; }
 
+	/**
+	 * <p>Getter for the field <code>createdAt</code>.</p>
+	 *
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public java.util.Calendar getCreatedAt() { return createdAt; }
+	/**
+	 * <p>Setter for the field <code>createdAt</code>.</p>
+	 *
+	 * @param createdAt a {@link java.util.Calendar} object.
+	 */
 	public void setCreatedAt(java.util.Calendar createdAt) { this.createdAt = createdAt; }
 	
+	/**
+	 * <p>Getter for the field <code>modifiedAt</code>.</p>
+	 *
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public java.util.Calendar getModifiedAt() { return modifiedAt; }
+	/**
+	 * <p>Setter for the field <code>modifiedAt</code>.</p>
+	 *
+	 * @param modifiedAt a {@link java.util.Calendar} object.
+	 */
 	public void setModifiedAt(java.util.Calendar modifiedAt) { this.modifiedAt = modifiedAt; }
 
+	/**
+	 * <p>Getter for the field <code>properties</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<Property> getProperties() { return properties; }
+	/**
+	 * <p>Setter for the field <code>properties</code>.</p>
+	 *
+	 * @param properties a {@link java.util.Collection} object.
+	 */
 	public void setProperties(Collection<Property> properties) { this.properties = properties; }
 
+	/**
+	 * <p>Getter for the field <code>constructs</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<ConstructId> getConstructs() { return constructs; }
+	/**
+	 * <p>Setter for the field <code>constructs</code>.</p>
+	 *
+	 * @param constructs a {@link java.util.Collection} object.
+	 */
 	public void setConstructs(Collection<ConstructId> constructs) { this.constructs = constructs; }
 
+	/**
+	 * <p>Getter for the field <code>libraryId</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+	 */
 	public LibraryId getLibraryId() { return libraryId; }
+	/**
+	 * <p>Setter for the field <code>libraryId</code>.</p>
+	 *
+	 * @param _library_id a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+	 */
 	public void setLibraryId(LibraryId _library_id) { this.libraryId = _library_id; }
 
+	/**
+	 * <p>isWellknownDigest.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isWellknownDigest() { return wellknownDigest!=null && wellknownDigest.equals(true); }
+	/**
+	 * <p>Getter for the field <code>wellknownDigest</code>.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean getWellknownDigest() { return wellknownDigest; }
+	/**
+	 * <p>Setter for the field <code>wellknownDigest</code>.</p>
+	 *
+	 * @param wellknownDigest a {@link java.lang.Boolean} object.
+	 */
 	public void setWellknownDigest(Boolean wellknownDigest) { this.wellknownDigest = wellknownDigest; }
 
+	/**
+	 * <p>Getter for the field <code>digestTimestamp</code>.</p>
+	 *
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public java.util.Calendar getDigestTimestamp() { return digestTimestamp; }
+	/**
+	 * <p>Setter for the field <code>digestTimestamp</code>.</p>
+	 *
+	 * @param digestTimestamp a {@link java.util.Calendar} object.
+	 */
 	public void setDigestTimestamp(java.util.Calendar digestTimestamp) { this.digestTimestamp = digestTimestamp; }
 
+	/**
+	 * <p>Getter for the field <code>digestVerificationUrl</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getDigestVerificationUrl() { return digestVerificationUrl; }
+	/**
+	 * <p>Setter for the field <code>digestVerificationUrl</code>.</p>
+	 *
+	 * @param digestVerificationUrl a {@link java.lang.String} object.
+	 */
 	public void setDigestVerificationUrl(String digestVerificationUrl) { this.digestVerificationUrl = digestVerificationUrl; }
 
 	//substituted with fields constructorCounter and methodCounter to avoid queries all constructs in order to have the total in the dependencies summary
@@ -209,7 +342,8 @@ public class Library implements Serializable {
 	/**
 	 * Loops over all constructs in order to find the distinct set of {@link ProgrammingLanguage}s used to develop the library.
 	 * Note: If slow, it can maybe improved by using a JPQL query.
-	 * @return
+	 *
+	 * @return a {@link java.util.Set} object.
 	 */
 	@JsonProperty(value = "developedIn")
 	@JsonView(Views.CountDetails.class)
@@ -230,7 +364,8 @@ public class Library implements Serializable {
 
 	/**
 	 * Note: Aggregates ignoring the programming language.
-	 * @return
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.model.ConstructIdFilter} object.
 	 */
 	@JsonProperty(value = "constructTypeCounters")
 	@JsonView(Views.CountDetails.class)
@@ -241,6 +376,9 @@ public class Library implements Serializable {
 		return this.filter;
 	}
 
+	/**
+	 * <p>prePersist.</p>
+	 */
 	@PrePersist
 	public void prePersist() {
 		if(this.getCreatedAt()==null) {
@@ -259,6 +397,7 @@ public class Library implements Serializable {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -267,6 +406,7 @@ public class Library implements Serializable {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -284,11 +424,18 @@ public class Library implements Serializable {
 		return true;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public final String toString() {
 		return this.toString(false);
 	}
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @param _deep a boolean.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public final String toString(boolean _deep) {
 		final StringBuilder builder = new StringBuilder();
 		if(_deep) {
@@ -311,6 +458,9 @@ public class Library implements Serializable {
 	}
 
 	//changed to public temporarily to recreate wellknownDigest flag for already persisted libs
+	/**
+	 * <p>verifyDigest.</p>
+	 */
 	public void verifyDigest() {
 		if(this.getWellknownDigest()==null || this.getDigestVerificationUrl()==null || this.getDigestTimestamp()==null) {
 			try {
@@ -328,6 +478,12 @@ public class Library implements Serializable {
 	}
 
 	//changed to public temporarily to recreate libId flag for already persisted libs
+	/**
+	 * <p>getLibIdFromMaven.</p>
+	 *
+	 * @param _digest a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+	 */
 	public final LibraryId getLibIdFromMaven(String _digest) {
 		final String result = callMvn(_digest);
 		LibraryId libid = null;
@@ -372,18 +528,38 @@ public class Library implements Serializable {
 		return mvnResponse;
 	}
 
+	/**
+	 * <p>Getter for the field <code>directUsageCounter</code>.</p>
+	 *
+	 * @return a {@link java.lang.Integer} object.
+	 */
 	public Integer getDirectUsageCounter() {
 		return directUsageCounter;
 	}
 
+	/**
+	 * <p>Setter for the field <code>directUsageCounter</code>.</p>
+	 *
+	 * @param directUsageCounter a {@link java.lang.Integer} object.
+	 */
 	public void setDirectUsageCounter(Integer directUsageCounter) {
 		this.directUsageCounter = directUsageCounter;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>bundledLibraryIds</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<LibraryId> getBundledLibraryIds() {
 		return bundledLibraryIds;
 	}
 
+	/**
+	 * <p>Setter for the field <code>bundledLibraryIds</code>.</p>
+	 *
+	 * @param bundledLibraryIds a {@link java.util.Collection} object.
+	 */
 	public void setBundledLibraryIds(Collection<LibraryId> bundledLibraryIds) {
 		this.bundledLibraryIds = bundledLibraryIds;
 	}

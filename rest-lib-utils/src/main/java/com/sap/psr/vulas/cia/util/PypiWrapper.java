@@ -27,6 +27,10 @@ import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.Artifact;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>PypiWrapper class.</p>
+ *
+ */
 public class PypiWrapper implements RepositoryWrapper {
 
 	private static Logger log = LoggerFactory.getLogger(PypiWrapper.class);
@@ -47,6 +51,7 @@ public class PypiWrapper implements RepositoryWrapper {
 			CONFIGURED=true;
 	}
 		
+	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
 		return SUPP_LANG;
@@ -85,6 +90,7 @@ public class PypiWrapper implements RepositoryWrapper {
 		return result;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<Artifact> getAllArtifactVersions(String group, String artifact, String classifier, String packaging)
 			throws Exception {
@@ -116,6 +122,7 @@ public class PypiWrapper implements RepositoryWrapper {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<Artifact> getGreaterArtifactVersions(String group, String artifact, String greaterThanVersion,
 			String classifier, String packaging) throws Exception {
@@ -144,6 +151,7 @@ public class PypiWrapper implements RepositoryWrapper {
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Artifact getLatestArtifactVersion(String group, String artifact, String classifier, String packaging)
 			throws Exception {
@@ -193,6 +201,7 @@ public class PypiWrapper implements RepositoryWrapper {
 		return result;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Artifact getArtifactVersion(String group, String artifact, String version, String classifier,
 			String packaging,ProgrammingLanguage lang) throws Exception {
@@ -203,6 +212,7 @@ public class PypiWrapper implements RepositoryWrapper {
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Path downloadArtifact(Artifact a) throws Exception {
 		String downloadUrl = null;
@@ -241,11 +251,13 @@ public class PypiWrapper implements RepositoryWrapper {
 	}
 
 	
+	/** {@inheritDoc} */
 	@Override
 	public Artifact getArtifactForDigest(String digest) throws RepoException {
 		throw new NotImplementedException();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isConfigured() {
 		return CONFIGURED;

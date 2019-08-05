@@ -21,7 +21,6 @@ import javassist.CtBehavior;
  * Tracks how many times a construct has been invoked. Downloads the list of relevant bugs from the backend and
  * collects the stack trace for all their change list elements. Stack traces collected will be transformed into
  * call paths that are again uploaded to the backend.
- *
  */
 public class StackTraceInstrumentor extends AbstractTraceInstrumentor {
 
@@ -36,6 +35,9 @@ public class StackTraceInstrumentor extends AbstractTraceInstrumentor {
 	 */
 	private Set<ConstructId> constructsCollectStacktrace = null;
 
+	/**
+	 * <p>Constructor for StackTraceInstrumentor.</p>
+	 */
 	public StackTraceInstrumentor() {
 		try {
 			final Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> bug_change_lists = BackendConnector.getInstance().getAppBugs(CoreConfiguration.buildGoalContextFromConfiguration(this.vulasConfiguration), CoreConfiguration.getAppContext(this.vulasConfiguration));
@@ -52,10 +54,17 @@ public class StackTraceInstrumentor extends AbstractTraceInstrumentor {
 		}
 	}
 
+	/**
+	 * <p>isStacktraceRequestedFor.</p>
+	 *
+	 * @param _construct a {@link com.sap.psr.vulas.ConstructId} object.
+	 * @return a boolean.
+	 */
 	public boolean isStacktraceRequestedFor(ConstructId _construct) {
 		return this.constructsCollectStacktrace!=null && this.constructsCollectStacktrace.contains(_construct);
 	}
 
+	/** {@inheritDoc} */
 	public void instrument(StringBuffer _code, JavaId _jid, CtBehavior _behavior, ClassVisitor _cv) throws CannotCompileException {
 
 		// Inject some basic stuff common to several instrumentors

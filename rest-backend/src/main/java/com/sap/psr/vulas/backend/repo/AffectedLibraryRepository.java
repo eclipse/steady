@@ -19,37 +19,57 @@ import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.backend.util.ResultSetFilter;
 import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 
+/**
+ * <p>AffectedLibraryRepository interface.</p>
+ *
+ */
 @Repository
 public interface AffectedLibraryRepository extends CrudRepository<AffectedLibrary, Long>, AffectedLibraryRepositoryCustom {
 	
+	/** Constant <code>FILTER</code> */
 	public static final ResultSetFilter<AffectedLibrary> FILTER = new ResultSetFilter<AffectedLibrary>();
 
 	/**
 	 * Find all entries for a given {@link Bug}, {@link LibraryId} and {@link AffectedVersionSource}.
-	 * @param bug
-	 * @param libraryId
-	 * @return
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @param group a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 * @return a {@link java.util.List} object.
 	 */
 	@Query("SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.bugId = :bug AND afflib.libraryId.mvnGroup = :group AND afflib.libraryId.artifact = :artifact  AND afflib.libraryId.version = :version AND afflib.source = :source")
 	List<AffectedLibrary> findByBugAndLibraryIdAndSource(@Param("bug") Bug bug, @Param("group") String group, @Param("artifact") String artifact, @Param("version") String version, @Param("source") AffectedVersionSource source);
 	
 	/**
 	 * Find all entries for a given {@link Bug} and {@link AffectedVersionSource}.
-	 * @param bug
-	 * @param libraryId
-	 * @return
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 * @return a {@link java.util.List} object.
 	 */
 	@Query("SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.bugId = :bug AND afflib.source = :source")
 	List<AffectedLibrary> findByBugAndSource(@Param("bug") Bug bug, @Param("source") AffectedVersionSource source);
 	
+	/**
+	 * <p>findByBugAndLibIdAndSource.</p>
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 * @param group a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	@Query("SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.bugId = :bug AND afflib.source = :source AND afflib.libraryId.mvnGroup = :group AND afflib.libraryId.artifact = :artifact AND afflib.libraryId.version = :version")
 	List<AffectedLibrary> findByBugAndLibIdAndSource(@Param("bug") Bug bug, @Param("source") AffectedVersionSource source, @Param("group") String group, @Param("artifact") String artifact,@Param("version") String version);
 	
 	/**
 	 * Find all entries for a given {@link Bug} and {@link AffectedVersionSource}.
-	 * @param bug
-	 * @param libraryId
-	 * @return
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
 	 */
 	@Modifying
 	@Transactional
@@ -67,33 +87,67 @@ public interface AffectedLibraryRepository extends CrudRepository<AffectedLibrar
 
 	/**
 	 * Find all entries for a given {@link Bug}.
-	 * @param bug
-	 * @return
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @return a {@link java.util.List} object.
 	 */
 	@Query("SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.bugId = :bug")
 	List<AffectedLibrary> findByBug(@Param("bug") Bug bug);
 	
 	
+	/**
+	 * <p>findByBugAndLibId.</p>
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @param group a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	@Query("SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.bugId = :bug AND afflib.libraryId.mvnGroup = :group AND afflib.libraryId.artifact = :artifact AND afflib.libraryId.version = :version")
 	List<AffectedLibrary> findByBugAndLibId(@Param("bug") Bug bug, @Param("group") String group, @Param("artifact") String artifact,@Param("version") String version);
 	
+	/**
+	 * <p>findByBugAndLibAndSource.</p>
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @param digest a {@link com.sap.psr.vulas.backend.model.Library} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	@Query("SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.bugId = :bug AND afflib.source = :source AND afflib.lib = :digest")
 	List<AffectedLibrary> findByBugAndLibAndSource(@Param("bug") Bug bug, @Param("digest") Library digest, @Param("source") AffectedVersionSource source);
 
+	/**
+	 * <p>deleteCCByAffLib.</p>
+	 *
+	 * @param aff_lib a {@link com.sap.psr.vulas.backend.model.AffectedLibrary} object.
+	 */
 	@Modifying
 	@Transactional
 	@Query("DELETE FROM AffectedConstructChange as affcc WHERE affcc.affectedLib = :aff_lib")
 	void deleteCCByAffLib(@Param("aff_lib") AffectedLibrary aff_lib);
 	
 	
+	/**
+	 * <p>findByBugAndLib.</p>
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @param digest a {@link com.sap.psr.vulas.backend.model.Library} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	@Query("SELECT affcc FROM AffectedConstructChange AS affcc JOIN affcc.affectedLib afflib WHERE afflib.bugId = :bug AND afflib.lib = :digest")
 	List<AffectedConstructChange> findByBugAndLib(@Param("bug") Bug bug, @Param("digest") Library digest);
 
 
 	/**
 	 * Finds all bugs for a given {@link LibraryId}.
-	 * @param libraryId
-	 * @return
+	 *
+	 * @param group a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @return a {@link java.util.List} object.
 	 */
 	@Query("SELECT distinct afflib.bugId FROM AffectedLibrary AS afflib WHERE afflib.libraryId.mvnGroup = :group AND afflib.libraryId.artifact = :artifact AND afflib.libraryId.version = :version")
 	List<Bug> findBugByLibraryId(@Param("group") String group, @Param("artifact") String artifact, @Param("version") String version);
@@ -103,18 +157,44 @@ public interface AffectedLibraryRepository extends CrudRepository<AffectedLibrar
 
 	/**
 	 * Same as {@link AffectedLibraryRepository#findBugByLibraryId(String, String, String)}, but offering an additional filter for selected bug ID(s).
-	 * @param libraryId
-	 * @return
+	 *
+	 * @param group a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param bugIds an array of {@link java.lang.String} objects.
+	 * @return a {@link java.util.List} object.
 	 */
 	@Query("SELECT distinct afflib.bugId FROM AffectedLibrary AS afflib WHERE afflib.libraryId.mvnGroup = :group AND afflib.libraryId.artifact = :artifact AND afflib.libraryId.version = :version AND afflib.bugId.bugId IN :bugIds ")
 	List<Bug> findBugByLibraryId(@Param("group") String group, @Param("artifact") String artifact, @Param("version") String version, @Param("bugIds") String[] bugIds);	
 	
+	/**
+	 * <p>findByLibraryId.</p>
+	 *
+	 * @param group a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	@Query("SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.libraryId.mvnGroup = :group AND afflib.libraryId.artifact = :artifact  AND afflib.libraryId.version = :version")
 	List<AffectedLibrary> findByLibraryId(@Param("group") String group, @Param("artifact") String artifact, @Param("version") String version);
 	
+	/**
+	 * <p>findByLibraryIdGA.</p>
+	 *
+	 * @param group a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	@Query("SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.libraryId.mvnGroup = :group AND afflib.libraryId.artifact = :artifact ")
 	List<AffectedLibrary> findByLibraryIdGA(@Param("group") String group, @Param("artifact") String artifact);
 	
+	/**
+	 * <p>isBugLibAffected.</p>
+	 *
+	 * @param bug_id a {@link java.lang.String} object.
+	 * @param lib a {@link java.lang.String} object.
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	@Query(value= "	select a.affected from "
 			+ "	(select distinct bug_id,lib,affected from bug_affected_library where source='MANUAL' and library_id is null "
 			+ " UNION "
@@ -132,6 +212,13 @@ public interface AffectedLibraryRepository extends CrudRepository<AffectedLibrar
 //			+ " and not (lib is not null and exists (select 1 from bug_affected_library where source='MANUAL' and bug_id=bug_id and lib=lib)) "
 //			+ " and not (library_id is not null and exists (select 1 from bug_affected_library where source='MANUAL' and bug_id=bug_id and library_id=library_id))) as a "
 //			+ " where a.bug_id=:bug_id and a.library_id=:library_id",nativeQuery=true)
+	/**
+	 * <p>isBugLibIdAffected.</p>
+	 *
+	 * @param bug_id a {@link java.lang.String} object.
+	 * @param library_id a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	@Query(value= "	select a.affected from "
 			+ "	(select distinct bug_id,library_id,affected from bug_affected_library where source='MANUAL'  and lib is null"
 			+ " UNION "

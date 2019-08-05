@@ -8,12 +8,20 @@ import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.model.Application;
 
+/**
+ * <p>CleanGoal class.</p>
+ *
+ */
 public class CleanGoal extends AbstractAppGoal {
 
 	private static final Log log = LogFactory.getLog(CleanGoal.class);
 
+	/**
+	 * <p>Constructor for CleanGoal.</p>
+	 */
 	public CleanGoal() { super(GoalType.CLEAN); }
 
+	/** {@inheritDoc} */
 	@Override
 	/*
 	 * This method cleans the backend and also eventually purges the older versions of the application.

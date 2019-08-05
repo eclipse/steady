@@ -12,18 +12,40 @@ import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>ArtifactMaps class.</p>
+ *
+ */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties
 public class ArtifactMaps {
 	
+	/** Constant <code>ARTIFACT_MAPS="vulas.backend.artifactMaps"</code> */
 	public static final String ARTIFACT_MAPS = "vulas.backend.artifactMaps";
 	
 	private List<ArtifactMap> maps = null;
 	
+	/**
+	 * <p>Getter for the field <code>maps</code>.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	public List<ArtifactMap> getMaps() { return maps; }
 	
+	/**
+	 * <p>Setter for the field <code>maps</code>.</p>
+	 *
+	 * @param maps a {@link java.util.List} object.
+	 */
 	public void setMaps(List<ArtifactMap> maps) { this.maps = maps; }
 	
+	/**
+	 * <p>getGreaterArtifacts.</p>
+	 *
+	 * @param _group a {@link java.lang.String} object.
+	 * @param _artifact a {@link java.lang.String} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	@JsonIgnore
 	public List<LibraryId> getGreaterArtifacts(@NotNull String _group, @NotNull String _artifact) {
 		if(_group==null || _group.equals("") || _artifact==null || _artifact.equals(""))
@@ -34,6 +56,12 @@ public class ArtifactMaps {
 		return this.getGreaterArtifacts(l);
 	}
 	
+	/**
+	 * <p>getGreaterArtifacts.</p>
+	 *
+	 * @param _a a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	@JsonIgnore
 	public List<LibraryId> getGreaterArtifacts(LibraryId _a) {
 		final List<LibraryId> later = new ArrayList<LibraryId>();
@@ -50,7 +78,8 @@ public class ArtifactMaps {
 	
 	/**
 	 * Reads the configuration setting vulas.backend.artifactMaps.
-	 * @return
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.util.ArtifactMaps} object.
 	 */
 	public static ArtifactMaps buildMaps() {
 		String m = VulasConfiguration.getGlobal().getConfiguration().getString(ARTIFACT_MAPS, null);

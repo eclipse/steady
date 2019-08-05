@@ -1,10 +1,8 @@
 package com.sap.psr.vulas.java.sign;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,7 +29,6 @@ import ch.uzh.ifi.seal.changedistiller.ast.java.JavaCompilation;
 
 /**
  * Helper class to create the ASTSignature instances using ChangeDistiller.
- *
  */
 public final class CompilationUtils {
 	
@@ -39,6 +36,12 @@ public final class CompilationUtils {
 
 	private CompilationUtils() {}
 
+    /**
+     * <p>compileSource.</p>
+     *
+     * @param source a {@link java.lang.String} object.
+     * @return a {@link ch.uzh.ifi.seal.changedistiller.ast.java.JavaCompilation} object.
+     */
     public static JavaCompilation compileSource(String source) {
 
     	//Compiler Options
@@ -76,8 +79,7 @@ public final class CompilationUtils {
 
 
     /**
-     * Returns the generated {@link JavaCompilation} from the file identified by the given filename. This method assumes
-     * that the filename is relative to <code>{@value #TEST_DATA_BASE_DIR}</code>.
+     * Returns the generated {@link JavaCompilation} from the file identified by the given filename.
      *
      * @param _filename
      *            of the file to compile
@@ -119,6 +121,12 @@ public final class CompilationUtils {
     }
 
 
+    /**
+     * <p>extractComments.</p>
+     *
+     * @param sCompilationUnit a {@link ch.uzh.ifi.seal.changedistiller.ast.java.JavaCompilation} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<Comment> extractComments(JavaCompilation sCompilationUnit) {
         CommentCollector collector =
                 new CommentCollector(sCompilationUnit.getCompilationUnit(), sCompilationUnit.getSource());
@@ -126,6 +134,13 @@ public final class CompilationUtils {
         return collector.getComments();
     }
 
+    /**
+     * <p>findMethod.</p>
+     *
+     * @param cu a {@link org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration} object.
+     * @param methodName a {@link java.lang.String} object.
+     * @return a {@link org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration} object.
+     */
     public static AbstractMethodDeclaration findMethod(CompilationUnitDeclaration cu, String methodName) {
         for (TypeDeclaration type : cu.types) {
             for (AbstractMethodDeclaration method : type.methods) {
@@ -137,6 +152,13 @@ public final class CompilationUtils {
         return null;
     }
 
+    /**
+     * <p>findField.</p>
+     *
+     * @param cu a {@link org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration} object.
+     * @param fieldName a {@link java.lang.String} object.
+     * @return a {@link org.eclipse.jdt.internal.compiler.ast.FieldDeclaration} object.
+     */
     public static FieldDeclaration findField(CompilationUnitDeclaration cu, String fieldName) {
         for (TypeDeclaration type : cu.types) {
             for (FieldDeclaration field : type.fields) {
@@ -148,6 +170,13 @@ public final class CompilationUtils {
         return null;
     }
 
+    /**
+     * <p>findType.</p>
+     *
+     * @param cu a {@link org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration} object.
+     * @param typeName a {@link java.lang.String} object.
+     * @return a {@link org.eclipse.jdt.internal.compiler.ast.TypeDeclaration} object.
+     */
     public static TypeDeclaration findType(CompilationUnitDeclaration cu, String typeName) {
         for (TypeDeclaration type : cu.types) {
             for (TypeDeclaration memberType : type.memberTypes) {
@@ -159,6 +188,12 @@ public final class CompilationUtils {
         return null;
     }
 
+    /**
+     * <p>getFile.</p>
+     *
+     * @param filename a {@link java.lang.String} object.
+     * @return a {@link java.io.File} object.
+     */
     public static File getFile(String filename) {
         return new File(filename);
     }

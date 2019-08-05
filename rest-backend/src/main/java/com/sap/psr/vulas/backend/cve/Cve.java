@@ -13,13 +13,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Used for (de)serializing the JSON read from circl.lu
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Cve {
 	
+	/** Constant <code>CVE_REGEX="(CVE-\\d{4}+-\\d{4,}).*"</code> */
 	public static final String CVE_REGEX = "(CVE-\\d{4}+-\\d{4,}).*";
+	/** Constant <code>CVE_PATTERN</code> */
 	public static final Pattern CVE_PATTERN = Pattern.compile(CVE_REGEX);
 	
 	@JsonProperty(value = "id")
@@ -45,29 +46,103 @@ public class Cve {
 	@JsonProperty(value = "summary")
 	private String summary;
 	
+	/**
+	 * <p>Constructor for Cve.</p>
+	 */
 	public Cve() { super(); }
 	
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getId() { return id; }
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.String} object.
+	 */
 	public void setId(String id) { this.id = id; }
 
+	/**
+	 * <p>Getter for the field <code>published</code>.</p>
+	 *
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public java.util.Calendar getPublished() { return published; }
+	/**
+	 * <p>Setter for the field <code>published</code>.</p>
+	 *
+	 * @param published a {@link java.util.Calendar} object.
+	 */
 	public void setPublished(java.util.Calendar published) { this.published = published; }
 
+	/**
+	 * <p>Getter for the field <code>modified</code>.</p>
+	 *
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public java.util.Calendar getModified() { return modified; }
+	/**
+	 * <p>Setter for the field <code>modified</code>.</p>
+	 *
+	 * @param modified a {@link java.util.Calendar} object.
+	 */
 	public void setModified(java.util.Calendar modified) { this.modified = modified; }
 
+	/**
+	 * <p>Getter for the field <code>cvssScore</code>.</p>
+	 *
+	 * @return a {@link java.lang.Float} object.
+	 */
 	public Float getCvssScore() { return cvssScore; }
+	/**
+	 * <p>Setter for the field <code>cvssScore</code>.</p>
+	 *
+	 * @param cvss a {@link java.lang.Float} object.
+	 */
 	public void setCvssScore(Float cvss) { this.cvssScore = cvss; }
 
+	/**
+	 * <p>Getter for the field <code>cvssVersion</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getCvssVersion() { return cvssVersion; }
+	/**
+	 * <p>Setter for the field <code>cvssVersion</code>.</p>
+	 *
+	 * @param cvssVersion a {@link java.lang.String} object.
+	 */
 	public void setCvssVersion(String cvssVersion) { this.cvssVersion = cvssVersion; }
 	
+	/**
+	 * <p>Getter for the field <code>cvssVector</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getCvssVector() { return cvssVector; }
+	/**
+	 * <p>Setter for the field <code>cvssVector</code>.</p>
+	 *
+	 * @param cvssVector a {@link java.lang.String} object.
+	 */
 	public void setCvssVector(String cvssVector) { this.cvssVector = cvssVector; }
 
+	/**
+	 * <p>Getter for the field <code>summary</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getSummary() { return summary; }
+	/**
+	 * <p>Setter for the field <code>summary</code>.</p>
+	 *
+	 * @param summary a {@link java.lang.String} object.
+	 */
 	public void setSummary(String summary) { this.summary = summary; }
 	
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		final StringBuffer b = new StringBuffer();
@@ -78,9 +153,9 @@ public class Cve {
 	/**
 	 * Uses {@link Cve#CVE_REGEX} to extract a CVE identifier from the given {@link String}.
 	 * Returns null if no such identifier can be found.
-	 * 
-	 * @param _string
-	 * @return
+	 *
+	 * @param _string a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String extractCveIdentifier(String _string) {
 		if(_string==null)

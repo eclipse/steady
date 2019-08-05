@@ -7,17 +7,30 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
+/**
+ * <p>PythonConstructDigestSerializer class.</p>
+ *
+ */
 public class PythonConstructDigestSerializer extends StdSerializer<PythonConstructDigest> {
 
+	/**
+	 * <p>Constructor for PythonConstructDigestSerializer.</p>
+	 */
 	public PythonConstructDigestSerializer() {
 		this(null);
 	}
 
+	/**
+	 * <p>Constructor for PythonConstructDigestSerializer.</p>
+	 *
+	 * @param t a {@link java.lang.Class} object.
+	 */
 	public PythonConstructDigestSerializer(Class<PythonConstructDigest> t) {
 		super(t);
 	}
 	
 
+	/** {@inheritDoc} */
 	@Override
 	public void serialize(PythonConstructDigest value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
 		jgen.writeStartObject();

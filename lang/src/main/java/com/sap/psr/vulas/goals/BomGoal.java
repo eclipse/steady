@@ -23,13 +23,22 @@ import com.sap.psr.vulas.shared.util.DependencyUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import com.sap.psr.vulas.tasks.BomTask;
 
+/**
+ * <p>BomGoal class.</p>
+ *
+ */
 public class BomGoal extends AbstractAppGoal {
 
 	private static final Log log = LogFactory.getLog(BomGoal.class);
 
+	/**
+	 * <p>Constructor for BomGoal.</p>
+	 */
 	public BomGoal() { super(GoalType.APP); }
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Evaluates the configuration setting {@link CoreConfiguration#APP_PREFIXES}.
 	 */
 	@Override
@@ -37,6 +46,7 @@ public class BomGoal extends AbstractAppGoal {
 		super.prepareExecution();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void executeTasks() throws Exception {
 

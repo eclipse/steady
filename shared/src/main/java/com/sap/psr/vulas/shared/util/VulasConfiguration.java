@@ -46,28 +46,27 @@ import com.sap.psr.vulas.shared.connectivity.ServiceConnectionException;
 
 /**
  * Provides central read/write access to Vulas configuration.
- * 
+ *
  * Vulas configuration is composed of multiple, individual {@link Configuration} items.
  * When reading a given setting, the list of configuration items is searched until a configuration
  * containing the respective setting is found.
- * 
+ *
  * The list contains items in the following order:
- * 
+ *
  * Writable map properties (added empty by default): Settings provided through {@link VulasConfiguration#setProperty(String, Object, String, boolean)}.
- * 
+ *
  * System properties (added by default): Settings specified with the JVM option -D.
- * 
- * Map properties (no default, added through {@link VulasConfiguration#addAfterSystemProperties(Map)}. Results in
+ *
+ * Map properties (no default, added through {@link VulasConfiguration#addLayerAfterSysProps(String, Map, String, boolean)}. Results in
  * rebuilding the entire composite configuration.
- * 
+ *
  * Properties files (added by default): Found in the current work directory (.) and its sub-directories.
- * 
+ *
  * Properties files contained in JAR files (by default, the JAR from which {@link VulasConfiguration}
  * is loaded is considered): Searched at the very end, these configuration
  * items are useful for providing defaults.
- * 
+ *
  * @see org.apache.commons.configuration.CompositeConfiguration
- * 
  */
 public class VulasConfiguration {
 
@@ -81,6 +80,11 @@ public class VulasConfiguration {
 	private static final String[] LOG_PREFIXES = new String[] {"http", "https", "vulas"};
 
 	private static VulasConfiguration global = null;
+	/**
+	 * <p>Getter for the field <code>global</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.util.VulasConfiguration} object.
+	 */
 	public static final synchronized VulasConfiguration getGlobal() {
 		if(global==null)
 			global = new VulasConfiguration();
@@ -105,6 +109,9 @@ public class VulasConfiguration {
 	private Configuration writableConfiguration = new MapConfiguration(new HashMap<String,Object>());
 	
 	// Add the initial ones right away
+	/**
+	 * <p>Constructor for VulasConfiguration.</p>
+	 */
 	public VulasConfiguration() {
 		this.appendInitialConfigurations();
 	}
@@ -119,15 +126,19 @@ public class VulasConfiguration {
 	 */
 	private static final String propertiesRegexSpring = "BOOT-INF/classes/vulas-.*\\.properties";
 	
+	/** Constant <code>SYS_PROP_CFG_LAYER="System-Properties"</code> */
 	public static final String SYS_PROP_CFG_LAYER = "System-Properties";
 	
+	/** Constant <code>TRANSIENT_CFG_LAYER="Transient-Config-Layer"</code> */
 	public static final String TRANSIENT_CFG_LAYER = "Transient-Config-Layer";
 	
+	/** Constant <code>ENV_CFG_LAYER="Environment-Variables"</code> */
 	public static final String ENV_CFG_LAYER = "Environment-Variables";
 
 	/**
 	 * Returns the mutable configuration object for read/write access.
-	 * @return
+	 *
+	 * @return a {@link org.apache.commons.configuration.Configuration} object.
 	 */
 	public org.apache.commons.configuration.Configuration getConfiguration() {
 		return cfg;
@@ -269,12 +280,12 @@ public class VulasConfiguration {
 	 * Adds a {@link MapConfiguration} right after the {@link SystemConfiguration}, which is the second element,
 	 * and before all other configurations. As such, contained settings get precedence before file-based configurations
 	 * in file system or JAR files.
-	 * 
-	 * @param _map
+	 *
+	 * @param _map a {@link java.util.Map} object.
 	 * @param _ignore_value if specified, elements will only be added if the value's string representation from this argument
 	 * @param _ignore_null whether or not null values shall be ignored
-	 * @return
-	 * @throws IllegalArgumentException
+	 * @throws java.lang.IllegalArgumentException
+	 * @param _layer_name a {@link java.lang.String} object.
 	 */
 	public void addLayerAfterSysProps(@NotNull String _layer_name, @NotNull Map<?,?> _map, String _ignore_value, boolean _ignore_null) {
 		final Map<String,Object> map = new HashMap<String,Object>();
@@ -317,8 +328,9 @@ public class VulasConfiguration {
 	
 	/**
 	 * Returns the {@link Configuration} layer with the given name. If multiple layers with that name exist, the top-most layer will be returned.
-	 * @param _layer_name
-	 * @return
+	 *
+	 * @param _layer_name a {@link java.lang.String} object.
+	 * @return a {@link org.apache.commons.configuration.Configuration} object.
 	 */
 	public Configuration getConfigurationLayer(String _layer_name) {
 		for(Configuration c: this.individualConfigurations.keySet()) {
@@ -329,6 +341,12 @@ public class VulasConfiguration {
 		return null;
 	}
 
+	/**
+	 * <p>appendConfigurationsFromJarPath.</p>
+	 *
+	 * @param _jar_path a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	protected boolean appendConfigurationsFromJarPath(String _jar_path) {
 		final Map<String, Configuration> jar_entries = this.discoverConfigurationsInJarUri(_jar_path);
 		for(Map.Entry<String, Configuration> entry: jar_entries.entrySet()) {
@@ -340,13 +358,14 @@ public class VulasConfiguration {
 	/**
 	 * Identifies configurations in the JAR from which the given class was loaded, and appends them to
 	 * the configuration list from which the composite configuration will be built.
-	 * 
+	 *
 	 * Afterwards, if such configurations were found, the composite configuration is rebuilt
 	 * from the updated configuration list.
-	 * 
+	 *
 	 * Returns true if configurations were found and added.
-	 * 
-	 * @param _clazz
+	 *
+	 * @param _clazz a {@link java.lang.Class} object.
+	 * @return a boolean.
 	 */
 	protected boolean appendConfigurationsFromJar(Class<?> _clazz) {
 		final Map<String, Configuration> jar_entries = this.discoverConfigurationsInJar(_clazz);
@@ -471,33 +490,46 @@ public class VulasConfiguration {
 
 	//=============== Stuff for accessing single shared configuration settings
 
+	/** Constant <code>MAND_SETTINGS="vulas.shared.settings.mandatory"</code> */
 	public final static String MAND_SETTINGS = "vulas.shared.settings.mandatory";
 
+	/** Constant <code>OPTI_SETTINGS="vulas.shared.settings.optional"</code> */
 	public final static String OPTI_SETTINGS = "vulas.shared.settings.optional";
 
+	/** Constant <code>HOMEPAGE="vulas.shared.homepage"</code> */
 	public final static String HOMEPAGE = "vulas.shared.homepage";
 	
+	/** Constant <code>CHARSET="vulas.shared.charset"</code> */
 	public final static String CHARSET = "vulas.shared.charset";
 
+	/** Constant <code>TMP_DIR="vulas.shared.tmpDir"</code> */
 	public final static String TMP_DIR = "vulas.shared.tmpDir";
 
+	/** Constant <code>VULAS_JIRA_USER="vulas.jira.usr"</code> */
 	public final static String VULAS_JIRA_USER = "vulas.jira.usr";
 
+	/** Constant <code>VULAS_JIRA_PWD="vulas.jira.pwd"</code> */
 	public final static String VULAS_JIRA_PWD = "vulas.jira.pwd";
 
+	/** Constant <code>M2_DIR="vulas.shared.m2Dir"</code> */
 	public final static String M2_DIR = "vulas.shared.m2Dir";
 	
+	/** Constant <code>SYS_PROPS="vulas.shared.sys"</code> */
 	public final static String SYS_PROPS = "vulas.shared.sys";
 	
+	/** Constant <code>SYS_PROPS_CUSTOM="vulas.shared.sys.custom"</code> */
 	public final static String SYS_PROPS_CUSTOM = "vulas.shared.sys.custom";
 
+	/** Constant <code>ENV_VARS="vulas.shared.env"</code> */
 	public final static String ENV_VARS = "vulas.shared.env";
 	
+	/** Constant <code>ENV_VARS_CUSTOM="vulas.shared.env.custom"</code> */
 	public final static String ENV_VARS_CUSTOM = "vulas.shared.env.custom";
 	
 	/**
 	 * Checks mandatory and optional settings and, where provided, the format.
-	 * @throws ConfigurationException
+	 *
+	 * @throws org.apache.commons.configuration.ConfigurationException
 	 */
 	public void checkSettings() throws ConfigurationException {
 
@@ -550,6 +582,8 @@ public class VulasConfiguration {
 	/**
 	 * Deletes all transient (not persisted) configuration settings.
 	 * Returns true if the transient configuration layer contained values that were deleted, false otherwise.
+	 *
+	 * @return a boolean.
 	 */
 	public boolean clearTransientProperties() {
 		final boolean contains_etries = !writableConfiguration.isEmpty();
@@ -560,6 +594,9 @@ public class VulasConfiguration {
 
 	/**
 	 * Returns true if the configuration does not contain the given setting or its value is an empty string.
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
 	public boolean isEmpty(String _key) {
 		return !cfg.containsKey(_key) || cfg.getString(_key).equals("");
@@ -567,9 +604,10 @@ public class VulasConfiguration {
 
 	/**
 	 * Reads the setting with the given key (recursively, if the key's value is the name of another setting).
-	 * @param _key
-	 * @param _default
-	 * @return
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _default a {@link java.lang.Object} object.
+	 * @return a {@link java.lang.Object} object.
 	 */
 	public Object getProperty(@NotNull String _key, Object _default) {
 		Object obj = cfg.getProperty(_key);
@@ -587,8 +625,9 @@ public class VulasConfiguration {
 
 	/**
 	 * Sets the given setting to the specified value in case it is empty. Note that this setting is transient (not persisted).
-	 * @param _key
-	 * @param _value
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _value a {@link java.lang.Object} object.
 	 */
 	public void setPropertyIfEmpty(@NotNull String _key, Object _value) {
 		if(isEmpty(_key))
@@ -597,13 +636,22 @@ public class VulasConfiguration {
 
 	/**
 	 * Sets the given setting to the specified value. Note that this setting is transient (not persisted).
-	 * @param _key
-	 * @param _value
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _value a {@link java.lang.Object} object.
 	 */
 	public void setProperty(@NotNull String _key, Object _value) {
 		setProperty(_key, _value, null, false);
 	}
 
+	/**
+	 * <p>setProperty.</p>
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _value a {@link java.lang.Object} object.
+	 * @param _ignore_value a {@link java.lang.String} object.
+	 * @param _ignore_null a boolean.
+	 */
 	public void setProperty(@NotNull String _key, Object _value, String _ignore_value, boolean _ignore_null) {
 		if( (_value!=null || !_ignore_null) && (_ignore_value==null || !_value.toString().equals(_ignore_value)) ) {
 
@@ -632,9 +680,10 @@ public class VulasConfiguration {
 	/**
 	 * Improves the method {@link Configuration#getStringArray(String)} by adding a default value, which is returned
 	 * if the String array returned for the respective setting is either null or contains a single empty {@link String}.
-	 * @param _key
-	 * @param _default
-	 * @return
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _default an array of {@link java.lang.String} objects.
+	 * @return an array of {@link java.lang.String} objects.
 	 */
 	public String[] getStringArray(@NotNull String _key, String[] _default) {
 		String[] value = this.getConfiguration().getStringArray(_key);
@@ -647,8 +696,9 @@ public class VulasConfiguration {
 	/**
 	 * Returns the configuration setting for the given key as {@link Path}. If no such setting exists, the tmp directory
 	 * will be returned.
-	 * @param _key
-	 * @return
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @return a {@link java.nio.file.Path} object.
 	 */
 	public Path getDir(String _key) {
 		Path p = null;
@@ -666,6 +716,8 @@ public class VulasConfiguration {
 	/**
 	 * Creates if necessary and returns the temporary directory to be used by Vulas. This is either the directory
 	 * indicated by the configuration setting TMP_DIR (if any) or the OS' temporary directory.
+	 *
+	 * @return a {@link java.nio.file.Path} object.
 	 */
 	public Path getTmpDir() {
 		Path p = null;
@@ -680,6 +732,12 @@ public class VulasConfiguration {
 		return p;
 	}
 
+	/**
+	 * <p>getServiceUrl.</p>
+	 *
+	 * @param _service a {@link com.sap.psr.vulas.shared.connectivity.Service} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getServiceUrl(Service _service) {
 		String value = null;
 		try {
@@ -690,6 +748,14 @@ public class VulasConfiguration {
 		return value;
 	}
 
+	/**
+	 * <p>getServiceUrl.</p>
+	 *
+	 * @param _service a {@link com.sap.psr.vulas.shared.connectivity.Service} object.
+	 * @param _throw_exception a boolean.
+	 * @return a {@link java.lang.String} object.
+	 * @throws com.sap.psr.vulas.shared.connectivity.ServiceConnectionException if any.
+	 */
 	public String getServiceUrl(Service _service, boolean _throw_exception) throws ServiceConnectionException {
 		final String key = VulasConfiguration.getServiceUrlKey(_service);
 		final String value = cfg.getString(key, null);
@@ -698,11 +764,24 @@ public class VulasConfiguration {
 		return value;
 	}
 
+	/**
+	 * <p>hasServiceUrl.</p>
+	 *
+	 * @param _service a {@link com.sap.psr.vulas.shared.connectivity.Service} object.
+	 * @return a boolean.
+	 */
 	public boolean hasServiceUrl(Service _service) {
 		final String key = VulasConfiguration.getServiceUrlKey(_service);
 		return !this.isEmpty(key);
 	}
 
+	/**
+	 * <p>setServiceUrl.</p>
+	 *
+	 * @param _service a {@link com.sap.psr.vulas.shared.connectivity.Service} object.
+	 * @param _value a {@link java.lang.String} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public void setServiceUrl(Service _service, String _value) throws IllegalArgumentException {
 		final String key = VulasConfiguration.getServiceUrlKey(_service);
 		URI uri;
@@ -715,14 +794,21 @@ public class VulasConfiguration {
 		}
 	}
 
+	/**
+	 * <p>getServiceUrlKey.</p>
+	 *
+	 * @param _service a {@link com.sap.psr.vulas.shared.connectivity.Service} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getServiceUrlKey(Service _service) {
 		return "vulas.shared." + _service.toString().toLowerCase() + ".serviceUrl";
 	}
 
 	/**
 	 * Returns the path to the m2 repository.
-	 * @return
-	 * @throws IllegalStateException
+	 *
+	 * @throws java.lang.IllegalStateException
+	 * @return a {@link java.nio.file.Path} object.
 	 */
 	public Path getLocalM2Repository() throws IllegalStateException {
 		if(this.m2==null) {
@@ -764,7 +850,9 @@ public class VulasConfiguration {
 
 	/**
 	 * Prints settings having the given prefixes to the log.
-	 * @param _prefix
+	 *
+	 * @param _prefix an array of {@link java.lang.String} objects.
+	 * @param _indent a {@link java.lang.String} object.
 	 */
 	public void log(String[] _prefix, String _indent) {
 		// Print all configurations considered
@@ -804,7 +892,9 @@ public class VulasConfiguration {
 	/**
 	 * Returns a {@link StringList} containing items taken from the given configuration settings. Each configuration settings is
 	 * expected to contain one or more values (comma-separated), which are trimmed and added to the {@link StringList}.
-	 * @return
+	 *
+	 * @param _config_names a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.shared.util.StringList} object.
 	 */
 	public final StringList getStringList(String... _config_names) {
 		final StringList l = new StringList();

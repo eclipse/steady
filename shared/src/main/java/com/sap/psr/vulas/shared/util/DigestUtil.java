@@ -1,6 +1,7 @@
 package com.sap.psr.vulas.shared.util;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -19,12 +20,12 @@ public class DigestUtil {
 	private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 	
 	/**
-	 * Returns a digest for the given {@link String}, using the given {@link Charset} (typically {@link StandardCharsets#UTF_8) and {@link DigestAlgorithm}.
+	 * Returns a digest for the given {@link String}, using the given {@link Charset} (typically {@link StandardCharsets#UTF_8}) and {@link DigestAlgorithm}.
 	 *
-	 * @param _source
-	 * @param _charset
-	 * @param _alg
-	 * @return
+	 * @param _source a {@link java.lang.String} object.
+	 * @param _charset a {@link java.nio.charset.Charset} object.
+	 * @param _alg a {@link com.sap.psr.vulas.shared.enums.DigestAlgorithm} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public final static String getDigestAsString(String _source, Charset _charset, DigestAlgorithm _alg) {
 		return DigestUtil.bytesToHex(DigestUtil.getDigestAsBytes(_source, _charset, _alg));
@@ -49,6 +50,12 @@ public class DigestUtil {
 		return digest;
 	}
 	
+	/**
+	 * <p>bytesToHex.</p>
+	 *
+	 * @param bytes an array of {@link byte} objects.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String bytesToHex(byte[] bytes) {
 	    char[] hexChars = new char[bytes.length * 2];
 	    for ( int j = 0; j < bytes.length; j++ ) {

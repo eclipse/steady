@@ -39,11 +39,13 @@ public class PythonFileAnalyzer implements FileAnalyzer {
 
 	private Map<ConstructId, Construct> constructs = null;
 
+	/** {@inheritDoc} */
 	@Override
 	public String[] getSupportedFileExtensions() {
 		return new String[] { "py" };
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean canAnalyze(File _file) {
 		final String ext = FileUtil.getFileExtension(_file);
@@ -56,6 +58,7 @@ public class PythonFileAnalyzer implements FileAnalyzer {
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void analyze(final File _file) throws FileAnalysisException {
 		if(!FileUtil.isAccessibleFile(_file.toPath()))
@@ -90,6 +93,7 @@ public class PythonFileAnalyzer implements FileAnalyzer {
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
 		if(this.constructs==null) {
@@ -100,17 +104,21 @@ public class PythonFileAnalyzer implements FileAnalyzer {
 		return analyzer.getConstructs();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean containsConstruct(ConstructId _id) throws FileAnalysisException {
 		return this.getConstructs().containsKey(_id);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Construct getConstruct(ConstructId _id) throws FileAnalysisException {
 		return this.getConstructs().get(_id);
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * The nested {@link Python3FileAnalyzer} is completely hidden.
 	 */
 	@Override
@@ -119,6 +127,8 @@ public class PythonFileAnalyzer implements FileAnalyzer {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * The nested {@link Python3FileAnalyzer} is completely hidden.
 	 */
 	@Override
@@ -128,6 +138,10 @@ public class PythonFileAnalyzer implements FileAnalyzer {
 
 	/**
 	 * Creates a {@link PythonId} of type {@link ConstructType#MODU} for the given py file.
+	 *
+	 * @param _file a {@link java.io.File} object.
+	 * @return a {@link com.sap.psr.vulas.python.PythonId} object.
+	 * @throws java.lang.IllegalArgumentException if any.
 	 */
 	public static PythonId getModule(File _file) throws IllegalArgumentException {
 		if(!FileUtil.hasFileExtension(_file.toPath(), new String[] { "py" })) {
@@ -169,6 +183,12 @@ public class PythonFileAnalyzer implements FileAnalyzer {
 	
 	final static Pattern[] COMMENT_PATTERNS = new Pattern[] { Pattern.compile("^\\s*#.*$") };
 	
+	/**
+	 * <p>createAnalyzer.</p>
+	 *
+	 * @param _file a {@link java.io.File} object.
+	 * @return a {@link com.sap.psr.vulas.FileAnalyzer} object.
+	 */
 	public static FileAnalyzer createAnalyzer(final File _file) { 
 		try(final InputStream is = new FileInputStream(_file)) {
 			return PythonFileAnalyzer.createAnalyzer(is);
@@ -180,10 +200,11 @@ public class PythonFileAnalyzer implements FileAnalyzer {
 
 	/**
 	 * Reads the input stream line by line in order to decide which {@link FileAnalyzer} to take.
-	 * Defaults to {@link PythonAnalyzer335}.
-	 * 
-	 * @param _is
-	 * @return
+	 * Defaults to {@link Python335FileAnalyzer}.
+	 *
+	 * @param _is a {@link java.io.InputStream} object.
+	 * @return a {@link com.sap.psr.vulas.FileAnalyzer} object.
+	 * @throws java.io.IOException if any.
 	 */
 	public static FileAnalyzer createAnalyzer(InputStream _is) throws IOException {
 		FileAnalyzer fa = null;
