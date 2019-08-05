@@ -20,6 +20,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
+import com.sap.psr.vulas.shared.util.DigestUtil;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -37,7 +39,6 @@ public class NpmWrapper {
     private static final String PACKAGE_JSON = "package.json";
     private static final boolean IS_WIN = System.getProperty("os.name").contains("Windows");
 
-    private Path pathToNpm = null;
     private Path pathToVirtualenv = null;
     private Path pathToNpmExecutable = null;
     private Path pathToNodejsProject = null;
@@ -213,43 +214,74 @@ public class NpmWrapper {
             String pack_required_by = "";
             String pack_integrity = "";
             String pack_shasum = "";
+            DigestAlgorithm pack_shasum_type = DigestAlgorithm.SHA1;
             String pack_git_hash = "";
             File tarball_dest = null;
 
-            // TODO break an exception handling
             try {
-                pack_url = StringUtils.defaultIfEmpty(pack_json.get("_resolved").getAsString(), "");
-                pack_dep_location = StringUtils.defaultIfEmpty(pack_json.get("_location").getAsString(), "/");
-
-                List<String> required_by_list = new ArrayList<>();
-                for(JsonElement dep: pack_json.getAsJsonArray("_requiredBy")) {
-                    required_by_list.add(dep.getAsString());
+                if(pack_json.has("_resolved")) {
+                    pack_url = pack_json.get("_resolved").getAsString();
                 }
-                pack_required_by = StringUtils.join(required_by_list, ",");
+                else {
+                    log.warn("Cannot get \"_resolved\" property of [" + pack_name + "], set the default value instead");
+                }
 
-                pack_shasum = String.valueOf(pack_json.get("_shasum").getAsString());
-                pack_integrity = StringUtils.defaultIfEmpty(pack_json.get("_integrity").getAsString(), "");
-                if(pack_json.getAsJsonObject("_requested").get("type").getAsString().equalsIgnoreCase("git")) {
-                    pack_git_hash = "#" + pack_url.split("#")[1];
+                if(pack_json.has("_location")) {
+                    pack_dep_location = pack_json.get("_location").getAsString();
+                }
+                else {
+                    log.warn("Cannot get \"_location\" of [" + pack_name + "], set the default value instead");
+                }
+
+                if(pack_json.has("_requiredBy")) {
+                    List<String> required_by_list = new ArrayList<>();
+                    for (JsonElement dep : pack_json.getAsJsonArray("_requiredBy")) {
+                        required_by_list.add(dep.getAsString());
+                    }
+                    pack_required_by = StringUtils.join(required_by_list, ",");
+                }
+                else {
+                    log.warn("Cannot get \"_requiredBy\" of [" + pack_name + "], set the default value instead");
+                }
+
+                if(pack_json.has("_shasum") && pack_json.has("_integrity")) {
+                    pack_shasum = pack_json.get("_shasum").getAsString();
+                    pack_integrity = pack_json.get("_integrity").getAsString();
+                }
+                else if(!pack_json.has("_shasum") && (pack_json.has("_integrity")) && !String.valueOf(pack_json.get("_integrity").getAsString()).equalsIgnoreCase("")) {
+                    log.warn("Cannot get \"_shasum\" of [" + pack_name + "], compute from \"_integrity\" instead");
+                    pack_integrity = pack_json.get("_integrity").getAsString();
+                    String[] hash = pack_integrity.split("-");
+                    if(hash[0].equalsIgnoreCase("sha512"))
+                        pack_shasum_type = DigestAlgorithm.SHA512;
+
+                    byte[] hashByte = Base64.decodeBase64(hash[1]);
+                    pack_shasum = DigestUtil.bytesToHex(hashByte);
+                }
+                else {
+                    log.warn("Cannot get \"_shasum\" and \"_integrity\" of [" + pack_name + "], create a tarball and compute them instead");
+                    try {
+                        tarball_dest = Paths.get(pack_path.substring(0, pack_path.lastIndexOf(File.separator)), pack_name + ".tgz").toFile();
+
+                        DirUtil.createTarBall(Paths.get(pack_path).toFile(), tarball_dest, new String[] {"node_modules"}, null);
+                        pack_integrity = DigestAlgorithm.SHA512.toString().replace("-", "") +"-"+ FileUtil.getDigest(tarball_dest, DigestAlgorithm.SHA512);
+                        pack_shasum = FileUtil.getDigest(tarball_dest, DigestAlgorithm.SHA1);
+                    } catch(ArchiveException e) {
+                        log.error(e.getMessage());
+                    } catch(Exception e) {
+                        log.error(e.getMessage());
+                    }
+                }
+                pack_shasum = pack_shasum.toUpperCase();
+
+                if(pack_json.has("_requested")) {
+                    if(pack_json.getAsJsonObject("_requested").get("type").getAsString().equalsIgnoreCase("git")) {
+                        log.info("[" + pack_name + "] was requested from git repository, extract git hash");
+                        pack_git_hash = "#" + pack_url.split("#")[1];
+                    }
                 }
             } catch(NullPointerException e){
                 log.error("Cannot get properties of [" + pack_name + "], set the default value instead");
-            }
-
-            if(pack_integrity.equalsIgnoreCase("") && !pack_dep_location.equalsIgnoreCase("/")) {
-                log.info("Cannot retrieve integrity field from json file, trying to make tarball file instead");
-
-                try {
-                    tarball_dest = Paths.get(pack_path.substring(0, pack_path.lastIndexOf(File.separator)), pack_name + ".tgz").toFile();
-
-                    DirUtil.createTarBall(Paths.get(pack_path).toFile(), tarball_dest, new String[] {"node_modules"}, null);
-                    pack_integrity = DigestAlgorithm.SHA512.toString().replace("-", "") +"-"+ FileUtil.getDigest(tarball_dest, DigestAlgorithm.SHA512);
-                    pack_shasum = FileUtil.getDigest(tarball_dest, DigestAlgorithm.SHA1);
-                } catch(ArchiveException e) {
-                    log.error(e.getMessage());
-                } catch(Exception e) {
-                    log.error(e.getMessage());
-                }
             }
 
             pack_props.put("name", pack_name);
@@ -259,6 +291,7 @@ public class NpmWrapper {
             pack_props.put("required_by", pack_required_by);
             pack_props.put("integrity", pack_integrity);
             pack_props.put("shasum", pack_shasum);
+            pack_props.put("shasum_type", pack_shasum_type.toString());
             pack_props.put("created_tarball", String.valueOf(tarball_dest));
             pack_props.put("git_hash", pack_git_hash);
 
