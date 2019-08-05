@@ -1813,19 +1813,23 @@ mvn -Dvulas vulas:instr
 </ul>
 <h2 id="clean-and-delete-apps-clean">Clean and delete apps (clean)<a class="headerlink" href="#clean-and-delete-apps-clean" title="Permanent link">&para;</a></h2>
 <h4>Objective</h4>
-<p>Deletes application-specific data in the backend, e.g., traces collected during JUnit tests, or application constructs and dependencies collected through the <code>app</code> goal. Right after executing <code>clean</code> for a given application, the apps Web frontend will be empty for the respective application.</p>
+<p>Deletes application-specific data in the backend, e.g., traces collected during JUnit tests, application constructs and dependencies collected through the <code>app</code> goal. Right after executing <code>clean</code> for a given application, the apps Web frontend will be empty for the respective application.</p>
 <h4>Configure as follows</h4>
-<div class="codehilite"><pre><span></span>    <span class="c1"># When true, details of past goal executions will be deleted</span>
-    <span class="c1"># Default: false</span>
-    <span class="na">vulas.core.clean.goalHistory</span> <span class="o">=</span> <span class="s">false</span>
-
-    <span class="c1"># When true, all but the latest X app versions will be deleted (latest according to the application creation date)</span>
+<div class="codehilite"><pre><span></span>    <span class="c1"># When true, all but the latest X app versions will be deleted (latest according to the application creation date).</span>
+    <span class="c1"># The value of X is configured with the option &#39;vulas.core.clean.purgeVersions.keepLast&#39;, see below.</span>
     <span class="c1"># Default: false</span>
     <span class="na">vulas.core.clean.purgeVersions</span> <span class="o">=</span> <span class="s">false</span>
 
-    <span class="c1"># Specifies X, i.e., the number of application versions to be kept if purgeVersions is set to true (0 will delete all versions)</span>
+    <span class="c1"># Specifies X, i.e., the number of application versions to be kept if purgeVersions is set to true.</span>
+    <span class="c1"># Set this to 0 to delete all versions.</span>
     <span class="c1"># Default: 3</span>
     <span class="na">vulas.core.clean.purgeVersions.keepLast</span> <span class="o">=</span> <span class="s">3</span>
+
+    <span class="c1"># When true, the history of past goal executions will be deleted (NOTE: this does not delete the scan results themselves!</span>
+    <span class="c1"># you may want to use the two directives above to purge scan results.)</span>
+    <span class="c1"># The default value is recommended, in normal scenarios you should leave this to false.</span>
+    <span class="c1"># Default: false</span>
+    <span class="na">vulas.core.clean.goalHistory</span> <span class="o">=</span> <span class="s">false</span>
 </pre></div>
 
 <p>Run as follows to <strong>clean the current version</strong>:</p>
