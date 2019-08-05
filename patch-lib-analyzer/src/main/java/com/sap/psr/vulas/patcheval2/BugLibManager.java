@@ -809,7 +809,6 @@ public class BugLibManager {
      * <p>analyze.</p>
      *
      * @param bugsToAnalyze a {@link java.util.List} object.
-     * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
      * @throws java.lang.InterruptedException if any.
      */
     public static void analyze(List<Bug> bugsToAnalyze) throws InterruptedException{

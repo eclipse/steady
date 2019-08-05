@@ -163,7 +163,7 @@ public class PipWrapper {
 	}
 
 	/**
-	 * Calls pip freeze and pip show <package> in order to create and return all {@link PipInstalledPackages} of the Python environment.
+	 * Calls pip freeze and pip show &lt;package&gt; in order to create and return all {@link PipInstalledPackage} of the Python environment.
 	 *
 	 * @return a {@link java.util.Set} object.
 	 * @throws com.sap.psr.vulas.python.ProcessWrapperException if any.
@@ -242,7 +242,7 @@ public class PipWrapper {
 	}
 
 	/**
-	 * Calls pip list and pip show <package> in order to create and return all {@link PipInstalledPackages} of the Python environment.
+	 * Calls pip list and pip show &lt;package&gt; in order to create and return all {@link PipInstalledPackage}s of the Python environment.
 	 *
 	 * @return a {@link java.util.Set} object.
 	 * @throws com.sap.psr.vulas.python.ProcessWrapperException if any.

@@ -54,7 +54,7 @@ public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
     protected VulasConfiguration vulasConfiguration = new VulasConfiguration();
     
 	/**
-	 * Puts the plugin configuration element <layeredConfiguration> as a new layer into {@link VulasConfiguration}.
+	 * Puts the plugin configuration element &lt;layeredConfiguration&gt; as a new layer into {@link VulasConfiguration}.
 	 * If no such element exists, e.g., because the POM file does not contain a plugin section for Vulas, default settings
 	 * are established using {@link MavenProject} and {@link VulasConfiguration#setPropertyIfEmpty(String, Object)}.
 	 *
@@ -146,7 +146,7 @@ public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
 	protected abstract void createGoal();
 
 	/**
-	 * Simply calls {@AbstractAnalysisGoal#execute}.
+	 * Calls {@link AbstractSpaceGoal#executeSync()}.
 	 *
 	 * CAN be overridden by subclasses.
 	 *

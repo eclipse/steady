@@ -463,7 +463,7 @@ public class PipInstalledPackage implements Comparable {
 	 * Returns true if the standard distribution name of this package is equal to the one of the given package.
 	 *
 	 * @param _other a {@link com.sap.psr.vulas.python.pip.PipInstalledPackage} object.
-	 * @see {@link PipInstalledPackage#getStandardDistributionName()}
+	 * @see PipInstalledPackage#getStandardDistributionName()
 	 * @return a boolean.
 	 */
 	public boolean equalsStandardDistributionName(PipInstalledPackage _other) {

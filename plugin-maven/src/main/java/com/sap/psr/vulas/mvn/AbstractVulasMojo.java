@@ -60,7 +60,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     protected MavenSession session;
 
     /**
-     * All plugin configuration settings of the element <layeredConfiguration> are put in this {@link Map}.
+     * All plugin configuration settings of the element &lt;layeredConfiguration&gt; are put in this {@link Map}.
      */
     @Parameter
     private Map<?, ?> layeredConfiguration;
@@ -75,7 +75,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     protected VulasConfiguration vulasConfiguration = new VulasConfiguration();
 
     /**
-     * Puts the plugin configuration element <layeredConfiguration> as a new layer into {@link VulasConfiguration}.
+     * Puts the plugin configuration element &lt;layeredConfiguration&gt; as a new layer into {@link VulasConfiguration}.
      * If no such element exists, e.g., because the POM file does not contain a plugin section for Vulas, default settings
      * are established using {@link MavenProject} and {@link VulasConfiguration#setPropertyIfEmpty(String, Object)}.
      *
@@ -212,7 +212,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     protected abstract void createGoal();
 
     /**
-     * Simply calls {@AbstractAnalysisGoal#execute}.
+     * Calls {@link AbstractAppGoal#executeSync()}.
      * <p>
      * CAN be overridden by subclasses.
      *
