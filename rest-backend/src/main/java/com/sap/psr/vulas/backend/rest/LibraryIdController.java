@@ -186,8 +186,6 @@ public class LibraryIdController {
 			
 			//all libids rebundled in a libraryId having the given GA
 			List<Object[]> libids_w_rebundles = this.libIdRepository.findBundledLibIdByGA(mvnGroup, artifact);
-						
-			log.info("Found ["+libids_w_rebundles.size()+"] libids with rebundled libids.");
 			
 			for(Object[] e: libids_w_rebundles) {
 				//check whether the libId rebundles a vulnerable library. If so, add it to vuln_libids
