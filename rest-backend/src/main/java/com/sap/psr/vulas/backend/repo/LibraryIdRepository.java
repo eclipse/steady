@@ -41,7 +41,7 @@ public interface LibraryIdRepository extends CrudRepository<LibraryId, Long> {
 	 * @param artifact a {@link java.lang.String} object.
 	 * @return a {@link java.util.List} object.
 	 */
-	@Query("SELECT distinct libid FROM LibraryId AS libid JOIN FETCH libid.affLibraries WHERE libid.mvnGroup = :mvnGroup AND libid.artifact = :artifact")
+	@Query("SELECT distinct libid FROM LibraryId AS libid JOIN FETCH libid.affLibraries  WHERE libid.mvnGroup = :mvnGroup AND libid.artifact = :artifact") 
 	List<LibraryId> findLibIds(@Param("mvnGroup") String mvnGroup, @Param("artifact") String artifact);
 	
 	/**
@@ -66,4 +66,11 @@ public interface LibraryIdRepository extends CrudRepository<LibraryId, Long> {
 			+ "   inner join lib_bundled_library_ids bl on l1.id=bl.library_id "
 			+ "   where d.app=:app and not l1.library_id_id = bl.bundled_library_ids_id  ", nativeQuery=true)
 	List<Object[]> findBundledLibIdByApp(@Param("app") Application app);
+	
+	@Query(value="select lid.id, bl.bundled_library_ids_id as boundled_lid_id "
+			+ "   from library_id lid "
+			+ "   inner join lib l1 on lid.id=l1.library_id_id "
+			+ "   inner join lib_bundled_library_ids bl on l1.id=bl.library_id "
+			+ "   where lid.mvn_group = :mvnGroup AND lid.artifact = :artifact and not l1.library_id_id = bl.bundled_library_ids_id  ", nativeQuery=true)
+	List<Object[]> findBundledLibIdByGA(@Param("mvnGroup") String mvnGroup, @Param("artifact") String artifact);
 }
