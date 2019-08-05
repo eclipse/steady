@@ -150,16 +150,23 @@ public class NpmWrapper {
     public Set<NpmInstalledPackage> installPackages(Path _project_path) {
         Set<NpmInstalledPackage> packages = null;
         try {
+            // Clear npm cache before installing
+            ProcessWrapper pw_cache = new ProcessWrapper();
+            pw_cache.setWorkingDir(_project_path);
+            pw_cache.setPath(this.pathToVirtualenv);
+            pw_cache.setCommand(this.pathToNpmExecutable,"cache", "clean", "--force");
+            Thread t_cache = new Thread(pw_cache);
+            t_cache.start();
+            t_cache.join();
+
             // Download and install all dependencies
-            ProcessWrapper pw = new ProcessWrapper();
-//            pw.setWorkingDir(Paths.get("C:\\Users\\I517033\\AppData\\Local\\Temp\\vulas-npm-virtualenv-test-helloworld-8744455940834443910\\test-helloworld"));
-            pw.setWorkingDir(_project_path);
-            pw.setCommand(this.pathToNpmExecutable,"install", "-ddd", "--force", "--no-audit");
-//            pw.setPath(Paths.get("C:\\Users\\I517033\\AppData\\Local\\Temp\\vulas-npm-virtualenv-test-helloworld-8744455940834443910"));
-            pw.setPath(this.pathToVirtualenv);
-            Thread t = new Thread(pw);
-            t.start();
-            t.join();
+            ProcessWrapper pw_install = new ProcessWrapper();
+            pw_install.setWorkingDir(_project_path);
+            pw_install.setPath(this.pathToVirtualenv);
+            pw_install.setCommand(this.pathToNpmExecutable,"install", "-ddd", "--force", "--no-audit");
+            Thread t_install = new Thread(pw_install);
+            t_install.start();
+            t_install.join();
 
             // Get all dependencies
             packages = this.getListPackages();
