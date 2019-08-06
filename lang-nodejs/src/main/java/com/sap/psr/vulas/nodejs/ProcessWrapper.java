@@ -34,6 +34,8 @@ public class ProcessWrapper implements Runnable {
 
     private Path errFile;
 
+    private String outErrName = null;
+
     private int exitCode = -1;
 
     public ProcessWrapper() {
@@ -66,10 +68,16 @@ public class ProcessWrapper implements Runnable {
         return this;
     }
 
+    public void setOutErrName(String _name) {
+        this.outErrName = _name;
+    }
+
     @Override
     public void run() {
         String name = null;
-        if(FileUtil.isAccessibleFile(this.exe))
+        if(this.outErrName != null)
+            name = this.outErrName;
+        else if(FileUtil.isAccessibleFile(this.exe))
             name = this.exe.getFileName().toString();
         else if(this.exe.toString().indexOf(System.getProperty("file.separator"))!=-1)
             name = this.exe.toString().substring(this.exe.toString().lastIndexOf(System.getProperty("file.separator"))+1);

@@ -155,6 +155,7 @@ public class NpmWrapper {
             pw_cache.setWorkingDir(_project_path);
             pw_cache.setPath(this.pathToVirtualenv);
             pw_cache.setCommand(this.pathToNpmExecutable,"cache", "clean", "--force");
+            pw_cache.setOutErrName("npm-cache");
             Thread t_cache = new Thread(pw_cache);
             t_cache.start();
             t_cache.join();
@@ -163,7 +164,8 @@ public class NpmWrapper {
             ProcessWrapper pw_install = new ProcessWrapper();
             pw_install.setWorkingDir(_project_path);
             pw_install.setPath(this.pathToVirtualenv);
-            pw_install.setCommand(this.pathToNpmExecutable,"install", "-ddd", "--force", "--no-audit");
+            pw_install.setCommand(this.pathToNpmExecutable,"install", "-ddd", "--no-audit");
+            pw_install.setOutErrName("npm-install");
             Thread t_install = new Thread(pw_install);
             t_install.start();
             t_install.join();
@@ -189,6 +191,7 @@ public class NpmWrapper {
         pw.setCommand(this.pathToNpmExecutable, "list", "--parseable");
         pw.setWorkingDir(project_path);
         pw.setPath(this.pathToVirtualenv);
+        pw.setOutErrName("npm-list");
         Thread t = new Thread(pw, "npm-list");
         t.start();
         t.join();
