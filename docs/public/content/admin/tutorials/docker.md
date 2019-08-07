@@ -34,6 +34,12 @@ Before proceeding, be sure to move there with:
 cd vulnerability-assessment-tool
 ```
 
+If you want you can checkout a stable version of Vulas. Usually the `master` branch holds a `-SNAPSHOT` version.
+
+```sh
+git checkout tags/@@PROJECT_VERSION@@
+```
+
 Make a copy of the sample configuration:
 
 ```sh
