@@ -35,19 +35,13 @@ services:
     container_name: vulnerability-assessment-tool-haproxy
     hostname: haproxy
     env_file: .env
-    build: 
-      context: ./haproxy
-      dockerfile: ./Dockerfile
-      args:
-        - VULAS_RELEASE=${VULAS_RELEASE}
-        - http_proxy=${http_proxy}
-        - https_proxy=${https_proxy}
-    image: vulnerability-assessment-tool-haproxy:${VULAS_RELEASE}
+    image: haproxy:alpine
     ports:
       - "8033:8080"
       - "8034:7070"
     volumes:
       - "./haproxy/conf/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
+    command: ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
     depends_on:
       - frontend-apps
       - frontend-bugs
@@ -89,19 +83,17 @@ services:
   postgresql:
     container_name: vulnerability-assessment-tool-postgresql
     hostname: postgresql
-    build: 
-      context: ./postgresql
-      dockerfile: ./Dockerfile
-      args:
-        - VULAS_RELEASE=${VULAS_RELEASE}
-    image: vulnerability-assessment-tool-postgresql:${VULAS_RELEASE}
+    image: postgres:11-alpine
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=vulas
+      - PGDATA=/var/lib/postgresql/data
     ports:
       - "8032:5432"
     volumes:
       - vulnerability-assessment-tool-postgres-data:/var/lib/postgresql/data
+      - ./postgresql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
     security_opt:
       - no-new-privileges
     restart: always
