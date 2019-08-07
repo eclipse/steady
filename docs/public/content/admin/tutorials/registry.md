@@ -21,8 +21,6 @@ vulnerability-assessment-tool-rest-backend       @@PROJECT_VERSION@@ 277217bc35b
 vulnerability-assessment-tool-rest-lib-utils     @@PROJECT_VERSION@@ 53bbb929895d  22 hours ago 127MB
 vulnerability-assessment-tool-frontend-bugs      @@PROJECT_VERSION@@ fab5925fe785  22 hours ago 316MB
 vulnerability-assessment-tool-frontend-apps      @@PROJECT_VERSION@@ 191ce235c420  22 hours ago 317MB
-vulnerability-assessment-tool-haproxy            @@PROJECT_VERSION@@ 37948fae374e  22 hours ago 20.9MB
-vulnerability-assessment-tool-postgresql         @@PROJECT_VERSION@@ c7a17e4f4cda  22 hours ago 70.8MB
 ```
 
 ## Push the images to a registry
