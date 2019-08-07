@@ -89,4 +89,19 @@ public class NpmWrapperTest {
             assertNotNull(algo);
         }
     }
+
+    @Test
+    @Category(Slow.class)
+    public void testUnknownPackage() throws IllegalArgumentException, ProcessWrapperException {
+        final Path project = Paths.get("src", "test", "resources", "test-unknown-dep");
+        try {
+            final NpmWrapper vew = new NpmWrapper(project);
+        } catch (ProcessWrapperException e) {
+            assertTrue(true);
+            return;
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+        assertTrue(false);
+    }
 }

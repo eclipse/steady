@@ -84,7 +84,7 @@ public class NpmWrapper {
 
         // Call npm install
         final Path project_path = Paths.get(this.pathToVirtualenv.toString(), this.projectName);
-        this.installedPackages = installPackages(project_path);
+        this.installedPackages = installPackages(project_path, 0);
     }
 
     public String getProjectName() {
@@ -147,7 +147,7 @@ public class NpmWrapper {
         }
     }
 
-    public Set<NpmInstalledPackage> installPackages(Path _project_path) {
+    public Set<NpmInstalledPackage> installPackages(Path _project_path, int _attempt) throws ProcessWrapperException{
         Set<NpmInstalledPackage> packages = null;
         try {
             // Clear npm cache before installing
@@ -155,31 +155,83 @@ public class NpmWrapper {
             pw_cache.setWorkingDir(_project_path);
             pw_cache.setPath(this.pathToVirtualenv);
             pw_cache.setCommand(this.pathToNpmExecutable,"cache", "clean", "--force");
-            pw_cache.setOutErrName("npm-cache");
+            pw_cache.setOutErrName("npm-cache-" + _attempt);
             Thread t_cache = new Thread(pw_cache);
             t_cache.start();
             t_cache.join();
+
+            // Remove package-lock.json and node_modules before installing dependencies,
+            // only when npm fail to install in the first attempt
+            if(_attempt > 0) {
+                removeLockModules(_project_path);
+            }
 
             // Download and install all dependencies
             ProcessWrapper pw_install = new ProcessWrapper();
             pw_install.setWorkingDir(_project_path);
             pw_install.setPath(this.pathToVirtualenv);
-            pw_install.setCommand(this.pathToNpmExecutable,"install", "-ddd", "--no-audit");
-            pw_install.setOutErrName("npm-install");
+            pw_install.setCommand(this.pathToNpmExecutable,"install", "--no-audit");
+            pw_install.setOutErrName("npm-install" + _attempt);
             Thread t_install = new Thread(pw_install);
             t_install.start();
             t_install.join();
 
+           // Check installing status
+           if(parseNpmInstallErrLog(pw_install.getErrFile())){
+               if(_attempt > 0) {
+                   throw new ProcessWrapperException("Got error from npm-install");
+               }
+               else {
+                   log.warn("Failed to install dependencies, try the second attempt");
+                   return installPackages(_project_path, _attempt + 1);
+               }
+           }
+
             // Get all dependencies
             packages = this.getListPackages();
         } catch(ProcessWrapperException e) {
-            log.error("Error calling installing packages: " + e.getMessage(), e);
+            throw new ProcessWrapperException("Error calling installing packages: " + e.getMessage(), e);
         } catch(IOException e) {
-            log.error("Error calling installing packages: " + e.getMessage(), e);
+            throw new ProcessWrapperException("Error calling installing packages: " + e.getMessage(), e);
         } catch(InterruptedException e) {
-            log.error("Error calling installing packages: " + e.getMessage(), e);
+            throw new ProcessWrapperException("Error calling installing packages: " + e.getMessage(), e);
         }
         return packages;
+    }
+
+    private void removeLockModules(Path _dir) throws IOException{
+        final Path lock_file = Paths.get(_dir.toString(), "package-lock.json");
+        final Path modules = Paths.get(_dir.toString(), "node_modules");
+        if(FileUtil.isAccessibleFile(lock_file)) {
+            log.warn("Found [package-lock.json] in [" + _dir + "], removing");
+            Files.delete(lock_file);
+        }
+        if(FileUtil.isAccessibleDirectory(modules)) {
+            log.warn("Found [node_modules] in [" + _dir + "], removing");
+            Files.walkFileTree(modules, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
+    }
+
+    private boolean parseNpmInstallErrLog(Path _log) throws IOException{
+        // Read the list of installed dependencies/project paths
+        final String file = FileUtil.readFile(_log);
+        String[] log_lines = file.split("\n");
+        for(String line: log_lines)
+            if(line.toUpperCase().startsWith("NPM ERR"))
+                return true;
+        return false;
     }
 
     public Set<NpmInstalledPackage> getListPackages() throws ProcessWrapperException, IOException, InterruptedException {
