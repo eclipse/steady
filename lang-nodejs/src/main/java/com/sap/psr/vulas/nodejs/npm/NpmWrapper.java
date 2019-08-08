@@ -171,7 +171,7 @@ public class NpmWrapper {
             pw_install.setWorkingDir(_project_path);
             pw_install.setPath(this.pathToVirtualenv);
             pw_install.setCommand(this.pathToNpmExecutable,"install", "--no-audit");
-            pw_install.setOutErrName("npm-install" + _attempt);
+            pw_install.setOutErrName("npm-install-" + _attempt);
             Thread t_install = new Thread(pw_install);
             t_install.start();
             t_install.join();
@@ -269,7 +269,8 @@ public class NpmWrapper {
 
             final Map<String, String> pack_props = new HashMap<>();
 
-            final String pack_name = pack_json.get("name").getAsString();
+            // Replace / with $ to avoid the problem with the filename or url that refer to this package
+            String pack_name = pack_json.get("name").getAsString();
             final String pack_version = pack_json.get("version").getAsString();
             String pack_url = "";
             String pack_dep_location = "/";
@@ -298,7 +299,9 @@ public class NpmWrapper {
                 if(pack_json.has("_requiredBy")) {
                     List<String> required_by_list = new ArrayList<>();
                     for (JsonElement dep : pack_json.getAsJsonArray("_requiredBy")) {
-                        required_by_list.add(dep.getAsString());
+                        String dep_name = dep.getAsString();
+                        dep_name = dep_name.substring(dep_name.indexOf("/"));
+                        required_by_list.add(dep_name);
                     }
                     pack_required_by = StringUtils.join(required_by_list, ",");
                 }
@@ -323,7 +326,7 @@ public class NpmWrapper {
                 else {
                     log.warn("Cannot get \"_shasum\" and \"_integrity\" of [" + pack_name + "], create a tarball and compute them instead");
                     try {
-                        tarball_dest = Paths.get(pack_path.substring(0, pack_path.lastIndexOf(File.separator)), pack_name + ".tgz").toFile();
+                        tarball_dest = Paths.get(pack_path + ".tgz").toFile();
 
                         DirUtil.createTarBall(Paths.get(pack_path).toFile(), tarball_dest, new String[] {"node_modules"}, null);
                         pack_integrity = DigestAlgorithm.SHA512.toString().replace("-", "") +"-"+ FileUtil.getDigest(tarball_dest, DigestAlgorithm.SHA512);
@@ -344,6 +347,12 @@ public class NpmWrapper {
                 }
             } catch(NullPointerException e){
                 log.error("Cannot get properties of [" + pack_name + "], set the default value instead");
+            }
+
+            if(pack_required_by.equalsIgnoreCase("")) {
+                final String old_name = pack_name;
+                pack_name = pack_name.replace("/", "$");
+                log.info("Replace / in package name with $ [" + old_name + "] -> [" + pack_name + "]");
             }
 
             pack_props.put("name", pack_name);

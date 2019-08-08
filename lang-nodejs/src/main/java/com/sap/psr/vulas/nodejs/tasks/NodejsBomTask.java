@@ -128,7 +128,7 @@ public class NodejsBomTask extends AbstractBomTask {
                     dep.setApp(this.getApplication());
                     final Path download_path = pack.getDownloadPath();
                     if(download_path != null) {
-                        dep.setFilename(download_path.getFileName().toString()+"$"+pack.getVersion()+pack.getProperties().get("git_hash"));
+                        dep.setFilename(pack.getName()+"@"+pack.getVersion()+pack.getProperties().get("git_hash"));
                         dep.setPath(download_path.toString());
                     }
                     dep.setDeclared(true);
