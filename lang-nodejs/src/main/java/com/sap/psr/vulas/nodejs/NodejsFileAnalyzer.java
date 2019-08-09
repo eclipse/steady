@@ -60,6 +60,8 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
 
     private File file = null;
 
+    private Path packageRoot = null;
+
 
     @Override
     public String[] getSupportedFileExtensions() {
@@ -89,6 +91,10 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
         if(!FileUtil.isAccessibleFile(_file.toPath()))
             throw new IllegalArgumentException("[" + _file + "] does not exist or is not readable");
         this.file = _file;
+    }
+
+    public void setPackageRoot(Path _dir) {
+        this.packageRoot = _dir;
     }
 
     /**
@@ -141,9 +147,8 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
 
         final String name = ctx.Identifier().toString();
         String parent_classes = "";
-        if(ctx.classTail().singleExpression() != null){
+        if(ctx.classTail().singleExpression() != null)
             parent_classes = ctx.classTail().singleExpression().getText();
-        }
 
         // Create construct and add to context
         final NodejsId id = new NodejsId(this.context.peek(), NodejsId.Type.CLASS, name + "(" + parent_classes + ")");
@@ -178,6 +183,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
         else {
             name = ctx.Identifier().getText();
         }
+
         String parent_classes = "";
         if(ctx.classTail().Extends() != null)
             parent_classes = ctx.classTail().singleExpression().getText();
@@ -339,14 +345,17 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
     @Override
     public void enterMethodDefinition(JavaScriptParser.MethodDefinitionContext ctx) {
         String name = "";
-        if(ctx.getter() != null)
+        if(ctx.getter() != null && ctx.getter().propertyName() != null)
             name = "get@" + ctx.getter().propertyName().getText();
-        else if(ctx.setter() != null)
+        else if(ctx.setter() != null && ctx.setter().propertyName() != null)
             name = "set@" + ctx.setter().propertyName().getText();
         else if(ctx.propertyName() != null)
             name = ctx.propertyName().getText();
-        else
-            throw new IllegalStateException("Parser error: Method definition without name in context " + this.context + ", line [" + ctx.getStart().getLine() + "]");
+        else {
+            log.error("Parser error: Method definition without name in context " + this.context + ", line [" + ctx.getStart().getLine() + "]");
+            log.warn("Skip method definition");
+            return ;
+        }
         String parameters = "";
         if(ctx.formalParameterList() != null)
             parameters = ctx.formalParameterList().getText();
@@ -465,7 +474,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
                 this.constructs = new TreeMap<ConstructId, Construct>();
 
                 // Create module and add to constructs
-                this.module = NodejsFileAnalyzer.getModule(this.file);
+                this.module = NodejsFileAnalyzer.getModule(this.file, this.packageRoot);
                 this.constructs.put(this.module, new Construct(this.module, ""));
 
                 // Get package, if any, and add to constructs
@@ -539,7 +548,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
     /**
      * Creates a {@link NodejsId} of type {@link ConstructType#MODU} for the given js file.
      */
-    public static NodejsId getModule(File _file) throws IllegalArgumentException, FileNotFoundException, IOException{
+    public static NodejsId getModule(File _file, Path _pkg_root) throws IllegalArgumentException, FileNotFoundException, IOException{
         if(!FileUtil.hasFileExtension(_file.toPath(), new String[] { "js" })) {
             throw new IllegalArgumentException("Expected file with file extension [js], got [" + _file.toString() + "]");
         }
@@ -552,14 +561,15 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
         // Search upwards until find package.json, and add directory names to the qname components
         final List<String> package_name = new ArrayList<String>();
         Path search_path = p.getParent();
-        while(!DirUtil.containsFile(search_path.toFile(), "package.json") && search_path.getNameCount() > 1) {
+        Path stop_path = _pkg_root != null? _pkg_root.toAbsolutePath() : p.getParent();
+        while(!search_path.toString().equalsIgnoreCase(stop_path.toString())) {
             package_name.add(0, search_path.getFileName().toString());
             search_path = search_path.getParent();
         }
         // Get the root package's directory name
-        if(DirUtil.containsFile(search_path.toFile(), "package.json")) {
+        if(DirUtil.containsFile(stop_path.toFile(), "package.json")) {
             try {
-                final JsonObject pack_json = new Gson().fromJson(FileUtil.readFile(Paths.get(search_path.toString(), "package.json")), JsonObject.class);
+                final JsonObject pack_json = new Gson().fromJson(FileUtil.readFile(Paths.get(stop_path.toString(), "package.json")), JsonObject.class);
                 package_name.add(0, pack_json.get("name").getAsString());
             }
             catch (IOException e){

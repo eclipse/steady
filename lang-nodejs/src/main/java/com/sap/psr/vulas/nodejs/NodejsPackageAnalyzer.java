@@ -74,6 +74,8 @@ public class NodejsPackageAnalyzer implements FileAnalyzer {
 
             for(Path file : walker.getFileList()) {
                 final FileAnalyzer analyzer = FileAnalyzerFactory.buildFileAnalyzer(file.toFile());
+                if(analyzer instanceof NodejsFileAnalyzer)
+                    ((NodejsFileAnalyzer) analyzer).setPackageRoot(this.pack_path.toPath());
                 this.constructs.putAll(analyzer.getConstructs());
             }
         }

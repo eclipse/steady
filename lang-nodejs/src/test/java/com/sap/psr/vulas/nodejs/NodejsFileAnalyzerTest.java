@@ -231,4 +231,38 @@ public class NodejsFileAnalyzerTest {
         assertTrue(c1.containsKey(anon1_2));
         assertTrue(c1.containsKey(anon2));
     }
+
+    @Test
+    public void testSkipingBrokenConstruct() throws FileAnalysisException {
+        final FileAnalyzer f1 = FileAnalyzerFactory.buildFileAnalyzer(new File("src/test/resources/test-unknown-dep/index.js"));
+        final Map<ConstructId, Construct> c1 = f1.getConstructs();
+
+        final NodejsId pack = new NodejsId(null, NodejsId.Type.PACKAGE, "test-unknown-dep");
+        final NodejsId modu = new NodejsId(pack, NodejsId.Type.MODULE, "index");
+        final NodejsId func1 = new NodejsId(modu, NodejsId.Type.FUNCTION, "a(x,y)");
+        final NodejsId clas = new NodejsId(modu, NodejsId.Type.CLASS, "help()");
+        final NodejsId cons = new NodejsId(clas, NodejsId.Type.CONSTRUCTOR, "constructor(name)");
+        final NodejsId meth = new NodejsId(clas, NodejsId.Type.METHOD, "two()");
+        final NodejsId main = new NodejsId(modu, NodejsId.Type.FUNCTION, "main()");
+        final NodejsId async = new NodejsId(main, NodejsId.Type.FUNCTION, "1()");
+        final NodejsId func_f = new NodejsId(async, NodejsId.Type.FUNCTION, "f()");
+        final NodejsId arr1 = new NodejsId(func_f, NodejsId.Type.FUNCTION, "1(resolve)");
+        final NodejsId arr2 = new NodejsId(arr1, NodejsId.Type.FUNCTION, "1()");
+        final NodejsId hello = new NodejsId(main, NodejsId.Type.FUNCTION, "hello()");
+
+        assertEquals(12, c1.size());
+        assertTrue(c1.containsKey(pack));
+        assertTrue(c1.containsKey(modu));
+        assertTrue(c1.containsKey(func1));
+        assertTrue(c1.containsKey(clas));
+        assertTrue(c1.containsKey(cons));
+        assertTrue(c1.containsKey(meth));
+        assertTrue(c1.containsKey(main));
+        assertTrue(c1.containsKey(async));
+        assertTrue(c1.containsKey(func_f));
+        assertTrue(c1.containsKey(arr1));
+        assertTrue(c1.containsKey(arr2));
+        assertTrue(c1.containsKey(hello));
+    }
+
 }
