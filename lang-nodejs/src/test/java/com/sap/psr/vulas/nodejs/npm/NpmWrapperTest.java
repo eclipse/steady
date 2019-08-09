@@ -92,7 +92,7 @@ public class NpmWrapperTest {
 
     @Test
     @Category(Slow.class)
-    public void testUnknownPackage() throws IllegalArgumentException, ProcessWrapperException {
+    public void testUnknownPackage() throws IllegalArgumentException {
         final Path project = Paths.get("src", "test", "resources", "test-unknown-dep");
         try {
             final NpmWrapper vew = new NpmWrapper(project);
@@ -103,5 +103,24 @@ public class NpmWrapperTest {
             assertTrue(false);
         }
         assertTrue(false);
+    }
+
+    @Test
+    @Category(Slow.class)
+    public void testDependenciesType() throws IllegalArgumentException, ProcessWrapperException {
+        final Path project = Paths.get("src", "test", "resources", "test-type-dependencies");
+        final NpmWrapper vew = new NpmWrapper(project);
+        final Set<NpmInstalledPackage> packages = vew.getInstalledPackages();
+
+        boolean hasDev = false;
+        boolean hasBundle = false;
+        boolean hasOptinal = false;
+
+        for(NpmInstalledPackage p: packages) {
+            hasDev |= p.getProperties().containsKey("dev");
+            hasBundle |= p.getProperties().containsKey("bundled");
+            hasOptinal |= p.getProperties().containsKey("optional");
+        }
+        assertTrue(hasDev || hasBundle || hasOptinal);
     }
 }

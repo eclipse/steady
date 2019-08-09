@@ -132,7 +132,10 @@ public class NodejsBomTask extends AbstractBomTask {
                         dep.setPath(download_path.toString());
                     }
                     dep.setDeclared(true);
-                    dep.setScope(Scope.RUNTIME);
+                    if(pack.getProperties().containsKey("dev"))
+                        dep.setScope(Scope.TEST);
+                    else
+                        dep.setScope(Scope.RUNTIME);
                     dep.setTransitive(prj_package != null && prj_package.requires(pack) ? false : true);
 
                     deps.add(dep);

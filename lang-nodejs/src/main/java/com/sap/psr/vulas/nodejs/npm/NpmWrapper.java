@@ -10,6 +10,8 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.util.DigestUtil;
+import com.sap.psr.vulas.shared.util.StringUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.lang.StringUtils;
@@ -46,6 +49,7 @@ public class NpmWrapper {
     private String projectName = null;
 
     private Set<NpmInstalledPackage> installedPackages = null;
+    private Map<String, String> packageType = null;
 
     /**
      * Assumes that the npm executable is part of the PATH environment variable.
@@ -188,6 +192,7 @@ public class NpmWrapper {
            }
 
             // Get all dependencies
+            this.packageType = this.getPackageType(_project_path);
             packages = this.getListPackages();
         } catch(ProcessWrapperException e) {
             throw new ProcessWrapperException("Error calling installing packages: " + e.getMessage(), e);
@@ -232,6 +237,35 @@ public class NpmWrapper {
             if(line.toUpperCase().startsWith("NPM ERR"))
                 return true;
         return false;
+    }
+
+    private Map<String, String> getPackageType(Path pack_path) throws IOException {
+        final Map<String, String> type_obj = new HashMap<>();
+        final Path pack_json_file = Paths.get(pack_path.toString(), "package-lock.json");
+        final Queue<JsonObject> pack_queue = new LinkedList<>();
+        final JsonObject lock_json = new Gson().fromJson(FileUtil.readFile(pack_json_file), JsonObject.class);
+        pack_queue.add(lock_json);
+
+        while(!pack_queue.isEmpty()) {
+            final JsonObject dep = pack_queue.remove();
+            final List<String> dep_type = new ArrayList<>();
+            if(dep.has("dev"))
+                dep_type.add("dev");
+            if(dep.has("optional"))
+                dep_type.add("optional");
+            if(dep.has("bundled"))
+                dep_type.add("bundled");
+            if(dep_type.size() != 0) {
+                final String hash = dep.get("integrity").getAsString();
+                type_obj.put(hash, StringUtil.join(dep_type, ","));
+            }
+            if(dep.has("dependencies")) {
+                for(String dep_name : dep.getAsJsonObject("dependencies").keySet()) {
+                    pack_queue.add(dep.getAsJsonObject("dependencies").getAsJsonObject(dep_name));
+                }
+            }
+        }
+        return type_obj;
     }
 
     public Set<NpmInstalledPackage> getListPackages() throws ProcessWrapperException, IOException, InterruptedException {
@@ -365,6 +399,12 @@ public class NpmWrapper {
             pack_props.put("shasum_type", pack_shasum_type.toString());
             pack_props.put("created_tarball", String.valueOf(tarball_dest));
             pack_props.put("git_hash", pack_git_hash);
+
+            if(this.packageType.containsKey(pack_integrity)) {
+                for(String type: this.packageType.get(pack_integrity).split(",")) {
+                    pack_props.put(type, "true");
+                }
+            }
 
             NpmInstalledPackage pack = new NpmInstalledPackage(pack_name, pack_version);
             pack.setDownloadPath(Paths.get(pack_path));
