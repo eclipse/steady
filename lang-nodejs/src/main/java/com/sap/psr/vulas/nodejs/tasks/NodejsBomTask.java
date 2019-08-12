@@ -11,11 +11,10 @@ import org.apache.commons.logging.LogFactory;
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalysisException;
-import com.sap.psr.vulas.FileAnalyzer;
-import com.sap.psr.vulas.FileAnalyzerFactory;
 import com.sap.psr.vulas.goals.GoalConfigurationException;
 import com.sap.psr.vulas.goals.GoalExecutionException;
 import com.sap.psr.vulas.nodejs.ProcessWrapperException;
+import com.sap.psr.vulas.nodejs.NodejsPackageAnalyzer;
 import com.sap.psr.vulas.nodejs.npm.NpmInstalledPackage;
 import com.sap.psr.vulas.nodejs.npm.NpmWrapper;
 import com.sap.psr.vulas.nodejs.utils.NodejsConfiguration;
@@ -90,12 +89,13 @@ public class NodejsBomTask extends AbstractBomTask {
 
         // 2) App constructs
         final Set<ConstructId> app_constructs = new HashSet<ConstructId>();
-        for(Path p: this.getSearchPath()) {
+        for(Path p: prj_paths) {
             try {
                 // Make sure to not accidentally add other than Node.js constructs
                 if(FileUtil.isAccessibleDirectory(p) || FileUtil.hasFileExtension(p, EXT_FILTER)) {
                     log.info("Searching for Node.js constructs in search path [" + p + "] with filter [" + StringUtil.join(EXT_FILTER, ", ") + "]");
-                    final FileAnalyzer da = FileAnalyzerFactory.buildFileAnalyzer(p.toFile(), EXT_FILTER);
+                    final NodejsPackageAnalyzer da = new NodejsPackageAnalyzer();
+                    da.analyze(p.toFile());
                     app_constructs.addAll(da.getConstructs().keySet());
                 }
             } catch (Exception e) {
