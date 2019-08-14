@@ -37,12 +37,12 @@ matrix:
     deploy:
     - provider: script
       skip_cleanup: true
-      script: .travis/docker_hub_push_snapshot.sh
+      script: bash .travis/docker_hub_push_snapshot.sh
       on:
         branch: master
     - provider: script
       skip_cleanup: true
-      script: .travis/docker_hub_push_release.sh
+      script: bash .travis/docker_hub_push_release.sh
       on:
         condition: "$TRAVIS_TAG =~ ^(\\d+\\.\\d+\\.\\d.*)$"
   - name: Docs - Build and check the docs for dead links
