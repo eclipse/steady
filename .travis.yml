@@ -1,92 +1,70 @@
 matrix:
   include:
-    - name: OpenJDK8 - Run all the test on the Open JVM
-      language: java
-      jdk: openjdk8
-      cache:
-        timeout: 1000
-        directories:
-        - $HOME/.m2
-      before_cache:
-        - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
-      install:
-        - "echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'"
-      script: mvn -e -B -P gradle -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
-
-    # - name: OracleJDK8 - Run all the test on the Oracle JVM
-    #   language: java
-    #   jdk: oraclejdk8
-    #   cache:
-    #     timeout: 1000
-    #     directories:
-    #     - $HOME/.m2
-    #   before_cache:
-    #     - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
-    #   install:
-    #     - "echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'"
-    #   script: mvn -e -B -P gradle -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
-
-    # - name: Docker (skip Java tests) - Build the Modules' Jars, Create vital containers, Check if they stay alive for more than 20 seconds
-    #   language: bash
-    #   sudo: required
-    #   services:
-    #     - docker
-    #   before_install:
-    #     - docker -v
-    #     - docker-compose -v
-    #     - wget -qO- 'https://github.com/tianon/pgp-happy-eyeballs/raw/master/hack-my-builds.sh' | bash
-    #     - cp .travis/.env docker/.env
-    #   install:
-    #     - docker build --tag vulas-travis -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
-    #     - docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags=-DskipTests vulas-travis
-    #   script:
-    #     - (cd docker && docker-compose up -d --build)
-    #     - sh .travis/check.sh
-    #   after_failure:
-    #     - docker images
-    #     - docker ps -as
-    #     - (cd docker && docker-compose logs)
-    
-    - name: Docker - Build the Modules' Jars, Run all Java tests, Create vital containers, Check if they stay alive for more than 20 seconds
-      language: bash
-      sudo: required
-      services:
-        - docker
-      before_install:
-        - docker -v
-        - docker-compose -v
-        - cp .travis/.env docker/.env
-      install:
-        - docker build --tag vulas-travis -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
-        - docker run -it --rm -v ${PWD}/docker:/exporter -v ${PWD}/.travis/settings.xml:/settings.xml --env-file ./docker/.env -e mvn_flags='-q -P gradle -Dit.test=!IT01_PatchAnalyzerIT,IT*,*IT,*ITCase -DfailIfNoTests=false --settings /settings.xml' vulas-travis
-      script:
-        - (cd docker && docker-compose up -d --build)
-        - sh .travis/check.sh
-      after_failure:
-        - docker images
-        - docker ps -as
-        - (cd docker && docker-compose logs)
-
-    - name: Docs - Build and check the docs for dead links
-      language: bash
-      sudo: required
-      services:
-        - docker
-      before_install:
-        - docker -v
-        - docker-compose -v
-      install:
-        - docker build --tag docs ./docs
-        - docker build --tag checklinks -f ./docs/Dockerfile.checklinks ./docs
-        - docker network create docs
-      script:
-        - docker run --rm --network=docs  -d --name docs --hostname docs -p 8000:8000 docs
-        - sleep 20
-        - docker run --rm --network=docs --name checklinks checklinks
-      after_failure:
-        - docker images
-        - docker ps -as
-        - (cd docker && docker logs)
-
+  - name: OpenJDK8 - Run all the test on the Open JVM
+    language: java
+    jdk: openjdk8
+    cache:
+      timeout: 1000
+      directories:
+      - "$HOME/.m2"
+    before_cache:
+    - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
+    install:
+    - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
+    script: mvn -e -B -P gradle -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
+  - name: Docker - Build the Modules' Jars, Run all Java tests, Create vital containers, Check if they stay alive for more than 20 seconds
+    language: bash
+    sudo: required
+    services:
+    - docker
+    before_install:
+    - docker -v
+    - docker-compose -v
+    - cp .travis/.env docker/.env
+    install:
+    - docker build --tag vulnerability-assessment-tool-generator -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
+    - docker run -it --rm -v ${PWD}/docker:/exporter -v ${PWD}/.travis/settings.xml:/settings.xml --env-file ./docker/.env -e mvn_flags='-q -P gradle -Dit.test=!IT01_PatchAnalyzerIT,IT*,*IT,*ITCase -DfailIfNoTests=false --settings /settings.xml' vulnerability-assessment-tool-generator
+    script:
+    - "(cd docker && docker-compose up -d --build)"
+    - sh .travis/check.sh
+    after_failure:
+    - docker images
+    - docker ps -as
+    - (cd docker && docker-compose logs)
+    deploy:
+    # - provider: script
+    #   script: |
+    #     echo "$DOCKER_HUB_NARAMSIM_PASSWORD" | docker login -u "$DOCKER_HUB_NARAMSIM_USERNAME" --password-stdin
+    #     (cd docker && push-images.sh -r registry.hub.docker.com -p vulas -v latest)
+    #   on:
+    #     branch: travis-push-images #master
+    - provider: script
+      script: |
+        echo "$DOCKER_HUB_NARAMSIM_PASSWORD" | docker login -u "$DOCKER_HUB_NARAMSIM_USERNAME" --password-stdin
+        (cd docker && push-images.sh -r registry.hub.docker.com -p vulas -v $TRAVIS_TAG)
+      on:
+        condition: "$TRAVIS_TAG =~ ^(\\d+\\.\\d+\\.\\d.*)$"
+  - name: Docs - Build and check the docs for dead links
+    language: bash
+    sudo: required
+    services:
+    - docker
+    before_install:
+    - docker -v
+    - docker-compose -v
+    install:
+    - docker build --tag docs ./docs
+    - docker build --tag checklinks -f ./docs/Dockerfile.checklinks ./docs
+    - docker network create docs
+    script:
+    - docker run --rm --network=docs  -d --name docs --hostname docs -p 8000:8000 docs
+    - sleep 20
+    - docker run --rm --network=docs --name checklinks checklinks
+    after_failure:
+    - docker images
+    - docker ps -as
+    - "(cd docker && docker logs)"
 notifications:
   email: false
+env:
+  secure: UHFVpywEQyDPZkZ3O+OzGtYPGSyfvyGZ7bind6nFZZbP3qXHKzEa0NylpqEr750OhGpmOb7oh0laVLUzqkuv4MUQIwGfS7jEe41o6Tdtn9p2B0KbVqQafkGQD2FXIExyBe3h7HV/NMhOxN2yZOozEPwh8i5CgseMeadIs3SQCztzOzF1Hj+ULBeB9FtotYN+NNMd2xsJYfDcL0CQKuabhzINO/XvhsVcrp6Ow0IRO5DRvXMFx92mQp80mX417QxAS708M9i008NdaQIZCiYIgQ2cwrdfZmtRDgCnCt/ugHzrDGaR8lo2/EHO7EeCCUhnMWcWGwwafxQ2MUBdWYgc8iFdFnVwEPSibvNv4zsLOwSBz7IN33LS4/Qds+CxwGLMyPylkiNKkrSEc6d3YHNq+ofDCzdhiRPbi3X4CQvkQp28sFalsVN40g0tG5RvF7GWM2R74WXrm1CVCEKNH25E/KfQ5E3TjFZVGxmAyYlZF4ae3SOJIDYJMogNFal+nn40HiJYr8suItrl6mP6WNiQEnOEar29vg/FWUS/C85osKYss3Rm3qjRHWoVJeqmiFyhJyOUq1DTyNoZ/Z3QNNZoh6SyXyB15aucWEtmzuBbnuxN3VpkCaRnHlbBXd96xlu2lEG/fPCLQHg5N4fzGVblWfn9X5OCDcXGhtbLyCYySVE=
