@@ -17,15 +17,15 @@ fi
 REGISTRY_HOST=$1
 USERNAME=$2
 VERSION=$3
-SERVICES='generator frontend-apps frontend-bugs haproxy patch-lib-analyzer postgresql rest-backend rest-lib-utils'
+SERVICES='generator frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils'
 
-docker login $REGISTRY_HOST
+docker login "$REGISTRY_HOST"
 
 VULAS_RELEASE=$VERSION docker-compose build
 
 for service in $SERVICES ;
 do
     IMAGE=${REGISTRY_HOST}/${USERNAME}/vulnerability-assessment-tool-$service:${VERSION}
-    docker tag vulnerability-assessment-tool-$service:${VERSION} $IMAGE
-    docker push ${IMAGE}
+    docker tag "vulnerability-assessment-tool-$service:${VERSION}" "$IMAGE"
+    docker push "${IMAGE}"
 done
