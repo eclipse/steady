@@ -65,6 +65,8 @@ if [[ "$(docker images -q vulnerability-assessment-tool-rest-backend:"$VULAS_REL
     exit 1
 fi
 
+
+for service in $SERVICES ; do
     IMAGE=${REGISTRY}/${PROJECT}/vulnerability-assessment-tool-${service}:${VULAS_RELEASE}
     docker tag vulnerability-assessment-tool-"${service}":"${VULAS_RELEASE}" "$IMAGE"
     docker push "${IMAGE}"
