@@ -14,7 +14,7 @@ set -e
 usage () {
     cat <<HELP_USAGE
 Usage: $0 [options...]
- -r, --registry <registry>  The Docker registry.  e.g.: registry.hub.docker.com
+ -r, --registry <registry>  The Docker registry.  e.g.: docker.io
  -p, --project <project>    The project where to nest it.  e.g.: vulas
  -v, --version <version>    The version of the images to push.  e.g.: 3.1.5
  -h, --help                 This help text
