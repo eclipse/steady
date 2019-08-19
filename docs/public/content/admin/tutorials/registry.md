@@ -1,13 +1,11 @@
 # Push Docker images on a registry
 
-!!! warning "Official @@PROJECT_NAME@@ images"
-    @@PROJECT_NAME@@ does **not** officially publish Docker images on any public registry such as Docker Hub or Quay.io. The provided Bash script is meant to push images to **local** Docker repositories running within your organization.
-
 ## Pre-requisites
 
 - git
 - bash
 - docker
+- docker-compose
 
 ## Generate @@PROJECT_NAME@@ images
 
@@ -33,10 +31,11 @@ To use the script you will need:
 - a username
 - @@PROJECT_NAME@@ used version
 
-Invoke the script with the following positional arguments. The script will authenticate yourself on the registry, tag your images and push them.
+Invoke the script with the following positional arguments.
 
 ```sh
-bash push-images.sh [registry] [username] [vulnerability-assessment-tool-version]
+docker login [registry]
+bash push-images.sh -r [registry] -u [username] -v [vulnerability-assessment-tool-version]
 ```
 
 ## Pulling the images from a repository

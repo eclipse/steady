@@ -25,7 +25,7 @@ matrix:
     - docker build --tag vulnerability-assessment-tool-generator -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
     - docker run -it --rm -v ${PWD}/docker:/exporter -v ${PWD}/.travis/settings.xml:/settings.xml --env-file ./docker/.env -e mvn_flags='-q -P gradle -Dit.test=!IT01_PatchAnalyzerIT,IT*,*IT,*ITCase -DfailIfNoTests=false --settings /settings.xml' vulnerability-assessment-tool-generator
     script:
-    - "(cd docker && docker-compose up -d --build)"
+    - "(cd docker && docker-compose -f docker-compose.build.yml up -d --build)"
     - sh .travis/check.sh
     after_failure:
     - docker images
@@ -40,6 +40,7 @@ matrix:
       script: bash .travis/docker_hub_push_snapshot.sh
       on:
         branch: master
+        condition: $TRAVIS_EVENT_TYPE = push
     - provider: script
       skip_cleanup: true
       script: bash .travis/docker_hub_push_release.sh
