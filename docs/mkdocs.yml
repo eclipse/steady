@@ -39,6 +39,7 @@ nav:
     - DevOps: 'admin/index.md'
     - Tutorials: 
       - 'Deploy on Docker': 'admin/tutorials/docker.md'
+      - 'Build JAVA archives/Docker images': 'admin/tutorials/build.md'
       - 'Push Docker images to a registry': 'admin/tutorials/registry.md'
   - Contribute:
     - Contribute: contributor/index.md

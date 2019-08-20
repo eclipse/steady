@@ -58,7 +58,7 @@ You are now ready to run the system with the generated archives and create the D
 You can create and run containers from the generated images.
 
 ```sh
-(cd docker && docker-compose -f docker-compose.build.yml up -d)
+(cd docker && docker-compose f docker-compose.yml -f docker-compose.build.yml up -d)
 ```
 
 To check everything started successfully, browse the page `http://localhost:8033/haproxy?stats`. All endpoints should appear as green.
