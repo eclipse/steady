@@ -29,7 +29,7 @@ public class RequestRepeater {
 	}
 
 	/**
-	 * Returns true (and waits {@link RequestRepeater#waitMilli) milliseconds) if the response code of the previous HTTP call was 503
+	 * Returns true (and waits {@link RequestRepeater#waitMilli} milliseconds) if the response code of the previous HTTP call was 503
 	 * and the number of maximum retries has not been reached, false otherwise.
 	 *
 	 * @param _503 a boolean.

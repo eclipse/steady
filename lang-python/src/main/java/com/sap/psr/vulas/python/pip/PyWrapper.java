@@ -26,7 +26,7 @@ public class PyWrapper {
 	private Path logDir = null;
 	
 	/**
-	 * Assumes that the python executable is part of the PATH environment variable.
+	 * Assumes that the Python executable is part of the PATH environment variable.
 	 *
 	 * @throws com.sap.psr.vulas.python.ProcessWrapperException if any.
 	 */
@@ -73,11 +73,11 @@ public class PyWrapper {
 	}
 	
 	/**
-	 * Calls pip list and pip show <package> in order to create and return all {@link PipInstalledPackages} of the Python environment.
+	 * <p>Runs a Python script.</p>
 	 *
 	 * @param _script a {@link java.nio.file.Path} object.
 	 * @param _args a {@link java.util.List} object.
-	 * @return a int.
+	 * @return an int representing the exit code.
 	 */
 	public int runScript(Path _script, List<String> _args) {
 		int exit_code = -1;

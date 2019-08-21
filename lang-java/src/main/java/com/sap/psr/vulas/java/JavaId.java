@@ -653,7 +653,7 @@ public abstract class JavaId extends ConstructId {
 	}
 
 	/**
-	 * Returns all {@link JavaMethodId}s and {@link JavaConstructuctorId}s belonging to the given class.
+	 * Returns all {@link JavaMethodId}s and {@link JavaConstructorId}s belonging to the given class.
 	 *
 	 * @param _set a {@link java.util.Set} object.
 	 * @param _context a {@link com.sap.psr.vulas.java.JavaId} object.
@@ -679,8 +679,8 @@ public abstract class JavaId extends ConstructId {
 	 * Returns the URL of the JAR from which the construct was loaded, or null if it is a package or has not been loaded from a JAR.
 	 * The URL has the form "file:/.../foo.jar", hence, it can be transformed into a {@link URI} and {@link File}.
 	 *
-	 * First, it uses {@link ClassPoolUpdater#getJarResourcePath} to search for the JAR URL, hence, {@link ClassPoolUpdater#loadedResources}
-	 * should contain all the needed resources. If that fails, it uses {@link Class#forName} and {@link Class#getResource(String)} to search
+	 * First, it uses {@link ClassPoolUpdater#getJarResourcePath(ConstructId)} to search for the JAR URL, hence, {@link ClassPoolUpdater}
+	 * should contain all the needed resources. If that fails, it uses {@link Class#forName(String)} and {@link Class#getResource(String)} to search
 	 * for the JAR URL.
 	 *
 	 * @return the URL from which the construct was loaded

@@ -58,7 +58,7 @@ public class DependencyUtil {
 	}
 	
 	/**
-	 * Returns true of the given set of dependencies already contains a {@link Dependency} with the same library' digest, parent and relativePath, false otherwise.
+	 * Returns a {@link Dependency} from a given set with the same library' digest, parent and relativePath, null otherwise.
 	 *
 	 * @param _deps a {@link java.util.Set} object.
 	 * @param _dep a {@link com.sap.psr.vulas.backend.model.Dependency} object.
@@ -66,7 +66,11 @@ public class DependencyUtil {
 	 */
 	public static Dependency getDependency(Set<Dependency> _deps, Dependency _dep) {
 		for(Dependency d: _deps) {
-			if(d.getLib().equals(_dep.getLib()) && d.getParent().equalLibParentRelPath(_dep.getParent()) && d.getRelativePath().equals(_dep.getRelativePath())) {
+			 if(d.getLib().equals(_dep.getLib()) &&
+					( (d.getParent() == null && _dep.getParent()==null) ||
+							d.getParent().equalLibParentRelPath(_dep.getParent())) &&
+					( (d.getRelativePath() == null && _dep.getRelativePath()==null) ||
+							d.getRelativePath().equals(_dep.getRelativePath()))) {
 				return d;
 			}
 		}

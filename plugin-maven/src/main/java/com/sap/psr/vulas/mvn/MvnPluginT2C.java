@@ -11,7 +11,7 @@ import com.sap.psr.vulas.cg.T2CGoal;
 import com.sap.psr.vulas.goals.AbstractAppGoal;
 
 /**
- * The plugin can be executed for Eclipse projects through 'Run As' > 'Maven build...' > Goal 'vulas:t2c'.
+ * The plugin can be executed for Eclipse projects through 'Run As' &gt; 'Maven build...' &gt; Goal 'vulas:t2c'.
  */
 @Mojo( name = "t2c", defaultPhase = LifecyclePhase.PROCESS_CLASSES, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresOnline = true )
 public class MvnPluginT2C extends AbstractVulasMojo {

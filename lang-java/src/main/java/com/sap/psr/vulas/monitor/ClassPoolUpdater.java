@@ -232,7 +232,7 @@ public class ClassPoolUpdater {
 	 * Resets the {@link ClassPoolUpdater} to its initial state. In particular, a new instance of the {@link ClassPool} will be created, and all
 	 * all the {@link Path}s that have been added to its class path will be removed.
 	 *
-	 * @see {@link #appendToClasspath(Path)}
+	 * @see ClassPoolUpdater#appendToClasspath(Path)
 	 */
 	public synchronized void reset() {
 		this.appendedResources.clear();
@@ -243,11 +243,10 @@ public class ClassPoolUpdater {
 	}
 
 	/**
-	 * Return a {@link ClassPool} object that can be filled using the method
-	 * {@link ClassPoolUpdater#appendToResourceList(java.nio.file.Path)} of
-	 * {@link Path} representing the loaded resources.
+	 * Returns a {@link ClassPool} object that can be populated using the methods
+	 * {@link #appendToClasspath(java.nio.file.Path)} and {@link #appendToClasspath(Set)}.
 	 *
-	 * @return A {@link ClasPool} object, can be null if there is none
+	 * @return A {@link ClassPool} object, can be null if there is none
 	 */
 	public ClassPool getCustomClassPool() { return this.customClassPool; }
 
@@ -256,7 +255,7 @@ public class ClassPoolUpdater {
 	 * physical path of the JAR if is present in the resources loaded into the
 	 * ClassPool. If is not found it returns null
 	 * PS: We can add to the ClassPool all the resources that we want using
-	 * the method {@ClassPoolUpdater#appendToClasspath}
+	 * the methods {@link #appendToClasspath(java.nio.file.Path)} and {@link #appendToClasspath(Set)}.
 	 *
 	 * @param _cid the ConstructId that we want to search in the ClassPool
 	 * @return the JAR path or null if is not found

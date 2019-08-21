@@ -13,14 +13,14 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  * Represents the context of a goal execution. All its elements can be specified using
  * the tenant, space and application related configuration settings.
  *
- * @see {@link CoreConfiguration#APP_CTX_GROUP} as well as ARTIF and VERSION
- * @see {@link CoreConfiguration#TENANT_TOKEN}
- * @see {@link CoreConfiguration#SPACE_TOKEN}
+ * @see CoreConfiguration#APP_CTX_GROUP
+ * @see CoreConfiguration#TENANT_TOKEN
+ * @see CoreConfiguration#SPACE_TOKEN
  *
  * The secret tokens of the tenant and space, if any, will be included as HTTP headers
  * into every request sent to the Vulas backend.
- * @see {@link Constants#HTTP_TENANT_HEADER}
- * @see {@link Constants#HTTP_SPACE_HEADER}
+ * @see Constants#HTTP_TENANT_HEADER
+ * @see Constants#HTTP_SPACE_HEADER
  */
 public class GoalContext implements Serializable {
 

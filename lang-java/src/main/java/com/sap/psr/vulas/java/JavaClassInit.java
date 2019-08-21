@@ -8,7 +8,7 @@ import com.sap.psr.vulas.ConstructId;
  */
 public class JavaClassInit extends JavaId {
 
-	/** Constant <code>NAME="<clinit>"</code> */
+	/** Constant <code>NAME="&lt;clinit&gt;"</code> */
 	public static final String NAME = "<clinit>";
 	private JavaClassId classContext = null;
 	
@@ -37,14 +37,14 @@ public class JavaClassInit extends JavaId {
 	public String getQualifiedName() { return classContext.getQualifiedName() + "." + JavaClassInit.NAME; }
 
 	/**
-	 * Returns <clinit>.
+	 * Returns &lt;clinit&gt;.
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
 	public String getName() { return JavaClassInit.NAME; }
 	
 	/**
-	 * Returns <clinit>.
+	 * Returns &lt;clinit&gt;.
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */

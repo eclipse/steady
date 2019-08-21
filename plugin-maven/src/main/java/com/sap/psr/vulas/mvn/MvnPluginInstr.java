@@ -20,7 +20,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 /**
  * This plugin analyzes all Java archives in a given Maven project in order to identify all their Java constructs.
  * Those are then uploaded to a remote service for further analysis (test coverage, vulnerability assessments, archive integrity).
- * The plugin can be executed for Eclipse projects through 'Run As' > 'Maven build...' > Goal 'vulas:instr'.
+ * The plugin can be executed for Eclipse projects through 'Run As' &gt; 'Maven build...' &gt; Goal 'vulas:instr'.
  *
  * help:describe -Dplugin=com.sap.research.security.vulas:vulas-maven-plugin
  */

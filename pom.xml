@@ -5,7 +5,7 @@
 
 	<groupId>com.sap.research.security.vulas</groupId>
 	<artifactId>root</artifactId>
-	<version>3.1.5-SNAPSHOT</version>
+	<version>3.1.6-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
@@ -287,7 +287,7 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>2.9.9.1</version>
+				<version>2.9.9.2</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>

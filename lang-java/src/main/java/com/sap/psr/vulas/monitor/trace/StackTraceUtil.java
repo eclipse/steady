@@ -34,7 +34,7 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 
 /**
- * Transforms a stacktrace, obtained from {@link Throwable) as an array of {@link StackTraceElement},
+ * Transforms a stacktrace, obtained from {@link Throwable} as an array of {@link StackTraceElement},
  * into a linked list of corresponding construct identifiers.
  * <p>
  * Analyzes the bytecode in order to find methods in case of method overloading

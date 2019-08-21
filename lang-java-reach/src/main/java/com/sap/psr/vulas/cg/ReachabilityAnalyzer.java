@@ -197,7 +197,7 @@ public class ReachabilityAnalyzer implements Runnable {
     }
 
     /**
-     * Sets the application constructs, used when analyzing the overall call graph in {@link ReachabilityAnalyzer#collectLibraryEntryPoints}.
+     * Sets the application constructs.
      *
      * @param _constructs a {@link java.util.Set} object.
      */
@@ -249,7 +249,7 @@ public class ReachabilityAnalyzer implements Runnable {
 
     /**
      * Sets the change list elements of the given bug(s) as target constructs. If no bugs are passed, all bugs
-     * relevant for the application will be considered (cf. {@link BackendConnector#getAppBugs(MavenId, String)}).
+     * relevant for the application will be considered (cf. {@link BackendConnector#getAppBugs(GoalContext, Application)}).
      *
      * @param _filter Comma-separated list of bug identifiers
      */
