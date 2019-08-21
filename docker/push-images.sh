@@ -1,31 +1,73 @@
 #!/bin/bash
 # Push vulnerability-assessment-tool images to a registry
 #
-# Usage: push.sh <registry> <username> <vulnerability-assessment-tool-version>
+# Usage: push.sh -r <registry> -p <project> -v <vulnerability-assessment-tool-version>
 #
-# To run this script you should have already generated the JARs
+# To run this script you should have already generated the JARs and be logged in the registry
+# Use `docker login` to login to the registry
 # Read more here: https://github.com/SAP/vulnerability-assessment-tool/blob/master/docker/README.md
+
+RELEASE_PATTERN="([0-9]+\.[0-9]+\.[0-9]+(.*)?)|latest"
 
 set -e
 
-if [[ -z $1 || -z $2 || -z $3 ]];
+usage () {
+    cat <<HELP_USAGE
+Usage: $0 [options...]
+ -r, --registry <registry>  The Docker registry.  e.g.: docker.io
+ -p, --project <project>    The project where to nest it.  e.g.: vulas
+ -v, --version <version>    The version of the images to push.  e.g.: 3.1.5
+ -h, --help                 This help text
+HELP_USAGE
+    exit 0
+}
+
+if ! options=$(getopt -o r:p:v:h -l registry:,project:,version:,help -- "$@")
 then
-    echo "[-] Usage: push.sh <registry> <username> <vulnerability-assessment-tool-version>"
+    usage
     exit 1
 fi
 
-REGISTRY_HOST=$1
-USERNAME=$2
-VERSION=$3
-SERVICES='generator frontend-apps frontend-bugs haproxy patch-lib-analyzer postgresql rest-backend rest-lib-utils'
+set -- $options
 
-docker login $REGISTRY_HOST
+while true; do
+    case "$1" in
+        -r | --registry ) REGISTRY="$2"; shift 2 ;;
+        -p | --project ) PROJECT="$2"; shift 2 ;;
+        -v | --version ) VULAS_RELEASE="$2"; shift 2 ;;
+        -h | --help ) usage; shift 2 ;;
+        -- ) shift; break ;;
+        * ) break ;;
+    esac
+done
 
-VULAS_RELEASE=$VERSION docker-compose build
+if [[ -z "${VULAS_RELEASE// }" ]]; then
+    usage
+    exit 1
+fi
 
-for service in $SERVICES ;
-do
-    IMAGE=${REGISTRY_HOST}/${USERNAME}/vulnerability-assessment-tool-$service:${VERSION}
-    docker tag vulnerability-assessment-tool-$service:${VERSION} $IMAGE
-    docker push ${IMAGE}
+REGISTRY=${REGISTRY//\'/}
+PROJECT=${PROJECT//\'/}
+VULAS_RELEASE=${VULAS_RELEASE//\'/}
+
+if [[ ! $VULAS_RELEASE =~ $RELEASE_PATTERN ]]; then
+    echo '[-] You did not specify a valid pattern for the release. Use -r switch. The format is: \d\.\d\.\d(.*)?'
+    usage
+    exit 1
+fi
+
+SERVICES='frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils'
+
+VULAS_RELEASE=${VULAS_RELEASE} docker-compose build
+
+if [[ "$(docker images -q vulnerability-assessment-tool-rest-backend:"$VULAS_RELEASE" 2> /dev/null)" == "" ]]; then
+    echo "[-] There are no local images for release $VULAS_RELEASE"
+    exit 1
+fi
+
+
+for service in $SERVICES ; do
+    IMAGE=${REGISTRY}/${PROJECT}/vulnerability-assessment-tool-${service}:${VULAS_RELEASE}
+    docker tag vulnerability-assessment-tool-"${service}":"${VULAS_RELEASE}" "$IMAGE"
+    docker push "${IMAGE}"
 done
