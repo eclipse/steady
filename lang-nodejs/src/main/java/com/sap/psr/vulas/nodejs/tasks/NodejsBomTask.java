@@ -3,7 +3,11 @@ package com.sap.psr.vulas.nodejs.tasks;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -85,7 +89,27 @@ public class NodejsBomTask extends AbstractBomTask {
 
         if(app_npm_packs.size() == 0)
             log.warn("No dependencies found");
-        a.addDependencies(this.toDependencies(app_npm_packs));
+
+        // Find a relationship between each package and construct a dependency tree
+        final Map<String, NpmInstalledPackage> app_npm_map = new HashMap<>();
+        final Map<String, Set<String>> dep_tree = new HashMap<>();
+        for(NpmInstalledPackage pack : app_npm_packs) {
+            String location = pack.getProperties().get("dep_location");
+            // Map location with NpmInstalledPackage for querying
+            app_npm_map.put(location, pack);
+
+            String[] required_by = pack.getProperties().get("required_by").split(",");
+            for(String parent_location: required_by) {
+                Set<String> dependencies = new HashSet<>();
+                if(dep_tree.containsKey(parent_location)) {
+                    dependencies = dep_tree.get(parent_location);
+                }
+                dependencies.add(location);
+                dep_tree.put(parent_location, dependencies);
+            }
+        }
+
+        a.addDependencies(this.toDependencies(app_npm_map, dep_tree));
 
         // 2) App constructs
         final Set<ConstructId> app_constructs = new HashSet<ConstructId>();
@@ -107,22 +131,41 @@ public class NodejsBomTask extends AbstractBomTask {
         // Set the one to be returned
         this.setCompletedApplication(a);
     }
-    private Set<Dependency> toDependencies(Set<NpmInstalledPackage> _packs) {
-        // Get the installed package that corresponds to the project (if any)
-        NpmInstalledPackage prj_package = null;
-        for(NpmInstalledPackage pack: _packs) {
-            if(pack.getName().equals(this.getApplication().getMvnGroup())) {
-                prj_package = pack;
-                break;
-            }
-        }
 
-        // Create deps for npm packages
-        final Set<Dependency> deps = new HashSet<Dependency>();
-        for(NpmInstalledPackage pack: _packs) {
+    private Set<Dependency> toDependencies(Map<String, NpmInstalledPackage> _packs, Map<String, Set<String>> _dep_tree) {
+        // Init queue for dependency tree traversal and add direct dependencies as the starting package
+        final Queue<String> pack_queue = new LinkedList<>();
+        pack_queue.addAll(_dep_tree.get("/"));
+
+        // Create Map of Dependency Object for querying parent
+        final Map<String, Dependency> deps_map = new HashMap<>();
+        final Set<String> visited = new HashSet<>();
+
+        // Set project package
+        NpmInstalledPackage prj_package = _packs.get("/");
+
+        // BFS tree traversal
+        while(!pack_queue.isEmpty()) {
+            // Split the location + parent location string by ","
+            String[] pack_loc_parent = pack_queue.remove().split(",");
+            String pack_loc = pack_loc_parent[0];
+            String pack_parent = pack_loc_parent.length > 1 ? pack_loc_parent[1] : null;
+
+            NpmInstalledPackage pack = _packs.get(pack_loc);
             try {
                 // Do not add the project package itself as dependency
-                if((prj_package == null || !prj_package.equals(pack)) && pack.getLibrary().hasValidDigest()) {
+                if((prj_package == null || !prj_package.equals(pack)) && pack.getLibrary().hasValidDigest() || !visited.contains(pack_loc)) {
+                    // Set visited package to
+                    visited.add(pack_loc);
+                    if(_dep_tree.containsKey(pack_loc)) {
+                        for (String next_pack : _dep_tree.get(pack_loc)) {
+                            // Skip visited package
+                            if (!visited.contains(next_pack))
+                                // Enqueue to-be-visited package
+                                // Join the location of to-be-visited package and current package location with ","
+                                pack_queue.add(next_pack + "," + pack_loc);
+                        }
+                    }
                     final Dependency dep = new Dependency();
                     dep.setLib(pack.getLibrary());
                     dep.setApp(this.getApplication());
@@ -131,19 +174,23 @@ public class NodejsBomTask extends AbstractBomTask {
                         dep.setFilename(pack.getName()+"@"+pack.getVersion()+pack.getProperties().get("git_hash"));
                         dep.setPath(download_path.toString());
                     }
+                    if(pack.getProperties().containsKey("dep_location")) {
+                        dep.setRelativePath(pack.getProperties().get("dep_location"));
+                    }
                     dep.setDeclared(true);
                     if(pack.getProperties().containsKey("dev"))
                         dep.setScope(Scope.TEST);
                     else
                         dep.setScope(Scope.RUNTIME);
                     dep.setTransitive(prj_package != null && prj_package.requires(pack) ? false : true);
-
-                    deps.add(dep);
+                    if(pack_parent != null)
+                        dep.setParent(deps_map.get(pack_parent));
+                    deps_map.put(pack_loc, dep);
                 }
             } catch(FileAnalysisException e) {
                 log.error(e.getMessage(), e);
             }
         }
-        return deps;
+        return new HashSet<>(deps_map.values());
     }
 }
