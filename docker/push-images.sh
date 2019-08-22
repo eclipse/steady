@@ -58,7 +58,7 @@ fi
 
 SERVICES='frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils'
 
-VULAS_RELEASE=${VULAS_RELEASE} docker-compose build
+VULAS_RELEASE=${VULAS_RELEASE} docker-compose -f docker-compose.build.yml build
 
 if [[ "$(docker images -q vulnerability-assessment-tool-rest-backend:"$VULAS_RELEASE" 2> /dev/null)" == "" ]]; then
     echo "[-] There are no local images for release $VULAS_RELEASE"
