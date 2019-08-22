@@ -817,15 +817,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#clone-from-github" title="Clone from GitHub" class="md-nav__link">
-    Clone from GitHub
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#build-docker-images" title="Build Docker images" class="md-nav__link">
-    Build Docker images
+  <a href="#setup" title="Setup" class="md-nav__link">
+    Setup
   </a>
   
 </li>
@@ -857,6 +850,18 @@
   
 </nav>
     
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../build/" title="Build JAVA archives/Docker images" class="md-nav__link">
+      Build JAVA archives/Docker images
+    </a>
   </li>
 
         
@@ -1146,15 +1151,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#clone-from-github" title="Clone from GitHub" class="md-nav__link">
-    Clone from GitHub
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#build-docker-images" title="Build Docker images" class="md-nav__link">
-    Build Docker images
+  <a href="#setup" title="Setup" class="md-nav__link">
+    Setup
   </a>
   
 </li>
@@ -1212,42 +1210,21 @@ It <strong>shall not</strong> be used in productive scenarios (both for security
 <ul>
 <li>git</li>
 <li>docker</li>
+<li>docker-compose</li>
 </ul>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<h3 id="clone-from-github">Clone from GitHub<a class="headerlink" href="#clone-from-github" title="Permanent link">&para;</a></h3>
+<h3 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h3>
+<p>Clone locally the <code>vulnerability-assessment-tool</code> repository</p>
 <div class="codehilite"><pre><span></span>git clone https://github.com/SAP/vulnerability-assessment-tool
 </pre></div>
 
-<h3 id="build-docker-images">Build Docker images<a class="headerlink" href="#build-docker-images" title="Permanent link">&para;</a></h3>
-<p>All the following commands are supposed to be executed from the root folder of the project.
-Before proceeding, be sure to move there with:</p>
-<div class="codehilite"><pre><span></span><span class="nb">cd</span> vulnerability-assessment-tool
-</pre></div>
-
-<p>Make a copy of the sample configuration:</p>
+<p>Customize the file <code>docker/.env</code> to match your needs, make sure you set the version you want to run in VULAS_RELEASE.</p>
 <div class="codehilite"><pre><span></span>cp docker/.env.sample docker/.env
 </pre></div>
 
-<p>Customize the file <code>docker/.env</code> to match your needs.</p>
-<div class="admonition info">
-<p class="admonition-title">Sensitive information</p>
+<blockquote>
 <p>In <code>docker/.env</code> you must configure at least <code>POSTGRES_USER=</code>, you should also configure the <code>HAPROXY</code>'s user and password as well as the credentials to access the bugs' frontend</p>
-</div>
-<p>At this point, you are ready to perform the actual build with the following command:</p>
-<div class="codehilite"><pre><span></span>docker build --tag vulnerability-assessment-tool-generator:3.1.5 -f docker/Dockerfile --build-arg <span class="nv">http_proxy</span><span class="o">=</span> --build-arg <span class="nv">https_proxy</span><span class="o">=</span> .
-docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span>-DexcludedGroups<span class="o">=</span>com.sap.psr.vulas.shared.categories.Slow vulnerability-assessment-tool-generator:3.1.5
-</pre></div>
-
-<div class="admonition warning">
-<p class="admonition-title">Build error</p>
-<p>If the command above fails, add <code>-DreuseForks=False</code> flag to <code>mvn_flags</code>. As shown in the example below.</p>
-<div class="codehilite"><pre><span></span>docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span><span class="s1">&#39;-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow -DreuseForks=False&#39;</span> vulnerability-assessment-tool-generator:3.1.5
-</pre></div>
-
-</div>
-<p>In case you are running behind a proxy you need to configure it in the <code>--build-arg</code> arguments.</p>
-<p>As a result, the folders <code>docker/&lt;component-name&gt;</code> will contain compiled JARs (or WARs, depending on the component). The folder <code>docker/client-tools</code> will be populated with the JARs for client side tools (CLI, plugins, patchanalyzer).</p>
-<p>Finally, you may want to make all artifacts available to the developers of your organization (e.g., through an internal Nexus or other artifact distribution system).</p>
+</blockquote>
 <h3 id="run">Run<a class="headerlink" href="#run" title="Permanent link">&para;</a></h3>
 <p>You are now ready to run the system:</p>
 <div class="codehilite"><pre><span></span><span class="o">(</span><span class="nb">cd</span> docker <span class="o">&amp;&amp;</span> docker-compose up -d --build<span class="o">)</span>
@@ -1311,13 +1288,13 @@ docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><spa
           </a>
         
         
-          <a href="../registry/" title="Push Docker images to a registry" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../build/" title="Build JAVA archives/Docker images" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Push Docker images to a registry
+                Build JAVA archives/Docker images
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
