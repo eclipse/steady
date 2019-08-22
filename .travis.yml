@@ -46,6 +46,10 @@ matrix:
       script: bash .travis/docker_hub_push_release.sh
       on:
         condition: "$TRAVIS_TAG =~ ^(\\d+\\.\\d+\\.\\d.*)$"
+  - name: Docker - Check if Dockerfile sources are present at fixed location
+    language: bash
+    script:
+    - bash .travis/check_dockerfile_location.sh
   - name: Docs - Build and check the docs for dead links
     language: bash
     sudo: required
