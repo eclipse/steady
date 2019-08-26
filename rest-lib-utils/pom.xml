@@ -33,12 +33,16 @@
 	</properties>
 
 	<distributionManagement>
-        <snapshotRepository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>build.snapshots.repo</id>
-            <name>Internal Snapshots</name>
-            <url>${snapshots.repo}</url>
-        </snapshotRepository>
+		<!--snapshotRepository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>build.snapshots.repo</id>
+			<name>snapshots</name>
+			<url>${snapshots.repo}</url>
+		</snapshotRepository-->
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
         <repository>
             <id>build.releases.repo</id>
             <name>Internal Releases</name>
