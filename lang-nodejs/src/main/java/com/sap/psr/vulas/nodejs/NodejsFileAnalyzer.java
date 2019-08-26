@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -558,26 +559,49 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
         // Add file name w/o extension to qname components
         final String module_name = FileUtil.getFileName(p.toString(), false);
 
-        // Search upwards until find package.json, and add directory names to the qname components
         final List<String> package_name = new ArrayList<String>();
         Path search_path = p.getParent();
-        Path stop_path = _pkg_root != null? _pkg_root.toAbsolutePath() : p.getParent();
-        while(!search_path.toString().equalsIgnoreCase(stop_path.toString())) {
-            package_name.add(0, search_path.getFileName().toString());
-            search_path = search_path.getParent();
+        Path stop_path = _pkg_root != null? _pkg_root.toAbsolutePath() : null;
+
+        // Check that root directory of a package is set or not
+        // If not, need to find a root directory, either directory with SHA-1 name or parent directory of analyzed file
+        if(stop_path == null) {
+            Pattern[] sha1_checker = new Pattern[] {Pattern.compile("([1-f0-9])+")};
+            Path parent_dir = p.getParent();
+            Path topmost_dir = p.getRoot();
+            // Search the directory that has SHA-1 name
+            // For the case that PatchAnalyzer initialize NodejsFileAnalyzer without setting a root path
+            while(!parent_dir.equals(topmost_dir)) {
+                String dir_name = parent_dir.getFileName().toString();
+                if(StringUtil.matchesPattern(dir_name, sha1_checker) && dir_name.length() == 40) {
+                    stop_path = parent_dir;
+                    break;
+                }
+                parent_dir = parent_dir.getParent();
+            }
+            // Get the parent directory of the file as a root of a package
+            if(stop_path == null)
+                stop_path = p.getParent();
         }
-        // Get the root package's directory name
+        // Search upwards until find package.json, and add directory names to the qname components
         if(DirUtil.containsFile(stop_path.toFile(), "package.json")) {
+            while(!search_path.toString().equalsIgnoreCase(stop_path.toString())) {
+                package_name.add(0, search_path.getFileName().toString());
+                search_path = search_path.getParent();
+            }
             try {
+                // Get the root package's directory name
                 final JsonObject pack_json = new Gson().fromJson(FileUtil.readFile(Paths.get(stop_path.toString(), "package.json")), JsonObject.class);
                 package_name.add(0, pack_json.get("name").getAsString());
             }
             catch (IOException e){
-                throw new IOException("Cannot open [package.json] file");
+                log.warn("Cannot open [package.json] file, use parent directory name instead");
+                package_name.add(0, stop_path.getFileName().toString());
             }
         }
+        // If package.json is missing, package won't be added to the qname components
         else {
-            throw new FileNotFoundException("[package.json] file not found");
+            log.warn("[package.json] file not found, no package construct will be added");
         }
 
         // Create the package (if any), the module and return the latter
