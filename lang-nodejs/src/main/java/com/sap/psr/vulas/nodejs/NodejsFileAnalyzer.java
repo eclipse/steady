@@ -131,11 +131,10 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
      */
     @Override
     public void enterSourceElement(JavaScriptParser.SourceElementContext ctx) {
-        // Get non-construct nodes.
+        // Get construct and non-construct nodes that belong to MODULE.
+        // This method should not includes a composite construct.
         final String stmt = ctx.getText();
-        if(!NodejsFileAnalyzer.isTopOfType(this.context, NodejsId.Type.MODULE)
-            || stmt.startsWith("function")
-            || stmt.startsWith("class"))
+        if(!NodejsFileAnalyzer.isTopOfType(this.context, NodejsId.Type.MODULE))
             return ;
         stmts.add(stmt);
     }
@@ -483,7 +482,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
                 if(pack != null)
                     this.constructs.put(pack, new Construct(pack, ""));
 
-                // User package and module as context
+                // Use package and module as context
                 if(pack != null)
                     this.context.push(pack);
                 this.context.push(module);
