@@ -1,6 +1,7 @@
 package com.sap.psr.vulas.backend.rest;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.Filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.sap.psr.vulas.backend.model.Tenant;
 import com.sap.psr.vulas.backend.model.view.Views;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
+import com.sap.psr.vulas.backend.util.CacheFilter;
 import com.sap.psr.vulas.backend.util.TokenUtil;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
@@ -34,9 +36,12 @@ public class TenantController {
 
 	private TenantRepository tenantRepository;
 
+	private final Filter cacheFilter;
+
 	@Autowired
-	TenantController(TenantRepository tenantRepository) {
+	TenantController(TenantRepository tenantRepository, Filter cacheFilter) {
 		this.tenantRepository = tenantRepository;
+		this.cacheFilter = cacheFilter;
 	}
 	
 	/**

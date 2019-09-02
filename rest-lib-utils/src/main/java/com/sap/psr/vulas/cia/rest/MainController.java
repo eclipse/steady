@@ -56,7 +56,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  *
  */
 @Configuration
-@ComponentScan
+@ComponentScan({"com.sap.psr.vulas.cia.util,com.sap.psr.vulas.cia.rest"})
 @EnableAutoConfiguration
 @EnableSwagger2
 public class MainController extends SpringBootServletInitializer {

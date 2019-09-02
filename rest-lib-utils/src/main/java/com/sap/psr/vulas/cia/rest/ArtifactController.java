@@ -11,10 +11,13 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.Filter;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jeantessier.dependencyfinder.cli.JarJarDiff;
 import com.sap.psr.vulas.FileAnalyzer;
+import com.sap.psr.vulas.cia.util.CacheFilter;
 import com.sap.psr.vulas.cia.util.FileAnalyzerFetcher;
 import com.sap.psr.vulas.cia.util.HeaderEcho;
 import com.sap.psr.vulas.cia.dependencyfinder.JarDiffCmd;
@@ -59,7 +63,10 @@ public class ArtifactController {
 	
 	private static Logger log = LoggerFactory.getLogger(ArtifactController.class);
 
-	
+	@Autowired
+	@Qualifier("cacheFilter")
+	private Filter cacheFilter;
+
 	/**
 	 * Returns the artifact version for the given SHA1. Returns 404 if the SHA1 is not known by the configured external services.
 	 *

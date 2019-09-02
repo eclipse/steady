@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.Filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ import com.sap.psr.vulas.backend.repo.DependencyRepository;
 import com.sap.psr.vulas.backend.repo.LibraryIdRepository;
 import com.sap.psr.vulas.backend.repo.LibraryRepository;
 import com.sap.psr.vulas.backend.util.ArtifactMaps;
+import com.sap.psr.vulas.backend.util.CacheFilter;
 import com.sap.psr.vulas.backend.util.ServiceWrapper;
 import com.sap.psr.vulas.shared.enums.VulnDepOrigin;
 import com.sap.psr.vulas.shared.json.model.Version;
@@ -56,11 +58,14 @@ public class LibraryIdController {
 	
 	private final BugRepository bugRepository;
 
+	private final Filter cacheFilter;
+
 	@Autowired
-	LibraryIdController(AffectedLibraryRepository afflibRepository, LibraryIdRepository libIdRepository, BugRepository bugRepository) {
+	LibraryIdController(AffectedLibraryRepository afflibRepository, LibraryIdRepository libIdRepository, BugRepository bugRepository, Filter cacheFilter) {
 		this.afflibRepository = afflibRepository;
 		this.libIdRepository = libIdRepository;
 		this.bugRepository = bugRepository;
+		this.cacheFilter = cacheFilter;
 	}
 
 	/**
@@ -247,7 +252,6 @@ public class LibraryIdController {
 						result.add(a);
 				}
 			}
-
 			return new ResponseEntity<List<com.sap.psr.vulas.shared.json.model.LibraryId>>(result, HttpStatus.OK);
 		}
 		catch(Exception e) {
