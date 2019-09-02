@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -49,7 +50,7 @@ public class NpmWrapper {
     private String projectName = null;
 
     private Set<NpmInstalledPackage> installedPackages = null;
-    private Map<String, String> packageType = null;
+    private Set<String> devDependenciesPath = null;
 
     /**
      * Assumes that the npm executable is part of the PATH environment variable.
@@ -191,8 +192,9 @@ public class NpmWrapper {
                }
            }
 
+           // Get devDependencies path
+            this.devDependenciesPath = this.callNpmList("--dev");
             // Get all dependencies
-            this.packageType = this.getPackageType(_project_path);
             packages = this.getListPackages();
         } catch(ProcessWrapperException e) {
             throw new ProcessWrapperException("Error calling installing packages: " + e.getMessage(), e);
@@ -268,13 +270,29 @@ public class NpmWrapper {
         return type_obj;
     }
 
-    public Set<NpmInstalledPackage> getListPackages() throws ProcessWrapperException, IOException, InterruptedException {
+    private Set<NpmInstalledPackage> getListPackages() throws ProcessWrapperException, IOException, InterruptedException {
         Set<NpmInstalledPackage> packages = null;
+
+        // List paths of installed dependencies
+        Set<String> installed_paths = callNpmList();
+        packages = this.parseNpmListParseableOutput(installed_paths);
+
+        return packages;
+    }
+
+    private Set<String> callNpmList() throws ProcessWrapperException, IOException, InterruptedException {
+        return callNpmList(null);
+    }
+
+    private Set<String> callNpmList(String arg) throws ProcessWrapperException, IOException, InterruptedException{
 
         // List paths of installed dependencies
         ProcessWrapper pw = new ProcessWrapper();
         final Path project_path = Paths.get(this.pathToVirtualenv.toString(), this.projectName);
-        pw.setCommand(this.pathToNpmExecutable, "list", "--parseable");
+        if(arg != null)
+            pw.setCommand(this.pathToNpmExecutable, "list", "--parseable", arg);
+        else
+            pw.setCommand(this.pathToNpmExecutable, "list", "--parseable");
         pw.setWorkingDir(project_path);
         pw.setPath(this.pathToVirtualenv);
         pw.setOutErrName("npm-list");
@@ -282,21 +300,16 @@ public class NpmWrapper {
         t.start();
         t.join();
 
-        packages = this.parseNpmListParseableOutput(pw.getOutFile());
-
-        return packages;
+        // Read the list of installed dependencies/project paths
+        final String file = FileUtil.readFile(pw.getOutFile());
+        return new HashSet<String>(Arrays.asList(file.split("\n")));
     }
 
-    private Set<NpmInstalledPackage> parseNpmListParseableOutput(Path _file) throws IOException {
+    private Set<NpmInstalledPackage> parseNpmListParseableOutput(Set<String> pack_path_list) throws IOException {
         final Set<NpmInstalledPackage> set = new HashSet<>();
-
-        // Read the list of installed dependencies/project paths
-        final String file = FileUtil.readFile(_file);
-        String[] pack_path_list = file.split("\n");
 
         // Read package.json for each package in node_modules
         for(String pack_path: pack_path_list) {
-
             // Get package information from package.json
             final Path pack_json_file = Paths.get(pack_path, "package.json");
             final JsonObject pack_json = new Gson().fromJson(FileUtil.readFile(pack_json_file), JsonObject.class);
@@ -400,10 +413,8 @@ public class NpmWrapper {
             pack_props.put("created_tarball", String.valueOf(tarball_dest));
             pack_props.put("git_hash", pack_git_hash);
 
-            if(this.packageType.containsKey(pack_integrity)) {
-                for(String type: this.packageType.get(pack_integrity).split(",")) {
-                    pack_props.put(type, "true");
-                }
+            if(this.devDependenciesPath.contains(pack_path)) {
+                pack_props.put("dev", "true");
             }
 
             NpmInstalledPackage pack = new NpmInstalledPackage(pack_name, pack_version);

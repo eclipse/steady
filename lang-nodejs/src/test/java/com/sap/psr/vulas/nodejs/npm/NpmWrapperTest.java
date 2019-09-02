@@ -113,14 +113,10 @@ public class NpmWrapperTest {
         final Set<NpmInstalledPackage> packages = vew.getInstalledPackages();
 
         boolean hasDev = false;
-        boolean hasBundle = false;
-        boolean hasOptinal = false;
 
         for(NpmInstalledPackage p: packages) {
             hasDev |= p.getProperties().containsKey("dev");
-            hasBundle |= p.getProperties().containsKey("bundled");
-            hasOptinal |= p.getProperties().containsKey("optional");
         }
-        assertTrue(hasDev || hasBundle || hasOptinal);
+        assertTrue(hasDev);
     }
 }
