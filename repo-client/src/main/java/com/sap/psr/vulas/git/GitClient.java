@@ -381,9 +381,10 @@ public class GitClient implements IVCSClient {
 		final StopWatch sw = new StopWatch("Get file changes for revision [" + _rev.substring( 0, (_rev.length()>8)?8:_rev.length() ) + "]").start();
 
 		String branch = "";
-		if(_rev.contains(":")){
-			branch = _rev.substring(_rev.indexOf(":")+1, _rev.length())+":";
-			_rev= _rev.substring(0,_rev.indexOf(":")-1);
+		if(_rev.contains(":")) {
+			String [] rev_branch = _rev.split(":");
+			_rev = rev_branch[0];
+			branch = rev_branch[1];
 		}
 
 		// TODO: use this.repository instead

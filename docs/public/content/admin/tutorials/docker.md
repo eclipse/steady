@@ -16,62 +16,25 @@ In this tutorial you will be guided through the necessary steps to set-up the @@
 
 - git
 - docker
+- docker-compose
 
 ## Installation
 
-### Clone from GitHub
+### Setup
+
+Clone locally the `vulnerability-assessment-tool` repository
 
 ```sh
 git clone https://github.com/SAP/vulnerability-assessment-tool
 ```
 
-### Build Docker images
-
-All the following commands are supposed to be executed from the root folder of the project.
-Before proceeding, be sure to move there with:
-
-```sh
-cd vulnerability-assessment-tool
-```
-
-If you want you can checkout a stable version of Vulas. Usually the `master` branch holds a `-SNAPSHOT` version.
-
-```sh
-git checkout tags/@@PROJECT_VERSION@@
-```
-
-Make a copy of the sample configuration:
+Customize the file `docker/.env` to match your needs, make sure you set the version you want to run in VULAS_RELEASE.
 
 ```sh
 cp docker/.env.sample docker/.env
 ```
 
-Customize the file `docker/.env` to match your needs.
-
-!!! info "Sensitive information"
-
-	In `docker/.env` you must configure at least `POSTGRES_USER=`, you should also configure the `HAPROXY`'s user and password as well as the credentials to access the bugs' frontend
-
-At this point, you are ready to perform the actual build with the following command:
-
-```sh
-docker build --tag vulnerability-assessment-tool-generator:@@PROJECT_VERSION@@ -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
-docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags=-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow vulnerability-assessment-tool-generator:@@PROJECT_VERSION@@
-```
-
-!!! warning "Build error"
-
-	If the command above fails, add `-DreuseForks=False` flag to `mvn_flags`. As shown in the example below.
-
-    ```sh
-    docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags='-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow -DreuseForks=False' vulnerability-assessment-tool-generator:@@PROJECT_VERSION@@
-    ```
-
-In case you are running behind a proxy you need to configure it in the `--build-arg` arguments.
-
-As a result, the folders `docker/<component-name>` will contain compiled JARs (or WARs, depending on the component). The folder `docker/client-tools` will be populated with the JARs for client side tools (CLI, plugins, patchanalyzer).
-
-Finally, you may want to make all artifacts available to the developers of your organization (e.g., through an internal Nexus or other artifact distribution system).
+> In `docker/.env` you must configure at least `POSTGRES_USER=`, you should also configure the `HAPROXY`'s user and password as well as the credentials to access the bugs' frontend
 
 ### Run
 

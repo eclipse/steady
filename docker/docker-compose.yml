@@ -4,12 +4,7 @@ services:
   frontend-apps:
     container_name: vulnerability-assessment-tool-frontend-apps
     hostname: frontend-apps
-    build: 
-      context: ./frontend-apps
-      dockerfile: ./Dockerfile
-      args:
-        - VULAS_RELEASE=${VULAS_RELEASE}
-    image: vulnerability-assessment-tool-frontend-apps:${VULAS_RELEASE}
+    image: vulas/vulnerability-assessment-tool-frontend-apps:${VULAS_RELEASE}
     expose:
       - "8080"
     security_opt:
@@ -19,12 +14,7 @@ services:
   frontend-bugs:
     container_name: vulnerability-assessment-tool-frontend-bugs
     hostname: frontend-bugs
-    build: 
-      context: ./frontend-bugs
-      dockerfile: ./Dockerfile
-      args:
-        - VULAS_RELEASE=${VULAS_RELEASE}
-    image: vulnerability-assessment-tool-frontend-bugs:${VULAS_RELEASE}
+    image: vulas/vulnerability-assessment-tool-frontend-bugs:${VULAS_RELEASE}
     expose:
       - "8080"
     security_opt:
@@ -54,14 +44,7 @@ services:
   patch-lib-analyzer:
     container_name: vulnerability-assessment-tool-patch-lib-analyzer
     hostname: patch-lib-analyzer
-    build: 
-      context: ./patch-lib-analyzer
-      dockerfile: ./Dockerfile
-      args:
-        - VULAS_RELEASE=${VULAS_RELEASE}
-        - http_proxy=${http_proxy}
-        - https_proxy=${https_proxy}
-    image: vulnerability-assessment-tool-patch-lib-analyzer:${VULAS_RELEASE}
+    image: vulas/vulnerability-assessment-tool-patch-lib-analyzer:${VULAS_RELEASE}
     expose:
       - "8080"
     volumes:
@@ -104,14 +87,7 @@ services:
     env_file: 
       - .env
       - ./rest-backend/conf/restbackend.properties
-    build: 
-      context: ./rest-backend    
-      dockerfile: ./Dockerfile
-      args:
-        - VULAS_RELEASE=${VULAS_RELEASE}
-        - http_proxy=${http_proxy}
-        - https_proxy=${https_proxy}
-    image: vulnerability-assessment-tool-rest-backend:${VULAS_RELEASE}
+    image: vulas/vulnerability-assessment-tool-rest-backend:${VULAS_RELEASE}
     expose:
       - "8091"
     environment:
@@ -135,14 +111,7 @@ services:
   rest-lib-utils:
     container_name: vulnerability-assessment-tool-rest-lib-utils
     hostname: rest-lib-utils
-    build: 
-      context: ./rest-lib-utils 
-      dockerfile: ./Dockerfile
-      args:
-        - VULAS_RELEASE=${VULAS_RELEASE}
-        - http_proxy=${http_proxy}
-        - https_proxy=${https_proxy}
-    image: vulnerability-assessment-tool-rest-lib-utils:${VULAS_RELEASE}
+    image: vulas/vulnerability-assessment-tool-rest-lib-utils:${VULAS_RELEASE}
     expose:
         - "8092"
     volumes:
