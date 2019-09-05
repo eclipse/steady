@@ -112,6 +112,20 @@ public class NodejsId extends ConstructId {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        NodejsId other = (NodejsId)obj;
+        if (this.type != other.type)
+            return false;
+        return this.getQualifiedName().equals(other.getQualifiedName());
+    }
+
+    @Override
     public String getName() {
         return this.simpleName;
     }

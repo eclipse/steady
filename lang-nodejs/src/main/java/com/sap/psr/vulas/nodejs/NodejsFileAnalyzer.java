@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 import org.antlr.v4.runtime.CharStream;
@@ -471,7 +470,7 @@ public class NodejsFileAnalyzer extends JavaScriptParserBaseListener implements 
         log.info("Getting constructs from [" + this.file.toString() + "]");
         if(this.constructs == null) {
             try {
-                this.constructs = new TreeMap<ConstructId, Construct>();
+                this.constructs = new HashMap<ConstructId, Construct>();
 
                 // Create module and add to constructs
                 this.module = NodejsFileAnalyzer.getModule(this.file, this.packageRoot);

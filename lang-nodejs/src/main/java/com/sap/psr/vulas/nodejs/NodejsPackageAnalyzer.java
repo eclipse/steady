@@ -9,12 +9,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
-import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,7 +55,7 @@ public class NodejsPackageAnalyzer implements FileAnalyzer {
     @Override
     public Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
         if(this.constructs == null) {
-            this.constructs = new TreeMap<>();
+            this.constructs = new HashMap<>();
 
             final NodejsFileVisitor walker = new NodejsFileVisitor(this.getSupportedFileExtensions());
             try {
