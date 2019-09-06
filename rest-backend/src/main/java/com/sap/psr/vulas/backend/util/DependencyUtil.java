@@ -67,10 +67,13 @@ public class DependencyUtil {
 	public static Dependency getDependency(Set<Dependency> _deps, Dependency _dep) {
 		for(Dependency d: _deps) {
 			 if(d.getLib().equals(_dep.getLib()) &&
-					( (d.getParent() == null && _dep.getParent()==null) ||
-							d.getParent().equalLibParentRelPath(_dep.getParent())) &&
-					( (d.getRelativePath() == null && _dep.getRelativePath()==null) ||
-							d.getRelativePath().equals(_dep.getRelativePath()))) {
+					( (d.getParent() == null && _dep.getParent()==null) || (d.getParent() != null && _dep.getParent()!=null &&
+							d.getParent().equalLibParentRelPath(_dep.getParent()))) &&
+					( (d.getRelativePath() == null && _dep.getRelativePath()==null) || (d.getRelativePath() != null && _dep.getRelativePath()!=null &&
+							d.getRelativePath().equals(_dep.getRelativePath()))) 
+					//&&	( (d.getPath() == null && _dep.getPath()==null) || (d.getPath() != null && _dep.getPath()!=null &&
+					//d.getPath().equals(_dep.getPath())))
+					 ) {
 				return d;
 			}
 		}
