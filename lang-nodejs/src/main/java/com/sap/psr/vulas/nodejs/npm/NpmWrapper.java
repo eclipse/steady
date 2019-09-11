@@ -175,7 +175,7 @@ public class NpmWrapper {
             ProcessWrapper pw_install = new ProcessWrapper();
             pw_install.setWorkingDir(_project_path);
             pw_install.setPath(this.pathToVirtualenv);
-            pw_install.setCommand(this.pathToNpmExecutable,"install", "--no-audit");
+            pw_install.setCommand(this.pathToNpmExecutable,"install", "--package-lock", "false", "--no-audit");
             pw_install.setOutErrName("npm-install-" + _attempt);
             Thread t_install = new Thread(pw_install);
             t_install.start();
