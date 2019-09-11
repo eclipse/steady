@@ -121,7 +121,7 @@
 
 		<!-- Activate when deploying to the Central Repo. Also see https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release -->
 		<profile>
-			<id>release</id>
+			<id>javadoc</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -152,6 +152,15 @@
 							</execution>
 						</executions>
 					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		
+		<!-- Activate when deploying to the Central Repo. Also see https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release -->
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
