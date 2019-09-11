@@ -62,8 +62,16 @@ public class NodejsBomTask extends AbstractBomTask {
         for(Path p : this.getSearchPath()) {
             log.info("Searching for Node.js projects in search path [" + p + "]");
             search.clear();
-            prj_paths.addAll(search.search(p));
+            Path root_p = null;
+            for(Path sub_p : search.search(p)) {
+                if(root_p == null)
+                    root_p = sub_p;
+                else if(root_p.toString().length() > sub_p.toString().length())
+                    root_p = sub_p;
+            }
+            prj_paths.add(root_p);
         }
+
         log.info("Found [" + prj_paths.size() + "] Node.js projects in search path(s)");
 
         NpmWrapper npm;
