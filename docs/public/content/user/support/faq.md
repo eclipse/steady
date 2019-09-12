@@ -111,17 +111,18 @@ WARN com.sap.psr.vulas.backend.BackendConnector - App [group=com.acme, artifact=
 - If an application does neither have any dependencies nor source code, e.g., in folder `src/main/java`, it will not be uploaded to the backend (depending on configuration parameter `vulas.core.app.uploadEmpty`, which defaults to `false`). In this case, the execution of goal execution information cannot be uploaded. Typical examples of _empty_ applications are Maven aggregator projects (`<packaging>pom</packaging>`).
 - If an application version is analyzed for the first time, the initial execution of the `clean` goal will also result in this warning message.
 
-### Why does @@PROJECT_NAME@@ show vulnerabilities which seems to be related to others components
+### Why does @@PROJECT_NAME@@ show vulnerabilities that are seemingly related to other components
 
-**Symptom**: In the @@PROJECT_NAME@@ FrontEnd or in the @@PROJECT_NAME@@ report, @@PROJECT_NAME@@ displays findings which seem to be related to others components:
+**Symptom**: In the Web frontend or in the report, @@PROJECT_NAME@@ displays findings which seem to be related to others components.
 
 **Example**:
-In the following screenshot, user can see a list of CVEs related to "jackson-databind" which are associated to an archive related to the "spring" component by @@PROJECT_NAME@@. 
+In the following screenshot, several CVEs related to `jackson-databind` are shown for `spring-cloud-cloudfoundry-connector`. 
 
 ![Vulnerability references](img/vuln_rebundles.jpg)
 
-**Explanation**: @@PROJECT_NAME@@ has detected that the used archive embedds the code of the artifact associated to the CVE. The finding is correct.
-In the previous example, the file "spring-cloud-cloudfoundry-connector-2.0.5.RELEASE.jar" contains the vulnerable code of "jackson-databind".
+**Explanation**: @@PROJECT_NAME@@ detects the presence of vulnerable code, no matter the file name or GAV of a dependency. Sometimes, an archive re-bundles code of other open source projects. Sometimes, re-bundled code is even re-packaged, thus, the Java package namespace is altered. Both of those cases are still detected by @@PROJECT_NAME@@.
+
+In the previous example, the file `spring-cloud-cloudfoundry-connector-2.0.5.RELEASE.jar` contains (re-bundles) vulnerable code of `jackson-databind`.
 
 
 ## Understanding the results produced by @@PROJECT_NAME@@
