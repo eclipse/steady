@@ -290,9 +290,9 @@ public class NpmWrapper {
         ProcessWrapper pw = new ProcessWrapper();
         final Path project_path = Paths.get(this.pathToVirtualenv.toString(), this.projectName);
         if(arg != null)
-            pw.setCommand(this.pathToNpmExecutable, "list", "--parseable", arg);
+            pw.setCommand(this.pathToNpmExecutable, "list", "--package-lock", "false", "--parseable", arg);
         else
-            pw.setCommand(this.pathToNpmExecutable, "list", "--parseable");
+            pw.setCommand(this.pathToNpmExecutable, "list", "--package-lock", "false", "--parseable");
         pw.setWorkingDir(project_path);
         pw.setPath(this.pathToVirtualenv);
         pw.setOutErrName("npm-list");
