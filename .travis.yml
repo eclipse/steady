@@ -1,6 +1,6 @@
 matrix:
   include:
-  - name: OpenJDK8 - Run all the test on the Open JVM
+  - name: OpenJDK8 - Test and install Maven artifacts
     language: java
     jdk: openjdk8
     cache:
@@ -12,12 +12,12 @@ matrix:
     install:
     - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
     script: mvn -e -B -P gradle -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
-  - name: Javadoc - Build Javadoc
+  - name: OpenJDK8 - Create Maven artifacts for JavaDoc and sources
     language: java
     jdk: openjdk8
     install:
     - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
-    script: mvn -e -B --settings .travis/settings.xml compile javadoc:javadoc
+    script: mvn -e -B -P gradle,javadoc -DskipTests --settings .travis/settings.xml clean package
   - name: Docker - Build the Modules' Jars, Run all Java tests, Create vital containers, Check if they stay alive for more than 20 seconds
     language: bash
     sudo: required
