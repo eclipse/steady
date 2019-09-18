@@ -575,7 +575,8 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj){
-		return obj instanceof JarAnalyzer && this.getSHA1().equals(((JarAnalyzer)obj).getSHA1());
+		//We need to distinguish Jars with same digest but different path to be able to link parents to their digest. However the relativePath should be used once we start using it.
+		return obj instanceof JarAnalyzer && this.getSHA1().equals(((JarAnalyzer)obj).getSHA1()) && this.getPath().toString().equals(((JarAnalyzer)obj).getPath().toString());
 	}
 
 	/** {@inheritDoc} */
