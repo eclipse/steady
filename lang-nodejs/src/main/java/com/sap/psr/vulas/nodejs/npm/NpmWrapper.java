@@ -25,7 +25,9 @@ import com.google.gson.JsonObject;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.util.DigestUtil;
 import com.sap.psr.vulas.shared.util.StringUtil;
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -166,16 +168,13 @@ public class NpmWrapper {
             t_cache.join();
 
             // Remove package-lock.json and node_modules before installing dependencies,
-            // only when npm fail to install in the first attempt
-            if(_attempt > 0) {
-                removeLockModules(_project_path);
-            }
+            removeLockModules(_project_path);
 
             // Download and install all dependencies
             ProcessWrapper pw_install = new ProcessWrapper();
             pw_install.setWorkingDir(_project_path);
             pw_install.setPath(this.pathToVirtualenv);
-            pw_install.setCommand(this.pathToNpmExecutable,"install", "--package-lock", "false", "--no-audit");
+            pw_install.setCommand(this.pathToNpmExecutable,"install", "--no-audit");
             pw_install.setOutErrName("npm-install-" + _attempt);
             Thread t_install = new Thread(pw_install);
             t_install.start();
@@ -208,10 +207,15 @@ public class NpmWrapper {
 
     private void removeLockModules(Path _dir) throws IOException{
         final Path lock_file = Paths.get(_dir.toString(), "package-lock.json");
+        final Path shrinkwrap_file = Paths.get(_dir.toString(), "npm-shrinkwrap.json");
         final Path modules = Paths.get(_dir.toString(), "node_modules");
         if(FileUtil.isAccessibleFile(lock_file)) {
             log.warn("Found [package-lock.json] in [" + _dir + "], removing");
             Files.delete(lock_file);
+        }
+        if(FileUtil.isAccessibleFile(shrinkwrap_file)) {
+            log.warn("Found [npm-shrinkwrap.json] in [" + _dir + "], removing");
+            Files.delete(shrinkwrap_file);
         }
         if(FileUtil.isAccessibleDirectory(modules)) {
             log.warn("Found [node_modules] in [" + _dir + "], removing");
@@ -290,9 +294,9 @@ public class NpmWrapper {
         ProcessWrapper pw = new ProcessWrapper();
         final Path project_path = Paths.get(this.pathToVirtualenv.toString(), this.projectName);
         if(arg != null)
-            pw.setCommand(this.pathToNpmExecutable, "list", "--package-lock", "false", "--parseable", arg);
+            pw.setCommand(this.pathToNpmExecutable, "list", "--parseable", arg);
         else
-            pw.setCommand(this.pathToNpmExecutable, "list", "--package-lock", "false", "--parseable");
+            pw.setCommand(this.pathToNpmExecutable, "list", "--parseable");
         pw.setWorkingDir(project_path);
         pw.setPath(this.pathToVirtualenv);
         pw.setOutErrName("npm-list");
@@ -360,6 +364,12 @@ public class NpmWrapper {
                     pack_shasum = pack_json.get("_shasum").getAsString();
                     pack_integrity = pack_json.get("_integrity").getAsString();
                 }
+                else if(pack_json.has("_shasum") && !pack_json.has("_integrity")) {
+                    log.warn("Cannot get \"_integrity\" of [" + pack_name + "], compute from \"_shasum\" instead");
+                    pack_shasum = pack_json.get("_shasum").getAsString();
+                    byte[] decoded_shasum = Hex.decodeHex(pack_shasum.toLowerCase());
+                    pack_integrity = DigestAlgorithm.SHA1.toString().replace("-", "") +"-"+ Base64.encodeBase64String(decoded_shasum);
+                }
                 else if(!pack_json.has("_shasum") && (pack_json.has("_integrity")) && !String.valueOf(pack_json.get("_integrity").getAsString()).equalsIgnoreCase("")) {
                     log.warn("Cannot get \"_shasum\" of [" + pack_name + "], compute from \"_integrity\" instead");
                     pack_integrity = pack_json.get("_integrity").getAsString();
@@ -392,7 +402,7 @@ public class NpmWrapper {
                         pack_git_hash = "#" + pack_url.split("#")[1];
                     }
                 }
-            } catch(NullPointerException e){
+            } catch(NullPointerException | DecoderException e){
                 log.error("Cannot get properties of [" + pack_name + "], set the default value instead");
             }
 
