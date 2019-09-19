@@ -51,7 +51,7 @@ matrix:
       skip_cleanup: true
       script: bash .travis/docker_hub_push_release.sh
       on:
-        condition: "$TRAVIS_TAG =~ ^(\\d+\\.\\d+\\.\\d.*)$"
+        condition: tag =~ /^[0-9]+\.[0-9]+\.[0-9]+(\..*)?$/
   - name: Docker - Check if Dockerfile sources are present at fixed location
     language: bash
     script:
