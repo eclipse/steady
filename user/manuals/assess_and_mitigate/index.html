@@ -40,7 +40,7 @@
     
     
       
-        <title>Assessment and Mitigation - vulnerability-assessment-tool 3.1.5</title>
+        <title>Assessment and Mitigation - vulnerability-assessment-tool 3.1.6</title>
       
     
     
@@ -125,7 +125,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.5" class="md-header-nav__button md-logo">
+        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -139,7 +139,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.1.5
+                vulnerability-assessment-tool 3.1.6
               </span>
               <span class="md-header-nav__topic">
                 Assessment and Mitigation
@@ -311,12 +311,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.5" class="md-nav__button md-logo">
+    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.1.5
+    vulnerability-assessment-tool 3.1.6
   </label>
   
     <div class="md-nav__source">
@@ -1353,6 +1353,16 @@
 </div>
 <p>Fixing the library means to create a fix for the vulnerability within the source code of the open-source library, which requires a deep understanding of the respective library and vulnerability.</p>
 <p>If you take that road, make sure to create a pull request so that the original open-source developers check and integrate the fix in the standard. If not, you will need to maintain your fix in the forked version of the library, and any further enhancements of the library will need to be merged into this fork.</p>
+<div class="admonition warning">
+<p class="admonition-title">Special case: Uber JARs</p>
+<p>So-called Uber JARs are one example where the removal or update of a vulnerable dependency is not easily possible. Such Java archives do not only contain the Java classes of the respective component, but also contain (rebundle) the Java classes of its dependencies. Uber JARs enable the distribution of self-contained "all-in-one" Java archives.</p>
+<p>In order to fix such Uber JARs, one has to clone the source code repository of the respective open source component, fix the version of the dependency whose classes will be included in the Uber JAR, and build the component in order to produce a new, fixed Uber JAR of the component containing the non-vulnerable classes of its dependency.</p>
+<p>Example: The Java component <a href="https://search.maven.org/artifact/org.springframework.cloud/spring-cloud-cloudfoundry-connector/2.0.6.RELEASE/jar"><code>org.springframework.cloud:spring-cloud-cloudfoundry-connector</code></a> rebundles <code>jackson-databind</code>. In case the latest version of <code>spring-cloud-cloudfoundry-connector</code> contains a vulnerable version of <code>jackson-databind</code>, one has to clone <code>https://github.com/spring-cloud/spring-cloud-connectors/tree/master/spring-cloud-cloudfoundry-connector</code>, edit <code>build.gradle</code> in order to update the version of <code>jackson-databind</code>, and build a fixed Uber JAR to be used by the application.</p>
+<p><strong>Important</strong>:</p>
+<ul>
+<li>If you create a fix yourself, make sure to contribute such fixes to the original open source project.</li>
+</ul>
+</div>
 <h3 id="fixing-the-application-exceptional">Fixing the application (exceptional)<a class="headerlink" href="#fixing-the-application-exceptional" title="Permanent link">&para;</a></h3>
 <div class="admonition warning">
 <p class="admonition-title">Best practice</p>
