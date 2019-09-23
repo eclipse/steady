@@ -1,3 +1,4 @@
 com.sap.psr.vulas.cia.util.MavenCentralWrapper
 com.sap.psr.vulas.cia.util.NexusWrapper
 com.sap.psr.vulas.cia.util.PypiWrapper
+com.sap.psr.vulas.cia.util.NpmRegistryWrapper

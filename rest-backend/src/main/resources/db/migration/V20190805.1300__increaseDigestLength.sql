@@ -9,6 +9,9 @@ drop view v_app_dep;
 -- increase size of digest
 ALTER TABLE lib ALTER COLUMN digest TYPE CHARACTER varying(128);
 
+-- increase size of digest
+ALTER TABLE app_dependency ALTER COLUMN lib TYPE CHARACTER varying(128);
+
 --create views
 --Affected libraries results after applying priority (MANUAL->AST_EQUALITY(and other patch eval results)) for libraries without GAV (only sha1 known)
 create or replace view v_affected_library_digest as
