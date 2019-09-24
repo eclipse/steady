@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "a": "git://github.com/alfateam/a.git"
+    "a": "git://github.com/alfateam/a.git#b9a9461"
   },
   "author": "",
   "license": "ISC"

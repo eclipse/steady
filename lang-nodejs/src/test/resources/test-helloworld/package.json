@@ -7,12 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "upper-case": "*",
+    "upper-case": "1.1.3",
     "http": "*",
     "connect": "2.0.0"
   },
   "devDependencies": {
-    "left-pad": "*"
+    "left-pad": "1.3.0"
   },
   "author": "",
   "license": "ISC"
