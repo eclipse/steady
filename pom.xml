@@ -5,7 +5,7 @@
 
 	<groupId>com.sap.research.security.vulas</groupId>
 	<artifactId>root</artifactId>
-	<version>3.1.6-SNAPSHOT</version>
+	<version>3.1.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
@@ -302,17 +302,17 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-core</artifactId>
-				<version>2.9.9</version>
+				<version>2.9.10</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>2.9.9.3</version>
+				<version>2.9.10</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-annotations</artifactId>
-				<version>2.9.9</version>
+				<version>2.9.10</version>
 			</dependency>
 
 			<!-- Versions of 'org.apache.maven' artifacts should be identical -->

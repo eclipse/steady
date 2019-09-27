@@ -11,13 +11,13 @@ matrix:
     - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
     install:
     - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
-    script: mvn -e -B -P gradle -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
+    script: mvn -e -B -P gradle -Dspring.standalone -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
   - name: OpenJDK8 - Create Maven artifacts for JavaDoc and sources
     language: java
     jdk: openjdk8
     install:
     - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
-    script: mvn -e -B -P gradle,javadoc -DskipTests --settings .travis/settings.xml clean package
+    script: mvn -e -B -P gradle,javadoc -Dspring.standalone -DskipTests --settings .travis/settings.xml clean package
   - name: Docker - Build the Modules' Jars, Run all Java tests, Create vital containers, Check if they stay alive for more than 20 seconds
     language: bash
     sudo: required
@@ -51,7 +51,8 @@ matrix:
       skip_cleanup: true
       script: bash .travis/docker_hub_push_release.sh
       on:
-        condition: "$TRAVIS_TAG =~ ^(\\d+\\.\\d+\\.\\d.*)$"
+        all_branches: true
+        condition: tag =~ /^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$/
   - name: Docker - Check if Dockerfile sources are present at fixed location
     language: bash
     script:
