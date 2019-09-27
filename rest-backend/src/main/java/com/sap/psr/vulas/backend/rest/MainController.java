@@ -47,7 +47,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  *
  */
 @Configuration
-@ComponentScan({"com.sap.psr.vulas.backend.component,com.sap.psr.vulas.backend.rest"})
+@ComponentScan({"com.sap.psr.vulas.backend.component,com.sap.psr.vulas.backend.rest,com.sap.psr.vulas.backend.util"})
 @EnableAutoConfiguration
 //@EnableWebMvc 
 //@SpringBootApplication
