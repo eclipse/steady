@@ -1,0 +1,39 @@
+{{- if .Values.benchmark }}
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: bench-pgbench-direct
+  namespace: {{ .Values.global.core.namespace }}
+  annotations:
+    "helm.sh/hook": post-install
+
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: bench-pgbench-direct
+          image: postgres:11.5-alpine
+          imagePullPolicy: "IfNotPresent"
+          command:
+            - sh
+            - -c
+            - |
+              #!/bin/sh
+              {{- with .Values.global.core.postgres }}
+              export PGPASSWORD={{ .credentials.postgres_password }}
+              pgbench -d -c 80 -j 8 -U {{ .credentials.postgres_user }} -f /bench.sql -r -n -T 600 -h {{ .master.service }} -p 5432 vulas
+              {{- end }}
+
+          volumeMounts:
+          - name: bench-pgbench-sql
+            mountPath: /bench.sql
+            subPath: bench.sql
+
+      volumes:
+      - name: bench-pgbench-sql
+        configMap:
+          name: bench-pgbench-sql
+{{- end }}

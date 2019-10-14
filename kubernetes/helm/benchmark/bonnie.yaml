@@ -1,0 +1,29 @@
+{{- if .Values.benchmark }}
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: bench-nfs-io
+  namespace: {{ .Values.global.core.namespace }}
+  annotations:
+    "helm.sh/hook": post-install
+
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: bench-nfs-io-host
+          image: ubuntu:18.04
+          imagePullPolicy: "IfNotPresent"
+          command:
+            - sh
+            - -c
+            - |-
+              #!/bin/bash
+              apt-get update && apt-get install bonnie++
+              bonnie++ -d /tmp -s 4G -n innerContainer -f -b
+
+              sleep 10000
+{{- end }}

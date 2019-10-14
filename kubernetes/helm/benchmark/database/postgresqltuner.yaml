@@ -1,0 +1,27 @@
+{{- if .Values.benchmark }}
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: bench-postgresqltuner
+  namespace: {{ .Values.global.core.namespace }}
+  annotations:
+    "helm.sh/hook": post-install
+
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: bench-postgresqltuner-container
+          image: jfcoz/postgresqltuner:latest
+          imagePullPolicy: "IfNotPresent"
+          args:
+          {{- with .Values.global.core.postgres }}
+          - --host={{ .master.service }}
+          - --database={{ .credentials.postgres_db }}
+          - --user={{ .credentials.postgres_user }}
+          - --password={{ .credentials.postgres_password }}
+          {{- end }}
+{{- end }}
