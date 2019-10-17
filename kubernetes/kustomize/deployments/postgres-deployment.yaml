@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: postgresql
+  labels:
+    component: postgresql
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: postgresql
+    spec:
+      containers:
+        - name: postgresql
+          image: postgres:11.3
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: env-secret
+                  key: POSTGRES_PASSWORD
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+            - name: POSTGRES_DB
+              value: vulas
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-claim0
+            - mountPath: /docker-entrypoint-initdb.d
+              name: startup
+      volumes:
+        - name: postgres-claim0
+          persistentVolumeClaim:
+            claimName: postgres-claim0
+        - name: startup
+          configMap:
+            name: postgres-setup-script-cm
+            items:
+              - key: postgres-setup-script
+                path: 10-vulas-setup.sh

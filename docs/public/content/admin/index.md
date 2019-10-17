@@ -7,3 +7,4 @@
 - [Deploy on Docker](./tutorials/docker/) and [Import the knowledge base](../vuln_db/tutorials/vuln_db_tutorial/#batch-import-from-knowledge-base)
 - [Build JAVA archives and local Docker images](./tutorials/build/)
 - [Push Docker images to a registry](./tutorials/registry/)
+- [Deploy on Kubernetes with Kustomize](./tutorials/kustomize/)

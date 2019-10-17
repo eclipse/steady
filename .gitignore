@@ -29,3 +29,6 @@ docs/site
 docs/.merged
 docs/.tmp
 /*/src/main/webapp/model/Version.js
+/kubernetes/kustomize/secrets/*
+!/kubernetes/kustomize/secrets/*.sample
+/docker/**/import_vulas_kb.sh
