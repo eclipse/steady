@@ -1,0 +1,72 @@
+apiVersion: skaffold/v1beta15
+kind: Config
+build:
+  tagPolicy:
+    envTemplate:
+      template: "{{.IMAGE_NAME}}:{{.VULAS_RELEASE}}-jib"
+  artifacts:
+    - image: vulas/vulnerability-assessment-tool-rest-backend
+      context: .
+      jib:
+        project: rest-backend
+        args:
+        - -DskipTests=true
+
+    - image: vulas/vulnerability-assessment-tool-frontend-apps
+      context: .
+      jib:
+        project: frontend-apps
+        args:
+        - -DskipTests=true
+        - -Djib.container.appRoot=/jetty/webapps/apps
+    - image: vulas/vulnerability-assessment-tool-frontend-bugs
+      context: .
+      jib:
+        project: frontend-bugs
+        args:
+        - -DskipTests=true
+        - -Djib.container.appRoot=/jetty/webapps/bugs
+    - image: vulas/vulnerability-assessment-tool-rest-lib-utils
+      context: .
+      jib:
+        project: rest-lib-utils
+        args:
+        - -DskipTests=true
+    - image: vulas/vulnerability-assessment-tool-patch-lib-analyzer
+      context: .
+      jib:
+        project: patch-lib-analyzer
+        args:
+        - -DskipTests=true
+        - -Djib.container.mainClass=com.sap.psr.vulas.patcheval2.Main
+
+profiles:
+  - name: prod
+    patches:
+      - op: replace
+        path: /build/artifacts/0/jib/args/0
+        value: -DskipTests=false
+      - op: replace
+        path: /build/artifacts/1/jib/args/0
+        value: -DskipTests=false
+      - op: replace
+        path: /build/artifacts/2/jib/args/0
+        value: -DskipTests=false
+      - op: replace
+        path: /build/artifacts/3/jib/args/0
+        value: -DskipTests=false
+      - op: replace
+        path: /build/artifacts/4/jib/args/0
+        value: -DskipTests=false
+
+#
+# deploy:
+#   helm:
+#     releases:
+#       - name: frontendapps-test
+#         chartPath: kubernetes/helm/vulnerability-assessment-tool-core/charts/frontendapps
+#         valuesFiles:
+#           - kubernetes/helm/vulnerability-assessment-tool-core/charts/frontendapps/values.yaml
+#           - kubernetes/helm/vulnerability-assessment-tool-core/values.yaml
+#         values:
+#           image: ichbinfrog/frontendapps
