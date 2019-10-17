@@ -1,8 +1,0 @@
-.env
-kustomize-version/
-tiller/
-*.log
-test.yaml
-ci/results/*.yaml
-README_PROD.md
-values_prod.yaml

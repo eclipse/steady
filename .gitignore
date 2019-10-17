@@ -29,3 +29,6 @@ docs/site
 docs/.merged
 docs/.tmp
 /*/src/main/webapp/model/Version.js
+test.yaml
+kubernetes/helm/vulnerability-assessment-tool-admin/charts/nginx-ingress/files/tls/*.key
+kubernetes/helm/vulnerability-assessment-tool-admin/charts/nginx-ingress/files/tls/*.crt
