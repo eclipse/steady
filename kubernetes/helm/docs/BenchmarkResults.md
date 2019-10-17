@@ -1,18 +1,24 @@
-## Database Clustering benchmark
+# Database Cluster benchmark
 
 Pgbench run as a Kubernetes scheduled job within the cluster (on a distinct node from databases) with the following specs:
-- Scaling factor: 1
-- Query mode: simple (restricted here to Read queries)
-- Number of clients: 80
-- Number of threads: 8
+-   Scaling factor: 1
+-   Query mode: simple (restricted here to Read queries)
+-   Number of clients: 80
+-   Number of threads: 8
+
+This benchmark is performed with a Kubernetes cluster hosted on SAP Converge Cloud (based on Openstack) with three machines:
+-   1 x 24560MB RAM, 24 VCPU, 64GB disk hosting the master database
+-   2 x 16368MB RAM, 16 VCPU, 64GB disk hosting the slave database
+
+Each of these have a mounted PVC (provisioned by Openstack Cinder) with a storage capacity of 400GB.
 
 **Test cases:**  
-All the below test cases execute a ready only sql script (see <a href="#script">below</a>)meant to globally simulate real life usages tested against a dataset of around 300gb and can be launched as a job (see in `benchmark/database`).
+All the below test cases execute a ready only sql script (see <a href="#script">below</a>) meant to globally simulate real life usages tested against a dataset of around 300gb and can be launched as a job (see in [benchmarking folder](../vulnerability-assessment-tool-core/templates/benchmark/README.md)).
 
-- Master direct: pgbench runs directly against the master node with `nclients` concurrent clients. This would represent the 'old' setup but with replication added on which would slightly tax performance.
-- Slave direct: pgbench runs directly against the slave service (with two exact endpoints). This would be the most optimal situation since pgbench clients can query both databases and thus reduce the response time on both. (Purely hypothethical as test cases only touch read-only queries)
-- Single pgpool instance: pgbench runs against pgpool connected to one master node and to slaves.
-- Multiple pgpool instances (3): pgbench runs against pgpool-service connected to 3 pgpool non clustered instance.
+-   Master direct: pgbench runs directly against the master node with `nclients` concurrent clients. This would represent the 'old' setup but with replication added on which would slightly tax performance.
+-   Slave direct: pgbench runs directly against the slave service (with two exact endpoints). This would be the most optimal situation since pgbench clients can query both databases and thus reduce the response time on both. (Purely hypothethical as test cases only touch read-only queries)
+-   Single pgpool instance: pgbench runs against pgpool connected to one master node and to slaves.
+-   Multiple pgpool instances (3): pgbench runs against pgpool-service connected to 3 pgpool non clustered instance.
 
 |                | Average  Latency(ms) | tps(with handshake) | tps(w/ handshake) |  Q0   |  Q1   |   Q2   |   Q3    |   Q4   |    Q5    |   Q6   |  Q7   |  Q8   |  Q9   |  Q10  |  Q11   |  Q12  |  Q13   |  Q14  |    Q15    |  Q16   |  Q17  |
 |:--------------:|:--------------------:|:-------------------:|:-----------------:|:-----:|:-----:|:------:|:-------:|:------:|:--------:|:------:|:-----:|:-----:|:-----:|:-----:|:------:|:-----:|:------:|:-----:|:---------:|:------:|:-----:|

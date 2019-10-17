@@ -1,25 +1,21 @@
-
 # Populating database inside the kubernetes cluster
 
-This guide is destined to those who want to populate their vulnerability databases with the open sourced knowledge base (https://github.com/SAP/vulnerability-assessment-kb).
-
-## TL;DR
-
-This can be automated using the utils packaged with this chart (which can be installed by following this ![guide](BuildingUtils.md)). You can run the following command, once the module is built:
+This guide is destined to those who want to populate their vulnerability databases with the open sourced [knowledge base](https://github.com/SAP/vulnerability-assessment-kb).
+This can be automated using the utils packaged with this chart (which can be installed by following this [guide](../utils/README.md)). You can run the following command, once the module is built:
 
 ```sh
-vulas-utils load <bugFile.yaml> \
+utils load <bugFile.yaml> \
   --concurrent { Concurrent } \
   --releaseName { releaseName } \
   --namespace { namespace } \
   --skip
 
 # for more info and flags
-vulas-utils load --help
+utils load --help
 ```
 
 ## . Configuration
-As off vulas-utils release v0.0.1 the bug file has to be a **yaml** file following this structure:
+As off utils release v0.0.1 the bug file has to be a **yaml** file following this structure:
 ```yaml
 bugs:
 - reference: bug1   # vulnerability identifier

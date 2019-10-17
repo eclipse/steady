@@ -1,4 +1,3 @@
-
 # Loading dumps and migrating from existing database
 
 This guide is destined to those who want to migrate their old vulnerability-assessment-tool database to the Kubernetes deployment.
@@ -6,33 +5,33 @@ This guide is destined to those who want to migrate their old vulnerability-asse
 ## Preliminary
 
 Requirements:
-- kubectl (with access to cluster)  
+-   kubectl (with access to cluster)  
 
 Warning:  
-- During the first phase, the source database will be under some strain so its recommended to perform this operation during low load periods
-- During the migration, accessing the destination database will break the destination database. Therefore, it is recommended to scale down the restbackend and restlibutils to avoid going into the broken state with these commands:
+-   During the first phase, the source database will be under some strain so its recommended to perform this operation during low load periods
+-   During the migration, accessing the destination database will break the destination database. Therefore, it is recommended to scale down the restbackend and restlibutils to avoid going into the broken state with these commands:
 ```sh
 kubectl scale statefulset.apps restbackend --replicas 0 \
     && kubectl scale deployment.apps restlibutils --replicas 0
 ```
-- This process may take up to 5 hours depending on the amount of data present
+-   This process may take up to 5 hours depending on the amount of data present
 
 ## Migration using go module
 
-This migration can be automated using the utils packaged with this chart (which can be installed by following this ![guide](BuildingUtils.md)). You can run the following command, once the module is built:
+This migration can be automated using the utils packaged with this chart (which can be installed by following this [guide](../utils/README.md)). You can run the following command, once the module is built:
 
 ```sh
-vulas-utils migrate -n { CoreNamespace } -sh { SourceHost } \
+utils migrate -n { CoreNamespace } -sh { SourceHost } \
   -sp { SourcePort } -spa { Source Dump Path } -su { SourceUser } \
   -spw { SourcePassword } -dH { DestinationHost } -dp { DestinationPort } \
   -du { DestinationUser } -dpw { DestinationPassword }
 
 
 # for more info and flags
-vulas-utils migrate --help
+utils migrate --help
 ```
 
-## . Manual Migration
+## Manual Migration
 
 This can be done with a single job run from within the destination cluster (provided the source is accessible from within the k8s cluster). This job is meant to be templated with helm with the command:
 ```sh
@@ -123,11 +122,11 @@ spec:
             cpu: {{ .Values.migration.cpu }}
 ```
 
-## . Checking integrity
+## Checking integrity
 
 Due to the migration being often quite large, errors can occur that can break the database. Those can be identified by:
 
-- Tailing the logs of the migration job with `kubectl logs -f`. Some error may occur due to network issues, lack of space on the destination database, etc..
-- Trying to load the frontendapps or frontendbugs, you'll notice a huge performance dip (it could take up to 60s for simple queries instead of 5-6s max)
-- Accessing postgres and checking from inside the database with:
+-   Tailing the logs of the migration job with `kubectl logs -f`. Some error may occur due to network issues, lack of space on the destination database, etc..
+-   Trying to load the frontendapps or frontendbugs, you'll notice a huge performance dip (it could take up to 60s for simple queries instead of 5-6s max)
+-   Accessing postgres and checking from inside the database with:
 `kubectl exec -it postgres-master-0 psql -c 'SELECT pg_size_pretty( pg_database_size('dbname'))'`
