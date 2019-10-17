@@ -1,6 +1,6 @@
 matrix:
   include:
-  - name: OpenJDK8 - Test and install Maven artifacts
+  - name: OpenJDK8 - Test and install Maven artifacts, Deploys Jib images
     language: java
     jdk: openjdk8
     cache:
@@ -11,7 +11,20 @@ matrix:
     - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
     install:
     - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
-    script: mvn -e -B -P gradle -Dspring.standalone -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
+    script:
+    - mvn -e -B -P gradle -Dspring.standalone -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
+    before_deploy:
+    - set -a; source docker/.env; set +a;
+    - echo "VULAS_RELEASE=${VULAS_RELEASE}"
+    - curl -Lo .travis/skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
+    - chmod +x .travis/skaffold
+    deploy:
+    - provider: script
+      skip_cleanup: true
+      script:
+      - echo "$DOCKER_HUB_NARAMSIM_PASSWORD" | docker login -u "$DOCKER_HUB_NARAMSIM_USERNAME" --password-stdin
+      - ./.travis/skaffold build -f ./.travis/skaffold.yaml
+
   - name: OpenJDK8 - Create Maven artifacts for JavaDoc and sources
     language: java
     jdk: openjdk8
@@ -40,8 +53,6 @@ matrix:
     before_deploy:
     - set -a; source docker/.env; set +a;
     - echo "VULAS_RELEASE=${VULAS_RELEASE}"
-    - curl -Lo .travis/skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
-    - chmod +x .travis/skaffold
     deploy:
     - provider: script
       skip_cleanup: true
