@@ -10,7 +10,7 @@ A CLI that is meant to help automatically manage the vulnerability-assessment-to
 ## Installation
 You can either download a release or assuming you already have a recent version of Go installed, pull down the code with `go get`:
 ```sh
-go get github.com/ichbinfrog/vulnerability-assessment-tool/kubernetes/helm/utils
+go get -u github.com/ichbinfrog/vulnerability-assessment-tool/kubernetes/helm/utils
 ```
 
 ## Building the utils package from source
