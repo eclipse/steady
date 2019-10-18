@@ -1,7 +1,6 @@
 # Vulnerability assessment tool helm chart
 
-This readme is meant to give an overall view of the vulnerability-assessment-tool deployment to a Kubernetes  cluster and does not go into detail about helm chart values.
-
+This readme is meant to give an overall view of the vulnerability-assessment-tool deployment to a Kubernetes cluster and does not go into detail about helm chart values.
 For more detailled configuration see:
 -   [vulnerability-assessment-tool-core chart](vulnerability-assessment-tool-core/README.md)
 -   [vulnerability-assessment-tool-admin chart](vulnerability-assessment-tool-admin/README.md)
@@ -24,7 +23,7 @@ This repo contains three subcharts which are meant to be installed independently
   - *nginx-ingress*: NGINX ingress controller used to expose the service
   - (future releases) *redis*: A caching server for NGINX
 
-- **vulnerability-assessment-tool-monitoring**: which is used to deploy vulas monitoring stack
+- **vulnerability-assessment-tool-monitoring**: which is used to deploy the dedicated monitoring stack
   - *elastic*: Elasticsearch + Kibana stack
   - *fluentd*: Log collection daemonset
   - *grafana*: Metrics graphing
@@ -102,7 +101,7 @@ For more information see the [database chart](vulnerability-assessment-tool-core
 
 
 # Vulnerability-assessment-tool Admin
-This chart contains only a single nginx-ingress subchart configured to serve vulas core components. It will however include a redis subchart to serve as a distributed caching db for nginx.
+This chart contains only a single nginx-ingress subchart configured to serve vulnerability assessment tool core components. It will however include a redis subchart to serve as a distributed caching db for nginx.
 For more information see the [nginx-ingress chart](vulnerability-assessment-tool-admin/charts/nginx-ingress)
 
 # Vulnerability-assessment-tool Monitoring
