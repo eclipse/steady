@@ -95,12 +95,12 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<!-- Repos to which Vulas artifacts will be deployed, must be provided 
+		<!-- Repos to which Vulas artifacts will be deployed, must be provided
 			as system property (-D) (no defaults) -->
 		<snapshots.repo></snapshots.repo>
 		<releases.repo></releases.repo>
 
-		<!-- Repos used for resolving dependencies, specify as system property 
+		<!-- Repos used for resolving dependencies, specify as system property
 			(-D) to change the defaults -->
 		<gradle.repo>https://maven.google.com/</gradle.repo>
 	</properties>
@@ -155,7 +155,7 @@
 				</plugins>
 			</build>
 		</profile>
-		
+
 		<!-- Activate when deploying to the Central Repo. Also see https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release -->
 		<profile>
 			<id>release</id>
@@ -178,13 +178,13 @@
 					<!-- Deploy to the Central Repository according to https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release. -->
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId> 
+						<artifactId>nexus-staging-maven-plugin</artifactId>
 						<version>1.6.8</version>
 						<extensions>true</extensions>
 						<configuration>
-							<serverId>ossrh</serverId> 
+							<serverId>ossrh</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose> 
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -357,8 +357,13 @@
 
 	<build>
 		<plugins>
+			<plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <version>1.6.1</version>
+      </plugin>
 
-			<!-- Show whether there are newer versions available, run fully-qualified 
+			<!-- Show whether there are newer versions available, run fully-qualified
 				with 'mvn -DallowMajorUpdates=false -DprocessDependencyManagement=false org.codehaus.mojo:versions-maven-plugin:2.5:display-dependency-updates' -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -381,7 +386,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- Successor of Findbugs, run fully-qualified with 'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml 
+			<!-- Successor of Findbugs, run fully-qualified with 'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml
 				-Dspotbugs.failOnError=false -P soot,gradle com.github.spotbugs:spotbugs-maven-plugin:3.1.11:check' -->
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
@@ -536,7 +541,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>3.7.1</version>
-				<!--configuration> <outputDirectory>${project.basedir}/docs/site</outputDirectory> 
+				<!--configuration> <outputDirectory>${project.basedir}/docs/site</outputDirectory>
 					</configuration -->
 			</plugin>
 			<plugin>

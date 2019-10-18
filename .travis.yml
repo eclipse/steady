@@ -16,7 +16,7 @@ matrix:
     before_deploy:
     - set -a; source .travis/.env; set +a;
     - echo "VULAS_RELEASE=${VULAS_RELEASE}"
-    - curl -Lo .travis/skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
+    - curl -Lo .travis/skaffold https://storage.googleapis.com/skaffold/releases/v0.40.0/skaffold-linux-amd64
     - chmod +x .travis/skaffold
     - export JIB=true
     deploy:
