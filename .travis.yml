@@ -8,6 +8,7 @@ matrix:
       directories:
       - "$HOME/.m2"
     before_cache:
+    - rm $HOME/.m2/settings.xml
     - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
     install:
     - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
