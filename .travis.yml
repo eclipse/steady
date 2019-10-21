@@ -13,8 +13,6 @@ matrix:
     - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
     script: mvn -e -B -P gradle -Dspring.standalone -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
     before_deploy:
-    - ls -alh $HOME/.m2
-    - rm $HOME/.m2/settings.xml
     - set -a; source .travis/.env; set +a;
     - echo "VULAS_RELEASE=${VULAS_RELEASE}"
     - curl -Lo .travis/skaffold https://storage.googleapis.com/skaffold/releases/v0.40.0/skaffold-linux-amd64
@@ -39,7 +37,7 @@ matrix:
     jdk: openjdk8
     install:
     - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
-    script: mvn -e -B -P gradle,javadoc -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
+    script: mvn -e -B -P gradle,javadoc -Dspring.standalone -DskipTests --settings .travis/settings.xml clean package
   - name: Docker - Build the Modules' Jars, Run all Java tests, Create vital containers, Check if they stay alive for more than 20 seconds
     language: bash
     sudo: required
