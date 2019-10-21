@@ -19,6 +19,12 @@ matrix:
     - curl -Lo .travis/skaffold https://storage.googleapis.com/skaffold/releases/v0.40.0/skaffold-linux-amd64
     - chmod +x .travis/skaffold
     - export JIB=true
+    - echo "
+<settings>
+  <pluginGroups>
+    <pluginGroup>com.google.cloud.tools</pluginGroup>
+  </pluginGroups>
+</settings>" > "$HOME/.m2/settings.xml"
     deploy:
     - provider: script
       skip_cleanup: true
