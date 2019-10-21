@@ -24,8 +24,6 @@ matrix:
     - provider: script
       skip_cleanup: true
       script: bash .travis/docker_hub_push_release.sh
-      on:
-        all_branches: true
 
   - name: OpenJDK8 - Create Maven artifacts for JavaDoc and sources
     language: java
