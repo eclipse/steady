@@ -80,7 +80,6 @@ under the License.
      | Specifies a further group identifier to use for plugin lookup.
     <pluginGroup>com.your.plugins</pluginGroup>
     -->
-    <pluginGroup>com.google.cloud.tools</pluginGroup>
   </pluginGroups>
 
   <!-- proxies
