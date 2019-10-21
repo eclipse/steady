@@ -178,14 +178,14 @@
 			<artifactId>flyway-core</artifactId>
 			<version>5.0.7</version>
 		</dependency>
-		
+
 		<!-- To prevent javadoc error "class file for javax.interceptor.InterceptorBinding not found" -->
 		<dependency>
 		    <groupId>javax.interceptor</groupId>
 		    <artifactId>javax.interceptor-api</artifactId>
 		    <version>1.2.2</version>
 		</dependency>
-		
+
 	</dependencies>
 
 	<dependencyManagement>
@@ -208,7 +208,7 @@
 				<version>2.9.10</version>
 			</dependency>
 
-			<!-- Fix Spring Boot's dependency on vulnerable dom4j 1.6.1, inherited 
+			<!-- Fix Spring Boot's dependency on vulnerable dom4j 1.6.1, inherited
 				from hibernate-core and hibernate-entitymanager 5.0.12.Final (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
 			<dependency>
 				<groupId>org.hibernate</groupId>
@@ -232,7 +232,7 @@
 				<artifactId>logback-core</artifactId>
 				<version>1.2.3</version>
 			</dependency>
-			
+
 			<!--  Fix dependency on vulnerable commons-beanutils 1.9.3 -->
 			<dependency>
 				<groupId>commons-beanutils</groupId>
@@ -266,7 +266,7 @@
 				<dependency>
 					<groupId>com.h2database</groupId>
 					<artifactId>h2</artifactId>
-					<version>1.4.199</version><!-- Fix Spring Boot's dependency on vulnerable 
+					<version>1.4.199</version><!-- Fix Spring Boot's dependency on vulnerable
 						h2 1.4.197 (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
 				</dependency>
 				<dependency>
@@ -304,8 +304,8 @@
 			</dependencies>
 			<build>
 				<plugins>
-					<!-- Maintain admin credentials for vulas-tomcat-server @ {host:port} 
-						in settings.xml. Build WAR Run "mvn -Dmaven.tomcat.url={host:port}/manager/text 
+					<!-- Maintain admin credentials for vulas-tomcat-server @ {host:port}
+						in settings.xml. Build WAR Run "mvn -Dmaven.tomcat.url={host:port}/manager/text
 						-P container package tomcat7:deploy-only". Point browser to {host:port}/apps -->
 					<plugin>
 						<groupId>org.apache.tomcat.maven</groupId>
@@ -321,7 +321,7 @@
 				</plugins>
 			</build>
 		</profile>
-		
+
 		<!-- Activate when deploying to the Central Repo. Also see https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release -->
 		<profile>
 			<id>javadoc</id>
@@ -358,7 +358,7 @@
 				</plugins>
 			</build>
 		</profile>
-		
+
 		<!-- Activate when deploying to the Central Repo. Also see https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release -->
 		<profile>
 			<id>release</id>
@@ -381,13 +381,13 @@
 					<!-- Deploy to the Central Repository according to https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release. -->
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId> 
+						<artifactId>nexus-staging-maven-plugin</artifactId>
 						<version>1.6.8</version>
 						<extensions>true</extensions>
 						<configuration>
-							<serverId>ossrh</serverId> 
+							<serverId>ossrh</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose> 
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -396,6 +396,11 @@
 	</profiles>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>1.7.0</version>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -430,16 +435,16 @@
 	</build>
 
 	<!-- Run with 'mvn clean site site:deploy' -->
-	<!--reporting> <plugins> <plugin> <groupId>org.apache.maven.plugins</groupId> 
-		<artifactId>maven-project-info-reports-plugin</artifactId> <version>2.9</version> 
-		</plugin> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
-		<version>3.0.0</version> <configuration> <failOnError>false</failOnError> 
-		<noindex>false</noindex> <links> <link>http://java.sun.com/j2se/1.5.0/docs/api</link> 
-		</links> </configuration> <reportSets> <reportSet> <id>aggregate</id> <configuration> 
-		</configuration> <reports> <report>aggregate</report> </reports> </reportSet> 
-		</reportSets> </plugin> <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>findbugs-maven-plugin</artifactId> 
-		<version>3.0.5</version> </plugin> <plugin> <groupId>org.apache.maven.plugins</groupId> 
-		<artifactId>maven-checkstyle-plugin</artifactId> <version>3.0.0</version> 
-		<reportSets> <reportSet> <reports> <report>checkstyle</report> </reports> 
+	<!--reporting> <plugins> <plugin> <groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-project-info-reports-plugin</artifactId> <version>2.9</version>
+		</plugin> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId>
+		<version>3.0.0</version> <configuration> <failOnError>false</failOnError>
+		<noindex>false</noindex> <links> <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+		</links> </configuration> <reportSets> <reportSet> <id>aggregate</id> <configuration>
+		</configuration> <reports> <report>aggregate</report> </reports> </reportSet>
+		</reportSets> </plugin> <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>findbugs-maven-plugin</artifactId>
+		<version>3.0.5</version> </plugin> <plugin> <groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-checkstyle-plugin</artifactId> <version>3.0.0</version>
+		<reportSets> <reportSet> <reports> <report>checkstyle</report> </reports>
 		</reportSet> </reportSets> </plugin> </plugins> </reporting -->
 </project>

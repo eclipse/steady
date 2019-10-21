@@ -72,7 +72,7 @@
 			<artifactId>lang-python</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -103,7 +103,7 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.6</version>
 		</dependency>
-		
+
 		<!-- Swagger core dependencies -->
 		<dependency>
 			<groupId>io.swagger</groupId>
@@ -162,7 +162,7 @@
 			<version>1.2.1-beta5</version>
 		</dependency>
 
-		<!-- The following are the dependencies of dependency-finder They have 
+		<!-- The following are the dependencies of dependency-finder They have
 			been pasted here from the dependency-finder pom.xml -->
 		<dependency>
 			<groupId>oro</groupId>
@@ -202,12 +202,12 @@
 			<scope>system</scope>
 			<systemPath>${java.home}/../lib/tools.jar</systemPath>
 		</dependency>
-		
+
 	</dependencies>
-	
+
 	<dependencyManagement>
 		<dependencies>
-		
+
 			<!-- Fix Spring Boot's dependency on vulnerable Jackson releases (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
@@ -224,7 +224,7 @@
 				<artifactId>jackson-annotations</artifactId>
 				<version>2.9.10</version>
 			</dependency>
-			
+
 			<!-- Fix Spring Boot's dependency on vulnerable logback 1.1.11 (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
@@ -236,14 +236,14 @@
 				<artifactId>logback-core</artifactId>
 				<version>1.2.3</version>
 			</dependency>
-			
+
 			<!--  Fix dependency on vulnerable commons-beanutils 1.9.3 -->
 			<dependency>
 				<groupId>commons-beanutils</groupId>
 				<artifactId>commons-beanutils</artifactId>
 				<version>1.9.4</version>
 			</dependency>
-			
+
 		</dependencies>
 	</dependencyManagement>
 
@@ -309,7 +309,7 @@
 				</plugins>
 			</build>
 		</profile>
-		
+
 		<!-- Activate when deploying to the Central Repo. Also see https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release -->
 		<profile>
 			<id>javadoc</id>
@@ -346,7 +346,7 @@
 				</plugins>
 			</build>
 		</profile>
-		
+
 		<!-- Activate when deploying to the Central Repo. Also see https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release -->
 		<profile>
 			<id>release</id>
@@ -369,22 +369,27 @@
 					<!-- Deploy to the Central Repository according to https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release. -->
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId> 
+						<artifactId>nexus-staging-maven-plugin</artifactId>
 						<version>1.6.8</version>
 						<extensions>true</extensions>
 						<configuration>
-							<serverId>ossrh</serverId> 
+							<serverId>ossrh</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose> 
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
 						</configuration>
 					</plugin>
 				</plugins>
 			</build>
 		</profile>
-		
+
 	</profiles>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>1.7.0</version>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
