@@ -14,11 +14,11 @@ matrix:
     script:
     - mvn -e -B -P gradle -Dspring.standalone -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
     before_deploy:
+    - cp .travis/settings.xml $HOME/.m2/settings.xml
     - set -a; source .travis/.env; set +a;
     - echo "VULAS_RELEASE=${VULAS_RELEASE}"
     - curl -Lo .travis/skaffold https://storage.googleapis.com/skaffold/releases/v0.40.0/skaffold-linux-amd64
     - chmod +x .travis/skaffold
-    - echo "<settings><pluginGroups><pluginGroup>com.google.cloud.tools</pluginGroup></pluginGroups></settings>" > $HOME/.m2/settings.xml
     - export JIB=true
     deploy:
     - provider: script
