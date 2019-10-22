@@ -55,9 +55,11 @@ In order for the tool to detect vulnerabilities, you need to import and analyze 
 
 Follow the instructions mentioned [here](../../../vuln_db/tutorials/vuln_db_tutorial/#batch-import-from-knowledge-base), to import and build all the vulnerabilities' knowledge.
 
+---
+
 Get going:
 
-1. [Import](../../../vuln_db/tutorials/vuln_db_tutorial/) all the CVEs and bugs in your local datababse
+1. [Import](../../../vuln_db/tutorials/vuln_db_tutorial/) all the CVEs and bugs in your local database
 2. Setup your [workspace](../../../user/manuals/setup/#workspace) (if you don't have one)
 3. Become familiar with the various analysis [goals](../../../user/manuals/analysis/) (first time users)
 4. Analyze your [Java](../../../user/tutorials/java_maven/) or [Python](../../../user/tutorials/python_cli/) application (on a regular basis)

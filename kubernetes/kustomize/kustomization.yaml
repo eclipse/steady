@@ -1,0 +1,39 @@
+namespace: vulnerability-assessment-tool
+
+configMapGenerator:
+  - name: postgres-setup-script-cm
+    files:
+      - config/postgres-setup-script
+  - name: restbackend-config-cm
+    env: config/restbackend-config # HACK: Not documented in Kustomize for configMapGenerators
+
+secretGenerator:
+  - name: env-secret
+    env: secrets/.env # TODO: change in envs as kustomize release 2.0.4
+    type: Opaque
+  - name: bugs-frontend-secret
+    files: 
+      - auth=secrets/bugs-frontend-credentials
+
+resources:
+  - other/namespace.yaml
+  - other/ingress-controller-rbac.yaml
+  - config/haproxy-ingress-configmap.yaml
+  - services/default-service.yaml
+  - services/frontend-apps-service.yaml
+  - services/frontend-bugs-service.yaml
+  - services/postgres-service.yaml
+  - services/rest-backend-service.yaml
+  - services/rest-lib-utils-service.yaml
+  - services/cloud.yaml
+  - volumes/postgres-persistentvolumeclaim.yaml
+  - volumes/patch-lib-analyzer-persistentvolumeclaim.yaml
+  - deployments/default-deployment.yaml
+  - deployments/frontend-apps-deployment.yaml
+  - deployments/frontend-bugs-deployment.yaml
+  - deployments/postgres-deployment.yaml
+  - deployments/rest-backend-deployment.yaml
+  - deployments/rest-lib-utils-deployment.yaml
+  - deployments/patch-lib-analyzer-deployment.yaml
+  - deployments/haproxy-ingress-controller.yaml
+  - other/ingress.yaml

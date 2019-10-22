@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: patch-lib-analyzer
+  labels:
+    component: patch-lib-analyzer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: patch-lib-analyzer
+    spec:
+      containers:
+        - name: patch-lib-analyzer
+          image: vulas/vulnerability-assessment-tool-patch-lib-analyzer:3.1.6-SNAPSHOT
+          ports:
+            - containerPort: 8080
+          env:
+            - name: vulas.patchEval.onlyAddNewResults
+              value: "true"
+            - name: vulas.shared.backend.serviceUrl
+              value: http://rest-backend:8091/backend
+            - name: vulas.shared.cia.serviceUrl
+              value: http://rest-lib-utils:8092/cia
+            - name: PATCHEVAL_OPTS
+              value: -bug "" -folder /patcheval-data -j -h 0 -p 6
+          resources: {}
+          volumeMounts:
+            - mountPath: /patcheval-data
+              name: patch-lib-analyzer-claim0
+      volumes:
+        - name: patch-lib-analyzer-claim0
+          persistentVolumeClaim:
+            claimName: patch-lib-analyzer-claim0

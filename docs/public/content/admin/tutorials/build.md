@@ -64,3 +64,10 @@ You can create and run containers from the generated images.
 To check everything started successfully, browse the page `http://localhost:8033/haproxy?stats`. All endpoints should appear as green.
 
 > `username` and `password` can be found in your `.env` file, be also advised that `rest-backend` could take more than 30 seconds to be ready to answer HTTP requests
+
+---
+
+Get going:
+
+1. [Push](../registry/) the images you have built to a private Docker registry
+2. [Deploy](../docker/) @@PROJECT_NAME@@ locally with Docker

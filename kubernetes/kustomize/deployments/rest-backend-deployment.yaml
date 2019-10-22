@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rest-backend
+  labels:
+    component: rest-backend
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        component: rest-backend
+    spec:
+      initContainers:
+        - name: database-checker
+          image: postgres:11.3
+          command: ['sh', '-c',   
+            'until pg_isready -h postgresql -p 5432; 
+            do echo waiting for database; sleep 2; done;']
+      containers:
+        - name: rest-backend
+          image: vulas/vulnerability-assessment-tool-rest-backend:3.1.6-SNAPSHOT
+          ports:
+            - containerPort: 8091
+          env:
+            - name: DELAY_STARTUP
+              value: "1"
+            - name: spring.datasource.username
+              value: postgres
+            - name: spring.datasource.password
+              valueFrom:
+                secretKeyRef:
+                  name: env-secret
+                  key: POSTGRES_PASSWORD
+            - name: vulas.backend.coverageService.langConfidenceThreshold
+              value: "0.2"
+            - name: vulas.backend.coverageService.licenseConfidenceThreshold
+              value: "0.2"
+            - name: vulas.shared.cia.serviceUrl
+              value: http://rest-lib-utils:8092/cia
+          envFrom:
+            - configMapRef:
+                name: restbackend-config-cm
+          readinessProbe:
+            periodSeconds: 5
+            initialDelaySeconds: 20
+            httpGet:
+              path: /backend/health
+              port: 8091
+          livenessProbe:
+            periodSeconds: 10
+            initialDelaySeconds: 60
+            httpGet:
+              path: /backend/health
+              port: 8091
+          resources:
+            limits:
+              memory: "4Gi"
+              cpu: "800m"
