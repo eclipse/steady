@@ -105,7 +105,7 @@ This chart contains only a single nginx-ingress subchart configured to serve vul
 For more information see the [nginx-ingress chart](vulnerability-assessment-tool-admin/charts/nginx-ingress)
 
 # Vulnerability-assessment-tool Monitoring
-This chart contains a logging and monitoring stack for the Vulas core cluster. It contains 4 subcharts:
+This chart contains a logging and monitoring stack for the vulnerability-assessment-tool core cluster. It contains 4 subcharts:
 -   *elastic* : contains elasticsearch + kibana, used for storing and visualising logs
 -   *fluentd* : log fetcher for the logging stack
 -   *prometheus*: contains node exporter (for exporting node related metrics, kube-state-metrics for cluster wide metrics and prom-server for the actual prometheus server)
