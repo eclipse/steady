@@ -400,6 +400,7 @@
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>1.7.0</version>
+				<extensions>true</extensions>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
