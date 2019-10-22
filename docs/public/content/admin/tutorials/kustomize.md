@@ -12,9 +12,7 @@ In this tutorial you will be guided through the necessary steps to set-up the @@
 - kubectl
 - a Kubernetes cluster
 
-## Installation
-
-### Setup
+## Setup
 
 Clone locally `vulnerability-assessment-tool` repository and change the directory to Kustomize's folder
 
@@ -31,7 +29,7 @@ cp secrets/bugs-frontend-credentials.sample secrets/bugs-frontend-credentials
 # edit the above files
 ```
 
-### Run
+## Run
 
 You are now ready to deploy @@PROJECT_NAME@@ inside your Kubernetes cluster:
 
