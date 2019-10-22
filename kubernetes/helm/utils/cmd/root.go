@@ -34,7 +34,7 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "utils",
-	Short: "utility CLI for managing vulas in k8s",
+	Short: "utility CLI for managing the vulnerability-assessment-tool in k8s",
 	Long: `This command allows for an user with access to a kubernetes cluster hosting
 the vulnerability assessment tool helm chart to automate part of that management`,
 	// Uncomment the following line if your bare application
