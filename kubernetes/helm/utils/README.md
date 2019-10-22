@@ -1,4 +1,4 @@
-# Vulas-utils
+# utils: An utility module to manage the vulnerability-assessment-tool helm chart
 
 **Warning**: This module uses helm 3 to manage the helm chart.
 
