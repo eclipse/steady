@@ -53,7 +53,7 @@ A Java application which runs constantly in order to analyze packages for vulner
 For more information see the [patchlibanalyzer chart](vulnerability-assessment-tool-core/charts/patchlibanalyzer)
 
 ## Restbackend
-A springboot backend which communicates with the Postgres database through **hibernate** (see ![docs](https://hibernate.org/)) and the infrastructure's cornerstone. The connection is direct and the host can be configured through the env variable **spring.datasource.url** (which has to be a jdbc syntax compliant string).
+A springboot backend which communicates with the Postgres database through **hibernate** (see [docs](https://hibernate.org/)) and the infrastructure's cornerstone. The connection is direct and the host can be configured through the env variable **spring.datasource.url** (which has to be a jdbc syntax compliant string).
 
 Since the schema is bound to change over time, the restbackend also has a **flyway** module (see [docs](https://flywaydb.org/)) which allow for on the fly schema migration. This connection is also direct and can be configured with the env variable **FLYWAY_URL** (also a jdbc syntax compliant string).
 
