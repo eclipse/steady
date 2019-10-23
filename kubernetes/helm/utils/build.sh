@@ -2,7 +2,7 @@
 
 build() {
   PLATFORMS="darwin/amd64" # amd64 only as of go1.5
-  PLATFORMS="$PLATFORMS linux/amd64 linux/386"
+  PLATFORMS="$PLATFORMS linux/amd64 linux/386 windows/amd64"
 
   SCRIPT_NAME=`basename "$0"`
   FAILURES=""
