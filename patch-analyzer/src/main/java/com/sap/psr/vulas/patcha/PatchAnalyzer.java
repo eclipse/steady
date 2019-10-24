@@ -485,6 +485,7 @@ public class PatchAnalyzer {
 					if(delete) pa.cleanup();
 				} catch (Exception e) {
 					PatchAnalyzer.log.error(e.getMessage());
+					System.exit(127);
 				}
 			}
 		}
@@ -492,6 +493,7 @@ public class PatchAnalyzer {
 			PatchAnalyzer.log.error(pe.getMessage());
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp( "PatchAnalyzer", options );
+			System.exit(125);
 		}
 	}
 
