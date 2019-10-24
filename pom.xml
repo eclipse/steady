@@ -194,15 +194,12 @@
 	</profiles>
 
 	<distributionManagement>
-		<!--snapshotRepository>
+		<!-- To deploy snaphots to Sonatype, call deploy w/o profiles javadoc and release, but with -Dsnapshots.repo=https://oss.sonatype.org/content/repositories/snapshots -->
+		<snapshotRepository>
 			<uniqueVersion>false</uniqueVersion>
 			<id>build.snapshots.repo</id>
 			<name>snapshots</name>
 			<url>${snapshots.repo}</url>
-		</snapshotRepository-->
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 		<repository>
 			<id>build.releases.repo</id>
