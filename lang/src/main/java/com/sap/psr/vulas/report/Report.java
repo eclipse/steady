@@ -242,7 +242,7 @@ public class Report {
 	}
 	
 	/**
-	 * Downloads vulnerable dependencies for all {@link Application}s in member varaiable {@link #modules}.
+	 * Downloads vulnerable dependencies for all {@link Application}s in member variable {@link #modules}.
 	 * 
 	 * The member variable {@link #modules} only contains multiple {@link Application}s if the report is created through the Maven plugin and
 	 * the respective Maven project (for which the report goal is executed) is a multi-module aggregator project. If both conditions are met,
