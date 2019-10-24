@@ -1,6 +1,5 @@
 package com.sap.psr.vulas.goals;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Set;
 
@@ -67,8 +66,8 @@ public class ReportGoal extends AbstractAppGoal {
 		// Fetch the vulns
 		try {
 			report.fetchAppVulnerabilities();
-		} catch (IOException e) {
-			throw new GoalExecutionException("Error fetching vulnerabilities from the backend: " + e.getMessage(), e);
+		} catch (Exception e) {
+			throw new GoalExecutionException("Error fetching vulnerabilities: " + e.getMessage(), e);
 		}
 
 		// Loop over vulnerabilities

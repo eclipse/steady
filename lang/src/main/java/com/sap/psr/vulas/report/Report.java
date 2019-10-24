@@ -242,14 +242,16 @@ public class Report {
 	}
 	
 	/**
-	 * Fetch JSON report data from central Vulas backend.
+	 * Downloads vulnerable dependencies for all {@link Application}s in member varaiable {@link #modules}.
+	 * 
+	 * The member variable {@link #modules} only contains multiple {@link Application}s if the report is created through the Maven plugin and
+	 * the respective Maven project (for which the report goal is executed) is a multi-module aggregator project. If both conditions are met,
+	 * each project module corresponds to one {@link Application} in member varaiable {@link #modules}.
 	 *
 	 * @throws java.io.IOException
+	 * @throws com.sap.psr.vulas.backend.BackendConnectionException
 	 */
-	public void fetchAppVulnerabilities() throws IOException {
-		/*final String vulnsJson = BackendConnector.getInstance().getAppVulnDeps(this.app);//getAggregatedAppVulnerabilities(this.modules);
-		final Gson gson = new GsonBuilder().setDateFormat(Report.dateFormatString).create();
-		this.vulns = gson.fromJson(vulnsJson, AggregatedVuln[].class);*/
+	public void fetchAppVulnerabilities() throws IOException, BackendConnectionException {
 		for(Application prj: this.modules) {
 			try {
 				// Fetch and collect historical vulns
@@ -274,7 +276,10 @@ public class Report {
 						added_av.addAnalysis(v);
 				}
 			} catch (BackendConnectionException e) {
-				Report.log.error("Error while fetching report data for application module " + prj + " from the central Vulas engine: " + e.getMessage(), e);
+				// Throw exception in order to abort report creation
+				final BackendConnectionException bce = new BackendConnectionException("Error fetching vulnerable dependencies for application (module) " + prj + ": " + e.getMessage(), e);
+				Report.log.error(bce);
+				throw bce;
 			}
 		}  
 	}
