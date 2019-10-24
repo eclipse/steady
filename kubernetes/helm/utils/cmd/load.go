@@ -47,20 +47,22 @@ bugs:
 `,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-
 		sourceFile := args[0]
 		if _, err := os.Stat(sourceFile); err != nil {
 			log.Fatal(err)
 		}
 
-		if concurrent <= 1 {
+		// Concurrent amount check
+		if concurrent < 1 {
 			log.Fatalf("Concurrent values cannot be less then 1")
 		}
 
+		// Release name check
 		if releaseName == "" {
 			log.Fatalf("Release name cannot be empty")
 		}
 
+		// Namespace check
 		if coreNamespace == "" {
 			log.Fatalf("Namespace cannot be empty")
 		}
@@ -73,6 +75,7 @@ bugs:
 			DryRun:      noUpload,
 			Skip:        skipIfExist,
 		}
+
 		list, _ := load.SplitCVE(&context)
 		load.UploadBugs(&context, list)
 	},

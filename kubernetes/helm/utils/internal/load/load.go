@@ -5,20 +5,18 @@ package load
 import (
 	"fmt"
 	"io/ioutil"
+	apiv1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	corev1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 
-	batchv1 "k8s.io/api/batch/v1"
-	apiv1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	jobv1 "k8s.io/client-go/kubernetes/typed/batch/v1"
-	cmv1 "k8s.io/client-go/kubernetes/typed/core/v1"
-
 	"github.com/ichbinfrog/vulnerability-assessment-tool/kubernetes/helm/utils/pkg/connect"
-	"github.com/ichbinfrog/vulnerability-assessment-tool/kubernetes/helm/utils/pkg/convert"
 	"gopkg.in/yaml.v3"
+	alessandroPezzepizzatime "k8s.io/apimachinery/pkg/watch"
 )
 
 // CVE represents a simplified vulnerability to be loaded
@@ -84,224 +82,168 @@ func SplitCVE(context *Context) ([][]CVE, error) {
 	return distributedCve, nil
 }
 
-// UploadBugs helps uploqd the bugs into the desired restbackend
+// UploadBugs helps upload the bugs into the desired restbackend
 func UploadBugs(context *Context, bugs [][]CVE) {
 	var wg sync.WaitGroup
+
 	clientset, connectErr := connect.GetClient(context.KubeConfig)
 	if connectErr != nil {
 		log.Fatal(connectErr)
 	}
-	jobClient := clientset.BatchV1().Jobs(context.Namespace)
-	configClient := clientset.CoreV1().ConfigMaps(context.Namespace)
+	podClient := clientset.CoreV1().Pods(context.Namespace)
 
 	for chunkID, cveList := range bugs {
 		wg.Add(1)
-		go func(context *Context, configClient cmv1.ConfigMapInterface, jobClient jobv1.JobInterface, bugs []CVE, chunkID int) {
+		go func(context *Context, podClient corev1.PodInterface, bugs []CVE, chunkID int) {
 			defer wg.Done()
-			createConfigMap(context, configClient, bugs, chunkID)
-			createJob(jobClient, chunkID)
-		}(context, configClient, jobClient, cveList, chunkID)
-	}
-	wg.Wait()
+			failed := []CVE{}
+			bugLength := len(bugs)
 
-	for chunkID := range bugs {
-		wg.Add(1)
-		fmt.Printf("Chunk %d: Watching for events\n", chunkID)
-		// Watches job for completion
-		watch, watchErr := jobClient.Watch(metav1.ListOptions{
-			LabelSelector: fmt.Sprintf("app.kubernetes.io/name=bugs-loader,app.kubernetes.io/instance=%s", strconv.Itoa(chunkID)),
-		})
+			for progress, bug := range bugs {
+				pod := createPod(podClient, chunkID, bug, *context)
+				if _, err := podClient.Create(&pod); err != nil {
+					fmt.Printf("Chunk %d [%d/%d]: Pod creation failed %s\n", chunkID, progress+1, bugLength, err)
+				} else {
+					fmt.Printf("Chunk %d [%d/%d]: Pod to analyze bug %s started \n", chunkID, progress+1, bugLength, bug.Reference)
 
-		if watchErr != nil {
-			log.Fatal(watchErr)
-		}
+					// Watches pod for completion
+					watch, _ := podClient.Watch(metav1.ListOptions{
+						LabelSelector: fmt.Sprintf("app.kubernetes.io/name=%s,app.kubernetes.io/instance=%s", getPodName(bug), strconv.Itoa(chunkID)),
+					})
 
-		go func(chunkID int) {
-			defer wg.Done()
-			for event := range watch.ResultChan() {
-				fmt.Printf("Chunk %d: Type: %v\n", chunkID, event.Type)
-				j, ok := event.Object.(*batchv1.Job)
-				if !ok {
-					log.Fatalf("Chunk %d: Encountered unknown event type\n", chunkID)
-				}
-				fmt.Printf("Chunk %d: Number of active pods %d\n", chunkID, j.Status.Active)
-				fmt.Printf("Chunk %d: Conditions %v\n", chunkID, j.Status.Conditions)
+					for event := range watch.ResultChan() {
+						podStatus, ok := event.Object.(*apiv1.Pod)
 
-				if j.Status.Failed >= 1 {
-					fmt.Printf("Chunk %d: Job Failed\n", chunkID)
-					return
-				}
-				if j.Status.Succeeded >= 1 {
-					fmt.Printf("Chunk %d: Job succeeded\n", chunkID)
-					return
-				}
+						if !ok {
+							log.Fatalf("Chunk %d [%d/%d]: Encountered unknown event type\n", progress+1, bugLength, chunkID)
+							watch.Stop()
+						}
 
-				if event.Type == "DELETED" {
-					fmt.Printf("Chunk %d: Job deleted by user\n", chunkID)
-					return
+						if event.Type == alessandroPezzepizzatime.Deleted {
+							fmt.Printf("Chunk %d [%d/%d]: Bug analysis %s deleted by user, stopping execution\n", progress+1, bugLength, chunkID, bug.Reference)
+							watch.Stop()
+							wg.Done()
+						}
+
+						if podStatus.Status.Phase == apiv1.PodFailed || podStatus.Status.Phase == apiv1.PodUnknown {
+							fmt.Printf("Chunk %d [%d/%d]: Bug analysis %s failed with reason %s\n", chunkID, progress+1, bugLength, bug.Reference, podStatus.Status.Reason)
+							failed = append(failed, bug)
+							watch.Stop()
+						}
+
+						if podStatus.Status.Phase == apiv1.PodSucceeded {
+							// Checks container status for proper exit code
+							lastState := podStatus.Status.ContainerStatuses[0].State.Terminated
+
+							// Error on code execution
+							if lastState.ExitCode != 0 {
+								fmt.Printf("Chunk %d [%d/%d]: Bug analysis %s failed (to see log use `kubectl get logs -n %s %s`)\n", chunkID, progress+1, bugLength, bug.Reference, context.Namespace, getPodName(bug))
+								failed = append(failed, bug)
+							} else {
+								// Only succeeded containers are deleted
+								if deleteErr := podClient.Delete(pod.Name, &metav1.DeleteOptions{}); err != nil {
+									fmt.Printf("Chunk %d [%d/%d]: Bug analysis %s could not be delete because (%s)", chunkID, progress+1, bugLength, bug.Reference, deleteErr)
+								}
+								fmt.Printf("Chunk %d [%d/%d]: Bug analysis %s succeeded \n", chunkID, progress+1, bugLength, bug.Reference)
+							}
+							watch.Stop()
+						}
+					}
 				}
 			}
-		}(chunkID)
+			fmt.Printf(`
+---
+Chunk %d: completed with %d failed analysis / %d bugs
+---
+
+`, chunkID, len(failed), bugLength)
+		}(context, podClient, cveList, chunkID)
 	}
 	wg.Wait()
-	cleanUp(jobClient, configClient)
 }
 
 func getChunkName(chunkID int) string {
 	return "bugs-loader-" + strconv.Itoa(chunkID)
 }
 
+func getPodName(bug CVE) string {
+	return "bugs-loader-" + strings.ToLower(bug.Reference)
+}
+
 func getBackendService(release *string) string {
-	return *release + "-restbackend:8091/backend"
-}
-func getLoaderCommand(bugs []CVE, context *Context) string {
-	patcheval := `
-#!/bin/sh
-  `
-	for _, bug := range bugs {
-		patcheval = patcheval + fmt.Sprintf(`
-java -Dvulas.shared.backend.serviceUrl=http://%s \
-      -jar patch-analyzer-3.1.6.jar com.sap.psr.vulas.patcha.PatchAnalyzer \
-      -b %s \
-      -r %s \
-      -e %s \
-      -desc %q \
-      -links %q`, getBackendService(&context.ReleaseName), bug.Reference, bug.Repo, bug.Commit, bug.Description, bug.Links)
-
-		if !context.DryRun {
-			patcheval = patcheval + " -u"
-		}
-
-		if context.Skip {
-			patcheval = patcheval + " -sie"
-		}
-
-		// Allows for continuous uninterrupted execution even if failure
-		patcheval = patcheval + " || : "
-	}
-
-	return patcheval
+	return "http://" + *release + "-restbackend:8091/backend"
 }
 
-func createConfigMap(context *Context, configClient cmv1.ConfigMapInterface, bugs []CVE, chunkID int) {
-	configmap := &apiv1.ConfigMap{
+func createPod(podClient corev1.PodInterface, chunkID int, bug CVE, context Context) apiv1.Pod {
+	pod := &apiv1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: getChunkName(chunkID),
+			Name: getPodName(bug),
 			Labels: map[string]string{
-				"app.kubernetes.io/name":     "bugs-loader",
+				"app.kubernetes.io/name":     getPodName(bug),
+				"app.kubernetes.io/part-of":  "bugs-loader",
 				"app.kubernetes.io/instance": strconv.Itoa(chunkID),
 			},
 		},
-		Data: map[string]string{
-			"patcheval.sh": getLoaderCommand(bugs, context),
+		Spec: apiv1.PodSpec{
+			RestartPolicy: "Never",
+			Containers: []apiv1.Container{
+				{
+					Name: getPodName(bug),
+					//Image: "ichbinfrog/patchanalyzer:v0.0.6",
+					Image:           "vulas/vulnerability-assessment-tool-patch-analyzer:3.1.7-SNAPSHOT",
+					ImagePullPolicy: "IfNotPresent",
+					Args: []string{
+						"com.vulas.sap.psr.vulas.patcha.PatchAnalyzer",
+						"-b",
+						bug.Reference,
+						"-r",
+						bug.Repo,
+						"-e",
+						bug.Commit,
+						"-descr",
+						strconv.Quote(bug.Description),
+						"-links",
+						strconv.Quote(bug.Links),
+					},
+					Env: []apiv1.EnvVar{
+						{
+							Name:  "vulas.shared.backend.serviceUrl",
+							Value: getBackendService(&context.ReleaseName),
+						},
+					},
+				},
+			},
 		},
 	}
 
-	fmt.Printf("Chunk %d: Creating configmap for %d bugs\n", chunkID, len(bugs))
-	_, err := configClient.Create(configmap)
-
-	if err != nil {
-		deleteErr := configClient.Delete(configmap.Name, &metav1.DeleteOptions{})
-		if deleteErr != nil {
-			log.Fatal(err, deleteErr)
-		}
-		log.Fatal(err)
+	if !context.DryRun {
+		pod.Spec.Containers[0].Args = append(pod.Spec.Containers[0].Args, "-u")
 	}
+
+	if context.Skip {
+		pod.Spec.Containers[0].Args = append(pod.Spec.Containers[0].Args, "-sie")
+	}
+
+	return *pod
 }
 
-func cleanUp(jobClient jobv1.JobInterface, configClient cmv1.ConfigMapInterface) {
-	jobList, listErr := jobClient.List(metav1.ListOptions{
-		LabelSelector: "app.kubernetes.io/name=bugs-loader",
+// CleanLoad deletes all pods associated with the bug loader in the given namespace
+func CleanLoad(context *Context) {
+	clientset, connectErr := connect.GetClient(context.KubeConfig)
+	if connectErr != nil {
+		log.Fatal(connectErr)
+	}
+	podClient := clientset.CoreV1().Pods(context.Namespace)
+	podList, listErr := podClient.List(metav1.ListOptions{
+		LabelSelector: "app.kubernetes.io/part-of=bugs-loader",
 	})
 
 	if listErr != nil {
 		log.Fatal(listErr)
 	}
 
-	for _, job := range jobList.Items {
-		fmt.Printf("Deleting job %s\n", job.Name)
-		jobClient.Delete(job.Name, &metav1.DeleteOptions{})
+	for _, pod := range podList.Items {
+		fmt.Printf("CLEANUP: Deleting pod %s\n", pod.Name)
+		podClient.Delete(pod.Name, &metav1.DeleteOptions{})
 	}
-
-	configList, configListErr := configClient.List(metav1.ListOptions{
-		LabelSelector: "app.kubernetes.io/name=bugs-loader",
-	})
-
-	if configListErr != nil {
-		log.Fatal(configListErr)
-	}
-
-	for _, cm := range configList.Items {
-		fmt.Printf("Deleting configmap %s\n", cm.Name)
-		configClient.Delete(cm.Name, &metav1.DeleteOptions{})
-	}
-}
-
-func createJob(jobClient jobv1.JobInterface, chunkID int) {
-	job := &batchv1.Job{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: getChunkName(chunkID),
-		},
-		Spec: batchv1.JobSpec{
-			Parallelism:  convert.Int32Ptr(1),
-			BackoffLimit: convert.Int32Ptr(0),
-			Template: apiv1.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{
-					Labels: map[string]string{
-						"app.kubernetes.io/name":     "bugs-loader",
-						"app.kubernetes.io/instance": strconv.Itoa(chunkID),
-					},
-				},
-				Spec: apiv1.PodSpec{
-					RestartPolicy: "Never",
-					Volumes: []apiv1.Volume{
-						{
-							Name: getChunkName(chunkID),
-							VolumeSource: apiv1.VolumeSource{
-								ConfigMap: &apiv1.ConfigMapVolumeSource{
-									LocalObjectReference: apiv1.LocalObjectReference{
-										Name: getChunkName(chunkID),
-									},
-									DefaultMode: convert.Int32Ptr(0744),
-								},
-							},
-						},
-					},
-					Containers: []apiv1.Container{
-						{
-							Name:            "bugs-loader",
-							Image:           "ichbinfrog/patchanalyzer:v0.0.4",
-							ImagePullPolicy: "Always",
-							Command: []string{
-								"sh",
-								"-c",
-								"/vulas/patcheval.sh",
-							},
-							VolumeMounts: []apiv1.VolumeMount{
-								{
-									Name:      getChunkName(chunkID),
-									MountPath: "/vulas/patcheval.sh",
-									ReadOnly:  false,
-									SubPath:   "patcheval.sh",
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-
-	fmt.Printf("Chunk %d: Creating job...\n", chunkID)
-	_, err := jobClient.Create(job)
-
-	if err != nil {
-		deleteErr := jobClient.Delete(job.Name, &metav1.DeleteOptions{})
-		if deleteErr != nil {
-			log.Fatal(err, deleteErr)
-		}
-		log.Fatal(err)
-	}
-
-	fmt.Printf("Chunk %d: Job successfully created\n", chunkID)
 }

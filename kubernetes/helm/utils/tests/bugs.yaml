@@ -1,4 +1,16 @@
 bugs:
+- reference: CVE-2016-6816
+  repo: http://svn.apache.org/repos/asf/tomcat
+  commit: 1767645:trunk,1767675:trunk,1767645:master,1767653:trunk,1767641:trunk,1767683:trunk
+  description: ""
+  links: ""
+
+- reference: CVE-2014-2059
+  repo: https://github.com/jenkinsci/jenkins.git
+  commit: ad38d8480f20ce3cbf8fec3e2003bc83efda4f7d:master
+  description: ""
+  links: ""
+
 - reference: CVE-2018-8013
   repo: https://github.com/apache/batik/
   commit: f91125b26a6ca2b7a1195f1842360bed03629839:master
@@ -18,14 +30,6 @@ bugs:
   commit: a080293da69f3fe3d11d5214432e1469ee195870:master
   description: "Overview: org.apache.commons:commons-compress defines an API for working with compression and archive formats. Affected versions of this package are vulnerable to Directory Traversal.\n Remediation: Upgrade org.apache.commons:commons-compress to version 1.18-RC1 or higher."
   links: "https://github.com/apache/commons-compress/commit/a080293da69f3fe3d11d5214432e1469ee195870,https://snyk.io/vuln/SNYK-JAVA-ORGAPACHECOMMONS-72275"
-
-
-- reference: CVE-2016-6816
-  repo: http://svn.apache.org/repos/asf/tomcat
-  commit: 1767645:trunk,1767675:trunk,1767645:master,1767653:trunk,1767641:trunk,1767683:trunk
-  description: ""
-  links: ""
-
 
 - reference: CVE-2018-12418
   repo: https://github.com/junrar/junrar/
@@ -648,13 +652,6 @@ bugs:
   commit: e36a7a66fa08eb5eb253b2b0cec262ffbdef072:4.1,fef9a618f11a670dc040d903a4b0f9bbc9f3e9c:4.2
   description: ""
   links: "https://issues.apache.org/jira/browse/KARAF-6090,https://lists.apache.org/thread.html/6856aa7ed7dd805eaf65d0e5e95027dda3b2307aacd1ab4a838c5cd1@%3Cuser.karaf.apache.org%3E"
-
-
-- reference: CVE-2014-2059
-  repo: https://github.com/jenkinsci/jenkins.git
-  commit: ad38d8480f20ce3cbf8fec3e2003bc83efda4f7d:master
-  description: ""
-  links: ""
 
 
 - reference: CVE-2016-6796
