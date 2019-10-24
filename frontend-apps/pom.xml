@@ -13,6 +13,12 @@
 	<name>Frontend for analysis results</name>
 	<build>
 		<plugins>
+			<plugin>
+        		<groupId>com.google.cloud.tools</groupId>
+        		<artifactId>jib-maven-plugin</artifactId>
+				<extensions>true</extensions>
+      		</plugin>
+      		
 			<!--
 				Maintain admin credentials for vulas-tomcat-server @ {host:port} in settings.xml
 				Build WAR
