@@ -58,11 +58,16 @@
 
 	<build>
 		<plugins>
+			<plugin>
+        		<groupId>com.google.cloud.tools</groupId>
+        		<artifactId>jib-maven-plugin</artifactId>
+				<extensions>true</extensions>
+      		</plugin>
+		
 			<!-- Make the JAR executable, run the PatchAnalyzer by default -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.1.0</version>
 				<executions>
 					<execution>
 						<id>make-shade</id>
