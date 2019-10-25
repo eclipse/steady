@@ -16,7 +16,7 @@ import (
 
 	"github.com/ichbinfrog/vulnerability-assessment-tool/kubernetes/helm/utils/pkg/connect"
 	"gopkg.in/yaml.v3"
-	alessandroPezzepizzatime "k8s.io/apimachinery/pkg/watch"
+	watchapi "k8s.io/apimachinery/pkg/watch"
 )
 
 // CVE represents a simplified vulnerability to be loaded
@@ -119,14 +119,14 @@ func UploadBugs(context *Context, bugs [][]CVE) {
 							watch.Stop()
 						}
 
-						if event.Type == alessandroPezzepizzatime.Deleted {
+						if event.Type == watchapi.Deleted {
 							fmt.Printf("Chunk %d [%d/%d]: Bug analysis %s deleted by user, stopping execution\n", progress+1, bugLength, chunkID, bug.Reference)
 							watch.Stop()
 							wg.Done()
 						}
 
 						if podStatus.Status.Phase == apiv1.PodFailed || podStatus.Status.Phase == apiv1.PodUnknown {
-							fmt.Printf("Chunk %d [%d/%d]: Bug analysis %s failed with reason %s\n", chunkID, progress+1, bugLength, bug.Reference, podStatus.Status.Reason)
+							fmt.Printf("Chunk %d [%d/%d]: Bug analysis %s failed\n", chunkID, progress+1, bugLength, bug.Reference)
 							failed = append(failed, bug)
 							watch.Stop()
 						}
@@ -188,22 +188,27 @@ func createPod(podClient corev1.PodInterface, chunkID int, bug CVE, context Cont
 			RestartPolicy: "Never",
 			Containers: []apiv1.Container{
 				{
-					Name: getPodName(bug),
-					//Image: "ichbinfrog/patchanalyzer:v0.0.6",
-					Image:           "vulas/vulnerability-assessment-tool-patch-analyzer:3.1.7-SNAPSHOT",
-					ImagePullPolicy: "IfNotPresent",
-					Args: []string{
-						"com.vulas.sap.psr.vulas.patcha.PatchAnalyzer",
-						"-b",
-						bug.Reference,
-						"-r",
-						bug.Repo,
-						"-e",
-						bug.Commit,
-						"-descr",
-						strconv.Quote(bug.Description),
-						"-links",
-						strconv.Quote(bug.Links),
+					Name:  getPodName(bug),
+					Image: "ichbinfrog/patchanalyzer:v0.0.7",
+					//Image:           "vulas/vulnerability-assessment-tool-patch-analyzer:3.1.7-SNAPSHOT",
+					ImagePullPolicy: "Always",
+					// Args: []string{
+					// 	"com.vulas.sap.psr.vulas.patcha.PatchAnalyzer",
+					// 	"-b",
+					// 	bug.Reference,
+					// 	"-r",
+					// 	bug.Repo,
+					// 	"-e",
+					// 	bug.Commit,
+					// 	"-descr",
+					// 	strconv.Quote(bug.Description),
+					// 	"-links",
+					// 	strconv.Quote(bug.Links),
+					// },
+					Command: []string{
+						"/bin/sh",
+						"-c",
+						"java -jar /vulas/patch-analyzer.jar com.sap.psr.vulas.PatchAnalyzer -r " + bug.Repo + " -b " + bug.Reference + " -e " + bug.Commit,
 					},
 					Env: []apiv1.EnvVar{
 						{
@@ -217,11 +222,11 @@ func createPod(podClient corev1.PodInterface, chunkID int, bug CVE, context Cont
 	}
 
 	if !context.DryRun {
-		pod.Spec.Containers[0].Args = append(pod.Spec.Containers[0].Args, "-u")
+		pod.Spec.Containers[0].Command[2] += " -u "
 	}
 
 	if context.Skip {
-		pod.Spec.Containers[0].Args = append(pod.Spec.Containers[0].Args, "-sie")
+		pod.Spec.Containers[0].Command[2] += "-sie"
 	}
 
 	return *pod

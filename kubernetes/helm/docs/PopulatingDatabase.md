@@ -12,6 +12,9 @@ utils load <bugFile.yaml> \
 
 # for more info and flags
 utils load --help
+
+# for cleaning up the pods after a run
+kubectl delete pods -l 'app.kubernetes.io/part-of=bugs-loader' -n { namespace }
 ```
 
 ## . Configuration
