@@ -876,6 +876,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../helm/" title="Deploy on Kubernetes with Helm" class="md-nav__link">
+      Deploy on Kubernetes with Helm
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -1223,7 +1235,7 @@ docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><spa
 </pre></div>
 
 <p>You can create and run containers from the generated images.</p>
-<div class="codehilite"><pre><span></span><span class="o">(</span><span class="nb">cd</span> docker <span class="o">&amp;&amp;</span> docker-compose f docker-compose.yml -f docker-compose.build.yml up -d<span class="o">)</span>
+<div class="codehilite"><pre><span></span><span class="o">(</span><span class="nb">cd</span> docker <span class="o">&amp;&amp;</span> docker-compose -f docker-compose.yml -f docker-compose.build.yml up -d<span class="o">)</span>
 </pre></div>
 
 <p>To check everything started successfully, browse the page <code>http://localhost:8033/haproxy?stats</code>. All endpoints should appear as green.</p>

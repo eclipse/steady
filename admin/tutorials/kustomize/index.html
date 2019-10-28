@@ -845,26 +845,19 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation" title="Installation" class="md-nav__link">
-    Installation
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#setup" title="Setup" class="md-nav__link">
     Setup
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#run" title="Run" class="md-nav__link">
     Run
   </a>
   
-</li>
+    <nav class="md-nav">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#populatemaintain-the-vulnerability-database" title="Populate/maintain the vulnerability database" class="md-nav__link">
@@ -886,6 +879,18 @@
   
 </nav>
     
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../helm/" title="Deploy on Kubernetes with Helm" class="md-nav__link">
+      Deploy on Kubernetes with Helm
+    </a>
   </li>
 
         
@@ -1155,26 +1160,19 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation" title="Installation" class="md-nav__link">
-    Installation
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#setup" title="Setup" class="md-nav__link">
     Setup
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#run" title="Run" class="md-nav__link">
     Run
   </a>
   
-</li>
+    <nav class="md-nav">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#populatemaintain-the-vulnerability-database" title="Populate/maintain the vulnerability database" class="md-nav__link">
@@ -1219,8 +1217,7 @@
 <li>kubectl</li>
 <li>a Kubernetes cluster</li>
 </ul>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<h3 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h3>
+<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
 <p>Clone locally <code>vulnerability-assessment-tool</code> repository and change the directory to Kustomize's folder</p>
 <div class="codehilite"><pre><span></span>git clone https://github.com/SAP/vulnerability-assessment-tool
 <span class="nb">cd</span> vulnerability-assessment-tool/kubernetes/kustomize
@@ -1232,7 +1229,7 @@ cp secrets/bugs-frontend-credentials.sample secrets/bugs-frontend-credentials
 <span class="c1"># edit the above files</span>
 </pre></div>
 
-<h3 id="run">Run<a class="headerlink" href="#run" title="Permanent link">&para;</a></h3>
+<h2 id="run">Run<a class="headerlink" href="#run" title="Permanent link">&para;</a></h2>
 <p>You are now ready to deploy vulnerability-assessment-tool inside your Kubernetes cluster:</p>
 <div class="codehilite"><pre><span></span>kubectl apply -k .
 </pre></div>
@@ -1300,13 +1297,13 @@ cp secrets/bugs-frontend-credentials.sample secrets/bugs-frontend-credentials
           </a>
         
         
-          <a href="../../../contributor/" title="Contribute" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../helm/" title="Deploy on Kubernetes with Helm" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Contribute
+                Deploy on Kubernetes with Helm
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
