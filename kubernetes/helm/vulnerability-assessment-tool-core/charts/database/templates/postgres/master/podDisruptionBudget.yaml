@@ -1,0 +1,23 @@
+{{- $pdbRequired := and .Values.global.masterReplicas (ge (int .Values.global.masterReplicas) 2) }}
+{{- if $pdbRequired -}}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+
+metadata:
+  name: {{ template "postgres.master.podDisruptionBudgetName" . }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+
+spec:
+  {{- if .Values.postgres.master.podDisruptionBudget }}
+  {{- toYaml .Values.postgres.master.podDisruptionBudget | nindent 2 }}
+  {{- else }}
+  minAvailable: 1
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "postgres.master.enrichedLabels" . | nindent 6 }}
+{{- else -}}
+# INFO: Skipped podDisruptionBudget because replicas < 2
+{{- end -}}

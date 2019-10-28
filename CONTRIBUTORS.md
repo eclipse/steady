@@ -10,6 +10,7 @@ SAP Security Testing team
 
 - [Alessandro Pezzé](https://github.com/Naramsim)
 - Cedric Dangremont
+- [HOANG Quoc Trung](https://github.com/ichbinfrog)
 
 University of Paderborn
 

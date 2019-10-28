@@ -37,11 +37,12 @@ nav:
       - 'FAQ': user/support/faq.md
   - DevOps:
     - DevOps: 'admin/index.md'
-    - Tutorials: 
+    - Tutorials:
       - 'Deploy on Docker': 'admin/tutorials/docker.md'
       - 'Build JAVA archives/Docker images': 'admin/tutorials/build.md'
       - 'Push Docker images to a registry': 'admin/tutorials/registry.md'
       - 'Deploy on Kubernetes with Kustomize': 'admin/tutorials/kustomize.md'
+      - 'Deploy on Kubernetes with Helm': 'admin/tutorials/helm.md'
   - Contribute:
     - Contribute: contributor/index.md
     # - Tutorials:
@@ -65,7 +66,7 @@ nav:
       - 'Patch Analyzer' : vuln_db/manuals/patch_analyzer.md
       - 'Patch Lib Analyzer' : vuln_db/manuals/patch_lib_analyzer.md
       - 'Manual Assessment' : vuln_db/manuals/manual_assessment.md
-  - Blog: 
+  - Blog:
     - https://blogs.sap.com/tag/vulas/
 
 copyright: 'Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.'

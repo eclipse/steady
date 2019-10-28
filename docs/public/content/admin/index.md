@@ -8,3 +8,4 @@
 - [Build JAVA archives and local Docker images](./tutorials/build/)
 - [Push Docker images to a registry](./tutorials/registry/)
 - [Deploy on Kubernetes with Kustomize](./tutorials/kustomize/)
+- [Deploy on Kubernetes with Helm](./tutorials/helm/)

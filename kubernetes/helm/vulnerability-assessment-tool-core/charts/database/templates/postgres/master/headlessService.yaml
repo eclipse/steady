@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: {{ .Release.Name }}-db-master-headless
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+
+spec:
+  clusterIP: None
+
+  selector:
+    {{- include "postgres.master.serviceLabels" . | nindent 4 }}
+
+  ports:
+  - name: container
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
