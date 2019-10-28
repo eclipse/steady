@@ -188,27 +188,21 @@ func createPod(podClient corev1.PodInterface, chunkID int, bug CVE, context Cont
 			RestartPolicy: "Never",
 			Containers: []apiv1.Container{
 				{
-					Name:  getPodName(bug),
-					Image: "ichbinfrog/patchanalyzer:v0.0.7",
-					//Image:           "vulas/vulnerability-assessment-tool-patch-analyzer:3.1.7-SNAPSHOT",
+					Name:            getPodName(bug),
+					Image:           "vulas/vulnerability-assessment-tool-patch-analyzer:3.1.7-SNAPSHOT",
 					ImagePullPolicy: "Always",
-					// Args: []string{
-					// 	"com.vulas.sap.psr.vulas.patcha.PatchAnalyzer",
-					// 	"-b",
-					// 	bug.Reference,
-					// 	"-r",
-					// 	bug.Repo,
-					// 	"-e",
-					// 	bug.Commit,
-					// 	"-descr",
-					// 	strconv.Quote(bug.Description),
-					// 	"-links",
-					// 	strconv.Quote(bug.Links),
-					// },
-					Command: []string{
-						"/bin/sh",
-						"-c",
-						"java -jar /vulas/patch-analyzer.jar com.sap.psr.vulas.PatchAnalyzer -r " + bug.Repo + " -b " + bug.Reference + " -e " + bug.Commit,
+					Args: []string{
+						"com.vulas.sap.psr.vulas.patcha.PatchAnalyzer",
+						"-b",
+						bug.Reference,
+						"-r",
+						bug.Repo,
+						"-e",
+						bug.Commit,
+						"-descr",
+						strconv.Quote(bug.Description),
+						"-links",
+						strconv.Quote(bug.Links),
 					},
 					Env: []apiv1.EnvVar{
 						{
@@ -222,11 +216,11 @@ func createPod(podClient corev1.PodInterface, chunkID int, bug CVE, context Cont
 	}
 
 	if !context.DryRun {
-		pod.Spec.Containers[0].Command[2] += " -u "
+		pod.Spec.Containers[0].Args = append(pod.Spec.Containers[0].Args, " -u")
 	}
 
 	if context.Skip {
-		pod.Spec.Containers[0].Command[2] += "-sie"
+		pod.Spec.Containers[0].Args = append(pod.Spec.Containers[0].Args, "-sie")
 	}
 
 	return *pod

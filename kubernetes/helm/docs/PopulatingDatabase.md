@@ -1,4 +1,4 @@
-# Populating database inside the kubernetes cluster
+# Populating database inside the Kubernetes cluster
 
 This guide is destined to those who want to populate their vulnerability databases with the open sourced [knowledge base](https://github.com/SAP/vulnerability-assessment-kb).
 This can be automated using the utils packaged with this chart (which can be installed by following this [guide](../utils/README.md)). You can run the following command, once the module is built:
@@ -39,7 +39,7 @@ bugs:
 
 ## . Behind the scenes
 
-This module uses go routines to split the bugs list into **n** (the amount of concurrent jobs) equal chunks. In short, these will be fed into the patch-analyzer which will then analyze the codes and push it into the restbackend accordingly.
+This module uses Golang routines to split the bugs list into **n** (the amount of concurrent jobs) equal chunks. In short, these will be fed into the patch-analyzer which will then analyze the codes and push it into the restbackend accordingly.
 
 In reality, this module generates a shell script which contains call to the patchanalyzer jar and mounts it via configmap to a list of jobs, each having different configmaps corresponding to the chunk that they're in charge of.
 

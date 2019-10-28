@@ -4,7 +4,7 @@
 This guide is destined to help migrating versions with schema changes without hiccups. This assumes all three charts have been installed independently within their designated namespaces with the core chart having major release name : `alpha` migrating towards major release `beta`.
 
 
-## TL,DR
+## TL;DR
 
 This upgrade can be automated using the utils packaged with this chart (which can be installed by following this [guide](BuildingUtils.md)). You can run the following command, once the module is built:
 
@@ -34,11 +34,11 @@ utils route --help
 ```
 
 
-## Detailled actions
+## Detailed actions
 
-![schema_change](media/k8s_database_change.png)
+![schema_change](../../../docs/public/content/images/helm_database_change.png)
 
-The golang migrator utils uses the given `kubeconfig` to communicate directly with the cluster's Kubernetes API through the kubernetes go-client. And does the following actions (see previous image):
+The Golang migrator utils uses the given `kubeconfig` to communicate directly with the cluster's Kubernetes API through the Kubernetes Go-client. And does the following actions (see previous image):
 
 -   Fetches the replicas amount of the postgres slave statefulset within the cluster
 -   Scales down one replicas if possible which will be promoted to master in the future release

@@ -51,7 +51,7 @@ Clustering pgpool seem to increase postgres performance drastically observable w
 
 
 ## In depth Analysis of Pgpool clustering performance
-![perf](media/db_benchmark.png)
+![perf](../../../docs/public/content/images/helm_db_benchmark.png)
 
 With our current setup (1 master and 2 replicas with pgpool instance each having affinity towards sharing nodes with postgres instances), 3 replicas seems to be the optimal setup to reduce both latency and increase tps.
 

@@ -1,16 +1,16 @@
 # Vulnerability assessment tool helm chart
 
 This readme is meant to give an overall view of the vulnerability-assessment-tool deployment to a Kubernetes cluster and does not go into detail about helm chart values.
-For more detailled configuration see:
+For more detailed configuration see:
 -   [vulnerability-assessment-tool-core chart](vulnerability-assessment-tool-core/README.md)
 -   [vulnerability-assessment-tool-admin chart](vulnerability-assessment-tool-admin/README.md)
 -   [vulnerability-assessment-tool-monitoring chart](vulnerability-assessment-tool-monitoring/README.md)
 
 # Overall Architecture
 
-![architecture](docs/media/overall_architecture.png)
+![architecture](../../docs/public/content/images/helm_architecture.png)
 
-This repo contains three subcharts which are meant to be installed independently from each other:
+This repository contains three subcharts which are meant to be installed independently from each other:
 -   **vulnerability-assessment-tool-core**: which encapsulates all the core components of the tool including:  
   - *frontendapps*: Jetty web UI which allows submitting code for review
   - *frontendbugs*: Jetty web UI which allows admins to manage bugs database
@@ -88,7 +88,7 @@ For more information see the [restlibutils chart](vulnerability-assessment-tool-
 
 The database storing all data related to the vulnerability-assessment-tool. For high availability as well as performance, this chart implements a master-slave replication cluster for postgres. The replication method (see [postgres HA docs](https://www.postgresql.org/docs/current/high-availability.html)) can be summed up by the graph below:
 
-![database](docs/media/postgres.png)
+![database](../../docs/public/content/images/helm_postgres.png)
 
 -   i) The init container in the postgres replica pod uses pg_basebackup pointed to the postgres master container. This command copies the data from the master node to make sure that the replica is up to date, then creates the `replica.conf` file which tells the replica node that it is the master's standby.
 -   ii) Once the pg_basebackup succeeds, it allows for the postgres replica container to spin up, mounting the same PVC as the init container (thus sharing the data + config)

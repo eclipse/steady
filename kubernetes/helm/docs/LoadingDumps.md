@@ -16,7 +16,7 @@ kubectl scale statefulset.apps restbackend --replicas 0 \
 ```
 -   This process may take up to 5 hours depending on the amount of data present
 
-## Migration using go module
+## Migration using Go module
 
 This migration can be automated using the utils packaged with this chart (which can be installed by following this [guide](../utils/README.md)). You can run the following command, once the module is built:
 
