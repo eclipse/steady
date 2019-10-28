@@ -15,11 +15,11 @@ In this tutorial you will be guided through the necessary steps to set-up the @@
 
 ## Setup
 
-![helm-chart](../../images/overall_architecture.png)
+![helm-chart](../../images/helm_architecture.png)
 
 This repository contains three charts:  
 
--   **vulnerability-assessment-tool-core** chart: which encapsulates all the core components of the tool  
+-   **vulnerability-assessment-tool-core**: which encapsulates all the core components of the tool  
 -   **vulnerability-assessment-tool-admin**: which encapsulates all the cluster admin tools (namely the ingress controller to expose the service)  
 -   **vulnerability-assessment-tool-monitoring**: which is used to deploy the dedicated monitoring stack  
 
@@ -55,6 +55,7 @@ helm install vulnerability-assessment-tool-core ReleaseName
 
 The above command will create a `Namespace` called `vulnerability-assessment-tool-core` (which can be specified in the [vulnerability-assessment-tool-core/values.yaml](https://github.com/SAP/vulnerability-assessment-tool/kubernetes/helm/vulnerability-assessment-tool-core/values.yaml)) and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command `kubectl get pods -n vulnerability-assessment-tool-core`. The deployment will request a couple `PersistentVolumeClaims` which could need some time to be created depending on the cloud provider you are running on.
 
+
 ### Vulnerability-assessment-tool-monitoring chart
 
 ```sh
@@ -67,6 +68,9 @@ helm install vulnerability-assessment-tool-monitoring ReleaseName
 
 The above command will create a `Namespace` called `vulnerability-assessment-tool-monitoring` (which can be specified in the [vulnerability-assessment-tool-monitoring/values.yaml](https://github.com/SAP/vulnerability-assessment-tool/kubernetes/helm/vulnerability-assessment-tool-monitoring/values.yaml)) and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command `kubectl get pods -n vulnerability-assessment-tool-monitoring`. The deployment will request a couple `PersistentVolumeClaims` which could need some time to be created depending on the cloud provider you are running on.
 
+!!! info "Monitoring scope"
+
+    This chart's monitoring is not scoped to any namespace so you can add other pods to be monitored simply by adding `prometheus.io/scrape: "true"` in the correct pod annotation and in which ever namespace you desire. 
 
 ### Vulnerability-assessment-tool-admin chart
 
@@ -80,25 +84,6 @@ helm install vulnerability-assessment-tool-admin ReleaseName
 
 The above command will create a `Namespace` called `vulnerability-assessment-tool-admin` (which can be specified in the [vulnerability-assessment-tool-admin/values.yaml](https://github.com/SAP/vulnerability-assessment-tool/kubernetes/helm/vulnerability-assessment-tool-admin/values.yaml)) and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command `kubectl get pods -n vulnerability-assessment-tool-admin`. The deployment will request a `LoadBalancer` which could need some time to be created depending on the cloud provider you are running on.
 
+!!! warning "Reaching @@PROJECT_NAME@@ from the Internet"
 
-### Populate/maintain the vulnerability database
-
-In order for the tool to detect vulnerabilities, you need to import and analyze them first so that they are available in the tool's vulnerability database. Large part of CVE's and bugs are open sourced in [vulnerability-assessment-kb](https://github.com/SAP/vulnerability-assessment-kb).
-
-Follow the instructions mentioned [here](../../../vuln_db/tutorials/vuln_db_tutorial/#batch-import-from-knowledge-base), to import and build all the vulnerabilities' knowledge.
-
----
-
-Get going:
-
-1. [Import](../../../vuln_db/tutorials/vuln_db_tutorial/) all the CVEs and bugs in your local database
-2. Setup your [workspace](../../../user/manuals/setup/#workspace) (if you don't have one)
-3. Become familiar with the various analysis [goals](../../../user/manuals/analysis/) (first time users)
-4. Analyze your [Java](../../../user/tutorials/java_maven/) or [Python](../../../user/tutorials/python_cli/) application (on a regular basis)
-5. [Assess](../../../user/manuals/assess_and_mitigate/) findings using the apps Web frontend (following every analysis)
-
-Further links:
-
-- [Configure](../../../user/tutorials/) the client-side analysis
-- [Automate](../../../user/tutorials/jenkins_howto/) with Jenkins
-- [Get help](../../../user/support/) if you run into troubles
+    This chart creates a `LoadBalancer` to allow Internet traffic to reach the cluster provisioned by your provider and will connect to it. This `LoadBalancer` will be exposed on the Internet so be careful to change the authentication ingress values from the default ones. The `Service type:LoadBalancer` should work with most providers such as GKE, Azure. If not, you can follow this [ingress-nginx guide](https://github.com/kubernetes/ingress-nginx/blob/master/docs/deploy/index.md#provider-specific-steps)
