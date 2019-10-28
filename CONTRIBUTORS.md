@@ -15,3 +15,7 @@ SAP Security Testing team
 University of Paderborn
 
 - [Andreas Dann](https://github.com/anddann)
+
+NAIST
+
+- [Bodin Chinthanet](https://github.com/gotzillaz)
