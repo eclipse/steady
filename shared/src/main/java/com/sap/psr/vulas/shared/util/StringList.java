@@ -198,15 +198,13 @@ public class StringList implements Iterable<String> {
 	public HashMap<String, String> filter(Map<String, String> _in, boolean _keep_matches, ComparisonMode _mode, CaseSensitivity _case_sensitivity) {
 		final HashMap<String, String> out = new HashMap<String, String>();
 		for(Map.Entry<String, String> entry : _in.entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-			if(this.contains(key, _mode, _case_sensitivity)) {
+			if(this.contains(entry.getKey(), _mode, _case_sensitivity)) {
 				if(_keep_matches) {
-					out.put(key, value);
+					out.put(entry.getKey(), entry.getValue());
 				}
-				else if(!_keep_matches) {
-					out.put(key, value);
-				}
+			}
+			else if(!_keep_matches) {
+				out.put(entry.getKey(), entry.getValue());
 			}
 		}
 		return out;

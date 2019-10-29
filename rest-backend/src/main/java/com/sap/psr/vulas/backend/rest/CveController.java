@@ -27,14 +27,14 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 @CrossOrigin("*")
 @RequestMapping("/cves")
 public class CveController {
-	
+
 	private static Logger log = LoggerFactory.getLogger(CveController.class);
-	
+
 	private static String CACHE_REFRESH_ALL = "vulas.backend.cveCache.refetchAllMs";
 	private static String CACHE_REFRESH_SNG = "vulas.backend.cveCache.refetchSingleMs";
-	
+
 	private Thread cveCacheFetch = null;
-	
+
 	/**
 	 * Creates a thread pre-fetching the CVEs for all bugs.
 	 * This thread shall be started by using the REST endpoint {@link #startRefresh()}.
@@ -43,11 +43,11 @@ public class CveController {
 	@Autowired
 	CveController(BugRepository bugRepository) {
 		final BugRepository bug_repo = bugRepository;
-		
+
 		// Refresh CVE cache
 		final long refresh_all = VulasConfiguration.getGlobal().getConfiguration().getLong(CACHE_REFRESH_ALL, -1);
 		final long refresh_sng = VulasConfiguration.getGlobal().getConfiguration().getLong(CACHE_REFRESH_SNG, 60000);
-		
+
 		if(refresh_all==-1) {
 			log.warn("Periodic update of cached CVE data: Disabled");
 		}
@@ -56,9 +56,9 @@ public class CveController {
 			this.cveCacheFetch = new Thread(new Runnable() {
 				public void run() {
 					boolean force = false;
-					
+
 					while(true) {
-						
+
 						// Loop all bugs
 						final StopWatch sw = new StopWatch("Refresh of cached CVE data").setTotal(bug_repo.count()).start();
 						for(Bug b: bug_repo.findAll()) {
@@ -70,16 +70,16 @@ public class CveController {
 								CveController.log.error("Interrupted exception while refreshing cached CVE data of bug [" + b.getBugId() + "]: " + e.getMessage());
 							}
 							sw.progress();
-						}						
+						}
 						sw.stop();
-						
+
 						// Wait before entering the loop another time
 						try {
-							Thread.sleep(new Double(refresh_all + Math.random() * refresh_all).longValue());
+							Thread.sleep(Long.valueOf(refresh_all + Math.random() * refresh_all));
 						} catch (InterruptedException e) {
 							CveController.log.error("Interrupted exception while refreshing cached CVE data: " + e.getMessage());
 						}
-						
+
 						// Force refresh
 						force = true;
 					}
@@ -88,7 +88,7 @@ public class CveController {
 			this.cveCacheFetch.setPriority(Thread.MIN_PRIORITY);
 		}
 	}
-	
+
 	/**
 	 * Returns the {@link Cve} with the given ID, e.g., CVE-2014-0050.
 	 *
@@ -105,7 +105,7 @@ public class CveController {
 			return new ResponseEntity<Cve>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	/**
 	 * Returns the {@link Cve} with the given ID, e.g., CVE-2014-0050.
 	 *
