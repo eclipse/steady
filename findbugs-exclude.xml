@@ -2,8 +2,5 @@
 	<!-- Exclude ANTLR generated files -->
 	<Match>
 		<Class name="~com\.sap\..*\.antlr\..*" />
-		<Not>
-			<Bug code="NP_BOOLEAN_RETURN_NULL" /> <!-- 'IJU' is the code for bugs related to JUnit test code -->
-		</Not>
 	</Match>
 </FindBugsFilter>
