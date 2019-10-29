@@ -12,11 +12,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class Excemption {
 
 	private Boolean excludedScope = null;
-	
+
 	private Boolean excludedBug = null;
-	
+
 	private String excludedBugReason = null;
-	
+
 	/**
 	 * <p>isExcludedScope.</p>
 	 *

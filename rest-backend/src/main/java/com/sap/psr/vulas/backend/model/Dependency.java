@@ -50,9 +50,9 @@ import com.sap.psr.vulas.shared.enums.Scope;
 // Note, the unique constraint is not defined as an annotation any longer as we need more expressiveness than what JPA allows
 // The new constraints are defined in the flyway migration V20180828.1730__depParent.sql as partial indexes
 public class Dependency implements Serializable{
-	
+
 	private static final long serialVersionUID = 1L;
-		
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@JsonIgnore
@@ -66,79 +66,79 @@ public class Dependency implements Serializable{
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	@JoinColumn(name = "lib",  referencedColumnName = "digest")
 	private Library lib;
-	
+
 	@ManyToOne(optional = true, fetch = FetchType.EAGER )//, cascade = { CascadeType.REMOVE }) //we do not need to cascade operations as parents are always stored in the main list of app's dependencies and thus to cascade PERSIST would throw exceptions for saving multiple times the same managed object, similar for the DELETE
 	@JoinColumn(name = "parent",  referencedColumnName = "id")
 	private Dependency parent;
-	
+
 	@Column
 	@Enumerated(EnumType.STRING)
 	private DependencyOrigin origin;
-	
+
 	@Column
 	private Boolean declared;
-	
+
 	@Column
 	private Boolean traced;
-		
+
 	@Column
 	@Enumerated(EnumType.STRING)
 	private Scope scope;
-	
+
 	@Column
 	private Boolean transitive;
-	
+
 	@Column
 	private String filename;
-	
+
 	@Column(columnDefinition = "text")
 	private String path;
-	
+
 	@Column(columnDefinition = "text")
 	private String relativePath;
-	
+
 	@ManyToMany(cascade = {}, fetch = FetchType.LAZY)
 	@JsonView(Views.DepDetails.class)
 	private Set<ConstructId> reachableConstructIds;
-	
+
 	@ElementCollection(fetch=FetchType.LAZY)
 	@CollectionTable(name="AppDependencyTouchPoints", joinColumns = @JoinColumn(name = "id"))
 	@JsonView(Views.DepDetails.class)
 	private Set<TouchPoint> touchPoints;
-	
+
 	/**
 	 * Only set when single dependencies are returned by {@link ApplicationController#getDependency(String, String, String, String)}.
 	 * TODO: Maybe check if they can always bet set (depending on performance and memory).
 	 */
 	@Transient
 	private Collection<Trace> traces;
-	
+
 	/**
 	 * Contains collections of reachable dependency constructs per {@link ConstructType}.
 	 * It MUST be a subset of what can be obtained from the library via {@link Library#countConstructTypes()}.
 	 */
 	@Transient
 	private ConstructIdFilter reachableFilter = null;
-	
+
 	/**
 	 * Contains collections of traced dependency constructs per {@link ConstructType}.
 	 * It MUST be a subset of what can be obtained from the library via {@link Library#countConstructTypes()}.
 	 * Depending on the quality of the reachability analysis, it SHOULD be a subset of what can be obtained
-	 * via {@link Dependency#countReachableConstructTypes()}. 
+	 * via {@link Dependency#countReachableConstructTypes()}.
 	 */
 	@Transient
 	private ConstructIdFilter tracedFilter = null;
 
-	
+
 	@Transient
 	@JsonProperty(value = "tracedExecConstructsCounter")
 	@JsonView(Views.Default.class)
 	private Integer tracedExecConstructsCounter;
-	
+
 	@Transient
 	@JsonView(Views.Default.class)
 	private Integer reachExecConstructsCounter;
-	
+
 	/**
 	 * <p>Constructor for Dependency.</p>
 	 */
@@ -163,7 +163,7 @@ public class Dependency implements Serializable{
 		this.declared = (scope!=null && transitive!=null);
 		this.traced = false;
 	}
-	
+
 	/**
 	 * <p>Getter for the field <code>id</code>.</p>
 	 *
@@ -176,7 +176,7 @@ public class Dependency implements Serializable{
 	 * @param id a {@link java.lang.Long} object.
 	 */
 	public void setId(Long id) { this.id = id; }
-	
+
 	/**
 	 * <p>Getter for the field <code>app</code>.</p>
 	 *
@@ -189,7 +189,7 @@ public class Dependency implements Serializable{
 	 * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
 	 */
 	public void setApp(Application app) { this.app = app; }
-	
+
 	/**
 	 * <p>Getter for the field <code>lib</code>.</p>
 	 *
@@ -202,7 +202,7 @@ public class Dependency implements Serializable{
 	 *
 	 * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
 	 */
-	public void setAppRecursively(Application app) { 
+	public void setAppRecursively(Application app) {
 		this.app = app;
 		if(this.parent!=null)
 			this.parent.setAppRecursively(app);
@@ -214,7 +214,7 @@ public class Dependency implements Serializable{
 	 * @param lib a {@link com.sap.psr.vulas.backend.model.Library} object.
 	 */
 	public void setLib(Library lib) { this.lib = lib; }
-	
+
 	/**
 	 * <p>Getter for the field <code>parent</code>.</p>
 	 *
@@ -240,7 +240,7 @@ public class Dependency implements Serializable{
 	 * @param origin a {@link com.sap.psr.vulas.shared.enums.DependencyOrigin} object.
 	 */
 	public void setOrigin(DependencyOrigin origin) { this.origin = origin; }
-	
+
 	/**
 	 * <p>Getter for the field <code>scope</code>.</p>
 	 *
@@ -253,7 +253,7 @@ public class Dependency implements Serializable{
 	 * @param scope a {@link com.sap.psr.vulas.shared.enums.Scope} object.
 	 */
 	public void setScope(Scope scope) { this.scope = scope; }
-	
+
 	/**
 	 * <p>Getter for the field <code>transitive</code>.</p>
 	 *
@@ -266,7 +266,7 @@ public class Dependency implements Serializable{
 	 * @param transitive a {@link java.lang.Boolean} object.
 	 */
 	public void setTransitive(Boolean transitive) { this.transitive = transitive; }
-		
+
 	/**
 	 * <p>Getter for the field <code>filename</code>.</p>
 	 *
@@ -305,7 +305,7 @@ public class Dependency implements Serializable{
 	 * @param path a {@link java.lang.String} object.
 	 */
 	public void setPath(String path) {this.path = path;}
-	
+
 	/**
 	 * <p>Getter for the field <code>relativePath</code>.</p>
 	 *
@@ -328,7 +328,7 @@ public class Dependency implements Serializable{
 	public boolean isTraced() {
 		return this.traced!=null && this.traced;
 	}
-	
+
 	/**
 	 * Returns the value of the member {@link Dependency#traced}, which can be null.
 	 *
@@ -336,14 +336,14 @@ public class Dependency implements Serializable{
 	 */
 	//TODO to check whether to add flags "calls_count" and "reachableArchive" included in old backend
 	public Boolean getTraced() { return traced; }
-	
+
 	/**
 	 * Sets the value of the member {@link Dependency#traced}, which can be null.
 	 *
 	 * @param traced a {@link java.lang.Boolean} object.
 	 */
 	public void setTraced(Boolean traced) { this.traced = traced; }
-	
+
 	/**
 	 * <p>Getter for the field <code>reachableConstructIds</code>.</p>
 	 *
@@ -352,7 +352,7 @@ public class Dependency implements Serializable{
 	public Set<ConstructId> getReachableConstructIds() {
 		return reachableConstructIds;
 	}
-	
+
 	/**
 	 * <p>Setter for the field <code>reachableConstructIds</code>.</p>
 	 *
@@ -361,7 +361,7 @@ public class Dependency implements Serializable{
 	public void setReachableConstructIds(Set<ConstructId> reachableConstructIds) {
 		this.reachableConstructIds = reachableConstructIds;
 	}
-	
+
 	/**
 	 * <p>addReachableConstructIds.</p>
 	 *
@@ -386,7 +386,7 @@ public class Dependency implements Serializable{
 			this.reachableFilter = new ConstructIdFilter(this.getReachableConstructIds());
 		return this.reachableFilter;
 	}
-	
+
 	/**
 	 * <p>Getter for the field <code>traces</code>.</p>
 	 *
@@ -394,7 +394,7 @@ public class Dependency implements Serializable{
 	 */
 	@JsonIgnore
 	public Collection<Trace> getTraces() { return traces; }
-	
+
 	/**
 	 * <p>Setter for the field <code>traces</code>.</p>
 	 *
@@ -419,7 +419,7 @@ public class Dependency implements Serializable{
 		}
 		return this.tracedFilter;
 	}
-	
+
 	/**
 	 * <p>getTracedConstructs.</p>
 	 *
@@ -434,7 +434,7 @@ public class Dependency implements Serializable{
 			traced_cids.add(t.getConstructId());
 		return traced_cids;
 	}
-	
+
 	/**
 	 * <p>Getter for the field <code>touchPoints</code>.</p>
 	 *
@@ -458,7 +458,7 @@ public class Dependency implements Serializable{
             else
                 this.getTouchPoints().addAll(touchPoints);
         }
-	
+
 	/**
 	 * <p>prePersist.</p>
 	 */
@@ -543,7 +543,7 @@ public class Dependency implements Serializable{
 			return false;
 		return true;
 	}
-	
+
 	/**
 	 * <p>equalLibParentRelPath.</p>
 	 *
@@ -558,7 +558,7 @@ public class Dependency implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Dependency other = (Dependency) obj;
-		
+
 		if (lib == null) {
 			if (other.lib != null)
 				return false;
@@ -574,10 +574,10 @@ public class Dependency implements Serializable{
 				return false;
 		} else if (!relativePath.equals(other.relativePath))
 			return false;
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * <p>setTotalTracedExecConstructCount.</p>
 	 *
@@ -586,7 +586,7 @@ public class Dependency implements Serializable{
 	public void setTotalTracedExecConstructCount(Integer countTracesOfConstructorsLibrary) {
 		this.tracedExecConstructsCounter  = countTracesOfConstructorsLibrary;
 	}
-	
+
 	/**
 	 * <p>setTotalReachExecConstructCount.</p>
 	 *
@@ -595,7 +595,7 @@ public class Dependency implements Serializable{
 	public void setTotalReachExecConstructCount(Integer countReachableExecConstructLibrary) {
 		this.reachExecConstructsCounter  = countReachableExecConstructLibrary;
 	}
-	
+
 	@Override
 	public String toString() {
 		final StringBuffer b = new StringBuffer();

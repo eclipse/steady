@@ -87,27 +87,27 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 	private ClassDiffResult classDiffResult;
 
 	private ClassDifferences differences;
-	
-	private Collection<FeatureDifferences> removedFields = new TreeSet<FeatureDifferences>();
-    private Collection<FeatureDifferences> removedConstructors = new TreeSet<FeatureDifferences>();
-    private Collection<FeatureDifferences> removedMethods = new TreeSet<FeatureDifferences>();
 
-    private Collection<FeatureDifferences> deprecatedFields = new TreeSet<FeatureDifferences>();
-    private Collection<FeatureDifferences> deprecatedConstructors = new TreeSet<FeatureDifferences>();
-    private Collection<FeatureDifferences> deprecatedMethods = new TreeSet<FeatureDifferences>();
+	//private Collection<FeatureDifferences> removedFields = new TreeSet<FeatureDifferences>();
+		private Collection<FeatureDifferences> removedConstructors = new TreeSet<FeatureDifferences>();
+		private Collection<FeatureDifferences> removedMethods = new TreeSet<FeatureDifferences>();
 
-    private Collection<FieldDifferences> modifiedFields = new TreeSet<FieldDifferences>();
-    private Collection<CodeDifferences> modifiedConstructors = new TreeSet<CodeDifferences>();
-    private Collection<CodeDifferences> modifiedMethods = new TreeSet<CodeDifferences>();
+		//private Collection<FeatureDifferences> deprecatedFields = new TreeSet<FeatureDifferences>();
+		private Collection<FeatureDifferences> deprecatedConstructors = new TreeSet<FeatureDifferences>();
+		private Collection<FeatureDifferences> deprecatedMethods = new TreeSet<FeatureDifferences>();
 
-    private Collection<FeatureDifferences> undeprecatedFields = new TreeSet<FeatureDifferences>();
-    private Collection<FeatureDifferences> undeprecatedConstructors = new TreeSet<FeatureDifferences>();
-    private Collection<FeatureDifferences> undeprecatedMethods = new TreeSet<FeatureDifferences>();
+		//private Collection<FieldDifferences> modifiedFields = new TreeSet<FieldDifferences>();
+		private Collection<CodeDifferences> modifiedConstructors = new TreeSet<CodeDifferences>();
+		private Collection<CodeDifferences> modifiedMethods = new TreeSet<CodeDifferences>();
 
-    private Collection<FeatureDifferences> newFields = new TreeSet<FeatureDifferences>();
-    private Collection<FeatureDifferences> newConstructors = new TreeSet<FeatureDifferences>();
-    private Collection<FeatureDifferences> newMethods = new TreeSet<FeatureDifferences>();
-	
+		//private Collection<FeatureDifferences> undeprecatedFields = new TreeSet<FeatureDifferences>();
+		private Collection<FeatureDifferences> undeprecatedConstructors = new TreeSet<FeatureDifferences>();
+		private Collection<FeatureDifferences> undeprecatedMethods = new TreeSet<FeatureDifferences>();
+
+		//private Collection<FeatureDifferences> newFields = new TreeSet<FeatureDifferences>();
+		private Collection<FeatureDifferences> newConstructors = new TreeSet<FeatureDifferences>();
+		private Collection<FeatureDifferences> newMethods = new TreeSet<FeatureDifferences>();
+
 	/**
 	 * <p>Constructor for ClassDiffVisitor.</p>
 	 *
@@ -122,7 +122,7 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 		com.sap.psr.vulas.shared.json.model.ConstructId m = new com.sap.psr.vulas.shared.json.model.ConstructId();
 
 		m.setQname(_mi.getFullSignature());
-		
+
 		if(_mi.isPublic()) m.addAttribute("visibility", "public");
 		else if(_mi.isProtected()) m.addAttribute("visibility", "protected");
 		else if(_mi.isPackage()) m.addAttribute("visibility", "package");
@@ -135,7 +135,7 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 		m.addAttribute("abstract", _mi.isAbstract());
 		m.addAttribute("strict", _mi.isStrict());
 		m.addAttribute("synthetic", _mi.isSynthetic());
-		
+
 		if(_mi.isDeprecated())
     		m.addRelates("annotation", new ConstructId(ProgrammingLanguage.JAVA, ConstructType.INTF, "java.lang.Deprecated"));
 
@@ -159,12 +159,12 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 
 		return m;
 	}
-			
+
 	/** {@inheritDoc} */
 	public void visitClassDifferences(ClassDifferences differences) {
 		this.differences = differences;
 
-		for (Differences featureDifference : differences.getFeatureDifferences()) {
+		for (Differences featureDifference : this.differences.getFeatureDifferences()) {
 			featureDifference.accept(this);
 		}
 	}
@@ -173,7 +173,7 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 	public void visitInterfaceDifferences(InterfaceDifferences differences) {
 		this.differences = differences;
 
-		for (Differences featureDifference : differences.getFeatureDifferences()) {
+		for (Differences featureDifference : this.differences.getFeatureDifferences()) {
 			featureDifference.accept(this);
 		}
 	}
@@ -182,17 +182,17 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 	public void visitFieldDifferences(FieldDifferences differences) {
 		// Do nothing
 	}
-	
+
 	/** {@inheritDoc} */
 	public void visitConstructorDifferences(ConstructorDifferences differences) {
         if (differences.isRemoved()) {
             removedConstructors.add(differences);
         }
-    
+
         if (differences.isModified()) {
             modifiedConstructors.add(differences);
         }
-    
+
         if (differences.isNew()) {
             newConstructors.add(differences);
         }
@@ -211,11 +211,11 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
         if (differences.isRemoved()) {
             removedMethods.add(differences);
         }
-    
+
         if (differences.isModified()) {
             modifiedMethods.add(differences);
         }
-    
+
         if (differences.isNew()) {
             newMethods.add(differences);
         }
@@ -535,7 +535,7 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 	 * @return a {@link com.sap.psr.vulas.shared.json.model.diff.ClassDiffResult} object.
 	 */
 	public ClassDiffResult getClassDiffResult() {
-		
+
 		if (removedConstructors.size() != 0) {
             for (FeatureDifferences fd : removedConstructors) {
                 //indent().append("<declaration").append(breakdownDeclaration((Method_info) fd.getOldFeature())).append(fd.isInherited() ? " inherited=\"yes\"" : "").append(">").append(fd.getOldDeclaration()).append("</declaration>").eol();
@@ -613,7 +613,7 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
             	this.classDiffResult.addUndeprecatedMethod(this.getMethod((Method_info)fd.getNewFeature()));
             }
         }
-        
+
         if (newConstructors.size() != 0) {
             for (FeatureDifferences fd : newConstructors) {
                 //indent().append("<declaration").append(breakdownDeclaration((Method_info) fd.getNewFeature())).append(">").append(fd.getNewDeclaration()).append("</declaration>").eol();
@@ -627,7 +627,7 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
             	this.classDiffResult.addNewMethod(this.getMethod((Method_info)fd.getNewFeature()));
             }
         }
-        
+
 		return classDiffResult;
 	}
 }

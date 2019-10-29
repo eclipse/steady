@@ -119,7 +119,7 @@ public class ConstructController {
 			throw new RuntimeException(e.getClass().getSimpleName() + " when writing file to output stream: " + e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Provided that (1) the given SHA1 is known to the software repo (e.g., Maven Central) and (2) an artifact with classifier 'source' exists for the corresponding GAV,
 	 * the method returns the source code of the given Java construct.
@@ -135,7 +135,7 @@ public class ConstructController {
 		Path file = null;
 		JavaId jid = null;
 		JavaId def_ctx = null;
-		
+
 		try {
 			RepositoryDispatcher r = new RepositoryDispatcher();
 			final Artifact doc = r.getArtifactForDigest(sha1);
@@ -185,7 +185,7 @@ public class ConstructController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param _jid
 	 * @return
 	 */
@@ -232,17 +232,17 @@ public class ConstructController {
 	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/{type:.+}/{qname:.+}/sign", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
-	public ResponseEntity<Signature> getConstructAstForGav(@PathVariable String mvnGroup, 
-			@PathVariable String artifact, @PathVariable String version, @PathVariable String type, 
+	public ResponseEntity<Signature> getConstructAstForGav(@PathVariable String mvnGroup,
+			@PathVariable String artifact, @PathVariable String version, @PathVariable String type,
 			@PathVariable String qname,@RequestParam(value="sources", required=false, defaultValue="true") Boolean sources,
 			@RequestParam(value="lang", required=true, defaultValue="JAVA") ProgrammingLanguage lang) {
 		Path file = null;
 		Signature sign = null;
-				
+
 		if(lang==ProgrammingLanguage.JAVA){
 			JavaId jid = null;
 			JavaId def_ctx = null;
-			try {			
+			try {
 				jid = this.getJavaId(type, qname);
 				def_ctx = this.getCompilationUnit(jid);
 				log.debug("Determined compilation unit " + def_ctx + " for qname [" + qname + "]");
@@ -264,7 +264,7 @@ public class ConstructController {
 					} catch (Exception e) {
 						log.error("Cannot delete file [" + file + "]: " + e.getMessage());
 					}
-					
+
 					if (sign==null){
 						log.warn("Cannot construct signature for class [" + def_ctx.getQualifiedName() + "]");
 						return new ResponseEntity<Signature>(HttpStatus.NOT_FOUND);
@@ -283,18 +283,18 @@ public class ConstructController {
 				RepositoryDispatcher r = new RepositoryDispatcher();
 				String pack = (sources)?"sdist":"bdist_wheel";
 				Artifact response = r.getArtifactVersion(mvnGroup, artifact, version, null, pack, lang);
-			
+
 				if(response==null)
 					return new ResponseEntity<Signature>(HttpStatus.NOT_FOUND);
 				else{
 					Artifact a = new Artifact(mvnGroup,artifact,version);
 					a.setPackaging(pack);
 					a.setProgrammingLanguage(lang);
-					
+
 					FileAnalyzer fa = FileAnalyzerFetcher.read(a);
-								
+
 					com.sap.psr.vulas.shared.json.model.ConstructId pid = new com.sap.psr.vulas.shared.json.model.ConstructId(ProgrammingLanguage.PY,PythonId.toSharedType(PythonId.typeFromString(type)), qname);
-					
+
 					final Set<com.sap.psr.vulas.ConstructId> constructs_in = fa.getConstructs().keySet();
 					for (com.sap.psr.vulas.ConstructId c : constructs_in){
 						String aaa = c.getQualifiedName();
@@ -316,10 +316,10 @@ public class ConstructController {
 				return new ResponseEntity<Signature>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
-		
+
 		return new ResponseEntity<Signature>(sign, HttpStatus.OK);
-			
-		
+
+
 	}
 
 	/**
@@ -338,7 +338,7 @@ public class ConstructController {
 			RepositoryDispatcher r = new RepositoryDispatcher();
 			final Artifact doc = r.getArtifactForDigest(sha1);
 			if(doc==null)
-				return new ResponseEntity<ASTConstructBodySignature>(HttpStatus.NOT_FOUND); 
+				return new ResponseEntity<ASTConstructBodySignature>(HttpStatus.NOT_FOUND);
 
 			Path file = null;
 			JavaId jid = null;
@@ -357,7 +357,7 @@ public class ConstructController {
 			else {
 				SignatureFactory sf = CoreConfiguration.getSignatureFactory(JavaId.toSharedType(jid));
 				ASTConstructBodySignature sign = (ASTConstructBodySignature)sf.createSignature(JavaId.toSharedType(jid), file.toFile());
-				
+
 				// Delete
 				try {
 					Files.delete(file);
@@ -365,13 +365,10 @@ public class ConstructController {
 					log.error("Cannot delete file [" + file + "]: " + e.getMessage());
 				}
 
-				if(sign!=null)
-					return new ResponseEntity<ASTConstructBodySignature>(sign, HttpStatus.OK);
-				else {
+				if(sign==null) {
 					log.warn("Cannot construct signature for class [" + def_ctx.getQualifiedName() + "] in SHA1: " + sha1);
-					return new ResponseEntity<ASTConstructBodySignature>(sign, HttpStatus.NOT_FOUND);
 				}
-			}	
+				return new ResponseEntity<ASTConstructBodySignature>(sign, HttpStatus.NOT_FOUND);
 		}
 		catch(RepoException e) {
 			return new ResponseEntity<ASTConstructBodySignature>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -405,7 +402,7 @@ public class ConstructController {
 			final SignatureChange ddt = signComparator.computeChange(asts[0], asts[1]);
 
 			if(ddt!=null) {
-				return new ResponseEntity<SignatureChange>(ddt, HttpStatus.OK); 
+				return new ResponseEntity<SignatureChange>(ddt, HttpStatus.OK);
 			}
 			else {
 				return new ResponseEntity<SignatureChange>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -48,7 +48,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     private static final String EXCLUDES = "vulas.maven.excludes";
 
     private static final String IGNORE_POMS = "vulas.maven.ignorePoms";
-    
+
     /** Constant <code>PLUGIN_CFG_LAYER="Maven-Plugin-Config"</code> */
     protected static final String PLUGIN_CFG_LAYER = "Maven-Plugin-Config";
 
@@ -70,7 +70,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     private StringList includeArtifacts = null;
     private StringList excludeArtifacts = null;
     private boolean ignorePoms = false;
-    
+
     /** The configuration used throughout the execution of the goal. */
     protected VulasConfiguration vulasConfiguration = new VulasConfiguration();
 
@@ -82,7 +82,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
      * @throws java.lang.Exception
      */
     public final void prepareConfiguration() throws Exception {
-    	
+
     	// Delete any transient settings that remaining from a previous goal execution (if any)
         final boolean contained_values = this.vulasConfiguration.clearTransientProperties();
         if (contained_values)
@@ -92,9 +92,8 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
         this.vulasConfiguration.addLayerAfterSysProps(PLUGIN_CFG_LAYER, this.layeredConfiguration, null, true);
 
         // Check whether the application context can be established
-        Application app = null;
         try {
-            app = CoreConfiguration.getAppContext(this.vulasConfiguration);
+            CoreConfiguration.getAppContext(this.vulasConfiguration);
         }
         // In case the plugin is called w/o using the Vulas profile, project-specific settings are not set
         // Set them using the project member
@@ -102,7 +101,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
             this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.APP_CTX_GROUP, this.project.getGroupId());
             this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.APP_CTX_ARTIF, this.project.getArtifactId());
             this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.APP_CTX_VERSI, this.project.getVersion());
-            app = CoreConfiguration.getAppContext(this.vulasConfiguration);
+            CoreConfiguration.getAppContext(this.vulasConfiguration);
         }
 
         // Set defaults for all the paths
@@ -229,8 +228,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
      * @throws DependencyResolutionRequiredException
      */
     private final void setKnownDependencies() throws DependencyResolutionRequiredException {
-        if (this.goal!=null && this.goal instanceof AbstractAppGoal) {
-
+          if(this.goal!= null){
             // ---- Determine dependencies (Vulas 2.x)
 
 			/*final Set<String> runtime_system_classpath = new HashSet<String>();
@@ -263,10 +261,10 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
                 // Create lib w/o SHA1
                 lib = new Library();
                 lib.setLibraryId(new LibraryId(a.getGroupId(), a.getArtifactId(), a.getVersion()));
-                
+
                 // Create dependency and put into map
                 dep = new Dependency(this.goal.getGoalContext().getApplication(), lib, Scope.fromString(a.getScope().toUpperCase(), Scope.RUNTIME), !direct_artifacts.contains(a), null, a.getFile().toPath().toString());
-                                
+
                 // Set parent dependency (if there is any and it is NOT an intra-project Maven dependency with path target/classes)
                 final LibraryId parent = this.getParent(a.getDependencyTrail());
                 if(parent!=null) {
@@ -278,16 +276,16 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
                 		}
                 	}
                 }
-                
+
                 getLog().info("Dependency [" + StringUtil.padLeft(++count, 4) + "]: Dependency [libid=" + dep.getLib().getLibraryId() + ", parent=" + (dep.getParent()==null ? "null" : dep.getParent().getLib().getLibraryId()) + ", path=" + a.getFile().getPath() + ", direct=" + direct_artifacts.contains(a) + ", scope=" + dep.getScope() + "] created for Maven artifact [g=" + a.getGroupId() + ", a=" + a.getArtifactId() + ", base version=" + a.getBaseVersion() + ", version=" + a.getVersion() + ", classifier=" + a.getClassifier() + "]");
                 getLog().info("    " + StringUtil.join(a.getDependencyTrail(), " => "));
-                
+
                 // Check consistency
                 if( (dep.getParent()==null && dep.getTransitive()) || (dep.getParent()!=null && !dep.getTransitive()) ) {
                 	// Note that those warnings are printed for all dependency trails that include intrta-project dependencies (since they are ignored for the time being)
                 	getLog().warn("Dependency is transitive [" + dep.getTransitive() + "], but parent is [" + (dep.getParent()==null ? "null" : "present") + "]");
                 }
-                
+
                 dep_for_path.put(a.getFile().toPath(), dep);
             }
 
@@ -295,9 +293,9 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
             //TODO: It may be that a different version (file) is chosen due to conflict resolution. Still, those cases should also be visible in the frontend (archive view).
 
             ((AbstractAppGoal)this.goal).setKnownDependencies(dep_for_path);
-        }
+          }
     }
-    
+
     /**
      * <p>getParent.</p>
      *
@@ -320,10 +318,10 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     	}
     	return parent;
     }
-    
+
     /**
      * Parses one element of the {@link Artifact}'s dependency trail, which is a {@link String} comprising groupId, artifactId, type and version.
-     * 
+     *
      * @param _string
      * @return a {@link LibraryId} created from groupId, artifactId and version (or null if the given String does not have the expected format)
      */

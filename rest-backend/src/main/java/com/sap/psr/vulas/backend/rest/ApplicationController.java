@@ -128,16 +128,16 @@ public class ApplicationController {
 	private final TenantRepository tenantRepository;
 
 	private final ConstructIdRepository cidRepository;
-	
+
 	private final V_AppVulndepRepository appVulDepRepository;
-	
+
 	private final ApplicationExporter appExporter;
 
 	private final Filter cacheFilter;
-	
+
 	/** Constant <code>SENDER_EMAIL="vulas.backend.smtp.sender"</code> */
 	public final static String SENDER_EMAIL = "vulas.backend.smtp.sender";
-	
+
 	/** Constant <code>ALL_APPS_CSV_SUBJECT="vulas.backend.allApps.mailSubject"</code> */
 	public static final String ALL_APPS_CSV_SUBJECT = "vulas.backend.allApps.mailSubject";
 
@@ -180,10 +180,10 @@ public class ApplicationController {
 	 * @param space a {@link java.lang.String} object.
 	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, 
+	@RequestMapping(value = "", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"},
 			produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
-	public ResponseEntity<Application> createApplication(@RequestBody Application application, 
+	public ResponseEntity<Application> createApplication(@RequestBody Application application,
 			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
@@ -196,7 +196,7 @@ public class ApplicationController {
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<Application>(HttpStatus.NOT_FOUND);
 		}
-		
+
 		if(!DependencyUtil.isValidDependencyCollection(application))
 			return new ResponseEntity<Application>(HttpStatus.BAD_REQUEST);
 
@@ -238,7 +238,7 @@ public class ApplicationController {
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}", method = RequestMethod.DELETE)
 	@JsonView(Views.Default.class)
-	public ResponseEntity<List<Application>> purgeApplicationVersions(@PathVariable String mvnGroup, 
+	public ResponseEntity<List<Application>> purgeApplicationVersions(@PathVariable String mvnGroup,
 			@PathVariable String artifact,
 			@RequestParam(value="keep", required=false, defaultValue="3") Integer keep,
 			@RequestParam(value="mode", required=false, defaultValue="versions") String mode,
@@ -252,12 +252,12 @@ public class ApplicationController {
 		} catch (Exception e){
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<List<Application>>(HttpStatus.NOT_FOUND);
-		}	
+		}
 
 		try {
 			// Check args
 			if( keep<0 || keep>100 || mode==null || (!mode.equalsIgnoreCase("DAYS") && !mode.equalsIgnoreCase("VERSIONS")) ) {
-				log.error("Invalid value for arg 'keep' (anything between 0 and 100, is [" + keep + "]) and/or arg 'mode' (should be DAYS or VERSIONS, is [" + mode + "])"); 
+				log.error("Invalid value for arg 'keep' (anything between 0 and 100, is [" + keep + "]) and/or arg 'mode' (should be DAYS or VERSIONS, is [" + mode + "])");
 				return new ResponseEntity<List<Application>>(HttpStatus.BAD_REQUEST);
 			}
 
@@ -303,7 +303,7 @@ public class ApplicationController {
 							this.appRepository.delete(app);
 						} catch (Exception e) {
 							log.error("Error while deleting app " + app + ": " + e.getMessage(), e);
-						}	
+						}
 					}
 				}
 			}
@@ -319,7 +319,7 @@ public class ApplicationController {
 			return new ResponseEntity<List<Application>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 //	/**
 //	 * Re-creates the {@link Application} with a given GAV.
 //	 * @param digest
@@ -391,9 +391,9 @@ public class ApplicationController {
 
 		if(!DependencyUtil.isValidDependencyCollection(application))
 			return new ResponseEntity<Application>(HttpStatus.BAD_REQUEST);
-		
+
 		try {
-			//TODO: Ensure consistency of path variable and JSON content Check whether 
+			//TODO: Ensure consistency of path variable and JSON content Check whether
 			/*final String group = _app.getMvnGroup();
 			final String artifact = _app.getArtifact();
 			final String version = _app.getVersion();*/
@@ -452,7 +452,7 @@ public class ApplicationController {
 		} catch (Exception e){
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<Collection<Application>>(HttpStatus.NOT_FOUND);
-		}	
+		}
 
 		try{
 			if(g.equals("*") && a.equals("*") && v.equals("*")) {
@@ -503,7 +503,7 @@ public class ApplicationController {
 		}
 
 	}
-	
+
 	/**
 	 * Compiles a list of all {@link Application}s of the respective {@link Tenant}, which is either sent by email (as attachment) or returned as part of the HTTP response.
 	 *
@@ -520,8 +520,8 @@ public class ApplicationController {
 	 */
 	@RequestMapping(value = "/export", method = RequestMethod.GET)
 	public void exportApplications(
-			@RequestParam(value="separator", required=false, defaultValue=";") final String separator, 
-			@RequestParam(value="includeSpaceProperties", required=false, defaultValue="") final String[] includeSpaceProperties, 
+			@RequestParam(value="separator", required=false, defaultValue=";") final String separator,
+			@RequestParam(value="includeSpaceProperties", required=false, defaultValue="") final String[] includeSpaceProperties,
 			@RequestParam(value="includeGoalConfiguration", required=false, defaultValue="") final String[] includeGoalConfiguration,
 			@RequestParam(value="includeGoalSystemInfo", required=false, defaultValue="") final String[] includeGoalSystemInfo,
 			@RequestParam(value="vuln", required=false, defaultValue="") final String[] vuln,
@@ -543,15 +543,15 @@ public class ApplicationController {
 			log.error("Tenant [" + tenant + "] not found");
 			throw new RuntimeException("Tenant [" + tenant + "] not found");
 		}
-		
+
 		// Export format
 		final ExportFormat exp_format = ExportFormat.parseFormat(format, ExportFormat.CSV);
-		
+
 		// Send export per email
 		if(to!=null && to.length>0) {
-			try {			
-				final String req = request.getQueryString(); 
-				
+			try {
+				final String req = request.getQueryString();
+
 				// Build mesage
 				final Message msg = new Message();
 				msg.setSender(VulasConfiguration.getGlobal().getConfiguration().getString(SENDER_EMAIL));
@@ -559,12 +559,12 @@ public class ApplicationController {
 				msg.setBody(req);
 				for(String recipient: to)
 					msg.addRecipient(recipient);
-				
+
 				// Write apps to CSV and send email (async)
 				this.appExporter.produceExportAsync(t, null, separator, includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, vuln, false, false, exp_format, msg);
-								
-				// Short response				
-				response.setContentType(ExportFormat.TXT_PLAIN);      
+
+				// Short response
+				response.setContentType(ExportFormat.TXT_PLAIN);
 				final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
 				writer.write("Result of request [" + req + "] will be sent to [" + StringUtil.join(to, ", ") + "]");
 				writer.newLine();
@@ -589,10 +589,10 @@ public class ApplicationController {
 			try {
 				// Write apps to CSV
 				final java.nio.file.Path csv = this.appExporter.produceExport(t, null, separator, includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, vuln, false, false, exp_format);
-				
+
 				// Headers
-				response.setContentType(ExportFormat.getHttpContentType(exp_format));      
-				response.setHeader("Content-Disposition", "attachment; filename=" + csv.getFileName().toString()); 
+				response.setContentType(ExportFormat.getHttpContentType(exp_format));
+				response.setHeader("Content-Disposition", "attachment; filename=" + csv.getFileName().toString());
 				final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(csv.toFile())));
 				String line = null;
 				final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
@@ -632,7 +632,7 @@ public class ApplicationController {
 	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
-	public ResponseEntity<Application> cleanApplication(@PathVariable String mvnGroup, 
+	public ResponseEntity<Application> cleanApplication(@PathVariable String mvnGroup,
 			@PathVariable String artifact, @PathVariable String version,
 			@RequestParam(value="clean", required=true) Boolean clean,
 			@RequestParam(value="cleanGoalHistory", required=false, defaultValue="false") Boolean cleanGoalHistory,
@@ -647,7 +647,7 @@ public class ApplicationController {
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<Application>(HttpStatus.NOT_FOUND);
 		}
-		
+
 		// Ensure that app exists
 		Application app = null;
 		try { app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s)); }
@@ -704,7 +704,7 @@ public class ApplicationController {
 
 			// Search string must be at least 4 chars long
 			if(searchString==null || searchString.length()<=3) {
-				log.error("Search string must be at least 3 characters long"); 
+				log.error("Search string must be at least 3 characters long");
 				return new ResponseEntity<Set<ConstructSearchResult>>(HttpStatus.BAD_REQUEST);
 			}
 
@@ -779,7 +779,7 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.CountDetails.class)
 	public ResponseEntity<Application> getApplication(@PathVariable String mvnGroup, @PathVariable String artifact,
-			@PathVariable String version, 
+			@PathVariable String version,
 			@RequestParam(value="inclTraces", required=false, defaultValue="true") Boolean inclTraces,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER,  required=false)  String space) {
 
@@ -789,7 +789,7 @@ public class ApplicationController {
 		} catch (Exception e){
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<Application>(HttpStatus.NOT_FOUND);
-		}	
+		}
 		try {
 			final Application app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s));
 
@@ -821,7 +821,7 @@ public class ApplicationController {
 	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/constructIds", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
-	public ResponseEntity<Collection<ConstructId>> getApplicationConstructIds(@PathVariable String mvnGroup, 
+	public ResponseEntity<Collection<ConstructId>> getApplicationConstructIds(@PathVariable String mvnGroup,
 			@PathVariable String artifact, @PathVariable String version,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
@@ -853,8 +853,8 @@ public class ApplicationController {
 	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
-	public ResponseEntity<GoalExecution> createGoalExecution(@PathVariable String mvnGroup, 
-			@PathVariable String artifact, @PathVariable String version, 
+	public ResponseEntity<GoalExecution> createGoalExecution(@PathVariable String mvnGroup,
+			@PathVariable String artifact, @PathVariable String version,
 			@RequestBody GoalExecution goalExecution,
 			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
@@ -891,7 +891,7 @@ public class ApplicationController {
 		else
 			return new ResponseEntity<GoalExecution>(gexe, HttpStatus.CREATED);
 	}
-	
+
 	/**
 	 * <p>updateGoalExecution.</p>
 	 *
@@ -905,8 +905,8 @@ public class ApplicationController {
 	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals/{executionId}", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
-	public ResponseEntity<GoalExecution> updateGoalExecution(@PathVariable String mvnGroup, 
-			@PathVariable String artifact, @PathVariable String version, 
+	public ResponseEntity<GoalExecution> updateGoalExecution(@PathVariable String mvnGroup,
+			@PathVariable String artifact, @PathVariable String version,
 			@PathVariable String executionId,
 			@RequestBody GoalExecution goalExecution,
 			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
@@ -929,7 +929,7 @@ public class ApplicationController {
 		try {
 			GoalExecutionRepository.FILTER.findOne(this.gexeRepository.findByExecutionId(executionId));
 			GoalExecution managed_gexe = this.gexeRepository.customSave(app, goalExecution);
-			
+
 			if(skipResponseBody)
 				return new ResponseEntity<GoalExecution>(HttpStatus.OK);
 			else
@@ -937,10 +937,10 @@ public class ApplicationController {
 		}
 		catch (EntityNotFoundException e) {
 			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
-			
+
 		}
 	}
-	
+
 	/**
 	 * <p>isGoalExecutionExisting.</p>
 	 *
@@ -952,8 +952,8 @@ public class ApplicationController {
 	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals/{executionId}", method = RequestMethod.OPTIONS)
-	public ResponseEntity<GoalExecution> isGoalExecutionExisting(@PathVariable String mvnGroup, 
-			@PathVariable String artifact, @PathVariable String version, 
+	public ResponseEntity<GoalExecution> isGoalExecutionExisting(@PathVariable String mvnGroup,
+			@PathVariable String artifact, @PathVariable String version,
 			@PathVariable String executionId,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
@@ -965,8 +965,7 @@ public class ApplicationController {
 			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
 		}
 		// Ensure that app exists
-		Application app = null;
-		try { app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s)); }
+		try { ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s)); }
 		catch (EntityNotFoundException e) { return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND); }
 
 		try {
@@ -990,7 +989,7 @@ public class ApplicationController {
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals/{id}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.GoalDetails.class)
-	public ResponseEntity<GoalExecution> getGoalExecution(@PathVariable String mvnGroup, 
+	public ResponseEntity<GoalExecution> getGoalExecution(@PathVariable String mvnGroup,
 			@PathVariable String artifact, @PathVariable String version, @PathVariable Long id,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
@@ -1012,7 +1011,7 @@ public class ApplicationController {
 
 		return new ResponseEntity<GoalExecution>(gexe, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Returns the latest {@link GoalExceution} for the given {@link Application} and having the given {@link GoalType}.
 	 *
@@ -1025,7 +1024,7 @@ public class ApplicationController {
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals/latest", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.GoalDetails.class)
-	public ResponseEntity<GoalExecution> getLatestGoalExecution(@PathVariable String mvnGroup, 
+	public ResponseEntity<GoalExecution> getLatestGoalExecution(@PathVariable String mvnGroup,
 			@PathVariable String artifact, @PathVariable String version,
 			@RequestParam(value="type", required=false, defaultValue="") String type,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
@@ -1037,7 +1036,7 @@ public class ApplicationController {
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
 		}
-		
+
 		Application app = null;
 		try { app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s)); }
 		catch (EntityNotFoundException e) { return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND); }
@@ -1048,7 +1047,7 @@ public class ApplicationController {
 			log.error("Illegal goal type: " + type);
 			return new ResponseEntity<GoalExecution>(HttpStatus.BAD_REQUEST);
 		}
-		
+
 		final GoalExecution gexe = this.gexeRepository.findLatestGoalExecution(app, gt);
 		if(gexe==null)
 			return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
@@ -1067,7 +1066,7 @@ public class ApplicationController {
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
-	public ResponseEntity<List<GoalExecution>> getGoalExecutions(@PathVariable String mvnGroup, 
+	public ResponseEntity<List<GoalExecution>> getGoalExecutions(@PathVariable String mvnGroup,
 			@PathVariable String artifact, @PathVariable String version,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
@@ -1097,7 +1096,7 @@ public class ApplicationController {
 	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals", method = RequestMethod.DELETE)
-	public ResponseEntity<List<GoalExecution>> deleteGoalExecutions(@PathVariable String mvnGroup, 
+	public ResponseEntity<List<GoalExecution>> deleteGoalExecutions(@PathVariable String mvnGroup,
 			@PathVariable String artifact, @PathVariable String version,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
@@ -1138,7 +1137,7 @@ public class ApplicationController {
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/bugs", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.BugDetails.class)
-	public ResponseEntity<List<Bug>> getApplicationBugs(@PathVariable String mvnGroup, @PathVariable String artifact, 
+	public ResponseEntity<List<Bug>> getApplicationBugs(@PathVariable String mvnGroup, @PathVariable String artifact,
 			@PathVariable String version,
 			@RequestParam(value="historical", required=false, defaultValue="false") Boolean historical,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
@@ -1183,7 +1182,7 @@ public class ApplicationController {
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/intersect", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
-	public ResponseEntity<List<DependencyIntersection>> findDependencyIntersections(@PathVariable String mvnGroup, 
+	public ResponseEntity<List<DependencyIntersection>> findDependencyIntersections(@PathVariable String mvnGroup,
 			@PathVariable String artifact, @PathVariable String version,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
@@ -1260,7 +1259,7 @@ public class ApplicationController {
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.DepDetails.class) // extends View LibDetails that allows to see the properties
-	public ResponseEntity<Dependency> getDependency(@PathVariable String mvnGroup, @PathVariable String artifact, 
+	public ResponseEntity<Dependency> getDependency(@PathVariable String mvnGroup, @PathVariable String artifact,
 			@PathVariable String version, @PathVariable String digest,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
@@ -1416,7 +1415,7 @@ public class ApplicationController {
 			//			final com.sap.psr.vulas.backend.model.DependencyUpdate depUpdate = new com.sap.psr.vulas.backend.model.DependencyUpdate(
 			//																							new com.sap.psr.vulas.shared.json.model.LibraryId(dep.getLib().getLibraryId().getMvnGroup(),dep.getLib().getLibraryId().getArtifact(),dep.getLib().getLibraryId().getVersion()),
 			//																									new com.sap.psr.vulas.shared.json.model.LibraryId(otherVersion.getMvnGroup(),otherVersion.getArtifact(),otherVersion.getVersion()));
-			//			
+			//
 
 			// Metrics related to touch points (from traces or static analysis)
 			final Collection<TouchPoint> touch_points = dep.getTouchPoints();
@@ -1641,25 +1640,25 @@ public class ApplicationController {
 			return new ResponseEntity<TreeSet<VulnerableDependency>>(HttpStatus.NOT_FOUND);
 		}
 
-		try {			
+		try {
 			// Throw an exception if the entity is not found
 			final Application app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup, artifact, version, s));
-			
+
 			// All of them (no matter the scope)
 			final TreeSet<VulnerableDependency> vd_all = this.appRepository.findAppVulnerableDependencies(app, addExcemptionInfo, true);
-			
+
 			// The set to be returned
 			final TreeSet<VulnerableDependency> vd_list = new TreeSet<VulnerableDependency>();
-			
-			// Update traced and reachable flags 
+
+			// Update traced and reachable flags
 			// Populate the set to be returned depending on the historical flag
 			for (VulnerableDependency vd : vd_all){
 				if(   (includeAffectedUnconfirmed || vd.getAffectedVersionConfirmed()==1) &&
 					 ((historical && vd.getAffectedVersion()==0) || (affected && vd.getAffectedVersion()==1)) ) {
-					
+
 					// Update CVE data (if needed)
 					this.bugRepository.updateCachedCveData(vd.getBug(), false);
-				
+
 					vd_list.add(vd);
 				}
 			}
@@ -1670,7 +1669,7 @@ public class ApplicationController {
 			if (lastChange != null && !lastChange.equals("")) {
 				headers.add("X-Accel-Expires", "5256000");
 			}
-			
+
 			return new ResponseEntity<TreeSet<VulnerableDependency>>(vd_list, headers, HttpStatus.OK);
 		}
 		catch(EntityNotFoundException enfe) {
@@ -1707,9 +1706,9 @@ public class ApplicationController {
 		//	}
 			this.affLibRepository.computeAffectedLib(vd_list);
 			this.appRepository.updateFlags(vd_list,true);
-			
-				
-		// Old code using JPQL query		
+
+
+		// Old code using JPQL query
 //			TreeSet<VulnerableDependency> all_vd = this.appRepository.findJPQLVulnerableDependencies();
 //			this.affLibRepository.computeAffectedLib(all_vd);
 //			TreeSet<VulnerableDependency> vd_list = new TreeSet<VulnerableDependency>();
@@ -1767,7 +1766,7 @@ public class ApplicationController {
 		try {
 			// To throw an exception if the entity is not found
 			final Application a = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s));
-			
+
 			if( (vulnDepOrigin.equals(VulnDepOrigin.BUNDLEDCC) && bundledLibrary == null) || (vulnDepOrigin.equals(VulnDepOrigin.BUNDLEDAFFLIBID) && (bundledGroup == null || bundledGroup == null || bundledVersion == null )))
 				return new ResponseEntity<VulnerableDependency>(HttpStatus.BAD_REQUEST);
 
@@ -1851,7 +1850,7 @@ public class ApplicationController {
 		// Save and return
 		return new ResponseEntity<List<Trace>>(this.traceRepository.findByApp(app), HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Returns a {@link Collection} of all application {@link Dependency}s including their reachable {@link ConstructId}s.
 	 *
@@ -1877,7 +1876,7 @@ public class ApplicationController {
 		Application app = null;
 		try { app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s)); }
 		catch (EntityNotFoundException e) { return new ResponseEntity<Collection<Dependency>>(HttpStatus.NOT_FOUND); }
-		
+
 		// Save and return
 		return new ResponseEntity<Collection<Dependency>>(app.getDependencies(), HttpStatus.OK);
 	}

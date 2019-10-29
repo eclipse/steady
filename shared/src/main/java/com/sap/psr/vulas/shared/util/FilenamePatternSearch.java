@@ -23,7 +23,7 @@ public class FilenamePatternSearch extends AbstractFileSearch {
 	public FilenamePatternSearch(@NotNull String _regex) {
 		this(Pattern.compile(_regex));
 	}
-	
+
 	/**
 	 * <p>Constructor for FilenamePatternSearch.</p>
 	 *
@@ -36,8 +36,9 @@ public class FilenamePatternSearch extends AbstractFileSearch {
 	/** {@inheritDoc} */
 	@Override
 	public FileVisitResult visitFile(Path _f, BasicFileAttributes attrs) {
-		if(!_f.toFile().isDirectory() && !this.foundFile(_f) && _f.getFileName()!=null) {
-			final Matcher m = this.pattern.matcher(_f.getFileName().toString());
+		Path f = _f.getFileName();
+		if(!_f.toFile().isDirectory() && !this.foundFile(_f) && f!=null) {
+			final Matcher m = this.pattern.matcher(f.toString());
 			if(m.matches()) {
 				this.addFile(_f);
 			}

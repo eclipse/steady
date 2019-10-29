@@ -17,16 +17,16 @@ import java.util.Set;
 public class StringList implements Iterable<String> {
 
 	public enum ComparisonMode { EQUALS, STARTSWITH, ENDSWITH, PATTERN };
-	
+
 	public enum CaseSensitivity { CASE_SENSITIVE, CASE_INSENSITIVE };
-	
+
 	private Set<String> itemlist = new HashSet<String>();
-	
+
 	/**
 	 * Creates a new instance with an empty item list.
 	 */
 	public StringList() { this(null); }
-		
+
 	/**
 	 * Creates a new instance with the give item list. Strings of the item list will be trimmed before
 	 * being added to the new {@link StringList}.
@@ -37,7 +37,7 @@ public class StringList implements Iterable<String> {
 		if(_itemlist!=null)
 			this.addAll(_itemlist, true);
 	}
-	
+
 	/**
 	 * First trims and then adds all strings contained in argument _itemlist to this {@link StringList}.
 	 *
@@ -49,7 +49,7 @@ public class StringList implements Iterable<String> {
 			this.addAll(_itemlist, true);
 		return this;
 	}
-	
+
 	/**
 	 * Adds all strings contained in argument _itemlist to this {@link StringList}. The strings are
 	 * trimmed depending on the value of the argument _trim.
@@ -64,7 +64,7 @@ public class StringList implements Iterable<String> {
 				this.add(item, _trim);
 		return this;
 	}
-	
+
 	/**
 	 * Splits the given string using the given separator and adds all items to the {@link StringList}.
 	 *
@@ -77,7 +77,7 @@ public class StringList implements Iterable<String> {
 		this.addAll(_itemlist.split(_separator), _trim);
 		return this;
 	}
-	
+
 	/**
 	 * First trims and then adds the given string to this {@link StringList}.
 	 *
@@ -88,7 +88,7 @@ public class StringList implements Iterable<String> {
 		this.add(_item, true);
 		return this;
 	}
-	
+
 	/**
 	 * Adds the given string to this {@link StringList}. The strings is
 	 * trimmed depending on the value of the argument _trim. If the provided
@@ -103,7 +103,7 @@ public class StringList implements Iterable<String> {
 			this.itemlist.add( (_trim ? _item.trim() : _item) );
 		return this;
 	}
-	
+
 	/**
 	 * <p>iterator.</p>
 	 *
@@ -112,7 +112,7 @@ public class StringList implements Iterable<String> {
 	public Iterator<String> iterator() {
 		return this.itemlist.iterator();
 	}
-	
+
 	/**
 	 * Returns true if the argument _value is equal (case sensitive) to any of the
 	 * items in this {@link StringList}.
@@ -121,7 +121,7 @@ public class StringList implements Iterable<String> {
 	 * @return a boolean.
 	 */
 	public boolean contains(String _value) { return this.contains(_value, ComparisonMode.EQUALS, CaseSensitivity.CASE_SENSITIVE); }
-	
+
 	/**
 	 * Returns true if the argument _value matches any of the items in the list
 	 * according to the mode.
@@ -133,13 +133,13 @@ public class StringList implements Iterable<String> {
 	 */
 	public boolean contains(String _value, ComparisonMode _mode, CaseSensitivity _case_sensitivity) {
 		boolean r = false;
-		
+
 		// The strings to be compared
 		final String value = (_case_sensitivity==CaseSensitivity.CASE_INSENSITIVE ? _value.toLowerCase() : _value);
 		String item  = null;
-		
+
 		for(String i: this.itemlist) {
-			item = (_case_sensitivity==CaseSensitivity.CASE_INSENSITIVE ? i.toLowerCase() : i);			
+			item = (_case_sensitivity==CaseSensitivity.CASE_INSENSITIVE ? i.toLowerCase() : i);
 			switch(_mode) {
 				case EQUALS: if(value.equals(item)) return true; else break;
 				case STARTSWITH: if(value.startsWith(item)) return true; else break;
@@ -152,14 +152,14 @@ public class StringList implements Iterable<String> {
 		}
 		return r;
 	}
-	
+
 	/**
 	 * <p>isEmpty.</p>
 	 *
 	 * @return a boolean.
 	 */
 	public boolean isEmpty() { return this.itemlist.isEmpty(); }
-	
+
 	/**
 	 * <p>toString.</p>
 	 *
@@ -184,7 +184,7 @@ public class StringList implements Iterable<String> {
 		}
 		return b.toString();
 	}
-	
+
 	/**
 	 * If matches are to be kept (argument _keep_matches equals true), the method returns a new {@link HashMap} containing all keys of the given map that are contained in this {@link StringList}.
 	 * If matches are to be dropped (argument _keep_matches equals false), the method returns a new {@link HashMap} containing all keys of the given map NOT contained in this {@link StringList}.
@@ -197,13 +197,16 @@ public class StringList implements Iterable<String> {
 	 */
 	public HashMap<String, String> filter(Map<String, String> _in, boolean _keep_matches, ComparisonMode _mode, CaseSensitivity _case_sensitivity) {
 		final HashMap<String, String> out = new HashMap<String, String>();
-		for(String key: _in.keySet()) {
+		for(Map.Entry<String, String> entry : _in.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
 			if(this.contains(key, _mode, _case_sensitivity)) {
-				if(_keep_matches)
-					out.put(key, _in.get(key));
-			}
-			else if(!_keep_matches) {
-				out.put(key, _in.get(key));
+				if(_keep_matches) {
+					out.put(key, value);
+				}
+				else if(!_keep_matches) {
+					out.put(key, value);
+				}
 			}
 		}
 		return out;

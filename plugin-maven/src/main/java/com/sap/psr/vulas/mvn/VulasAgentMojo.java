@@ -40,7 +40,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 	private Map<String, Artifact> pluginArtifactMap;
 
 	private static final String PROPERTY_NAME = "vulas.maven.agent.propertyName";
-	
+
 	private static final String ECLIPSE_TEST_PLUGIN = "eclipse-test-plugin";
 
 	private static final String VULAS_AGENT_ARTIFACT_NAME = "com.sap.research.security.vulas:lang-java";
@@ -50,7 +50,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 	 * Name of the property used in maven-osgi-test-plugin.
 	 */
 	private static final String TYCHO_ARG_LINE = "tycho.testArgLine";
-	
+
 	/**
 	 * Name of the property used in maven-surefire-plugin.
 	 */
@@ -80,7 +80,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 			Configuration configuration = vulasConfiguration.getConfigurationLayer(PLUGIN_CFG_LAYER);
 			if(configuration!=null) {
 				getLog().info("The following settings are taken from layer [" + PLUGIN_CFG_LAYER + "]:");
-				final Iterator<String> iter = configuration.getKeys(); 
+				final Iterator<String> iter = configuration.getKeys();
 				while(iter.hasNext()) {
 					final String key = iter.next();
 					final Object val = configuration.getProperty(key);
@@ -98,12 +98,12 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 					getLog().info("    [" + key + "=" + val + "]");
 				}
 			}
-			
+
 			// Add settings from sys properties
 			configuration = vulasConfiguration.getConfigurationLayer(VulasConfiguration.SYS_PROP_CFG_LAYER);
 			if(configuration!=null) {
 				getLog().info("The following settings are taken from layer [" + VulasConfiguration.SYS_PROP_CFG_LAYER + "]:");
-				final Iterator<String> iter = configuration.getKeys(); 
+				final Iterator<String> iter = configuration.getKeys();
 				while(iter.hasNext()) {
 					final String key = iter.next();
 					final Object val = configuration.getProperty(key);
@@ -123,7 +123,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 					}
 				}
 			}
-			
+
 			// If not yet present, e.g., because no plugin configuration is present, add GAV from pom.xml
 			if(this.agentOptions.get(CoreConfiguration.APP_CTX_GROUP)==null || this.agentOptions.get(CoreConfiguration.APP_CTX_ARTIF)==null || this.agentOptions.get(CoreConfiguration.APP_CTX_VERSI)==null) {
 				getLog().info("The following settings are taken from the project's [pom.xml]:");
@@ -140,7 +140,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 					getLog().info("    [" + CoreConfiguration.APP_CTX_VERSI + "=" + project.getVersion() + "]");
 				}
 			}
-				
+
 			// Always READ_ONLY so that traces, paths, etc. will be written to disk
 			this.agentOptions.put(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.READ_ONLY.toString());
 			getLog().info("Setting [" + CoreConfiguration.BACKEND_CONNECT + "] set to [" + CoreConfiguration.ConnectType.READ_ONLY + "] (hard-coded, no matter the configured value)");
@@ -183,14 +183,13 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 				commandlineJava.createArgument().setLine(arg);
 
 			}
-			
+
 			//add my properties
-			for (final String key : this.agentOptions.keySet()) {
-				final String value = this.agentOptions.get(key);
-				if (value != null && !value.isEmpty()) {
+			for (final Map.Entry<String, String> entry: this.agentOptions.entrySet()) {
+				if (entry.getValue() != null && !entry.getValue().isEmpty()) {
 					Environment.Variable variable = new Environment.Variable();
-					variable.setKey(key);
-					variable.setValue(value);
+					variable.setKey(entry.getKey());
+					variable.setValue(entry.getValue());
 					commandlineJava.addSysproperty(variable);
 				}
 			}
@@ -277,7 +276,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 		}
 		return SUREFIRE_ARG_LINE;
 	}
-	
+
 	private boolean isEclipseTestPluginPackaging() {
 		return ECLIPSE_TEST_PLUGIN.equals(project.getPackaging());
 	}

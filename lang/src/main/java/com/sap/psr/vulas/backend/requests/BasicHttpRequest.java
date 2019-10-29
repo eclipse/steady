@@ -18,6 +18,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +48,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 public class BasicHttpRequest extends AbstractHttpRequest {
 
 	private static final Log log = LogFactory.getLog(BasicHttpRequest.class);
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private HttpMethod method = null;
@@ -64,7 +65,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	private String contentType = null;
 
 	private String dir=null;
-	
+
 	/** Null in case the request does not exist on disk. */
 	private String payloadPath = null;
 
@@ -72,7 +73,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	private transient HttpResponse response = null;
 
 	private boolean checkJson = false;
-	
+
 	/**
 	 * <p>Constructor for BasicHttpRequest.</p>
 	 *
@@ -146,7 +147,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 			throw new IllegalStateException("Payload only possible for POST not for [" + this.method + "]");
 		}
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public HttpRequest setGoalContext(GoalContext _ctx) {
@@ -247,7 +248,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		prefix = this.ms + "-" + prefix;
 		return prefix;
 	}
-	
+
 	/**
 	 * <p>getPayloadFilename.</p>
 	 *
@@ -256,7 +257,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	public String getPayloadFilename() {
 		return this.getFilename() + ".json";
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void savePayloadToDisk()  throws IOException {
@@ -290,14 +291,14 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		final URI uri = this.getUri();
 		Map<String,List<String>> request_fields = null;
 		final RequestRepeater repeater = new RequestRepeater(this.getVulasConfiguration().getConfiguration().getLong(CoreConfiguration.REPEAT_MAX, 50), this.getVulasConfiguration().getConfiguration().getLong(CoreConfiguration.REPEAT_WAIT, 60000));
-		
+
 		boolean is_503;
 		try {
 			do {
 				is_503 = false;
-				
+
 				final long start_nano = System.nanoTime();
-				
+
 				connection = (HttpURLConnection)uri.toURL().openConnection();
 				connection.setRequestMethod(this.method.toString().toUpperCase());
 
@@ -311,15 +312,15 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 					space_token = this.context.getSpace().getSpaceToken();
 					connection.setRequestProperty(Constants.HTTP_SPACE_HEADER, space_token);
 				}
-				
+
 				// Include version and component as request header
 				connection.setRequestProperty(Constants.HTTP_VERSION_HEADER, CoreConfiguration.getVulasRelease());
 				connection.setRequestProperty(Constants.HTTP_COMPONENT_HEADER, Constants.VulasComponent.client.toString());
-				
+
 				// Only if put something in the body
 				if(this.hasPayload()) {
 					connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-					connection.setRequestProperty("Content-Length", Integer.toString(this.payload.getBytes().length));
+					connection.setRequestProperty("Content-Length", Integer.toString(this.payload.getBytes(StandardCharsets.UTF_8).length));
 					connection.setRequestProperty("Content-Language", "en-US");
 				}
 				else if(this.binPayload!=null){
@@ -328,8 +329,8 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 
 				if(!this.hasPayload())
 					BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
-				else if(this.binPayload==null)	
-					BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + ", size=" + StringUtil.byteToKBString(this.payload.getBytes().length) + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
+				else if(this.binPayload==null)
+					BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + ", size=" + StringUtil.byteToKBString(this.payload.getBytes(StandardCharsets.UTF_8).length) + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
 				else
 					BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + ", size=" + this.binPayload.available() + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
 
@@ -352,13 +353,13 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 
 					request_fields = connection.getRequestProperties();
 					final OutputStream output = connection.getOutputStream();
-					//	PrintWriter writer = new PrintWriter(new OutputStreamWriter(output), true); 
+					//	PrintWriter writer = new PrintWriter(new OutputStreamWriter(output), true);
 
 					byte[] buffer = new byte[4096];
 					int length;
 					while ((length = this.binPayload.read(buffer)) > 0) {
 						output.write(buffer, 0, length);
-					} 
+					}
 					output.flush();
 					output.close();
 					//    writer.append(CRLF).flush();
@@ -392,7 +393,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 
 					// Opens input stream from the HTTP connection
 					InputStream inputStream = connection.getInputStream();
-					String saveFilePath = null; 
+					String saveFilePath = null;
 					if (this.dir!=null){
 						//create directories if not existing
 						if(!Files.exists(Paths.get(dir))){
@@ -444,7 +445,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 			if(is_503)
 				throw new BackendConnectionException(this.method, uri, 503, null);
 		} catch(BackendConnectionException bce) {
-			this.logHeaderFields("    Request-header", request_fields);	
+			this.logHeaderFields("    Request-header", request_fields);
 			this.logHeaderFields("    Response-header", connection.getHeaderFields());
 			if(bce.getHttpResponseBody()!=null)
 				BasicHttpRequest.log.error("    Response-body: [" + bce.getHttpResponseBody().replaceAll("[\\t\\n\\x0B\\f\\r]*", "") + "]");
@@ -466,7 +467,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		}
 		return response;
 	}
-	
+
 	private void logHeaderFields(String _prefix, Map<String,List<String>> _fields) {
 		for(Map.Entry<String, List<String>> entry: _fields.entrySet())
 			BasicHttpRequest.log.error(_prefix + " " + (entry.getKey()==null?"":"["+entry.getKey()+"]" + " = ") + entry.getValue());

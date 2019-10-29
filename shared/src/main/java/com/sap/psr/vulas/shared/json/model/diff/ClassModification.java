@@ -16,7 +16,7 @@ public class ClassModification implements Comparable {
 	private ConstructId newConstruct = null;
 	private boolean declarationChanged;
 	private boolean bodyChanged;
-	
+
 	/**
 	 * <p>Getter for the field <code>oldConstruct</code>.</p>
 	 *
@@ -81,7 +81,7 @@ public class ClassModification implements Comparable {
 	public void setBodyChanged(boolean bodyChanged) {
 		this.bodyChanged = bodyChanged;
 	}
-	
+
 	/** {@inheritDoc} */
 	public int compareTo(Object _other) {
 		if(_other instanceof ClassModification)

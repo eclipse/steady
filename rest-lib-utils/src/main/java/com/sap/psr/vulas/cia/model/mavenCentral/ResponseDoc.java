@@ -20,27 +20,27 @@ import com.sap.psr.vulas.shared.json.model.LibraryId;
  */
 @JsonIgnoreProperties(ignoreUnknown = true,value = { "c" })
 public class ResponseDoc implements Comparable {
-	
+
 	final static Pattern VERSION_PATTERN = Pattern.compile("([\\d\\.]*)(.*)", Pattern.DOTALL);
-	
+
 	private static Log log = LogFactory.getLog(ResponseDoc.class);
 
 	private String id;
-	
+
 	private String g;
-	
+
 	private String a;
-	
+
 	private String v;
-	
+
 	private String c;
-	
+
 	private String p;
-	
+
 	private long timestamp;
-	
+
 	private Collection<String> ec = null;
-	
+
 	/**
 	 * <p>Constructor for ResponseDoc.</p>
 	 */
@@ -51,20 +51,20 @@ public class ResponseDoc implements Comparable {
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
-	public String getId() { return id; }
+	public String getId() { return this.id; }
 	/**
 	 * <p>Setter for the field <code>id</code>.</p>
 	 *
 	 * @param id a {@link java.lang.String} object.
 	 */
 	public void setId(String id) { this.id = id; }
-	
+
 	/**
 	 * <p>Getter for the field <code>g</code>.</p>
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
-	public String getG() { return g; }
+	public String getG() { return this.g; }
 	/**
 	 * <p>Setter for the field <code>g</code>.</p>
 	 *
@@ -77,20 +77,20 @@ public class ResponseDoc implements Comparable {
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
-	public String getA() { return a; }
+	public String getA() { return this.a; }
 	/**
 	 * <p>Setter for the field <code>a</code>.</p>
 	 *
 	 * @param a a {@link java.lang.String} object.
 	 */
 	public void setA(String a) { this.a = a; }
-	
+
 	/**
 	 * <p>Getter for the field <code>v</code>.</p>
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
-	public String getV() { return v; }
+	public String getV() { return this.v; }
 	/**
 	 * <p>Setter for the field <code>v</code>.</p>
 	 *
@@ -103,23 +103,23 @@ public class ResponseDoc implements Comparable {
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
-	public String getC() { return c; }
+	public String getC() { return this.c; }
 	/**
 	 * <p>Setter for the field <code>c</code>.</p>
 	 *
 	 * @param c a {@link java.lang.String} object.
 	 */
-	public void setC(String c) { 
+	public void setC(String c) {
 		//TODO check that c is among ec
-		this.c = c; 
-		}
-		
+		this.c = c;
+	}
+
 	/**
 	 * <p>Getter for the field <code>p</code>.</p>
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
-	public String getP() { return p; }
+	public String getP() { return this.p; }
 	/**
 	 * <p>Setter for the field <code>p</code>.</p>
 	 *
@@ -132,27 +132,27 @@ public class ResponseDoc implements Comparable {
 	 *
 	 * @return a long.
 	 */
-	public long getTimestamp() { return timestamp; }
+	public long getTimestamp() { return this.timestamp; }
 	/**
 	 * <p>Setter for the field <code>timestamp</code>.</p>
 	 *
 	 * @param timestamp a long.
 	 */
 	public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
-	
+
 	/**
 	 * <p>Getter for the field <code>ec</code>.</p>
 	 *
 	 * @return a {@link java.util.Collection} object.
 	 */
-	public Collection<String> getEc() { return ec; }
+	public Collection<String> getEc() { return this.ec; }
 	/**
 	 * <p>Setter for the field <code>ec</code>.</p>
 	 *
 	 * @param ec a {@link java.util.Collection} object.
 	 */
 	public void setEc(Collection<String> ec) { this.ec = ec; }
-	
+
 	/**
 	 * <p>availableWith.</p>
 	 *
@@ -164,7 +164,6 @@ public class ResponseDoc implements Comparable {
 	public boolean availableWith(String _classifier, String _packaging) {
 		//final String filter_ec = (_classifier!=null && !_classifier.equals("") ? _classifier + "-" : "") + "." + _packaging;
 		for(String ec: this.getEc()) {
-			
 			if(_classifier!=null && _packaging!=null) {
 				if(ec.equals("-" + _classifier + "." + _packaging))
 					return true;
@@ -178,7 +177,7 @@ public class ResponseDoc implements Comparable {
 					return true;
 			}
 			else
-				return true;			
+				return true;
 		}
 		return false;
 	}
@@ -192,23 +191,23 @@ public class ResponseDoc implements Comparable {
 	public int compareTo(Object other) {
 		if(other instanceof ResponseDoc) {
 			final ResponseDoc other_doc = (ResponseDoc)other;
-			int c = new Long(this.timestamp).compareTo(Long.valueOf(other_doc.getTimestamp()));
+			int c = Long.compare(Long.valueOf(this.timestamp), Long.valueOf(other_doc.getTimestamp()));
 			if(c==0) {
 				//c = this.v.compareTo(other_doc.v);
-				
+
 				Matcher this_m  = VERSION_PATTERN.matcher(this.v);
 				Matcher other_m = VERSION_PATTERN.matcher(other_doc.v);
-				
+
 				String this_v = (this_m.matches() ? this_m.group(1) : this.v);
 				String other_v = (other_m.matches() ? other_m.group(1) : other_doc.v);
-				
+
 				ResponseDoc.log.debug("Compare artifact versions: Original [" + this.v + ", " + other_doc.v + "], modified for comparison [" + this_v + ", " + other_v + "]");
 				c = this_v.compareTo(other_v);
 
 				if(c==0) {
 					String this_v_tag = (this_m.matches() ? this_m.group(2) : this.v);
 					String other_v_tag = (other_m.matches() ? other_m.group(2) : other_doc.v);
-				
+
 					if(this_v_tag.equals("") && !other_v_tag.equals(""))
 						return 1;
 					else if(!this_v_tag.equals("") && other_v_tag.equals(""))
@@ -226,7 +225,7 @@ public class ResponseDoc implements Comparable {
 			throw new IllegalArgumentException("Expected ResponseDoc, got [" + other.getClass().getName() + "]");
 		}
 	}
-	
+
 
 	/** {@inheritDoc} */
 	@Override
@@ -238,7 +237,7 @@ public class ResponseDoc implements Comparable {
 		b.append(":").append(p).append("]");
 		return b.toString();
 	}
-	
+
 //	/**
 //	 * Returns the path of the directory where the artifact is stored, relative to the local M2 repository.
 //	 * E.g, com/jolira/guice/3.0.0.
@@ -252,7 +251,7 @@ public class ResponseDoc implements Comparable {
 //		b.append(this.getV());
 //		return Paths.get(b.toString());
 //	}
-//	
+//
 //	/**
 //     * Returns the artifact's filename root, e.g., guice-3.0.0
 //     * To be completed with one of the available postfix in this.ec
@@ -267,7 +266,7 @@ public class ResponseDoc implements Comparable {
 //		b.append(".").append(this.getP());
 //		return b.toString();
 //	}
-	
+
 //	/**
 //	 * http://search.maven.org/remotecontent?filepath=com/jolira/guice/3.0.0/guice-3.0.0.pom
 //	 * @return
@@ -275,8 +274,8 @@ public class ResponseDoc implements Comparable {
 //	@JsonIgnore
 //	public Path getRelM2Path() {
 //		return Paths.get(this.getRelM2Dir().toString(), this.getM2Filename());
-//	}	
-	
+//	}
+
 	/**
 	 * Returns a {@link LibraryId} corresponding to this {@link ResponseDoc}.
 	 *
@@ -288,6 +287,5 @@ public class ResponseDoc implements Comparable {
 		r.setProgrammingLanguage(ProgrammingLanguage.JAVA);
 		return r;
 	}
-	
+
 }
- 

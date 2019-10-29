@@ -28,25 +28,25 @@ import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
  *
  */
 public class PyPiVerifier implements DigestVerifier {
-	
+
 	private static Logger log = LoggerFactory.getLogger(PyPiVerifier.class);
 
 	private static Set<ProgrammingLanguage> SUPP_LANG = new HashSet<ProgrammingLanguage>();
 
 	private static Set<DigestAlgorithm> SUPP_ALG = new HashSet<DigestAlgorithm>();
-	
+
 	static {
 		SUPP_LANG.add(ProgrammingLanguage.PY);
 		SUPP_ALG.add(DigestAlgorithm.MD5);
 	}
-	
+
 	private String url = null;
-	
+
 	/** Release timestamp of the given digest (null if unknown). */
 	private java.util.Calendar timestamp;
-	
+
 	private SimpleDateFormat dateFormat = null;
-	
+
 	/**
 	 * <p>Constructor for PyPiVerifier.</p>
 	 */
@@ -54,7 +54,7 @@ public class PyPiVerifier implements DigestVerifier {
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
 		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
@@ -70,21 +70,21 @@ public class PyPiVerifier implements DigestVerifier {
 	/** {@inheritDoc} */
 	@Override
 	public String getVerificationUrl() { return url; }
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public java.util.Calendar getReleaseTimestamp() { return this.timestamp; }
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public Boolean verify(final Library _lib) throws VerificationException {
 		if(_lib==null || _lib.getDigest()==null)
 			throw new IllegalArgumentException("No library or digest provided: [" + _lib + "]");
-		
+
 		if(_lib.getLibraryId()==null || _lib.getLibraryId().getMvnGroup()==null || _lib.getLibraryId().getVersion()==null)
 			return null;
 
-		this.url = new String("https://pypi.python.org/pypi/<name>/<version>/json").replaceAll("<name>", _lib.getLibraryId().getMvnGroup()).replaceAll("<version>", _lib.getLibraryId().getVersion());
+		this.url = "https://pypi.python.org/pypi/<name>/<version>/json".replaceAll("<name>", _lib.getLibraryId().getMvnGroup()).replaceAll("<version>", _lib.getLibraryId().getVersion());
 
 		String response_body = null;
 		Boolean verified = false;
@@ -115,18 +115,18 @@ public class PyPiVerifier implements DigestVerifier {
 		}
 		return verified;
 	}
-	
+
 	/**
 	 * Returns true if the given JSON (produced by PyPi) contains a release having the given MD5 digest, false otherwise.
 	 * Example PyPi response for the Python library called requests: https://pypi.org/pypi/requests/2.18.4/json
-	 * 
+	 *
 	 * @param _json
 	 * @param _md5
 	 * @return
 	 */
-	boolean containsMD5(String _json, final String _md5) {		
+	boolean containsMD5(String _json, final String _md5) {
 		final List<String> releases = JsonPath.read(_json, "$.releases..[?(@.md5_digest == \"" + _md5.toLowerCase() + "\")].upload_time");
-		
+
 		// One result, take the release's timestamp
 		if(releases.size()==1) {
 			final String upload_time = releases.get(0);
@@ -138,12 +138,12 @@ public class PyPiVerifier implements DigestVerifier {
 				log.error("Error when parsing the timestamp [" + upload_time + "] of PyPi package with MD5 digest [" + _md5 + "]");
 			}
 		}
-		
+
 		// More than 1 result, don't take any timestamp
 		else if(releases.size()>1) {
 			log.warn("The lookup of MD5 digest [" + _md5 + "] in PyPi returned [" + releases.size() + "] artifacts");
 		}
-		
+
 		return !releases.isEmpty();
 	}
 }

@@ -27,21 +27,21 @@ import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 public class MavenCentralVerifier implements DigestVerifier {
 
 	private static Logger log = LoggerFactory.getLogger(MavenCentralVerifier.class);
-	
+
 	private static Set<ProgrammingLanguage> SUPP_LANG = new HashSet<ProgrammingLanguage>();
 
 	private static Set<DigestAlgorithm> SUPP_ALG = new HashSet<DigestAlgorithm>();
-	
+
 	static {
 		SUPP_LANG.add(ProgrammingLanguage.JAVA);
 		SUPP_ALG.add(DigestAlgorithm.SHA1);
 	}
-	
+
 	private String url = null;
-	
+
 	/** Release timestamp of the given digest (null if unknown). */
 	private java.util.Calendar timestamp;
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
@@ -57,7 +57,7 @@ public class MavenCentralVerifier implements DigestVerifier {
 	/** {@inheritDoc} */
 	@Override
 	public String getVerificationUrl() { return url; }
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public java.util.Calendar getReleaseTimestamp() { return this.timestamp; }
@@ -68,7 +68,7 @@ public class MavenCentralVerifier implements DigestVerifier {
 		if(_lib==null || _lib.getDigest()==null)
 			throw new IllegalArgumentException("No library or digest provided: [" + _lib + "]");
 
-		this.url = new String("http://search.maven.org/solrsearch/select?q=1:<SHA1>&rows=20&wt=json").replaceAll("<SHA1>", _lib.getDigest());
+		this.url = "http://search.maven.org/solrsearch/select?q=1:<SHA1>&rows=20&wt=json".replaceAll("<SHA1>", _lib.getDigest());
 
 		String mvnResponse = null;
 		Boolean verified = null;
@@ -86,12 +86,12 @@ public class MavenCentralVerifier implements DigestVerifier {
 					mvnResponse = ConnectionUtil.readInputStream(entity.getContent());
 					int num_found = ((Integer)JsonPath.read(mvnResponse, "$.response.numFound")).intValue();
 					verified = num_found > 0;
-					
+
 					if(num_found==1) {
 						final long ms = (Long)JsonPath.read(mvnResponse, "$.response.docs[0].timestamp");
 						this.timestamp = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-						this.timestamp.setTimeInMillis(ms);						
-						
+						this.timestamp.setTimeInMillis(ms);
+
 						// Check whether given and returned libid correspond
 						final LibraryId returned_libid = new LibraryId((String)JsonPath.read(mvnResponse, "$.response.docs[0].g"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].a"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].v"));
 						if(_lib.getLibraryId()!=null && !_lib.getLibraryId().equals(returned_libid))

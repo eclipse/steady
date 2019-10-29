@@ -4,13 +4,13 @@ package com.sap.psr.vulas.shared.enums;
  * <p>ConstructType class.</p>
  */
 public enum ConstructType {
-	
+
 	PACK((byte)10), CLAS((byte)20), ENUM((byte)30), INTF((byte)40), METH((byte)50), CONS((byte)60), INIT((byte)70), FUNC((byte)80), MODU((byte)90);
-	
+
 	private byte value;
-	
+
 	private ConstructType(byte _value) { this.value = _value; }
-	
+
 	/**
 	 * <p>toString.</p>
 	 *
@@ -26,9 +26,10 @@ public enum ConstructType {
 		else if(this.value==70) return "INIT";
 		else if(this.value==80) return "FUNC";
 		else if(this.value==90) return "MODU";
+		else if(this.value==0) return "";
 		else throw new IllegalArgumentException("[" + this.value + "] is not a valid contruct construct type");
 	}
-	
+
 	/**
 	 * Returns an array with all existing construct types.
 	 *

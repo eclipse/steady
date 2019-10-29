@@ -90,7 +90,7 @@ public abstract class AbstractGoal implements Runnable {
 	private MemoryMonitor memoThread = null;
 
 	// System information (CPU, OS, JVM, etc.)
-	private Map<String,String> systemInfo = new HashMap<String,String>(); 
+	private Map<String,String> systemInfo = new HashMap<String,String>();
 
 	// Goal-specific stats (set from outside)
 	private Map<String,Double> goalStats = new HashMap<String,Double>();
@@ -104,7 +104,7 @@ public abstract class AbstractGoal implements Runnable {
 	 * Creates a new goal execution.
 	 * @param _app the context of this execution (can be null, i.e., unknown, in case of TEST)
 	 * @param _goal the goal of this execution
-	 * @see 
+	 * @see
 	 */
 	/**
 	 * <p>Constructor for AbstractGoal.</p>
@@ -215,7 +215,7 @@ public abstract class AbstractGoal implements Runnable {
 	private final void execute() throws GoalConfigurationException, GoalExecutionException {
 		// Execute the goal and measure execution time
 		try {
-			this.start();			
+			this.start();
 			this.executeTasks();
 			this.stop();
 		}
@@ -260,7 +260,7 @@ public abstract class AbstractGoal implements Runnable {
 	 * @param _c a {@link com.sap.psr.vulas.shared.util.VulasConfiguration} object.
 	 * @return a {@link com.sap.psr.vulas.goals.AbstractGoal} object.
 	 */
-	public final AbstractGoal setConfiguration(VulasConfiguration _c) { this.configuration = _c; return this;}
+	public synchronized final AbstractGoal setConfiguration(VulasConfiguration _c) { this.configuration = _c; return this;}
 
 	/**
 	 * Returns the context of this goal execution. If the context has not been set before, it is constructed
@@ -271,12 +271,12 @@ public abstract class AbstractGoal implements Runnable {
 	public synchronized final GoalContext getGoalContext() {
 		if(this.goalContext==null) {
 			final Configuration c = this.getConfiguration().getConfiguration();
-			
+
 			this.goalContext = new GoalContext();
 
 			// Configuration
 			this.goalContext.setVulasConfiguration(this.getConfiguration());
-			
+
 			// Tenant
 			if(!this.getConfiguration().isEmpty(CoreConfiguration.TENANT_TOKEN))
 				this.goalContext.setTenant(new Tenant(c.getString(CoreConfiguration.TENANT_TOKEN)));
@@ -296,7 +296,7 @@ public abstract class AbstractGoal implements Runnable {
 				else
 					log.warn("Incomplete application context: " + a.toString());
 			}
-		}		
+		}
 		return this.goalContext;
 	}
 
@@ -305,7 +305,7 @@ public abstract class AbstractGoal implements Runnable {
 	 *
 	 * @param _ctx a {@link com.sap.psr.vulas.goals.GoalContext} object.
 	 */
-	public final void setGoalContext(GoalContext _ctx) {
+	public synchronized final void setGoalContext(GoalContext _ctx) {
 		this.goalContext = _ctx;
 	}
 
@@ -322,7 +322,7 @@ public abstract class AbstractGoal implements Runnable {
 		try {
 			this.getConfiguration().checkSettings();
 		} catch (ConfigurationException e) {
-			throw new GoalConfigurationException(e); 
+			throw new GoalConfigurationException(e);
 		}
 	}
 
@@ -391,7 +391,7 @@ public abstract class AbstractGoal implements Runnable {
 
 		// Stop!
 		else {
-			this.stopMemo();			
+			this.stopMemo();
 			this.stopWatch.lap("Completed execution", true);
 
 			this.cleanAfterExecution();
@@ -545,7 +545,7 @@ public abstract class AbstractGoal implements Runnable {
 		// System info
 		final StringList env_whitelist = this.getConfiguration().getStringList(VulasConfiguration.ENV_VARS, VulasConfiguration.ENV_VARS_CUSTOM);
 		final StringList sys_whitelist = this.getConfiguration().getStringList(VulasConfiguration.SYS_PROPS, VulasConfiguration.SYS_PROPS_CUSTOM);
-		
+
 		// A subset of environment variables
 		this.systemInfo.putAll(env_whitelist.filter(System.getenv(), true, ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE));
 
@@ -554,8 +554,8 @@ public abstract class AbstractGoal implements Runnable {
 			final String key_string = (String)key;
 			if(sys_whitelist.contains(key_string, ComparisonMode.STARTSWITH, CaseSensitivity.CASE_INSENSITIVE))
 				this.systemInfo.put(key_string, System.getProperty(key_string));
-		}		
-		
+		}
+
 		b.append(",\"systemInfo\":[");
 		c = 0;
 		for(Map.Entry<String, String> entry: this.systemInfo.entrySet()) {

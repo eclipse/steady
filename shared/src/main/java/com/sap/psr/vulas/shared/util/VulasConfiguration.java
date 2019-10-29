@@ -95,7 +95,7 @@ public class VulasConfiguration {
 	 * Used for retrieving actual configuration settings.
 	 */
 	private org.apache.commons.configuration.CompositeConfiguration cfg = new CompositeConfiguration();
-	
+
 	private Path m2 = null;
 
 	//=============== Used for building and updating the composite configuration
@@ -107,7 +107,7 @@ public class VulasConfiguration {
 	private Map<Configuration, String> individualConfigurations = new LinkedHashMap<Configuration, String>();
 
 	private Configuration writableConfiguration = new MapConfiguration(new HashMap<String,Object>());
-	
+
 	// Add the initial ones right away
 	/**
 	 * <p>Constructor for VulasConfiguration.</p>
@@ -125,13 +125,13 @@ public class VulasConfiguration {
 	 * Regex used to discover configurations in the folder BOOT-INF/classes/ of executable Spring JARs.
 	 */
 	private static final String propertiesRegexSpring = "BOOT-INF/classes/vulas-.*\\.properties";
-	
+
 	/** Constant <code>SYS_PROP_CFG_LAYER="System-Properties"</code> */
 	public static final String SYS_PROP_CFG_LAYER = "System-Properties";
-	
+
 	/** Constant <code>TRANSIENT_CFG_LAYER="Transient-Config-Layer"</code> */
 	public static final String TRANSIENT_CFG_LAYER = "Transient-Config-Layer";
-	
+
 	/** Constant <code>ENV_CFG_LAYER="Environment-Variables"</code> */
 	public static final String ENV_CFG_LAYER = "Environment-Variables";
 
@@ -185,7 +185,7 @@ public class VulasConfiguration {
 		// Add: Properties in JAR files contained in classpath
 		final ClassLoader cl = VulasConfiguration.class.getClassLoader();
 		final Set<String> jar_paths = new HashSet<String>();
-		
+
 		// Consider JARs known to URLClassLoader
 		if(cl instanceof URLClassLoader) {
 			jar_paths.addAll(FileUtil.getJarFilePaths((URLClassLoader)cl));
@@ -194,7 +194,7 @@ public class VulasConfiguration {
 		else {
 			jar_paths.addAll(FileUtil.getJarFilePathsForResources(cl, new String[] {"vulas-core.properties", "vulas-java.properties"}));
 		}
-		
+
 		// Search in all JARs
 		final Set<String> jar_paths_analyzed = new HashSet<String>();
 		for(String jar_path: jar_paths) {
@@ -211,7 +211,7 @@ public class VulasConfiguration {
 		// Log configuration composition and actual settings
 		this.log(LOG_PREFIXES, "    ");
 	}
-	
+
 	private void addConfiguration(Configuration _cfg, String _source) {
 		if(!individualConfigurations.containsValue(_source)) {
 			individualConfigurations.put(_cfg, _source);
@@ -226,7 +226,7 @@ public class VulasConfiguration {
 	 * Puts the given Configuration as a new layer at the given position and with the given name. If a layer with the same name
 	 * already exists at the given position, it will be either deleted or shifted by one position according to the boolean argument.
 	 * In combination with providing null as new configuration, this boolean flag can be used to remove existing layers.
-	 * 
+	 *
 	 * @param _cfg
 	 * @param _source
 	 * @param _position
@@ -236,25 +236,23 @@ public class VulasConfiguration {
 		Map<Configuration, String> tmp = new LinkedHashMap<Configuration, String>();
 		boolean removed_existing = false;
 		int i=0;
-		for(Configuration c: individualConfigurations.keySet()) {
+
+		for(Map.Entry<Configuration, String> entry : individualConfigurations.entrySet()) {
+			Configuration key = entry.getKey();
+			String value = entry.getValue();
 
 			// Wrong position, just append the current layer
 			if(i!=_position) {
-				tmp.put(c,  individualConfigurations.get(c));
-			}
-			// Correct position
-			else  {
-				// Put new layer (if provided)
-				if(_cfg!=null)
-					tmp.put(_cfg, _source);
-
-				// Check if current layer at this position is to be removed (replaced)
-				final String name = individualConfigurations.get(c);
-				if(_replace_if_existing && name.equals(_source)) {
-					removed_existing = true;
+				tmp.put(key, value);
+			} else {
+				if(_cfg != null) {
+					tmp.put(_cfg,_source);
 				}
-				else {
-					tmp.put(c, name);
+				// Check if current layer at this position is to be removed (replaced)
+				if(_replace_if_existing && value.equals(_source)) {
+					removed_existing = true;
+				} else {
+					tmp.put(key, value);
 				}
 			}
 			i++;
@@ -296,14 +294,14 @@ public class VulasConfiguration {
 			for(Object key: _map.keySet()) {
 				final Object value = _map.get(key);
 				if( (value!=null || !_ignore_null) && (_ignore_value==null || !value.toString().equals(_ignore_value)) ) {
-					map.put(key.toString(), _map.get(key));	
+					map.put(key.toString(), _map.get(key));
 				}
 			}
 			config = new MapConfiguration(map);
 		}
 		final int no_layers_before = individualConfigurations.size();
 		final boolean removed_existing = putConfiguration(config, _layer_name, 2, true);
-		final int no_layers_after = individualConfigurations.size();		
+		final int no_layers_after = individualConfigurations.size();
 
 		// Log message
 		final StringBuffer msg = new StringBuffer();
@@ -325,7 +323,7 @@ public class VulasConfiguration {
 		if(_map!=null || removed_existing)
 			rebuild();
 	}
-	
+
 	/**
 	 * Returns the {@link Configuration} layer with the given name. If multiple layers with that name exist, the top-most layer will be returned.
 	 *
@@ -333,9 +331,9 @@ public class VulasConfiguration {
 	 * @return a {@link org.apache.commons.configuration.Configuration} object.
 	 */
 	public Configuration getConfigurationLayer(String _layer_name) {
-		for(Configuration c: this.individualConfigurations.keySet()) {
-			if(this.individualConfigurations.get(c).equals(_layer_name)) {
-				return c;
+		for(Map.Entry<Configuration, String> entry: this.individualConfigurations.entrySet()) {
+			if(entry.getValue().equals(_layer_name)) {
+				return entry.getKey();
 			}
 		}
 		return null;
@@ -498,7 +496,7 @@ public class VulasConfiguration {
 
 	/** Constant <code>HOMEPAGE="vulas.shared.homepage"</code> */
 	public final static String HOMEPAGE = "vulas.shared.homepage";
-	
+
 	/** Constant <code>CHARSET="vulas.shared.charset"</code> */
 	public final static String CHARSET = "vulas.shared.charset";
 
@@ -513,19 +511,19 @@ public class VulasConfiguration {
 
 	/** Constant <code>M2_DIR="vulas.shared.m2Dir"</code> */
 	public final static String M2_DIR = "vulas.shared.m2Dir";
-	
+
 	/** Constant <code>SYS_PROPS="vulas.shared.sys"</code> */
 	public final static String SYS_PROPS = "vulas.shared.sys";
-	
+
 	/** Constant <code>SYS_PROPS_CUSTOM="vulas.shared.sys.custom"</code> */
 	public final static String SYS_PROPS_CUSTOM = "vulas.shared.sys.custom";
 
 	/** Constant <code>ENV_VARS="vulas.shared.env"</code> */
 	public final static String ENV_VARS = "vulas.shared.env";
-	
+
 	/** Constant <code>ENV_VARS_CUSTOM="vulas.shared.env.custom"</code> */
 	public final static String ENV_VARS_CUSTOM = "vulas.shared.env.custom";
-	
+
 	/**
 	 * Checks mandatory and optional settings and, where provided, the format.
 	 *
@@ -555,7 +553,7 @@ public class VulasConfiguration {
 				}
 			}
 		}
-		
+
 		// Check format (where provided)
 		final Iterator<String> iter = this.cfg.getKeys();
 		final Set<String> wrong_format = new HashSet<String>();
@@ -574,7 +572,7 @@ public class VulasConfiguration {
 				}
 			}
 		}
-		
+
 		if(!not_specified.isEmpty() || !wrong_format.isEmpty())
 			throw new ConfigurationException("The following mandatory settings are not specified: [" + StringUtil.join(not_specified, ", ") + "], the following settings do not comply with the required format: [" + StringUtil.join(wrong_format, ", ") + "]");
 	}
@@ -862,7 +860,7 @@ public class VulasConfiguration {
 			final Iterator<String> iter = entry.getKey().getKeys();
 			while(iter.hasNext()) { count_entries++; iter.next(); }
 			VulasConfiguration.getLog().info("Configuration [" + ++count + "]: " + entry.getValue() + ", [" + count_entries + "] entries");
-		}		
+		}
 
 		// Print actual values that result from that composition
 		final StringBuilder builder = new StringBuilder();
@@ -888,7 +886,7 @@ public class VulasConfiguration {
 					getLog().info((_indent==null?"":_indent) + _prefix[i] + "." + key + "=" + config.getProperty(key).toString());
 		}
 	}
-	
+
 	/**
 	 * Returns a {@link StringList} containing items taken from the given configuration settings. Each configuration settings is
 	 * expected to contain one or more values (comma-separated), which are trimmed and added to the {@link StringList}.

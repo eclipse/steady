@@ -29,16 +29,16 @@ import net.minidev.json.JSONArray;
  * Reads {@link Cve} information from a service configured with {@link #CVE_SERVICE_URL}.
  */
 public class CveReader2 implements ObjectFetcher<String, Cve> {
-	
+
 	private static final String CVE_SERVICE_URL = "vulas.backend.cveCache.serviceUrl";
-	
+
 	private static Logger log = LoggerFactory.getLogger(CveReader2.class);
-	
+
 	/**
 	 * Cache entries are invalidated after one day (1440 min) in order to not miss any changes.
 	 */
 	private static Cache<String, Cve> CVE_CACHE= new Cache<String, Cve>(new CveReader2(), 1440);
-	
+
 	/**
 	 * <p>read.</p>
 	 *
@@ -49,7 +49,7 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 	public static Cve read(String _key) throws CacheException {
 		return CVE_CACHE.get(_key);
 	}
-	
+
 	/**
 	 * <p>read.</p>
 	 *
@@ -73,20 +73,20 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 	public Cve fetch(String _key) throws CacheException {
 		if(_key==null)
 			return null;
-		
+
 		Cve cve = null;
 		int sc = -1;
 		String result = null;
 		String uri = null;
-		
+
 		// URL to read CVE information from
 		final String url = VulasConfiguration.getGlobal().getConfiguration().getString(CVE_SERVICE_URL, null);
 		if(url==null)
 			throw new CacheException("Configuration parameter [" + CVE_SERVICE_URL + "] not set");
-		
+
 		try {
 			final CloseableHttpClient httpclient = HttpClients.createDefault();
-			uri = new String(url).replaceAll("<ID>", _key);
+			uri = url.replaceAll("<ID>", _key);
 			log.info("Query details of CVE [" + _key + "] at [" + uri + "]");
 			final HttpGet method = new HttpGet(uri);
 			if(ConnectionUtil.getProxyConfig()!=null)
@@ -118,17 +118,17 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 		}
 		return cve;
 	}
-	
+
 	final static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-	
-	static Cve buildFromJson(String _id, String _json) throws ParseException {
+
+	static synchronized Cve buildFromJson(String _id, String _json) throws ParseException {
 		final Cve cve = new Cve();
 		cve.setId(_id);
-		
+
 		final Configuration conf = Configuration.defaultConfiguration();
-		//conf.addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL);		
+		//conf.addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL);
 		final Object document = conf.jsonProvider().parse(_json);
-		
+
 		// Take first english description
 		final JSONArray descriptions = JsonPath.read(document, "$.cve.description.description_data[?(@.lang=='en')].value");
 		if(descriptions==null || descriptions.size()==0) {
@@ -138,12 +138,12 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 		else {
 			cve.setSummary(descriptions.get(0).toString());
 		}
-		
+
 		final String published = JsonPath.read(document, "$.publishedDate");
 		final Calendar publ = new GregorianCalendar();
 		publ.setTime(format.parse(published));
 		cve.setPublished(publ);
-		
+
 		final String modified = JsonPath.read(document, "$.lastModifiedDate");
 		final Calendar modi = new GregorianCalendar();
 		modi.setTime(format.parse(modified));
@@ -159,7 +159,7 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 		} catch (Exception e) {
 			log.warn("Exception when reading CVSS v3 information for CVE [" + _id + "]: " + e.getMessage());
 		}
-		
+
 		String cvss2_version = null;
 		Double cvss2_score = null;
 		String cvss2_vector = null;
@@ -170,7 +170,7 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 		} catch (Exception e) {
 			log.warn("Exception when reading CVSS v2 information for CVE [" + _id + "]: " + e.getMessage());
 		}
-		
+
 		if(cvss3_version!=null && cvss3_score!=null && cvss3_vector!=null) {
 			cve.setCvssScore(cvss3_score.floatValue());
 			cve.setCvssVector(cvss3_vector);
@@ -181,7 +181,7 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 			cve.setCvssVector(cvss2_vector);
 			cve.setCvssVersion(cvss2_version);
 		}
-		
+
 		return cve;
 	}
 }

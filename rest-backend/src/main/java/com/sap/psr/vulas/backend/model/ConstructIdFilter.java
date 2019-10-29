@@ -1,5 +1,6 @@
 package com.sap.psr.vulas.backend.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ import com.sap.psr.vulas.shared.enums.ConstructType;
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConstructIdFilter {
+public class ConstructIdFilter implements Serializable {
 
 	//TODO: Memory: Save just the counters rather than a collection of all the constructs?
 	private Map<ConstructType, SortedSet<ConstructId>> constructIds = new HashMap<ConstructType, SortedSet<ConstructId>>();
@@ -98,7 +99,7 @@ public class ConstructIdFilter {
 	@JsonProperty(value = "METH")
 	public int countMeth() { return ( this.constructIds.containsKey(ConstructType.METH) ? this.constructIds.get(ConstructType.METH).size()  : 0); }
 
-	
+
 	/**
 	 * <p>countModule.</p>
 	 *
@@ -115,7 +116,7 @@ public class ConstructIdFilter {
 	@JsonProperty(value = "FUNC")
 	public int countFunction() { return ( this.constructIds.containsKey(ConstructType.FUNC) ? this.constructIds.get(ConstructType.FUNC).size()  : 0); }
 
-	
+
 	/**
 	 * Returns the total number of constructs having one of the following types: {@link ConstructId.ConstructType.METH}, {@link ConstructId.ConstructType.CONS} and {@link ConstructId.ConstructType.INIT}.
 	 * This are all the types whose execution can be observed during test, and for which reachable is checked.

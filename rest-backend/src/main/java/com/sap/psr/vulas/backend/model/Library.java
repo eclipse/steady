@@ -71,7 +71,7 @@ public class Library implements Serializable {
 	/** Was previously named 'sha1', but renamed to digest to be more general. */
 	@Column(nullable = false, length = 64)
 	private String digest;
-	
+
 	/** Exists to be backward-compatible with Vulas 2.x clients, see setSha1 for details. */
 	@Transient
 	private String sha1;
@@ -83,7 +83,7 @@ public class Library implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	private java.util.Calendar createdAt;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	@JsonIgnoreProperties(value = { "modifiedAt" }, allowGetters=true)
@@ -109,7 +109,7 @@ public class Library implements Serializable {
 
 	@ManyToMany(cascade = {})
 	private Collection<LibraryId> bundledLibraryIds;
-	
+
 	@Transient
 	@JsonView(Views.Overview.class)
 	private Integer directUsageCounter = null;
@@ -117,12 +117,12 @@ public class Library implements Serializable {
 	/**
 	 * True if the library provider or a trusted software repository confirms the mapping of digest to human-readable ID, false otherwise.
 	 * TODO: field now set to false even in case the verification failed because the external service returns [500]; should be null instead
-	 * 
+	 *
 	 */
 	@Column(nullable = true)
 	@JsonIgnoreProperties(value = { "wellknownDigest" }, allowGetters=true)
 	private Boolean wellknownDigest;
-	
+
 	/**
 	 * The library's publication timestamp (read from the package repository during digest verification).
 	 */
@@ -137,8 +137,8 @@ public class Library implements Serializable {
 	 */
 	@Column(nullable = true)
 	@JsonIgnoreProperties(value = { "digestVerificationUrl" }, allowGetters=true)
-	private String digestVerificationUrl;	
-	
+	private String digestVerificationUrl;
+
 	/**
 	 * Contains collections of library constructs per {@link ConstructType}.
 	 */
@@ -179,7 +179,7 @@ public class Library implements Serializable {
 	 * @param id a {@link java.lang.Long} object.
 	 */
 	public void setId(Long id) { this.id = id; }
-	
+
 	// Only exists for backward-compatibility with Vulas 2.x clients
 	/**
 	 * <p>Getter for the field <code>sha1</code>.</p>
@@ -237,7 +237,7 @@ public class Library implements Serializable {
 	 * @param createdAt a {@link java.util.Calendar} object.
 	 */
 	public void setCreatedAt(java.util.Calendar createdAt) { this.createdAt = createdAt; }
-	
+
 	/**
 	 * <p>Getter for the field <code>modifiedAt</code>.</p>
 	 *
@@ -337,7 +337,7 @@ public class Library implements Serializable {
 
 	//substituted with fields constructorCounter and methodCounter to avoid queries all constructs in order to have the total in the dependencies summary
 	/*@JsonProperty(value = "constructCounter")
-	public int countConstructs() { return ( this.getConstructs()==null ? 0 : this.getConstructs().size()); } */ 
+	public int countConstructs() { return ( this.getConstructs()==null ? 0 : this.getConstructs().size()); } */
 
 	/**
 	 * Loops over all constructs in order to find the distinct set of {@link ProgrammingLanguage}s used to develop the library.
@@ -504,7 +504,7 @@ public class Library implements Serializable {
 			String uri = null;
 			try {
 				final CloseableHttpClient httpclient = HttpClients.createDefault();
-				uri = new String("http://search.maven.org/solrsearch/select?q=1:<SHA1>&rows=20&wt=json").replaceAll("<SHA1>", _digest);
+				uri = "http://search.maven.org/solrsearch/select?q=1:<SHA1>&rows=20&wt=json".replaceAll("<SHA1>", _digest);
 				final HttpGet method = new HttpGet(uri);
 				if(ConnectionUtil.getProxyConfig()!=null)
 					method.setConfig(ConnectionUtil.getProxyConfig());
@@ -545,7 +545,7 @@ public class Library implements Serializable {
 	public void setDirectUsageCounter(Integer directUsageCounter) {
 		this.directUsageCounter = directUsageCounter;
 	}
-	
+
 	/**
 	 * <p>Getter for the field <code>bundledLibraryIds</code>.</p>
 	 *

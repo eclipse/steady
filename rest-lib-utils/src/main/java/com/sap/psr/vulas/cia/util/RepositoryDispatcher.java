@@ -29,23 +29,23 @@ import com.sap.psr.vulas.shared.json.model.LibraryId;
 public class RepositoryDispatcher  implements RepositoryWrapper {
 
 	private static Logger log = LoggerFactory.getLogger(RepositoryDispatcher.class);
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
 		final Set<ProgrammingLanguage> l = new HashSet<ProgrammingLanguage>();
 		final ServiceLoader<RepositoryWrapper> loader = ServiceLoader.load(RepositoryWrapper.class);
-		for(RepositoryWrapper dv: loader) {					
+		for(RepositoryWrapper dv: loader) {
 			l.addAll(dv.getSupportedLanguages());
 		}
 		return l;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public Set<Artifact> getAllArtifactVersions(String group, String artifact, String classifier, String packaging)
 			throws Exception {
-	
+
 		Set<Artifact> result = new TreeSet<Artifact>();
 		Set<LibraryId> lids = new TreeSet<LibraryId>();
 		final ServiceLoader<RepositoryWrapper> loader = ServiceLoader.load(RepositoryWrapper.class);
@@ -63,7 +63,7 @@ public class RepositoryDispatcher  implements RepositoryWrapper {
 						}
 					}
 				}catch(NotImplementedException e){
-					
+
 				}catch(UnsupportedOperationException e){
 				}
 			}
@@ -84,7 +84,7 @@ public class RepositoryDispatcher  implements RepositoryWrapper {
 					if (result!=null && !result.isEmpty())
 						break;
 				}catch(NotImplementedException e){
-					
+
 				}catch(UnsupportedOperationException e){
 				}catch(ServiceConnectionException e){
 					log.error("Invoked service was unavailable: " + e.getMessage());
@@ -100,7 +100,7 @@ public class RepositoryDispatcher  implements RepositoryWrapper {
 			throws Exception {
 		Artifact result = null;
 		final ServiceLoader<RepositoryWrapper> loader = ServiceLoader.load(RepositoryWrapper.class);
-	
+
 		for(RepositoryWrapper dv: loader) {
 			if(dv.isConfigured()){
 				try{
@@ -108,7 +108,7 @@ public class RepositoryDispatcher  implements RepositoryWrapper {
 					if(result != null)
 						break;
 				}catch(NotImplementedException e){
-					
+
 				}catch(UnsupportedOperationException e){
 				}
 			}
@@ -129,11 +129,11 @@ public class RepositoryDispatcher  implements RepositoryWrapper {
 					if(result != null)
 						break;
 				}catch(NotImplementedException e){
-					
+
 				}catch(UnsupportedOperationException e){
 				}
 			}
-			
+
 		}
 		return result;
 	}
@@ -142,7 +142,7 @@ public class RepositoryDispatcher  implements RepositoryWrapper {
 	@Override
 	public Path downloadArtifact(Artifact a) throws Exception {
 		Path p = null;
-		
+
 		if(!a.isReadyForDownload())
 			throw new IllegalArgumentException("Artifact not fully specified: " + a);
 
@@ -150,7 +150,7 @@ public class RepositoryDispatcher  implements RepositoryWrapper {
 		if(a.isCached()) {
 			log.debug(a.toString() + " available in local m2 repo: [" + a.getAbsM2Path() + "]");
 			p = a.getAbsM2Path();
-			
+
 			try{
 				if(a.getProgrammingLanguage()==ProgrammingLanguage.JAVA){
 					JarFile j = new JarFile(p.toFile(), false, java.util.zip.ZipFile.OPEN_READ);
@@ -173,12 +173,12 @@ public class RepositoryDispatcher  implements RepositoryWrapper {
 		// No, download!
 		else {
 			p=this.downloadArtifactFile(a);
-				
+
 		}
 		return p;
-		
+
 	}
-	
+
 	private Path downloadArtifactFile(Artifact a) throws Exception{
 		Path p = null;
 		// Create the dir
@@ -186,7 +186,7 @@ public class RepositoryDispatcher  implements RepositoryWrapper {
 		if(!artifact_dir.toFile().exists())
 			Files.createDirectories(artifact_dir);
 
-					
+
 		final ServiceLoader<RepositoryWrapper> loader = ServiceLoader.load(RepositoryWrapper.class);
 		for(RepositoryWrapper dv: loader) {
 			if(dv.isConfigured() && (dv.getSupportedLanguages().contains(a.getProgrammingLanguage())))	{
@@ -195,14 +195,14 @@ public class RepositoryDispatcher  implements RepositoryWrapper {
 					if(p!=null)
 						break;
 				}catch(NotImplementedException e){
-					
+
 				}catch(UnsupportedOperationException e){
 				}
 			}
 		}
 		if(p==null)
 			throw new FileNotFoundException();
-		
+
 		return p;
 	}
 
@@ -218,7 +218,7 @@ public class RepositoryDispatcher  implements RepositoryWrapper {
 					if(result != null)
 						break;
 				}catch(NotImplementedException e){
-					
+
 				}catch(UnsupportedOperationException e){
 				}
 			}
@@ -232,6 +232,6 @@ public class RepositoryDispatcher  implements RepositoryWrapper {
 	public boolean isConfigured() {
 		return false;
 	}
-	
+
 
 }

@@ -108,8 +108,8 @@ public class HubIntegrationController {
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
 	public ResponseEntity<Collection<String>> getExportItemIds(
-			@RequestParam(value="skipEmpty", required=false, defaultValue="false") Boolean skipEmpty, 
-			@RequestParam(value="separator", required=false, defaultValue=":") String separator, 
+			@RequestParam(value="skipEmpty", required=false, defaultValue="false") Boolean skipEmpty,
+			@RequestParam(value="separator", required=false, defaultValue=":") String separator,
 			@RequestParam(value="max", required=false, defaultValue="-1") Integer max,
 			@RequestParam(value="asOf", required=false, defaultValue="0") String asOfTimestamp,
 			@RequestParam(value="aggregate", required=false, defaultValue="true") Boolean aggregate,
@@ -127,13 +127,13 @@ public class HubIntegrationController {
 			log.error("Tenant [" + tenant + "] not found");
 			throw new RuntimeException("Tenant [" + tenant + "] not found");
 		}
-		
+
 		// To be returned
 		final Collection<String> items = new TreeSet<String>();
 
 		// Get all spaces and evaluate the export setting
 		final List<Space> spaces = this.spaceRepository.findAllTenantSpaces(t.getTenantToken());
-		
+
 		outerloop:
 		for(Space s: spaces) {
 			// Export will be aggregated (one item only, corresponding to the space)
@@ -241,13 +241,13 @@ public class HubIntegrationController {
 		final TreeSet<VulnerableItemDependency> vd_list = new TreeSet<VulnerableItemDependency>();
 
 		// Get latest goal execution date
-		final GoalExecution latest_gexe = gexeRepository.findLatestGoalExecution(_app, null); 
+		final GoalExecution latest_gexe = gexeRepository.findLatestGoalExecution(_app, null);
 		final Calendar snapshot_date = (latest_gexe==null ? null : latest_gexe.getCreatedAt());
 
 		// All of them (no matter the scope)
 		final TreeSet<VulnerableDependency> vd_all = this.appRepository.findAppVulnerableDependencies(_app, true, false);
 
-		// Update traced and reachable flags 
+		// Update traced and reachable flags
 		// populate the set to be returned depending on the historical flag
 		for (VulnerableDependency vd : vd_all) {
 			if(vd.getAffectedVersion()==1) {
@@ -261,12 +261,12 @@ public class HubIntegrationController {
 
 				// Add application id to ease integration
 				vhd.setAppId(_app.getId());
-				
+
 				// Last scan date and client version
 				vhd.setLastScan(_app.getLastScan());
 				if(latest_gexe!=null)
 					vhd.setClientVersion(latest_gexe.getClientVersion());
-				
+
 				// Set to null if among excluded scopes
 				if(_excluded_scopes!=null && _excluded_scopes.length>0) {
 					for(Scope scope: _excluded_scopes) {
@@ -295,7 +295,7 @@ public class HubIntegrationController {
 	 */
 	static class ExportItem {
 
-		private Space space;		
+		private Space space;
 		private Application app;
 
 		private ExportItem(@NotNull Space _s, Application _app) {
@@ -340,12 +340,12 @@ public class HubIntegrationController {
 			if(this.app!=null)
 				b.append(" ").append(escapeCharacters(this.app.getMvnGroup())).append(_separator).append(escapeCharacters(this.app.getArtifact())).append(_separator).append(escapeCharacters(this.app.getVersion()));
 			return b.toString();
-		}	
-		
+		}
+
 		private String escapeCharacters(String _param){
 			return _param.replace("/", "%2F");
 		}
-		
+
 		private static String revertEscapedCharacters(String _param){
 			return _param.replace("%2F", "/");
 		}
@@ -358,9 +358,9 @@ public class HubIntegrationController {
 		private int count = 1;
 
 		private String projectId;
-		
+
 		// === Property PRIORITY
-		
+
 		// Priority (1 = high, 5 = low)
 		public static final int AUDIT_ALL = 1;
 		public static final int SPOT_CHECKS = 2;
@@ -368,46 +368,46 @@ public class HubIntegrationController {
 		public static final int NO_PRIO = 5;
 
 		private int priority = AUDIT_ALL; // default to highest prio
-		
+
 		// === Property STATE
-		
+
 		public static final int NOT_AUDITED = -1;
 		public static final int FP_TOOL_LIMIT = 0;
 		public static final int FP_SECURE_DESIGN = 1;
 		public static final int TP = 2;
 		public static final int FP_MITIGATED = 4;
-		
+
 		/** Defaults to {@link #TP}, will be set to {@link #FP_SECURE_DESIGN} if the dependency scope has been exempted or to {@link #FP_MITIGATED} if the vulnerability has been exempted. */
 		private int state = TP;
 
 		private String exemptionReason = null;
-		
+
 		// === Property STATUS
-		
+
 		/** Not audited in Vulas. */
 		public static final int STATUS_NOT_AUDITED = -1;
-		
+
 		/** Audited in Vulas. */
 		public static final int STATUS_AUDITED = 1;
-		
+
 		/** Defaults to {@link #STATUS_NOT_AUDITED}, will be set to {@link #STATUS_AUDITED} if the state equals {@link #FP_SECURE_DESIGN} or {@link #FP_MITIGATED}. */
 		private int status = STATUS_NOT_AUDITED;
 
 		/** Vulnerability identifier. */
 		private String type;
-		
+
 		private String scope = null;
-		
+
 		private String spaceToken = null;
-		
+
 		private Long appId = null;
-		
+
 		private Boolean reachable = null;
-		
+
 		private String clientVersion = null;
-		
+
 		private Calendar lastScan = null;
-		
+
 
 		@JsonIgnore
 		private VulnerableDependency vulnerableDependency = null;
@@ -417,7 +417,7 @@ public class HubIntegrationController {
 
 		@Temporal(TemporalType.TIMESTAMP)
 		@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm", timezone="GMT")
-		private java.util.Calendar snapshotDate; 
+		private java.util.Calendar snapshotDate;
 
 		private VulnerableItemDependency(String _spaceToken, VulnerableDependency _vd, Calendar _date) {
 			this(_spaceToken, null, _vd, _date);
@@ -437,7 +437,7 @@ public class HubIntegrationController {
 			this.snapshotDate = _date;
 			this.scope = _vd.getDep().getScope()==null ? null : _vd.getDep().getScope().toString();
 			this.spaceToken = _spaceToken;
-			
+
 			this.reachable = (_vd.getReachable()==1 || _vd.getTraced()==1);
 
 			// Scope excluded: State to 1 (False Positive: Secure by design)
@@ -459,11 +459,11 @@ public class HubIntegrationController {
 		}
 
 		public int getCount() { return count; }
-		
+
 		public String getExemptionReason() { return this.exemptionReason; }
-		
+
 		public String getScope() { return this.scope; }
-		
+
 		public String getSpaceToken() { return this.spaceToken; }
 
 		public String getProjectId() { return projectId; }
@@ -478,28 +478,28 @@ public class HubIntegrationController {
 		public String getType() { return type; }
 
 		public java.util.Calendar getSnapshotDate() { return snapshotDate; }
-		
+
 		public Long getAppId() { return this.appId; }
-		
+
 		public void setAppId(Long _id){
 			this.appId = _id;
 		}
-		
+
 		public Boolean getReachable() { return this.reachable; }
 
-		
+
 		public String getClientVersion() { return this.clientVersion; }
-		
+
 		public void setClientVersion(String _clientVersion){
 			this.clientVersion = _clientVersion;
 		}
-		
+
 		public Calendar getLastScan() { return this.lastScan; }
-		
+
 		public void setLastScan(Calendar _lastScan){
 			this.lastScan = _lastScan;
 		}
-		
+
 		/**
 		 * Delegates the comparison to {@link Application#compareTo(Application)} and {@link VulnerableDependency#compareTo(VulnerableDependency)}.
 		 */

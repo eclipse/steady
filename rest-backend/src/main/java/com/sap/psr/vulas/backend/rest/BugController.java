@@ -54,17 +54,17 @@ import com.sap.psr.vulas.shared.util.StopWatch;
 @CrossOrigin(origins = "*")
 @RequestMapping(path="/bugs")
 public class BugController {
-	
+
 	private static Logger log = LoggerFactory.getLogger(BugController.class);
 
 	private final BugRepository bugRepository;
 
 	private final AffectedLibraryRepository afflibRepository;
-	
+
 	private final LibraryRepository libRepository;
 
 	private final TenantRepository tenantRepository;
-	
+
 	@Autowired
 	BugController(BugRepository bugRepository, AffectedLibraryRepository afflibRepository, LibraryRepository libRepository, TenantRepository tenantRepository) {
 		this.bugRepository = bugRepository;
@@ -113,7 +113,7 @@ public class BugController {
 			return new ResponseEntity<Bug>(HttpStatus.CONFLICT);
 		} catch (EntityNotFoundException e) {
 			try {
-				//skip av 
+				//skip av
 				bug.setAffectedVersions(null);
 				final Bug managed_bug = this.bugRepository.customSave(bug, true);
 				return new ResponseEntity<Bug>(managed_bug, HttpStatus.CREATED);
@@ -122,7 +122,7 @@ public class BugController {
 			}
 		}
 	}
-	
+
 	/**
 	 * <p>createAllBugs.</p>
 	 *
@@ -134,7 +134,7 @@ public class BugController {
 	public ResponseEntity<Bug[]> createAllBugs(@RequestBody Bug[] bugs) {
 		List<Bug> saved = new ArrayList<Bug>();
 		for(Bug b : bugs){
-			try {			
+			try {
 					final Bug existing_bug = BugRepository.FILTER.findOne(this.bugRepository.findByBugId(b.getBugId()));
 					// Return CONFLICT to indicate that resource with this bug ID already exists
 					//return new ResponseEntity<Bug>(HttpStatus.CONFLICT);
@@ -142,33 +142,33 @@ public class BugController {
 				} catch (EntityNotFoundException e) {
 					try {
 						final Bug managed_bug = this.bugRepository.customSave(b,true);
-										
+
 //						// Ensure that no affected libs for bug and source exist
 //						final List<AffectedLibrary> aff_libs = this.afflibRepository.findByBug(managed_bug);
-//						if(aff_libs!=null && aff_libs.size()>0) 
+//						if(aff_libs!=null && aff_libs.size()>0)
 //							//return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.CONFLICT);
 //							//should never happen as the bug is newly created
 //							System.out.println("["+ aff_libs.size()+ "] AffLibs for Bug " + b.getBugId() + " already exists");
-						
+
 						//only save MANUAL affectedLib for libIds
 						List<AffectedLibrary> tobesaved = new ArrayList<AffectedLibrary>();
-						for(AffectedLibrary afflib: b.getAffectedVersions()){							
+						for(AffectedLibrary afflib: b.getAffectedVersions()){
 							if (afflib.getSource()==AffectedVersionSource.MANUAL && afflib.getLibraryId()!=null && afflib.getLib()==null ){
 								tobesaved.add(afflib);
 							}
 						}
-						AffectedLibrary[] tobesavedA = new  AffectedLibrary[tobesaved.size()];		
+						AffectedLibrary[] tobesavedA = new  AffectedLibrary[tobesaved.size()];
 						if(tobesaved.size()>0){
 						 this.afflibRepository.customSave(managed_bug, tobesaved.toArray(tobesavedA));
 						}
-						
+
 						saved.add(managed_bug);
 					} catch (PersistenceException e1) {
 						return new ResponseEntity<Bug[]>(HttpStatus.INTERNAL_SERVER_ERROR);
 					}
 				}
 		}
-		Bug[] savedBugs = new Bug[saved.size()];
+		Bug[] b = new Bug[saved.size()];
 		//return new ResponseEntity<Bug[]>(saved.toArray(savedBugs), HttpStatus.CREATED);
 		return new ResponseEntity<Bug[]>(HttpStatus.CREATED);
 	}
@@ -198,7 +198,7 @@ public class BugController {
 			return new ResponseEntity<Bug>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * <p>isBugExisting.</p>
 	 *
@@ -237,7 +237,7 @@ public class BugController {
 		if(!bugid.equals(bug.getBugId()))
 			return new ResponseEntity<Bug>(HttpStatus.UNPROCESSABLE_ENTITY);
 		try {
-			//skip av 
+			//skip av
 			bug.setAffectedVersions(null);
 			Bug managed_bug = BugRepository.FILTER.findOne(this.bugRepository.findByBugId(bugid));
 			managed_bug = this.bugRepository.customSave(bug,true);
@@ -260,10 +260,10 @@ public class BugController {
 	public ResponseEntity<Resource<Bug>> deleteBug(@PathVariable String bugid) {
 		try {
 			final Bug b = BugRepository.FILTER.findOne(this.bugRepository.findByBugId(bugid));
-			
+
 			// Ensure that no affected libs for bug exist
 			final List<AffectedLibrary> aff_libs = this.afflibRepository.findByBug(b);
-			if(aff_libs!=null && aff_libs.size()>0) 
+			if(aff_libs!=null && aff_libs.size()>0)
 				return new ResponseEntity<Resource<Bug>>(HttpStatus.UNPROCESSABLE_ENTITY);
 			this.bugRepository.delete(b);
 			return new ResponseEntity<Resource<Bug>>(HttpStatus.OK);
@@ -307,7 +307,7 @@ public class BugController {
 					return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.UNPROCESSABLE_ENTITY);
 			}
 		}
-		
+
 		// Save and return
 		return new ResponseEntity<List<AffectedLibrary>>(this.afflibRepository.customSave(bug, affectedLibraries), HttpStatus.OK);
 	}
@@ -330,7 +330,7 @@ public class BugController {
 //			sw.lap("not allowed",true);
 //			return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.UNPROCESSABLE_ENTITY);
 //		}
-		
+
 		// Ensure that bug exists
 		Bug bug = null;
 		try { bug = BugRepository.FILTER.findOne(this.bugRepository.findByBugId(bugid)); }
@@ -346,7 +346,7 @@ public class BugController {
 		// Save and return
 		return new ResponseEntity<List<AffectedLibrary>>(this.afflibRepository.customSave(bug, affectedLibraries), HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Creates a set of {@link AffectedLibrary}s for the given {@link Bug} and {@link AffectedVersionSource}.
 	 * Note that {@link AffectedLibrary}s cannot be created, modified or deleted individually, but always as bulk for a given {@link AffectedVersionSource}.
@@ -366,7 +366,7 @@ public class BugController {
 		else
 			return new ResponseEntity<List<AffectedLibrary>>(this.afflibRepository.findByBugAndSource(bug, source), HttpStatus.OK);
 	}
-	
+
 	/**
 	 * <p>getAffectedLibraryDetails.</p>
 	 *
@@ -388,7 +388,7 @@ public class BugController {
 		else
 			return new ResponseEntity<List<AffectedLibrary>>(this.afflibRepository.findByBugAndLibraryIdAndSource(bug, mvnGroup, artifact, version, source), HttpStatus.OK);
 	}
-	
+
 	/**
 	 * <p>areBugAffectedLibrariesExisting.</p>
 	 *
@@ -409,7 +409,7 @@ public class BugController {
 		if(aff_libs!=null && aff_libs.size()>0) // Return CONFLICT to indicate that resource with this bug ID already exists
 			return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.OK);
 		else
-			return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.NOT_FOUND); 
+			return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.NOT_FOUND);
 
 	}
 
@@ -437,9 +437,9 @@ public class BugController {
 				//Delete affected construct changes
 				this.afflibRepository.deleteCCByAffLib(aff_lib);
 		}
-		
+
 		// Delete and return
-		this.afflibRepository.deleteByBugAndSource(bug, source); 
+		this.afflibRepository.deleteByBugAndSource(bug, source);
 		return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.OK);
 	}
 
@@ -452,8 +452,7 @@ public class BugController {
 	@RequestMapping(value = "/{bugid}/libraries", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
 	public ResponseEntity<List<Library>> getAllBugLibraries(@PathVariable String bugid) {
-		Bug bug = null;
-		try { bug = BugRepository.FILTER.findOne(this.bugRepository.findByBugId(bugid)); }
+		try { BugRepository.FILTER.findOne(this.bugRepository.findByBugId(bugid)); }
 		catch (EntityNotFoundException e) { return new ResponseEntity<List<Library>>(HttpStatus.NOT_FOUND); }
 		return new ResponseEntity<List<Library>>(this.libRepository.findJPQLVulnerableLibrariesByBug(bugid), HttpStatus.OK);
 	}

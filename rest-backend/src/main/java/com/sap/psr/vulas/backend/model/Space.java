@@ -53,59 +53,59 @@ public class Space {
 	@JoinColumn(name = "tenant", referencedColumnName = "id")
 	@JsonBackReference	 // Required in order to omit the tenant property when de-serializing JSON
 	private Tenant tenant= null;
-	
+
 	@Column(nullable = false, length = 64)
 	private String spaceToken = null;
-	
+
 	@Column(nullable = false, length = 1024)
 	private String spaceName = null;
-	
+
 	@Column(nullable = false)
 	private String spaceDescription = null;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	private java.util.Calendar createdAt;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	private java.util.Calendar lastModified;
-	
+
 	// The default value is used whenever the values is not provided in the request body
 	// This implies that modifying an existing space without sending 'exportConfiguration' will
 	// will cause this field to go back to the default value (AGGREGATED)
 	@Column
 	@Enumerated(EnumType.STRING)
 	private ExportConfiguration exportConfiguration = ExportConfiguration.AGGREGATED;
-	
+
 	// The default value is used whenever the values is not provided in the request body
 	// This implies that modifying an existing space without sending 'isPublic' will
 	// will cause this field to go back to the default value (true)
 	@Column
 	private boolean isPublic = true;
-	
+
 	@Column
 	private boolean isDefault = false;
-	
+
 	@Column
 	private boolean isReadOnly = false;
-	
+
 	// The default value is used whenever the values is not provided in the request body
 	// This implies that modifying an existing space without sending 'bugFilter' will
 	// will cause this field to go back to the default value (1)
 	@Column
 	private int bugFilter = 1; // Only bugs with origin PUBLIC
-	
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name="SpaceOwners")
 	private Set<String> spaceOwners;
-	
+
 	/**
 	 * Used to store additional space properties, e.g., software identifiers used in other management tools.
 	 */
 	@ManyToMany(cascade = {}, fetch = FetchType.EAGER)
 	private Collection<Property> properties;
-	
+
 	/**
 	 * <p>Getter for the field <code>id</code>.</p>
 	 *
@@ -118,7 +118,7 @@ public class Space {
 	 * @param id a {@link java.lang.Long} object.
 	 */
 	public void setId(Long id) { this.id = id; }
-	
+
 	/**
 	 * <p>Getter for the field <code>tenant</code>.</p>
 	 *
@@ -131,7 +131,7 @@ public class Space {
 	 * @param tenant a {@link com.sap.psr.vulas.backend.model.Tenant} object.
 	 */
 	public void setTenant(Tenant tenant) { this.tenant = tenant; }
-	
+
 	/**
 	 * <p>Getter for the field <code>spaceToken</code>.</p>
 	 *
@@ -170,7 +170,7 @@ public class Space {
 	 * @param spaceDescription a {@link java.lang.String} object.
 	 */
 	public void setSpaceDescription(String spaceDescription) { this.spaceDescription = spaceDescription; }
-	
+
 	/**
 	 * <p>hasNameAndDescription.</p>
 	 *
@@ -179,7 +179,7 @@ public class Space {
 	public boolean hasNameAndDescription() {
 		return this.spaceName!=null && this.spaceDescription!=null && !this.spaceName.equals("") && !this.spaceDescription.equals("");
 	}
-	
+
 	/**
 	 * <p>Getter for the field <code>createdAt</code>.</p>
 	 *
@@ -231,7 +231,7 @@ public class Space {
 	 * @param isPublic a boolean.
 	 */
 	public void setPublic(boolean isPublic) { this.isPublic = isPublic; }
-	
+
 	/**
 	 * <p>isDefault.</p>
 	 *
@@ -244,7 +244,7 @@ public class Space {
 	 * @param isDefault a boolean.
 	 */
 	public void setDefault(boolean isDefault) { this.isDefault = isDefault; }
-	
+
 	/**
 	 * <p>isReadOnly.</p>
 	 *
@@ -257,7 +257,7 @@ public class Space {
 	 * @param readOnly a boolean.
 	 */
 	public void setReadOnly(boolean readOnly) { this.isReadOnly = readOnly; }
-	
+
 	/**
 	 * <p>Getter for the field <code>bugFilter</code>.</p>
 	 *
@@ -270,7 +270,7 @@ public class Space {
 	 * @param bugFilter a int.
 	 */
 	public void setBugFilter(int bugFilter) { this.bugFilter = bugFilter; }
-		
+
 	/**
 	 * <p>Getter for the field <code>spaceOwners</code>.</p>
 	 *
@@ -283,7 +283,7 @@ public class Space {
 	 * @param spaceOwners a {@link java.util.Set} object.
 	 */
 	public void setSpaceOwners(Set<String> spaceOwners) { this.spaceOwners = spaceOwners; }
-	
+
 	/**
 	 * <p>Getter for the field <code>properties</code>.</p>
 	 *
@@ -296,7 +296,7 @@ public class Space {
 	 * @param properties a {@link java.util.Collection} object.
 	 */
 	public void setProperties(Collection<Property> properties) { this.properties = properties; }
-	
+
 	/**
 	 * Returns the value of the {@link Property} with the given name, or null if no such property exists.
 	 *
@@ -313,7 +313,7 @@ public class Space {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * <p>prePersist.</p>
 	 */
@@ -323,7 +323,7 @@ public class Space {
 			this.setCreatedAt(Calendar.getInstance());
 		this.setLastModified(Calendar.getInstance());
 	}
-	
+
 	/**
 	 * <p>preUpdate.</p>
 	 */
@@ -364,7 +364,7 @@ public class Space {
 	public String toString() {
 		return "space [token=" + spaceToken + ", name=" + spaceName + ", isTransient=" + this.isTransient() + "]";
 	}
-	
+
 	/**
 	 * <p>isTransient.</p>
 	 *

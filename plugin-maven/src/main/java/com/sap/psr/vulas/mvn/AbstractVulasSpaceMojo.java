@@ -52,7 +52,7 @@ public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
 
 	/** The configuration used throughout the execution of the goal. */
     protected VulasConfiguration vulasConfiguration = new VulasConfiguration();
-    
+
 	/**
 	 * Puts the plugin configuration element &lt;layeredConfiguration&gt; as a new layer into {@link VulasConfiguration}.
 	 * If no such element exists, e.g., because the POM file does not contain a plugin section for Vulas, default settings
@@ -71,9 +71,8 @@ public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
 		this.vulasConfiguration.addLayerAfterSysProps("Plugin configuration", this.layeredConfiguration, null, true);
 
 		// Check whether the application context can be established
-		Application app = null;
 		try {
-			app = CoreConfiguration.getAppContext(this.vulasConfiguration);
+			CoreConfiguration.getAppContext(this.vulasConfiguration);
 		}
 		// In case the plugin is called w/o using the Vulas profile, project-specific settings are not set
 		// Set them using the project member
@@ -81,7 +80,7 @@ public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
 			this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.APP_CTX_GROUP, this.project.getGroupId());
 			this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.APP_CTX_ARTIF, this.project.getArtifactId());
 			this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.APP_CTX_VERSI, this.project.getVersion());
-			app = CoreConfiguration.getAppContext(this.vulasConfiguration);
+			CoreConfiguration.getAppContext(this.vulasConfiguration);
 		}
 
 		// Set defaults for all the paths

@@ -1,5 +1,6 @@
 package com.sap.psr.vulas.backend.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * <p>PackageStatistics class.</p>
  *
  */
-public class PackageStatistics {
+public class PackageStatistics implements Serializable {
 
 	/**
 	 * Package to statistics
@@ -37,7 +38,7 @@ public class PackageStatistics {
 			}
 		}
 	}
-	
+
 	/**
 	 * <p>countConstructTypesPerPackage.</p>
 	 *
