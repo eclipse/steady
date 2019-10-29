@@ -370,6 +370,7 @@ public class ConstructController {
 				}
 				return new ResponseEntity<ASTConstructBodySignature>(sign, HttpStatus.NOT_FOUND);
 		}
+	}
 		catch(RepoException e) {
 			return new ResponseEntity<ASTConstructBodySignature>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -381,7 +382,7 @@ public class ConstructController {
 			log.error("Exception writing file to output stream: " + e.getMessage());
 			return new ResponseEntity<ASTConstructBodySignature>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-	}
+}
 
 	/**
 	 * <p>diffConstructAsts.</p>
