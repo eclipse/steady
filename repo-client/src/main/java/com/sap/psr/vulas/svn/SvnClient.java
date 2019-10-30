@@ -78,7 +78,7 @@ public class SvnClient implements IVCSClient {
 		final String phost = this.cfg.getString("http.proxyHost", null);
 		final String pport = this.cfg.getString("http.proxyPort", null);
 		if(phost!=null && pport!=null) {
-			authManager.setProxy(phost, new Integer(pport).intValue(), "", "");
+			authManager.setProxy(phost, Integer.valueOf(pport), "", "");
 			SvnClient.log.info("Using proxy " + phost + ":" + pport);
 		}
 
@@ -330,7 +330,7 @@ public class SvnClient implements IVCSClient {
 
 			// Determine prev. revision
 			final long l = Long.valueOf(_rev).longValue()-1;
-			final String prev_rev = new Long(l).toString();
+			final String prev_rev = Long.valueOf(l).toString();
 
 			// Get changed paths for revision
 			SVNLogEntry entry = this.getLogEntry(_rev);
