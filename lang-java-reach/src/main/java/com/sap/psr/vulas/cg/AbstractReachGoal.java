@@ -32,7 +32,7 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
     private Set<Path> preparedDepClasspath = new HashSet<Path>();
 
     private Set<Path> preparedAppClasspath = new HashSet<Path>();
-    
+
     /** Rewritten Java archives to be deleted after goal execution. */
     private Set<Path> rewrittenJars = new HashSet<Path>();
 
@@ -81,15 +81,19 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
         // Append known dependencies to classpath (can be none in case of CLI)
         for (Path p : this.getKnownDependencies().keySet()) {
         	Path appended_path = null;
+          Path fileName = p.getFileName();
+
+          if (fileName != null) {
             if (exclude_jars.isEmpty())
-            	appended_path = JarWriter.appendToClasspath(this.preparedDepClasspath, p, preprocess);
-            else if (!exclude_jars.contains(p.getFileName().toString(), ComparisonMode.PATTERN, CaseSensitivity.CASE_INSENSITIVE))
-            	appended_path = JarWriter.appendToClasspath(this.preparedDepClasspath, p, preprocess);
+              appended_path = JarWriter.appendToClasspath(this.preparedDepClasspath, p, preprocess);
+            else if (!exclude_jars.contains(fileName.toString(), ComparisonMode.PATTERN, CaseSensitivity.CASE_INSENSITIVE))
+              appended_path = JarWriter.appendToClasspath(this.preparedDepClasspath, p, preprocess);
             else
-                log.info("[" + p + "] excluded from reachability analysis");
-            
-            if(appended_path!=null && !appended_path.equals(p))
-            	this.rewrittenJars.add(appended_path);
+              log.info("[" + p + "] excluded from reachability analysis");
+          }
+
+          if(appended_path!=null && !appended_path.equals(p))
+          	this.rewrittenJars.add(appended_path);
         }
 
         ClassPoolUpdater.getInstance().appendToClasspath(this.preparedDepClasspath);
@@ -101,17 +105,23 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
 
             // Add them one by one to the classpath (except those excluded through configuration)
             final Set<Path> paths = jar_search.search(app_dir);
-            for (Path p : paths) {
-            	Path appended_path = null;
-            	if (exclude_jars.isEmpty())
-            		appended_path = JarWriter.appendToClasspath(this.preparedAppClasspath, p, preprocess);
-                else if (!exclude_jars.contains(p.getFileName().toString(), ComparisonMode.PATTERN, CaseSensitivity.CASE_INSENSITIVE))
-                	appended_path = JarWriter.appendToClasspath(this.preparedAppClasspath, p, preprocess);
-                else
-                    log.info("[" + p + "] excluded from reachability analysis");
-            	
-            	if(appended_path!=null && !appended_path.equals(p))
-                	this.rewrittenJars.add(appended_path);
+              if (paths != null){
+                for (Path p : paths) {
+                  Path appended_path = null;
+                  Path fileName = p.getFileName();
+
+                  if (fileName != null) {
+                    if (exclude_jars.isEmpty())
+                      appended_path = JarWriter.appendToClasspath(this.preparedAppClasspath, p, preprocess);
+                      else if (!exclude_jars.contains(fileName.toString(), ComparisonMode.PATTERN, CaseSensitivity.CASE_INSENSITIVE))
+                        appended_path = JarWriter.appendToClasspath(this.preparedAppClasspath, p, preprocess);
+                      else
+                          log.info("[" + p + "] excluded from reachability analysis");
+
+                    if(appended_path!=null && !appended_path.equals(p))
+                        this.rewrittenJars.add(appended_path);
+                  }
+              }
             }
 
             // Search for class files
@@ -122,7 +132,7 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
         }
 
         ClassPoolUpdater.getInstance().appendToClasspath(preparedAppClasspath);
-        
+
         log.info("Rewrote [" + this.rewrittenJars.size() + "] dependencies");
     }
 
