@@ -194,6 +194,7 @@ public class HubIntegrationController {
 		Tenant t = null;
 		try {
 			if(tenant!=null && !tenant.equals(""))
+				// FIXME: SPOTBUGS DLS_DEAD_LOCAL_STORE
 				t = TenantRepository.FILTER.findOne(this.tenantRepository.findBySecondaryKey(tenant));
 			else
 				t = tenantRepository.findDefault();
