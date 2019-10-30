@@ -108,7 +108,7 @@ public class CallgraphReachableSearch implements Runnable {
 	 * @param _node
 	 */
 	private void addReachableNode(NodeMetaInformation _node) {
-		final String sha1 = _node.getArchiveId(); 
+		final String sha1 = _node.getArchiveId();
 		if(sha1!=null) {
 			if(!this.reachableConstructs.containsKey(sha1)) {
 				this.reachableConstructs.put(sha1, new HashSet<NodeMetaInformation>());
@@ -123,7 +123,7 @@ public class CallgraphReachableSearch implements Runnable {
 	 * @param _node
 	 */
 	private void addTouchPoint(NodeMetaInformation _from, NodeMetaInformation _to) {
-		final String sha1 = _to.getArchiveId(); 
+		final String sha1 = _to.getArchiveId();
 		if(sha1!=null) {
 			if(!this.touchPoints.containsKey(sha1)) {
 				this.touchPoints.put(sha1, new HashSet<List<NodeMetaInformation>>());
@@ -141,7 +141,7 @@ public class CallgraphReachableSearch implements Runnable {
 	public void run() {
 		if(this.graph!=null && this.graph.getGraph()!=null) {
 			StopWatch sw = null;
-			try {				
+			try {
 				// Loop over all nodes
 				final Graph<Integer> wala_graph = this.graph.getGraph();
 				final Iterator<Integer> wala_graph_iterator = wala_graph.iterator();
@@ -202,14 +202,18 @@ public class CallgraphReachableSearch implements Runnable {
 				}
 			}
 			catch(NullPointerException npe) {
-				sw.stop(npe);
+				if(sw != null) {
+					sw.stop(npe);
+				}
 				log.error(npe.getClass().getSimpleName() + " occured when looping callgraph", npe);
 			}
 			catch(Exception e) {
-				sw.stop(e);
+				if(sw != null) {
+					sw.stop(e);
+				}
 				log.error(e.getClass().getSimpleName() + " occured when looping callgraph: " + e.getMessage());
 			}
-		}	
+		}
 	}
 
 	/**
@@ -228,5 +232,5 @@ public class CallgraphReachableSearch implements Runnable {
 	 */
 	public Map<String, Set<NodeMetaInformation>> getReachableConstructs() {
 		return reachableConstructs;
-	}	
+	}
 }
