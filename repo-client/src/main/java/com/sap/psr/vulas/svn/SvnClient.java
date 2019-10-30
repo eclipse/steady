@@ -78,7 +78,7 @@ public class SvnClient implements IVCSClient {
 		final String phost = this.cfg.getString("http.proxyHost", null);
 		final String pport = this.cfg.getString("http.proxyPort", null);
 		if(phost!=null && pport!=null) {
-			authManager.setProxy(phost, Integer.valueOf(pport), "", "");
+			authManager.setProxy(phost, Integer.parseInt(pport), "", "");
 			SvnClient.log.info("Using proxy " + phost + ":" + pport);
 		}
 
@@ -189,7 +189,7 @@ public class SvnClient implements IVCSClient {
 
 	private SVNLogEntry getLogEntry(String _rev) {
 		SVNLogEntry e = null;
-		final long rev = Long.valueOf(_rev);
+		final long rev = Long.parseLong(_rev);
 		for (SVNLogEntry logEntry : this.logEntries)
 			if (logEntry.getRevision() == rev) {
 				e = logEntry;
@@ -212,7 +212,7 @@ public class SvnClient implements IVCSClient {
 				rev_dir = Files.createDirectory(rev_dir);
 
 			// Perform checkout
-			SVNRevision revision = SVNRevision.create(Long.valueOf(_rev));
+			SVNRevision revision = SVNRevision.create(Long.parseLong(_rev));
 			final SvnCheckout checkout = svnOperationFactory.createCheckout();
 			checkout.setSingleTarget(SvnTarget.fromFile(rev_dir.toFile()));
 			checkout.setSource(SvnTarget.fromURL(this.setupRepo("trunk/").getLocation()));
@@ -275,7 +275,7 @@ public class SvnClient implements IVCSClient {
 			url = SVNURL.parseURIEncoded(this.rootRepo.getRepositoryRoot(false) + "/" + rel_dir);
 
 			// Perform checkout
-			SVNRevision revision = SVNRevision.create(Long.valueOf(_rev));
+			SVNRevision revision = SVNRevision.create(Long.parseLong(_rev));
 
 			SVNUpdateClient clnt = new SVNUpdateClient((ISVNAuthenticationManager)this.authManager, null);
 			clnt.doCheckout(url, p.toFile(), revision, revision, SVNDepth.FILES, false); //IMMEDIATES, FILES, INFINITY
@@ -329,7 +329,7 @@ public class SvnClient implements IVCSClient {
 			this.updateCommitLog(this.asOf);
 
 			// Determine prev. revision
-			final long l = Long.valueOf(_rev).longValue()-1;
+			final long l = Long.parseLong(_rev)-1;
 			final String prev_rev = Long.valueOf(l).toString();
 
 			// Get changed paths for revision
