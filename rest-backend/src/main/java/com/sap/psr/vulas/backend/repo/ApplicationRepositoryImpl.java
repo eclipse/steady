@@ -69,7 +69,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 	@Autowired
 	LibraryRepository libRepository;
-	
+
 	@Autowired
 	LibraryIdRepository libIdRepository;
 
@@ -78,7 +78,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 	@Autowired
 	SpaceRepository spaceRepository;
-	
+
 	@Autowired
 	TenantRepository tenantRepository;
 
@@ -99,11 +99,11 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 	@Autowired
 	V_AppVulndepRepository v_appVulnDepRepository;
-	
+
 	@Autowired
 	ReferenceUpdater refUpdater;
 
-	
+
 	/** {@inheritDoc} */
 	public Application customSave(Application _app) {
 		final StopWatch sw = new StopWatch("Save app " + _app).start();
@@ -114,7 +114,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 		// Does it already exist?
 		Application managed_app = null;
-		
+
 		try {
 			managed_app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(group, artifact, version, _app.getSpace()));
 			managed_app.setModifiedAt(Calendar.getInstance());
@@ -124,28 +124,28 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			//if the applcation does not exist, we create an empty one so that we can later add the dependencies incrementally
 			Application new_app = new Application(group,artifact,version);
 			new_app.setSpace(_app.getSpace());
-			managed_app = this.appRepository.save(new_app);		
+			managed_app = this.appRepository.save(new_app);
 			sw.lap("Saved new empty application [" + _app +"], next steps will be to save constructs and dependencies");
 		}
 
 		_app.setId(managed_app.getId());
 		_app.setCreatedAt(managed_app.getCreatedAt());
-		_app.setModifiedAt(managed_app.getModifiedAt());	
+		_app.setModifiedAt(managed_app.getModifiedAt());
 		_app.setLastScan(managed_app.getLastScan());
 		_app.setLastVulnChange(managed_app.getLastVulnChange());
-		
+
 		// Update refs to independent entities
 		_app.setConstructs(refUpdater.saveNestedConstructIds(_app.getConstructs()));
 		sw.lap("Updated refs to nested constructs");
-		
+
 		_app = this.updateLibraries(_app);
 		sw.lap("Updated refs to nested libs");
-		
-		
+
+
 		_app.orderDependenciesByDepth();
 		_app = this.saveAndupdateDependencyTree(_app);
 		sw.lap("Saved and updated refs to dependencies' (including parents)");
-		
+
 		// Save (if existing, saves the updated fields, otherwise iti should all already be there
 		try {
 			managed_app = this.appRepository.save(_app);
@@ -157,23 +157,23 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 		return managed_app;
 	}
-	
+
 	private Application saveAndupdateDependencyTree(@NotNull Application _app) {
-		for(Dependency d: _app.getDependencies()) { 
+		for(Dependency d: _app.getDependencies()) {
 			if(d.getParent()!=null){
 				d.setParent(updateParent(d.getParent(),_app));
 			}
 			d = this.depRepository.save(d);
 		}
 		return _app;
-	}	
-	
+	}
+
 	private Dependency updateParent(Dependency _dep,Application _app){
 
 		if(_dep.getParent()!=null)
 			_dep.setParent(updateParent(_dep.getParent(),_app));
-		try{		
-			_dep = DependencyRepository.FILTER.findOne(depRepository.findByAppAndLibAndParentAndRelPath(_app, _dep.getLib().getDigest(),_dep.getParent(),_dep.getRelativePath()));			
+		try{
+			_dep = DependencyRepository.FILTER.findOne(depRepository.findByAppAndLibAndParentAndRelPath(_app, _dep.getLib().getDigest(),_dep.getParent(),_dep.getRelativePath()));
 		}catch(EntityNotFoundException e){
 			//this should not happen, as we ordered the list, when we came across a parent it should have been already saved
 			log.warn("Parent entity not already existing");
@@ -181,8 +181,8 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		}
 		return _dep;
 	}
-	
-	
+
+
 	private Application updateDependencies(@NotNull Application _managed_app, @NotNull Application _provided_app) {
 		for(Dependency provided_dep: _provided_app.getDependencies()) {
 			for(Dependency managed_dep: _managed_app.getDependencies()) {
@@ -200,33 +200,33 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 					break;
 				}
 				// if no dependency  with the same lib parent and relPath exists, we do not look for a library with same lib only but we consider it a new dependency
-				// here we check whether it has a parent to see whether it already exists among the managed entities 
+				// here we check whether it has a parent to see whether it already exists among the managed entities
 				//else if(provided_dep.getParent()!=null){
 				//	updateParents(provided_dep,_managed_app);
 				//}
 			}
-			
+
 		}
 		return _provided_app;
 	}
-	
-	
+
+
 	private Application updateLibraries(@NotNull Application _provided_app) throws PersistenceException{
-		
+
 		for(Dependency d: _provided_app.getDependencies()){
 			updateLibrary(d,_provided_app);
-			
+
 		}
 		return _provided_app;
 	}
-	
+
 	private void updateLibrary(Dependency _dep,Application _provided_app){
 		if(_dep.getParent()!=null){
 			updateLibrary(_dep.getParent(),_provided_app);
 		}
 		_dep.setLib(findManagedLibrary(_dep,_provided_app));
 	}
-	
+
 	private Library findManagedLibrary(Dependency _dep, Application _provided_app){
 		Library managed_lib = null;
 		try{
@@ -260,12 +260,12 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		// 1) Bugs WITH change list
 		if(_withChangeList) {
 			_vd.setVulnDepOrigin(VulnDepOrigin.CC);
-			
+
 			// 1.1) Dynamic analysis
 			final List<Trace> trace_list = traceRepository.findVulnerableTracesOfLibraries(_vd.getDep().getApp(),_vd.getDep().getLib(),_vd.getBugId());
 			if(trace_list.size()>0)
 				_vd.setTraced(1);
-			else 
+			else
 				_vd.setTraced(0);
 
 			// 1.2) Static analysis
@@ -280,23 +280,23 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			if(reachable)
 				_vd.setReachable(1);
 			else
-				_vd.setReachable(0);			
+				_vd.setReachable(0);
 		}
 		// 2) Bugs WITHOUT change list
 		else {
 			_vd.setVulnDepOrigin(VulnDepOrigin.AFFLIBID);
-			
+
 			// 2.1) Dynamic analysis
 			if(_vd.getDep().isTraced())
 				_vd.setTraced(1);
-			else 
+			else
 				_vd.setTraced(0);
 
 			// 2.2) Static analysis
 			final Collection<ConstructId> reachable_constructs = _vd.getDep().getReachableConstructIds();
 			if(reachable_constructs!=null && reachable_constructs.size()>0)
 				_vd.setReachable(1);
-			else 
+			else
 				_vd.setReachable(0);
 		}
 	}
@@ -313,7 +313,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		List<Application> result = null;
 		if(_skip_empty)
 			result = this.appRepository.findNonEmptyApps(_space, _asOfTimestamp);
-		else 
+		else
 			result = this.appRepository.findAllApps(_space, _asOfTimestamp);
 		w.stop();
 		sorted_apps.addAll(result);
@@ -330,13 +330,13 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 		// Create the vuln dependency (flags to be set afterwards)
 		VulnerableDependency vd = new VulnerableDependency(DependencyRepository.FILTER.findOne(depRepository.findByAppAndLib(a, digest)), bug);
-		
+
 		// Required for setting the flags for all elements of the change list (if any)
 		List<Trace> trace_list = new ArrayList<Trace>();
 		List<Path> path_list = new ArrayList<Path>();
 		List<ConstructId> cidList = new ArrayList<ConstructId>();
 		List<AffectedConstructChange> aff_ccList = new ArrayList<AffectedConstructChange>();
-		
+
 		//set affected flag and trace.reachable (if applicable)
 		if(origin.equals(VulnDepOrigin.CC) || origin.equals(VulnDepOrigin.AFFLIBID)){
 			this.affLibRepository.computeAffectedLib(vd,vd.getDep().getLib());
@@ -344,7 +344,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 				this.updateFlags(vd,true);
 			else
 				this.updateFlags(vd,false);
-			
+
 			// Required for setting the flags for all elements of the change list (if any)
 			trace_list = traceRepository.findVulnerableTracesOfLibraries(vd.getDep().getApp(),vd.getDep().getLib(), vd.getBugId());
 			path_list = pathRepository.findPathsForLibraryBug(vd.getDep().getApp(), vd.getDep().getLib(), vd.getBugId());
@@ -359,14 +359,14 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			cidList = libRepository.findBuggyConstructIds(library.getDigest(),vd.getBug().getBugId() );
 			aff_ccList = affLibRepository.findByBugAndLib(vd.getBug(),library);
 		} else if (origin.equals(VulnDepOrigin.BUNDLEDAFFLIBID) ){
-			LibraryId libraryId = LibraryIdRepository.FILTER.findOne(this.libIdRepository.findBySecondaryKey(bundledGroup, bundledArtifact, bundledVersion));  
+			LibraryId libraryId = LibraryIdRepository.FILTER.findOne(this.libIdRepository.findBySecondaryKey(bundledGroup, bundledArtifact, bundledVersion));
 			Boolean affected = this.affLibRepository.isBugLibIdAffected(vd.getBug().getBugId(), libraryId);
 			vd.setAffectedVersion(affected?1:0);
 			vd.setAffectedVersionConfirmed(1);
 			vd.setVulnDepOrigin(VulnDepOrigin.BUNDLEDAFFLIBID);
 			vd.setBundledLibId(libraryId);
 		}
-		
+
 		List<ConstructChangeInDependency> constructsList = new ArrayList<ConstructChangeInDependency>();
 		for(ConstructChange c : vd.getBug().getConstructChanges()) {
 			if(c.getConstructId().getType()== ConstructType.CONS || c.getConstructId().getType()== ConstructType.METH || c.getConstructId().getType()== ConstructType.INIT){
@@ -390,7 +390,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 					if(p.getEndConstructId().equals(c.getConstructId())){
 						//if(p.getEndConstructId().equals(c.getConstructId())||p.getStartConstructId().equals(c.getConstructId()))
 						if(p.getSource()!= PathSource.X2C){
-							found=true;	
+							found=true;
 							ccd.setReachable(true);
 							break;
 						}
@@ -404,16 +404,16 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 				}
 				else
 					ccd.setInArchive(false);
-				
 
-				
+
+
 				for(AffectedConstructChange aff_cc : aff_ccList){
 					if(aff_cc.getCc().equals(c)){
 						ccd.setAffected(aff_cc.getAffected());
 						ccd.setClassInArchive(aff_cc.getClassInArchive());
 						ccd.setEqualChangeType(aff_cc.getEqualChangeType());
 						ccd.setOverall_change(aff_cc.getOverall_chg());
-						if(ccd.getInArchive()!=aff_cc.getInArchive()){
+						if(ccd.getInArchive().equals(aff_cc.getInArchive())){
 							log.warn("Conclusion of construct In archive from backend is " + ccd.getInArchive() + " while vulas:check-version concluded " + aff_cc.getInArchive());
 						}
 					}
@@ -477,27 +477,27 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		final TreeSet<VulnerableDependency> vd_list_cc = this.appRepository.findJPQLVulnerableDependenciesByGAV(_app.getMvnGroup(), _app.getArtifact(), _app.getVersion(), _app.getSpace());
 		if(_log)
 			sw.lap("Found [" + vd_list_cc.size() + "] through joining constructs", true);
-		
+
 		//to improve performances we use a native query to get the affected version (having moved to SQL the computation of the affected version source having priority.
 		//further improvements could be:
 		// embedding the native query into the JPQL one to only get the bugs according to the requested flags, e.g., only affected or only historical ones.
 		this.affLibRepository.computeAffectedLib(vd_list_cc);
 		this.updateFlags(vd_list_cc, true);
-		
-		
+
+
 		// 2) Retrieve vuln w/ cc for bundled libids
 		TreeSet<VulnerableDependency> vd_list_bundled_cc = new TreeSet<VulnerableDependency>();
-		
+
 		List<Object[]> bundledDigests = this.libRepository.findBundledLibByApp(_app);
-		
+
 		log.info("Found ["+bundledDigests.size()+"] libs digest for bundled libids.");
-		
+
 		for (Object[] e: bundledDigests){
 			Dependency depWithBundledLibId = DependencyRepository.FILTER.findOne(this.depRepository.findById(((BigInteger)e[0]).longValue()));
-			
-			Library bundledDigest = LibraryRepository.FILTER.findOne(this.libRepository.findById(((BigInteger)e[1]).longValue())); 
+
+			Library bundledDigest = LibraryRepository.FILTER.findOne(this.libRepository.findById(((BigInteger)e[1]).longValue()));
 			List<Bug> vulns_cc = this.bugRepository.findByLibrary(bundledDigest);
-			
+
 			for(Bug b: vulns_cc){
 				VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
 				vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDCC);
@@ -508,36 +508,36 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			}
 			//for bundled libraries we do have have traced and reachable information so we skip the query
 			//	this.updateFlags(vd_list_bundled_cc, true);
-			
+
 		}
-		
+
 		// 3) Retrieve vuln w/o cc for bundled libids
 		TreeSet<VulnerableDependency> vd_list_bundled_av = new TreeSet<VulnerableDependency>();
-		
+
 		List<Object[]> bundledLibIds = this.libIdRepository.findBundledLibIdByApp(_app);
-		
+
 		for(Object[] e: bundledLibIds){
-			
+
 			Dependency depWithBundledLibId = DependencyRepository.FILTER.findOne(this.depRepository.findById(((BigInteger)e[0]).longValue()));
-			
-			LibraryId bundledLibId = LibraryIdRepository.FILTER.findOne(this.libIdRepository.findById(((BigInteger)e[1]).longValue())); 
-			
+
+			LibraryId bundledLibId = LibraryIdRepository.FILTER.findOne(this.libIdRepository.findById(((BigInteger)e[1]).longValue()));
+
 			List<Bug> vulns_av_true = this.bugRepository.findByLibId(bundledLibId,true);
-			
+
 			for (Bug b: vulns_av_true){
 				VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
 				vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDAFFLIBID);
 				Boolean rebundlingAffected = this.affLibRepository.isBugLibIdAffected(b.getBugId(), depWithBundledLibId.getLib().getLibraryId());
 				if(rebundlingAffected != null && !rebundlingAffected)
 					vulndep.setAffectedVersion(0);
-				else						
+				else
 					vulndep.setAffectedVersion(1);
 				vulndep.setAffectedVersionConfirmed(1);
 				vulndep.setBundledLibId(bundledLibId);
 				vd_list_bundled_av.add(vulndep);
 			}
 			List<Bug> vulns_av_false = this.bugRepository.findByLibId(bundledLibId,false);
-			
+
 			for (Bug b: vulns_av_false){
 				VulnerableDependency vulndep = new VulnerableDependency(depWithBundledLibId, b);
 				vulndep.setVulnDepOrigin(VulnDepOrigin.BUNDLEDAFFLIBID);
@@ -548,9 +548,9 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			}
 			//for bundled libraries we do have have traced and reachable information so we skip the query
 			//	this.updateFlags(vd_list_bundled_cc, true);
-			
+
 		}
-		
+
 		if(_log){
 			sw.lap("Found [" + vd_list_bundled_cc.size() + "] vulns w/  cc through bundled library ids", true);
 			sw.lap("Found [" + vd_list_bundled_av.size() + "] vulns w/o cc through bundled library ids", true);
@@ -576,8 +576,8 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		//this.affLibRepository.computeAffectedLib(vd_list_libid); this is not required for vulns w/o cc as we select by affectedVersions.affected (in this way we save the additional queries to get the affected flag afterwards)
 		this.updateFlags(vd_list_libid, false);
 
-		// Merge bugs found joining constructs and libids 
-		final TreeSet<VulnerableDependency> vd_all = new TreeSet<VulnerableDependency>();	
+		// Merge bugs found joining constructs and libids
+		final TreeSet<VulnerableDependency> vd_all = new TreeSet<VulnerableDependency>();
 		vd_all.addAll(vd_list_cc); //this must be done before the add for bundled vulndeps to ensure that we do not consider as bundledcc the cases where the code signature was not altered.
 		vd_all.addAll(vd_list_bundled_cc);
 		vd_all.addAll(vd_list_bundled_av);
@@ -603,7 +603,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 		if(_log)
 			sw.stop();
-		
+
 		return vd_all;
 	}
 
@@ -676,7 +676,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 		return excluded_bugs;
 	}
-	
+
 	/**
 	 * <p>findAffectedApps.</p>
 	 *
@@ -692,7 +692,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 					final Long app_id = ((BigInteger)o[0]).longValue();
 					final String bugid = (String)o[1];
 					final Boolean affected = (Boolean)o[2];
-					
+
 					HashMap<String, Boolean> affected_map = null;
 					if(affected_apps.containsKey(app_id)) {
 						affected_map = affected_apps.get(app_id);
@@ -700,7 +700,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 						affected_map = new HashMap<String, Boolean>();
 					}
 					affected_map.put(bugid,  affected);
-					affected_apps.put(app_id,  affected_map);					
+					affected_apps.put(app_id,  affected_map);
 				} catch (ClassCastException e) {
 					log.error("Cannot cast [" + StringUtil.join(o, ", ") + "] of types [" + o[0].getClass().getSimpleName() + ", " + o[1].getClass().getSimpleName() + ", " + o[2].getClass().getSimpleName() + "] to [BigInt, String, Boolean]");
 				} catch (ArrayIndexOutOfBoundsException e) {
@@ -708,9 +708,9 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 				}
 			}
 		}
-		return affected_apps;		
+		return affected_apps;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Transactional
 	public void refreshVulnChangebyChangeList(Collection<ConstructChange> _listOfConstructChanges){
@@ -719,7 +719,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		for(ConstructChange cc : _listOfConstructChanges){
 			listOfConstructs.add(cc.getConstructId());
 		}
-		List<Application> apps = appRepository.findAppsByCC(listOfConstructs); 
+		List<Application> apps = appRepository.findAppsByCC(listOfConstructs);
 		sw.lap("LastVulnChange by CC, [" +apps.size()+"] apps to be refreshed",true);
 
 		//we partition the list to work around the PostgreSQL's limit of 32767 bind variables per statement
@@ -727,7 +727,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			appRepository.updateAppLastVulnChange(sub);
 		sw.stop();
 	}
-	
+
 	/** {@inheritDoc} */
 	@Transactional
 	public void refreshVulnChangebyAffLib(AffectedLibrary _affLib){
@@ -743,8 +743,8 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			appRepository.updateAppLastVulnChange(sub);
 		sw.stop();
 	}
-	
-	
+
+
 	/** {@inheritDoc} */
 	public void refreshLastScanbyApp(Application _app){
 		_app.setLastScan(Calendar.getInstance());
