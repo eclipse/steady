@@ -81,7 +81,7 @@ public class ConstructUsage {
 	 *
 	 * @param _ctx a {@link com.sap.psr.vulas.shared.json.model.Application} object.
 	 */
-	public void setAppContext(Application _ctx) { this.appContext = _ctx; }	
+	public void setAppContext(Application _ctx) { this.appContext = _ctx; }
 	/**
 	 * <p>Getter for the field <code>resourceURL</code>.</p>
 	 *
@@ -124,7 +124,7 @@ public class ConstructUsage {
 	 * @param _id a {@link java.lang.String} object.
 	 */
 	public void setExecutionId(String _id) { this.executionId = _id; }
-	
+
 	/**
 	 * <p>toString.</p>
 	 *
@@ -148,10 +148,10 @@ public class ConstructUsage {
 		final JsonBuilder jb = new JsonBuilder();
 		jb.startObject();
 		jb.appendObjectProperty("tracedAt", StringUtil.formatDate(this.t));
-		jb.appendObjectProperty("count", new Integer(this.counter));
+		jb.appendObjectProperty("count", Integer.valueOf(this.counter));
 		jb.appendObjectProperty("executionId", this.executionId);
 		if(this.appContext!=null)
-			jb.appendObjectProperty("app", JacksonUtil.asJsonString(this.appContext), false);	
+			jb.appendObjectProperty("app", JacksonUtil.asJsonString(this.appContext), false);
 		if(this.archiveFileName!=null && this.archiveDigest!=null) {
 			jb.appendObjectProperty("lib", this.archiveDigest);
 			jb.appendObjectProperty("filename", this.archiveFileName);

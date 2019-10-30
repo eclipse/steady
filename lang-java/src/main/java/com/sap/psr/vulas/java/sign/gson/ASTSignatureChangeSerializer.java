@@ -37,7 +37,7 @@ public class ASTSignatureChangeSerializer extends StdSerializer<ASTSignatureChan
 	public ASTSignatureChangeSerializer(Class<ASTSignatureChange> t) {
 		super(t);
 	}
-	
+
 	/**
 	 * Helper method for building a "SourceCodeEntity" element
 	 *
@@ -48,10 +48,10 @@ public class ASTSignatureChangeSerializer extends StdSerializer<ASTSignatureChan
 		jgen.writeObjectFieldStart(_property_name);
 		jgen.writeStringField("UniqueName", _entity.getUniqueName().toString());
 		jgen.writeStringField("EntityType", _entity.getType().toString());
-		jgen.writeStringField("Modifiers", new Integer(_entity.getModifiers()).toString());
+		jgen.writeStringField("Modifiers", Integer.valueOf(_entity.getModifiers()).toString());
 		jgen.writeObjectFieldStart("SourceCodeRange");
-		jgen.writeStringField("Start", new Integer(_entity.getSourceRange().getStart()).toString());
-		jgen.writeStringField("End", new Integer(_entity.getSourceRange().getEnd()).toString());
+		jgen.writeStringField("Start", Integer.valueOf(_entity.getSourceRange().getStart()).toString());
+		jgen.writeStringField("End", Integer.valueOf(_entity.getSourceRange().getEnd()).toString());
 		jgen.writeEndObject();
 		jgen.writeEndObject();
 	}
@@ -66,17 +66,17 @@ public class ASTSignatureChangeSerializer extends StdSerializer<ASTSignatureChan
 
 		jgen.writeStringField("UniqueName", value.getStructureEntity().getUniqueName());
 		jgen.writeStringField("EntityType", value.getStructureEntity().getType().toString());
-		jgen.writeStringField("Modifiers", new Integer(value.getStructureEntity().getModifiers()).toString());
+		jgen.writeStringField("Modifiers", Integer.valueOf(value.getStructureEntity().getModifiers()).toString());
 
 		jgen.writeArrayFieldStart("changes");
 
 		for(SourceCodeChange change : value.getListOfChanges()) {
-			
+
 			jgen.writeStartObject();
-			
+
 			jgen.writeStringField("OperationType", change.getClass().getSimpleName());
 			jgen.writeStringField("changeType", change.getChangeType().toString());
-						
+
 			// INSERT OPERATION
 			if(change instanceof Insert) {
 				this.writeSourceCodeEntityElement(jgen, "InsertedEntity", change.getChangedEntity());
@@ -100,7 +100,7 @@ public class ASTSignatureChangeSerializer extends StdSerializer<ASTSignatureChan
 				this.writeSourceCodeEntityElement(jgen, "UpdatedEntity", ((Update)change).getChangedEntity());
 				this.writeSourceCodeEntityElement(jgen, "ParentEntity", change.getParentEntity());
 			}
-			
+
 			jgen.writeEndObject();
 		}
 		jgen.writeEndArray(); // changes

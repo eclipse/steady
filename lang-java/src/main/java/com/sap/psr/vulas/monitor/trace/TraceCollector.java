@@ -649,7 +649,7 @@ public class TraceCollector {
 	 */
 	public Map<String,Long> getStatistics() {
 		final Map<String, Long> stats = new HashMap<String,Long>();
-		stats.put("archivesAnalyzed", new Long(this.jarFiles.size()));
+		stats.put("archivesAnalyzed", Long.valueOf(this.jarFiles.size()));
 		stats.put("tracesCollectedMethod", this.methodTraceCount);
 		stats.put("tracesCollectedConstructor", this.constructorTraceCount);
 		stats.put("tracesCollectedClinit", this.clinitTraceCount);

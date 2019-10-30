@@ -53,19 +53,19 @@ public class StackTraceUtil {
 			StackTraceUtil.log =  LogFactory.getLog(StackTraceUtil.class);
 		return StackTraceUtil.log;
 	}
-	
+
 	private Loader loader = null;
 
 	private boolean stopAtJUnit = false;
 
 	private static final String ANNO_JUNIT_TEST = "org.junit.Test";
-	
+
 	/** Remember ClassNotFoundExceptions in order to not print them again and again. */
 	static private final Set<String> cnfe = new HashSet<String>();
-	
+
 	/** Remember ConstructIds built from stack trace elements. */
 	static private final Map<StackTraceElement, ConstructId> constructIds = new HashMap<StackTraceElement, ConstructId>();
-	
+
 	/**
 	 * <p>Constructor for StackTraceUtil.</p>
 	 */
@@ -159,7 +159,7 @@ public class StackTraceUtil {
 					if(k>=0) {
 						b.append(" --> ").append(path.get(k).toString());
 						k--;
-					} 
+					}
 				}
 				StackTraceUtil.getLog().debug(b.toString());
 			}
@@ -169,7 +169,7 @@ public class StackTraceUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param _path
 	 * @param _e
 	 * @param _loader
@@ -198,7 +198,7 @@ public class StackTraceUtil {
 			// Get the Java class definition, break if that does not work
 			c = cl.loadClass(_e.getClassName());
 
-			// To be built from the 
+			// To be built from the
 			String qname = null;
 
 			// Constructor
@@ -229,7 +229,7 @@ public class StackTraceUtil {
 							final ConstructId the_one = this.filterConstructors(_e, construct_ids);
 							if(the_one!=null) {
 								construct_ids.clear();
-								construct_ids.add(the_one);	
+								construct_ids.add(the_one);
 							}
 							else {
 								StackTraceUtil.getLog().error("Could not determine constructor despite line information: [" + _e.toString() + "]");
@@ -369,7 +369,7 @@ public class StackTraceUtil {
 					}
 				}
 			}
-		}			
+		}
 
 		// Loop all methods of the class having the same name
 		int shortest_distance = Integer.MAX_VALUE;
@@ -411,7 +411,7 @@ public class StackTraceUtil {
 
 		for(CtConstructor ctm: ctclass.getDeclaredConstructors()) {
 			c = JavaId.parseConstructorQName(ClassVisitor.removeParameterQualification(ctm.getLongName()));
-			constructor_line_numbers.put(new Integer(ctm.getMethodInfo().getLineNumber(0)), c);
+			constructor_line_numbers.put(Integer.valueOf(ctm.getMethodInfo().getLineNumber(0)), c);
 			if(_e.getLineNumber()>=ctm.getMethodInfo().getLineNumber(0)) {
 				current_distance = _e.getLineNumber() - ctm.getMethodInfo().getLineNumber(0);
 				if(current_distance < shortest_distance) {
@@ -446,7 +446,7 @@ public class StackTraceUtil {
 			if(StackTraceUtil.constructIds.containsKey(_st[1])) {
 				return StackTraceUtil.constructIds.get(_st[1]); // Can be null
 			}
-			
+
 			// We did not search before, search now
 			else {
 				final List<PathNode> path = new LinkedList<PathNode>();

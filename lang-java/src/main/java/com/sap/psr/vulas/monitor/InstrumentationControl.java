@@ -166,21 +166,21 @@ public class InstrumentationControl {
 		// Case 1: Already instrumented
 		if(_instr_successful==null) {
 			final Integer count = this.alreadyInstrumentedCountPP.get(pid);
-			final Integer new_count = new Integer((count==null ? 1 : count.intValue()+1));
+			final Integer new_count = Integer.valueOf((count==null ? 1 : count.intValue()+1));
 			this.alreadyInstrumentedCountPP.put(pid, new_count);
 			this.alreadyInstrumentedCount++;
 		}
 		// Case 2: Successful instrumentation
 		else if(_instr_successful.booleanValue()) {
 			final Integer count = this.successfulInstrumentationCountPP.get(pid);
-			final Integer new_count = new Integer((count==null ? 1 : count.intValue()+1));
+			final Integer new_count = Integer.valueOf((count==null ? 1 : count.intValue()+1));
 			this.successfulInstrumentationCountPP.put(pid, new_count);
 			this.successfulInstrumentationCount++;
 		}
 		// Case 3: Unsuccessful instrumentation
 		else {
 			final Integer count = this.failedInstrumentationCountPP.get(pid);
-			final Integer new_count = new Integer((count==null ? 1 : count.intValue()+1));
+			final Integer new_count = Integer.valueOf((count==null ? 1 : count.intValue()+1));
 			this.failedInstrumentationCountPP.put(pid, new_count);
 			this.failedInstrumentationCount++;
 			this.failedInstrumentations.add(_jcid);
@@ -265,10 +265,10 @@ public class InstrumentationControl {
 	 */
 	public Map<InstrumentationMetrics, Long> getStatistics() {
 		final Map<InstrumentationMetrics, Long> stats = new HashMap<InstrumentationMetrics, Long>();
-		stats.put(InstrumentationMetrics.classesTotal,  			 new Long(this.classesCount));
-		stats.put(InstrumentationMetrics.classesAlreadyInstrumented, new Long(this.alreadyInstrumentedCount));
-		stats.put(InstrumentationMetrics.classesInstrumentedSuccess, new Long(this.successfulInstrumentationCount));
-		stats.put(InstrumentationMetrics.classesInstrumentedFailure, new Long(this.failedInstrumentationCount));
+		stats.put(InstrumentationMetrics.classesTotal,  			 Long.valueOf(this.classesCount));
+		stats.put(InstrumentationMetrics.classesAlreadyInstrumented, Long.valueOf(this.alreadyInstrumentedCount));
+		stats.put(InstrumentationMetrics.classesInstrumentedSuccess, Long.valueOf(this.successfulInstrumentationCount));
+		stats.put(InstrumentationMetrics.classesInstrumentedFailure, Long.valueOf(this.failedInstrumentationCount));
 		return stats;
 	}
 
@@ -421,7 +421,7 @@ public class InstrumentationControl {
 				final String key = entry.getKey().toString();
 				if(overall_stats.containsKey(key)) {
 					final long new_count = overall_stats.get(key).longValue() + entry.getValue().longValue();
-					overall_stats.put(key, new Long(new_count));
+					overall_stats.put(key, Long.valueOf(new_count));
 				} else {
 					overall_stats.put(key, entry.getValue());
 				}
