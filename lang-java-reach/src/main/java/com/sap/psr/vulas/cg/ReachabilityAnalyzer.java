@@ -409,11 +409,11 @@ public class ReachabilityAnalyzer implements Runnable {
 
                 // Create parallel call graph searches
                 final Set<CallgraphPathSearch> searches = new HashSet<CallgraphPathSearch>();
-                for (String bug : this.targetConstructs.keySet()) {
+                for (Map.Entry<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> entry : this.targetConstructs.entrySet()) {
                     final CallgraphPathSearch search = new CallgraphPathSearch()
                             .setEntrypoints(src_ep)
-                            .setTargetpoints(this.targetConstructs.get(bug))
-                            .setLabel(bug)
+                            .setTargetpoints(entry.getValue())
+                            .setLabel(entry.getKey())
                             .setCallback(this)
                             .setShortestPaths(search_shortest)
                             .setCallgraph(this.callgraph);
@@ -534,18 +534,20 @@ public class ReachabilityAnalyzer implements Runnable {
 
                 // Reachable constructs
                 final Map<String, Set<NodeMetaInformation>> reachable_constructs = search.getReachableConstructs();
-                for (String key : reachable_constructs.keySet()) {
+                for (Map.Entry<String, Set<NodeMetaInformation>>  entry : reachable_constructs.entrySet()) {
+                    String key = entry.getKey();
                     if (!this.reachableConstructs.containsKey(key))
                         this.reachableConstructs.put(key, new HashSet<NodeMetaInformation>());
-                    this.reachableConstructs.get(key).addAll(reachable_constructs.get(key));
+                    this.reachableConstructs.get(key).addAll(entry.getValue());
                 }
 
                 // Touch points
                 final Map<String, Set<List<NodeMetaInformation>>> touch_points = search.getTouchPoints();
-                for (String key : touch_points.keySet()) {
+                for (Map.Entry<String, Set<List<NodeMetaInformation>>> entry : touch_points.entrySet()) {
+                    String key = entry.getKey();
                     if (!this.touchPoints.containsKey(key))
                         this.touchPoints.put(key, new HashSet<List<NodeMetaInformation>>());
-                    this.touchPoints.get(key).addAll(touch_points.get(key));
+                    this.touchPoints.get(key).addAll(entry.getValue());
                 }
             }
         } catch (InterruptedException e) {
@@ -751,12 +753,13 @@ public class ReachabilityAnalyzer implements Runnable {
 
         // Log if paths will be dropped
         int uploaded_path_count = 0;
-        for (com.sap.psr.vulas.shared.json.model.ConstructId con : counters.keySet()) {
-            if (counters.get(con).intValue() > max_path) {
-                ReachabilityAnalyzer.log.warn("[" + counters.get(con).intValue() + "] paths lead to construct [" + con + "], only [" + max_path + "] will be uploaded");
+        for (Map.Entry<com.sap.psr.vulas.shared.json.model.ConstructId, Integer> entry : counters.entrySet()) {
+            Integer value = entry.getValue();
+            if (value.intValue() > max_path) {
+                ReachabilityAnalyzer.log.warn("[" + value.intValue() + "] paths lead to construct [" + entry.getKey() + "], only [" + max_path + "] will be uploaded");
                 uploaded_path_count += max_path;
             } else {
-                uploaded_path_count += counters.get(con).intValue();
+                uploaded_path_count += value.intValue();
             }
         }
 
@@ -793,8 +796,9 @@ public class ReachabilityAnalyzer implements Runnable {
             JsonArray json_constructs = null;
 
             // Loop dependencies
-            for (String sha1 : this.reachableConstructs.keySet()) {
-                nodes = this.reachableConstructs.get(sha1);
+            for (Map.Entry<String,Set<NodeMetaInformation>> entry : this.reachableConstructs.entrySet()) {
+                String sha1 = entry.getKey();
+                nodes = entry.getValue();
                 json_constructs = new JsonArray();
 
                 // Loop reachable constructs
@@ -832,8 +836,9 @@ public class ReachabilityAnalyzer implements Runnable {
             NodeMetaInformation from = null, to = null;
 
             // Loop dependencies
-            for (String sha1 : this.touchPoints.keySet()) {
-                touch_points = this.touchPoints.get(sha1);
+            for (Map.Entry<String,Set<List<NodeMetaInformation>>> entry : this.touchPoints.entrySet()) {
+                String sha1 = entry.getKey();
+                touch_points = entry.getValue();
                 json_tps = new JsonArray();
 
                 String jar_url = null;
