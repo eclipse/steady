@@ -131,7 +131,7 @@ public class ConstructController {
 	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
 	 */
 	@RequestMapping(value = "/{sha1:.+}/{type:.+}/{qname:.+}", method = RequestMethod.GET)
-	public void getConstructSourceForSha1(@PathVariable String sha1, @PathVariable String type, @PathVariable String qname, HttpServletResponse response) {
+	public void getConstructSourceForSha1(@PathVariable String sha1, @PathVariable String type, @PathVariable String qname, HttpServletResponse response) throws IllegalArgumentException, FileNotFoundException, IOException, Exception{
 		Path file = null;
 		JavaId jid = null;
 		JavaId def_ctx = null;
@@ -174,13 +174,15 @@ public class ConstructController {
 				}
 			}
 		} catch(IllegalArgumentException iae) {
-			throw new RuntimeException(iae.getMessage());
+			throw new IllegalArgumentException(iae.getMessage());
 		} catch (FileNotFoundException e) {
-			throw new RuntimeException("Cannot read file [" + file + "]");
+			throw new FileNotFoundException("Cannot read file [" + file + "]");
 		} catch (IOException e) {
-			throw new RuntimeException("IO exception when reading file [" + file + "]");
+			throw new IOException("IO exception when reading file [" + file + "]", e);
+		} catch (RuntimeException e) {
+			throw e;
 		} catch (Exception e) {
-			throw new RuntimeException("Exception writing file to output stream");
+			throw new Exception("Exception writing file to output stream", e);
 		}
 	}
 

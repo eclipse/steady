@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -249,7 +250,7 @@ public class ArtifactController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/{packaging:.+}", method = RequestMethod.GET)
 	public void getArtifact(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String packaging,
 			@RequestParam(value="classifier", required=false, defaultValue="") String classifier, HttpServletResponse response,
-			@RequestParam(value="lang", required=true, defaultValue="JAVA") ProgrammingLanguage lang) {
+			@RequestParam(value="lang", required=true, defaultValue="JAVA") ProgrammingLanguage lang) throws NullPointerException, IOException, Exception {
 
 		// The artifact whose JAR is to be downloaded
 		final Artifact a = new Artifact(mvnGroup,artifact,version);
@@ -261,19 +262,23 @@ public class ArtifactController {
 		response.setContentType(a.getContentType());
 		response.setHeader("Content-Disposition", "attachment; filename=" + a.getM2Filename());
 
+		FileInputStream fileInputStream = null;
+		OutputStream outputStream = null;
 		// Get it!
 		try {
 			RepositoryDispatcher r = new RepositoryDispatcher();
 			final Path file = r.downloadArtifact(a);
-			IOUtils.copy(new FileInputStream(file.toFile()), response.getOutputStream());
-			  response.flushBuffer();
+			outputStream = response.getOutputStream();
+			fileInputStream = new FileInputStream(file.toFile());
+			IOUtils.copy(fileInputStream, outputStream);
+		  response.flushBuffer();
 		} catch (FileNotFoundException e) {
 			ArtifactController.log.error("Cannot download artifact ["+mvnGroup+":"+artifact+":"+version+":"+packaging+"]: does not exist");
 			response.setStatus(404);
 			try {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Artifact does not exists");
 			} catch (IOException e1) {
-				throw new RuntimeException("IOError writing file to output stream");
+				throw new IOException("IOError writing file to output stream", e1);
 			}
 		} catch (NullPointerException e) {
 			ArtifactController.log.error("Cannot download artifact ["+mvnGroup+":"+artifact+":"+version+":"+packaging+"]: does not exist");
@@ -281,10 +286,10 @@ public class ArtifactController {
 			try {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Artifact does not exists");
 			} catch (IOException e1) {
-				throw new RuntimeException("IOError writing file to output stream");
+				throw new IOException("IOError writing file to output stream", e1);
 			}
 		} catch (IOException e) {
-			throw new RuntimeException("IOError writing file to output stream");
+			throw new IOException("IOError writing file to output stream", e);
 		} catch (Exception e) {
 			if(e.getMessage().equals("java.io.FileNotFoundException")){
 				ArtifactController.log.error("Cannot download artifact ["+mvnGroup+":"+artifact+":"+version+":"+packaging+"]: does not exist");
@@ -292,11 +297,27 @@ public class ArtifactController {
 				try {
 					response.sendError(HttpServletResponse.SC_NOT_FOUND, "Artifact does not exists");
 				} catch (IOException e1) {
-					throw new RuntimeException("IOError writing file to output stream");
+					throw new IOException("IOError writing file to output stream", e1);
 				}
 			}
 
-			throw new RuntimeException("IOError writing file to output stream");
+			throw new Exception("IOError writing file to output stream", e);
+		} finally {
+			if (fileInputStream != null) {
+				try {
+					fileInputStream.close();
+				} catch(IOException e) {
+					throw e;
+				}
+			}
+
+			if (outputStream != null) {
+				try {
+					outputStream.close();
+				} catch(IOException e) {
+					throw e;
+				}
+			}
 		}
 
 
