@@ -182,26 +182,30 @@ public class RepositoryDispatcher  implements RepositoryWrapper {
 	private Path downloadArtifactFile(Artifact a) throws Exception{
 		Path p = null;
 		// Create the dir
-		Path artifact_dir = a.getAbsM2Path().getParent();
-		if(!artifact_dir.toFile().exists())
+		Path absm2Path = a.getAbsM2Path();
+
+		if (absm2Path != null) {
+			Path artifact_dir = absm2Path.getParent();
+			if(artifact_dir != null && !artifact_dir.toFile().exists())
 			Files.createDirectories(artifact_dir);
 
 
-		final ServiceLoader<RepositoryWrapper> loader = ServiceLoader.load(RepositoryWrapper.class);
-		for(RepositoryWrapper dv: loader) {
-			if(dv.isConfigured() && (dv.getSupportedLanguages().contains(a.getProgrammingLanguage())))	{
-				try{
-					p = dv.downloadArtifact(a);
-					if(p!=null)
+			final ServiceLoader<RepositoryWrapper> loader = ServiceLoader.load(RepositoryWrapper.class);
+			for(RepositoryWrapper dv: loader) {
+				if(dv.isConfigured() && (dv.getSupportedLanguages().contains(a.getProgrammingLanguage())))	{
+					try{
+						p = dv.downloadArtifact(a);
+						if(p!=null)
 						break;
-				}catch(NotImplementedException e){
+					}catch(NotImplementedException e){
 
-				}catch(UnsupportedOperationException e){
+					}catch(UnsupportedOperationException e){
+					}
 				}
 			}
-		}
-		if(p==null)
+			if(p==null)
 			throw new FileNotFoundException();
+		}
 
 		return p;
 	}
