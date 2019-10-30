@@ -38,7 +38,7 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  * <p>Python335FileAnalyzer class.</p>
  *
  */
-public class Python335FileAnalyzer extends Python335BaseListener implements FileAnalyzer {  
+public class Python335FileAnalyzer extends Python335BaseListener implements FileAnalyzer {
 
 	private final static Log log = LogFactory.getLog(Python335FileAnalyzer.class);
 
@@ -73,7 +73,7 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 	public Python335FileAnalyzer() {
 		super();
 	}
-	
+
 	/**
 	 * Sets context information in case an {@link InputStream} is parsed using {@link Python3FileAnalyzer#getConstructs(InputStream)}.
 	 * In this case, package and module information cannot be obtained from the file and file system.
@@ -87,12 +87,12 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 		if(_pack!=null){
 			this.context.push(_pack);
 			this.constructs.put(_pack, new Construct(_pack, ""));
-		}		
+		}
 		this.context.push(_module);
-		this.module = _module;		
-		this.constructs.put(module, new Construct(module, ""));	
+		this.module = _module;
+		this.constructs.put(module, new Construct(module, ""));
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean canAnalyze(File _file) {
@@ -166,7 +166,7 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 		// Happens if method or function name is 'async', due to the Python grammar's problem with the ASYNC keyword, cf. testPythonFileWithAsync
 		if(ctx.NAME()==null)
 			throw new IllegalStateException("Parser error: Construct without name in context " + this.context + ", line [" + ctx.getStart().getLine() + "]");
-		
+
 		PythonId id;
 		String name = ctx.NAME().toString();
 		String args = ctx.parameters().getText();
@@ -207,7 +207,7 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 	}
 
 	/**
-	 * 
+	 *
 	 * @param _name
 	 * @return
 	 */
@@ -218,10 +218,10 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 			this.countPerContext.put(ctx, new HashMap<String, Integer>());
 
 		if(this.countPerContext.get(ctx).get(_name)==null)
-			this.countPerContext.get(ctx).put(_name, new Integer(0));
+			this.countPerContext.get(ctx).put(_name, Integer.valueOf(0));
 
 		int count = this.countPerContext.get(ctx).get(_name).intValue();
-		this.countPerContext.get(ctx).put(_name, new Integer(++count));
+		this.countPerContext.get(ctx).put(_name, Integer.valueOf(++count));
 
 		if(count==1)
 			return _name;
@@ -234,7 +234,7 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 	public boolean containsConstruct(ConstructId _id) throws FileAnalysisException {
 		return this.constructs.containsKey(_id);
 	}
-	
+
 	/**
 	 * Maybe promote this method, which uses the shared type as argument, to the interface.
 	 * Alternatively, make all core-internal interfaces work with core types, not with shared
@@ -273,7 +273,7 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 		final Python335Parser parser = new Python335Parser(tokens);
 		final ParseTree root = parser.file_input();
 		final ParseTreeWalker walker = new ParseTreeWalker();
-		
+
 		try {
 			walker.walk(this, root);
 		}
@@ -289,17 +289,17 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 					b.append(stmt);
 			this.constructs.get(this.module).setContent(b.toString());
 		}
-		
+
 		return this.constructs;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
 		if(this.constructs==null) {
 			try {
 				this.constructs = new TreeMap<ConstructId, Construct>();
-				
+
 				// Create module and add to constructs
 				this.module = PythonFileAnalyzer.getModule(this.file);
 				this.constructs.put(this.module, new Construct(this.module, ""));
@@ -313,7 +313,7 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 				if(pack!=null)
 					this.context.push(pack);
 				this.context.push(module);
-				
+
 				// Parse the file
 				log.debug("Parsing [" + this.file + "]");
 				try(FileInputStream fis = new FileInputStream(this.file)) {
@@ -329,19 +329,19 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 		}
 		return this.constructs;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean hasChilds() {
 		return false;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) {
 		return null;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
