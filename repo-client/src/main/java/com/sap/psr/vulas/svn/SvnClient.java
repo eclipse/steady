@@ -50,7 +50,7 @@ public class SvnClient implements IVCSClient {
 
 	private static final String TYPE = "SVN";
 
-	private final String id = new Double(Math.random()).toString();
+	private final String id = Double.toString(Math.random());
 	private Path workDir = null;
 
 	private URL url = null;
