@@ -32,10 +32,10 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  *
  */
 public class MavenCentralWrapper implements RepositoryWrapper {
-	
+
 	private static final String baseUrl;
 
-	private static String MAVEN_CENTRAL_REPO; 
+	private static String MAVEN_CENTRAL_REPO;
 
 	private static Logger log = LoggerFactory.getLogger(MavenCentralWrapper.class);
 
@@ -44,7 +44,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 	private static Integer mavenCentralRetryCount;
 
 	private static boolean CONFIGURED = false;
-	
+
 	private static Set<ProgrammingLanguage> SUPP_LANG = new HashSet<ProgrammingLanguage>();
 
 	static {
@@ -56,13 +56,13 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 		if (MAVEN_CENTRAL_REPO != null && baseUrl!=null)
 			CONFIGURED = true;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
 		return SUPP_LANG;
 	}
-	
+
 	private StringBuilder constructQ(String _g,String _a, String _v, String _c, String _p){
 		final StringBuilder query = new StringBuilder();
 		query.append("g:\"").append(_g).append("\" AND ");
@@ -125,7 +125,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 			// Set filters
 			packaging = (packaging!=null && packaging.equals("") ? null : packaging);
 			classifier = (classifier!=null && classifier.equals("") ? null : classifier);
-			
+
 			if(search!=null){
 				// Client only wants the latest
 				if(!search.getResponse().getDocs().isEmpty() && latest) {
@@ -135,12 +135,12 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 						latest_only=filtered.last();
 					if(latest_only!=null)
 						result.add(latest_only.toArtifact());
-				
-					
+
+
 				}
 				// Client only wants versions GT x
 				else if(!search.getResponse().getDocs().isEmpty() && greaterThanVersion!=null && !greaterThanVersion.equals("")) {
-	
+
 					// Find the timestamp of version X
 					long timestamp = -1;
 					for(ResponseDoc d: search.getResponse().getSortedDocs()) {
@@ -149,21 +149,21 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 							break;
 						}
 					}
-	
+
 					// Return bad request if version is not found
 					if(timestamp==-1) {
 						log.error("Version [" + greaterThanVersion + "] not found in Maven Central for group [" + mvnGroup + "] and artifact [" + artifact + "]");
 						return null;
 
 					}
-	
+
 					// Find all with a timestamp after that of X
 					for(ResponseDoc d: search.getResponse().getSortedDocs()) {
 						if(d.getTimestamp() > timestamp && d.availableWith(classifier, packaging) ){
 							result.add(d.toArtifact());
 						}
 					}
-	
+
 				}
 				// Client wants all versions
 				else if(!search.getResponse().getDocs().isEmpty()){
@@ -174,8 +174,10 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 				}
 			}
 
-		}
-		catch(Exception e) {
+		} catch(RuntimeException e) {
+			log.error("Encountered RuntimeException" + e.getMessage());
+			throw e;
+		} catch(Exception e) {
 			log.error("Error: " + e.getMessage(), e);
 			throw e;
 		}
@@ -244,7 +246,12 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 			else {
 				log.error("Found [" + versions.size() + "] artifacts for SHA1 [" + _sha1 + "], should be none or one only");
 				throw new RepoException("Found [" + versions.size() + "] artifacts for SHA1 [" + _sha1 + "], should be none or one only");
-			} 
+			}
+		}
+		catch(RuntimeException e) {
+			log.error("RuntimeException Encountered when searching for [" + _sha1 + "] in repo [" + baseUrl + "]: " + e.getMessage(), e);
+			e.printStackTrace();
+			throw e;
 		}
 		catch(Exception e) {
 			log.error("Error when searching for [" + _sha1 + "] in repo [" + baseUrl + "]: " + e.getMessage(), e);
@@ -258,7 +265,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 	/** {@inheritDoc} */
 	@Override
 	public Set<Artifact> getAllArtifactVersions(String group, String artifact, String classifier, String packaging) throws Exception {
-		return this.getArtifactVersions(group, artifact, null , false, null, classifier, packaging); 
+		return this.getArtifactVersions(group, artifact, null , false, null, classifier, packaging);
 	}
 
 	/** {@inheritDoc} */
