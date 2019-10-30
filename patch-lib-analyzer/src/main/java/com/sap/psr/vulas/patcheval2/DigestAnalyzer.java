@@ -37,9 +37,9 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  *
  */
 public class DigestAnalyzer {
-	
+
 	private static final Log log = LogFactory.getLog(DigestAnalyzer.class);
-	
+
 	String digest;
 	String version;
 
@@ -60,15 +60,15 @@ public class DigestAnalyzer {
 		//necessary read_write as we use GET PUT POST
 		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.READ_WRITE.toString());
 		final Gson gson = GsonHelper.getCustomGsonBuilder().create();
-		
+
 		try {
 		//check that the 'Implementation-version' is available among the properties
 		String lib;
-		
+
 			lib = BackendConnector.getInstance().getLibrary(digest);
 			Library l = (Library) JacksonUtil.asObject(lib, Library.class);
 	//		Library l = gson.fromJson(lib, Library.class);
-	
+
 			boolean canAnalyze = false;
 			for(Property p: l.getProperties()){
 				if(p.getName().equals("Implementation-Version")){
@@ -77,31 +77,31 @@ public class DigestAnalyzer {
 					break;
 				}
 			}
-			
+
 			if(canAnalyze){
-				
+
 				//get all bugs for the given digest
-				List<Bug> bugsToAnalyze = new ArrayList<Bug>();
-				
+				List<Bug> bugsToAnalyze = null;
+
 				String allbugs;
-				
+
 				allbugs = BackendConnector.getInstance().getBugsForLib(digest);
 				bugsToAnalyze = Arrays.asList(gson.fromJson(allbugs, Bug[].class));
 				//bugsToAnalyze= Arrays.asList((Bug[]) JacksonUtil.asObject(allbugs, Bug[].class));
-				
+
 				log.info("["+bugsToAnalyze.size()+"] bugs to analyze");
-				
+
 				bugLoop:
 				for (Bug b: bugsToAnalyze){
 					HashMap<AffectedVersionSource, AffectedLibrary[]> existingxSource = new HashMap<AffectedVersionSource, AffectedLibrary[]>();
-					
+
 					//retrieve existing affectedVersions
 					for(AffectedVersionSource s : AffectedVersionSource.values()){
 			    		AffectedLibrary[] al = BackendConnector.getInstance().getBugAffectedLibraries(b.getBugId(),s.toString());
 			    		existingxSource.put(s, al);
 			    		log.info("Existing [" + al.length + "] affected libraries in backend for source [" +s.toString()+"]");
 			    	}
-							
+
 					for(AffectedLibrary a: existingxSource.get(AffectedVersionSource.MANUAL)){
 						if(a.getLib()!=null && a.getLib().getDigest().equals(digest)){
 							continue bugLoop;
@@ -112,19 +112,19 @@ public class DigestAnalyzer {
 							continue bugLoop;
 						}
 					}
-					
+
 					existingxSource.remove(AffectedVersionSource.TO_REVIEW);
-					
+
 					Boolean affected = null;
 					boolean toUpload = false;
-					//loop over affected versions, if the same version for org.apache.tomcat was assessed consistently to VULN/FIXED, propagate it to SHA1 (meant to be used for tomcat >6 right now)	
+					//loop over affected versions, if the same version for org.apache.tomcat was assessed consistently to VULN/FIXED, propagate it to SHA1 (meant to be used for tomcat >6 right now)
 					for(AffectedLibrary[] array: existingxSource.values()){
 						for(AffectedLibrary a : array){
 							if(
 								//tomcat JAR without GAV
 								(a.getLibraryId()!=null && l.getLibraryId()==null && a.getLibraryId().getMvnGroup().equals("org.apache.tomcat") && a.getLibraryId().getVersion().equals(version)) ||
-								//tomcat JAR with GAV for OSGI eclipse bundle, works for version > 7.0.x	
-								(a.getLibraryId()!=null && l.getLibraryId()!=null 
+								//tomcat JAR with GAV for OSGI eclipse bundle, works for version > 7.0.x
+								(a.getLibraryId()!=null && l.getLibraryId()!=null
 									&& a.getLibraryId().getMvnGroup().equals("org.apache.tomcat") &&  (a.getLibraryId().getArtifact().startsWith("tomcat-") || a.getLibraryId().getArtifact().startsWith("tomcat7-"))
 									&& l.getLibraryId().getMvnGroup().equals("p2.eclipse-plugin")
 									&& (l.getLibraryId().getArtifact().substring(0,l.getLibraryId().getArtifact().lastIndexOf(".")).equals("org.apache")
@@ -156,17 +156,17 @@ public class DigestAnalyzer {
 						JsonObject result = createJsonResult(l, affected);
 
 						JsonArray sourceResult = new JsonArray();
-						
+
 						sourceResult.add(result);
-						
+
 						BackendConnector.getInstance().uploadPatchEvalResults(b.getBugId(),sourceResult.toString(), "PROPAGATE_MANUAL");
 					}
-					
-					
-					
+
+
+
 				}
-				
-				
+
+
 			}
 		} catch (EntityNotFoundInBackendException e1) {
 			// TODO Auto-generated catch block
@@ -176,12 +176,12 @@ public class DigestAnalyzer {
 			e.printStackTrace();
 		}
 	}
-	
+
 	 private JsonObject createJsonResult(Library _lib, Boolean _affected){
 			JsonObject result = new JsonObject();
 			result.addProperty("source", "PROPAGATE_MANUAL");
 			result.addProperty("explanation", "Generated automatically by DigestAnalyzer on " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
-			
+
 			if(_affected!=null)
 				result.addProperty("affected", _affected);
 				if(_lib.getLibraryId()!=null){
@@ -198,7 +198,7 @@ public class DigestAnalyzer {
 			}
 			return result;
 	    }
-	 
+
 		/**
 		 * <p>main.</p>
 		 *
@@ -207,14 +207,14 @@ public class DigestAnalyzer {
 		public static void main(String[] _args){
 			// Prepare parsing of cmd line arguments
 			final Options options = new Options();
-			
+
 			options.addOption("digest", "digest", true, "Delete all existing results before upload; otherwise only upload results for AffectedLibraries not already existing in the backend");
-			
-						 
+
+
 			try {
 				final CommandLineParser parser = new DefaultParser();
 			    CommandLine cmd = parser.parse(options, _args);
-				
+
 				if(cmd.hasOption("digest")){
 					String digest = cmd.getOptionValue("digest");
 					log.info("Running patcheval to assess all bugs of digest["+digest+"], all other options will be ignored.");

@@ -60,35 +60,35 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  * Finally it computes the json of affected libraries.
  */
 public class BugLibManager {
-	
 
-	
+
+
 	private static final Log log = LogFactory.getLog(BugLibManager.class);
 
 	// used to serialize cc
-	BugChangeList bugChangeList = null; 
+	BugChangeList bugChangeList = null;
     static List<ConstructChange> methsConsCC = null;
     private Set<ArtifactResult2> lids = null;
-   
+
     //data structure to keep all artifact results divided per GA
  //   private List<List<ArtifactResult2>> lidsXGA = new ArrayList<List<ArtifactResult2>>();
-    
+
     //data structure to keep all artifact results divided per GA and minor release
  //   private List<List<ReleaseTree>> lr = new ArrayList<List<ReleaseTree>>();
-    
+
     static HashMap<String,ConstructBytecodeASTManager> bytecodes = null;
 
 	private ExecutorService pool = null;
-	
+
 	/**
 	 * <p>Constructor for BugLibManager.</p>
 	 */
 	public BugLibManager(){
 		this.lids = new TreeSet<ArtifactResult2>();
 		BugLibManager.bytecodes  = new HashMap<String,ConstructBytecodeASTManager>();
-    }
-    
-	
+  }
+
+
 	/**
 	 * <p>resetToBug.</p>
 	 *
@@ -120,7 +120,7 @@ public class BugLibManager {
 			while ((line = br.readLine()) != null) {
 				String[] splitLine = line.split(cvsSplitBy);
 				processLine(splitLine);
-				
+
 			}
 			if(lids.size()==0){
 				BugLibManager.log.warn("File [" + f.getName()+"] is empty!");
@@ -129,7 +129,7 @@ public class BugLibManager {
 			br.close();
 		}
 	}
-    
+
 	/**
 	 * This method reads the string representation of the CSV computed by the BugLibAnalyzer
 	 *
@@ -158,7 +158,7 @@ public class BugLibManager {
 		br.close();
 
 	}
-        
+
 	/**
 	 * This method fills the data structures lidsXGA and lr based on the lids.
 	 *
@@ -223,17 +223,17 @@ public class BugLibManager {
 			lr.add(gaRelList);
 
 		}
-		
+
 		return lr;
 
 	}
-            	
-            
+
+
     /**
-     * 
+     *
      * This methods computes the results for each source (AST_EQUALITY, etc.) and creates the JSON to be uploaded or saved to file
-     * @throws BackendConnectionException 
-     * 
+     * @throws BackendConnectionException
+     *
      */
     private void computeAndUploadResults() throws BackendConnectionException{
     	HashMap<String, JsonArray> gaResxSource = new HashMap<String, JsonArray>();
@@ -241,12 +241,12 @@ public class BugLibManager {
     			overall_toreview = 0;
     	int upload_ast_equality_v = 0, upload_ast_equality_f = 0, upload_minor = 0, upload_major = 0, upload_intersection = 0, upload_greater = 0,
     			upload_toreview = 0 ,  upload_propagate = 0;
-    	
+
     	//true when only affectedlibraries not already existing in backend should be uploaded
     	boolean addnew = VulasConfiguration.getGlobal().getConfiguration().getBoolean(PEConfiguration.ADD_RESULTS);
     	HashMap<AffectedVersionSource, AffectedLibrary[]> existingxSource = new HashMap<AffectedVersionSource, AffectedLibrary[]>();
     	//if(addnew){
-    	
+
     	// we always get all the existing affected versions (even if onlyAddNew is false)
     	// as we always need the results for MANUAL and PROGATE_MANUAL in order to further propagate
     	for(AffectedVersionSource s : AffectedVersionSource.values()){
@@ -255,9 +255,9 @@ public class BugLibManager {
     		BugLibManager.log.info("Existing [" + al.length + "] affected libraries in backend for source [" +s.toString()+"]");
     	}
     	//}
-    	
+
     	List<List<ReleaseTree>> lr = computeGA();
-    	
+
 		for (int ga = 0; ga < lr.size(); ga++) {
 			BugLibManager.log.info("Collecting results for group artifact [" + lr.get(ga).get(0).getNode().getGa() + "]");
 
@@ -270,7 +270,7 @@ public class BugLibManager {
 					new_toreview = 0;
 
 			for (int r = 0; r < relsxGA.size(); r++) {
-	
+
 				String source = null;
 				List<String> libAssessed = new ArrayList<String>();
 
@@ -293,7 +293,7 @@ public class BugLibManager {
 					if(lastFirstFixed!=null)
 						BugLibManager.log.info("Last first fixed is [" + lastFirstFixed.toString() +"] based on Intersection");
 				}
-			
+
 				boolean toAdd = true;
 
 				List<ArtifactResult2> v = tree.getEqualsV();
@@ -302,11 +302,11 @@ public class BugLibManager {
 						libAssessed.add(v.get(i).getGroup().concat(v.get(i).getArtifact().concat(v.get(i).getVersion())));
 						ast_equality_v++;
 						source = "AST_EQUALITY";
-						
+
 						toAdd = true;
 						if(addnew){
 							for(AffectedLibrary a: existingxSource.get(AffectedVersionSource.AST_EQUALITY)){
-								if(a.getLibraryId()!=null && a.getLibraryId().getMvnGroup().equals(v.get(i).getGroup()) 
+								if(a.getLibraryId()!=null && a.getLibraryId().getMvnGroup().equals(v.get(i).getGroup())
 										&& a.getLibraryId().getArtifact().equals(v.get(i).getArtifact())
 										&& a.getLibraryId().getVersion().equals(v.get(i).getVersion())){
 									toAdd = false;
@@ -336,12 +336,12 @@ public class BugLibManager {
 						libAssessed.add(f.get(i).getGroup().concat(f.get(i).getArtifact().concat(f.get(i).getVersion())));
 						ast_equality_f++;
 						source = "AST_EQUALITY";
-						
+
 						toAdd = true;
 						if(addnew){
 							for(int j=0;j<existingxSource.get(AffectedVersionSource.AST_EQUALITY).length;j++){
 								AffectedLibrary a = existingxSource.get(AffectedVersionSource.AST_EQUALITY)[j];
-								if(a.getLibraryId()!=null && a.getLibraryId().getMvnGroup().equals(f.get(i).getGroup()) 
+								if(a.getLibraryId()!=null && a.getLibraryId().getMvnGroup().equals(f.get(i).getGroup())
 										&& a.getLibraryId().getArtifact().equals(f.get(i).getArtifact())
 										&& a.getLibraryId().getVersion().equals(f.get(i).getVersion())){
 									toAdd = false;
@@ -365,8 +365,8 @@ public class BugLibManager {
 						}
 					}
 				}
-				
-				
+
+
 				HashMap<ArtifactResult2, ArtifactResult2> mv = tree.getMinorV();
 				for (Entry<ArtifactResult2, ArtifactResult2> el : mv.entrySet()) {
 					if (!libAssessed.contains(el.getKey().getGroup()
@@ -379,7 +379,7 @@ public class BugLibManager {
 						if(addnew){
 							for(int j=0;j<existingxSource.get(AffectedVersionSource.MINOR_EQUALITY).length;j++){
 								AffectedLibrary a = existingxSource.get(AffectedVersionSource.MINOR_EQUALITY)[j];
-								if(a.getLibraryId()!=null && a.getLibraryId().getMvnGroup().equals(el.getKey().getGroup()) 
+								if(a.getLibraryId()!=null && a.getLibraryId().getMvnGroup().equals(el.getKey().getGroup())
 										&& a.getLibraryId().getArtifact().equals(el.getKey().getArtifact())
 										&& a.getLibraryId().getVersion().equals(el.getKey().getVersion())){
 									toAdd = false;
@@ -390,9 +390,9 @@ public class BugLibManager {
 						if(toAdd){
 							new_minor++;
 							JsonObject result = createJsonResult(el.getKey(), source, true);
-	
+
 							result.addProperty("lastVulnerable", el.getValue().toString());
-	
+
 							JsonArray sourceResult = null;
 							if (gaResxSource.containsKey(source)) {
 								sourceResult = gaResxSource.get(source);
@@ -405,8 +405,8 @@ public class BugLibManager {
 
 					}
 				}
-     		
-			
+
+
 				HashMap<ArtifactResult2, ArtifactResult2> mf = tree.getMajorF();
 
 				for (Entry<ArtifactResult2, ArtifactResult2> el : mf.entrySet()) {
@@ -421,7 +421,7 @@ public class BugLibManager {
 						if(addnew){
 							for(int j=0;j<existingxSource.get(AffectedVersionSource.MAJOR_EQUALITY).length;j++){
 								AffectedLibrary a = existingxSource.get(AffectedVersionSource.MAJOR_EQUALITY)[j];
-								if(a.getLibraryId()!=null && a.getLibraryId().getMvnGroup().equals(el.getKey().getGroup()) 
+								if(a.getLibraryId()!=null && a.getLibraryId().getMvnGroup().equals(el.getKey().getGroup())
 										&& a.getLibraryId().getArtifact().equals(el.getKey().getArtifact())
 										&& a.getLibraryId().getVersion().equals(el.getKey().getVersion())){
 									toAdd = false;
@@ -433,9 +433,9 @@ public class BugLibManager {
 							new_major++;
 							JsonObject result = createJsonResult(el.getKey(), source, false);
 							result.addProperty("source", "MAJOR_EQUALITY");
-	
+
 							result.addProperty("firstFixed", el.getValue().toString());
-	
+
 							JsonArray sourceResult = null;
 							if (gaResxSource.containsKey(source)) {
 								sourceResult = gaResxSource.get(source);
@@ -447,8 +447,8 @@ public class BugLibManager {
 						}
 					}
 				}
-				
-				
+
+
 				HashMap<ArtifactResult2, Intersection2> posti = tree.getPostIntersection();
 
 				for (Entry<ArtifactResult2, Intersection2> el : posti.entrySet()) {
@@ -463,8 +463,8 @@ public class BugLibManager {
 						if(addnew){
 							for(int j=0;j<existingxSource.get(AffectedVersionSource.INTERSECTION).length;j++){
 								AffectedLibrary a = existingxSource.get(AffectedVersionSource.INTERSECTION)[j];
-							
-								if(a.getLibraryId()!=null && a.getLibraryId().getMvnGroup().equals(el.getKey().getGroup()) 
+
+								if(a.getLibraryId()!=null && a.getLibraryId().getMvnGroup().equals(el.getKey().getGroup())
 										&& a.getLibraryId().getArtifact().equals(el.getKey().getArtifact())
 										&& a.getLibraryId().getVersion().equals(el.getKey().getVersion())){
 									toAdd = false;
@@ -475,10 +475,10 @@ public class BugLibManager {
 						if(toAdd){
 							new_intersection++;
 							JsonObject result = createJsonResult(el.getKey(), source, false);
-	
+
 							result.addProperty("fromIntersection", el.getValue().getFrom().toString());
 							result.addProperty("toIntersection", el.getValue().getTo().toString());
-	
+
 							JsonArray sourceResult = null;
 							if (gaResxSource.containsKey(source)) {
 								sourceResult = gaResxSource.get(source);
@@ -491,7 +491,7 @@ public class BugLibManager {
 					}
 
 				}
-        			
+
 				HashMap<ArtifactResult2, Intersection2> prei = tree.getBeforeIntersection();
 
 				for (Entry<ArtifactResult2, Intersection2> el : prei.entrySet()) {
@@ -502,13 +502,13 @@ public class BugLibManager {
 
 						source = "INTERSECTION";
 						intersection++;
-						
+
 						toAdd = true;
 						if(addnew){
 							for(int j=0;j<existingxSource.get(AffectedVersionSource.INTERSECTION).length;j++){
 								AffectedLibrary a = existingxSource.get(AffectedVersionSource.INTERSECTION)[j];
-							
-								if(a.getLibraryId()!=null && a.getLibraryId().getMvnGroup().equals(el.getKey().getGroup()) 
+
+								if(a.getLibraryId()!=null && a.getLibraryId().getMvnGroup().equals(el.getKey().getGroup())
 										&& a.getLibraryId().getArtifact().equals(el.getKey().getArtifact())
 										&& a.getLibraryId().getVersion().equals(el.getKey().getVersion())){
 									toAdd = false;
@@ -519,11 +519,11 @@ public class BugLibManager {
 						if(toAdd){
 							new_intersection++;
 							JsonObject result = createJsonResult(el.getKey(), source, true);
-	
+
 							result.addProperty("fromIntersection", el.getValue().getFrom().toString());
 							result.addProperty("toIntersection", el.getValue().getTo().toString());
 							result.addProperty("overallConfidence", el.getValue().getConfidence());
-	
+
 							JsonArray sourceResult = null;
 							if (gaResxSource.containsKey(source)) {
 								sourceResult = gaResxSource.get(source);
@@ -535,8 +535,8 @@ public class BugLibManager {
 						}
 					}
 				}
-				
-			
+
+
 				// check greater release
 				if (libAssessed.size() == 0 && lastFirstFixed != null && tree.getNode().getTimestamp()!=null && lastFirstFixed.getTimestamp()!=null
 						&& tree.getNode().getTimestamp() > lastFirstFixed.getTimestamp()) {
@@ -548,8 +548,8 @@ public class BugLibManager {
 						if(addnew){
 							for(int j=0;j<existingxSource.get(AffectedVersionSource.GREATER_RELEASE).length;j++){
 								AffectedLibrary a1 = existingxSource.get(AffectedVersionSource.GREATER_RELEASE)[j];
-							
-								if(a1.getLibraryId()!=null && a1.getLibraryId().getMvnGroup().equals(a.getGroup()) 
+
+								if(a1.getLibraryId()!=null && a1.getLibraryId().getMvnGroup().equals(a.getGroup())
 										&& a1.getLibraryId().getArtifact().equals(a.getArtifact())
 										&& a1.getLibraryId().getVersion().equals(a.getVersion())){
 									toAdd = false;
@@ -560,7 +560,7 @@ public class BugLibManager {
 						if(toAdd){
 							new_greater++;
 							JsonObject result = createJsonResult(a, source, false);
-	
+
 							JsonArray sourceResult = null;
 							if (gaResxSource.containsKey(source)) {
 								sourceResult = gaResxSource.get(source);
@@ -572,18 +572,18 @@ public class BugLibManager {
 						}
 					}
 				}
-				
+
 				// if it's not a greater release, upload the available
 				// information for the libraries on which no conclusion was
 				// taken
-				// and check whether we can propagate existing manual assessments 
+				// and check whether we can propagate existing manual assessments
 				else {
-					
+
 					//retrieve Manual assessment
 					List<AffectedLibrary> manual = new ArrayList<AffectedLibrary>();
 					for(int j=0;j<existingxSource.get(AffectedVersionSource.MANUAL).length;j++){
 						AffectedLibrary a1 = existingxSource.get(AffectedVersionSource.MANUAL)[j];
-						if(a1.getLibraryId()!=null && a1.getLibraryId().getMvnGroup().equals(tree.getNode().getGroup()) 
+						if(a1.getLibraryId()!=null && a1.getLibraryId().getMvnGroup().equals(tree.getNode().getGroup())
 								&& a1.getLibraryId().getArtifact().equals(tree.getNode().getArtifact())
 								&& a1.getLibraryId().getVersion().startsWith(tree.getNode().getMinorRelease())){
 							manual.add(a1);
@@ -592,16 +592,16 @@ public class BugLibManager {
 					//retrieve existing propagate_manual
 					for(int j=0;j<existingxSource.get(AffectedVersionSource.PROPAGATE_MANUAL).length;j++){
 						AffectedLibrary a1 = existingxSource.get(AffectedVersionSource.PROPAGATE_MANUAL)[j];
-						if(a1.getLibraryId()!=null && a1.getLibraryId().getMvnGroup().equals(tree.getNode().getGroup()) 
+						if(a1.getLibraryId()!=null && a1.getLibraryId().getMvnGroup().equals(tree.getNode().getGroup())
 								&& a1.getLibraryId().getArtifact().equals(tree.getNode().getArtifact())
 								&& a1.getLibraryId().getVersion().startsWith(tree.getNode().getMinorRelease())){
 							manual.add(a1);
 						}
 					}
-					
+
 					for (ArtifactResult2 a : tree.getNodes()) {
 						if (!libAssessed.contains(a.getGroup().concat(a.getArtifact().concat(a.getVersion())))) {
-							
+
 							//add artifactResult to to_review
 							toreview++;
 
@@ -610,7 +610,7 @@ public class BugLibManager {
 							if(addnew){
 								for(int j=0;j<existingxSource.get(AffectedVersionSource.TO_REVIEW).length;j++){
 									AffectedLibrary a1 = existingxSource.get(AffectedVersionSource.TO_REVIEW)[j];
-									if(a1.getLibraryId()!=null && a1.getLibraryId().getMvnGroup().equals(a.getGroup()) 
+									if(a1.getLibraryId()!=null && a1.getLibraryId().getMvnGroup().equals(a.getGroup())
 											&& a1.getLibraryId().getArtifact().equals(a.getArtifact())
 											&& a1.getLibraryId().getVersion().equals(a.getVersion())){
 										toAdd = false;
@@ -621,7 +621,7 @@ public class BugLibManager {
 							if(toAdd){
 								new_toreview++;
 								JsonObject result = createJsonResult(a, source, null);
-	
+
 								JsonArray sourceResult = null;
 								if (gaResxSource.containsKey(source)) {
 									sourceResult = gaResxSource.get(source);
@@ -631,15 +631,15 @@ public class BugLibManager {
 								sourceResult.add(result);
 								gaResxSource.put(source, sourceResult);
 							}
-							
+
 							//add artifactResult to propagate_manual
 							source = "PROPAGATE_MANUAL";
 							boolean isGreater=false,isSmaller=false;
 							for(AffectedLibrary i :manual){
-								if(i.getLibraryId()!=null && i.getLibraryId().getMvnGroup().equals(a.getGroup()) && 
+								if(i.getLibraryId()!=null && i.getLibraryId().getMvnGroup().equals(a.getGroup()) &&
 										i.getLibraryId().getArtifact().equals(a.getArtifact()) ){
 									Version toCompare = new Version(i.getLibraryId().getVersion());
-									
+
 									if(a.getVersionObject().getMaintenanceRelease().equals(toCompare.getMaintenanceRelease()) ||
 											toCompare.isMaintenanceRelease()){
 										if(a.getVersionObject().compareTo(toCompare)==0){
@@ -659,7 +659,7 @@ public class BugLibManager {
 								propagate++;
 								log.info("Creating Json for PROPAGATE_MANUAL for artifact [" + a.toString()+"]");
 								JsonObject result = createJsonResult(a, source, false);
-	
+
 								JsonArray sourceResult = null;
 								if (gaResxSource.containsKey(source)) {
 									sourceResult = gaResxSource.get(source);
@@ -669,18 +669,18 @@ public class BugLibManager {
 								sourceResult.add(result);
 								gaResxSource.put(source, sourceResult);
 							}
-							
-							
+
+
 						}
 					}
 				}
-        				
-        		
-        		
-        		
-				// 
+
+
+
+
+				//
 				// if next round is new GA or list is finished, log stats//&& !gaResxSource.isEmpty()
-				if (relsxGA.size() == r + 1 ) { 
+				if (relsxGA.size() == r + 1 ) {
 						log.info("Computed results for GA [" + lr.get(ga).get(0).getNode().getGa() + "]");
 						log.info("[" + ast_equality_v + "] results for source AST_EQUALITY to vulnerable, [" +new_ast_equality_v+ "] new to upload");
 						log.info("[" + ast_equality_f + "] results for source AST_EQUALITY to fixed, [" +new_ast_equality_f+ "] new to upload");
@@ -705,7 +705,7 @@ public class BugLibManager {
 						overall_toreview += toreview; toreview = 0;
 						upload_toreview += new_toreview; new_toreview = 0;
 						upload_propagate += propagate; propagate = 0;
-					
+
 				}
 			}
 		}
@@ -718,15 +718,15 @@ public class BugLibManager {
 		log.info("[" + overall_greater + "] results for source GREATER_RELEASE [" +upload_greater+"] new to upload");
 		log.info("[" + overall_toreview + "] results for source TO_REVIEW [" +upload_toreview+"] new to upload");
 		log.info("[" + upload_propagate + "] results for source PROPAGATE");
-		 
+
 		// save to file or upload results per GA
 			if (!gaResxSource.isEmpty()) {
-				
+
 				if (VulasConfiguration.getGlobal().getConfiguration().getBoolean(PEConfiguration.UPLOAD_RESULTS) == true) {
 					try {
-						
+
 						Collection<Counter> existingAffLib = bugChangeList.getCountAffLibIds().getCounters();
-						
+
 						//delete old results for sources that did not lead any result
 						if(overall_ast_equality_v==0 && overall_ast_equality_f==0)
 							BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), "AST_EQUALITY");
@@ -738,11 +738,11 @@ public class BugLibManager {
 							BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), "INTERSECTION");
 						if(overall_greater==0)
 							BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), "GREATER_RELEASE");
-						//upload results if they are more or less than the already existing ones 
-					
+						//upload results if they are more or less than the already existing ones
+
 						for (Entry<String,JsonArray> e : gaResxSource.entrySet()) {
 							log.info("Uploading results for source " + e.getKey());
-							
+
 							boolean toUpload = true;
 							if(!addnew){
 								for(Counter i : existingAffLib){
@@ -750,20 +750,20 @@ public class BugLibManager {
 										toUpload=false;
 										BugLibManager.log.info("Patch Eval concluded for ["+gaResxSource.get(e.getKey()).size() + "] libs for source ["+e.getKey()+"], results already existing [" +i.getCount()+ "]: skip upload" );
 									}
-										
+
 								}
 							}
-							
-							
+
+
 							if(toUpload){
 								if(!addnew){
 									// delete all previous results and upload the new ones
 									BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), e.getKey());
-									
+
 								}
 								BackendConnector.getInstance().uploadPatchEvalResults(bugChangeList.getBugId(),gaResxSource.get(e.getKey()).toString(), e.getKey());
 							}
-						
+
 						}
 					} catch (BackendConnectionException ex) {
 						log.error(ex);
@@ -782,14 +782,14 @@ public class BugLibManager {
 					}
 				}
 
-			}		 
-        	
+			}
+
         }
-         
-        	 
-        
-        
-  
+
+
+
+
+
     /**
      * Checks for the consistency of the line, cannot be both equal to vulnerable and fixed
      * @param String eV
@@ -804,7 +804,7 @@ public class BugLibManager {
         }
         return true;
     }
-    
+
     /**
      * <p>analyze.</p>
      *
@@ -812,23 +812,23 @@ public class BugLibManager {
      * @throws java.lang.InterruptedException if any.
      */
     public static void analyze(List<Bug> bugsToAnalyze) throws InterruptedException{
-        
+
     	//necessary read_write as the ast_diff is done using POST
 		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.READ_WRITE.toString());
     	BugLibAnalyzer bla = new BugLibAnalyzer();
     	BugLibManager  bm = new BugLibManager();
-        int count=0;	        
+        int count=0;
         for ( Bug bug : bugsToAnalyze ){
         	try {
 	        	BugChangeList b = BackendConnector.getInstance().getBug(bug.getBugId());
-	    		
-	        	if(b==null){ 
+
+	        	if(b==null){
 					BugLibManager.log.error("Error getting bug; the bug [" + bug.getBugId() + "] does not exist in the backend");
 	        	}
 	        	else{
 	        		boolean mod_exists = false;
 	        		boolean no_cc = false;
-	        	
+
 	        		if(b.getConstructChanges()!=null && b.getConstructChanges().isEmpty()){
 	        			no_cc=true;
 	        			BugLibManager.log.info("Bug ["+b.getBugId()+"] does not have any construct change, we still continue to propagate the MANUAL results.");
@@ -844,13 +844,13 @@ public class BugLibManager {
 	        		if(!mod_exists){
 	        			BugLibManager.log.info("No-MOD constructor/method for bug ["+b.getBugId()+"] exists, we still continue to propagate the MANUAL results.");
 	        		}
-	        		
+
 	        		bm.resetToBug(b);
 			        File f = bm.getCsv();
 			        bla.setBug(b);
-	        		
-	        		if(!no_cc){				        	
-				        
+
+	        		if(!no_cc){
+
 				      //if CSV does not exist, create it
 				        if (f==null){
 				            bm.readString(bla.createCSV());
@@ -886,27 +886,27 @@ public class BugLibManager {
 								BugLibManager.log.info("["+newlibs.size()+"] new releases exists! Going to analyze and add them to the CSV");
 								bm.readString(bla.createCSV(newlibs,f));
 							}
-				        
-						
+
+
 				        }
-			       
+
 				        //try to compare bitecode
 				        bm.compareBytecode();
-				        
+
 				    //    bm.computeGA();
 				      	bm.computeAndUploadResults();
-		        		
+
 	        		}
 	        		else{
-	        			bm.computeAndUploadPropagateResults();    	     
+	        			bm.computeAndUploadPropagateResults();
 	        		}
 	        	}
-	           
+
 	        } catch (FileNotFoundException e) {
 				BugLibManager.log.error("CSV file not found : " + e);
 			} catch (IOException e) {
 				BugLibManager.log.error("Error reasding CSV file" + e);
-			
+
 			} catch (BackendConnectionException bce){
 				if(bce.getHttpResponseStatus()==503)
 					log.error("Service still unavailable (503) after 1h, could not analyze bugs");
@@ -923,17 +923,17 @@ public class BugLibManager {
 		    count++;
         }
 
-        
+
     }
-    
+
     //this method is used for bugs without construct changes to propagate manual (and already propagated) assessments (affected-false) to newer versions within the same major release
     private void computeAndUploadPropagateResults() throws BackendConnectionException{
     	List<AffectedLibrary> existingManual = new ArrayList<AffectedLibrary>();
 		existingManual.addAll(Arrays.asList(BackendConnector.getInstance().getBugAffectedLibraries(bugChangeList.getBugId(),AffectedVersionSource.MANUAL.toString())));
 		existingManual.addAll(Arrays.asList(BackendConnector.getInstance().getBugAffectedLibraries(bugChangeList.getBugId(),AffectedVersionSource.PROPAGATE_MANUAL.toString())));
-    	
+
 		BugLibManager.log.info("Existing [" + existingManual.size() + "] affected libraries in backend for sources MANUAL and PROPAGATE_MANUAL.");
-		
+
         List<String> groupsArtifactsToCheck = new ArrayList<>();
 		List<Artifact> gavToBeAssessed = new ArrayList<Artifact>();
 		List<Artifact> gavAssessed = new ArrayList<Artifact>();
@@ -954,27 +954,27 @@ public class BugLibManager {
             	}
             }
         }
-		
-		
+
+
 		//add artifactResult to propagate_manual
 		String source = "PROPAGATE_MANUAL";
 		boolean isGreater=false,isSmaller=false;
 		int propagate=0;
 		JsonArray sourceResult = new JsonArray();
-		
+
 		for(Artifact a : gavToBeAssessed){
 			if(!gavAssessed.contains(a)){
 				isGreater=false;
 				isSmaller=false;
 				for(AffectedLibrary i :existingManual){
-					if(i.getLibraryId()!=null && i.getLibraryId().getMvnGroup().equals(a.getLibId().getMvnGroup()) && 
+					if(i.getLibraryId()!=null && i.getLibraryId().getMvnGroup().equals(a.getLibId().getMvnGroup()) &&
 							i.getLibraryId().getArtifact().equals(a.getLibId().getArtifact()) ){
 						Version toCompare = new Version(i.getLibraryId().getVersion());
 						Version current = new Version(a.getLibId().getVersion());
-						
+
 						if(current.getMajorRelease().equals(toCompare.getMajorRelease()) &&
 								Integer.parseInt((current.getMinorRelease().split("\\."))[1])> Integer.parseInt((toCompare.getMinorRelease().split("\\."))[1]) ){
-							
+
 							if(current.getMaintenanceRelease().equals(toCompare.getMaintenanceRelease()) ||
 									toCompare.isMaintenanceRelease()){
 								if(current.compareTo(toCompare)==0){
@@ -991,15 +991,15 @@ public class BugLibManager {
 						}
 					}
 				}
-				
+
 				if(isGreater&&!isSmaller){
 					propagate++;
 					log.info("Creating Json for PROPAGATE_MANUAL for artifact [" + a.toString()+"]");
 					JsonObject result = createJsonResult(a, source, false);
-					
+
 					sourceResult.add(result);
 				}
-			}			
+			}
 		}
 		BugLibManager.log.info("Propagated results for [" + propagate + "] artifacts.");
 		if(propagate>0){
@@ -1007,7 +1007,7 @@ public class BugLibManager {
 				BackendConnector.getInstance().uploadPatchEvalResults(bugChangeList.getBugId(),sourceResult.toString(), source);
 			} else {
 				// save to file
-	
+
 				final File json_file = Paths.get(PEConfiguration.getBaseFolder().toString() + File.separator+ bugChangeList.getBugId() + "_" + source + "_" + ".json").toFile();
 				try {
 					FileUtil.writeToFile(json_file, sourceResult.toString());
@@ -1019,10 +1019,10 @@ public class BugLibManager {
 		}
 
     }
-    
+
     private void compareBytecode() {
-    	this.pool = Executors.newFixedThreadPool(4); 
-    	
+    	this.pool = Executors.newFixedThreadPool(4);
+
     	int count=0;
 
     	for(ArtifactResult2 ar:this.lids){
@@ -1035,20 +1035,20 @@ public class BugLibManager {
     			// ||(cpa.getType().equals("ADD")&&cpa.getDoneComparisons()!=null)){
     			//TODO check condition (add required?)
     			if((cpa.getType().equals("MOD") && cpa.getQnameInJar() && (cpa.getdToF()!=-1 || cpa.getdToV()!=-1 ))
-    		    			){	
+    		    			){
     				toCompare=false;
     				break;
     			}
     		}
-    		if(toCompare){    			
+    		if(toCompare){
     			// Create a ByteCodeComparator for all archive to compare, and ask the thread pool to start them
     			ByteCodeComparator b = new ByteCodeComparator(ar,bugChangeList.getBugId());
-    		
+
     			this.pool.execute(b);
     			count++;
-    		}	
-    			
-    		
+    		}
+
+
     	}
     	this.pool.shutdown();
     	try {
@@ -1057,12 +1057,12 @@ public class BugLibManager {
 		} catch (InterruptedException e) {
 			log.error("Interrupt exception");
 		}
-		
+
 		log.info("ByteCodeComparison: a total of [" + count + "] archives compared for [" + bytecodes.size()+"] construct paths.");
 		//CSVHelper2.rewriteCSV(bugChangeList.getBugId(), lids);
-				
+
 	}
-    
+
 	private File getCsv(){
     	String baseFolder = PEConfiguration.getBaseFolder().toString();
         File containingFolder = new File(baseFolder);
@@ -1079,11 +1079,11 @@ public class BugLibManager {
         	BugLibManager.log.info("Found file [" + f.getName()+"]");
         	return f;
         }
-        else 
+        else
         	return null;
     }
-    
-    
+
+
     private void processLine(String[] splitLine){
     	String baseFolder = PEConfiguration.getBaseFolder().toString()+File.separator;
     	if (splitLine.length>0&&splitLine[0].compareTo("") != 0 && splitLine[2].compareTo("Group") != 0) {
@@ -1091,7 +1091,7 @@ public class BugLibManager {
 				ConstructPathAssessment2 cpa = null ;
 				if(splitLine[5].equals("MOD")){
 					String vulnAst = null, fixedAst=null,testedAst=null;
-					
+
 					//retrieve vulnAst
 					if(splitLine[10]!=null && !splitLine[10].equals("")){
 						try {
@@ -1140,7 +1140,7 @@ public class BugLibManager {
 							BugLibManager.log.error("Couldn't read file [" +splitLine[12] + "]");
 						}
 					}
-					
+
 					//************ use constructchange list to find the type of the construct because is needed by the ast api but we
 					// don't have it in the CSV!
 					ConstructType type = null;
@@ -1148,17 +1148,17 @@ public class BugLibManager {
 						if(c.getConstructId().getQname().equals(splitLine[0]))
 							type=c.getConstructId().getType();
 					}
-					
+
 					cpa = new ConstructPathAssessment2(splitLine[0], splitLine[1],type,
-							Boolean.valueOf(splitLine[6]), 
+							Boolean.valueOf(splitLine[6]),
 							testedAst, Integer.parseInt(splitLine[8]),
 							Integer.parseInt(splitLine[9]), splitLine[5],vulnAst,fixedAst);
-					
+
 					//collect vuln and fixed bytecodes (only for matches that did not originated from bytecode)
 					//and only if the type of the constuct is not null
 					if(Integer.parseInt(splitLine[8])==0 && !(Integer.parseInt(splitLine[9])==-1)){
 						if(type!=null){
-						
+
 							LibraryId current = new LibraryId(splitLine[2], splitLine[3], splitLine[4]);
 							if(bytecodes.containsKey(splitLine[0].concat(splitLine[1]))){
 								ConstructBytecodeASTManager mgr = bytecodes.get(splitLine[0].concat(splitLine[1]));
@@ -1195,7 +1195,7 @@ public class BugLibManager {
 							}
 						}
 					}
-					
+
 					//collect lib w/ same bytecode (computed in previous runs)
 					if(splitLine.length>14){
 						String[] libraries = splitLine[14].split("\\|");
@@ -1205,20 +1205,20 @@ public class BugLibManager {
 					//collect lib w/ same bytecode (computed in previous runs)
 					if(splitLine.length>15){
 						cpa.setDoneComparisons(Integer.valueOf(splitLine[15]));
-					}			
-					
+					}
+
 				}else{
 					cpa = new ConstructPathAssessment2(splitLine[0], splitLine[1],
 							Boolean.valueOf(splitLine[6]),splitLine[5]);
 				}
-				
+
 				boolean added = false;
 				for (ArtifactResult2 a : lids) {
 					if (a.equalGAV(splitLine[2], splitLine[3], splitLine[4])) {
 						a.addConstructPathAssessment(cpa);
 						added = true;
 						break;
-						
+
 					}
 				}
 				if (!added) {
@@ -1236,7 +1236,7 @@ public class BugLibManager {
 			}
 		}
     }
-    
+
     private void setChangeList(){
 		Collection<ConstructChange> constructChanges = bugChangeList.getConstructChanges();
 		this.methsConsCC = new ArrayList<>();
@@ -1246,7 +1246,7 @@ public class BugLibManager {
 				this.methsConsCC.add(cc);
 		}
     }
-    
+
     private JsonObject createJsonResult(ArtifactResult2 a, String s, Boolean affected){
 		JsonObject result = new JsonObject();
 		result.addProperty("source", s);
@@ -1265,7 +1265,7 @@ public class BugLibManager {
 		result.add("affectedcc", a.getAffectedcc(methsConsCC));
 		return result;
     }
-    
+
     private JsonObject createJsonResult(Artifact a, String s, Boolean affected){
 		JsonObject result = new JsonObject();
 		result.addProperty("source", s);

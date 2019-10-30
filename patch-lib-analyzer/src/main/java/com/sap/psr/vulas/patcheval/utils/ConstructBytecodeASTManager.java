@@ -14,17 +14,17 @@ import com.sap.psr.vulas.shared.json.model.LibraryId;
  *
  */
 public class ConstructBytecodeASTManager {
-	
+
 	String construct;
-	String path;
-	
+	//String path;
+
 	ConstructType type;
-	
+
 	private static final String BYTECODE_NOT_FOUND = "none";
-	 
+
 	 HashMap<LibraryId,String> lidVulnBytecodeAST;
 	 HashMap<LibraryId,String> lidFixedBytecodeAST;
-	 
+
 	 /**
 	  * <p>Constructor for ConstructBytecodeASTManager.</p>
 	  *
@@ -34,7 +34,7 @@ public class ConstructBytecodeASTManager {
 	  */
 	 public ConstructBytecodeASTManager(String _c, String _p, ConstructType _t){
 		 this.construct = _c;
-		 this.path = _p;
+		 //this.path = _p;
 		 this.type = _t;
 		 this.lidVulnBytecodeAST = new HashMap<LibraryId,String>();
 		 this.lidFixedBytecodeAST = new HashMap<LibraryId,String>();
@@ -46,18 +46,18 @@ public class ConstructBytecodeASTManager {
 	  * @param l a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
 	  */
 	 public void addVulnLid(LibraryId l){
-		this.lidVulnBytecodeAST.put(l, null); 
+		this.lidVulnBytecodeAST.put(l, null);
 	 }
-	 
+
 	 /**
 	  * <p>addFixedLid.</p>
 	  *
 	  * @param l a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
 	  */
 	 public void addFixedLid(LibraryId l){
-		this.lidFixedBytecodeAST.put(l, null); 
+		this.lidFixedBytecodeAST.put(l, null);
 	 }
-	 
+
 	 /**
 	  * <p>getVulnLids.</p>
 	  *
@@ -66,7 +66,7 @@ public class ConstructBytecodeASTManager {
 	 public Set<LibraryId> getVulnLids(){
 		 return this.lidVulnBytecodeAST.keySet();
 	 }
-	 
+
 	 /**
 	  * <p>getVulnAst.</p>
 	  *
@@ -90,10 +90,10 @@ public class ConstructBytecodeASTManager {
 			 return null;
 		 }
 		 else {
-			 return res;  
+			 return res;
 		 }
 	}
-	 
+
 	 /**
 	  * <p>getFixedLids.</p>
 	  *
@@ -102,7 +102,7 @@ public class ConstructBytecodeASTManager {
 	 public Set<LibraryId> getFixedLids(){
 		 return this.lidFixedBytecodeAST.keySet();
 	 }
-	 
+
 	 /**
 	  * <p>getFixedAst.</p>
 	  *
@@ -127,10 +127,10 @@ public class ConstructBytecodeASTManager {
 			 return null;
 		 }
 		 else {
-			 return res;  
-		 } 
+			 return res;
+		 }
 	}
-	 
+
 	 /**
 	  * <p>getLidsSize.</p>
 	  *
@@ -139,5 +139,5 @@ public class ConstructBytecodeASTManager {
 	 public synchronized Integer getLidsSize(){
 		 return this.lidVulnBytecodeAST.size()+this.lidFixedBytecodeAST.size();
 	 }
-	 
+
 }
