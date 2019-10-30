@@ -271,7 +271,7 @@ public class CustomEntryPointCreator extends DefaultEntryPointCreator {
         }
 
         JNopStmt startStmt = new JNopStmt();
-        JNopStmt endStmt = new JNopStmt();
+        //JNopStmt endStmt = new JNopStmt();
 
         body.getUnits().add(startStmt);
 
