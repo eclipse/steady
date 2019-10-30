@@ -519,10 +519,12 @@ public class GitClient implements IVCSClient {
 		// Checkout init in current dir
 		Path py_file = Paths.get(_path);
 		Path init_file = null;
-		if(py_file.getParent()==null)
+		Path py_file_parent = py_file.getParent();
+
+		if(py_file_parent==null)
 			init_file = Paths.get("__init__.py");
 		else
-			init_file = py_file.getParent().resolve("__init__.py");
+			init_file = py_file_parent.resolve("__init__.py");
 
 		boolean exists = false;
 		try {
@@ -536,11 +538,16 @@ public class GitClient implements IVCSClient {
 		// Checkout init in parent dir
 		if(exists && init_file.getParent()!=null) {
 			Path parent_init = null;
-			if(init_file.getParent().getParent()==null)
-				parent_init = Paths.get("__init__.py");
-			else
-				parent_init = init_file.getParent().getParent().resolve("__init__.py");
+			Path parent = init_file.getParent();
+
+			if( parent != null ) {
+				Path grandparent = parent.getParent();
+				if(grandparent == null)
+					parent_init = Paths.get("__init__.py");
+				else
+					parent_init = grandparent.resolve("__init__.py");
 			checkoutPyInits(_rev_branch, parent_init.toString());
+			}
 		}
 	}
 
