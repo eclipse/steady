@@ -16,11 +16,11 @@ import com.sap.psr.vulas.shared.json.model.ConstructId;
  *
  */
 public class DepthFirstGetPaths extends AbstractGetPaths {
-	
+
 	private static final Log log = LogFactory.getLog(DepthFirstGetPaths.class);
-			
-	private long start_millis = System.currentTimeMillis(), end_millis = System.currentTimeMillis();	
-	
+
+	private long start_millis = System.currentTimeMillis(), end_millis = System.currentTimeMillis();
+
 	/**
 	 * <p>Constructor for DepthFirstGetPaths.</p>
 	 *
@@ -47,9 +47,9 @@ public class DepthFirstGetPaths extends AbstractGetPaths {
 	    }
 	    return result;
 	}
-	
-	private void findAllPaths(LinkedList<Integer> visited, HashSet<LinkedList<Integer>> paths, Integer currentNode, Integer _tgt) {      		
-	    if (currentNode == _tgt) {
+
+	private void findAllPaths(LinkedList<Integer> visited, HashSet<LinkedList<Integer>> paths, Integer currentNode, Integer _tgt) {
+	    if (currentNode.equals(_tgt)) {
 	    	LinkedList<Integer> newpath = new LinkedList<Integer>();
 	    	newpath.addAll(visited);
 	        paths.add(newpath);
@@ -61,15 +61,15 @@ public class DepthFirstGetPaths extends AbstractGetPaths {
 	    }
 	    else {
 	    	int succnode = -1;
-	        Iterator<Integer> nodes = this.graph.getSuccNodes(currentNode);    
+	        Iterator<Integer> nodes = this.graph.getSuccNodes(currentNode);
 	        while (nodes.hasNext()) {
 	        	succnode = nodes.next();
 	            if (visited.contains(succnode)) {
 	                continue;
-	            } 
+	            }
 	            LinkedList<Integer> temp = new LinkedList<Integer>();
 	            temp.addAll(visited);
-	            temp.add(succnode);       
+	            temp.add(succnode);
 	            findAllPaths(temp, paths, succnode, _tgt);
 	        }
 	    }
