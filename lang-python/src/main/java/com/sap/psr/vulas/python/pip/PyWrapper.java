@@ -18,20 +18,20 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  *
  */
 public class PyWrapper {
-	
+
 	private final static Log log = LogFactory.getLog(PyWrapper.class);
-	
+
 	private Path pathToPython = null;
-	
+
 	private Path logDir = null;
-	
+
 	/**
 	 * Assumes that the Python executable is part of the PATH environment variable.
 	 *
 	 * @throws com.sap.psr.vulas.python.ProcessWrapperException if any.
 	 */
 	public PyWrapper() throws ProcessWrapperException { this(Paths.get("python"), null); }
-	
+
 	/**
 	 * Creates a new wrapper for the python executable at the given path.
 	 *
@@ -71,7 +71,7 @@ public class PyWrapper {
 		}
 		return exists;
 	}
-	
+
 	/**
 	 * <p>Runs a Python script.</p>
 	 *
@@ -81,41 +81,44 @@ public class PyWrapper {
 	 */
 	public int runScript(Path _script, List<String> _args) {
 		int exit_code = -1;
-		
+
 		// Complete command line call
 		final List<String> list = new ArrayList<String>();
 		list.add(this.pathToPython.toString());
 		list.add(_script.toString());
 		list.addAll(_args);
-		
-		final String script_name = _script.getFileName().toString();
-		
-		try {
-			// Perform call			
-			final ProcessBuilder pb = new ProcessBuilder(list);
-			
-			// Create temp. directory for out and err streams
-			final Path out = Paths.get(logDir.toString(), "python-" + script_name + "-out.txt");
-			final Path err = Paths.get(logDir.toString(), "python-" + script_name + "-err.txt");
-						
-			// Redirect out and err
-			pb.redirectOutput(out.toFile());
-			pb.redirectError(err.toFile());
-			
-			// Start and wait
-			final Process process = pb.start();
-			exit_code = process.waitFor();
-			
-			// Success: Parse output and call pip show <package>
-			if(exit_code!=0) {
-				final String error_msg = FileUtil.readFile(err);
-				log.error("Error calling [python " + StringUtil.join(list, " ") + "]: " + error_msg);
-			}			
-		} catch(IOException ioe) {
-			log.error("Error calling [python " + StringUtil.join(list, " ") + "]: " + ioe.getMessage());
-		}
-		catch(InterruptedException ie) {
-			log.error("Error calling [python " + StringUtil.join(list, " ") + "]: " + ie.getMessage());
+
+		Path fileName = _script.getFileName();
+		if (fileName != null){
+			final String script_name = fileName.toString();
+
+			try {
+				// Perform call
+				final ProcessBuilder pb = new ProcessBuilder(list);
+
+				// Create temp. directory for out and err streams
+				final Path out = Paths.get(logDir.toString(), "python-" + script_name + "-out.txt");
+				final Path err = Paths.get(logDir.toString(), "python-" + script_name + "-err.txt");
+
+				// Redirect out and err
+				pb.redirectOutput(out.toFile());
+				pb.redirectError(err.toFile());
+
+				// Start and wait
+				final Process process = pb.start();
+				exit_code = process.waitFor();
+
+				// Success: Parse output and call pip show <package>
+				if(exit_code!=0) {
+					final String error_msg = FileUtil.readFile(err);
+					log.error("Error calling [python " + StringUtil.join(list, " ") + "]: " + error_msg);
+				}
+			} catch(IOException ioe) {
+				log.error("Error calling [python " + StringUtil.join(list, " ") + "]: " + ioe.getMessage());
+			}
+			catch(InterruptedException ie) {
+				log.error("Error calling [python " + StringUtil.join(list, " ") + "]: " + ie.getMessage());
+			}
 		}
 		return exit_code;
 	}

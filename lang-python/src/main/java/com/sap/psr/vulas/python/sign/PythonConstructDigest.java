@@ -14,19 +14,19 @@ import com.sap.psr.vulas.sign.Signature;
  *
  */
 public class PythonConstructDigest implements Signature {
-	
+
 	public static enum ComputedFromType { FILE, BODY }
 
 	private static final int MAX_STRING_LENGTH = 100;
-	
+
 	private String computedFrom = null;
-	
+
 	private ComputedFromType computedFromType = null;
-	
+
 	private String digest = null;
-	
+
 	private DigestAlgorithm digestAlgorithm = null;
-	
+
 	/**
 	 * <p>Constructor for PythonConstructDigest.</p>
 	 *
@@ -39,10 +39,13 @@ public class PythonConstructDigest implements Signature {
 			throw new IllegalArgumentException("Path argument [" + _path + "] is not a valid file");
 		this.digest = FileUtil.getDigest(_path.toFile(), _alg);
 		this.digestAlgorithm = _alg;
-		this.computedFrom = _path.getFileName().toString();
+		Path fileName = _path.getFileName();
+		if (fileName != null) {
+			this.computedFrom = fileName.toString();
+		}
 		this.computedFromType = ComputedFromType.FILE;
 	}
-	
+
 	/**
 	 * <p>Constructor for PythonConstructDigest.</p>
 	 *
@@ -60,9 +63,9 @@ public class PythonConstructDigest implements Signature {
 			this.computedFrom = _string;
 		this.computedFromType = ComputedFromType.BODY;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * <p>Getter for the field <code>computedFrom</code>.</p>
 	 *
@@ -140,7 +143,7 @@ public class PythonConstructDigest implements Signature {
 	public String toString() {
 		return this.digest + " (" + this.digestAlgorithm + ")";
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public String toJson() {
@@ -153,7 +156,7 @@ public class PythonConstructDigest implements Signature {
 		b.endObject();
 		return b.toString();
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
@@ -183,5 +186,5 @@ public class PythonConstructDigest implements Signature {
 			return false;
 		return true;
 	}
-	
+
 }

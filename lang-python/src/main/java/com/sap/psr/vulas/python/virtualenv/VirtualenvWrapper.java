@@ -30,7 +30,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 public class VirtualenvWrapper {
 
 	private static final String SETUP_PY = "setup.py";
-	
+
 	private static final boolean IS_WIN = System.getProperty("os.name").contains("Windows");
 
 	private final static Log log = LogFactory.getLog(VirtualenvWrapper.class);
@@ -38,11 +38,11 @@ public class VirtualenvWrapper {
 	private Path pathToVirtualenvExecutable = null;
 
 	private Path pathToPythonProject = null;
-	
+
 	private String projectName = null;
 
 	private Path pathToVirtualenv = null;
-	
+
 	private Set<PipInstalledPackage> installedPackages = null;
 
 	/**
@@ -84,21 +84,21 @@ public class VirtualenvWrapper {
 			throw new ProcessWrapperException("Cannot create tmp directory: " + e.getMessage());
 		}
 		this.createVirtualenvForProject(this.pathToVirtualenv);
-		
+
 		// Copy the project folder
 		this.copyProjectDirectory();
-		
+
 		// Create Vulas directories vulas/log and vulas/download
-		
+
 		// Call PIP install
 		final Path prj_path = Paths.get(this.pathToVirtualenv.toString(), this.projectName);
 		installedPackages = this.getPipWrapper().installPackages(prj_path);
-		
+
 		// Call setup
 		//final Path setup_path = Paths.get(this.pathToVirtualenv.toString(), this.projectName, SETUP_PY);
 		//this.getPyWrapper().runScript(setup_path, Arrays.asList(new String[] {"install"}));
 	}
-	
+
 	/**
 	 * <p>Getter for the field <code>projectName</code>.</p>
 	 *
@@ -112,7 +112,7 @@ public class VirtualenvWrapper {
 	 * @return a {@link java.nio.file.Path} object.
 	 */
 	public Path getPathToVirtualenv() { return pathToVirtualenv; }
-	
+
 	/**
 	 * <p>Getter for the field <code>installedPackages</code>.</p>
 	 *
@@ -121,7 +121,7 @@ public class VirtualenvWrapper {
 	public Set<PipInstalledPackage> getInstalledPackages() {
 		return this.installedPackages;
 	}
-	
+
 	/**
 	 * <p>getPipWrapper.</p>
 	 *
@@ -134,7 +134,7 @@ public class VirtualenvWrapper {
 		else
 			return new PipWrapper(Paths.get(this.pathToVirtualenv.toString(), "bin", "pip"), this.pathToVirtualenv);
 	}
-	
+
 	/**
 	 * <p>getPyWrapper.</p>
 	 *
@@ -156,7 +156,7 @@ public class VirtualenvWrapper {
 		Path ve = null;
 		try {
 			log.info("Create virtualenv in [" + _path_to_virtual_env + "]");
-			
+
 			// Create the virtual env inside this temp directory
 			ProcessBuilder pb = null;
 			if(VulasConfiguration.getGlobal().isEmpty(PythonConfiguration.PY_PY_PATH)) {
@@ -189,7 +189,7 @@ public class VirtualenvWrapper {
 			throw new ProcessWrapperException(e.getMessage(), e);
 		}
 	}
-	
+
 	private Path copyProjectDirectory() throws ProcessWrapperException {
 		Path new_dir = null;
 		try {
@@ -201,14 +201,14 @@ public class VirtualenvWrapper {
 		}
 		return new_dir;
 	}
-	
+
 	private static class CopyFileVisitor extends SimpleFileVisitor<Path> {
-		
+
 		private final static Log log = LogFactory.getLog(CopyFileVisitor.class);
-		
+
 		private Path src = null;
 		private Path tgt = null;
-		
+
 		public CopyFileVisitor(Path _src, Path _tgt) {
 			this.src = _src;
 			this.tgt = _tgt;
@@ -216,26 +216,32 @@ public class VirtualenvWrapper {
 
 		@Override
 		public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-			final Path relp = this.src.getParent().relativize(dir.toAbsolutePath());
-			final Path newp = Paths.get(tgt.toString(), relp.toString());
-			try {
-				Files.createDirectories(newp);
-			} catch (Exception e) {
-				log.error("Cannot copy [" + dir + "] to [" + newp + "]: " + e.getMessage());
+			Path parent = this.src.getParent();
+			if(parent != null) {
+				final Path relp = parent.relativize(dir.toAbsolutePath());
+				final Path newp = Paths.get(tgt.toString(), relp.toString());
+				try {
+					Files.createDirectories(newp);
+				} catch (Exception e) {
+					log.error("Cannot copy [" + dir + "] to [" + newp + "]: " + e.getMessage());
+				}
 			}
 			return FileVisitResult.CONTINUE;
 		}
 
 		@Override
 		public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-			final Path relp = this.src.getParent().relativize(file);
-			final Path newf = Paths.get(this.tgt.toString(), relp.toString());
-			try {
-				Files.copy(file, newf);
-			} catch (Exception e) {
-				log.error("Cannot copy [" + file + "] to [" + newf + "]: " + e.getMessage());
+			Path parent = this.src.getParent();
+			if(parent != null) {
+				final Path relp = parent.relativize(file);
+				final Path newf = Paths.get(this.tgt.toString(), relp.toString());
+				try {
+					Files.copy(file, newf);
+				} catch (Exception e) {
+					log.error("Cannot copy [" + file + "] to [" + newf + "]: " + e.getMessage());
+				}
 			}
 			return FileVisitResult.CONTINUE;
-		}			
+		}
 	}
 }

@@ -19,32 +19,32 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  *
  */
 public class ProcessWrapper implements Runnable {
-	
+
 	private static Log log = LogFactory.getLog(ProcessWrapper.class);
-	
+
 	private static final Pattern ALLOWED = Pattern.compile("[\\.\\-\\w=]+");
-	
+
 	private String id = null;
-	
+
 	private Path exe = null;
-	
+
 	private String[] args = null;
-	
+
 	private Path outPath = null;
-	
+
 	private Path outFile = null;
-	
+
 	private Path errFile;
-	
+
 	private int exitCode = -1;
-	
+
 	/**
 	 * <p>Constructor for ProcessWrapper.</p>
 	 */
-	public ProcessWrapper() { 
+	public ProcessWrapper() {
 		this.id = StringUtil.getRandonString(10);
 	}
-	
+
 	/**
 	 * <p>Constructor for ProcessWrapper.</p>
 	 *
@@ -53,14 +53,14 @@ public class ProcessWrapper implements Runnable {
 	public ProcessWrapper(String _id) {
 		this.id = _id;
 	}
-	
+
 	/**
 	 * <p>Getter for the field <code>id</code>.</p>
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
 	public String getId() { return this.id; }
-	
+
 	/**
 	 * <p>setCommand.</p>
 	 *
@@ -72,18 +72,18 @@ public class ProcessWrapper implements Runnable {
 	public ProcessWrapper setCommand(Path _executable, String... _args) throws ProcessWrapperException {
 		//if(_executable==null || FileUtil.isAccessibleFile(_executable))
 		//	throw new ProcessWrapperException("Illegal executable [" + _executable + "]");
-		
+
 		for(int i=0; i<_args.length; i++) {
 			final Matcher m = ALLOWED.matcher(_args[i]);
 			if(!m.matches() && !FileUtil.isAccessibleFile(_args[i]) && !FileUtil.isAccessibleDirectory(_args[i]))
 				throw new ProcessWrapperException("Illegal characters in argument [" + i + "], allowed are: a-zA-Z_0-9-.=");
 		}
-		
+
 		this.exe = _executable;
 		this.args = _args;
 		return this;
 	}
-	
+
 	/**
 	 * <p>setPath.</p>
 	 *
@@ -97,28 +97,32 @@ public class ProcessWrapper implements Runnable {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run() {		
+	public void run() {
 		String name = null;
+		Path fileName = null;
 		if(FileUtil.isAccessibleFile(this.exe))
-			name = this.exe.getFileName().toString();
+			fileName = this.exe.getFileName();
+			if(fileName != null) {
+				name = fileName.toString();
+			}
 		else if(this.exe.toString().indexOf(System.getProperty("file.separator"))!=-1)
-			name = this.exe.toString().substring(this.exe.toString().lastIndexOf(System.getProperty("file.separator"))+1);		
+			name = this.exe.toString().substring(this.exe.toString().lastIndexOf(System.getProperty("file.separator"))+1);
 		else
-			name = this.exe.toString();	
+			name = this.exe.toString();
 		final String rnd = StringUtil.getRandonString(6);
 		final String out_name = name + "-" + this.getId() + "-" + rnd + "-out.txt";
 		final String err_name = name + "-" + this.getId() + "-" + rnd + "-err.txt";
-		
+
 		// Create temp. directory for out and err streams
 		this.outFile = Paths.get(this.outPath.toString(), out_name);
 		this.errFile = Paths.get(this.outPath.toString(), err_name);
-		
+
 		try {
 			final ArrayList<String> cmd = new ArrayList<String>();
 			cmd.add(this.exe.toString());
 			cmd.addAll(Arrays.asList(this.args));
 			final ProcessBuilder pb = new ProcessBuilder(cmd);
-			
+
 			// Redirect out and err
 			pb.redirectOutput(this.outFile.toFile());
 			pb.redirectError(this.errFile.toFile());
@@ -167,7 +171,7 @@ public class ProcessWrapper implements Runnable {
 	public int getExitCode() {
 		return exitCode;
 	}
-	
+
 	/**
 	 * <p>terminatedWithSuccess.</p>
 	 *
@@ -176,7 +180,7 @@ public class ProcessWrapper implements Runnable {
 	public boolean terminatedWithSuccess() {
 		return this.exitCode==0;
 	}
-	
+
 	/**
 	 * <p>getCommand.</p>
 	 *

@@ -100,7 +100,7 @@ public class PythonFileAnalyzer implements FileAnalyzer {
 			analyzer = PythonFileAnalyzer.createAnalyzer(this.file);
 			analyzer.analyze(this.file);
 			this.constructs = analyzer.getConstructs();
-		}		
+		}
 		return analyzer.getConstructs();
 	}
 
@@ -155,22 +155,27 @@ public class PythonFileAnalyzer implements FileAnalyzer {
 
 		// Search upwards until there's no __init__.py anymore, and add directory names to the qname components
 		final List<String> package_name = new ArrayList<String>();
-		Path search_path = p.getParent();
-		while(DirUtil.containsFile(search_path.toFile(), "__init__.py") && search_path.getNameCount() > 1) {
-			package_name.add(0, search_path.getFileName().toString());
-			search_path = search_path.getParent();
-		}
 
+		Path search_path = p.getParent();
+		if (search_path != null) {
+			Path search_path_name = search_path.getFileName();
+			if (search_path_name != null) {
+				while(DirUtil.containsFile(search_path.toFile(), "__init__.py") && search_path.getNameCount() > 1) {
+					package_name.add(0, search_path_name.toString());
+					search_path = search_path.getParent();
+				}
+			}
+		}
 		// Create the package (if any), the module and return the latter
 		PythonId pack = null;
 		if(!package_name.isEmpty())
 			pack = new PythonId(null, PythonId.Type.PACKAGE, StringUtil.join(package_name, "."));
 		return new PythonId(pack, PythonId.Type.MODULE, module_name);
 	}
-	
+
 	/**
 	 * Checks for syntax that is specific to Python2.
-	 * 
+	 *
 	 * TODO: To be completed according to https://docs.python.org/release/3.0.1/whatsnew/3.0.html.
 	 *
 	 * As of today, the method searches for the following:
@@ -180,16 +185,16 @@ public class PythonFileAnalyzer implements FileAnalyzer {
 	final static Pattern[] PY2_PATTERNS = new Pattern[] { Pattern.compile("^\\s*print\\s+\".*$"), Pattern.compile("^.*raw_input\\(.*$") };
 
 	final static Pattern[] PY35_ASYNC_PATTERNS = new Pattern[] { Pattern.compile("^.*async\\s*def.*$") };
-	
+
 	final static Pattern[] COMMENT_PATTERNS = new Pattern[] { Pattern.compile("^\\s*#.*$") };
-	
+
 	/**
 	 * <p>createAnalyzer.</p>
 	 *
 	 * @param _file a {@link java.io.File} object.
 	 * @return a {@link com.sap.psr.vulas.FileAnalyzer} object.
 	 */
-	public static FileAnalyzer createAnalyzer(final File _file) { 
+	public static FileAnalyzer createAnalyzer(final File _file) {
 		try(final InputStream is = new FileInputStream(_file)) {
 			return PythonFileAnalyzer.createAnalyzer(is);
 		} catch(IOException e) {
@@ -229,11 +234,11 @@ public class PythonFileAnalyzer implements FileAnalyzer {
 				}
 			}
 		}
-		
+
 		// Default to 335
 		if(fa==null)
 			fa = new Python335FileAnalyzer();
-		
+
 		return fa;
 	}
 }

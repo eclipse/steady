@@ -160,8 +160,11 @@ public class PythonBomTask extends AbstractBomTask {
 					dep.setApp(this.getApplication());
 					final Path download_path = pack.getDownloadPath();
 					if(download_path!=null) {
-						dep.setFilename(download_path.getFileName().toString());
-						dep.setPath(download_path.toString());
+						Path fileName = download_path.getFileName();
+						if (fileName != null) {
+							dep.setFilename(fileName.toString());
+							dep.setPath(download_path.toString());
+						}
 					}
 					dep.setDeclared(true);
 					dep.setScope(Scope.RUNTIME);
@@ -173,7 +176,7 @@ public class PythonBomTask extends AbstractBomTask {
 				log.error(e.getMessage(), e);
 			}
 		}
-		
+
 		// Create deps for nested Python archives
 		for(PipInstalledPackage pack: _packs) {
 			final Set<FileAnalyzer> nested_fas = pack.getNestedArchives();
@@ -183,7 +186,7 @@ public class PythonBomTask extends AbstractBomTask {
 						try {
 							final PythonArchiveAnalyzer paa = (PythonArchiveAnalyzer)nested_fa;
 							final Library nested_lib = paa.getLibrary();
-							
+
 							if(DependencyUtil.containsLibraryDependency(deps, nested_lib)) {
 								log.warn("Dependency for library " + nested_lib + " already exists, will not be duplicated for the nested library with path [" + paa.getArchivePath() + "]");
 							}
@@ -193,8 +196,11 @@ public class PythonBomTask extends AbstractBomTask {
 								dep.setApp(this.getApplication());
 								final Path archive_path = paa.getArchivePath();
 								if(archive_path!=null) {
-									dep.setFilename(archive_path.getFileName().toString());
-									dep.setPath(archive_path.toString());
+									Path fileName = archive_path.getFileName();
+									if (fileName != null) {
+										dep.setFilename(fileName.toString());
+										dep.setPath(archive_path.toString());
+									}
 								}
 								dep.setDeclared(false); // Nested in one of the above packages
 								dep.setScope(Scope.RUNTIME);
