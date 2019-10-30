@@ -29,12 +29,12 @@ public class ExecutionMonitor {
 	private static ExecutionMonitor instance = null;
 
 	private static Log log = null;
-	
+
 	private static boolean PAUSE_COLLECTION = false;
 
 	// ====================================== INSTANCE MEMBERS
 
-	private String id = new Double(Math.random()).toString();
+	private String id = Double.toString(Math.random());
 
 	private UploadScheduler shutdownUploader = null;
 	private UploadScheduler periodicUploader = null;
@@ -85,13 +85,13 @@ public class ExecutionMonitor {
 		if(ExecutionMonitor.instance==null) ExecutionMonitor.instance = new ExecutionMonitor();
 		return ExecutionMonitor.instance;
 	}
-	
+
 	private static final Log getLog() {
 		if(ExecutionMonitor.log==null)
 			ExecutionMonitor.log = LogFactory.getLog(ExecutionMonitor.class);
 		return ExecutionMonitor.log;
 	}
-	
+
 	/**
 	 * <p>isPaused.</p>
 	 *

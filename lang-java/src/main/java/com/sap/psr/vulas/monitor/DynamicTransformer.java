@@ -43,7 +43,7 @@ public class DynamicTransformer implements ClassFileTransformer {
 
 	// ====================================== INSTANCE MEMBERS
 
-	private String id = new Double(Math.random()).toString();
+	private String id = Double.toString(Math.random());
 
 	private LoaderHierarchy loaderHierarchy = new LoaderHierarchy();
 

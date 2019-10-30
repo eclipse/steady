@@ -58,7 +58,7 @@ public class TraceCollector {
 
 	// INSTANCE MEMBERS
 
-	private String id = new Double(Math.random()).toString();
+	private String id = Double.toString(Math.random());
 
 	/**
 	 * The collected traces.
