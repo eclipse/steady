@@ -46,10 +46,13 @@ public class CustomEntryPointCreator extends DefaultEntryPointCreator {
     public void generateAppropriateDummyClasses(Collection<String> methodsToCall) {
 
         Map<String, Set<String>> classMap = SootMethodRepresentationParser.v().parseClassNames(methodsToCall, false);
-        for (String className : classMap.keySet()) {
-            SootClass createdClass = Scene.v().getSootClass(className);
+        for (Map.Entry<String, Set<String>> entry : classMap.entrySet()) {
+            String key = entry.getKey();
+            Set<String> value = entry.getValue();
+
+            SootClass createdClass = Scene.v().getSootClass(key);
             if (createdClass.isConcrete() && !createdClass.isPhantom() && !createdClass.isPhantomClass()) {
-                for (String method : classMap.get(className)) {
+                for (String method : value) {
                     SootMethodAndClass methodAndClass = SootMethodRepresentationParser.v().parseSootMethodString(method);
                     SootMethod methodToInvoke = findMethod(Scene.v().getSootClass(methodAndClass.getClassName()),
                             methodAndClass.getSubSignature());
