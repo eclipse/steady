@@ -100,7 +100,7 @@ public class PatchAnalyzer {
 	 */
 	public void setRepoURL(String _url) throws MalformedURLException, NoRepoClientException {
 		final URL u = new URL(_url);
-		if(!u.equals(this.url)) {
+		if(!u.toString().equals(this.url.toString())) {
 			final IVCSClient c = PatchAnalyzer.createVCSClient(u);
 			// Previous state will be dropped (only if above instantiation worked)
 			this.vcs = c;
@@ -206,7 +206,7 @@ public class PatchAnalyzer {
 
 			//Get the time stamp information
 			final String timeStamp = Long.toString(this.vcs.getRevisionTimeStamp(_rev));
-			
+
 			// Get and loop over all changed files
 			final Set<FileChange> file_changes = this.vcs.getFileChanges(_rev);
 			for(FileChange c: file_changes) {
@@ -239,7 +239,7 @@ public class PatchAnalyzer {
 						PatchAnalyzer.log.info("Class [" + tocheck.toString() + "] removed from changeList as no METH/CONS included" );
 					}
 				}
-			}		
+			}
 			this.changes.put(_rev, ch);
 		}
 		return ch;
@@ -356,7 +356,7 @@ public class PatchAnalyzer {
 		options.addOption("descr", "description", true, "Textual bug description (optional, only required for non-NVD vulnerabilities)");
 		options.addOption("mr", "max-rev", true, "Maximum number of search results (revisions) analyzed (optional, default 5)");
 		options.addOption("sie", "skip-if-existing", false, "Skips the analysis of a bug if it already exists in the backend");
-		
+
 
 		//options.addOption("f", "file", true, "File or directory with JSON files to be uploaded");
 
@@ -370,7 +370,7 @@ public class PatchAnalyzer {
 			// Parse cmd line arguments
 			final CommandLineParser parser = new DefaultParser();
 			final CommandLine cmd = parser.parse(options, _args);
-			
+
 			// Whether to upload JSON to the backend or save to the disk
 			final boolean upload  = cmd.hasOption("u");
 			VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, (upload ? CoreConfiguration.ConnectType.READ_WRITE.toString() : CoreConfiguration.ConnectType.READ_ONLY.toString()) );
@@ -417,7 +417,7 @@ public class PatchAnalyzer {
 						PatchAnalyzer.log.info("Bug [" + bugid + "] already exists in backend, analysis will be skipped");
 						return;
 					}
-					
+
 					// Create instance of PatchAnalyzer
 					final PatchAnalyzer pa = new PatchAnalyzer(url, bugid);
 					pa.setMetaInfo(cmd.getOptionValue("descr"), cmd.getOptionValue("links"));
@@ -456,7 +456,7 @@ public class PatchAnalyzer {
 							return;
 						}
 					}
-					
+
 					// Identify changes for all search hits
 					final StopWatch sw = new StopWatch("Analysis of [" + revisions.size() + "] revision(s)");
 					sw.setTotal(revisions.size()).start();
