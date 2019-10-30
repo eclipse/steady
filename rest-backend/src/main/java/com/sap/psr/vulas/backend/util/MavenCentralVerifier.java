@@ -105,6 +105,7 @@ public class MavenCentralVerifier implements DigestVerifier {
 				response.close();
 			}
 		} catch (Exception e) {
+			// FIXME: Spotbugs REC_CATCH_EXCEPTION
 			throw new VerificationException(_lib, this.url, e);
 		}
 		return verified;
