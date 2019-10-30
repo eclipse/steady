@@ -239,7 +239,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 
 	                if(ad.size()>0){
 		                //intersect change list add/del with artifact constructs
-		                List<ConstructId> adcids = null;
+                    //List<ConstructId> adcids = null; DEPRECATED
 		                ConstructId[] adcids_array = BackendConnector.getInstance().getArtifactBugConstructsIntersection(qString,ad,(lang==ProgrammingLanguage.JAVA)?"jar":"sdist",lang);
 		                if(adcids_array ==null){
 		                	log.warn("The intersection returned null (thus something went wrong in cia); the artifact for library Id [" + l.toString() +"] will not be included in the csv for ADD/DEL constructs");
@@ -251,10 +251,10 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
         			        qnameInJar=false;
 
                       if(adCc != null) {
-  	                    if(adcids!=null && adcids.contains(adCc.getConstructId())){
-  	   	                	log.info("adcids contains ["+adCc.getConstructId());
-  	   	                	qnameInJar=true;
-  	   	                }
+  	                    // if(adcids!=null && adcids.contains(adCc.getConstructId())){
+  	   	                // 	log.info("adcids contains ["+adCc.getConstructId());
+  	   	                // 	qnameInJar=true;
+  	   	                // }
 
   	   	               	LidResult2 lr = new LidResult2(l, timestamp, qnameInJar);
   					            ConstructPathLibResult2 cplr = new ConstructPathLibResult2(adCc.getConstructId().getQname(), adCc.getRepoPath(), adCc.getChangeType(), lr,null,null);
