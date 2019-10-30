@@ -69,13 +69,13 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 
 	/** Used for the construction of nested named and anonynous classes. */
 	private final ConstructIdBuilder constructIdBuilder = new ConstructIdBuilder();
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public String[] getSupportedFileExtensions() {
 		return new String[] { "java" };
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean canAnalyze(File _file) {
@@ -94,7 +94,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 	public void analyze(final File _file) throws FileAnalysisException {
 		this.setFile(_file);
 	}
-	
+
 	/**
 	 * <p>Setter for the field <code>file</code>.</p>
 	 *
@@ -145,7 +145,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 	 * Enums are added to {@link #constructs}.
 	 */
 	@Override
-	public void enterEnumDeclaration(@NotNull JavaParser.EnumDeclarationContext ctx) {		
+	public void enterEnumDeclaration(@NotNull JavaParser.EnumDeclarationContext ctx) {
 		// Create JavaId and push to the stack
 		final ContextStackEntry cse = this.contextStack.peek();
 		final JavaId decl_ctx = ( cse==null ? JavaPackageId.DEFAULT_PACKAGE : (JavaId)cse.getConstructId() );
@@ -234,7 +234,8 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 	/** {@inheritDoc} */
 	@Override
 	public void exitMethodDeclaration(com.sap.psr.vulas.java.antlr.JavaParser.MethodDeclarationContext ctx) {
-		final JavaId id = (JavaId) this.contextStack.pop().getConstructId();
+		// final JavaId id = (JavaId)this.contextStack.pop().getConstructId();
+		this.contextStack.pop().getConstructId();
 	}
 
 	/** {@inheritDoc} */
@@ -255,7 +256,8 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 	/** {@inheritDoc} */
 	@Override
 	public void exitConstructorDeclaration(com.sap.psr.vulas.java.antlr.JavaParser.ConstructorDeclarationContext ctx) {
-		final JavaId id = (JavaId)this.contextStack.pop().getConstructId();
+		//final JavaId id = (JavaId)this.contextStack.pop().getConstructId();
+		this.contextStack.pop().getConstructId();
 	}
 
 	/**
@@ -421,7 +423,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 				throw new FileAnalysisException("I/O exception while analysing class file [" + this.file.getName() + "]: " + e.getMessage(), e);
 			} catch (Exception e) {
 				throw new FileAnalysisException("Exception of type [" + e.getClass().getSimpleName() + "] while analyzing file [" + this.file.toPath().toAbsolutePath() + "]: " + e.getMessage(), e);
-			}			
+			}
 		}
 		return this.constructs;
 	}
@@ -433,13 +435,13 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 	/** {@inheritDoc} */
 	@Override
 	public Construct getConstruct(ConstructId _id) throws FileAnalysisException { return this.getConstructs().get(_id); }
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean hasChilds() {
 		return false;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) {
@@ -494,7 +496,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 		/**
 		 * Returns true if the class for which the name is about to be build is
 		 * anonymous
-		 * 
+		 *
 		 * @return
 		 */
 		private boolean isAnonymousClass() {
@@ -537,7 +539,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 				this.namedClassesCounter.put(id, name_counter);
 			}
 
-			// 
+			//
 			if(!name_counter.containsKey(_class_name))
 				name_counter.put(_class_name, 1);
 
@@ -553,7 +555,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 		/**
 		 * Create a name for the construct at hand considering what containers
 		 * are currently on the stack
-		 * 
+		 *
 		 * @param spaceId
 		 *            of the construct (the suffix to add to the container
 		 *            construct)
@@ -573,7 +575,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 
 			// Named class
 			if(!this.isAnonymousClass()) {
-				
+
 				// In method
 				if (topmost_stack_entry!=null && ( (JavaId)topmost_stack_entry.getConstructId()).type.equals(JavaId.Type.METHOD)) {
 					// Get the context (class, interface or enum)
@@ -654,7 +656,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 
 		/**
 		 * Return the topmost element (without removing it)
-		 * 
+		 *
 		 * @return
 		 */
 		public ContextStackEntry peek() {
@@ -663,7 +665,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
 
 		/**
 		 * Gets the top-most element <a>of a given types</a> (without removing it).
-		 * 
+		 *
 		 * @param _t
 		 *            the type of context elements to consider
 		 * @return

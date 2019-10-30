@@ -572,7 +572,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 		EntityType changeLabel = change.getChangedEntity().getType();
 
 		//The Node we are looking for, with EntityType and Value
-		Node nodeRoot = new Node(changeLabel, changeValue);
+		// Node nodeRoot = new Node(changeLabel, changeValue);
 
 		String nodeValue = astRoot.getValue().toString();
 		EntityType nodeLabel = astRoot.getLabel();
@@ -611,7 +611,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 	 */
 	public boolean searchForEntity(SourceCodeChange change, Node astRoot){
 
-		SourceCodeEntity parentEntity = change.getParentEntity();
+		// SourceCodeEntity parentEntity = change.getParentEntity();
 
 		String  _entityUniqueName = change.getChangedEntity().getUniqueName();
 		String nodeValue = astRoot.getValue().toString();

@@ -26,36 +26,36 @@ public class TouchPointInstrumentor extends AbstractInstrumentor {
 
 	/** {@inheritDoc} */
 	public void instrument(StringBuffer _code, JavaId _jid, CtBehavior _behavior, ClassVisitor _cv) throws CannotCompileException {
-		
+
 		// Inject some basic stuff common to several instrumentors
 		this.injectUrlAndLoader(_code, _jid, _behavior);
 		this.injectStacktrace(_code, _jid, _behavior);
-		
+
 		// Is the construct in question part of the application?
 		final boolean callee_in_app = ConstructIdUtil.getInstance().isAppConstruct(_jid);
-		
+
 		// Get type and value of all method arguments
 		_code.append("final java.util.Map tp_params = new java.util.HashMap();");
-		final String callee_qname = _behavior.getLongName();
-		
+		// final String callee_qname = _behavior.getLongName();
+
 		// The following code causes a StackOverflowException in certain cases --> see vulas-testapp, packages POI and xmlbeans
 		// Reason is maybe the call of this.toString() in constructors, which is injected due to the loop starting at index 0
 		// $0 means 'this' for Javassist
 		/*final String callee_args = callee_qname.substring(callee_qname.indexOf('(')+1, callee_qname.indexOf(')'));
-		
+
 		String [] arg_types = null;
 		if(callee_args.length() > 0)
 			arg_types = callee_args.split(",");
 		else
 			arg_types = new String[0];
-		
+
 		for(int i=0; i<arg_types.length; i++){
 			// the key into a map cannot contain [] or <>
-			_code.append("tp_params.put(\"arg_type_\" + \"" + i +"\", \"" + arg_types[i] + "\");"); 
+			_code.append("tp_params.put(\"arg_type_\" + \"" + i +"\", \"" + arg_types[i] + "\");");
 			if(!arg_types[i].contains("<") && !arg_types[i].contains(">")) {
 				if(arg_types[i].contains(".")){ // assuming that a param type contains at least a point (e.g. java.lang.String)
 					_code.append("if($" + (i+1) + " != null){");
-					_code.append("tp_params.put(\"arg_value_\" + \"" + i +"\", $" + (i+1) + ".toString());"); 
+					_code.append("tp_params.put(\"arg_value_\" + \"" + i +"\", $" + (i+1) + ".toString());");
 					_code.append("}");
 				}
 				else { // this case contains every case that is no an object (int, boolean, byte[])

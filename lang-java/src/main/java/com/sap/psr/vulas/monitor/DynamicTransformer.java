@@ -139,7 +139,7 @@ public class DynamicTransformer implements ClassFileTransformer {
 		CtClass c = null;
 		ClassVisitor cv = null;
 
-		final String loader_classname = loader.getClass().getName();
+		//final String loader_classname = loader.getClass().getName();
 		final String dot_classname    = className.replace('/', '.');
 
 		//07.08.2015, HP: Added in order to load class definition for stacktrace transformation
@@ -256,7 +256,7 @@ public class DynamicTransformer implements ClassFileTransformer {
 	 */
 	public static void premain(String agentArgs, Instrumentation inst) {
 		// Create monitor, which will register upload scheduler and start goal execution
-		final ExecutionMonitor m = ExecutionMonitor.getInstance();
+		// final ExecutionMonitor m = ExecutionMonitor.getInstance();
 
 		// Create and register transformer, which will inject the byte code using instrumentors
 		final DynamicTransformer t = DynamicTransformer.getInstance();

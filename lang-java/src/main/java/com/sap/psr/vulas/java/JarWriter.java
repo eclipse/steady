@@ -442,7 +442,7 @@ public class JarWriter {
 				final Enumeration<JarEntry> en =  this.originalJar.entries();
 				String class_name = null;
 				JavaId jid = null;
-				Set<JavaId> jids = new HashSet<JavaId>();
+				//Set<JavaId> jids = new HashSet<JavaId>();
 
 				// Remember all JAR entries written to the new JAR, so that we do not create duplicate entries
 				// Example of a duplicate entry: Location.class in xmlbeans-2.6.0.jar

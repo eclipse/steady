@@ -165,7 +165,7 @@ public class ASTSignatureChangeDeserializer  implements JsonDeserializer<Signatu
 		@Override
 		public SignatureChange deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
 			      throws JsonParseException{
-			
+
 			// HP, 10.12.2015, the following were members, now moved into method
 						SourceCodeChange srcCodeChange;
 						StructureEntityVersion rootEntity = null;
@@ -312,7 +312,6 @@ public class ASTSignatureChangeDeserializer  implements JsonDeserializer<Signatu
 		    int srcRangeStart = srcCodeEntitySrcRangeJsonObject.get(SRC_ENTITY_SOURCE_RANGE_START).getAsInt();
 		    int srcRangeEnd = srcCodeEntitySrcRangeJsonObject.get(SRC_ENTITY_SOURCE_RANGE_END).getAsInt();
 		    SourceRange srcRange = new SourceRange(srcRangeStart,srcRangeEnd);
-		    srcCodeEntity =  new SourceCodeEntity(fValue,fLabel,modifiers,srcRange);
 
 			srcCodeEntity = new  SourceCodeEntity(fValue, fLabel,modifiers, srcRange);
 			return srcCodeEntity;
