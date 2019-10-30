@@ -413,7 +413,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 						ccd.setClassInArchive(aff_cc.getClassInArchive());
 						ccd.setEqualChangeType(aff_cc.getEqualChangeType());
 						ccd.setOverall_change(aff_cc.getOverall_chg());
-						if(ccd.getInArchive().equals(aff_cc.getInArchive()))){
+						if(ccd.getInArchive().equals(aff_cc.getInArchive())){
 							log.warn("Conclusion of construct In archive from backend is " + ccd.getInArchive() + " while vulas:check-version concluded " + aff_cc.getInArchive());
 						}
 					}
