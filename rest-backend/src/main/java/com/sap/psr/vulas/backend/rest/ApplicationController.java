@@ -2095,10 +2095,10 @@ public class ApplicationController {
 		// Ensure that dependency exists
 		Dependency dep = app.getDependency(digest);
 		if(dep==null) {
-			if(constructIds==null || constructIds.length==0) {
+			if(constructIds==null || constructIds.length<=0) {
 				log.warn("App " + app.toString() + " has no dependency with digest [" + digest + "]: [" + (constructIds==null?"-":constructIds.length) + "] reachable constructs cannot be saved");
 			} else {
-				log.warn("App " + app.toString() + " has no dependency with digest [" + digest + "]: [" + (constructIds==null?"-":constructIds.length) + "] reachable constructs such as " + constructIds[0].toString() + " cannot be saved");
+				log.warn("App " + app.toString() + " has no dependency with digest [" + digest + "]: [" + constructIds.length + "] reachable constructs such as " + constructIds[0].toString() + " cannot be saved");
 			}
 			return new ResponseEntity<Set<ConstructId>>(HttpStatus.NOT_FOUND);
 		}
@@ -2139,10 +2139,10 @@ public class ApplicationController {
 		// Ensure that dependency exists
 		Dependency dep = app.getDependency(digest);
 		if(dep==null) {
-			if(touchPoints==null || touchPoints.length==0) {
+			if(touchPoints==null || touchPoints.length<=0) {
 				log.warn("App " + app.toString() + " has no dependency with digest [" + digest + "]: [" + (touchPoints==null?"-":touchPoints.length) + "] touch points cannot be saved");
 			} else {
-				log.warn("App " + app.toString() + " has no dependency with digest [" + digest + "]: [" + (touchPoints==null?"-":touchPoints.length) + "] touch points such as " + touchPoints[0].toString() + " cannot be saved");
+				log.warn("App " + app.toString() + " has no dependency with digest [" + digest + "]: [" + touchPoints.length + "] touch points such as " + touchPoints[0].toString() + " cannot be saved");
 			}
 			return new ResponseEntity<Set<TouchPoint>>(HttpStatus.NOT_FOUND);
 		}
