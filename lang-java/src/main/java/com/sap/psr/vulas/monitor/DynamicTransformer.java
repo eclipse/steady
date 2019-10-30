@@ -59,14 +59,14 @@ public class DynamicTransformer implements ClassFileTransformer {
 
 	private DynamicTransformer() throws IllegalStateException {
 		this.instrControl = InstrumentationControl.getInstance(this.getClass().getSimpleName());
-		
+
 		try {
 			if(!CoreConfiguration.existsInBackend(CoreConfiguration.getAppContext()))
 				throw new IllegalStateException("Application " + CoreConfiguration.getAppContext() + " does not exist in backend");
 		} catch (ConfigurationException e) {
 			throw new IllegalStateException("Error while reading configuration: " + e.getMessage());
 		}
-		
+
 		// Freeze a couple of classes
 		this.freezeClasses();
 	}
@@ -79,7 +79,7 @@ public class DynamicTransformer implements ClassFileTransformer {
 	 */
 	private final void freezeClasses() {
 		try {
-			final JavaMethodId jmi = JavaId.parseMethodQName("com.sap.Test.test()"); 
+			final JavaMethodId jmi = JavaId.parseMethodQName("com.sap.Test.test()");
 			final ConstructUsage cu = new ConstructUsage(jmi, null, -1);
 			final Loader l = new Loader(this.getClass().getClassLoader());
 			final Configuration cfg = VulasConfiguration.getGlobal().getConfiguration();
@@ -179,7 +179,7 @@ public class DynamicTransformer implements ClassFileTransformer {
 								cv.visitConstructors(true);
 								cv.finalizeInstrumentation();
 								byteCode = cv.getBytecode();
-								this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(true));
+								this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(true));
 								DynamicTransformer.log.debug("Class [" + dot_classname + "] now instrumented");
 							}
 							else {
@@ -190,16 +190,16 @@ public class DynamicTransformer implements ClassFileTransformer {
 					}
 					catch (IOException ioe) {
 						DynamicTransformer.log.error("I/O exception while instrumenting class [" + dot_classname + "]: " + ioe.getMessage());
-						this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+						this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
 					}
 					catch (CannotCompileException cce) {
 						DynamicTransformer.log.warn("Cannot compile instrumented class [" + dot_classname + "]: " + cce.getMessage());
-						this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+						this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
 					}
 					// Covers the following problems with Javassist and Java 8: "java.io.IOException: invalid constant type: 15"
 					catch (Exception e) {
 						DynamicTransformer.log.warn(e.getClass().getName() + " occured while instrumenting class [" + dot_classname + "]: " + e.getMessage());
-						this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+						this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
 					}
 				}
 			}

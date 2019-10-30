@@ -81,7 +81,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 	protected Path workDir = null; // To where modified JARs are written
 
 	private LibraryId libraryId = null;
-	
+
 	private Set<LibraryId> bundledLibraryIds = new HashSet<LibraryId>();
 
 	protected JarWriter jarWriter = null;
@@ -113,7 +113,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		try {
 			this.jar = new JarFile(_file, false, java.util.zip.ZipFile.OPEN_READ);
 			this.jarWriter = new JarWriter(_file.toPath());
-			this.url = _file.getAbsolutePath().toString();	
+			this.url = _file.getAbsolutePath().toString();
 		} catch (IllegalStateException e) {
 			log.error("IllegalStateException when analyzing file [" + _file + "]: " + e.getMessage());
 			throw new FileAnalysisException("Error when analyzing file [" + _file + "]: " + e.getMessage(), e);
@@ -215,7 +215,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		lib.setDigestAlgorithm(DigestAlgorithm.SHA1);
 		lib.setConstructs(this.getSharedConstructs());
 		lib.setLibraryId(this.libraryId);
-		
+
 		if(this.bundledLibraryIds!=null && !this.bundledLibraryIds.isEmpty())
 			lib.setBundledLibraryIds(this.bundledLibraryIds);
 
@@ -256,7 +256,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		try {
 			this.getSHA1();
 			this.getConstructIds();
-			this.getChilds(true);			
+			this.getChilds(true);
 			if(this.instrument) {
 				try {
 					this.createInstrumentedArchive();
@@ -305,7 +305,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		// Stats
 		this.instrControl.logStatistics();
 	}
-	
+
 	/**
 	 * <p>getInstrumentedArchive.</p>
 	 *
@@ -338,7 +338,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 	public boolean hasChilds() {
 		return false;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) {
@@ -351,25 +351,25 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 	 * @return a {@link java.util.Set} object.
 	 */
 	public synchronized Set<ConstructId> getConstructIds() {
-		//this method is used to collect statistics about the analyzed jars but these are not available (and thus skipped if the flag skipknownArchive is true 
+		//this method is used to collect statistics about the analyzed jars but these are not available (and thus skipped if the flag skipknownArchive is true
 		//if(this.constructs==null && !uploadEnabledAndSkipKnownArchive()) {
 		if(this.constructs==null) {
 			this.constructs = new TreeSet<ConstructId>();
-			
+
 			final SAXParserFactory spf = SAXParserFactory.newInstance();
 			spf.setNamespaceAware(true);
-			
+
 			// Loop all files in order to identify Java classes and bundled pom.xml files
 			final Enumeration<JarEntry> en =  this.jar.entries();
 			while(en.hasMoreElements()) {
 				final JarEntry je = en.nextElement();
-				
+
 				// 18.11.2014: Ignore "package-info.class" files, which can contain annotations and documentation
 				// 05.12.2017: Ignore "module-info.class" files, which can contain annotations and documentation
 				if(je.getName().endsWith(".class") && !je.getName().endsWith("package-info.class") && !je.getName().endsWith("module-info.class")) {
 					final String fqn = JarAnalyzer.getFqClassname(je.getName());
 					if(fqn!=null) {
-						this.classNames.add(fqn);					
+						this.classNames.add(fqn);
 						JarAnalyzer.log.debug("JAR entry [" + je.getName() + "] transformed to Java class identifier [" + fqn + "]");
 					}
 					else {
@@ -391,7 +391,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 						JarAnalyzer.log.warn("Exception when parsing JAR entry [" + je.getName() + "]: " + e.getMessage(), e);
 					} catch (IOException e) {
 						JarAnalyzer.log.warn("I/O exception for JAR entry [" + je.getName() + "]: " + e.getMessage(), e);
-					}					
+					}
 				}
 			}
 
@@ -427,7 +427,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 
 						if(ctclass.isEnum())
 							this.enumCount++;
-						else 
+						else
 							this.classCount++;
 
 						// Create ClassVisitor for the current Java class
@@ -446,16 +446,16 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 									cv.visitConstructors(true);
 									cv.finalizeInstrumentation();
 									this.instrumentedClasses.put(cv.getJavaId(), cv);
-									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(true));
+									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(true));
 								} catch (IOException ioe) {
 									JarAnalyzer.log.error("I/O exception while instrumenting class [" + cv.getJavaId().getQualifiedName() + "]: " + ioe.getMessage());
-									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
 								} catch (CannotCompileException cce) {
 									JarAnalyzer.log.warn("Cannot compile instrumented class [" + cv.getJavaId().getQualifiedName() + "]: " + cce.getMessage());
-									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
 								} catch (Exception e) {
 									JarAnalyzer.log.error(e.getClass().getName() + " occured while instrumenting class [" + cv.getJavaId().getQualifiedName() + "]: " + e.getMessage());
-									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
 								}
 							}
 						}
@@ -584,9 +584,9 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 	public int hashCode(){
 		return this.getSHA1().hashCode();
 	}
-	
+
 	// ---------------------------- STATIC METHODS
-	
+
 	/**
 	 * <p>isJavaIdentifier.</p>
 	 *
@@ -619,7 +619,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 	 */
 	public static String getFqClassname(String _jar_entry_name) {
 		String cn = null;
-		if(_jar_entry_name.endsWith(".class")) {			
+		if(_jar_entry_name.endsWith(".class")) {
 			// 18.11.2014: Ignore "package-info.class" files, which can contain annotations and documentation
 			// 05.12.2017: Ignore "module-info.class" files, which can contain annotations and documentation
 			if(!_jar_entry_name.endsWith("package-info.class") && !_jar_entry_name.endsWith("module-info.class")) {
@@ -647,7 +647,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 		}
 		return cn;
 	}
-	
+
 	/**
 	 * <p>setAppContext.</p>
 	 *
@@ -660,7 +660,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 	 * @return a {@link com.sap.psr.vulas.shared.json.model.Application} object.
 	 */
 	public static Application getAppContext() { return JarAnalyzer.APP_CTX; }
-	
+
 	/**
 	 * Adds a given URL to the classpath of the class pool. This allows maintaining dependencies needed for the compilation of instrumented classes.
 	 *

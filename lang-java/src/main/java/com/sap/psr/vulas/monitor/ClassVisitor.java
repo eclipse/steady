@@ -156,10 +156,10 @@ public class ClassVisitor {
 		if(this.isInstrumented==null) {
 			try {
 				this.c.getDeclaredField("VUL_CLS_INS");
-				this.isInstrumented = new Boolean(true);
+				this.isInstrumented = Boolean.valueOf(true);
 			}
 			catch(NotFoundException e) {
-				this.isInstrumented = new Boolean(false);
+				this.isInstrumented = Boolean.valueOf(false);
 			}
 		}
 		return this.isInstrumented.booleanValue();
@@ -268,7 +268,7 @@ public class ClassVisitor {
 				i.instrument(instrumentation_code, _jid, _behavior, this);
 			}
 		}
-		
+
 		// Return if there's nothing to inject
 		if(instrumentation_code.length()==0)
 			return;
@@ -283,8 +283,8 @@ public class ClassVisitor {
 
 		// Remember an exception (if any) and throw it at the end
 		CannotCompileException cce = null;
-		
-		// Inject the code		
+
+		// Inject the code
 		try {
 			if(_jid.getType().equals(JavaId.Type.CONSTRUCTOR) || _jid.getType().equals(JavaId.Type.CLASSINIT))
 				_behavior.insertAfter(source_code.toString());
@@ -351,7 +351,7 @@ public class ClassVisitor {
 		// Add member to indicate that the class has been instrumented
 		if(!this.isInstrumented()) {
 			this.addBooleanMember("VUL_CLS_INS", true, true);
-			this.isInstrumented = new Boolean(true);
+			this.isInstrumented = Boolean.valueOf(true);
 		}
 
 		//		this.bytes = this.c.toBytecode();
@@ -411,9 +411,9 @@ public class ClassVisitor {
 		// Avoid problems with JDO/JPA
 		this.addFieldAnnotations(f,  this.fieldAnnotations);
 
-		this.c.addField(f, new Boolean(_value).toString());
+		this.c.addField(f, Boolean.valueOf(_value).toString());
 	}
-	
+
 	/**
 	 * Adds the given annotations to the given field. Can be used to avoid problems with OR mappers by adding
 	 * an annotation "javax.persistence.Transient".
@@ -481,11 +481,11 @@ public class ClassVisitor {
 
 	/**
 	 * From http://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html#jls-3.8:
-	 * 
+	 *
 	 * The "Java letters" include uppercase and lowercase ASCII Latin letters A-Z (\u0041-\u005a),
 	 * and a-z (\u0061-\u007a), and, for historical reasons, the ASCII underscore (_, or \u005f) and dollar sign ($, or \u0024).
 	 * The $ character should be used only in mechanically generated source code or, rarely, to access pre-existing names on legacy systems.
-	 * The "Java digits" include the ASCII digits 0-9 (\u0030-\u0039). 
+	 * The "Java digits" include the ASCII digits 0-9 (\u0030-\u0039).
 	 */
 	private static Pattern QUALIFIED_TYPE_PATTERN = null;
 	private static Pattern getClassPattern() {
@@ -616,13 +616,13 @@ public class ClassVisitor {
 		for(int i=0; i<_src.length(); i++) {
 			char c = _src.charAt(i);
 			switch(c) {
-			case ';': 
+			case ';':
 				b.append(c).append(n).append(getIndent(indent, lvl)); break;
 			case '{':
 				b.append(c).append(n).append(getIndent(indent, ++lvl)); break;
 			case '}':
 				b.append(c).append(n).append(getIndent(indent, --lvl)); break;
-			default: 
+			default:
 				b.append(c);
 			}
 		}

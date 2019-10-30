@@ -41,13 +41,13 @@ import com.sap.psr.vulas.tasks.AbstractBomTask;
 public class JavaBomTask extends AbstractBomTask {
 
 	private static final Log log = LogFactory.getLog(JavaBomTask.class);
-	
+
 	private static final String[] EXT_FILTER = new String[] { "jar", "war", "class", "java", "aar" };
 
 	private String[] appPrefixes = null;
 
 	private StringList appJarNames = null;
-	
+
 	private static final List<GoalClient> pluginGoalClients = Arrays.asList(GoalClient.MAVEN_PLUGIN, GoalClient.GRADLE_PLUGIN);
 
 	/** {@inheritDoc} */
@@ -135,10 +135,10 @@ public class JavaBomTask extends AbstractBomTask {
 
 					// Add child analyzers and analyzer itself (except DirAnalyzer)
 					if(fa.hasChilds())
-						analyzers.addAll(fa.getChilds(true));					
+						analyzers.addAll(fa.getChilds(true));
 					if(!(fa instanceof DirAnalyzer))
 						analyzers.add(fa);
-					
+
 					// Log
 					int count = 0;
 					if(this.useAppPrefixes()) {
@@ -155,13 +155,13 @@ public class JavaBomTask extends AbstractBomTask {
 								final JarAnalyzer ja = (JarAnalyzer)fa2;
 
 								// Prefixes
-								if(this.useAppPrefixes()) {							
+								if(this.useAppPrefixes()) {
 									final Set<ConstructId> constructs = JavaId.filter(fa2.getConstructs().keySet(), this.appPrefixes);
 
 									// Constructs match to the prefixes
 									if(constructs!=null && constructs.size()>0) {
 										app_constructs.addAll(constructs);
-										
+
 										// Exclusively app constructs
 										if(constructs.size()==fa2.getConstructs().size()) {
 											log.info(StringUtil.padLeft(++count,  4) + " [" + StringUtil.padLeft(ja.getFileName(), 30) + "]: All [" + fa2.getConstructs().size() + "] constructs matched prefix(es): Constructs added to application, file NOT added as dependency");
@@ -190,7 +190,7 @@ public class JavaBomTask extends AbstractBomTask {
 										log.info(StringUtil.padLeft(++count,  4) + " [" + StringUtil.padLeft(ja.getFileName(), 30) + "]: Filename does not match pattern(s), file added as dependency");
 										dep_files.put(ja.getPath(), ja);
 									}
-								}							
+								}
 							}
 							// Important: What is in java and class files is always part of the app
 							else {
@@ -214,10 +214,10 @@ public class JavaBomTask extends AbstractBomTask {
 
 		// 2) Analyze all of the JAR/WAR files
 		final Set<JarAnalyzer> app_dependencies = new HashSet<JarAnalyzer>();
-	
+
 		final long timeout   = this.vulasConfiguration.getConfiguration().getLong(CoreConfiguration.JAR_TIMEOUT, -1);
 		final int no_threads = ThreadUtil.getNoThreads(this.vulasConfiguration, 2);
-		
+
 		final ArchiveAnalysisManager mgr = new ArchiveAnalysisManager(no_threads, timeout, false, this.getApplication());
 		mgr.setKnownDependencies(this.getKnownDependencies());
 		mgr.startAnalysis(dep_files, null);
@@ -276,7 +276,7 @@ public class JavaBomTask extends AbstractBomTask {
 				app_dep.setApp(this.getApplication());
 				app_dep.setFilename(ja.getFileName());
 				app_dep.setPath(ja.getPath().toString());
-				
+
 				// Dependency known to a package manager (if any)
 				Dependency known_dep = null;
 				if(ja.getParent()!=null){
@@ -285,12 +285,12 @@ public class JavaBomTask extends AbstractBomTask {
 				else {
 					known_dep = mgr.getKnownDependency(ja.getPath());
 				}
-				
+
 				// Take information from known dependency
 				app_dep.setScope( (known_dep!=null ? known_dep.getScope() : Scope.RUNTIME) );
-				app_dep.setTransitive( (ja.getParent()!= null? new Boolean(true) :(known_dep!=null ? new Boolean(known_dep.getTransitive()) : new Boolean(false)) ) );
-				app_dep.setDeclared( ((known_dep!=null && ja.getParent()==null) ? new Boolean(true): new Boolean(false)) );
-				
+				app_dep.setTransitive( (ja.getParent()!= null? Boolean.valueOf(true) :(known_dep!=null ? Boolean.valueOf(known_dep.getTransitive()) : Boolean.valueOf(false)) ) );
+				app_dep.setDeclared( ((known_dep!=null && ja.getParent()==null) ? Boolean.valueOf(true): Boolean.valueOf(false)) );
+
 				// Set the parent (if any)
 				if(known_dep!=null && known_dep.getParent()!=null) {
 					// Complete the draft parent dependency with library info
@@ -303,18 +303,18 @@ public class JavaBomTask extends AbstractBomTask {
 					}
 					app_dep.setParent(known_dep.getParent());
 				}
-				
+
 				a.addDependency(app_dep);
 			} catch (FileAnalysisException e) {
 				log.error(e.getMessage(), e);
 			}
 		}
-		
+
 		// Get a clean set of dependencies
 		final Set<Dependency> no_dupl_deps = DependencyUtil.removeDuplicateLibraryDependencies(a.getDependencies());
 		a.setDependencies(no_dupl_deps);
-		
-		// Fix parents on dependencies that were removed (this block should be removed once we use the relativePath and we get a dependency tree representing the actual one 
+
+		// Fix parents on dependencies that were removed (this block should be removed once we use the relativePath and we get a dependency tree representing the actual one
 		for(Dependency d : a.getDependencies()) {
 			if(d.getParent()!=null ) {
 				for(Dependency existing: a.getDependencies()) {
@@ -328,8 +328,8 @@ public class JavaBomTask extends AbstractBomTask {
 				}
 			}
 		}
-	
-		
+
+
 		// Check whether the parent-child dependency relationships are consistent
 		final boolean consistent_deps = DependencyUtil.isValidDependencyCollection(a);
 		if(!consistent_deps) {

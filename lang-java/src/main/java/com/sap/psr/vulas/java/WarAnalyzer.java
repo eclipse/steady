@@ -41,7 +41,7 @@ import javassist.NotFoundException;
 public class WarAnalyzer extends JarAnalyzer {
 
 	private static final Log log = LogFactory.getLog(WarAnalyzer.class);
-	
+
 	private static final String INCL_SPACE = "vulas.core.instr.static.inclSpace";
 	private static final String INCL_BACKEND_URL = "vulas.core.instr.static.inclBackendUrl";
 
@@ -61,7 +61,7 @@ public class WarAnalyzer extends JarAnalyzer {
 	private Map<JavaId, ClassVisitor>instrumentedClasses = new HashMap<JavaId, ClassVisitor>();
 	private Path tmpDir = null; // To where the WAR is extracted
 	private Path inclDir = null;
-	
+
 	private ArchiveAnalysisManager mgr = null;
 	private Set<FileAnalyzer> nestedAnalyzers = null;
 
@@ -98,7 +98,7 @@ public class WarAnalyzer extends JarAnalyzer {
 				// No problem at all if instrumentation is not requested.
 				// If instrumentation is requested, however, some classes may not compile
 				WarAnalyzer.log.error(this.toString() + ": Error while updating the classpath: " + e.getMessage());
-			}			
+			}
 		} catch (IllegalStateException e) {
 			log.error("IllegalStateException when analyzing file [" + _file + "]: " + e.getMessage());
 			throw new FileAnalysisException("Error when analyzing file [" + _file + "]: " + e.getMessage(), e);
@@ -198,7 +198,7 @@ public class WarAnalyzer extends JarAnalyzer {
 			this.jarWriter.addFile("WEB-INF/classes/", Paths.get(this.inclDir.toString(), "vulas-cfg.properties"), true);
 			this.jarWriter.addFile("WEB-INF/classes/", Paths.get(this.inclDir.toString(), "vulas-cfg.xml"), true);
 			this.jarWriter.addFile("WEB-INF/classes/", Paths.get(this.inclDir.toString(), "log4j.properties"), false);
-		}		
+		}
 
 		// Rename
 		if(this.rename)
@@ -209,20 +209,20 @@ public class WarAnalyzer extends JarAnalyzer {
 
 		// Stats
 		this.instrControl.logStatistics();
-	}	
+	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean hasChilds() {
 		return this.getChilds(true)!=null && !this.getChilds(true).isEmpty();
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) {
 		if(this.mgr==null) {
 			this.mgr = new ArchiveAnalysisManager(4, -1, this.instrument, JarAnalyzer.getAppContext());
-	
+
 			// Create a lib_mod folder for instrumented JARs of the WAR
 			if(this.instrument) {
 				final Path lib_mod = Paths.get(this.tmpDir.toString(), "WEB-INF", "lib_mod");
@@ -233,7 +233,7 @@ public class WarAnalyzer extends JarAnalyzer {
 						log.error("Cannot create directory [" + lib_mod.toAbsolutePath() + "]: " + e.getMessage(), e);
 					}
 				}
-	
+
 				if(lib_mod.toFile().exists()) {
 					mgr.setWorkDir(lib_mod);
 				}
@@ -242,7 +242,7 @@ public class WarAnalyzer extends JarAnalyzer {
 					mgr.setInstrument(false);
 				}
 			}
-	
+
 			// Find and analyze all JARs
 			final Set<Path> jars = new FileSearch(new String[] {"jar"}).search(Paths.get(this.tmpDir.toString(), "WEB-INF", "lib"));
 			mgr.startAnalysis(jars, this);
@@ -260,7 +260,7 @@ public class WarAnalyzer extends JarAnalyzer {
 	 */
 	@Override
 	public synchronized Set<ConstructId> getConstructIds() {
-		if(this.constructs==null) {			
+		if(this.constructs==null) {
 			this.constructs = new TreeSet<ConstructId>();
 			// Loop all *.class files in WEB-INF/classes
 			final Set<String> class_names = new HashSet<String>();
@@ -271,7 +271,7 @@ public class WarAnalyzer extends JarAnalyzer {
 				class_name = class_name.substring(0, class_name.length()-6); // ".class"
 				class_name = class_name.substring(class_name.indexOf("WEB-INF")+16); // "WEB-INF/classes/"
 				class_name = class_name.replace(File.separatorChar, '.');
-				class_names.add(class_name);				
+				class_names.add(class_name);
 				WarAnalyzer.log.debug("Found [" + class_name + "]");
 			}
 
@@ -291,7 +291,7 @@ public class WarAnalyzer extends JarAnalyzer {
 
 						if(ctclass.isEnum())
 							this.enumCount++;
-						else 
+						else
 							this.classCount++;
 
 						// Create ClassVisitor for the current Java class
@@ -310,19 +310,19 @@ public class WarAnalyzer extends JarAnalyzer {
 									cv.visitConstructors(true);
 									cv.finalizeInstrumentation();
 									this.instrumentedClasses.put(cv.getJavaId(), cv);
-									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(true));
+									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(true));
 								} catch (IOException ioe) {
 									WarAnalyzer.log.error("I/O exception while instrumenting class [" + cv.getJavaId().getQualifiedName() + "]: " + ioe.getMessage());
-									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
 								} catch (CannotCompileException cce) {
 									WarAnalyzer.log.warn("Cannot compile instrumented class [" + cv.getJavaId().getQualifiedName() + "]: " + cce.getMessage());
-									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
 								} catch (Exception e) {
 									WarAnalyzer.log.error(e.getClass().getName() + " occured while instrumenting class [" + cv.getJavaId().getQualifiedName() + "]: " + e.getMessage());
-									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
 								}
 							}
-						}						
+						}
 					}
 					if(!this.instrument){
 						//only detach if no static instrumentation (otherwise it will fail because the class was modified)
@@ -392,7 +392,7 @@ public class WarAnalyzer extends JarAnalyzer {
 				}
 			} catch (Exception e) {
 				WarAnalyzer.log.error("Cannot find rewritten JAR file from [" + ja + "]: " + e.getMessage());
-			}	
+			}
 		}
 		// Called during the rewrite of the JARs in inclDir
 		else if(_regex.equals("vulas-core.properties")) {
@@ -402,18 +402,18 @@ public class WarAnalyzer extends JarAnalyzer {
 				cfg.setProperty(CoreConfiguration.APP_CTX_GROUP, JarAnalyzer.getAppContext().getMvnGroup());
 				cfg.setProperty(CoreConfiguration.APP_CTX_ARTIF, JarAnalyzer.getAppContext().getArtifact());
 				cfg.setProperty(CoreConfiguration.APP_CTX_VERSI, JarAnalyzer.getAppContext().getVersion());
-				
+
 				// Include space
 				if(VulasConfiguration.getGlobal().getConfiguration().getBoolean(INCL_SPACE, true) && VulasConfiguration.getGlobal().getConfiguration().containsKey(CoreConfiguration.SPACE_TOKEN))
 					cfg.setProperty(CoreConfiguration.SPACE_TOKEN, VulasConfiguration.getGlobal().getConfiguration().getString(CoreConfiguration.SPACE_TOKEN));
-				
+
 				// Include backend URL
 				if(VulasConfiguration.getGlobal().getConfiguration().getBoolean(INCL_BACKEND_URL, true) && VulasConfiguration.getGlobal().getConfiguration().containsKey(VulasConfiguration.getServiceUrlKey(Service.BACKEND)))
 					cfg.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), VulasConfiguration.getGlobal().getConfiguration().getString(VulasConfiguration.getServiceUrlKey(Service.BACKEND)));
-				
+
 				tmp_file = Files.createTempFile("vulas-core-", ".properties");
 				cfg.save(tmp_file.toFile());
-				is = new FileInputStream(tmp_file.toFile());						
+				is = new FileInputStream(tmp_file.toFile());
 			}
 			catch(ConfigurationException ce) {
 				WarAnalyzer.log.error("Error when loading configuration from 'vulas-core.properties': " + ce.getMessage());
@@ -423,6 +423,6 @@ public class WarAnalyzer extends JarAnalyzer {
 			}
 		}
 
-		return is;		
+		return is;
 	}
 }
