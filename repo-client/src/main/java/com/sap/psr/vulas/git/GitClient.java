@@ -104,7 +104,7 @@ public class GitClient implements IVCSClient {
 				.setURI( _repoUrl )
 				.setDirectory( _repoPath.toFile() )
 				.call();
-			
+
 			}
 			else {
 				GitClient.log.info( "Found existing dir [" + builder.getGitDir().toPath().toAbsolutePath() + "] for GIT repo [" + _repoUrl + "], trying to fetch to update it");
@@ -179,7 +179,7 @@ public class GitClient implements IVCSClient {
 	 */
 	public void setRepoUrl( URL _u )  throws RepoMismatchException {
 		if ( _u == null ) {
-			throw new IllegalArgumentException( "Invalid url: " + _u );
+			throw new IllegalArgumentException( "Invalid url" );
 		}
 
 		this.url = _u.toString();
@@ -479,7 +479,7 @@ public class GitClient implements IVCSClient {
 					newFile = null;
 					break;
 				}
-				
+
 				// Also try to checkout __init__.py files (which are needed to build the construct ID)
 				this.checkoutPyInits(parentRev, oldPath);
 				this.checkoutPyInits(_rev, newPath);
@@ -537,7 +537,7 @@ public class GitClient implements IVCSClient {
 			checkoutPyInits(_rev_branch, parent_init.toString());
 		}
 	}
-	
+
 	private String toGitPath(Path _p) {
 		final StringBuffer b = new StringBuffer();
 		for(int i=0; i<_p.getNameCount(); i++) {
@@ -568,7 +568,7 @@ public class GitClient implements IVCSClient {
 	}
 
 	private static String[] splitRevBranch(String _string) {
-		final int idx = _string.indexOf(':'); 
+		final int idx = _string.indexOf(':');
 		if(idx==-1) {
 			return new String[] { _string, "" };
 		} else {
