@@ -410,83 +410,83 @@ public class GitClient implements IVCSClient {
 			df.setDetectRenames( true );
 			if (parent != null) {
 				List<DiffEntry> diffs = df.scan( parent.getTree(), commit.getTree() );
-			}
 
-			File oldFile, newFile;
-			DiffEntry.ChangeType changeType;
-			String newPath = null;
-			String oldPath = null;
+				File oldFile, newFile;
+				DiffEntry.ChangeType changeType;
+				String newPath = null;
+				String oldPath = null;
 
-			for ( DiffEntry entry : diffs ) {
+				for ( DiffEntry entry : diffs ) {
 
-				oldFile = null;
-				newFile = null;
-
-				newPath = entry.getNewPath() ;
-				oldPath = entry.getOldPath() ;
-
-				String parentRev = parent.getName();
-
-				// Checkout file(s), depending on the modification type
-				switch ( entry.getChangeType() ) {
-				case MODIFY:
-					GitClient.log.info("[Modified] " + branch+newPath);
-					oldFile = this.checkoutFile( parentRev, oldPath );
-					newFile = this.checkoutFile( _rev, newPath );
-
-					if ( oldFile != null || newFile != null ) {
-						changes.add( new FileChange(this.url, branch+newPath, oldFile, newFile ) );
-					}
-					break;
-				case ADD:
-					GitClient.log.info("[Created] " + branch+newPath);
-					oldFile = this.checkoutFile( parentRev, oldPath );
-					newFile = this.checkoutFile( _rev, newPath );
-
-					if ( oldFile != null || newFile != null ) {
-						changes.add( new FileChange(this.url, branch+newPath, oldFile, newFile ) );
-					}
-					break;
-				case DELETE:
-					GitClient.log.info("[Deleted] " + branch+newPath);
-					oldFile = this.checkoutFile( parentRev, oldPath );
-					newFile = this.checkoutFile( _rev, newPath );
-
-					if ( oldFile != null || newFile != null ) {
-						changes.add( new FileChange(this.url, branch+oldPath, oldFile, newFile ) );
-					}
-					break;
-				case COPY:
-					GitClient.log.info("[Copied] " + branch+newPath);
-					oldFile = this.checkoutFile( parentRev, oldPath );
-					newFile = this.checkoutFile( _rev, newPath );
-
-					if ( oldFile != null || newFile != null ) {
-						changes.add( new FileChange(this.url, branch+newPath, oldFile, newFile ) );
-					}
-					break;
-				case RENAME:
-					GitClient.log.info("[Moved] " + branch+newPath);
-					oldFile = this.checkoutFile( parentRev, oldPath );
-					newFile = this.checkoutFile( _rev, newPath );
-
-					if ( oldFile != null || newFile != null ) {
-						changes.add( new FileChange(this.url, branch+oldPath, oldFile, null ) );
-						changes.add( new FileChange(this.url, branch+newPath, null, newFile ) );
-					}
-					break;
-				default:
-					GitClient.log.warn("[UNKNOWN CHANGE TYPE] " + branch+newPath);
 					oldFile = null;
 					newFile = null;
-					break;
+
+					newPath = entry.getNewPath() ;
+					oldPath = entry.getOldPath() ;
+
+					String parentRev = parent.getName();
+
+					// Checkout file(s), depending on the modification type
+					switch ( entry.getChangeType() ) {
+					case MODIFY:
+						GitClient.log.info("[Modified] " + branch+newPath);
+						oldFile = this.checkoutFile( parentRev, oldPath );
+						newFile = this.checkoutFile( _rev, newPath );
+
+						if ( oldFile != null || newFile != null ) {
+							changes.add( new FileChange(this.url, branch+newPath, oldFile, newFile ) );
+						}
+						break;
+					case ADD:
+						GitClient.log.info("[Created] " + branch+newPath);
+						oldFile = this.checkoutFile( parentRev, oldPath );
+						newFile = this.checkoutFile( _rev, newPath );
+
+						if ( oldFile != null || newFile != null ) {
+							changes.add( new FileChange(this.url, branch+newPath, oldFile, newFile ) );
+						}
+						break;
+					case DELETE:
+						GitClient.log.info("[Deleted] " + branch+newPath);
+						oldFile = this.checkoutFile( parentRev, oldPath );
+						newFile = this.checkoutFile( _rev, newPath );
+
+						if ( oldFile != null || newFile != null ) {
+							changes.add( new FileChange(this.url, branch+oldPath, oldFile, newFile ) );
+						}
+						break;
+					case COPY:
+						GitClient.log.info("[Copied] " + branch+newPath);
+						oldFile = this.checkoutFile( parentRev, oldPath );
+						newFile = this.checkoutFile( _rev, newPath );
+
+						if ( oldFile != null || newFile != null ) {
+							changes.add( new FileChange(this.url, branch+newPath, oldFile, newFile ) );
+						}
+						break;
+					case RENAME:
+						GitClient.log.info("[Moved] " + branch+newPath);
+						oldFile = this.checkoutFile( parentRev, oldPath );
+						newFile = this.checkoutFile( _rev, newPath );
+
+						if ( oldFile != null || newFile != null ) {
+							changes.add( new FileChange(this.url, branch+oldPath, oldFile, null ) );
+							changes.add( new FileChange(this.url, branch+newPath, null, newFile ) );
+						}
+						break;
+					default:
+						GitClient.log.warn("[UNKNOWN CHANGE TYPE] " + branch+newPath);
+						oldFile = null;
+						newFile = null;
+						break;
+					}
+
+					// Also try to checkout __init__.py files (which are needed to build the construct ID)
+					this.checkoutPyInits(parentRev, oldPath);
+					this.checkoutPyInits(_rev, newPath);
+
+					// TODO what to do with directories?
 				}
-
-				// Also try to checkout __init__.py files (which are needed to build the construct ID)
-				this.checkoutPyInits(parentRev, oldPath);
-				this.checkoutPyInits(_rev, newPath);
-
-				// TODO what to do with directories?
 			}
 			sw.stop();
 		}
