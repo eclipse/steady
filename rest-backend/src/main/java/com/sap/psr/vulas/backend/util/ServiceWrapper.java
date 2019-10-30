@@ -2,6 +2,7 @@ package com.sap.psr.vulas.backend.util;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +45,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 public class ServiceWrapper {
 
 	private static Logger log = LoggerFactory.getLogger(ServiceWrapper.class);
-	
+
 	private static ServiceWrapper instance = null;
 
 	private ServiceWrapper() {}
@@ -87,11 +88,11 @@ public class ServiceWrapper {
 		}
 
 		final String url = service_url.concat(service_path);
-		
+
 		// Parameters
 		final Map<String,String> params = new HashMap<String,String>();
 		params.put("p", "jar");
-		
+
 
 		// Make the query
 		final List<LibraryId> result = new ArrayList<LibraryId>();
@@ -124,7 +125,7 @@ public class ServiceWrapper {
 
 		return result;
 	}
-	
+
 	/**
 	 * <p>getArtifactConstructs.</p>
 	 *
@@ -227,9 +228,9 @@ public class ServiceWrapper {
 		if(_params!=null && _params.size()>0) {
 			b.append(" with params [");
 			int i=0;
-			for(String key: _params.keySet()) {
+			for(Map.Entry<String, String> entry: _params.entrySet()) {
 				if(i++>0) b.append(", ");
-				b.append(key).append("=").append(_params.get(key));
+				b.append(entry.getKey()).append("=").append(entry.getValue());
 			}
 		}
 		log.info(b.toString()+"]");
@@ -244,7 +245,7 @@ public class ServiceWrapper {
 	 */
 	public CveClassifierResponse classify(String _cve) throws ServiceConnectionException {
 		CveClassifierResponse response = null;
-		
+
 		final String service_url = VulasConfiguration.getGlobal().getServiceUrl(Service.CVE, true);
 		if(service_url==null || service_url.equals("")) {
 			log.error("Configuration setting [" + VulasConfiguration.getGlobal().getServiceUrlKey(Service.CVE) + "] not specified") ;
@@ -254,13 +255,13 @@ public class ServiceWrapper {
 			final String param_template = "{cve}";
 			final Map<String,String> params = new HashMap<String,String>();
 			params.put("cve", _cve);
-			
+
 			// Make the query
 			URI uri = null;
 			try {
 				uri = new URI(service_url);
 				this.logCallInfo(uri, params);
-				final RestTemplate rest_template = new RestTemplate();	
+				final RestTemplate rest_template = new RestTemplate();
 				response = rest_template.getForObject(service_url + param_template, CveClassifierResponse.class, params);
 			} catch (RestClientException e) {
 				throw new ServiceConnectionException(uri, e);
@@ -268,10 +269,10 @@ public class ServiceWrapper {
 				throw new ServiceConnectionException("Cannot create service URI from [" + service_url + "]", use);
 			}
 		}
-		
+
 		return response;
 	}
-	
+
 	/**
 	 * <p>searchJira.</p>
 	 *
@@ -281,20 +282,20 @@ public class ServiceWrapper {
 	 */
 	public JiraSearchResponse searchJira(String _bugid) throws ServiceConnectionException {
 		JiraSearchResponse response = null;
-		
+
 		final String service_url = VulasConfiguration.getGlobal().getServiceUrl(Service.JIRA, true);
 		final String project_id = VulasConfiguration.getGlobal().getConfiguration().getString(CoverageController.PROJECT_ID, null);
 		final String component_id = VulasConfiguration.getGlobal().getConfiguration().getString(CoverageController.COMPONENT_ID, null);
-		
+
 		if(service_url==null || service_url.equals("") || project_id==null || project_id.equals("") || component_id==null || component_id.equals("")) {
 			log.error("Jira configuration settings [" + VulasConfiguration.getGlobal().getServiceUrlKey(Service.JIRA) + ", " + CoverageController.PROJECT_ID + ", " + CoverageController.COMPONENT_ID + "] not fully specified") ;
 		}
-		else {	
+		else {
 			// Parameters
 			final String param_template = "?jql={jql}";
 			final Map<String,String> params = new HashMap<String,String>();
 			params.put("jql", "project = " + project_id + " AND component = " + component_id + " AND summary ~ \"" + _bugid + "\"");
-	
+
 			// Make the query
 			URI uri = null;
 			try {
@@ -304,12 +305,12 @@ public class ServiceWrapper {
 				if((VulasConfiguration.getGlobal().getConfiguration().getString(VulasConfiguration.VULAS_JIRA_USER)==null )
 						|| (VulasConfiguration.getGlobal().getConfiguration().getString(VulasConfiguration.VULAS_JIRA_PWD)==null)){
 					log.error("Missing Jira credentials, please provide the arguments -Dvulas.jira.usr and -Dvulas.jira.pwd at startup");
-					
+
 					throw new ServiceConnectionException("Missing Jira credentials, please provide the arguments -Dvulas.jira.usr and -Dvulas.jira.pwd at startup", new Throwable("Missing Jira credentials, please provide the arguments -Dvulas.jira.usr and -Dvulas.jira.pwd at startup"));
 				}
-					
+
 				final ResponseEntity<JiraSearchResponse> re = rest_template.exchange(service_url + param_template, HttpMethod.GET, new HttpEntity<String>(this.createHeaders(VulasConfiguration.getGlobal().getConfiguration().getString(VulasConfiguration.VULAS_JIRA_USER), VulasConfiguration.getGlobal().getConfiguration().getString(VulasConfiguration.VULAS_JIRA_PWD))), JiraSearchResponse.class, params);
-				
+
 				response = re.getBody();
 			} catch (RestClientException e) {
 				throw new ServiceConnectionException(uri, e);
@@ -324,9 +325,9 @@ public class ServiceWrapper {
 	private HttpHeaders createHeaders(final String username, final String password) {
 		return new HttpHeaders() {{
 			String auth = username + ":" + password;
-			byte[] encodedAuth = Base64.getEncoder().encode( 
+			byte[] encodedAuth = Base64.getEncoder().encode(
 					auth.getBytes(Charset.forName("US-ASCII")) );
-			String authHeader = "Basic " + new String( encodedAuth );
+			String authHeader = "Basic " + new String( encodedAuth , StandardCharsets.UTF_8);
 			set( "Authorization", authHeader );
 		}};
 	}

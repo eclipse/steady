@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import java.nio.file.Path;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -33,9 +34,9 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  *
  */
 public class SmtpClient {
-	
+
 	private static Logger log = LoggerFactory.getLogger(SmtpClient.class);
-	
+
 	/** Constant <code>SMTP_HOST="vulas.backend.smtp.host"</code> */
 	public final static String SMTP_HOST = "vulas.backend.smtp.host";
 	/** Constant <code>SMTP_PORT="vulas.backend.smtp.port"</code> */
@@ -44,9 +45,9 @@ public class SmtpClient {
 	public final static String SMTP_USER = "vulas.backend.smtp.user";
 	/** Constant <code>SMTP_PWD="vulas.backend.smtp.pwd"</code> */
 	public final static String SMTP_PWD  = "vulas.backend.smtp.pwd";
-	
+
 	private Properties props = null;
-	
+
 	/**
 	 * <p>Constructor for SmtpClient.</p>
 	 *
@@ -55,7 +56,7 @@ public class SmtpClient {
 	public SmtpClient() throws IllegalStateException {
 		this.props = SmtpClient.getSmtpProperties(VulasConfiguration.getGlobal().getConfiguration());
 	}
-		
+
 	/**
 	 * <p>send.</p>
 	 *
@@ -68,7 +69,7 @@ public class SmtpClient {
 		else
 			log.error("Messages without attachment are not supported");
 	}
-	
+
 	private void sendWithAttachement(@NotNull com.sap.psr.vulas.backend.util.Message _msg) throws MessagingException {
 		final StopWatch sw = new StopWatch("Send message " + _msg).start();
 
@@ -83,14 +84,14 @@ public class SmtpClient {
 			final Message message = new MimeMessage(session);
 			message.setSubject(_msg.getSubject());
 			message.setFrom(new InternetAddress(_msg.getSender()));
-			
+
 			// Recipients
 			final InternetAddress[] to = SmtpClient.transform(_msg.getRecipients());
 			if(to.length==0)
 				throw new MessagingException("No valid recipients in " + _msg.getRecipients());
-			else 
+			else
 				message.setRecipients(Message.RecipientType.TO,	to);
-			
+
 			// Create a multipart message
 			Multipart multipart = new MimeMultipart();
 
@@ -103,19 +104,23 @@ public class SmtpClient {
 			messageBodyPart = new MimeBodyPart();
 			final DataSource source = new FileDataSource(_msg.getAttachment().toFile());
 			messageBodyPart.setDataHandler(new DataHandler(source));
-			messageBodyPart.setFileName(_msg.getAttachment().getFileName().toString());
-			multipart.addBodyPart(messageBodyPart);
 
-			// Send
-			message.setContent(multipart);
-			Transport.send(message);
-			sw.stop();
+			Path f = _msg.getAttachment().getFileName();
+			if(f != null) {
+				messageBodyPart.setFileName(f.toString());
+				multipart.addBodyPart(messageBodyPart);
+
+				// Send
+				message.setContent(multipart);
+				Transport.send(message);
+				sw.stop();
+			}
 		} catch (MessagingException e) {
 			sw.stop(e);
 			throw e;
 		}
 	}
-	
+
 	static final InternetAddress[] transform(Set<String> _recipients) {
 		Set<InternetAddress> recipients = new HashSet<InternetAddress>();
 		for(String to : _recipients) {
@@ -127,7 +132,7 @@ public class SmtpClient {
 		}
 		return recipients.toArray(new InternetAddress[recipients.size()]);
 	}
-	
+
 	/**
 	 * Returns {@link Properties} with all SMTP settings. Throws an {@link IllegalStateException} if
 	 * {@link #SMTP_HOST} or {@link SMTP_PORT} are not set.
@@ -141,13 +146,13 @@ public class SmtpClient {
 		final String port = _cfg.getString(SMTP_PORT);
 		if(host==null || port==null)
 			throw new IllegalStateException("Cannot setup SMTP client, configuration settings [" + SMTP_HOST + "] and/or [" + SMTP_PORT + "] are not present");
-		
+
 		final Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
 		//props.put("mail.smtp.starttls.enable", "true");
 		props.put("mail.smtp.host", host);
 		props.put("mail.smtp.port", port);
-		
+
 		return props;
 	}
 }

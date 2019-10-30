@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
@@ -71,7 +72,7 @@ public class SpaceController {
 	private TenantRepository tenantRepository;
 
 	private ApplicationRepository appRepository;
-	
+
 	private final ApplicationExporter appExporter;
 
 	private final Filter cacheFilter;
@@ -84,7 +85,7 @@ public class SpaceController {
 		this.appExporter = appExporter;
 		this.cacheFilter = cacheFilter;
 
-		//(SP, 27-10-2017) It is not mandatory to have default tenant & spaces. This is only required for 
+		//(SP, 27-10-2017) It is not mandatory to have default tenant & spaces. This is only required for
 		// the existing internal VULAS system to be backward compatible with vulas 2.x
 	}
 
@@ -97,7 +98,7 @@ public class SpaceController {
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Collection<Space>> getAllSpaces(
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
-		
+
 		// Check whether tenant exists or retrieve default
 		Tenant t = null;
 		try {
@@ -126,7 +127,7 @@ public class SpaceController {
 	@RequestMapping(value = "default", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Space> getDefaultSpace(
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
-		
+
 		// Check whether tenant exists or retrieve default
 		Tenant t = null;
 		try {
@@ -165,7 +166,7 @@ public class SpaceController {
 			@RequestParam(value="caseSensitivity", required=false, defaultValue="CASE_SENSITIVE") CaseSensitivity caseSensitivity,
 			@RequestParam(value="value", required=true) String[] value,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
-		
+
 		// Check whether tenant exists or retrieve default
 		Tenant t = null;
 		try {
@@ -283,7 +284,7 @@ public class SpaceController {
 			Tenant t = null;
 			try {
 				t = this.tenantRepository.getTenant(tenant);
-			} 
+			}
 			catch(EntityNotFoundException enfe) {
 				log.error("Tenant [" + t.getTenantToken() + "] not found");
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
@@ -343,7 +344,7 @@ public class SpaceController {
 			Tenant t = null;
 			try {
 				t = this.tenantRepository.getTenant(tenant);
-			} 
+			}
 			catch(EntityNotFoundException enfe) {
 				log.error("Tenant [" + t.getTenantToken() + "] not found");
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
@@ -379,7 +380,7 @@ public class SpaceController {
 					log.error("A default space for the given tenant already exists, adjust the configuration accordingly");
 					return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
 				}
-			}			
+			}
 
 			// Load existing space, update members and save
 			try {
@@ -414,7 +415,7 @@ public class SpaceController {
 			Tenant t = null;
 			try {
 				t = this.tenantRepository.getTenant(tenant);
-			} 
+			}
 			catch(EntityNotFoundException enfe) {
 				log.error("Tenant [" + t.getTenantToken() + "] not found");
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
@@ -503,7 +504,7 @@ public class SpaceController {
 			Tenant t = null;
 			try {
 				t = this.tenantRepository.getTenant(tenant);
-			} 
+			}
 			catch(EntityNotFoundException enfe) {
 				log.error("Tenant [" + t.getTenantToken() + "] not found");
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
@@ -595,7 +596,7 @@ public class SpaceController {
 	@RequestMapping(value = "/{token:.+}/apps", method = RequestMethod.GET)
 	public void getApplications(
 			@PathVariable String token,
-			@RequestParam(value="includeSpaceProperties", required=false, defaultValue="") final String[] includeSpaceProperties, 
+			@RequestParam(value="includeSpaceProperties", required=false, defaultValue="") final String[] includeSpaceProperties,
 			@RequestParam(value="includeGoalConfiguration", required=false, defaultValue="") final String[] includeGoalConfiguration,
 			@RequestParam(value="includeGoalSystemInfo", required=false, defaultValue="") final String[] includeGoalSystemInfo,
 			@RequestParam(value="includeBugs", required=false, defaultValue="false") final String includeBugs,
@@ -621,16 +622,16 @@ public class SpaceController {
 		try {
 			final boolean include_bugs = Boolean.valueOf(includeBugs);
 			final boolean include_exemptions = Boolean.valueOf(includeExemptions);
-			
+
 			final Space space = SpaceRepository.FILTER.findOne(this.spaceRepository.findBySecondaryKey(t, token));
 
 			final java.nio.file.Path json_file = this.appExporter.produceExport(t, space, ";", includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, null, include_bugs, include_exemptions, ExportFormat.JSON);
 
 			// Headers
 			response.setContentType(ExportFormat.getHttpContentType(ExportFormat.JSON));
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(json_file.toFile())));
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(json_file.toFile()),StandardCharsets.UTF_8));
 			String line = null;
-			final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
+			final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(),StandardCharsets.UTF_8));
 			while( (line=reader.readLine())!=null ) {
 				writer.write(line);
 				writer.newLine();

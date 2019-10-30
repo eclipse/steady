@@ -65,7 +65,7 @@ public class CveController {
 							try {
 								final boolean update_happened = bug_repo.updateCachedCveData(b, force);
 								if(update_happened)
-									Thread.sleep(new Double(refresh_sng + Math.random() * refresh_sng).longValue());
+									Thread.sleep((long)(refresh_sng + Math.random() * refresh_sng));
 							} catch (InterruptedException e) {
 								CveController.log.error("Interrupted exception while refreshing cached CVE data of bug [" + b.getBugId() + "]: " + e.getMessage());
 							}
@@ -75,7 +75,7 @@ public class CveController {
 
 						// Wait before entering the loop another time
 						try {
-							Thread.sleep(Long.valueOf(refresh_all + Math.random() * refresh_all));
+							Thread.sleep((long)(refresh_all + Math.random() * refresh_all));
 						} catch (InterruptedException e) {
 							CveController.log.error("Interrupted exception while refreshing cached CVE data: " + e.getMessage());
 						}

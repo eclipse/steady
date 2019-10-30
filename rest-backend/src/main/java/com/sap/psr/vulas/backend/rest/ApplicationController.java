@@ -1,5 +1,6 @@
 package com.sap.psr.vulas.backend.rest;
 
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -280,7 +281,7 @@ public class ApplicationController {
 
 			// Delete all except those from the last KEEP days
 			if(mode.equalsIgnoreCase("DAYS")) {
-				final long milli_treshold = System.currentTimeMillis() - (keep * 24 * 60 * 60 * 1000);
+				final long milli_treshold = Long.valueOf(System.currentTimeMillis()) - (keep * 24 * 60 * 60 * 1000L);
 				for(Application app: sorted_apps) {
 					if(app.getCreatedAt().getTime().getTime() < milli_treshold) {
 						deleted_apps.add(app);
@@ -565,7 +566,7 @@ public class ApplicationController {
 
 				// Short response
 				response.setContentType(ExportFormat.TXT_PLAIN);
-				final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
+				final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8));
 				writer.write("Result of request [" + req + "] will be sent to [" + StringUtil.join(to, ", ") + "]");
 				writer.newLine();
 				writer.flush();
@@ -593,9 +594,9 @@ public class ApplicationController {
 				// Headers
 				response.setContentType(ExportFormat.getHttpContentType(exp_format));
 				response.setHeader("Content-Disposition", "attachment; filename=" + csv.getFileName().toString());
-				final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(csv.toFile())));
+				final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(csv.toFile()),StandardCharsets.UTF_8));
 				String line = null;
-				final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
+				final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(),StandardCharsets.UTF_8));
 				while( (line=reader.readLine())!=null ) {
 					writer.write(line);
 					writer.newLine();

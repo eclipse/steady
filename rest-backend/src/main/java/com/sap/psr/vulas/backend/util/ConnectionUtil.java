@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import javax.validation.constraints.NotNull;
 
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class ConnectionUtil {
-	
+
 	private static Logger log = LoggerFactory.getLogger(ConnectionUtil.class);
 
 	/**
@@ -41,7 +42,7 @@ public class ConnectionUtil {
 		}
 		return config;
 	}
-	
+
 	/**
 	 * <p>readInputStream.</p>
 	 *
@@ -52,7 +53,7 @@ public class ConnectionUtil {
 	public static String readInputStream(@NotNull InputStream _is) throws IOException {
 		final StringBuilder result_builder = new StringBuilder();
         try {
-        	final BufferedReader rd = new BufferedReader(new InputStreamReader(_is));
+        	final BufferedReader rd = new BufferedReader(new InputStreamReader(_is,StandardCharsets.UTF_8));
 			String line;
 			while((line = rd.readLine()) != null) {
 				result_builder.append(line).append('\r');
