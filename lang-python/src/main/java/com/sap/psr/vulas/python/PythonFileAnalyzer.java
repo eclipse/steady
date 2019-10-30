@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -213,7 +214,7 @@ public class PythonFileAnalyzer implements FileAnalyzer {
 	 */
 	public static FileAnalyzer createAnalyzer(InputStream _is) throws IOException {
 		FileAnalyzer fa = null;
-		final BufferedReader isr = new BufferedReader(new InputStreamReader(_is));
+		final BufferedReader isr = new BufferedReader(new InputStreamReader(_is,StandardCharsets.UTF_8));
 		String line = null;
 		int line_count = 0;
 		while( (line=isr.readLine())!=null ) {

@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -134,7 +136,7 @@ public class PipWrapper {
 			Thread t = new Thread(pw);
 			t.start();
 			t.join();
-			final Path download_info = pw.getOutFile();		
+			final Path download_info = pw.getOutFile();
 
 			// Install all deps
 			pw = new ProcessWrapper();
@@ -205,7 +207,7 @@ public class PipWrapper {
 				}
 			} catch (InterruptedException e) {
 				PipWrapper.log.error("Interrupt exception");
-			}			
+			}
 		}
 		sw.stop();
 		return packages;
@@ -224,7 +226,7 @@ public class PipWrapper {
 		final Pattern pattern = Pattern.compile("^(.*)==(.*)$");
 
 		// Read line by line
-		final BufferedReader reader = new BufferedReader(new FileReader(_file.toFile()));
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(_file.toFile()), StandardCharsets.UTF_8));
 		String line;
 		while( (line=reader.readLine())!=null ) {
 			final Matcher m = pattern.matcher(line);
@@ -257,7 +259,7 @@ public class PipWrapper {
 		Thread t = new Thread(pw, "pip");
 		t.start();
 		t.join();
-		
+
 		Set<PipInstalledPackage> packages = null;
 		if(pw.terminatedWithSuccess()) {
 			packages = this.parsePipListOutput(pw.getOutFile());
@@ -272,7 +274,7 @@ public class PipWrapper {
 			if(pw.terminatedWithSuccess())
 				packages = this.deserializePipListOutput(pw.getOutFile());
 		}
-		
+
 		// Collect package details
 		if(packages!=null) {
 			log.info("Found [" + packages.size() + "] pip packages:");
@@ -301,11 +303,11 @@ public class PipWrapper {
 		} else {
 			log.warn("No pip packages found with pip list");
 		}
-		
+
 		sw.stop();
 		return packages;
 	}
-	
+
 	/**
 	 * Parses the output of pip list, and instantiates {@link PipInstalledPackage} for every installed pip package.
 	 * @param _file
@@ -321,7 +323,7 @@ public class PipWrapper {
 		//final Pattern pattern = Pattern.compile("^(.*)\\s+(.*)$");
 
 		// Read line by line
-		final BufferedReader reader = new BufferedReader(new FileReader(_file.toFile()));
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(_file.toFile()), StandardCharsets.UTF_8));
 		String line;
 		while( (line=reader.readLine())!=null ) {
 			final Matcher mb = pattern_brackets.matcher(line);
@@ -330,7 +332,7 @@ public class PipWrapper {
 					log.warn("Package [" + mb.group(1) + "] not added as installed package");
 				} else {
 					packs.add(new PipInstalledPackage(mb.group(1), mb.group(2)));
-				}				
+				}
 			}
 		}
 		reader.close();
@@ -355,7 +357,7 @@ public class PipWrapper {
 				log.warn("Package [" + p.getName() + "] not added as installed package");
 			} else {
 				set.add(new PipInstalledPackage(p.getName(), p.getVersion()));
-			}	
+			}
 		}
 		return set;
 	}
@@ -394,7 +396,7 @@ public class PipWrapper {
 		final Pattern pattern = Pattern.compile("^([^:]*):(.*)$");
 
 		// Read line by line
-		final BufferedReader reader = new BufferedReader(new FileReader(_file.toFile()));
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(_file.toFile()), StandardCharsets.UTF_8));
 		String line;
 		while( (line=reader.readLine())!=null ) {
 			final Matcher m = pattern.matcher(line);
@@ -403,7 +405,7 @@ public class PipWrapper {
 		}
 		reader.close();
 
-		return props;		
+		return props;
 	}
 
 	/**
@@ -455,7 +457,7 @@ public class PipWrapper {
 		// Find all download URLs and files in pip output
 		final Set<String> urls  = new HashSet<String>();
 		final Set<String> files = new HashSet<String>();
-		final BufferedReader r = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(_out.getBytes())));
+		final BufferedReader r = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(_out.getBytes(StandardCharsets.UTF_8)),StandardCharsets.UTF_8));
 		String line = null;
 		while( (line=r.readLine())!=null ) {
 			final Matcher d  = PipWrapper.DOWNLOAD_PATTERN.matcher(line);
@@ -500,7 +502,7 @@ public class PipWrapper {
 		else
 			log.info("Found download info for " + _p);
 	}
-	
+
 	/**
 	 * Helper class for deserializing the output of pip list --format json.
 	 */
