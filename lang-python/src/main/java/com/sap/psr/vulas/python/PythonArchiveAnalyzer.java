@@ -47,9 +47,9 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 	Map<ConstructId, Construct> constructs = new TreeMap<ConstructId, Construct>();
 
 	private File archive = null;
-	
+
 	private LibraryId libraryId = null;
-	
+
 	/** PythonArchiveAnalyzers to deal with nested archives. */
 	private Set<FileAnalyzer> nestedAnalyzers = new HashSet<FileAnalyzer>();
 
@@ -65,7 +65,7 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 		final String ext = FileUtil.getFileExtension(_file);
 		if(ext.equals("gz") && !_file.getAbsolutePath().endsWith("tar.gz"))
 			return false;
-		if(ext == null || ext.equals(""))
+		if(ext.equals(""))
 			return false;
 		for(String supported_ext: this.getSupportedFileExtensions()) {
 			if(supported_ext.equalsIgnoreCase(ext))
@@ -79,7 +79,7 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 	public void analyze(final File _file) {
 		this.archive = _file;
 	}
-	
+
 	/**
 	 * <p>getArchivePath.</p>
 	 *
@@ -88,7 +88,7 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 	public Path getArchivePath() {
 		return this.archive!=null ? this.archive.toPath() : null;
 	}
-	
+
 	/**
 	 * <p>getDigest.</p>
 	 *
@@ -97,24 +97,24 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 	public String getDigest() {
 		return this.archive!=null ? FileUtil.getDigest(this.archive, DigestAlgorithm.MD5) : null;
 	}
-	
+
 	private InputStream getArchiveInputStream() throws IOException {
 		//final String ext = FileUtil.getFileExtension(this.archive);
 		InputStream is = null;
-		try {			
+		try {
 			if(FileUtil.isZipped(this.archive)) {
 				is = new ZipInputStream(new FileInputStream(this.archive));
 			} else {
 				final GzipCompressorInputStream gzis = new GzipCompressorInputStream(new FileInputStream(this.archive));
 				is =  new TarArchiveInputStream(gzis);
 			}
-			
+
 		} catch (FileNotFoundException e) {
 			log.error("Cannot find Pyhton archive to analyze ["+ this.archive.getAbsolutePath() +"]", e);
 		}
 		return is;
 	}
-	
+
 	private String getModuleName(String _name){
 		if(_name.lastIndexOf("/")>-1) {
 			String module_name_with_ext = _name.substring(_name.lastIndexOf("/") + 1, _name.length());
@@ -124,16 +124,16 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 			return _name.substring(0, _name.indexOf("."));
 		}
 	}
-	
+
 	private List<String> getPackageName(String _name, List<String> _inits){
 		final List<String> package_name = new ArrayList<String>();
 		if(_name.lastIndexOf("/")>-1){
 			String packToFind = _name.substring(0, _name.lastIndexOf("/"));
-			
+
 			while(_inits.contains(packToFind.concat("/__init__.py"))){
 				if(packToFind.lastIndexOf("/")>-1){
 					package_name.add(0,packToFind.substring(packToFind.lastIndexOf("/")+1, packToFind.length()));
-					packToFind = packToFind.substring(0,packToFind.lastIndexOf("/"));	
+					packToFind = packToFind.substring(0,packToFind.lastIndexOf("/"));
 				}
 				else{
 					package_name.add(0,packToFind);
@@ -143,7 +143,7 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 		}
 		return package_name;
 	}
-	
+
 	private Boolean isPackage(String _en){
         return _en.endsWith("__init__.py");
 	}
@@ -152,12 +152,12 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 	@Override
 	public Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
 		if(this.constructs.isEmpty()) {
-			
+
 			// list of __init__.py files (to become packages)
 			final List<String> inits = new ArrayList<String>();
 			boolean pre_processed = false;
 			try(InputStream is = this.getArchiveInputStream()) {
-				
+
 				// Read archive to look for __init__.py
 				if(is instanceof ZipInputStream){
 					ZipEntry en=null;
@@ -184,15 +184,15 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 				pre_processed = true;
 			} catch (IOException e) {
 				log.error("IOException analyzing Python archive ["+ this.archive.getAbsolutePath() +"]", e);
-			}			
-						
+			}
+
 			// Re-read archive to create constructs
 			try(InputStream is = this.getArchiveInputStream()) {
-			
+
 				if(is instanceof ZipInputStream && pre_processed) {
 					ZipEntry en = null;
 					while ((en=((ZipInputStream)is).getNextEntry())!=null){
-				
+
 						if(!en.isDirectory()){
 							//check if it is a tar (wheel egg), then extract and analyze it (here or where??) !!!
 							if(en.getName().endsWith(".whl") || en.getName().endsWith(".egg")|| en.getName().endsWith(".gz")) {
@@ -207,14 +207,14 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 								PythonId pack = null;
 								if(!package_name.isEmpty())
 									pack = new PythonId(null, PythonId.Type.PACKAGE, StringUtil.join(package_name, "."));
-								
+
 								// Create module
-								final String module_name = this.getModuleName(en.getName());								
+								final String module_name = this.getModuleName(en.getName());
 								final PythonId module =  new PythonId(pack, PythonId.Type.MODULE, module_name);
-																
+
 								// We put everything into a byte[] to avoid that the stream gets closed when read by antlr
 								final byte[] py_bytes = FileUtil.readInputStream(is);
-																
+
 								final FileAnalyzer fa = PythonFileAnalyzer.createAnalyzer(new ByteArrayInputStream(py_bytes));
 								if(fa instanceof Python3FileAnalyzer) {
 									((Python3FileAnalyzer)fa).setContext(module, pack);
@@ -224,8 +224,8 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 									((Python335FileAnalyzer)fa).setContext(module, pack);
 									this.constructs.putAll(((Python335FileAnalyzer)fa).getConstructs(new ByteArrayInputStream(py_bytes)));
 								}
-							}		
-								
+							}
+
 						}
 					}
 				}
@@ -241,20 +241,20 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 									this.nestedAnalyzers.add(fa);
 							}
 							else if (en.getName().endsWith(".py")) {
-								
+
 								// Create the package (if any)
 								final List<String> package_name = this.getPackageName(en.getName(), inits);
 								PythonId pack = null;
 								if(!package_name.isEmpty())
 									pack = new PythonId(null, PythonId.Type.PACKAGE, StringUtil.join(package_name, "."));
-								
+
 								// Create module
-								final String module_name = this.getModuleName(en.getName());								
+								final String module_name = this.getModuleName(en.getName());
 								final PythonId module =  new PythonId(pack, PythonId.Type.MODULE, module_name);
-								
+
 								// We put everything into a byte[] to avoid that the stream gets closed when read by antlr
 								final byte[] py_bytes = FileUtil.readInputStream(is);
-								
+
 								final FileAnalyzer fa = PythonFileAnalyzer.createAnalyzer(new ByteArrayInputStream(py_bytes));
 								if(fa instanceof Python3FileAnalyzer) {
 									((Python3FileAnalyzer)fa).setContext(module, pack);
@@ -264,8 +264,8 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 									((Python335FileAnalyzer)fa).setContext(module, pack);
 									this.constructs.putAll(((Python335FileAnalyzer)fa).getConstructs(new ByteArrayInputStream(py_bytes)));
 								}
-							}		
-								
+							}
+
 						}
 					}
 				}
@@ -274,17 +274,17 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 				log.error("IOException analyzing Python archive ["+ this.archive.getAbsolutePath() +"]", e);
 			}
 		}
-		
+
 		return constructs;
 	}
-	
+
 	/**
 	 * Sets the Maven Id for the JAR to be analyzed. The Maven ID is already known in some contexts (e.g., during Maven plugin execution).
 	 *
 	 * @param _id a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
 	 */
 	public void setLibraryId(LibraryId _id) { this.libraryId = _id; }
-	
+
 	/**
 	 * Returns a {@link Library} representing the analyzed Java archive.
 	 *
@@ -293,12 +293,12 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 	 */
 	public Library getLibrary() throws FileAnalysisException {
 		final Library lib = new Library();
-		
+
 		if(this.getDigest()!=null) {
 			lib.setDigest(this.getDigest());
 			lib.setDigestAlgorithm(DigestAlgorithm.MD5);
 		}
-		
+
 		lib.setConstructs(this.getSharedConstructs());
 
 		// No properties are set
@@ -317,13 +317,13 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 	public Construct getConstruct(ConstructId _id) throws FileAnalysisException {
 		return this.constructs.get(_id);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean hasChilds() {
 		return this.nestedAnalyzers!=null && !this.nestedAnalyzers.isEmpty();
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) {
@@ -351,10 +351,10 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 
 		try {
 			TarArchiveInputStream zis = new TarArchiveInputStream(new GzipCompressorInputStream(new BufferedInputStream(new FileInputStream(_gz))));
-		
+
 			TarArchiveEntry entry = null;
 			while((entry=zis.getNextTarEntry())!= null) {
-				
+
 				// ZipSlip: Do not extract
 				if(!DirUtil.isBelowDestinationPath(_out_dir.toPath(), entry.getName())) {
 					log.warn("Entry [" + entry + "] of archive [" + _gz + "] will not be extracted, as it would be outside of destination directory");
@@ -369,10 +369,10 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 						// Create parent if not existing
 						if (!file.getParentFile().exists())
 							file.getParentFile().mkdirs();
-		
+
 						// Extract file
 						final BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-						final byte[] bytes = new byte[1024];				
+						final byte[] bytes = new byte[1024];
 						int len = 0;
 						while((len = zis.read(bytes)) != -1)
 							bos.write(bytes,0,len);
@@ -388,7 +388,7 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 		}
 		return _out_dir;
 	}*/
-	
+
 	/**
 	 * <p>getSharedConstructs.</p>
 	 *
