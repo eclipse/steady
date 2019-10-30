@@ -448,7 +448,7 @@ public class ReachabilityAnalyzer implements Runnable {
                         for (List<com.sap.psr.vulas.shared.json.model.ConstructId> l : this.rcPaths.get(search.getLabel())) {
                             path_count++;
                             shortest_path_sum += l.size();
-                            shortest_path_avg = new Double(Math.abs((double) shortest_path_sum / path_count)).intValue();
+                            shortest_path_avg = (int) (Math.abs((double) shortest_path_sum / path_count));
                             shortest_path_min = (l.size() < shortest_path_min ? l.size() : shortest_path_min);
                             shortest_path_max = (l.size() > shortest_path_max ? l.size() : shortest_path_max);
                         }
@@ -507,7 +507,7 @@ public class ReachabilityAnalyzer implements Runnable {
         final ExecutorService pool = Executors.newFixedThreadPool(no_threads);
 
         // Partition size
-        final int size = new Double(Math.ceil((double) this.callgraph.getNodeCount() / (double) no_threads)).intValue();
+        final int size = (int) (Math.ceil((double) this.callgraph.getNodeCount() / (double) no_threads));
 
         // Create parallel call graph searches
         final Set<CallgraphReachableSearch> searches = new HashSet<CallgraphReachableSearch>();
