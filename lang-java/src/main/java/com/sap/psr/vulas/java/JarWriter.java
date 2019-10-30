@@ -149,7 +149,7 @@ public class JarWriter {
 		JarEntry entry = null;
 		while(enumeration.hasMoreElements()) {
 			entry = enumeration.nextElement();
-			
+
 			// ZipSlip: Do not extract
 			if(!DirUtil.isBelowDestinationPath(to, entry.getName())) {
 				log.warn("Entry [" + entry + "] of archive [" + Paths.get(this.originalJar.getName()).toAbsolutePath() + "] will not be extracted, as it would be outside of destination directory");
@@ -157,7 +157,7 @@ public class JarWriter {
 			// Extract
 			else {
 				path  = Paths.get(to.toString(), entry.getName());
-	
+
 				try {
 					if(entry.isDirectory()) {
 						if(!path.toFile().exists())
@@ -171,7 +171,7 @@ public class JarWriter {
 							Files.createDirectories(path.getParent());
 							JarWriter.log.warn(this.toString() + ": Invalid JAR file: No directory entry for file entry [" + path + "]");
 						}
-	
+
 						try (final FileOutputStream fos = new FileOutputStream(path.toFile()); final InputStream is = this.originalJar.getInputStream(entry)) {
 							while((bytes_read = is.read(bytes)) != -1) fos.write(bytes, 0, bytes_read);
 						}
@@ -231,7 +231,7 @@ public class JarWriter {
 	 */
 	public boolean hasManifestEntry(String _key) {
 		//log.info(this.originalManifest.getMainAttributes().keySet());
-		
+
 		if(this.originalManifest!=null) {
 			for(Object key: this.originalManifest.getMainAttributes().keySet()) {
 				if(_key.equals(key.toString()))
@@ -239,9 +239,9 @@ public class JarWriter {
 			}
 		}
 		return false;
-		
+
 		// Does not work
-		//return this.originalManifest.getMainAttributes().get(_key)!=null;//containsKey(_key);		
+		//return this.originalManifest.getMainAttributes().get(_key)!=null;//containsKey(_key);
 	}
 
 	/**
@@ -295,8 +295,8 @@ public class JarWriter {
 		}
 
 		// Put all the new entries
-		for(String key: this.mfEntriesToAdd.keySet()) {
-			atts.putValue(key, this.mfEntriesToAdd.get(key));
+		for( Map.Entry<String,String> entry: this.mfEntriesToAdd.entrySet()) {
+			atts.putValue(entry.getKey(), entry.getValue());
 		}
 
 		// Add vulas-specific ones
@@ -313,7 +313,7 @@ public class JarWriter {
 	 */
 	public Path getOriginalJarFileName() {
 		final Path complete_path = Paths.get(this.originalJar.getName());
-		return complete_path.getFileName(); 
+		return complete_path.getFileName();
 	}
 
 	/**
@@ -338,7 +338,7 @@ public class JarWriter {
 		}
 		// Use original file name
 		else {
-			path = complete_path.getFileName(); 
+			path = complete_path.getFileName();
 		}
 
 		return path;
@@ -371,7 +371,7 @@ public class JarWriter {
 			entry_name = _target_dir + (_target_dir.equals("") || _target_dir.endsWith("/") ? "" : "/")  + _path.getFileName();
 
 		if(!this.hasEntry(entry_name) || _overwrite)
-			this.additionalFiles.put(entry_name, _path);	
+			this.additionalFiles.put(entry_name, _path);
 	}
 
 	/**
@@ -445,7 +445,7 @@ public class JarWriter {
 				Set<JavaId> jids = new HashSet<JavaId>();
 
 				// Remember all JAR entries written to the new JAR, so that we do not create duplicate entries
-				// Example of a duplicate entry: Location.class in xmlbeans-2.6.0.jar 
+				// Example of a duplicate entry: Location.class in xmlbeans-2.6.0.jar
 				Set<String> written_jar_entries = new HashSet<String>();
 
 				while(en.hasMoreElements()) {
@@ -469,10 +469,10 @@ public class JarWriter {
 						continue;
 
 					// Loop registered JarEntryWriters to see if any matches (take the input stream from the first match)
-					for(Pattern pattern: this.callbacks.keySet()) {
-						matcher = pattern.matcher(old_entry.getName());
+					for(Map.Entry<Pattern,JarEntryWriter> entry: this.callbacks.entrySet()) {
+						matcher = entry.getKey().matcher(old_entry.getName());
 						if(matcher.matches()) {
-							is = this.callbacks.get(pattern).getInputStream(pattern.toString(), old_entry);
+							is = entry.getValue().getInputStream(entry.getKey().toString(), old_entry);
 						}
 					}
 
@@ -498,11 +498,14 @@ public class JarWriter {
 				}
 
 				// Add additional files
-				for(String key: this.additionalFiles.keySet()) {
-					if(this.additionalFiles.get(key).toFile().exists()) {
+				for(Map.Entry<String,Path> entry: this.additionalFiles.entrySet()) {
+					String key = entry.getKey();
+					Path value = entry.getValue();
+
+					if(value.toFile().exists()) {
 						new_entry = new JarEntry(key);
 						jos.putNextEntry(new_entry);
-						is = new FileInputStream(this.additionalFiles.get(key).toFile());
+						is = new FileInputStream(value.toFile());
 						while((bytes_read = is.read(bytes)) != -1)
 							jos.write(bytes, 0, bytes_read);
 						is.close();
@@ -514,7 +517,7 @@ public class JarWriter {
 				jos.close();
 				this.originalJar.close();
 
-				// 
+				//
 				old_entry = null;
 				JarWriter.log.info("[" + this.originalJar.getName() + "] rewritten to [" + this.rewrittenFile + "]");
 			}
@@ -555,7 +558,7 @@ public class JarWriter {
 	 */
 	public final static Path appendToClasspath(Set<Path> _classpath, Path _to_append, boolean _preprocess) {
 		Path appended_path = _to_append;
-		
+
 		// Add w/o preprocessing
 		if(!_preprocess || _to_append.toFile().isDirectory()) {
 			_classpath.add(_to_append);
@@ -585,7 +588,7 @@ public class JarWriter {
 				JarWriter.log.error("Error while preprocessing JAR [" + _to_append + "], original JAR appended to classpath: " + e.getMessage());
 			}
 		}
-		
+
 		return appended_path;
 	}
 }

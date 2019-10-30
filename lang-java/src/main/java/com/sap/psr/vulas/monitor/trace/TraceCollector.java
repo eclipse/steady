@@ -94,7 +94,7 @@ public class TraceCollector {
 
 	/** Used in different upload methods, set in uploadInformarion(GoalExecution, int). */
 	private AbstractGoal exe = null;
-	
+
 	/** Java Ids corresponding to classes and packages of executable constructs. */
 	private Set<ConstructId> contextConstructs = new HashSet<ConstructId>();
 
@@ -128,7 +128,7 @@ public class TraceCollector {
 			// Trigger the creation of the execution monitor singleton
 			ExecutionMonitor.getInstance();
 
-			// 
+			//
 			ClassPoolUpdater.getInstance();
 
 			BackendConnector.getInstance();
@@ -290,7 +290,7 @@ public class TraceCollector {
 		// Only add the trace if the JAR is not blacklisted
 		if(!blacklisted_jar) {
 			this.constructUsage.add(u);
-			
+
 			// Stats
 			switch(c_type) {
 				case CONSTRUCTOR: this.constructorTraceCount++; break;
@@ -298,7 +298,7 @@ public class TraceCollector {
 				case CLASSINIT: this.clinitTraceCount++; break;
 				default: break; // Should not happen
 			}
-			
+
 			// Add 1 trace for context and package (more does not seem to make any sense, there could be easily too many)
 			final ConstructId ctx_id  = _id.getDefinitionContext();
 			final ConstructId pack_id = ((JavaId)_id).getJavaPackageId();
@@ -451,10 +451,12 @@ public class TraceCollector {
 				change_lists = BackendConnector.getInstance().getAppBugs(CoreConfiguration.buildGoalContextFromGlobalConfiguration(), app_ctx);
 			} catch (BackendConnectionException e) {
 				TraceCollector.getLog().error("Error while reading app bugs: " + e.getMessage(), e);
-				change_lists = new HashMap<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>>();						
+				change_lists = new HashMap<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>>();
 			}
-			for(String b: change_lists.keySet()) {
-				if(change_lists.get(b).contains(ConstructId.toSharedType(cle))) {
+			for(Map.Entry<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> entry: change_lists.entrySet()) {
+				String b = entry.getKey();
+				Set<com.sap.psr.vulas.shared.json.model.ConstructId> value = entry.getValue();
+				if(entry.getValue().contains(ConstructId.toSharedType(cle))) {
 					if(!paths_per_bug.containsKey(b))
 						paths_per_bug.put(b, new ArrayList<List<PathNode>>());
 					paths_per_bug.get(b).add(path);
@@ -473,13 +475,14 @@ public class TraceCollector {
 		JarAnalyzer ja = null;
 		ClassPoolUpdater cpu = new ClassPoolUpdater();
 		// Upload per bug (as in ReachabilityAnalyzer)
-		for(String bugid: paths_per_bug.keySet()) {
+		for(Map.Entry<String, List<List<PathNode>>> entry: paths_per_bug.entrySet()) {
+			String bugid = entry.getKey();
 			json.delete(0, json.length());
 			json.append("[");
 			int n=0;
 
 			// Build JSON
-			for(List<PathNode> path1: paths_per_bug.get(bugid)) {
+			for(List<PathNode> path1: entry.getValue()) {
 				if ( (n++)>0 ) json.append(",");
 				json.append("{");
 				json.append("\"app\":").append(JacksonUtil.asJsonString(app_ctx)).append(",");
@@ -500,7 +503,7 @@ public class TraceCollector {
 					}
 					// If not existing, find it
 					else {
-						// 
+						//
 						jar_url  = cpu.getJarResourcePath(cid.getConstructId());
 						/*if(jar_url==null) {
 									try {
@@ -508,7 +511,7 @@ public class TraceCollector {
 									} catch (MalformedURLException e) {
 										this.getLog().warn("Cannot create JAR URL: " + e.getMessage());
 									}
-								}*/	
+								}*/
 
 						jar_path = (jar_url==null ? null : FileUtil.getJARFilePath(jar_url.toString()));
 						if(jar_path!=null && this.jarFiles.containsKey(jar_path)) {
@@ -529,7 +532,7 @@ public class TraceCollector {
 			json.append("]");
 
 			// Upload JSON
-			TraceCollector.getLog().info("Upload [" + paths_per_bug.get(bugid).size() + "] path(s) for bug [" + bugid + "]");
+			TraceCollector.getLog().info("Upload [" + entry.getValue().size() + "] path(s) for bug [" + bugid + "]");
 			try {
 				BackendConnector.getInstance().uploadPaths(CoreConfiguration.buildGoalContextFromGlobalConfiguration(), app_ctx, json.toString());
 			} catch (BackendConnectionException e) {
@@ -548,7 +551,7 @@ public class TraceCollector {
 		b.append("[");
 		ConstructUsage u = null, v = null;
 		Application ctx = null;
-		
+
 		// The traces to be uploaded (polled one after the other)
 		final Map<ConstructUsage,ConstructUsage> traces_to_upload = new HashMap<ConstructUsage,ConstructUsage>();
 		while( (_batch_size==-1 || traces_to_upload.size()<_batch_size) && !this.constructUsage.isEmpty()) {
@@ -602,7 +605,7 @@ public class TraceCollector {
 
 					// Yes, already known
 					if(usage.getArchiveDigest()!=null && usage.getArchiveFileName()!=null) {}
-					// No, we need to get it from the JAR analyzer (created in method addUsedConstruct) 
+					// No, we need to get it from the JAR analyzer (created in method addUsedConstruct)
 					else {
 
 						if(this.jarFiles.containsKey(jar_path)) {
@@ -635,7 +638,7 @@ public class TraceCollector {
 		}
 		b.append("]");
 
-		TraceCollector.getLog().info("[" + trace_count + " traces] prepared for upload, [" + this.constructUsage.size() + " traces] remain in queue");				
+		TraceCollector.getLog().info("[" + trace_count + " traces] prepared for upload, [" + this.constructUsage.size() + " traces] remain in queue");
 		return b.toString();
 	}
 
@@ -646,7 +649,7 @@ public class TraceCollector {
 	 */
 	public Map<String,Long> getStatistics() {
 		final Map<String, Long> stats = new HashMap<String,Long>();
-		stats.put("archivesAnalyzed", new Long(this.jarFiles.size()));			
+		stats.put("archivesAnalyzed", new Long(this.jarFiles.size()));
 		stats.put("tracesCollectedMethod", this.methodTraceCount);
 		stats.put("tracesCollectedConstructor", this.constructorTraceCount);
 		stats.put("tracesCollectedClinit", this.clinitTraceCount);

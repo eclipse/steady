@@ -38,21 +38,21 @@ public class ArchiveAnalysisManager {
 	private static final Log log = LogFactory.getLog(ArchiveAnalysisManager.class);
 
 	private ExecutorService pool;
-	
+
 	private boolean instrument = false;
 	private Application ctx = null;
 	private Path workDir = null;
 	private Path libDir = null;
 	private Path inclDir = null;
 	private Map<Path, JarAnalyzer> analyzers = new HashMap<Path,JarAnalyzer>();
-	
+
 	/** Maps {@link JarAnalyzer}s, which implement {@link Callable}, to their respective {@link Future}. */
 	private Map<JarAnalyzer, Future<FileAnalyzer>> futures = new HashMap<JarAnalyzer, Future<FileAnalyzer>>();
-	
+
 	private boolean rename = false;
-	
+
 	private Map<Path,Dependency> knownDependencies = null;
-	
+
 	private long analysisTimeout = -1;
 
 	/**
@@ -121,7 +121,7 @@ public class ArchiveAnalysisManager {
 		this.inclDir = _p;
 		ArchiveAnalysisManager.log.info("Include dir set to [" + _p + "]");
 	}
-	
+
 	/**
 	 * <p>getSupportedFileExtensions.</p>
 	 *
@@ -175,10 +175,10 @@ public class ArchiveAnalysisManager {
 	public Dependency getKnownDependency(Path _p) {
 		if(this.knownDependencies!=null)
 			return this.knownDependencies.get(_p);
-		else 
+		else
 			return null;
 	}
-	
+
 	/**
 	 * Starts the analysis for all {@link Path}s of the given {@link Map} that have a null value.
 	 * As such, it can be used to avoid analyzing archives multiple times.
@@ -187,7 +187,7 @@ public class ArchiveAnalysisManager {
 	 * @param _parent a {@link com.sap.psr.vulas.java.JarAnalyzer} object.
 	 */
 	public void startAnalysis(@NotNull Map<Path, JarAnalyzer> _paths, JarAnalyzer _parent) {
-		
+
 		// Split those that have been analyzed already and those that need analysis
 		final Set<Path> not_yet_analyzed = new HashSet<Path>();
 		for(Map.Entry<Path, JarAnalyzer> entry: _paths.entrySet()) {
@@ -196,14 +196,14 @@ public class ArchiveAnalysisManager {
 			else
 				this.analyzers.put(entry.getKey(), entry.getValue());
 		}
-		
+
 		// Analyze if necessary
 		if(!not_yet_analyzed.isEmpty()) {
 			log.info("[" + this.analyzers.size() + "/" + _paths.size() + "] archives already analyzed, the remaining [" + not_yet_analyzed.size() + "] will be analyzed now ...");
 			this.startAnalysis(not_yet_analyzed, _parent);
 		} else {
 			log.info("All [" + this.analyzers.size() + "/" + _paths.size() + "] archives have been analyzed already");
-		}		
+		}
 	}
 
 	/**
@@ -262,15 +262,15 @@ public class ArchiveAnalysisManager {
 				else if(p.toString().endsWith("war")) {
 					ja = new WarAnalyzer();
 					((WarAnalyzer)ja).setIncludeDir(this.inclDir);
-				} 
+				}
 				else if(p.toString().endsWith("aar")) {
 					ja = new AarAnalyzer();
-				} 
+				}
 				else {
 					ArchiveAnalysisManager.log.warn("File extension not supported (only JAR, WAR, AAR): " + p);
 					continue;
 				}
-				
+
 				if(parent!=null)
 					ja.setParent(parent);
 
@@ -282,12 +282,12 @@ public class ArchiveAnalysisManager {
 
 				ja.analyze(p.toFile());
 				ja.setInstrument(this.instrument); // To be called after analyze, since instrument uses the URL member
-				
+
 				this.analyzers.put(p, ja);
-				
+
 				// Execute the analyzer
 				final Future<FileAnalyzer> future = this.pool.submit(ja);
-				this.futures.put(ja, future);				
+				this.futures.put(ja, future);
 			} catch (Exception e) {
 				ArchiveAnalysisManager.log.error("Error while analyzing path [" + p + "]: " + e.getMessage());
 			}
@@ -296,18 +296,18 @@ public class ArchiveAnalysisManager {
 		final StopWatch sw = new StopWatch("Analysis of [" + futures.size() + "] Java archives").setTotal(futures.size()).start();
 
 		this.pool.shutdown(); // Don't accept new tasks, wait for the completion of existing ones
-		
+
 		try {
-			while (!this.pool.awaitTermination(10, TimeUnit.SECONDS)) {				
+			while (!this.pool.awaitTermination(10, TimeUnit.SECONDS)) {
 				final Map<JarAnalyzer, Future<FileAnalyzer>> open_tasks = this.getOpenTasks();
 				final long sw_runtime = sw.getRuntimeMillis();
-				
+
 				// There are remaining tasks, and a timeout has been configured and reached
 				if(!open_tasks.isEmpty() && this.analysisTimeout!=-1 && sw_runtime > this.analysisTimeout) {
 					ArchiveAnalysisManager.log.warn("Timeout of [" + this.analysisTimeout + "ms] reached, the following [" + open_tasks.size() + "] non-completed analysis tasks will be canceled:");
-					for(JarAnalyzer ja: open_tasks.keySet()) {
-						ArchiveAnalysisManager.log.info("    " + ja);
-						open_tasks.get(ja).cancel(true);
+					for(Map.Entry<JarAnalyzer, Future<FileAnalyzer>> entry: open_tasks.entrySet()) {
+						ArchiveAnalysisManager.log.info("    " + entry.getKey());
+						entry.getValue().cancel(true);
 					}
 					throw new JarAnalysisException("Timeout of [" + this.analysisTimeout + "ms] reached, [" + open_tasks.size() + "] have been canceled");
 				}
@@ -318,7 +318,7 @@ public class ArchiveAnalysisManager {
 						ArchiveAnalysisManager.log.info("    " + ja);
 				}
 			}
-			
+
 			sw.stop();
 		}
 		catch (JarAnalysisException jae) {
@@ -328,7 +328,7 @@ public class ArchiveAnalysisManager {
 			sw.stop(e);
 		}
 	}
-	
+
 	/**
 	 * Returns all analysis {@link Future}s that are not (yet) done.
 	 * @see Future#isDone()
@@ -336,9 +336,9 @@ public class ArchiveAnalysisManager {
 	 */
 	private final Map<JarAnalyzer, Future<FileAnalyzer>> getOpenTasks() {
 		final Map<JarAnalyzer, Future<FileAnalyzer>> open_tasks = new HashMap<JarAnalyzer, Future<FileAnalyzer>>();
-		for(JarAnalyzer ja: this.futures.keySet()) {
-			if(!this.futures.get(ja).isDone()) {
-				open_tasks.put(ja, this.futures.get(ja));
+		for(Map.Entry<JarAnalyzer, Future<FileAnalyzer>> entry: this.futures.entrySet()) {
+			if(!entry.getValue().isDone()) {
+				open_tasks.put(entry.getKey(), entry.getValue());
 			}
 		}
 		return open_tasks;
@@ -370,13 +370,11 @@ public class ArchiveAnalysisManager {
 	 * @return a {@link com.sap.psr.vulas.java.JarAnalyzer} object.
 	 */
 	public JarAnalyzer getAnalyzerForSubpath(Path _p) {
-		JarAnalyzer ja = null;
-		for(Path p: this.analyzers.keySet()) {
-			if(p.endsWith(_p)) {
-				ja = this.analyzers.get(p); 
-				break;
+		for(Map.Entry<Path, JarAnalyzer> entry: this.analyzers.entrySet()) {
+			if(entry.getKey().endsWith(_p)) {
+				return entry.getValue();
 			}
 		}
-		return ja;
+		return null;
 	}
 }

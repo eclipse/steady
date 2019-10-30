@@ -38,7 +38,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 
 	private static final Log log = LogFactory.getLog(ASTSignatureComparator.class);
-	
+
 	//If a construct under test contains 50% of the fixes, it is said to contain the Security Fixes
 	// TODO : (A more robust scheme than a simple percentage might be better)
 	private static final double NUM_OF_FIXES_THRESHOLD = 100.0;
@@ -170,7 +170,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 		final Node root_of_signature_under_test = ((ASTSignature)_s).getRoot();
 		final ASTSignatureChange sign_change = (ASTSignatureChange)_change;
 		final Set<SourceCodeChange> list_of_modifications = sign_change.getListOfChanges();
-		
+
 		// Return the result of the worker method
 		return containsChange(root_of_signature_under_test, list_of_modifications);
 	}
@@ -183,7 +183,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 	public double getStringSimilarityThreshold() {
 		return this.mStringSimilarity;
 	}
-	
+
 	/**
 	 * <p>setStringSimilarityThreshold.</p>
 	 *
@@ -207,14 +207,14 @@ public class ASTSignatureComparator implements SignatureComparator {
 		else
 			this.setStringSimilarityThreshold(STRING_SIMILARITY_THRESHOLD_MORE_THAN__FIVE_CHANGES);
 	}
-	
+
 	/**
 	 * Returns the class name of the given SourceCodeChange (Delete, Insert, Move or Update).
 	 * @param _change
 	 * @return
 	 */
 	private String getSimpleChangeName(SourceCodeChange _change) { return _change.getClass().getSimpleName(); }
-	
+
 	/**
 	 * Returns true if the tree given by _root contains the entity changed by _change.
 	 * @param _root
@@ -223,26 +223,26 @@ public class ASTSignatureComparator implements SignatureComparator {
 	 */
 	private Node getBestMatch(Node _root, SourceCodeChange _change) {
 		Node best_match = null;
-		
+
 		final Set<NodePair> fMatch = new HashSet<NodePair>();
         final TreeMatcher dnm = MatchingFactory.getMatcher(fMatch);
-        
+
         final EntityType change_type  = _change.getChangedEntity().getType();
 		final String change_value = _change.getChangedEntity().getUniqueName();
 		final Node changed_node = new Node(change_type, change_value);
-		
+
         dnm.match(_root, changed_node);
-        
+
         //ASTSignatureComparator.log.info("");
         for(NodePair pair: fMatch) {
         	if(pair.getRight().equals(changed_node)) {
         		best_match = pair.getLeft();
         	}
         }
-        
+
 		return best_match;
 	}
-	
+
 	/**
 	 *
 	 * @param _root_node
@@ -255,24 +255,24 @@ public class ASTSignatureComparator implements SignatureComparator {
 		matchedNumFixes = 0;
 		this.assignSimlarityScheme(totalNumFixes);
 		boolean contains_change = false;
-		
+
 		// Maintains the containment status per change
 		final Map<SourceCodeChange, Boolean> change_containment = new HashMap<SourceCodeChange, Boolean>();
-		
+
 		int i = 1;
 
 		// Loop over all changes and check each of them
 		if(_changes!= null && _changes.size() > 0) {
-			
+
 			EntityType change_type = null;
 			String change_value = null;
-			
+
 			Node changed_node = null; // The node to search for
 			Node matched_node = null; // The node matching best (if any)
-			
+
 			for(SourceCodeChange change : _changes) {
 
-				// Build the node that results from the change (same type and value) 
+				// Build the node that results from the change (same type and value)
 				change_type  = change.getChangedEntity().getType();
 				change_value = change.getChangedEntity().getUniqueName();
 				changed_node = new Node(change_type, change_value);
@@ -281,7 +281,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 				// - The New Inserted Entity : change.getChangedEntity()
 				// - Parent Entity : change.getParentEntity()
 				if(change instanceof Insert) {
-					
+
 					//Set the parent of the changed node
 					EntityType changedParentEntityType = ((Insert)change).getParentEntity().getType();
 					String changedParentValue  = ((Insert)change).getParentEntity().getUniqueName();
@@ -292,8 +292,8 @@ public class ASTSignatureComparator implements SignatureComparator {
 					//matched_node = searchForBestMatchingNode(changed_node, _root_node);
 					matched_node = getBestMatch(_root_node, change);
 					contains_change = matched_node!=null;
-					
-					
+
+
 				}
 				// Case 2: DELETE
 				// 1. The Deleted Entity : change.getChangedEntity()
@@ -355,7 +355,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 					contains_change = matched_node!=null;
 				}
-				
+
 				// Maintain the status for the current change
 				ASTSignatureComparator.log.info("             " + i++ + " Change type [" + change.getClass().getSimpleName() + "], changed node [" + change_type + ", \"" + change_value + "\"], change contained: [" + contains_change + "]");
 				if(matched_node!=null)
@@ -366,9 +366,8 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 		// Make the Decision at the end reading through all the content of the map
 		boolean unMatchedFlag = false;
-		for (SourceCodeChange change : change_containment.keySet()) {
-			Boolean status = change_containment.get(change);
-			if(!status) {
+		for (Map.Entry<SourceCodeChange, Boolean> entry : change_containment.entrySet()) {
+			if(!entry.getValue()) {
 				unMatchedFlag = true;
 			}
 			else {
@@ -385,7 +384,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 	private boolean hasSameParent(Node _n1, Node _n2){
 		boolean same_parent = false;
-		
+
 		Node p1 = (Node)_n1.getParent();
 		String p1_type = p1.getLabel().name();
 		String p1_value = p1.getValue();
@@ -396,7 +395,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 		if(p1_type.equals(p2_type)) {
 			double similarityScheme = fLevenshtein.calculateSimilarity(p1_value, p2_value);
-			same_parent = (similarityScheme > getStringSimilarityThreshold()); 
+			same_parent = (similarityScheme > getStringSimilarityThreshold());
 		}
 		return same_parent;
 	}
@@ -416,10 +415,10 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 		// Both Nodes have the same "Label", for instance both are IF_STATEMENTs
 		if(astRootNodeLabel.equals(changedNode.getLabel())) {
-			
+
 			// Both have an empty Value, for instance ==== > return; (Label : RETURN_STATEMENT, Value : "")
 			if(astRootNodeValue.isEmpty() &&  changedNode.getValue().isEmpty()) {
-				
+
 				//Check if they have the same parent, otherwise resume searching
 				if(this.hasSameParent(changedNode,astRoot)) {
 					return astRoot;
