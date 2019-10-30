@@ -455,7 +455,7 @@ public class ReachabilityAnalyzer implements Runnable {
                     }
 
                     tp_sum += this.targetConstructs.get(search.getLabel()).size();
-                    tp_avg = new Double(Math.abs((double) tp_sum / bugs_count)).intValue();
+                    tp_avg = (int) (Math.abs((double) tp_sum / bugs_count));
                     tp_min = (this.targetConstructs.get(search.getLabel()).size() < tp_min ? this.targetConstructs.get(search.getLabel()).size() : tp_min);
                     tp_max = (this.targetConstructs.get(search.getLabel()).size() > tp_max ? this.targetConstructs.get(search.getLabel()).size() : tp_max);
                 }
