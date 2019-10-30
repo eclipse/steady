@@ -1768,7 +1768,8 @@ public class ApplicationController {
 			// To throw an exception if the entity is not found
 			final Application a = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s));
 
-			if( (vulnDepOrigin.equals(VulnDepOrigin.BUNDLEDCC) && bundledLibrary == null) || (vulnDepOrigin.equals(VulnDepOrigin.BUNDLEDAFFLIBID) && (bundledGroup == null || bundledGroup == null || bundledVersion == null )))
+			if( (vulnDepOrigin.equals(VulnDepOrigin.BUNDLEDCC) && bundledLibrary == null) ||
+			    (vulnDepOrigin.equals(VulnDepOrigin.BUNDLEDAFFLIBID) && (bundledGroup == null || bundledVersion == null )))
 				return new ResponseEntity<VulnerableDependency>(HttpStatus.BAD_REQUEST);
 
 			return new ResponseEntity<VulnerableDependency>(appRepository.getVulnerableDependencyBugDetails(a, digest, bugid, vulnDepOrigin, bundledLibrary, bundledGroup, bundledArtifact, bundledVersion), HttpStatus.OK);
