@@ -408,7 +408,9 @@ public class GitClient implements IVCSClient {
 			df.setRepository( repository );
 			df.setDiffComparator( RawTextComparator.DEFAULT );
 			df.setDetectRenames( true );
-			List<DiffEntry> diffs = df.scan( parent.getTree(), commit.getTree() );
+			if (parent != null) {
+				List<DiffEntry> diffs = df.scan( parent.getTree(), commit.getTree() );
+			}
 
 			File oldFile, newFile;
 			DiffEntry.ChangeType changeType;
