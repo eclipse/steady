@@ -70,7 +70,7 @@ public class SvnClient implements IVCSClient {
 	}
 
 	public void setRepoUrl(URL _u) throws RepoMismatchException {
-		if(_u==null) throw new IllegalArgumentException("Invalid url: " + _u);
+		if(_u==null) throw new IllegalArgumentException("Invalid url");
 		this.url = _u;
 
 		// Prepare repository setup (authentication and HTTP proxy)
