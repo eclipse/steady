@@ -3,6 +3,11 @@ package com.sap.psr.vulas.backend.component;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
+
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -156,6 +161,7 @@ public class ApplicationExporter {
 			pool.execute(search);
 		}
 
+		PrintWriter writer = null;
 		try {
 			// Temporary file
 			final java.nio.file.Path dir = VulasConfiguration.getGlobal().getTmpDir();
@@ -163,7 +169,8 @@ public class ApplicationExporter {
 			final File f = File.createTempFile(prefix, "." + _format.toString().toLowerCase(), dir.toFile());
 			export_file = f.toPath();
 
-			final PrintWriter writer = new PrintWriter(f);
+			Writer w = new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8);
+			writer = new PrintWriter(w);
 
 			// Create CSV header
 			if(ExportFormat.CSV.equals(_format)) {
@@ -233,6 +240,10 @@ public class ApplicationExporter {
 		} catch (IOException e) {
 			sw.stop(e);
 			log.error("Exception while writing the apps: " + e.getMessage());
+		} finally {
+			if(writer != null) {
+				writer.close();
+			}
 		}
 
 		return export_file;
