@@ -245,9 +245,9 @@ public class Python335FileAnalyzer extends Python335BaseListener implements File
 	 * @throws com.sap.psr.vulas.FileAnalysisException if any.
 	 */
 	public Construct getConstruct(com.sap.psr.vulas.shared.json.model.ConstructId _id) throws FileAnalysisException {
-		for(ConstructId cid: this.constructs.keySet())
-			if(ConstructId.toSharedType(cid).equals(_id))
-					return this.constructs.get(cid);
+		for(Map.Entry<ConstructId, Construct> entry: this.constructs.entrySet())
+			if(ConstructId.toSharedType(entry.getKey()).equals(_id))
+					return entry.getValue();
 		return null;
 	}
 
