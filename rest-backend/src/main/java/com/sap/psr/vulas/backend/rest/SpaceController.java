@@ -286,7 +286,7 @@ public class SpaceController {
 				t = this.tenantRepository.getTenant(tenant);
 			}
 			catch(EntityNotFoundException enfe) {
-				log.error("Tenant [" + t.getTenantToken() + "] not found");
+				log.error("Tenant [" + tenant + "] not found");
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}catch (Exception e){
 				log.error("Error retrieving tenant: " + e);
@@ -346,7 +346,7 @@ public class SpaceController {
 				t = this.tenantRepository.getTenant(tenant);
 			}
 			catch(EntityNotFoundException enfe) {
-				log.error("Tenant [" + t.getTenantToken() + "] not found");
+				log.error("Tenant [" + tenant + "] not found");
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}catch (Exception e){
 				log.error("Error retrieving tenant: " + e);
@@ -506,7 +506,7 @@ public class SpaceController {
 				t = this.tenantRepository.getTenant(tenant);
 			}
 			catch(EntityNotFoundException enfe) {
-				log.error("Tenant [" + t.getTenantToken() + "] not found");
+				log.error("Tenant [" + tenant + "] not found");
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}catch (Exception e){
 				log.error("Error retrieving tenant: " + e);
