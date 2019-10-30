@@ -121,7 +121,7 @@ public class ArtifactController {
 		}
 		catch(Exception e) {
 			log.error("Error: " + e.getMessage(), e);
-			e.getStackTrace();
+			// e.getStackTrace();
 			return new ResponseEntity<Set<Artifact>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -155,7 +155,7 @@ public class ArtifactController {
 		}
 		catch(Exception e) {
 			log.error("Error: " + e.getMessage(), e);
-			e.getStackTrace();
+			//e.getStackTrace();
 			return new ResponseEntity<Artifact>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
