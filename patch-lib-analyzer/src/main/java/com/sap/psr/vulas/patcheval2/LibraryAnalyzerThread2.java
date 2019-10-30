@@ -36,14 +36,14 @@ import org.apache.commons.logging.LogFactory;
 public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibResult2>>{
     private static final Log log = LogFactory.getLog(LibraryAnalyzerThread2.class);
     private int tid;
-     
+
   //  private Gson gson;
     private LinkedList<OverallConstructChange> singleMethsConsCC;
     private LinkedList<OverallConstructChange> addedDelMethsConsCC;
     private LibraryId libId;
     private Long timestamp;
     private ProgrammingLanguage lang;
-      
+
     /**
      * <p>Constructor for LibraryAnalyzerThread2.</p>
      *
@@ -53,20 +53,20 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
      * @param a a {@link com.sap.psr.vulas.shared.json.model.Artifact} object.
      * @param l a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
      */
-    public LibraryAnalyzerThread2(int _id, LinkedList<OverallConstructChange> methsConsMOD, 
+    public LibraryAnalyzerThread2(int _id, LinkedList<OverallConstructChange> methsConsMOD,
     		LinkedList<OverallConstructChange> methsConsAD, Artifact a , ProgrammingLanguage l){
         this.tid=_id;
 
-        this.singleMethsConsCC = methsConsMOD;    
+        this.singleMethsConsCC = methsConsMOD;
         this.addedDelMethsConsCC = methsConsAD;
         this.libId = a.getLibId();
         this.timestamp = a.getTimestamp();
         this.lang = l;
       //  gson = GsonHelper.getCustomGsonBuilder().create();
     }
-    
 
-   
+
+
     /** {@inheritDoc} */
     @Override
     public List<ConstructPathLibResult2> call() throws Exception {
@@ -74,11 +74,11 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
        // for (int libLoop=0;libLoop<libIds.size();libLoop++){
         	LibraryId l = libId;
         	log.info("Analysis of lib ["+ l.toString() + "] with tid [" +tid+"]");
-        	
+
         	  //TODO: now only going on for Java, extend to PYTHON
         //    if (lang==ProgrammingLanguage.JAVA) {
-            	        	
-                
+
+
             	boolean binAvailable = true;
             	// are these comments still valid?
             	//doesArtifactExist works for both Java and Python as the called api (/artifacts/g/a/v) does not use the package information for Python
@@ -89,7 +89,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
                 	log.warn("No artifact available for library Id [" + l.toString() +"], it will not be included in the csv");
                 }
                 else{
-              	
+
 	                //check whether the sources for the current version are available
                 	boolean sourcesAvailable = false;
                 	if(lang==ProgrammingLanguage.JAVA){
@@ -99,18 +99,18 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 	                String ast_lid = null;
 	                int changesToV = -1;
 	                int changesToF = -1;
-	                
+
 	                String qString = l.getMvnGroup()+"/"+l.getArtifact()+"/"+l.getVersion();
-	                
+
 	                List<ConstructId> c = new ArrayList<ConstructId>();
 	                for (int j=0;j<singleMethsConsCC.size();j++){
 	                	c.add(singleMethsConsCC.get(j).getConstructId());
 	                }
-	                
-	              
+
+
 		            if(c.size()>0){
-		
-		                //intersect change list with artifact constructs 
+
+		                //intersect change list with artifact constructs
 		                List<ConstructId> cids = null;
 		                ConstructId[] cids_array =null;
 		                cids_array=BackendConnector.getInstance().getArtifactBugConstructsIntersection(qString,c,(lang==ProgrammingLanguage.JAVA)?"jar":"sdist",lang);
@@ -118,62 +118,62 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 		                	log.warn("The intersection returned null (thus something went wrong in cia); the Jar for library Id [" + l.toString() +"] will not be included in the csv for MOD constructs");
 		                } else {
 		                	cids = Arrays.asList(cids_array);
-			                
-			             
+
+
 			                boolean qnameInBin = false;
 			                for ( OverallConstructChange mcCC : singleMethsConsCC  ) {
-			
+
 			                	ast_lid = null;
 			                	changesToV = -1;
 			                    changesToF = -1;
 			                    qnameInBin = false;
-			      
+
 				                if(cids!=null && cids.contains(mcCC.getConstructId())){
 				                	log.info("cids contains ["+mcCC.getConstructId()+"], change type [" +mcCC.getChangeType()+"]");
 				                	qnameInBin=true;
 				                }
-	
+
 				                LidResult2 lr = new LidResult2(l, timestamp,qnameInBin);
 		                		lr.setSourcesAvailable(sourcesAvailable);
-		                		
+
 				                // if sourcesAvailable is true, it also implies that lang==ProgrammingLanguage.JAVA
 					            if ( qnameInBin && sourcesAvailable){
-				                    
+
 					            	//if the construct is in the JAR and the sources are available
-					            	//we can perform the ast comparison in case 
+					            	//we can perform the ast comparison in case
 					            	// (a) changes are of type MOD
 					            	// (b) we have the ast for the buggy and fixed versions
 					            	// In particular,
 					            	// for (a):  it should always be MOD at this point of the execution, since add and del are pre filtered out
 					            	// for (b) even if the overall change is a mod, we may not have the buggy and fixed
-			                    	//asts: e.g., the fix includes 2 commit and the constructs is first DELETED and the 
-			                    	//ADDED, this means that overall is a MOD but we do not have asts (see CVE-2015-5254 
+			                    	//asts: e.g., the fix includes 2 commit and the constructs is first DELETED and the
+			                    	//ADDED, this means that overall is a MOD but we do not have asts (see CVE-2015-5254
 			                    	//as an example)
-					            	
+
 					            	 if ( mcCC.getChangeType().equals(ConstructChangeType.MOD) &&
 					            			 (mcCC.getBuggyBody()!=null ||mcCC.getFixedBody()!=null)){
-					            	
+
 						                    boolean sourcesQnameLib = false;
 						                    if(BackendConnector.getInstance().getSourcesForQnameInLib(qString+"/"+mcCC.getConstructId().getType().toString()+"/"+mcCC.getConstructId().getQname())!=null)
 						                    	sourcesQnameLib = true;
-						                
-						                
+
+
 						                    if (sourcesQnameLib) {
 						                    	// GET /constructs/{mvnGroup}/{artifact}/{version}/{type}/{qname}/  : AST_LID
 						                    	ast_lid = BackendConnector.getInstance().getAstForQnameInLib(qString+"/"+mcCC.getConstructId().getType().toString()+"/"+mcCC.getConstructId().getQname(),true,ProgrammingLanguage.JAVA);
 						                    	Gson gson = GsonHelper.getCustomGsonBuilder().create();
-			
+
 						                    	if ( ast_lid != null ) {
 						                    		if ( ast_lid.compareTo("")==0 ){
 						                    			//throw exception as this should never happen as we get the ast only if the sources contain the qname!
 						                    			throw new Exception("Ast lid for qname ["+mcCC.getConstructId().getQname()+"]is empty");
 						                    		} else {
 						                    			if(mcCC.getBuggyBody()!=null){
-					
+
 							                            	String lidToVulnBody = "["+mcCC.getBuggyBody() + "," + ast_lid +"]";
 							                            	  String editV = BackendConnector.getInstance().getAstDiff(lidToVulnBody);
 							                            	  ASTSignatureChange scV = gson.fromJson(editV, ASTSignatureChange.class);
-			
+
 							                             //   ASTSignatureChange scV = (ASTSignatureChange)BackendConnector.getInstance().getAstDiff(lidToVulnBody);
 							                                /* */
 							                                changesToV = scV.getModifications().size();
@@ -182,13 +182,13 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 							                                String lidToFixedBody = "["+ast_lid + "," + mcCC.getFixedBody()+"]";
 							                                String editF = BackendConnector.getInstance().getAstDiff(lidToFixedBody);
 							                                ASTSignatureChange scF = gson.fromJson(editF, ASTSignatureChange.class);
-			
+
 							                              //  ASTSignatureChange scF = (ASTSignatureChange)BackendConnector.getInstance().getAstDiff(lidToFixedBody);
-							                                /**/      
+							                                /**/
 							                                changesToF = scF.getModifications().size();
 						                    			}
 						                    		}
-						                    	
+
 						                    	} else {
 						                    		// it should never happen that ast not available if we ask for it
 						                    		log.error("Got null for ast "+qString+"/"+mcCC.getConstructId().getType().toString()+"/"+mcCC.getConstructId().getQname()+ " for library [" + l + "] where sourcesQnameLib is " + sourcesQnameLib + "qnameinjar and sources " + qnameInBin + " " + sourcesAvailable );
@@ -196,7 +196,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 						                    	}
 						                    }
 						             }
-					            	 
+
 				                }else if(qnameInBin && lang==ProgrammingLanguage.PY){
 				                //TODO: implement PY comparison
 				                	 if ( mcCC.getChangeType().equals(ConstructChangeType.MOD) &&
@@ -229,14 +229,14 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 			                }
 		                }
 		            }
-	                    	
-	             
-	                
+
+
+
 	                List<ConstructId> ad = new ArrayList<ConstructId>();
 	                for (int j=0;j<addedDelMethsConsCC.size();j++){
 	                	ad.add(addedDelMethsConsCC.get(j).getConstructId());
 	                }
-	                
+
 	                if(ad.size()>0){
 		                //intersect change list add/del with artifact constructs
 		                List<ConstructId> adcids = null;
@@ -244,21 +244,22 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 		                if(adcids_array ==null){
 		                	log.warn("The intersection returned null (thus something went wrong in cia); the artifact for library Id [" + l.toString() +"] will not be included in the csv for ADD/DEL constructs");
 		                } else {
-			               
-			                     	
+
+
 			                boolean qnameInJar=false;
 			            	for ( OverallConstructChange adCc : addedDelMethsConsCC ){
-			        			qnameInJar=false;
-			 		      
-			                    if(adCc!=null && adcids!=null && adcids.contains(adCc.getConstructId())){
-			   	                	log.info("adcids contains ["+adCc.getConstructId());
-			   	                	qnameInJar=true;
-			   	                }
-  			       
-			   	               	LidResult2 lr = new LidResult2(l, timestamp, qnameInJar);
-					
-					            ConstructPathLibResult2 cplr = new ConstructPathLibResult2(adCc.getConstructId().getQname(), adCc.getRepoPath(), adCc.getChangeType(), lr,null,null);
-					            results.add(cplr);
+        			        qnameInJar=false;
+
+                      if(adCc != null) {
+  	                    if(adcids!=null && adcids.contains(adCc.getConstructId())){
+  	   	                	log.info("adcids contains ["+adCc.getConstructId());
+  	   	                	qnameInJar=true;
+  	   	                }
+
+  	   	               	LidResult2 lr = new LidResult2(l, timestamp, qnameInJar);
+  					            ConstructPathLibResult2 cplr = new ConstructPathLibResult2(adCc.getConstructId().getQname(), adCc.getRepoPath(), adCc.getChangeType(), lr,null,null);
+  					            results.add(cplr);
+                      }
 			            	}
 		                }
 		            }
