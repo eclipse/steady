@@ -490,6 +490,10 @@ public class GitClient implements IVCSClient {
 			}
 			sw.stop();
 		}
+		catch ( RuntimeException e ) {
+			sw.stop(e);
+			GitClient.log.error("RuntimeException caught: " + e.getMessage());
+		}
 		catch ( Exception e ) {
 			sw.stop(e);
 			GitClient.log.error("Error while checking out files: " + e.getMessage());
