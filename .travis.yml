@@ -38,7 +38,7 @@ matrix:
     install:
     - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
     script: mvn -e -B -P gradle,javadoc -Dspring.standalone -DskipTests --settings .travis/settings.xml clean package
-    
+
   - name: Docker - Build the Modules' Jars, Run all Java tests, Create vital containers, Check if they stay alive for more than 20 seconds
     language: bash
     sudo: required
@@ -74,7 +74,7 @@ matrix:
       on:
         all_branches: true
         condition: tag =~ /^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$/
-        
+
   # According to the ECCN team re Docker images on DockerHub: “…if you posted the source code on the Internet,
   # you must notify BIS and the ENC Encryption Request Coordinator each time the Internet location is changed,
   # but you are not required to notify them of updates or modifications made to the encryption source code at
@@ -83,7 +83,7 @@ matrix:
     language: bash
     script:
     - bash .travis/check_dockerfile_location.sh
-    
+
   - name: Docs - Build and check the docs for dead links
     language: bash
     sudo: required
@@ -103,7 +103,8 @@ matrix:
     after_failure:
     - docker images
     - docker ps -as
-    - "(cd docker && docker logs)"
+    - docker logs docs
+    - docker logs checklinks
 notifications:
   email: false
 env:
