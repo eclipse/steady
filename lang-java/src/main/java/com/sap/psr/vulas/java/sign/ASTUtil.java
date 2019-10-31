@@ -486,7 +486,7 @@ public class ASTUtil {
 			case  "SIMPLE_NAME":
 				entityType =JavaEntityType.SIMPLE_NAME;
 				break;
-			case  " SINGLE_TYPE":
+			case  "SINGLE_TYPE":
 				entityType =JavaEntityType.SINGLE_TYPE;
 				break;
 			case  "STRING_LITERAL":
@@ -494,9 +494,6 @@ public class ASTUtil {
 				break;
 			case  "SUPER_INTERFACE_TYPES":
 				entityType =JavaEntityType.SUPER_INTERFACE_TYPES;
-				break;
-			case  "SWITCH_STATEMENT":
-				entityType =JavaEntityType.SWITCH_STATEMENT;
 				break;
 			case  "SWITCH_STATEMENT":
 				entityType =JavaEntityType.SWITCH_STATEMENT;
