@@ -27,21 +27,21 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
  *
  */
 public class ASTSignatureChange extends DistillerUtil implements SignatureChange  {
-	
+
 	public static enum OperationType { Insert, Update, Move, Delete };
 
 	private Signature mDefSignature = null;
-	
+
 	private Signature mFixSignature  = null;
-	
+
 	private Set<SourceCodeChange> listOfChanges = null;
-	
+
 	private String mMethodName;
 
 	//TODO : (Something fishy here, needs an improvement - see the sourcecode of changedistiller)
 	//A StructureEntityVersion has all the SourceCodeChange's
 	private StructureEntityVersion structureEntity = null;
-	
+
 	/**
 	 * <p>addChange.</p>
 	 *
@@ -59,7 +59,7 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 	public void removeChange(SourceCodeChange scc){
 		this.listOfChanges.remove(scc);
 	}
-	
+
 	/**
 	 * <p>toSourceCodeChanges.</p>
 	 *
@@ -83,7 +83,7 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 	 * @param srcCodeChanges - List of SourceCodeChanges
 	 */
 	public ASTSignatureChange(Set<SourceCodeChange> srcCodeChanges){
-		this(null,null);
+		this.reset();
 		this.setListOfChanges(srcCodeChanges);
 		List<SourceCodeChange> srcCodeChgs = new ArrayList<SourceCodeChange>(srcCodeChanges);
 		this.structureEntity.setSourceCodeChanges(srcCodeChgs);
@@ -130,6 +130,12 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		this.mDefSignature = defSignature;
 		this.mFixSignature = fixSignature;
 		//Name of the root of the AST for either the fixed or for the defective AST
+		mMethodName = ((ASTSignature)mFixSignature).getValue();
+	}
+
+	private void reset() {
+		this.mDefSignature = null;
+		this.mFixSignature = null;
 		mMethodName = ((ASTSignature)mFixSignature).getValue();
 	}
 
@@ -375,7 +381,7 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 		}
 		return buffer.toString();
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean isEmpty() {
