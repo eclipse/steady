@@ -31,11 +31,11 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 	private static final Pattern CONSTANT_PATTERN = Pattern.compile("([0-9a-zA-Z_\\.]+)\\.([0-9A-Z_]+)");
 
 	private static UniqueNameNormalizer instance = null;
-	
+
 	private ClassLoader classLoader = null;
 
         private static String cua = null; // class under analysis
-        
+
 	private UniqueNameNormalizer() {}
 
 	/**
@@ -75,7 +75,7 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 			classNames.add(cid.getQualifiedName());
 		}
 	}
-	
+
 	/**
 	 * Sets the class loader used for inlining constants, see {@link UniqueNameNormalizer#findConstants(String, String)}.
 	 *
@@ -88,12 +88,12 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 	public boolean haveEqualUniqueName(SourceCodeEntity _e1, SourceCodeEntity _e2) {
 		// Equality before normalization
 		final boolean eq_before_norm = _e1.getUniqueName().equals(_e2.getUniqueName());
-		
+
 		// Equality after normalization
 		final String p1 = this.normalizeUniqueName(_e1);
 		final String p2 = this.normalizeUniqueName(_e2);
 		final boolean eq_after_norm = p1.equals(p2);
-		
+
 		// Print log message in case the pre-processing realized a match that did not exist before
 		if(!eq_before_norm && eq_after_norm) { // && !_e1.equals(_e2)) {
 			UniqueNameNormalizer.log.info("Preprocessor match: Old [" + _e1 + "] and [" + _e2 + "]");
@@ -138,12 +138,12 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 		String tmp = this.normalizeUniqueName(toFix);
                 tmp = this.removeNumberCasts(tmp);
 		// Normalizations specific to entity types
-                
+
 		// Variable declaration: Remove leading "final"
-		
+
 		return tmp;
 	}
-        
+
         /**
          * <p>removeLeadingClassName.</p>
          *
@@ -155,7 +155,7 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
             tmp = tmp.replaceAll(cua+"\\.", "");
             return tmp;
         }
-        
+
         /**
          * <p>removeNumberCasts.</p>
          *
@@ -171,16 +171,15 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
                 String regex = "([^0-9]*)([0-9]+)([BDFL])(.*)";
                 Pattern pattern = Pattern.compile(regex);
                 Matcher matcher = pattern.matcher(_string);
-                String tmp = "";
+
+								StringBuffer tmp = new StringBuffer();
                 int i =0;
                 while ( matcher.find() ){
-                    String tmp2 = matcher.group(1);
-                    tmp2 += matcher.group(2);
-                    tmp2 += matcher.group(4);
-                    tmp+=tmp2;
+                    String tmp2 = matcher.group(1) + matcher.group(2) + matcher.group(4);
+                    tmp.append(tmp2);
                     i = matcher.end();
                 }
-                return tmp;
+                return tmp.toString();
             } else {
                 return _string;
             }
@@ -225,12 +224,12 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 
 	/**
 	 * Returns the value of the given {@link Field} as {@link String}.
-	 * 
+	 *
 	 * Todo: Until now, the method only distinguishes primitive types and
 	 * everything else. In both cases, the value is obtained by calling
 	 * toString. In the latter case, the value is additionally wrapped in quotes.
 	 * One must probably distinguish further cases, e.g., chars wrapper by single quotes.
-	 * 
+	 *
 	 * @param _field
 	 * @return
 	 */
@@ -255,10 +254,10 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 
 	/**
 	 * Searches for classes or interfaces of the given name (w/o package qualifier) and which have a constant of the given name.
-	 * 
+	 *
 	 * Considers all classes before passed to {@link UniqueNameNormalizer#addStrings(Collection)} or the other two methods.
 	 * At the same time, the classes must be in the class path so that they can be loaded.
-	 * 
+	 *
 	 * @param _class_name
 	 * @param _field_name
 	 * @return
@@ -272,7 +271,7 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 		Class cl = null;
 		for(String qn : this.classNames) {
 			if(qn.indexOf(class_name)!=-1) {
-				
+
 				// If existing, try the member class loader (e.g., set by the Maven plugin)
 				if(this.classLoader!=null) {
 					try {
@@ -281,16 +280,16 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 					catch(ClassNotFoundException e) {}
                                         catch (NoClassDefFoundError e2){}
 				}
-				
+
 				// If not existing or unsuccessful, try the system class loader
 				if(cl==null) {
 					try {
 						cl = Class.forName(qn);
 					}
-					catch(ClassNotFoundException e) {} 
+					catch(ClassNotFoundException e) {}
                                         catch( NoClassDefFoundError e2) {}
 				}
-				
+
 				// Add if found, otherwise write error message
 				if(cl==null)
 					UniqueNameNormalizer.log.error("Error instantiating class or interface [" + qn + "], needed for constant [" + _class_name + "." + _field_name + "]");
@@ -321,7 +320,7 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 		}
 		return fields;
 	}
-        
+
         /**
          * <p>setClassUnderAnalysisName.</p>
          *
