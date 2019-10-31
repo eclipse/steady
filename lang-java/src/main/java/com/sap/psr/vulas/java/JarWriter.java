@@ -435,6 +435,9 @@ public class JarWriter {
 		// Loop all entries of the old JAR
 		JarEntry old_entry = null, new_entry = null;
 
+		FileOutputStream fos = null;
+		InputStream  is = null;
+		JarOutputStream jos = null;
 		try {
 			if(dir==null)
 				dir = java.nio.file.Files.createTempDirectory("rewritten_jar_");
@@ -444,9 +447,8 @@ public class JarWriter {
 				JarWriter.log.info("The target [" + this.rewrittenFile + "] already exists, skip rewriting");
 			}
 			else {
-				final FileOutputStream fos = new FileOutputStream(this.rewrittenFile);
-				final JarOutputStream jos  = new JarOutputStream(fos, this.createModifiedManifest());
-				InputStream is = null;
+				fos = new FileOutputStream(this.rewrittenFile);
+				jos  = new JarOutputStream(fos, this.createModifiedManifest());
 				byte[] bytes = new byte[1024];
 				int bytes_read = 0;
 
@@ -516,10 +518,23 @@ public class JarWriter {
 					if(value.toFile().exists()) {
 						new_entry = new JarEntry(key);
 						jos.putNextEntry(new_entry);
-						is = new FileInputStream(value.toFile());
-						while((bytes_read = is.read(bytes)) != -1)
-							jos.write(bytes, 0, bytes_read);
-						is.close();
+
+						try {
+							is = new FileInputStream(value.toFile());
+							while((bytes_read = is.read(bytes)) != -1)
+								jos.write(bytes, 0, bytes_read);
+							is.close();
+						} catch(Exception ioe) {
+							throw new JarAnalysisException("Error while reading JAR entry [" + new_entry.getName() + "] to modified JAR [" + this.rewrittenFile + "]: " + ioe.getMessage(), ioe);
+						} finally {
+							if(is != null) {
+								try {
+									is.close();
+								} catch(IOException ie) {
+									throw new JarAnalysisException("Error while closing JarOutputStream", ie);
+								}
+							}
+						}
 						jos.closeEntry();
 					}
 				}
@@ -539,6 +554,24 @@ public class JarWriter {
 			else
 				throw new JarAnalysisException("Error while writing modified JAR: " + ioe.getMessage(), ioe);
 		}
+		finally {
+			if(jos != null) {
+				try {
+					jos.close();
+				} catch(IOException je) {
+					throw new JarAnalysisException("Error while closing JarOutputStream", je);
+				}
+			}
+
+			if(fos != null) {
+				try {
+					fos.close();
+				} catch(IOException fe) {
+					throw new JarAnalysisException("Error while closing FileOutputStream", fe);
+				}
+			}
+		}
+
 		return this.rewrittenFile.toPath();
 	}
 
