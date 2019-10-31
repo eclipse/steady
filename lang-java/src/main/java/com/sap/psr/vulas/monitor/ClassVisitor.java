@@ -487,14 +487,14 @@ public class ClassVisitor {
 	 * The $ character should be used only in mechanically generated source code or, rarely, to access pre-existing names on legacy systems.
 	 * The "Java digits" include the ASCII digits 0-9 (\u0030-\u0039).
 	 */
-	private static Pattern QUALIFIED_TYPE_PATTERN = null;
+	private static volatile Pattern QUALIFIED_TYPE_PATTERN = null;
 	private static Pattern getClassPattern() {
 		if(QUALIFIED_TYPE_PATTERN==null)
 			QUALIFIED_TYPE_PATTERN = Pattern.compile("([0-9a-zA-Z_\\.\\$]*\\.)([a-zA-Z0-9_\\$]*)");
 		return QUALIFIED_TYPE_PATTERN;
 	}
 
-	private static Pattern NESTED_CLASS_PATTERN = null;
+	private static volatile Pattern NESTED_CLASS_PATTERN = null;
 	private static Pattern getNestedClassPattern() {
 		if(NESTED_CLASS_PATTERN==null)
 			NESTED_CLASS_PATTERN = Pattern.compile("([0-9a-zA-Z_\\$]*\\$)([a-zA-Z0-9_]*)");
