@@ -166,10 +166,16 @@ public class JarWriter {
 					else {
 						// If the entry is a file, check whether we have already created the directory it is contained in.
 						// According to the JAR spec [?], this should always be the case, but tests showed non-compliant JAR files.
-						dir = path.getParent().toFile();
-						if(!dir.exists()) {
-							Files.createDirectories(path.getParent());
-							JarWriter.log.warn(this.toString() + ": Invalid JAR file: No directory entry for file entry [" + path + "]");
+						Path parent = path.getParent();
+						if (parent != null) {
+							dir = parent.toFile();
+
+							if(!dir.exists()) {
+								Files.createDirectories(parent);
+								JarWriter.log.warn(this.toString() + ": Invalid JAR file: No directory entry for file entry [" + path + "]");
+							}
+						} else {
+							JarWriter.log.warn(this.toString() + ": Invalid Path: No parent found for file entry [" + path + "]");
 						}
 
 						try (final FileOutputStream fos = new FileOutputStream(path.toFile()); final InputStream is = this.originalJar.getInputStream(entry)) {
@@ -365,10 +371,15 @@ public class JarWriter {
 	 */
 	public void addFile(String _target_dir, Path _path, boolean _overwrite) {
 		String entry_name = null;
-		if(_target_dir==null)
-			entry_name = _path.getFileName().toString();
-		else
+		Path fileName = _path.getFileName();
+		if(_target_dir==null) {
+			if (fileName != null) {
+				entry_name = fileName.toString();
+			}
+		}
+		else {
 			entry_name = _target_dir + (_target_dir.equals("") || _target_dir.endsWith("/") ? "" : "/")  + _path.getFileName();
+		}
 
 		if(!this.hasEntry(entry_name) || _overwrite)
 			this.additionalFiles.put(entry_name, _path);

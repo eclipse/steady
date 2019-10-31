@@ -44,7 +44,7 @@ public class ClassPoolUpdater {
 	 * <p>Constructor for ClassPoolUpdater.</p>
 	 */
 	public ClassPoolUpdater() { this(true); }
-	
+
 	private ClassPoolUpdater(boolean _use_default) {
 		this.appendedResources = new HashSet<Path>();
 		this.useDefault = _use_default;
@@ -53,7 +53,7 @@ public class ClassPoolUpdater {
 		else
 			this.customClassPool = new ClassPool();
 	}
-	
+
 	/**
 	 * Returns an instance of {@link ClassPoolUpdater} making use of a custom Javassist {@link ClassPool}.
 	 * This instance will be created at the time of the first call, later calls will return this instance.
@@ -107,18 +107,22 @@ public class ClassPoolUpdater {
 		FileInputStream fis = null;
 		try {
 			fis= new FileInputStream(_class_file);
-			final CtClass ctclass = ClassPool.getDefault().makeClass(fis);	
+			final CtClass ctclass = ClassPool.getDefault().makeClass(fis);
 			p = _class_file.toPath();
-			
+
 			// Distinguish absolute and relative paths
 			if(p.isAbsolute()) {
 				dir = p.subpath(0, p.getNameCount()-1); // Root is lost, as subpath always returns relative paths
-				dir = p.getRoot().resolve(dir);
+
+				Path root = p.getRoot();
+				if(root != null) {
+					dir = root.resolve(dir);
+				}
 			} else {
 				dir = p.subpath(0, p.getNameCount()-1);
 				dir = dir.toAbsolutePath().normalize();
 			}
-			
+
 			final Path package_dir = this.getPackagePath(ctclass);
 
 			// Class w/o package: Take dir as is
@@ -180,7 +184,7 @@ public class ClassPoolUpdater {
 		// Append (null handled in other method)
 		return this.appendToClasspath(this.getClasspath(_file));
 	}
-	
+
 	/**
 	 * <p>appendToClasspath.</p>
 	 *
@@ -218,7 +222,7 @@ public class ClassPoolUpdater {
 		}
 		return appended;
 	}
-	
+
 	/**
 	 * <p>countClasspathElements.</p>
 	 *
@@ -227,7 +231,7 @@ public class ClassPoolUpdater {
 	public int countClasspathElements() {
 		return this.appendedResources.size();
 	}
-	
+
 	/**
 	 * Resets the {@link ClassPoolUpdater} to its initial state. In particular, a new instance of the {@link ClassPool} will be created, and all
 	 * all the {@link Path}s that have been added to its class path will be removed.
@@ -268,8 +272,8 @@ public class ClassPoolUpdater {
 				url = this.customClassPool.find(_cid.getDefinitionContext().getQualifiedName());
 			}
 			else if(jid.getType()==JavaId.Type.CLASS || jid.getType()==JavaId.Type.INTERFACE || jid.getType()==JavaId.Type.ENUM || jid.getType()==JavaId.Type.NESTED_CLASS) {
-				url = this.customClassPool.find(_cid.getQualifiedName());				
-			}			
+				url = this.customClassPool.find(_cid.getQualifiedName());
+			}
 		}
 		return url;
 	}
@@ -284,7 +288,7 @@ public class ClassPoolUpdater {
 		final String package_name = _ctclass.getPackageName();
 		if(package_name==null)
 			return null;
-		else 
+		else
 			return Paths.get(package_name.replace('.',  '/'));
 	}
 }

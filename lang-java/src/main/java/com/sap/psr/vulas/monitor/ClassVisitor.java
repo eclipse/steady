@@ -586,7 +586,7 @@ public class ClassVisitor {
 	 *
 	 * @return a {@link com.sap.psr.vulas.shared.json.model.Application} object.
 	 */
-	public Application getAppContext() { return this.appContext; }
+	public synchronized Application getAppContext() { return this.appContext; }
 
 	/**
 	 * <p>Getter for the field <code>qname</code>.</p>
@@ -600,7 +600,7 @@ public class ClassVisitor {
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
-	public String getOriginalArchiveDigest() { return this.originalArchiveDigest; }
+	public synchronized String getOriginalArchiveDigest() { return this.originalArchiveDigest; }
 
 	/**
 	 * <p>prettyPrint.</p>

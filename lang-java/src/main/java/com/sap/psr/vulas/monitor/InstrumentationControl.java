@@ -291,7 +291,10 @@ public class InstrumentationControl {
 		// If a JAR URL can be determined, check if we already checked whether it is blacklisted
 		if(!this.checkedJars.containsKey(jar_path)) {
 			String path2 = jar_path.toString().replaceAll("C:", "C");
-			final String jar_file = Paths.get(path2).getFileName().toString();
+			Path fileName = Paths.get(path2).getFileName();
+
+			if(fileName == null) return false;
+			final String jar_file = fileName.toString();
 
 			// Compare path with whitelist
 			boolean blacklisted_dir = false;
