@@ -183,6 +183,9 @@ public class JarWriter {
 						}
 					}
 				}
+				catch(RuntimeException re) {
+					throw re;
+				}
 				catch(Exception ioe) {
 					JarWriter.log.error("Error while extracting JAR entry [" + entry.getName() + "]: " + ioe.getMessage(), ioe);
 				}
@@ -547,6 +550,9 @@ public class JarWriter {
 				old_entry = null;
 				JarWriter.log.info("[" + this.originalJar.getName() + "] rewritten to [" + this.rewrittenFile + "]");
 			}
+		}
+		catch(RuntimeException re) {
+			throw re;
 		}
 		catch(Exception ioe) {
 			if(old_entry!=null)

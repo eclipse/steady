@@ -88,6 +88,8 @@ public class DynamicTransformer implements ClassFileTransformer {
 			final JarAnalyzer ja = new JarAnalyzer();
 			ja.analyze(Paths.get(DynamicTransformer.class.getClassLoader().getResource(DynamicTransformer.class.getName().replace('.', '/') + ".class").toString()).toFile());
 		}
+		// Only throw when encountering runtime exceptions
+		catch(RuntimeException re) { throw re; }
 		// Getting an exception does not matter in the context of freezing some classes
 		catch(Exception e) {;}
 	}
