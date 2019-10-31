@@ -1,199 +1,194 @@
 package com.sap.psr.vulas.cia.model.nexus;
 
-
-
-/**
- * <p>NexusResolvedArtifact class.</p>
- *
- */
+/** NexusResolvedArtifact class. */
 public class NexusResolvedArtifact {
 
-	//@XmlAttribute(name="groupId")
-	String groupId;
-	
-//	@XmlAttribute(name="artifactId")
-	String artifactId;
-	
-	//@XmlAttribute(name="version")
-	String version;
-	
-	//@XmlAttribute(name="extension")
-	String extension;
-	
-	//@XmlAttribute(name="snapshot")
-	String snapshot;
-	
-	//@XmlAttribute(name="snapshotBuildNumber")
-	String snapshotBuildNumber;
-	
-	//@XmlAttribute(name="snapshotTimeStamp")
-	String snapshotTimeStamp;
-	
-	//@XmlAttribute(name="sha1")
-	String sha1;
-	
-	//@XmlAttribute(name="repositoryPath")
-	String repositoryPath;
+  // @XmlAttribute(name="groupId")
+  String groupId;
 
-	/**
-	 * <p>Getter for the field <code>groupId</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getGroupId() {
-		return groupId;
-	}
+  //	@XmlAttribute(name="artifactId")
+  String artifactId;
 
-	/**
-	 * <p>Setter for the field <code>groupId</code>.</p>
-	 *
-	 * @param groupId a {@link java.lang.String} object.
-	 */
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
-	}
+  // @XmlAttribute(name="version")
+  String version;
 
-	/**
-	 * <p>Getter for the field <code>artifactId</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getArtifactId() {
-		return artifactId;
-	}
+  // @XmlAttribute(name="extension")
+  String extension;
 
-	/**
-	 * <p>Setter for the field <code>artifactId</code>.</p>
-	 *
-	 * @param artifactId a {@link java.lang.String} object.
-	 */
-	public void setArtifactId(String artifactId) {
-		this.artifactId = artifactId;
-	}
+  // @XmlAttribute(name="snapshot")
+  String snapshot;
 
-	/**
-	 * <p>Getter for the field <code>version</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getVersion() {
-		return version;
-	}
+  // @XmlAttribute(name="snapshotBuildNumber")
+  String snapshotBuildNumber;
 
-	/**
-	 * <p>Setter for the field <code>version</code>.</p>
-	 *
-	 * @param version a {@link java.lang.String} object.
-	 */
-	public void setVersion(String version) {
-		this.version = version;
-	}
+  // @XmlAttribute(name="snapshotTimeStamp")
+  String snapshotTimeStamp;
 
-	/**
-	 * <p>Getter for the field <code>extension</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getExtension() {
-		return extension;
-	}
+  // @XmlAttribute(name="sha1")
+  String sha1;
 
-	/**
-	 * <p>Setter for the field <code>extension</code>.</p>
-	 *
-	 * @param extension a {@link java.lang.String} object.
-	 */
-	public void setExtension(String extension) {
-		this.extension = extension;
-	}
+  // @XmlAttribute(name="repositoryPath")
+  String repositoryPath;
 
-	/**
-	 * <p>Getter for the field <code>snapshot</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getSnapshot() {
-		return snapshot;
-	}
+  /**
+   * Getter for the field <code>groupId</code>.
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String getGroupId() {
+    return groupId;
+  }
 
-	/**
-	 * <p>Setter for the field <code>snapshot</code>.</p>
-	 *
-	 * @param snapshot a {@link java.lang.String} object.
-	 */
-	public void setSnapshot(String snapshot) {
-		this.snapshot = snapshot;
-	}
+  /**
+   * Setter for the field <code>groupId</code>.
+   *
+   * @param groupId a {@link java.lang.String} object.
+   */
+  public void setGroupId(String groupId) {
+    this.groupId = groupId;
+  }
 
-	/**
-	 * <p>Getter for the field <code>snapshotBuildNumber</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getSnapshotBuildNumber() {
-		return snapshotBuildNumber;
-	}
+  /**
+   * Getter for the field <code>artifactId</code>.
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String getArtifactId() {
+    return artifactId;
+  }
 
-	/**
-	 * <p>Setter for the field <code>snapshotBuildNumber</code>.</p>
-	 *
-	 * @param snapshotBuildNumber a {@link java.lang.String} object.
-	 */
-	public void setSnapshotBuildNumber(String snapshotBuildNumber) {
-		this.snapshotBuildNumber = snapshotBuildNumber;
-	}
+  /**
+   * Setter for the field <code>artifactId</code>.
+   *
+   * @param artifactId a {@link java.lang.String} object.
+   */
+  public void setArtifactId(String artifactId) {
+    this.artifactId = artifactId;
+  }
 
-	/**
-	 * <p>Getter for the field <code>snapshotTimeStamp</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getSnapshotTimeStamp() {
-		return snapshotTimeStamp;
-	}
+  /**
+   * Getter for the field <code>version</code>.
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String getVersion() {
+    return version;
+  }
 
-	/**
-	 * <p>Setter for the field <code>snapshotTimeStamp</code>.</p>
-	 *
-	 * @param snapshotTimeStamp a {@link java.lang.String} object.
-	 */
-	public void setSnapshotTimeStamp(String snapshotTimeStamp) {
-		this.snapshotTimeStamp = snapshotTimeStamp;
-	}
+  /**
+   * Setter for the field <code>version</code>.
+   *
+   * @param version a {@link java.lang.String} object.
+   */
+  public void setVersion(String version) {
+    this.version = version;
+  }
 
-	/**
-	 * <p>Getter for the field <code>sha1</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getSha1() {
-		return sha1;
-	}
+  /**
+   * Getter for the field <code>extension</code>.
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String getExtension() {
+    return extension;
+  }
 
-	/**
-	 * <p>Setter for the field <code>sha1</code>.</p>
-	 *
-	 * @param sha1 a {@link java.lang.String} object.
-	 */
-	public void setSha1(String sha1) {
-		this.sha1 = sha1;
-	}
+  /**
+   * Setter for the field <code>extension</code>.
+   *
+   * @param extension a {@link java.lang.String} object.
+   */
+  public void setExtension(String extension) {
+    this.extension = extension;
+  }
 
-	/**
-	 * <p>Getter for the field <code>repositoryPath</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getRepositoryPath() {
-		return repositoryPath;
-	}
+  /**
+   * Getter for the field <code>snapshot</code>.
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String getSnapshot() {
+    return snapshot;
+  }
 
-	/**
-	 * <p>Setter for the field <code>repositoryPath</code>.</p>
-	 *
-	 * @param repositoryPath a {@link java.lang.String} object.
-	 */
-	public void setRepositoryPath(String repositoryPath) {
-		this.repositoryPath = repositoryPath;
-	}
+  /**
+   * Setter for the field <code>snapshot</code>.
+   *
+   * @param snapshot a {@link java.lang.String} object.
+   */
+  public void setSnapshot(String snapshot) {
+    this.snapshot = snapshot;
+  }
+
+  /**
+   * Getter for the field <code>snapshotBuildNumber</code>.
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String getSnapshotBuildNumber() {
+    return snapshotBuildNumber;
+  }
+
+  /**
+   * Setter for the field <code>snapshotBuildNumber</code>.
+   *
+   * @param snapshotBuildNumber a {@link java.lang.String} object.
+   */
+  public void setSnapshotBuildNumber(String snapshotBuildNumber) {
+    this.snapshotBuildNumber = snapshotBuildNumber;
+  }
+
+  /**
+   * Getter for the field <code>snapshotTimeStamp</code>.
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String getSnapshotTimeStamp() {
+    return snapshotTimeStamp;
+  }
+
+  /**
+   * Setter for the field <code>snapshotTimeStamp</code>.
+   *
+   * @param snapshotTimeStamp a {@link java.lang.String} object.
+   */
+  public void setSnapshotTimeStamp(String snapshotTimeStamp) {
+    this.snapshotTimeStamp = snapshotTimeStamp;
+  }
+
+  /**
+   * Getter for the field <code>sha1</code>.
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String getSha1() {
+    return sha1;
+  }
+
+  /**
+   * Setter for the field <code>sha1</code>.
+   *
+   * @param sha1 a {@link java.lang.String} object.
+   */
+  public void setSha1(String sha1) {
+    this.sha1 = sha1;
+  }
+
+  /**
+   * Getter for the field <code>repositoryPath</code>.
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String getRepositoryPath() {
+    return repositoryPath;
+  }
+
+  /**
+   * Setter for the field <code>repositoryPath</code>.
+   *
+   * @param repositoryPath a {@link java.lang.String} object.
+   */
+  public void setRepositoryPath(String repositoryPath) {
+    this.repositoryPath = repositoryPath;
+  }
 }

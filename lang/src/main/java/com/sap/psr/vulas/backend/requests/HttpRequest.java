@@ -1,86 +1,83 @@
 package com.sap.psr.vulas.backend.requests;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.HttpResponse;
 import com.sap.psr.vulas.goals.GoalContext;
+import java.io.IOException;
+import java.io.Serializable;
 
-/**
- * Http request that can be send and saved to (loaded from) disk.
- */
+/** Http request that can be send and saved to (loaded from) disk. */
 public interface HttpRequest extends Serializable {
 
-	/**
-	 * <p>send.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.backend.HttpResponse} object.
-	 * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
-	 */
-	public HttpResponse send() throws BackendConnectionException;
-	
-	/**
-	 * <p>getGoalContext.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.goals.GoalContext} object.
-	 */
-	public GoalContext getGoalContext();
-	
-	/**
-	 * <p>setGoalContext.</p>
-	 *
-	 * @param _ctx a {@link com.sap.psr.vulas.goals.GoalContext} object.
-	 * @return a {@link com.sap.psr.vulas.backend.requests.HttpRequest} object.
-	 */
-	public HttpRequest setGoalContext(GoalContext _ctx);
+  /**
+   * send.
+   *
+   * @return a {@link com.sap.psr.vulas.backend.HttpResponse} object.
+   * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
+   */
+  public HttpResponse send() throws BackendConnectionException;
 
-	/**
-	 * <p>saveToDisk.</p>
-	 *
-	 * @throws java.io.IOException if any.
-	 */
-	public void saveToDisk() throws IOException;
+  /**
+   * getGoalContext.
+   *
+   * @return a {@link com.sap.psr.vulas.goals.GoalContext} object.
+   */
+  public GoalContext getGoalContext();
 
-	/**
-	 * <p>savePayloadToDisk.</p>
-	 *
-	 * @throws java.io.IOException if any.
-	 */
-	public void savePayloadToDisk() throws IOException;
-	
-	/**
-	 * <p>loadFromDisk.</p>
-	 *
-	 * @throws java.io.IOException if any.
-	 */
-	public void loadFromDisk() throws IOException;
-	
-	/**
-	 * <p>loadPayloadFromDisk.</p>
-	 *
-	 * @throws java.io.IOException if any.
-	 */
-	public void loadPayloadFromDisk() throws IOException;
+  /**
+   * setGoalContext.
+   *
+   * @param _ctx a {@link com.sap.psr.vulas.goals.GoalContext} object.
+   * @return a {@link com.sap.psr.vulas.backend.requests.HttpRequest} object.
+   */
+  public HttpRequest setGoalContext(GoalContext _ctx);
 
-	/**
-	 * <p>deleteFromDisk.</p>
-	 *
-	 * @throws java.io.IOException if any.
-	 */
-	public void deleteFromDisk() throws IOException;
+  /**
+   * saveToDisk.
+   *
+   * @throws java.io.IOException if any.
+   */
+  public void saveToDisk() throws IOException;
 
-	/**
-	 * <p>deletePayloadFromDisk.</p>
-	 *
-	 * @throws java.io.IOException if any.
-	 */
-	public void deletePayloadFromDisk() throws IOException;
+  /**
+   * savePayloadToDisk.
+   *
+   * @throws java.io.IOException if any.
+   */
+  public void savePayloadToDisk() throws IOException;
 
-	/**
-	 * <p>getFilename.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getFilename();
+  /**
+   * loadFromDisk.
+   *
+   * @throws java.io.IOException if any.
+   */
+  public void loadFromDisk() throws IOException;
+
+  /**
+   * loadPayloadFromDisk.
+   *
+   * @throws java.io.IOException if any.
+   */
+  public void loadPayloadFromDisk() throws IOException;
+
+  /**
+   * deleteFromDisk.
+   *
+   * @throws java.io.IOException if any.
+   */
+  public void deleteFromDisk() throws IOException;
+
+  /**
+   * deletePayloadFromDisk.
+   *
+   * @throws java.io.IOException if any.
+   */
+  public void deletePayloadFromDisk() throws IOException;
+
+  /**
+   * getFilename.
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String getFilename();
 }

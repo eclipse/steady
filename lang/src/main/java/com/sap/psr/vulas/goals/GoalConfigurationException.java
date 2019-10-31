@@ -1,25 +1,23 @@
 package com.sap.psr.vulas.goals;
 
-/**
- * <p>GoalConfigurationException class.</p>
- */
+/** GoalConfigurationException class. */
 public class GoalConfigurationException extends Exception {
-	
-	/**
-	 * <p>Constructor for GoalConfigurationException.</p>
-	 *
-	 * @param _msg a {@link java.lang.String} object.
-	 */
-	public GoalConfigurationException(String _msg) {
-		super(_msg);
-	}
-	
-	/**
-	 * <p>Constructor for GoalConfigurationException.</p>
-	 *
-	 * @param _t a {@link java.lang.Throwable} object.
-	 */
-	public GoalConfigurationException(Throwable _t) {
-		super(_t);
-	}
+
+  /**
+   * Constructor for GoalConfigurationException.
+   *
+   * @param _msg a {@link java.lang.String} object.
+   */
+  public GoalConfigurationException(String _msg) {
+    super(_msg);
+  }
+
+  /**
+   * Constructor for GoalConfigurationException.
+   *
+   * @param _t a {@link java.lang.Throwable} object.
+   */
+  public GoalConfigurationException(Throwable _t) {
+    super(_t);
+  }
 }

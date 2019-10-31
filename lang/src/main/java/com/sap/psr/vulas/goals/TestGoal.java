@@ -2,22 +2,19 @@ package com.sap.psr.vulas.goals;
 
 import com.sap.psr.vulas.shared.enums.GoalType;
 
-/**
- * <p>TestGoal class.</p>
- *
- */
+/** TestGoal class. */
 public class TestGoal extends AbstractAppGoal {
 
-	/**
-	 * <p>Constructor for TestGoal.</p>
-	 */
-	public TestGoal() { super(GoalType.TEST); }
+  /** Constructor for TestGoal. */
+  public TestGoal() {
+    super(GoalType.TEST);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * Empty implementation.
-	 */
-	@Override
-	protected void executeTasks() throws Exception {}
+  /**
+   * {@inheritDoc}
+   *
+   * <p>Empty implementation.
+   */
+  @Override
+  protected void executeTasks() throws Exception {}
 }

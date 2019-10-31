@@ -1,16 +1,13 @@
 package com.sap.psr.vulas.backend;
 
-/**
- * <p>EntityNotFoundInBackendException class.</p>
- *
- */
+/** EntityNotFoundInBackendException class. */
 public class EntityNotFoundInBackendException extends Exception {
-	/**
-	 * <p>Constructor for EntityNotFoundInBackendException.</p>
-	 *
-	 * @param _msg a {@link java.lang.String} object.
-	 */
-	public EntityNotFoundInBackendException(String _msg) {
-		super(_msg);
-	}
+  /**
+   * Constructor for EntityNotFoundInBackendException.
+   *
+   * @param _msg a {@link java.lang.String} object.
+   */
+  public EntityNotFoundInBackendException(String _msg) {
+    super(_msg);
+  }
 }

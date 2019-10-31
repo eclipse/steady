@@ -4,10 +4,9 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.NGramsC
 
 public class StringSimilarityNGrams extends StringSimilarity {
 
-	//bi-grams are used here
-    @Override
-	protected double calculateSimilarity(String left, String right) {
-        return new NGramsCalculator(2).calculateSimilarity(left, right);
-    }
-
+  // bi-grams are used here
+  @Override
+  protected double calculateSimilarity(String left, String right) {
+    return new NGramsCalculator(2).calculateSimilarity(left, right);
+  }
 }

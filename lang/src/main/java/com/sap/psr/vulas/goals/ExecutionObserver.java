@@ -1,15 +1,12 @@
 package com.sap.psr.vulas.goals;
 
-/**
- * <p>ExecutionObserver interface.</p>
- *
- */
+/** ExecutionObserver interface. */
 public interface ExecutionObserver {
 
-	/**
-	 * <p>callback.</p>
-	 *
-	 * @param _g a {@link com.sap.psr.vulas.goals.AbstractGoal} object.
-	 */
-	public void callback(AbstractGoal _g);
+  /**
+   * callback.
+   *
+   * @param _g a {@link com.sap.psr.vulas.goals.AbstractGoal} object.
+   */
+  public void callback(AbstractGoal _g);
 }

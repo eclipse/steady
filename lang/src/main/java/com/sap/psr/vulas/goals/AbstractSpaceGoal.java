@@ -1,54 +1,53 @@
 package com.sap.psr.vulas.goals;
 
-import java.util.Arrays;
-import java.util.HashSet;
-
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.shared.enums.ExportConfiguration;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.model.Space;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
+import java.util.Arrays;
+import java.util.HashSet;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-/**
- * Represents a goal executed in the context of a given {@link Space}.
- */
+/** Represents a goal executed in the context of a given {@link Space}. */
 public abstract class AbstractSpaceGoal extends AbstractGoal {
 
-	private static final Log log = LogFactory.getLog(AbstractSpaceGoal.class);
+  private static final Log log = LogFactory.getLog(AbstractSpaceGoal.class);
 
-	/**
-	 * <p>Constructor for AbstractSpaceGoal.</p>
-	 *
-	 * @param _type a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
-	 */
-	protected AbstractSpaceGoal(GoalType _type) { super(_type); }
-	
-	/**
-	 * All {@link Space}-related goals need to have a tenant configured.
-	 *
-	 * @throws com.sap.psr.vulas.goals.GoalConfigurationException if no tenant is specified
-	 */
-	protected void checkPreconditions() throws GoalConfigurationException {
-		if(!this.getGoalContext().hasTenant())
-			throw new GoalConfigurationException("No tenant configured");
-	}
-	
-	/**
-	 * <p>updateFromConfig.</p>
-	 *
-	 * @param _s a {@link com.sap.psr.vulas.shared.json.model.Space} object.
-	 */
-	protected void updateFromConfig(Space _s) {
-		final Configuration c = this.getConfiguration().getConfiguration();
-		_s.setSpaceName(c.getString(CoreConfiguration.SPACE_NAME, null));
-		_s.setSpaceDescription(c.getString(CoreConfiguration.SPACE_DESCR, null));
-		_s.setExportConfiguration(ExportConfiguration.parse(c.getString(CoreConfiguration.SPACE_EXPCFG, "AGGREGATED")));
-		_s.setPublic(c.getBoolean(CoreConfiguration.SPACE_PUBLIC, true));
-		_s.setBugFilter(c.getInt(CoreConfiguration.SPACE_BUGFLT, -1));
-		_s.setOwnerEmails(new HashSet<String>(Arrays.asList(c.getStringArray(CoreConfiguration.SPACE_OWNERS))));
-	}
+  /**
+   * Constructor for AbstractSpaceGoal.
+   *
+   * @param _type a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+   */
+  protected AbstractSpaceGoal(GoalType _type) {
+    super(_type);
+  }
+
+  /**
+   * All {@link Space}-related goals need to have a tenant configured.
+   *
+   * @throws com.sap.psr.vulas.goals.GoalConfigurationException if no tenant is specified
+   */
+  protected void checkPreconditions() throws GoalConfigurationException {
+    if (!this.getGoalContext().hasTenant())
+      throw new GoalConfigurationException("No tenant configured");
+  }
+
+  /**
+   * updateFromConfig.
+   *
+   * @param _s a {@link com.sap.psr.vulas.shared.json.model.Space} object.
+   */
+  protected void updateFromConfig(Space _s) {
+    final Configuration c = this.getConfiguration().getConfiguration();
+    _s.setSpaceName(c.getString(CoreConfiguration.SPACE_NAME, null));
+    _s.setSpaceDescription(c.getString(CoreConfiguration.SPACE_DESCR, null));
+    _s.setExportConfiguration(
+        ExportConfiguration.parse(c.getString(CoreConfiguration.SPACE_EXPCFG, "AGGREGATED")));
+    _s.setPublic(c.getBoolean(CoreConfiguration.SPACE_PUBLIC, true));
+    _s.setBugFilter(c.getInt(CoreConfiguration.SPACE_BUGFLT, -1));
+    _s.setOwnerEmails(
+        new HashSet<String>(Arrays.asList(c.getStringArray(CoreConfiguration.SPACE_OWNERS))));
+  }
 }
