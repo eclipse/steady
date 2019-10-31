@@ -250,7 +250,8 @@ public class ASTSignatureComparator implements SignatureComparator {
 	 * @return
 	 */
 	private boolean containsChange(Node  _root_node,  Set<SourceCodeChange> _changes) {
-
+		if(_changes == null) return false;
+		
 		totalNumFixes= _changes.size();
 		matchedNumFixes = 0;
 		this.assignSimlarityScheme(totalNumFixes);
@@ -262,7 +263,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 		int i = 1;
 
 		// Loop over all changes and check each of them
-		if(_changes!= null && _changes.size() > 0) {
+		if(_changes.size() > 0) {
 
 			EntityType change_type = null;
 			String change_value = null;
