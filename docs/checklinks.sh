@@ -38,4 +38,4 @@ URL=${1:-127.0.0.1:8000}
        -e .*wala\.sourceforge\.net.* \
        -e .*stackoverflow\.com.* \
        -e .*github\.com/kubernetes/ingress-nginx.* \
-       -e ^.*wiki.jenkins.io.* -t 60 http://$URL
+       -e ^.*wiki.jenkins.io.* -t 120 http://$URL
