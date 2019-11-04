@@ -26,4 +26,16 @@ muffet -e .*/edit/.* \
 # this mediates the issue with checklinks stage of travis job failing
 # at seemingly random intervals
 
-muffet -e ^.*wiki.jenkins.io.* -t 60 http://$URL
+muffet -e .*/edit/.* \
+       -e .*/f2895a6e-ca7c-0010-82c7-eda71af511fa.html \
+       -e .*exploit-db\.com \
+       -e .*corp[/:].* \
+       -e .*:8033/.* \
+       -e .*/apps.* \
+       -e .*/bugs.* \
+       -e .*maven\.apache\.org.* \
+       -e .*docs\.oracle\.com.* \
+       -e .*wala\.sourceforge\.net.* \
+       -e .*stackoverflow\.com.* \
+       -e .*github\.com/kubernetes/ingress-nginx.* \
+       -e ^.*wiki.jenkins.io.* -t 60 http://$URL
