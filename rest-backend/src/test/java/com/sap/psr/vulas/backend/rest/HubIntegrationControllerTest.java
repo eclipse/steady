@@ -126,6 +126,7 @@ public class HubIntegrationControllerTest {
     }
 
     @After
+		@Commit
     public void reset() throws Exception {
     	this.gexeRepository.deleteAll();
     	this.appRepository.deleteAll();
