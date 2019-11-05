@@ -94,16 +94,15 @@ matrix:
     - docker-compose -v
     install:
     - docker build --tag docs ./docs
-    - docker build --tag checklinks -f ./docs/Dockerfile.checklinks ./docs
     - docker network create docs
     script:
-    - docker run --rm --network=docs  -d --name docs --hostname docs -p 8000:8000 docs
+    - docker run --rm --network=docs -d --name docs --hostname docs -p 8000:8000 docs
     - sleep 10
-    - docker run --rm --network=docs --name checklinks checklinks
+    - docker run --entrypoint=/tmp/checklinks.sh -e URL=docs:8000 -v ${PWD}/docs/:/tmp/ --rm --network=docs --name checklinks checklinks
     after_failure:
     - docker images
     - docker ps -as
-    - "(cd docker && docker logs)"
+    - docker logs docs
 notifications:
   email: false
 env:

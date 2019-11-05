@@ -4,9 +4,11 @@
 # below -e parameter is used to add regex exclusions.
 # You need GoLang and Muffet in order to run this script
 
-URL=${1:-127.0.0.1:8000}
+if [ -z $URL ]; then
+  URL=${1:-127.0.0.1:8000}
+fi
 
-./muffet -e .*/edit/.* \
+muffet -e .*/edit/.* \
        -e .*/f2895a6e-ca7c-0010-82c7-eda71af511fa.html \
        -e .*exploit-db\.com \
        -e .*corp[/:].* \
@@ -26,7 +28,7 @@ URL=${1:-127.0.0.1:8000}
 # this mediates the issue with checklinks stage of travis job failing
 # at seemingly random intervals
 
-./muffet -e .*/edit/.* \
+muffet -e .*/edit/.* \
        -e .*/f2895a6e-ca7c-0010-82c7-eda71af511fa.html \
        -e .*exploit-db\.com \
        -e .*corp[/:].* \
@@ -38,4 +40,4 @@ URL=${1:-127.0.0.1:8000}
        -e .*wala\.sourceforge\.net.* \
        -e .*stackoverflow\.com.* \
        -e .*github\.com/kubernetes/ingress-nginx.* \
-       -e ^.*wiki.jenkins.io.* -t 120 http://$URL
+       -e ^.*wiki.jenkins.io.* -t 80 http://$URL
