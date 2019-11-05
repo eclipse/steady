@@ -8,7 +8,7 @@ if [ -z $URL ]; then
   URL=${1:-127.0.0.1:8000}
 fi
 
-muffet -e .*/edit/.* \
+./muffet -e .*/edit/.* \
        -e .*/f2895a6e-ca7c-0010-82c7-eda71af511fa.html \
        -e .*exploit-db\.com \
        -e .*corp[/:].* \
@@ -28,7 +28,7 @@ muffet -e .*/edit/.* \
 # this mediates the issue with checklinks stage of travis job failing
 # at seemingly random intervals
 
-muffet -e .*/edit/.* \
+./muffet -e .*/edit/.* \
        -e .*/f2895a6e-ca7c-0010-82c7-eda71af511fa.html \
        -e .*exploit-db\.com \
        -e .*corp[/:].* \
