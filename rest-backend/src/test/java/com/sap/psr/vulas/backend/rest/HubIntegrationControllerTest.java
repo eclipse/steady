@@ -33,6 +33,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.test.annotation.Commit;
 
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.Bug;
@@ -125,8 +126,8 @@ public class HubIntegrationControllerTest {
     	createDefaultTenantandSpace();
     }
 
+    @Commit
     @After
-		@Commit
     public void reset() throws Exception {
     	this.gexeRepository.deleteAll();
     	this.appRepository.deleteAll();
