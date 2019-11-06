@@ -94,12 +94,12 @@ matrix:
     - docker-compose -v
     install:
     - docker build --tag docs ./docs
-    - docker build --tag checklinks -f ./docs/Dockerfile.checklinks ./docs
     - docker network create docs
     script:
-    - docker run --rm --network=docs  -d --name docs --hostname docs -p 8000:8000 docs
-    - sleep 20
-    - docker run --rm --network=docs --name checklinks checklinks
+    - docker run --rm --network=docs -d --name docs --hostname docs -p 8000:8000 docs
+    - sleep 10
+    - docker run --entrypoint=/tmp/checklinks.sh -e URL=docs:8000 -v ${PWD}/docs/:/tmp/ --rm --network=docs --name checklinks raviqqe/muffet:1.3.1
+
     after_failure:
     - docker images
     - docker ps -as
