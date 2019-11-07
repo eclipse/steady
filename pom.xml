@@ -575,6 +575,7 @@
 				<configuration>
 					<failOnError>false</failOnError>
 					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+					<includeFilterFile>findbugs-include.xml</includeFilterFile>
 					<omitVisitors></omitVisitors>
 				</configuration>
 				<reportSets>
