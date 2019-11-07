@@ -4,7 +4,6 @@ package com.sap.psr.vulas.backend.rest;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -47,7 +46,6 @@ import com.sap.psr.vulas.backend.repo.GoalExecutionRepository;
 import com.sap.psr.vulas.backend.repo.SpaceRepository;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
 import com.sap.psr.vulas.shared.enums.ExportConfiguration;
-import com.sap.psr.vulas.shared.enums.ExportFormat;
 import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.StopWatch;
@@ -60,6 +58,15 @@ import com.sap.psr.vulas.shared.util.StopWatch;
 @CrossOrigin(origins = "*")
 @RequestMapping(path="/hubIntegration/apps")
 public class HubIntegrationController {
+	
+	/**
+	 * Whether or not archives with question marks will be ignored. This behavior is comparable to Report.ignoreUnassessed().
+	 */
+	public static final String IGN_UNASS_ALL = "all";
+	/** Constant <code>IGN_UNASS_KNOWN="known"</code> */
+	public static final String IGN_UNASS_KNOWN = "known";
+	/** Constant <code>IGN_UNASS_OFF="off"</code> */
+	public static final String IGN_UNASS_OFF = "off";
 
 	private static Logger log = LoggerFactory.getLogger(HubIntegrationController.class);
 
@@ -174,12 +181,13 @@ public class HubIntegrationController {
 	}
 
 	/**
-	 * Returns a collection of {@link VulnerableDependency}s relevant for the {@link Application} with the given GAV.
+	 * Returns a collection of {@link VulnerableDependency}s relevant for the given item ID (previously obtained by the client with {@link #getExportItemIds}.
 	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
 	 * @param itemId a {@link java.lang.String} object.
 	 * @param separator a {@link java.lang.String} object.
 	 * @param excludedScopes an array of {@link com.sap.psr.vulas.shared.enums.Scope} objects.
+	 * @param ignoreUnassessed {@link java.lang.String} object determining the treatment of findings for unassessed archives, as in Report.ignoreUnassessed().
 	 * @param tenant a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{itemId:.+}/vulndeps", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
@@ -188,6 +196,7 @@ public class HubIntegrationController {
 			@PathVariable String itemId,
 			@RequestParam(value="separator", required=false, defaultValue=":") String separator,
 			@RequestParam(value="excludedScopes", required=false, defaultValue="") Scope[] excludedScopes,
+			@RequestParam(value="ignoreUnassessed", required=false, defaultValue=IGN_UNASS_KNOWN) String ignoreUnassessed,
 			@RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
 
 		// Get the tenant
@@ -214,14 +223,14 @@ public class HubIntegrationController {
 			// Export of app statistics
 			if(item.hasApplication()) {
 				final Application app = item.getApplication();
-				vd_list.addAll(this.getVulnerableItemDependencies(item.getSpace(), app, excludedScopes, false));
+				vd_list.addAll(this.getVulnerableItemDependencies(item.getSpace(), app, excludedScopes, false, ignoreUnassessed));
 			}
 			// Export of space statistics
 			else {
 				final Space space = item.getSpace();
 				final List<Application> apps = this.appRepository.findAllApps(space.getSpaceToken(),0);
 				for(Application app: apps) {
-					vd_list.addAll(this.getVulnerableItemDependencies(space, app, excludedScopes, true));
+					vd_list.addAll(this.getVulnerableItemDependencies(space, app, excludedScopes, true, ignoreUnassessed));
 				}
 			}
 
@@ -237,9 +246,9 @@ public class HubIntegrationController {
 		}
 	}
 
-	private TreeSet<VulnerableItemDependency> getVulnerableItemDependencies(Space _s, Application _app, Scope[] _excluded_scopes, boolean _include_app_gav) {
+	private TreeSet<VulnerableItemDependency> getVulnerableItemDependencies(Space _s, Application _app, Scope[] _excluded_scopes, boolean _include_app_gav, String _ignore_unassessed) {
 		final TreeSet<VulnerableItemDependency> vd_list = new TreeSet<VulnerableItemDependency>();
-
+		
 		// Get latest goal execution date
 		final GoalExecution latest_gexe = gexeRepository.findLatestGoalExecution(_app, null); 
 		final Calendar snapshot_date = (latest_gexe==null ? null : latest_gexe.getCreatedAt());
@@ -275,6 +284,16 @@ public class HubIntegrationController {
 							break;
 						}
 					}
+				}
+				
+				// Set to null depending on treatment of unassessed findings (comparable impl. than in method Report.ignoreUnassessed())
+				if(!vd.isAffectedVersionConfirmed()) {
+					if(_ignore_unassessed.equalsIgnoreCase(IGN_UNASS_OFF))
+						;
+					else if(_ignore_unassessed.equalsIgnoreCase(IGN_UNASS_ALL))
+						vhd = null;
+					else if(_ignore_unassessed.equalsIgnoreCase(IGN_UNASS_KNOWN) && vd.getDep().getLib().isWellknownDigest())
+						vhd = null;
 				}
 
 				// Set priority and add to collection
@@ -408,7 +427,6 @@ public class HubIntegrationController {
 		
 		private Calendar lastScan = null;
 		
-
 		@JsonIgnore
 		private VulnerableDependency vulnerableDependency = null;
 

@@ -1,13 +1,13 @@
 package com.sap.psr.vulas.backend.rest;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -24,12 +24,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
@@ -98,7 +96,6 @@ public class HubIntegrationControllerTest {
     @Autowired
     private AffectedLibraryRepository affLibRepository;
 
-
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
 
@@ -165,35 +162,50 @@ public class HubIntegrationControllerTest {
     
     @Test
     public void testGetHubAppVulnerabilities() throws Exception {
-    	// Rest-post http-client 4.1.3
-    	Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/dummy_app/lib.json")), Library.class);
-    	this.libRepository.customSave(lib);
+    	final Library lib_foo = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/dummy_app/lib.json")), Library.class);
+    	this.libRepository.customSave(lib_foo);
+    	
+    	final Library lib_bar = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/dummy_app/lib_bar.json")), Library.class);
+    	this.libRepository.customSave(lib_bar);
     	    	
-    	//Rest-post bug 
     	final Bug bug = (Bug)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/dummy_app/bug_foo.json")), Bug.class);
-    	this.bugRepository.customSave(bug,true);
+    	this.bugRepository.customSave(bug,true);    	
     	
-    	
-    	//Rest-post app using http-client
+    	// App with dependencies on foo and bar
     	final Application app = new Application(APP_GROUP, APP_ARTIFACT, "0.0." + APP_VERSION);
-
-		//Dependencies
 		final Set<Dependency> app_dependency = new HashSet<Dependency>(); 
-		app_dependency.add(new Dependency(app,lib, Scope.COMPILE, false, "foo.jar"));
-		String token = spaceRepository.getDefaultSpace(null).getSpaceToken();
+		app_dependency.add(new Dependency(app, lib_foo, Scope.COMPILE, false, "foo.jar"));
+		app_dependency.add(new Dependency(app, lib_bar, Scope.COMPILE, false, "bar.jar"));
 		app.setSpace(spaceRepository.getDefaultSpace(null));
-		
 		app.setDependencies(app_dependency);
     	this.appRepository.customSave(app);
-    	
+
+    	// Construct item ID
+    	final String token = spaceRepository.getDefaultSpace(null).getSpaceToken();
     	String item = TEST_DEFAULT_SPACE+" ("+token+") "+app.getMvnGroup()+":"+app.getArtifact()+":"+app.getVersion();
-    	// Read all public apps
-    	mockMvc.perform(get("/hubIntegration/apps/"+item+"/vulndeps"))
-        .andExpect(status().isOk()).andExpect(jsonPath("$[0].spaceToken").exists())
-        .andExpect(jsonPath("$[0].appId").exists())    	
-        .andExpect(jsonPath("$[0].lastScan").exists())
-        .andExpect(jsonPath("$[0].reachable").exists());
     	
+    	// Get vuln deps - default treatment of unassessed: IGN_UNASS_KNOWN
+    	MvcResult response = mockMvc.perform(get("/hubIntegration/apps/" + item + "/vulndeps"))
+	        .andExpect(status().isOk()).andExpect(jsonPath("$[0].spaceToken").exists())
+	        .andExpect(jsonPath("$[0].appId").exists())    	
+	        .andExpect(jsonPath("$[0].lastScan").exists())
+	        .andExpect(jsonPath("$[0].reachable").exists()).andReturn();
+    	
+    	// Vuln in foo is ignored as its digest is wellknown
+    	Set<HubIntegrationController.VulnerableItemDependency> vuln_deps = (Set<HubIntegrationController.VulnerableItemDependency>)JacksonUtil.asObject(response.getResponse().getContentAsString(), Set.class);
+    	assertEquals(1, vuln_deps.size());
+    	assertEquals("bar.jar", vuln_deps.iterator().next().getProjectId());
+    	
+    	// Get vuln deps - include all unassessed: IGN_UNASS_OFF
+    	response = mockMvc.perform(get("/hubIntegration/apps/" + item + "/vulndeps?ignoreUnassessed=" + HubIntegrationController.IGN_UNASS_OFF))
+	        .andExpect(status().isOk()).andExpect(jsonPath("$[0].spaceToken").exists())
+	        .andExpect(jsonPath("$[0].appId").exists())    	
+	        .andExpect(jsonPath("$[0].lastScan").exists())
+	        .andExpect(jsonPath("$[0].reachable").exists()).andReturn();
+    	
+    	// Both vuln in foo and bar are reported
+    	vuln_deps = (Set<HubIntegrationController.VulnerableItemDependency>)JacksonUtil.asObject(response.getResponse().getContentAsString(), Set.class);
+    	assertEquals(2, vuln_deps.size());
     }
     
     @Ignore

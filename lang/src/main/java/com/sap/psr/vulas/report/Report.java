@@ -48,8 +48,6 @@ public class Report {
 
 	private static final Log log = LogFactory.getLog(Report.class);
 
-	private static final String dateFormatString = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
-
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH:mm:ss");
 	
 	/**
@@ -331,7 +329,7 @@ public class Report {
 				if(analysis.isTraced()) vulns_total_traced++;
 
 				// Will this be considered for throwing a build exception?
-				analysis.setBlacklisted(this.isIgnoredForBuildException(analysis,  v.getBug().getBugId()));
+				analysis.setBlacklisted(this.isIgnoredForBuildException(analysis, v.getBug().getBugId()));
 				if(analysis.isBlacklisted()) scope_out++;
 				else scope_in++;
 
