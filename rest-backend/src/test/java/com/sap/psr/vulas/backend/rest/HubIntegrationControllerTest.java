@@ -189,12 +189,12 @@ public class HubIntegrationControllerTest {
 	        .andExpect(status().isOk()).andExpect(jsonPath("$[0].spaceToken").exists())
 	        .andExpect(jsonPath("$[0].appId").exists())    	
 	        .andExpect(jsonPath("$[0].lastScan").exists())
+	        .andExpect(jsonPath("$[0].projectId").value("bar.jar")) // Only bar.jar is reported (unknown digest), foo.jar is ignored (well-known digest)
 	        .andExpect(jsonPath("$[0].reachable").exists()).andReturn();
     	
-    	// Vuln in foo is ignored as its digest is wellknown
+    	// Only bar.jar is reported (unknown digest), foo.jar is ignored (well-known digest)
     	Set<HubIntegrationController.VulnerableItemDependency> vuln_deps = (Set<HubIntegrationController.VulnerableItemDependency>)JacksonUtil.asObject(response.getResponse().getContentAsString(), Set.class);
     	assertEquals(1, vuln_deps.size());
-    	assertEquals("bar.jar", vuln_deps.iterator().next().getProjectId());
     	
     	// Get vuln deps - include all unassessed: IGN_UNASS_OFF
     	response = mockMvc.perform(get("/hubIntegration/apps/" + item + "/vulndeps?ignoreUnassessed=" + HubIntegrationController.IGN_UNASS_OFF))
