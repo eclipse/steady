@@ -71,7 +71,6 @@ public class GetCallerClass {
 	 * Test all four methods
 	 */
 	public static void main(String[] args) {
-		testMethod(new ReflectionMethod());
 		testMethod(new ThreadStackTraceMethod());
 		testMethod(new ThrowableStackTraceMethod());
 		testMethod(new SecurityManagerMethod());
