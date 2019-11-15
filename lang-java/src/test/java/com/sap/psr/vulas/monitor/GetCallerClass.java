@@ -16,20 +16,6 @@ public class GetCallerClass {
 	}
 
 	/**
-	 * Uses the internal Reflection class
-	 */
-	private static class ReflectionMethod extends GetCallerClassNameMethod {
-		@SuppressWarnings({ "restriction", "deprecation" })
-		public String getCallerClassName(int callStackDepth) {
-			return sun.reflect.Reflection.getCallerClass(callStackDepth).getName();
-		}
-
-		public String getMethodName() {
-			return "Reflection";
-		}
-	}
-
-	/**
 	 * Get a stack trace from the current thread
 	 */
 	private static class ThreadStackTraceMethod extends GetCallerClassNameMethod {
