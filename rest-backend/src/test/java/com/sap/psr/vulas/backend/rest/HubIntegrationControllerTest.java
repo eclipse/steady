@@ -149,7 +149,10 @@ public class HubIntegrationControllerTest {
 		app.setSpace(spaceRepository.getDefaultSpace(null));
 		
 		app.setDependencies(app_dependency);
-    	this.appRepository.customSave(app);    	
+    	this.appRepository.customSave(app);
+    	
+    	// Make sure the app exists
+    	assertEquals(1, this.appRepository.count());
     	
     	// Read all public apps as strings
     	MvcResult response = mockMvc.perform(get("/hubIntegration/apps"))
