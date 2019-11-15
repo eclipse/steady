@@ -2,6 +2,7 @@ package com.sap.psr.vulas.backend.rest;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -56,14 +57,11 @@ import com.sap.psr.vulas.shared.util.FileUtil;
 @ActiveProfiles("test")
 public class HubIntegrationControllerTest {
 	
-	
     private MockMvc mockMvc;
     private HttpMessageConverter<?> mappingJackson2HttpMessageConverter;
     
     public static final String TEST_DEFAULT_SPACE = "public";
     public static final String TEST_DEFAULT_TENANT = "default";
-
-   
 
     @Autowired
     private ApplicationRepository appRepository;
@@ -129,10 +127,8 @@ public class HubIntegrationControllerTest {
         this.libRepository.deleteAll();
         this.bugRepository.deleteAll();
         this.cidRepository.deleteAll();
-       
     }
     
-    @Ignore
     @Test
     public void testGetHubApps() throws Exception {
     	// Rest-post http-client 4.1.3
@@ -155,9 +151,17 @@ public class HubIntegrationControllerTest {
 		app.setDependencies(app_dependency);
     	this.appRepository.customSave(app);    	
     	
-    	// Read all public apps
-    	mockMvc.perform(get("/hubIntegration/apps"))
-        .andExpect(status().isOk()).andExpect(content().string("[\""+TEST_DEFAULT_SPACE+" ("+token+") "+app.getMvnGroup()+":"+app.getArtifact()+":"+app.getVersion()+"\"]"));	
+    	// Read all public apps as strings
+    	MvcResult response = mockMvc.perform(get("/hubIntegration/apps"))
+    			.andExpect(status().isOk())
+    			.andExpect(content().string("[\""+TEST_DEFAULT_SPACE+" ("+token+") " + app.getMvnGroup() + ":" + app.getArtifact() + ":" + app.getVersion() + "\"]"))
+    			.andReturn();
+    	
+    	// Read all public apps as JSON
+    	response = mockMvc.perform(get("/hubIntegration/apps/json"))
+    			.andExpect(status().isOk())
+    			.andExpect(jsonPath("$[0].application.group").value(app.getMvnGroup()))
+    			.andReturn();
     }    
     
     @Test
@@ -184,28 +188,30 @@ public class HubIntegrationControllerTest {
     	final String token = spaceRepository.getDefaultSpace(null).getSpaceToken();
     	String item = TEST_DEFAULT_SPACE+" ("+token+") "+app.getMvnGroup()+":"+app.getArtifact()+":"+app.getVersion();
     	
-    	// Get vuln deps - default treatment of unassessed: IGN_UNASS_KNOWN
+    	// Get vuln deps - default include all unassessed: IGN_UNASS_OFF
     	MvcResult response = mockMvc.perform(get("/hubIntegration/apps/" + item + "/vulndeps"))
 	        .andExpect(status().isOk()).andExpect(jsonPath("$[0].spaceToken").exists())
 	        .andExpect(jsonPath("$[0].appId").exists())    	
 	        .andExpect(jsonPath("$[0].lastScan").exists())
-	        .andExpect(jsonPath("$[0].projectId").value("bar.jar")) // Only bar.jar is reported (unknown digest), foo.jar is ignored (well-known digest)
-	        .andExpect(jsonPath("$[0].reachable").exists()).andReturn();
+	        .andExpect(jsonPath("$[0].reachable").exists())
+	        .andReturn();
     	
     	// Only bar.jar is reported (unknown digest), foo.jar is ignored (well-known digest)
     	Set<HubIntegrationController.VulnerableItemDependency> vuln_deps = (Set<HubIntegrationController.VulnerableItemDependency>)JacksonUtil.asObject(response.getResponse().getContentAsString(), Set.class);
-    	assertEquals(1, vuln_deps.size());
+    	assertEquals(2, vuln_deps.size());
     	
-    	// Get vuln deps - include all unassessed: IGN_UNASS_OFF
-    	response = mockMvc.perform(get("/hubIntegration/apps/" + item + "/vulndeps?ignoreUnassessed=" + HubIntegrationController.IGN_UNASS_OFF))
+    	// Get vuln deps - treatment of unassessed: IGN_UNASS_KNOWN
+    	response = mockMvc.perform(get("/hubIntegration/apps/" + item + "/vulndeps?ignoreUnassessed=" + HubIntegrationController.IGN_UNASS_KNOWN))
 	        .andExpect(status().isOk()).andExpect(jsonPath("$[0].spaceToken").exists())
 	        .andExpect(jsonPath("$[0].appId").exists())    	
 	        .andExpect(jsonPath("$[0].lastScan").exists())
-	        .andExpect(jsonPath("$[0].reachable").exists()).andReturn();
+	        .andExpect(jsonPath("$[0].projectId").value("bar.jar")) // Only bar.jar is reported (unknown digest), foo.jar is ignored (well-known digest)
+	        .andExpect(jsonPath("$[0].reachable").exists())
+	        .andReturn();
     	
     	// Both vuln in foo and bar are reported
     	vuln_deps = (Set<HubIntegrationController.VulnerableItemDependency>)JacksonUtil.asObject(response.getResponse().getContentAsString(), Set.class);
-    	assertEquals(2, vuln_deps.size());
+    	assertEquals(1, vuln_deps.size());
     }
     
     @Ignore
@@ -245,13 +251,10 @@ public class HubIntegrationControllerTest {
         .andExpect(jsonPath("$[0].lastScan").exists())
         .andExpect(jsonPath("$[0].reachable",is(false))).andReturn();
     }
-  
-    
      
     private static final String APP_GROUP = "com.acme";
     private static final String APP_ARTIFACT = "vulas";
-    private static int APP_VERSION = 1; // Used to create unique apps
-    
+    private static int APP_VERSION = 1; // Used to create unique apps    
 		
 	public static String getAppUri(Application _app) {
 		return "/apps/" + _app.getMvnGroup()+ "/" + _app.getArtifact() + "/" + _app.getVersion();
@@ -260,7 +263,6 @@ public class HubIntegrationControllerTest {
 	public static String getAppsExportUri(String _format) {
 		return "/apps/export?format=" + _format;
 	}
-	
 	
 	private void createDefaultTenantandSpace() {
 		//default tenant

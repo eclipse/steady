@@ -4,6 +4,7 @@ package com.sap.psr.vulas.backend.rest;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -96,6 +97,87 @@ public class HubIntegrationController {
 		this.gexeRepository = gexeRepository;
 		this.spaceRepository = spaceRepository;
 		this.tenantRepository = tenantRepository;
+	}
+	
+	/**
+	 * Returns a sorted set of item identifiers. Items can correspond to either {@link Space}s or {@link Application}s, depending on the value of {@link Space#getExportConfiguration()}.
+	 * The identifiers looks as follows:
+	 * <space-name> (<space-token>)
+	 * <space-name> (<space-token>) <separator><group><separator><artifact><separator><version>
+	 *
+	 * @return sorted set of all items for which data can be exported
+	 * @param skipEmpty a {@link java.lang.Boolean} object.
+	 * @param separator a {@link java.lang.String} object.
+	 * @param max a {@link java.lang.Integer} object.
+	 * @param asOfTimestamp a {@link java.lang.String} object.
+	 * @param aggregate a {@link java.lang.Boolean} object.
+	 * @param tenant a {@link java.lang.String} object.
+	 */
+	@RequestMapping(value = "json", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
+	@JsonView(Views.Default.class)
+	public ResponseEntity<Collection<ExportItem>> getExportItemIdsAsJson(
+			@RequestParam(value="skipEmpty", required=false, defaultValue="false") Boolean skipEmpty,
+			@RequestParam(value="max", required=false, defaultValue="-1") Integer max,
+			@RequestParam(value="asOf", required=false, defaultValue="0") String asOfTimestamp,
+			@RequestParam(value="aggregate", required=false, defaultValue="true") Boolean aggregate,
+			@RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
+
+		// Get the tenant
+		Tenant t = null;
+		try {
+			if(tenant!=null && !tenant.equals(""))
+				t = TenantRepository.FILTER.findOne(this.tenantRepository.findBySecondaryKey(tenant));
+			else
+				t = tenantRepository.findDefault();
+		}
+		catch(EntityNotFoundException enfe) {
+			log.error("Tenant [" + tenant + "] not found");
+			throw new RuntimeException("Tenant [" + tenant + "] not found");
+		}
+		
+		// To be returned
+		final Collection<ExportItem> items = new HashSet<ExportItem>();
+
+		// Get all spaces and evaluate the export setting
+		final List<Space> spaces = this.spaceRepository.findAllTenantSpaces(t.getTenantToken());
+		
+		outerloop:
+		for(Space s: spaces) {
+			// Export will be aggregated (one item only, corresponding to the space)
+			if(aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) {
+				//if asOfTimestamp has been specified, we check if at least 1 application in the space has lastChange>asOfTimestamp
+				Boolean toAdd=true;
+				if(Long.parseLong(asOfTimestamp)>0){
+					final Set<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
+					if(apps.isEmpty())
+						toAdd=false;
+				}
+				if(toAdd){
+					final ExportItem item = new ExportItem(s, null);
+					if(max==-1 || items.size()<max)
+						items.add(item);
+					else
+						break outerloop;
+				}
+			}
+			// Export will be individual (one item per space application)
+			else if((!aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) || s.getExportConfiguration()==ExportConfiguration.DETAILED) {
+				final Set<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
+				for(Application app: apps) {
+					final ExportItem item = new ExportItem(s, app);
+					if(max==-1 || items.size()<max)
+						items.add(item);
+					else
+						break outerloop;
+				}
+			}
+			// No export
+			else if(s.getExportConfiguration()==ExportConfiguration.OFF) {
+				continue;
+			}
+		}
+
+		return new ResponseEntity<Collection<ExportItem>>(items, HttpStatus.OK);
 	}
 
 	/**
@@ -196,7 +278,7 @@ public class HubIntegrationController {
 			@PathVariable String itemId,
 			@RequestParam(value="separator", required=false, defaultValue=":") String separator,
 			@RequestParam(value="excludedScopes", required=false, defaultValue="") Scope[] excludedScopes,
-			@RequestParam(value="ignoreUnassessed", required=false, defaultValue=IGN_UNASS_KNOWN) String ignoreUnassessed,
+			@RequestParam(value="ignoreUnassessed", required=false, defaultValue=IGN_UNASS_OFF) String ignoreUnassessed,
 			@RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
 
 		// Get the tenant
@@ -312,10 +394,14 @@ public class HubIntegrationController {
 	 * Represents an item for which vulnerability statistics can be exported.
 	 * Items are either identified by space token and space name or by space token, space name and application GAV.
 	 */
+	@JsonInclude(JsonInclude.Include.ALWAYS)
+	@JsonIgnoreProperties(ignoreUnknown = true)
 	static class ExportItem {
 
 		private Space space;		
 		private Application app;
+		//TODO: Alternative to be discussed: Remove @JsonIgnore from Application.id 
+		private Long applicationId;
 
 		private ExportItem(@NotNull Space _s, Application _app) {
 			this.space = _s;
@@ -347,11 +433,13 @@ public class HubIntegrationController {
 			return new ExportItem(space, app);
 		}
 
-		private Space getSpace() { return this.space; }
+		public Space getSpace() { return this.space; }
 
-		private Application getApplication() { return this.app; }
+		public Application getApplication() { return this.app; }
 
 		private boolean hasApplication() { return this.app!=null; }
+		
+		public Long getApplicationId() { return this.getApplication()!=null ? this.getApplication().getId() : null; }
 
 		private String toString(String _separator) {
 			final StringBuffer b = new StringBuffer();
