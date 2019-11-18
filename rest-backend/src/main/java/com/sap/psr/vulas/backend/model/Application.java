@@ -57,7 +57,6 @@ public class Application implements Serializable, Comparable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@JsonIgnore
 	private Long id;
 	
 	@ManyToOne(optional = false)
