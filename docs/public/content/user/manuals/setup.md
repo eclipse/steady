@@ -83,8 +83,8 @@ Determines whether un-assessed vulnerabilities are exported or ignored. Un-asses
 Possible values:
 
 - `all`: All un-assessed vulnerabilities will be ignored
-- `known` (default): Only un-assessed vulnerabilities in archives with a well-known digest will be ignored (those archives that exist in a public package repository such as Maven Central)
-- `off`: Never ignore
+- `known`: Only un-assessed vulnerabilities in archives with a well-known digest will be ignored (those archives that exist in a public package repository such as Maven Central)
+- `off` (default): Never ignore
 
 ## Setup
 
