@@ -400,8 +400,6 @@ public class HubIntegrationController {
 
 		private Space space;		
 		private Application app;
-		//TODO: Alternative to be discussed: Remove @JsonIgnore from Application.id 
-		private Long applicationId;
 
 		private ExportItem(@NotNull Space _s, Application _app) {
 			this.space = _s;
@@ -438,8 +436,6 @@ public class HubIntegrationController {
 		public Application getApplication() { return this.app; }
 
 		private boolean hasApplication() { return this.app!=null; }
-		
-		public Long getApplicationId() { return this.getApplication()!=null ? this.getApplication().getId() : null; }
 
 		private String toString(String _separator) {
 			final StringBuffer b = new StringBuffer();
