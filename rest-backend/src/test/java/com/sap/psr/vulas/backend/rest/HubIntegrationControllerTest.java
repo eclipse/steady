@@ -60,8 +60,15 @@ public class HubIntegrationControllerTest {
     private MockMvc mockMvc;
     private HttpMessageConverter<?> mappingJackson2HttpMessageConverter;
     
-    public static final String TEST_DEFAULT_SPACE = "public";
-    public static final String TEST_DEFAULT_TENANT = "default";
+    public static final String DEFAULT_TENANT = "default";
+    public static final String DEFAULT_SPACE = "public";
+    
+    public static final String SECOND_TENANT = "second";
+    public static final String SECOND_SPACE = "second";
+    
+    private static final String APP_GROUP = "com.acme";
+    private static final String APP_ARTIFACT = "vulas";
+    private static int APP_VERSION = 1;
 
     @Autowired
     private ApplicationRepository appRepository;
@@ -90,13 +97,11 @@ public class HubIntegrationControllerTest {
     @Autowired
     private SpaceRepository spaceRepository;
     
-
     @Autowired
     private AffectedLibraryRepository affLibRepository;
 
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
-
         this.mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream().filter(
                 new Predicate<HttpMessageConverter<?>>() {
 					@Override
@@ -104,7 +109,6 @@ public class HubIntegrationControllerTest {
 						return hmc instanceof MappingJackson2HttpMessageConverter;
 					}
 				}).findAny().get();
-
         Assert.assertNotNull("the JSON message converter must not be null",
                 this.mappingJackson2HttpMessageConverter);
     }
@@ -117,7 +121,8 @@ public class HubIntegrationControllerTest {
         this.libRepository.deleteAll();
         this.cidRepository.deleteAll();
         
-    	createDefaultTenantandSpace();
+    	createTenantAndSpace(DEFAULT_TENANT, DEFAULT_SPACE, true);
+    	createTenantAndSpace(SECOND_TENANT, SECOND_SPACE, false);
     }
     
     @After
@@ -127,6 +132,18 @@ public class HubIntegrationControllerTest {
         this.libRepository.deleteAll();
         this.bugRepository.deleteAll();
         this.cidRepository.deleteAll();
+    }
+
+    /**
+     * Results in a bad request (400), because the requested space belongs to a wrong tenant.
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testBadSpaceExportRequest() throws Exception {
+    	final String item_id = SECOND_SPACE + "%20(" + SECOND_SPACE + ")";
+    	mockMvc.perform(get("/hubIntegration/apps/" + item_id + "/vulndeps"))
+    			.andExpect(status().is4xxClientError());
     }
     
     @Test
@@ -158,7 +175,7 @@ public class HubIntegrationControllerTest {
     	// Read all public apps as strings
     	MvcResult response = mockMvc.perform(get("/hubIntegration/apps"))
     			.andExpect(status().isOk())
-    			.andExpect(content().string("[\"" + TEST_DEFAULT_SPACE + " (" + token + ") " + app.getMvnGroup() + ":" + app.getArtifact() + ":" + app.getVersion() + "\"]"))
+    			.andExpect(content().string("[\"" + DEFAULT_SPACE + " (" + token + ") " + app.getMvnGroup() + ":" + app.getArtifact() + ":" + app.getVersion() + "\"]"))
     			.andReturn();
     	
     	// Read all public apps as JSON
@@ -190,7 +207,7 @@ public class HubIntegrationControllerTest {
 
     	// Construct item ID
     	final String token = spaceRepository.getDefaultSpace(null).getSpaceToken();
-    	String item = TEST_DEFAULT_SPACE+" ("+token+") "+app.getMvnGroup()+":"+app.getArtifact()+":"+app.getVersion();
+    	String item = DEFAULT_SPACE+" ("+token+") "+app.getMvnGroup()+":"+app.getArtifact()+":"+app.getVersion();
     	
     	// Get vuln deps - default include all unassessed: IGN_UNASS_OFF
     	MvcResult response = mockMvc.perform(get("/hubIntegration/apps/" + item + "/vulndeps"))
@@ -254,52 +271,42 @@ public class HubIntegrationControllerTest {
         .andExpect(jsonPath("$[0].appId",is(1)))    	
         .andExpect(jsonPath("$[0].lastScan").exists())
         .andExpect(jsonPath("$[0].reachable",is(false))).andReturn();
-    }
-     
-    private static final String APP_GROUP = "com.acme";
-    private static final String APP_ARTIFACT = "vulas";
-    private static int APP_VERSION = 1; // Used to create unique apps    
+    }   
 		
 	public static String getAppUri(Application _app) {
-		return "/apps/" + _app.getMvnGroup()+ "/" + _app.getArtifact() + "/" + _app.getVersion();
+		return "/apps/" + _app.getMvnGroup() + "/" + _app.getArtifact() + "/" + _app.getVersion();
 	}
 	
 	public static String getAppsExportUri(String _format) {
 		return "/apps/export?format=" + _format;
 	}
 	
-	private void createDefaultTenantandSpace() {
-		//default tenant
+	private void createTenantAndSpace(String _tenant, String _space, boolean _default) {
 		Tenant default_tenant = null;
-		try{
-			default_tenant = TenantRepository.FILTER.findOne(tenantRepository.findBySecondaryKey(TEST_DEFAULT_TENANT));
-		}catch(EntityNotFoundException e){
+		try {
+			default_tenant = TenantRepository.FILTER.findOne(tenantRepository.findBySecondaryKey(_tenant));
+		} catch(EntityNotFoundException e){
 			default_tenant = new Tenant();
-			default_tenant.setTenantToken(TEST_DEFAULT_TENANT);
-			default_tenant.setTenantName(TEST_DEFAULT_TENANT);
-			default_tenant.setDefault(true);
+			default_tenant.setTenantToken(_tenant);
+			default_tenant.setTenantName(_tenant);
+			default_tenant.setDefault(_default);
 			tenantRepository.save(default_tenant);
-			default_tenant = TenantRepository.FILTER.findOne(tenantRepository.findBySecondaryKey(TEST_DEFAULT_TENANT));
-			
+			default_tenant = TenantRepository.FILTER.findOne(tenantRepository.findBySecondaryKey(_tenant));
 		}
 		
-		//default space
 		Space default_space = null;
-		
-		try{
-			default_space = SpaceRepository.FILTER.findOne(spaceRepository.findBySecondaryKey(TEST_DEFAULT_SPACE));
-		}catch(EntityNotFoundException e){
+		try {
+			default_space = SpaceRepository.FILTER.findOne(spaceRepository.findBySecondaryKey(_space));
+		} catch(EntityNotFoundException e){
 			default_space = new Space();
-			default_space.setSpaceName(TEST_DEFAULT_SPACE);
-			default_space.setSpaceToken(TEST_DEFAULT_SPACE);
-			default_space.setDefault(true);
+			default_space.setSpaceName(_space);
+			default_space.setSpaceToken(_space);
+			default_space.setDefault(_default);
 			default_space.setExportConfiguration(ExportConfiguration.DETAILED);
 			default_space.setSpaceDescription("bar");
 			default_space.setSpaceOwners(new HashSet<String>(Arrays.asList(new String[] {"foo@bar.com"})));
 			default_space.setTenant(default_tenant);
 			spaceRepository.save(default_space);
-			
-			default_space = SpaceRepository.FILTER.findOne(spaceRepository.findBySecondaryKey(TEST_DEFAULT_SPACE));
 		}
 	}
 }

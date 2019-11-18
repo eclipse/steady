@@ -297,6 +297,13 @@ public class HubIntegrationController {
 		try {
 			// Build from the simple string argument
 			final ExportItem item = ExportItem.fromString(itemId, separator, spaceRepository, appRepository);
+			
+			// Fail if the given space does not belong to the tenant in question
+			if(!t.hasSpace(item.getSpace())) {
+				log.error("Space " + item.getSpace() + " is not part of tenant " + t);
+				throw new IllegalArgumentException("Space " + item.getSpace() + " is not part of tenant " + t);
+			}
+			
 			final StopWatch sw = new StopWatch("Query vulnerable dependencies for item [" + itemId + "] (total)").start();
 
 			// The set to be returned
