@@ -437,33 +437,33 @@
 												<div class="vulnerability_title">
 													<h2>$vul.filename - </h2>
 													#if( $vul.hasFindingsAboveThreshold() )
-													#if( $vul.bug.getReference().isEmpty() )
-													<a id="vulnerability_score_high" href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=$vul.bug.getBugId()" target="_blank">$vul.bug.getBugId()</a>
+														#if( $vul.bug.getReference().isEmpty() )
+														<a id="vulnerability_score_high" href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=$vul.bug.getBugId()" target="_blank">$vul.bug.getBugId()</a>
+														#else
+														<a id="vulnerability_score_high" href="$vul.bug.getReference().iterator().next()" target="_blank">$vul.bug.getBugId()</a>
+														#end
 													#else
-													<a id="vulnerability_score_high" href="$vul.bug.getReference().iterator().next()" target="_blank">$vul.bug.getBugId()</a>
-													#end
-													#else
-													#if( $vul.bug.getReference().isEmpty() )
-													<a id="vulnerability_score_medium" href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=$vul.bug.getBugId()" target="_blank">$vul.bug.getBugId()</a>
-													#else
-													<a id="vulnerability_score_medium" href="$vul.bug.getReference().iterator().next()" target="_blank">$vul.bug.getBugId()</a>
-													#end
+														#if( $vul.bug.getReference().isEmpty() )
+														<a id="vulnerability_score_medium" href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=$vul.bug.getBugId()" target="_blank">$vul.bug.getBugId()</a>
+														#else
+														<a id="vulnerability_score_medium" href="$vul.bug.getReference().iterator().next()" target="_blank">$vul.bug.getBugId()</a>
+														#end
 													#end
 												</div>
 											</div>
 										</summary>
 										#if( $vul.hasFindingsAboveThreshold() )
-										<div class="vulnerability_score_high">
+											<div class="vulnerability_score_high">
 										#else
-										<div class="vulnerability_score_medium">
+											<div class="vulnerability_score_medium">
 										#end
 											<div class="vulnerability_sha">
 												$vul.archiveid
 											</div>
 											#if( $vul.bug.getReference().isEmpty() )
-											<h4>CVSS: $vul.bug.getCvssDisplayString()</h4>
+												<h4>CVSS: $vul.bug.getCvssDisplayString()</h4>
 											#else
-											<h4>CVSS: $vul.bug.getCvssDisplayString()</h4>
+												<h4>CVSS: $vul.bug.getCvssDisplayString()</h4>
 											#end
 										</div>
 										$vul.bug.getDescription()
