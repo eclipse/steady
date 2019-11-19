@@ -216,7 +216,7 @@ func createPod(podClient corev1.PodInterface, chunkID int, bug CVE, context Cont
 	}
 
 	if !context.DryRun {
-		pod.Spec.Containers[0].Args = append(pod.Spec.Containers[0].Args, " -u")
+		pod.Spec.Containers[0].Args = append(pod.Spec.Containers[0].Args, "-u")
 	}
 
 	if context.Skip {
