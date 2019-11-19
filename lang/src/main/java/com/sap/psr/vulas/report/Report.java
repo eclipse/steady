@@ -48,8 +48,6 @@ public class Report {
 
 	private static final Log log = LogFactory.getLog(Report.class);
 
-	private static final String dateFormatString = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
-
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH:mm:ss");
 	
 	/**

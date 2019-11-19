@@ -362,7 +362,7 @@ public class Space {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "space [token=" + spaceToken + ", name=" + spaceName + ", isTransient=" + this.isTransient() + "]";
+		return "[token=" + spaceToken + ", name=" + spaceName + ", isTransient=" + this.isTransient() + "]";
 	}
 	
 	/**

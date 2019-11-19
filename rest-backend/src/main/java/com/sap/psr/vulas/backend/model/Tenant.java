@@ -135,6 +135,7 @@ public class Tenant {
 	 * @param spaces a {@link java.util.Collection} object.
 	 */
 	public void setSpaces(Collection<Space> spaces) { this.spaces = spaces; }
+	
 	/**
 	 * <p>addSpace.</p>
 	 *
@@ -144,6 +145,15 @@ public class Tenant {
 		if(this.getSpaces()==null)
 			this.spaces = new HashSet<Space>();
 		this.spaces.add(_space);
+	}
+	
+	/**
+	 * Returns true if the given space is part of this tenant, false otherwise.
+	 * 
+	 * @param _space a {@link com.sap.psr.vulas.backend.model.Space} object.
+	 */
+	public boolean hasSpace(Space _space) {
+		return this.getSpaces()!=null && this.getSpaces().contains(_space);
 	}
 	
 	/**
@@ -186,7 +196,7 @@ public class Tenant {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "tenant [token=" + tenantToken + ", name=" + tenantName + "]";
+		return "[token=" + tenantToken + ", name=" + tenantName + "]";
 	}
 	
 	/**

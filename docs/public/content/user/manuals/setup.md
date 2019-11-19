@@ -76,6 +76,16 @@ The API returns an array of JSON elements having the following data model:
 | count | Number of findings of type `type` in project | Always 1 |
 | snapshotDate | Date of most recent goal execution of the application (any goal) ||
 
+Query string parameter `ignoreUnassessed` 
+
+Determines whether un-assessed vulnerabilities are exported or ignored. Un-assessed vulns are those where the method signature(s) of a vulnerability appear in an archive, however, it is yet unclear whether the methods exist in the fixed or vulnerable version. Those findings are marked with an orange hourglass in the frontend.
+
+Possible values:
+
+- `all`: All un-assessed vulnerabilities will be ignored
+- `known`: Only un-assessed vulnerabilities in archives with a well-known digest will be ignored (those archives that exist in a public package repository such as Maven Central)
+- `off` (default): Never ignore
+
 ## Setup
 
 ### Maven
