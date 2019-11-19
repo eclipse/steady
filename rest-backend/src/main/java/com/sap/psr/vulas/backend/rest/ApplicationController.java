@@ -2014,7 +2014,13 @@ public class ApplicationController {
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}/paths/{bugId}/{qname}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
-	public ResponseEntity<List<Path>> getVulndepConstructPaths(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String digest, @PathVariable String bugId, @PathVariable String qname,
+	public ResponseEntity<List<Path>> getVulndepConstructPaths(
+			@PathVariable String mvnGroup,
+			@PathVariable String artifact,
+			@PathVariable String version,
+			@PathVariable String digest,
+			@PathVariable String bugId,
+			@PathVariable String qname,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
@@ -2024,6 +2030,7 @@ public class ApplicationController {
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<List<Path>>(HttpStatus.NOT_FOUND);
 		}
+		
 		// Ensure that app exists
 		Application app = null;
 		try { app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s)); }
