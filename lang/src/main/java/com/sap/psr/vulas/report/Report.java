@@ -109,12 +109,12 @@ public class Report {
 	/**
 	 *  Vulnerabilities that cause a build exception, determined in {@link Report#processVulnerabilities()}.
 	 */
-	private Set<AggregatedVuln> vulnsAboveThreshold = new HashSet<AggregatedVuln>();
+	private Set<AggregatedVuln> vulnsAboveThreshold = new TreeSet<AggregatedVuln>();
 		
 	/**
 	 *  Vulnerabilities that do not cause a build exception, determined in {@link Report#processVulnerabilities()}.
 	 */
-	private Set<AggregatedVuln> vulnsBelowThreshold = new HashSet<AggregatedVuln>();
+	private Set<AggregatedVuln> vulnsBelowThreshold = new TreeSet<AggregatedVuln>();
 	
 	// The following are used to inform about obsolete exemptions
 	private Set<String> historicalVulns = new HashSet<String>();
@@ -388,8 +388,8 @@ public class Report {
 
 		// Analysis results
 		this.context.put("vulnsToReport", vulnsToReport);
-		this.context.put("vulnsAboveTreshold", vulnsAboveThreshold);
-		this.context.put("vulnsBelowTreshold", vulnsBelowThreshold);
+		this.context.put("vulnsAboveThreshold", vulnsAboveThreshold);
+		this.context.put("vulnsBelowThreshold", vulnsBelowThreshold);
 		
 		this.context.put("obsoleteExemptionsHistorical", StringUtil.join(obsolHistorical, ", "));
 		this.context.put("obsoleteExemptionsSignatureNotPresent", StringUtil.join(obsolSignNotPresent, ", "));
