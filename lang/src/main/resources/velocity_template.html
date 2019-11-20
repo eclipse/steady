@@ -428,8 +428,16 @@
 									<h2 style="display: inline-block;">High Priority Vulnerabilities</h2>
 								</summary>
 								#foreach( $vul in $vulnsAboveThreshold )
-								<div class="vulnerability">
-									<details>
+								<div class="vulnerability"
+								#if ( $vul.bug.getCvssScore() ge 0.9 ) style="border-left: thick solid #e94f37"
+								#elseif ( $vul.bug.getCvssScore() ge 0.8 ) style="border-left: thick solid #ed6f5b"
+								#elseif ( $vul.bug.getCvssScore() ge 0.7 ) style="border-left: thick solid #fb8b24"
+								#elseif ( $vul.bug.getCvssScore() ge 0.6 ) style="border-left: thick solid #fb9537"
+								#elseif ( $vul.bug.getCvssScore() ge 0.5 ) style="border-left: thick solid #fba04b"
+								#elseif ( $vul.bug.getCvssScore() ge 0.4 ) style="border-left: thick solid #f4d35e"
+								#else style="border-left: thick solid #bdd358"
+								#end >
+								<details>
 										<summary>
 											<div class="vulnerability_summary">
 												<div class="vulnerability_title">
@@ -602,7 +610,15 @@
 									<h2 style="display: inline-block;">Exempted Vulnerabilities</h2>
 								</summary>
 								#foreach( $vul in $vulnsBelowThreshold )
-								<div class="vulnerability">
+								<div class="vulnerability"
+								#if ( $vul.bug.getCvssScore() ge 0.9 ) style="border-left: thick solid #e94f37"
+								#elseif ( $vul.bug.getCvssScore() ge 0.8 ) style="border-left: thick solid #ed6f5b"
+								#elseif ( $vul.bug.getCvssScore() ge 0.7 ) style="border-left: thick solid #fb8b24"
+								#elseif ( $vul.bug.getCvssScore() ge 0.6 ) style="border-left: thick solid #fb9537"
+								#elseif ( $vul.bug.getCvssScore() ge 0.5 ) style="border-left: thick solid #fba04b"
+								#elseif ( $vul.bug.getCvssScore() ge 0.4 ) style="border-left: thick solid #f4d35e"
+								#else style="border-left: thick solid #bdd358"
+								#end >
 									<details>
 										<summary>
 											<div class="vulnerability_summary">
