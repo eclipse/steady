@@ -56,11 +56,12 @@ Once this button is clicked, all the editable property-fields of the workspace a
 - update/change the data of your workspace as per your expectations.
 - Press the "Save" button to save your modifications, press the "close" button to revert your changes.
 
-### Workspace REST API
+### Export Analysis Results
 
-The REST API can be used to export findings in a machine-readable fashion. Calling HTTP GET on the following URL, for instance, returns all vulnerable dependencies of an aggregated workspace:
+The following REST API can be used to export findings (information about vulnerable dependencies) to JSON, either for entire workspaces or for single applications.
 
-`@@ADDRESS@@/backend/hubIntegration/apps/<workspace-name>%20(<workspace-token>)/vulndeps`
+For aggregated workspaces, call HTTP GET `@@ADDRESS@@/backend/hubIntegration/apps/<workspace-name>%20(<workspace-token>)/vulndeps`.
+For single applications, call HTTP GET `@@ADDRESS@@/backend/hubIntegration/apps/<workspace-name>%20(<workspace-token>)%20<group>:<artifact>:<version>/vulndeps`
 
 The API returns an array of JSON elements having the following data model:
 
