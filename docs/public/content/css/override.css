@@ -7,13 +7,13 @@
     .md-sidebar--secondary {
         margin: 0;
         float: right;
-        right: -20rem;
+        right: -300px;
     }
 }
 
 @media only screen and (min-width: 60em){
     .md-sidebar--secondary {
-        right: -22rem;
+        right: -270px;
     }
 }
 
@@ -215,7 +215,7 @@ a>code {
 
 /* Tips - start */
 .md-typeset .admonition, .md-typeset details {
-    font-size: 1.38rem;
+    font-size: 18px;
 }
 
 /* Hidden - start */
