@@ -609,7 +609,7 @@ Identified vulnerabilities including any information gathered during static and 
 #### Run as follows
 
 ```sh tab="CLI"
-java -Dvulas.core.appContext.group=<GROUP> -Dvulas.core.appContext.artifact=<ARTIFACT> -Dvulas.core.appContext.version=@@PROJECT_VERSION@@
+java -Dvulas.core.appContext.group=<GROUP> -Dvulas.core.appContext.artifact=<ARTIFACT> -Dvulas.core.appContext.version=<VERSION>
      -jar vulas-cli-jar-with-dependencies.jar -goal report
 ```
 

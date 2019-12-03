@@ -56,11 +56,12 @@ Once this button is clicked, all the editable property-fields of the workspace a
 - update/change the data of your workspace as per your expectations.
 - Press the "Save" button to save your modifications, press the "close" button to revert your changes.
 
-### Workspace REST API
+### Export Analysis Results
 
-The REST API can be used to export findings in a machine-readable fashion. Calling HTTP GET on the following URL, for instance, returns all vulnerable dependencies of an aggregated workspace:
+The following REST API can be used to export findings (information about vulnerable dependencies) to JSON, either for entire workspaces or for single applications.
 
-`@@ADDRESS@@/backend/hubIntegration/apps/<workspace-name>%20(<workspace-token>)/vulndeps`
+For aggregated workspaces, call HTTP GET `@@ADDRESS@@/backend/hubIntegration/apps/<workspace-name>%20(<workspace-token>)/vulndeps`.
+For single applications, call HTTP GET `@@ADDRESS@@/backend/hubIntegration/apps/<workspace-name>%20(<workspace-token>)%20<group>:<artifact>:<version>/vulndeps`
 
 The API returns an array of JSON elements having the following data model:
 
@@ -75,16 +76,6 @@ The API returns an array of JSON elements having the following data model:
 | status | Indicates whether the finding has been assessed  | 1 (audited) in case state is 1 or 4, -1 (non-audited) otherwise |
 | count | Number of findings of type `type` in project | Always 1 |
 | snapshotDate | Date of most recent goal execution of the application (any goal) ||
-
-Query string parameter `ignoreUnassessed` 
-
-Determines whether un-assessed vulnerabilities are exported or ignored. Un-assessed vulns are those where the method signature(s) of a vulnerability appear in an archive, however, it is yet unclear whether the methods exist in the fixed or vulnerable version. Those findings are marked with an orange hourglass in the frontend.
-
-Possible values:
-
-- `all`: All un-assessed vulnerabilities will be ignored
-- `known`: Only un-assessed vulnerabilities in archives with a well-known digest will be ignored (those archives that exist in a public package repository such as Maven Central)
-- `off` (default): Never ignore
 
 ## Setup
 
