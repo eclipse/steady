@@ -9,3 +9,4 @@
 - [Push Docker images to a registry](./tutorials/registry/)
 - [Deploy on Kubernetes with Kustomize](./tutorials/kustomize/)
 - [Deploy on Kubernetes with Helm](./tutorials/helm/)
+- [Kubernetes resource requirements](./tutorials/kubernetes_resources)
