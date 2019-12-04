@@ -309,6 +309,22 @@
 			text-decoration: none;
 		}
 	</style>
+	<script type="text/javascript">
+	//<![CDATA[
+	function toggle(_btn, _div) {
+		var elem = document.getElementById(_div);
+		
+		if(elem.style.display === 'none') {
+			elem.style.display = 'block'
+			_btn.innerHTML = "-";
+		}
+		else {
+			elem.style.display = 'none'
+			_btn.innerHTML = "+";
+		}
+	}
+	//]]>
+	</script>
 </head>
 
 <body>
@@ -321,38 +337,40 @@
 		<div class="summary">
 			<table class="configurations">
 				<tr>
-					<td>
+					<td valign="top" width="25%">
+						<h2>Generated at: $generatedAt</h2>
+						
 						<h2>Target: </h2>
 						<div class="target-summary">
-							<span>Space: <h3>$space.getSpaceToken()</h3></span><br>
-							<span>GroupId: <h3>$app.getMvnGroup()</h3></span><br>
-							<span>ArtifactId: <h3>$app.getArtifact()</h3></span><br>
+							<span>Workspace: <h3>$space.getSpaceToken()</h3></span><br>
+							<span>Group: <h3>$app.getMvnGroup()</h3></span><br>
+							<span>Artifact: <h3>$app.getArtifact()</h3></span><br>
 							<span>Version: <h3>$app.getVersion()</h3></span><br>
-							<span>Generated at: <h3>$generatedAt</h3></span><br>
 						</div>
-						<h2>Aggregated projects: $projects.size()</h2>
+						
 						#if($isAggregated)
-						<p>Aggregated projects ($projects.size()):&nbsp;<a href="#" onClick="toggle(this, 'projects')">+</a></p>
-						<div id="projects" style="display: none;">
-							<table>
-								<tr>
-									<th>GroupId</th>
-									<th>ArtifactId</th>
-									<th>Version</th>
-								</tr>
-								#foreach( $prj in $projects)
-								<tr>
-									<td>$prj.getMvnGroup()</td>
-									<td>$prj.getArtifact()</td>
-									<td>$prj.getVersion()</td>
-								</tr>
-								#end
-							</table>
+						<div class="target-summary">
+							<span>Aggregated projects ($projects.size()):&nbsp;<a href="#" onClick="toggle(this, 'projects')">+</a>
+						</div>
+						<div class="target-summary" id="projects" style="display: none;">
+							<ul>
+							#foreach( $prj in $projects)
+							<li><span>$prj.getMvnGroup() : $prj.getArtifact() : $prj.getVersion()</span></li>
+							#end
+							</ul>
 						</div>
 						#end
+						
+						<h2>Links: </h2>
+						<div class="target-summary">
+							<span><a href="$vulas-shared-homepage/user/manuals" target="_blank">Docs - User Manual</a></span><br>
+							<span><a href="$vulas-shared-homepage/user/manuals/assess_and_mitigate" target="_blank">Docs - Assess and Mitigate</a></span><br>
+							<span><a href="$vulas-shared-homepage/user/support" target="_blank">Docs - Getting Help</a></span><br>
+							<span><a href="$vulas-backend-serviceUrl/../apps" target="_blank">Web Frontend</a></span><br>
+						</div>
 					</td>
-					<td>
-						<h2>Plugin configuration</h2>
+					<td valign="top" width="75%">
+						<h2>Used Configuration Settings</h2>
 						<details>
 							<summary>exceptionThreshold: $exceptionThreshold</summary>
 							<br />
@@ -361,10 +379,9 @@
 							<ul>
 								<li>noException - no build exception will be thrown, regardless of the analysis results
 								<li>dependsOn - an exception will be thrown if at least one application project depends on an archive with known vulnerabilities (typically by declaring a dependency in the POM file)
-								<li>potentiallyExecutes* - an exception will be thrown if at least one application project can potentially execute vulnerable code (according to static source code analysis).
-								<li>actuallyExecutes* - an exception will be thrown if at least one application project actually executes vulnerable code during application tests.
+								<li>potentiallyExecutes - an exception will be thrown if at least one application project can potentially execute vulnerable code (according to static source code analysis).
+								<li>actuallyExecutes - an exception will be thrown if at least one application project actually executes vulnerable code during application tests.
 							</ul>
-							Please <a href="$vulas-shared-homepage/user/manuals/assess_and_mitigate/">address those dependencies</a> (correct where necessary and exempt where possible) in order to avoid the build exception.
 						</details>
 						<br />
 
@@ -386,7 +403,32 @@
 							<br />Obsolete exemptions (signatures of vulnerable code not present): $obsoleteExemptionsSignatureNotPresent
 							#end
 						</details>
-						<br />
+						
+						#if($thresholdMet)
+						<h2 class="build_ok">Analysis Result: Success</h2>
+						#else
+						<h2 class="build_exception">Analysis Result: Failure</h2>
+						#end
+						
+						<details>
+							<br />
+							<summary>
+							#if($thresholdMet)
+								No critical findings (considering the above configuration), thus, no build exception is thrown
+							#else
+								$vulnsAboveThreshold.size() critical findings (considering the above configuration), thus, a build exception is thrown
+							#end
+							</summary>
+							The findings presented below represent archives containing code that is subject to a specific vulnerability.
+							Expand to see the vulnerability description and the CVSS score (if any).
+							While the first table column indicates that vulnerable code is contained, the other two columns
+							show whether that vulnerable code is reachable according to the static and dynamic analyses (if performed using the respective analysis goals).
+							#if($isAggregated)
+								Hover over the table cells to see the full identifier (GAV) of the affected application project as well as details about the respective dependency.
+							#else
+								Hover over the table cells to see more details about the dependency.
+							#end 
+						</details>
 					</td>
 				</tr>
 			</table>
@@ -395,36 +437,11 @@
 		<section class="report">
 			<div>
 				<div class="report-card">
-					#if($thresholdMet)
-					<h2 style="display: inline-block;" class="build_ok">Analysis Result: Success</h2>
-					#else
-					<h2 style="display: inline-block;" class="build_exception">Analysis Result: Failure</h2>
-					#end
 					<div id="result" style="display: block;">
-						<p>
-							#if($thresholdMet)
-							No critical dependencies on vulnerable archives have been found (critical according to the defined threshold of &quot;$exceptionThreshold&quot;), no build exception is thrown.</p>
-						#else
-						One or more critical dependencies on vulnerable archives have been found (critical according to the defined threshold of <b>$exceptionThreshold</b>, and considering the excluded scopes and bugs).
-						Accordingly, a build exception is thrown in order to break the current build process.
-						Those application projects in whose context the exception threshold is violated are highlighted in red font. Please correct those dependencies in order to avoid the build exception.
-						#end
-						</p>
-						<p>
-							The following items represent vulnerabilities that affect a given dependency, expand to see the vulnerability description as well as information concerning the reachability of vulnerable code in given application projects (click on
-							the respective application project to see more details in the Web Frontend).
-						</p>
-						<p>
-							#if($isAggregated)
-							Since this is an aggregated report, the application projects listed are submodules of the project for which the report was created.
-							#else
-							Since this a non-aggregated report, the application project listed is identical to the project for which the report was created.
-							#end
-						</p>
 						<div class="vulnerabilities">
 							<details>
 								<summary>
-									<h2 style="display: inline-block;">High Priority Vulnerabilities</h2>
+									<h2 style="display: inline-block;">Critical Vulnerabilities ($vulnsAboveThreshold.size())</h2>
 								</summary>
 								#foreach( $vul in $vulnsAboveThreshold )
 								<div class="vulnerability"
@@ -440,22 +457,25 @@
 										<summary>
 											<div class="vulnerability_summary">
 												<div class="vulnerability_title">
-													<h2>$vul.filename - </h2>
+													<h2>$vul.filename -
 													#if( $vul.bug.getReference().isEmpty() )
 													<a id="vulnerability_score_high" href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=$vul.bug.getBugId()" target="_blank">$vul.bug.getBugId()</a>
 													#else
 													<a id="vulnerability_score_high" href="$vul.bug.getReference().iterator().next()" target="_blank">$vul.bug.getBugId()</a>
 													#end
+													</h2>
 												</div>
 											</div>
 										</summary>
-										<div class="vulnerability_score_high">
-											<div class="vulnerability_sha">
-												$vul.archiveid
-											</div>
+										<div>
+											Archive Digest: $vul.archiveid
 										</div>
-										$vul.bug.getDescription()
-										<br />
+										<div>
+											CVSS Score: $vul.bug.getCvssDisplayString()
+										</div>
+										<div>
+											$vul.bug.getDescription()
+										</div>
 										<br />
 										<table class="vulnerable_apps">
 											<tr>
@@ -597,7 +617,6 @@
 										</table>
 									</details>
 									<br />
-									<br />
 								</div>
 								#end
 							#end
@@ -606,7 +625,7 @@
 						<div class="vulnerabilities">
 							<details>
 								<summary>
-									<h2 style="display: inline-block;">Exempted Vulnerabilities</h2>
+									<h2 style="display: inline-block;">Exempted Vulnerabilities ($vulnsBelowThreshold.size())</h2>
 								</summary>
 								#foreach( $vul in $vulnsBelowThreshold )
 								<div class="vulnerability"
@@ -622,22 +641,25 @@
 										<summary>
 											<div class="vulnerability_summary">
 												<div class="vulnerability_title">
-													<h2>$vul.filename - </h2>
+													<h2>$vul.filename -
 													#if( $vul.bug.getReference().isEmpty() )
 													<a id="vulnerability_score_high" href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=$vul.bug.getBugId()" target="_blank">$vul.bug.getBugId()</a>
 													#else
 													<a id="vulnerability_score_high" href="$vul.bug.getReference().iterator().next()" target="_blank">$vul.bug.getBugId()</a>
 													#end
+													</h2>
 												</div>
 											</div>
 										</summary>
-										<div class="vulnerability_score_high">
-											<div class="vulnerability_sha">
-												$vul.archiveid
-											</div>
+										<div>
+											Archive Digest: $vul.archiveid
 										</div>
-										$vul.bug.getDescription()
-										<br />
+										<div>
+											CVSS Score: $vul.bug.getCvssDisplayString()
+										</div>
+										<div>
+											$vul.bug.getDescription()
+										</div>
 										<br />
 										<table class="vulnerable_apps">
 											<tr>
@@ -678,7 +700,7 @@
 																	<strong>Scope: </strong>$analysis.getDep().getScope()<br />
 																	<strong>Transitive dependency: </strong>$analysis.getDep().getTransitive()
 																	#if( $exceptionThreshold=='dependsOn' && $analysis.isThrowsExceptionExcluded() )
-																	<br />A build exception for this finding was suppressed according to the goal configuration
+																	<br /><strong>Note: </strong>Above configuration settings suppressed a build exception for this finding
 																	#end
 																	<i></i>
 																</div>
@@ -721,7 +743,7 @@
 																<strong>Scope: </strong>$analysis.getDep().getScope()<br />
 																<strong>Transitive dependency: </strong>$analysis.getDep().getTransitive()
 																#if( $exceptionThreshold=='potentiallyExecutes' && $analysis.isThrowsExceptionExcluded() )
-																<br />A build exception for this finding was suppressed according to the goal configuration
+																<br /><strong>Note: </strong>Above configuration settings suppressed a build exception for this finding
 																#end
 																<i></i>
 															</div>
@@ -765,7 +787,7 @@
 																<strong>Scope: </strong>$analysis.getDep().getScope()<br />
 																<strong>Transitive dependency: </strong>$analysis.getDep().getTransitive()
 																#if( $exceptionThreshold=='actuallyExecutes' && $analysis.isThrowsExceptionExcluded() )
-																<br />A build exception for this finding was suppressed according to the goal configuration
+																<br /><strong>Note: </strong>Above configuration settings suppressed a build exception for this finding
 																#end
 																<i></i>
 															</div	>
@@ -779,26 +801,15 @@
 										</table>
 									</details>
 									<br />
-									<br />
 								</div>
 								#end
 							#end
 							</details>
 						</div>
 					</div>
-					<details open>
-						<summary>
-							<h2 style="display: inline-block;">Contact</h2>
-						</summary>
-						<a href="$vulas-backend-serviceUrl/../apps/" target="_blank">Vulas Web Frontend</a>: The frontend of the central Vulas engine (with which the Maven plugin communicates during execution)<br />
-						<a href="$vulas-shared-homepage" target="_blank">Vulas Wiki</a>: General end user and background information<br />
-						<a href="mailto:DL VULAS">mailto: DL VULAS</a>: Get assistance from and provide feedback to the Vulas development team<br />
-					</details>
 				</div>
 			</div>
 		</section>
-		<button id="backToTop"><a href="#top"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6">
-					<path d="M12 6H0l6-6z" /></svg></a></button>
+		<button id="backToTop"><a href="#top"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6"><path d="M12 6H0l6-6z" /></svg></a></button>
 </body>
-
 </html>
