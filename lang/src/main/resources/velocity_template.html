@@ -313,7 +313,7 @@
 	//<![CDATA[
 	function toggle(_btn, _div) {
 		var elem = document.getElementById(_div);
-		
+
 		if(elem.style.display === 'none') {
 			elem.style.display = 'block'
 			_btn.innerHTML = "-";
@@ -339,7 +339,7 @@
 				<tr>
 					<td valign="top" width="25%">
 						<h2>Generated at: $generatedAt</h2>
-						
+
 						<h2>Target: </h2>
 						<div class="target-summary">
 							<span>Workspace: <h3>$space.getSpaceToken()</h3></span><br>
@@ -347,7 +347,7 @@
 							<span>Artifact: <h3>$app.getArtifact()</h3></span><br>
 							<span>Version: <h3>$app.getVersion()</h3></span><br>
 						</div>
-						
+
 						#if($isAggregated)
 						<div class="target-summary">
 							<span>Aggregated projects ($projects.size())&nbsp;<a href="#" onClick="toggle(this, 'projects')">+</a>
@@ -360,7 +360,7 @@
 							</ul>
 						</div>
 						#end
-						
+
 						<h2>Links: </h2>
 						<div class="target-summary">
 							<span><a href="$vulas-shared-homepage/user/manuals" target="_blank">Docs - User Manual</a></span><br>
@@ -444,13 +444,14 @@
 								</summary>
 								#foreach( $vul in $vulnsAboveThreshold )
 								<div class="vulnerability"
-								#if     ( $vul.bug.getCvssScore().floatValue() ge 9.0 ) style="border-left: thick solid #e94f37"
-								#elseif ( $vul.bug.getCvssScore().floatValue() ge 8.0 ) style="border-left: thick solid #ed6f5b"
-								#elseif ( $vul.bug.getCvssScore().floatValue() ge 7.0 ) style="border-left: thick solid #fb8b24"
-								#elseif ( $vul.bug.getCvssScore().floatValue() ge 6.0 ) style="border-left: thick solid #fb9537"
-								#elseif ( $vul.bug.getCvssScore().floatValue() ge 5.0 ) style="border-left: thick solid #fba04b"
-								#elseif ( $vul.bug.getCvssScore().floatValue() ge 4.0 ) style="border-left: thick solid #f4d35e"
-								#else style="border-left: thick solid #bdd358"
+								#if ( $vul.bug.getCvssScore() ge 9 ) style="border-left: thick solid #e94f37"
+								#elseif ( $vul.bug.getCvssScore() ge 8 ) style="border-left: thick solid #ed6f5b"
+								#elseif ( $vul.bug.getCvssScore() ge 7 ) style="border-left: thick solid #fb8b24"
+								#elseif ( $vul.bug.getCvssScore() ge 6 ) style="border-left: thick solid #fb9537"
+								#elseif ( $vul.bug.getCvssScore() ge 5 ) style="border-left: thick solid #fba04b"
+								#elseif ( $vul.bug.getCvssScore() ge 4 ) style="border-left: thick solid #f4d35e"
+								#elseif ( $vul.bug.getCvssScore() lt 3 ) style="border-left: thick solid #bdd358"
+								#else style="border-left: thick solid grey"
 								#end >
 								<details>
 										<summary>
@@ -644,13 +645,14 @@
 								</summary>
 								#foreach( $vul in $vulnsBelowThreshold )
 								<div class="vulnerability"
-								#if ( $vul.bug.getCvssScore() ge 0.9 ) style="border-left: thick solid #e94f37"
-								#elseif ( $vul.bug.getCvssScore() ge 0.8 ) style="border-left: thick solid #ed6f5b"
-								#elseif ( $vul.bug.getCvssScore() ge 0.7 ) style="border-left: thick solid #fb8b24"
-								#elseif ( $vul.bug.getCvssScore() ge 0.6 ) style="border-left: thick solid #fb9537"
-								#elseif ( $vul.bug.getCvssScore() ge 0.5 ) style="border-left: thick solid #fba04b"
-								#elseif ( $vul.bug.getCvssScore() ge 0.4 ) style="border-left: thick solid #f4d35e"
-								#else style="border-left: thick solid #bdd358"
+								#if ( $vul.bug.getCvssScore() ge 9 ) style="border-left: thick solid #e94f37"
+								#elseif ( $vul.bug.getCvssScore() ge 8 ) style="border-left: thick solid #ed6f5b"
+								#elseif ( $vul.bug.getCvssScore() ge 7 ) style="border-left: thick solid #fb8b24"
+								#elseif ( $vul.bug.getCvssScore() ge 6 ) style="border-left: thick solid #fb9537"
+								#elseif ( $vul.bug.getCvssScore() ge 5 ) style="border-left: thick solid #fba04b"
+								#elseif ( $vul.bug.getCvssScore() ge 4 ) style="border-left: thick solid #f4d35e"
+								#elseif ( $vul.bug.getCvssScore() lt 3 ) style="border-left: thick solid #bdd358"
+								#else style="border-left: thick solid grey"
 								#end >
 									<details>
 										<summary>
