@@ -444,14 +444,14 @@
 								</summary>
 								#foreach( $vul in $vulnsAboveThreshold )
 								<div class="vulnerability"
-								#if ( $vul.bug.getCvssScore() ge 9 ) style="border-left: thick solid #e94f37"
-								#elseif ( $vul.bug.getCvssScore() ge 8 ) style="border-left: thick solid #ed6f5b"
-								#elseif ( $vul.bug.getCvssScore() ge 7 ) style="border-left: thick solid #fb8b24"
-								#elseif ( $vul.bug.getCvssScore() ge 6 ) style="border-left: thick solid #fb9537"
-								#elseif ( $vul.bug.getCvssScore() ge 5 ) style="border-left: thick solid #fba04b"
-								#elseif ( $vul.bug.getCvssScore() ge 4 ) style="border-left: thick solid #f4d35e"
-								#elseif ( $vul.bug.getCvssScore() lt 3 ) style="border-left: thick solid #bdd358"
-								#else style="border-left: thick solid grey"
+								#if     ( $vul.bug.getCvssScore() ge 9 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#e94f37"
+								#elseif ( $vul.bug.getCvssScore() ge 8 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#ed6f5b"
+								#elseif ( $vul.bug.getCvssScore() ge 7 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fb8b24"
+								#elseif ( $vul.bug.getCvssScore() ge 6 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fb9537"
+								#elseif ( $vul.bug.getCvssScore() ge 5 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fba04b"
+								#elseif ( $vul.bug.getCvssScore() ge 4 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#f4d35e"
+								#elseif ( $vul.bug.getCvssScore() lt 3 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#bdd358"
+								#else style="border-left-style:solid;border-left-width:15px;border-left-color:grey"
 								#end >
 								<details>
 										<summary>
@@ -646,14 +646,14 @@
 								</summary>
 								#foreach( $vul in $vulnsBelowThreshold )
 								<div class="vulnerability"
-								#if ( $vul.bug.getCvssScore() ge 9 ) style="border-left: thick solid #e94f37"
-								#elseif ( $vul.bug.getCvssScore() ge 8 ) style="border-left: thick solid #ed6f5b"
-								#elseif ( $vul.bug.getCvssScore() ge 7 ) style="border-left: thick solid #fb8b24"
-								#elseif ( $vul.bug.getCvssScore() ge 6 ) style="border-left: thick solid #fb9537"
-								#elseif ( $vul.bug.getCvssScore() ge 5 ) style="border-left: thick solid #fba04b"
-								#elseif ( $vul.bug.getCvssScore() ge 4 ) style="border-left: thick solid #f4d35e"
-								#elseif ( $vul.bug.getCvssScore() lt 3 ) style="border-left: thick solid #bdd358"
-								#else style="border-left: thick solid grey"
+								#if     ( $vul.bug.getCvssScore() ge 9 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#e94f37"
+								#elseif ( $vul.bug.getCvssScore() ge 8 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#ed6f5b"
+								#elseif ( $vul.bug.getCvssScore() ge 7 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fb8b24"
+								#elseif ( $vul.bug.getCvssScore() ge 6 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fb9537"
+								#elseif ( $vul.bug.getCvssScore() ge 5 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fba04b"
+								#elseif ( $vul.bug.getCvssScore() ge 4 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#f4d35e"
+								#elseif ( $vul.bug.getCvssScore() lt 3 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#bdd358"
+								#else style="border-left-style:solid;border-left-width:15px;border-left-color:grey"
 								#end >
 									<details>
 										<summary>
