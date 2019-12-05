@@ -70,9 +70,7 @@ public class ReportGoal extends AbstractAppGoal {
 			throw new GoalExecutionException("Error fetching vulnerabilities: " + e.getMessage(), e);
 		}
 
-		// Loop over vulnerabilities
 		report.processVulnerabilities();
-
 		report.writeResult(this.getConfiguration().getDir(CoreConfiguration.REP_DIR));
 
 		// Stats
