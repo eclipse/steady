@@ -261,7 +261,7 @@ public class ServiceWrapper {
 				uri = new URI(service_url);
 				this.logCallInfo(uri, params);
 				final RestTemplate rest_template = new RestTemplate();	
-				response = rest_template.getForObject(service_url + param_template, CveClassifierResponse.class, params);
+				response = rest_template.getForObject(service_url + "/" + param_template, CveClassifierResponse.class, params);
 			} catch (RestClientException e) {
 				throw new ServiceConnectionException(uri, e);
 			} catch (URISyntaxException use) {
