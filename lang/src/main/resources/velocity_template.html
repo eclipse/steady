@@ -483,7 +483,8 @@
 												#elseif ( $vul.bug.getCvssScore().floatValue() ge 6.0 ) style="color:#fb9537;font-weight:bold"
 												#elseif ( $vul.bug.getCvssScore().floatValue() ge 5.0 ) style="color:#fba04b;font-weight:bold"
 												#elseif ( $vul.bug.getCvssScore().floatValue() ge 4.0 ) style="color:#f4d35e;font-weight:bold"
-												#else style="color:#bdd358;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore() lt 3 ) style="color:#bdd358;font-weight:bold"
+												#else style="color:grey;font-weight:bold"
 												#end >
 												$vul.bug.getCvssDisplayString()
 											</span>
@@ -684,7 +685,8 @@
 												#elseif ( $vul.bug.getCvssScore().floatValue() ge 6.0 ) style="color:#fb9537;font-weight:bold"
 												#elseif ( $vul.bug.getCvssScore().floatValue() ge 5.0 ) style="color:#fba04b;font-weight:bold"
 												#elseif ( $vul.bug.getCvssScore().floatValue() ge 4.0 ) style="color:#f4d35e;font-weight:bold"
-												#else style="color:#bdd358;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore() lt 3 ) style="color:#bdd358;font-weight:bold"
+												#else style="color:grey;font-weight:bold"
 												#end >
 												$vul.bug.getCvssDisplayString()
 											</span>
