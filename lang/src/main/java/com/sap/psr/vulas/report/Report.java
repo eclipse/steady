@@ -396,7 +396,6 @@ public class Report {
 
 		// Basic info
 		this.context.put("vulas-backend-serviceUrl", this.goalContext.getVulasConfiguration().getServiceUrl(Service.BACKEND));
-		this.context.put("vulas-cia-serviceUrl", this.goalContext.getVulasConfiguration().getServiceUrl(Service.CIA));
 		this.context.put("app", app);
 		this.context.put("space", this.goalContext.getSpace());
 		this.context.put("projects", modules);

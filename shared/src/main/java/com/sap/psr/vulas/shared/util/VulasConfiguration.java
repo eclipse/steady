@@ -749,7 +749,7 @@ public class VulasConfiguration {
 	}
 
 	/**
-	 * <p>getServiceUrl.</p>
+	 * Returns the URL of the given {@link Service}. Trailing slashes (/), if any, are removed.
 	 *
 	 * @param _service a {@link com.sap.psr.vulas.shared.connectivity.Service} object.
 	 * @param _throw_exception a boolean.
@@ -758,9 +758,13 @@ public class VulasConfiguration {
 	 */
 	public String getServiceUrl(Service _service, boolean _throw_exception) throws ServiceConnectionException {
 		final String key = VulasConfiguration.getServiceUrlKey(_service);
-		final String value = cfg.getString(key, null);
+		String value = cfg.getString(key, null);
 		if(_throw_exception && value==null)
 			throw new ServiceConnectionException("Service URL is not configured (parameter [" + key + "])", null);
+		if(value!=null) {
+			while(value.endsWith("/"))
+				value = value.substring(0, value.length()-1);
+		}
 		return value;
 	}
 

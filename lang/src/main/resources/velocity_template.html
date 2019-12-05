@@ -350,7 +350,7 @@
 						
 						#if($isAggregated)
 						<div class="target-summary">
-							<span>Aggregated projects ($projects.size()):&nbsp;<a href="#" onClick="toggle(this, 'projects')">+</a>
+							<span>Aggregated projects ($projects.size())&nbsp;<a href="#" onClick="toggle(this, 'projects')">+</a>
 						</div>
 						<div class="target-summary" id="projects" style="display: none;">
 							<ul>
@@ -366,10 +366,35 @@
 							<span><a href="$vulas-shared-homepage/user/manuals" target="_blank">Docs - User Manual</a></span><br>
 							<span><a href="$vulas-shared-homepage/user/manuals/assess_and_mitigate" target="_blank">Docs - Assess and Mitigate</a></span><br>
 							<span><a href="$vulas-shared-homepage/user/support" target="_blank">Docs - Getting Help</a></span><br>
-							<span><a href="$vulas-backend-serviceUrl/../apps" target="_blank">Web Frontend</a></span><br>
+							<span><a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()" target="_blank">Web Frontend</a></span><br>
 						</div>
 					</td>
 					<td valign="top" width="75%">
+						#if($thresholdMet)
+						<h2 class="build_ok">Analysis Result: Success</h2>
+						#else
+						<h2 class="build_exception">Analysis Result: Failure</h2>
+						#end						
+						<details>
+							<br />
+							<summary>
+							#if($thresholdMet)
+								No critical findings (considering the below-mentioned configuration), thus, no build exception is thrown
+							#else
+								$vulnsAboveThreshold.size() critical findings (considering the below-mentioned configuration), thus, a build exception is thrown
+							#end
+							</summary>
+							The findings presented below represent archives containing code that is subject to a specific vulnerability.
+							Expand to see the vulnerability description and the CVSS score (if any).
+							While the first table column indicates that vulnerable code is contained, the other two columns
+							show whether that vulnerable code is reachable according to the static and dynamic analyses (if performed using the respective analysis goals).
+							#if($isAggregated)
+								Hover over the table cells to see the full identifier (GAV) of the affected application project as well as details about the respective dependency.
+							#else
+								Hover over the table cells to see more details about the dependency.
+							#end 
+						</details>
+						
 						<h2>Used Configuration Settings</h2>
 						<details>
 							<summary>exceptionThreshold: $exceptionThreshold</summary>
@@ -403,32 +428,6 @@
 							<br />Obsolete exemptions (signatures of vulnerable code not present): $obsoleteExemptionsSignatureNotPresent
 							#end
 						</details>
-						
-						#if($thresholdMet)
-						<h2 class="build_ok">Analysis Result: Success</h2>
-						#else
-						<h2 class="build_exception">Analysis Result: Failure</h2>
-						#end
-						
-						<details>
-							<br />
-							<summary>
-							#if($thresholdMet)
-								No critical findings (considering the above configuration), thus, no build exception is thrown
-							#else
-								$vulnsAboveThreshold.size() critical findings (considering the above configuration), thus, a build exception is thrown
-							#end
-							</summary>
-							The findings presented below represent archives containing code that is subject to a specific vulnerability.
-							Expand to see the vulnerability description and the CVSS score (if any).
-							While the first table column indicates that vulnerable code is contained, the other two columns
-							show whether that vulnerable code is reachable according to the static and dynamic analyses (if performed using the respective analysis goals).
-							#if($isAggregated)
-								Hover over the table cells to see the full identifier (GAV) of the affected application project as well as details about the respective dependency.
-							#else
-								Hover over the table cells to see more details about the dependency.
-							#end 
-						</details>
 					</td>
 				</tr>
 			</table>
@@ -445,24 +444,28 @@
 								</summary>
 								#foreach( $vul in $vulnsAboveThreshold )
 								<div class="vulnerability"
-								#if ( $vul.bug.getCvssScore() ge 0.9 ) style="border-left: thick solid #e94f37"
-								#elseif ( $vul.bug.getCvssScore() ge 0.8 ) style="border-left: thick solid #ed6f5b"
-								#elseif ( $vul.bug.getCvssScore() ge 0.7 ) style="border-left: thick solid #fb8b24"
-								#elseif ( $vul.bug.getCvssScore() ge 0.6 ) style="border-left: thick solid #fb9537"
-								#elseif ( $vul.bug.getCvssScore() ge 0.5 ) style="border-left: thick solid #fba04b"
-								#elseif ( $vul.bug.getCvssScore() ge 0.4 ) style="border-left: thick solid #f4d35e"
+								#if     ( $vul.bug.getCvssScore().floatValue() ge 9.0 ) style="border-left: thick solid #e94f37"
+								#elseif ( $vul.bug.getCvssScore().floatValue() ge 8.0 ) style="border-left: thick solid #ed6f5b"
+								#elseif ( $vul.bug.getCvssScore().floatValue() ge 7.0 ) style="border-left: thick solid #fb8b24"
+								#elseif ( $vul.bug.getCvssScore().floatValue() ge 6.0 ) style="border-left: thick solid #fb9537"
+								#elseif ( $vul.bug.getCvssScore().floatValue() ge 5.0 ) style="border-left: thick solid #fba04b"
+								#elseif ( $vul.bug.getCvssScore().floatValue() ge 4.0 ) style="border-left: thick solid #f4d35e"
 								#else style="border-left: thick solid #bdd358"
 								#end >
 								<details>
 										<summary>
 											<div class="vulnerability_summary">
 												<div class="vulnerability_title">
-													<h2>$vul.filename -
-													#if( $vul.bug.getReference().isEmpty() )
-													<a id="vulnerability_score_high" href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=$vul.bug.getBugId()" target="_blank">$vul.bug.getBugId()</a>
-													#else
-													<a id="vulnerability_score_high" href="$vul.bug.getReference().iterator().next()" target="_blank">$vul.bug.getBugId()</a>
-													#end
+													<h2>
+														$vul.filename
+													</h2>
+													affected by
+													<h2>
+														#if( $vul.bug.getReference().isEmpty() )
+														<a id="vulnerability_score_high" href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=$vul.bug.getBugId()" target="_blank">$vul.bug.getBugId()</a>
+														#else
+														<a id="vulnerability_score_high" href="$vul.bug.getReference().iterator().next()" target="_blank">$vul.bug.getBugId()</a>
+														#end
 													</h2>
 												</div>
 											</div>
@@ -471,8 +474,20 @@
 											Archive Digest: $vul.archiveid
 										</div>
 										<div>
-											CVSS Score: $vul.bug.getCvssDisplayString()
+											CVSS Score:
+											<span
+												#if     ( $vul.bug.getCvssScore().floatValue() ge 9.0 ) style="color:#e94f37;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore().floatValue() ge 8.0 ) style="color:#ed6f5b;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore().floatValue() ge 7.0 ) style="color:#fb8b24;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore().floatValue() ge 6.0 ) style="color:#fb9537;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore().floatValue() ge 5.0 ) style="color:#fba04b;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore().floatValue() ge 4.0 ) style="color:#f4d35e;font-weight:bold"
+												#else style="color:#bdd358;font-weight:bold"
+												#end >
+												$vul.bug.getCvssDisplayString()
+											</span>
 										</div>
+										<br />
 										<div>
 											$vul.bug.getDescription()
 										</div>
@@ -641,12 +656,16 @@
 										<summary>
 											<div class="vulnerability_summary">
 												<div class="vulnerability_title">
-													<h2>$vul.filename -
-													#if( $vul.bug.getReference().isEmpty() )
-													<a id="vulnerability_score_high" href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=$vul.bug.getBugId()" target="_blank">$vul.bug.getBugId()</a>
-													#else
-													<a id="vulnerability_score_high" href="$vul.bug.getReference().iterator().next()" target="_blank">$vul.bug.getBugId()</a>
-													#end
+													<h2>
+														$vul.filename
+													</h2>
+													affected by
+													<h2>
+														#if( $vul.bug.getReference().isEmpty() )
+														<a id="vulnerability_score_high" href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=$vul.bug.getBugId()" target="_blank">$vul.bug.getBugId()</a>
+														#else
+														<a id="vulnerability_score_high" href="$vul.bug.getReference().iterator().next()" target="_blank">$vul.bug.getBugId()</a>
+														#end
 													</h2>
 												</div>
 											</div>
@@ -655,8 +674,20 @@
 											Archive Digest: $vul.archiveid
 										</div>
 										<div>
-											CVSS Score: $vul.bug.getCvssDisplayString()
+											CVSS Score:
+											<span
+												#if     ( $vul.bug.getCvssScore().floatValue() ge 9.0 ) style="color:#e94f37;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore().floatValue() ge 8.0 ) style="color:#ed6f5b;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore().floatValue() ge 7.0 ) style="color:#fb8b24;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore().floatValue() ge 6.0 ) style="color:#fb9537;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore().floatValue() ge 5.0 ) style="color:#fba04b;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore().floatValue() ge 4.0 ) style="color:#f4d35e;font-weight:bold"
+												#else style="color:#bdd358;font-weight:bold"
+												#end >
+												$vul.bug.getCvssDisplayString()
+											</span>
 										</div>
+										<br />
 										<div>
 											$vul.bug.getDescription()
 										</div>

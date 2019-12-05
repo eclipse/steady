@@ -17,6 +17,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.junit.Test;
 
+import com.sap.psr.vulas.shared.connectivity.Service;
 import com.sap.psr.vulas.shared.json.model.KeyValue;
 
 public class VulasConfigurationTest {
@@ -177,5 +178,17 @@ public class VulasConfigurationTest {
 		} catch (IOException e) {
 			assertTrue(false);
 		}
+	}
+	
+	@Test
+	public void testGetServiceUrl() {
+		final String url = "http://localhost:8000/backend";
+		VulasConfiguration c1 = new VulasConfiguration();
+		c1.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), url + "////");
+		assertEquals(url, c1.getServiceUrl(Service.BACKEND));
+		c1.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), url + "/");
+		assertEquals(url, c1.getServiceUrl(Service.BACKEND));
+		c1.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), url);
+		assertEquals(url, c1.getServiceUrl(Service.BACKEND));
 	}
 }
