@@ -21,6 +21,8 @@ import com.sap.psr.vulas.backend.util.ConnectionUtil;
 import com.sap.psr.vulas.shared.cache.Cache;
 import com.sap.psr.vulas.shared.cache.CacheException;
 import com.sap.psr.vulas.shared.cache.ObjectFetcher;
+import com.sap.psr.vulas.shared.connectivity.Service;
+import com.sap.psr.vulas.shared.connectivity.ServiceConnectionException;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 import net.minidev.json.JSONArray;
@@ -29,9 +31,7 @@ import net.minidev.json.JSONArray;
  * Reads {@link Cve} information from a service configured with {@link #CVE_SERVICE_URL}.
  */
 public class CveReader2 implements ObjectFetcher<String, Cve> {
-	
-	private static final String CVE_SERVICE_URL = "vulas.backend.cveCache.serviceUrl";
-	
+		
 	private static Logger log = LoggerFactory.getLogger(CveReader2.class);
 	
 	/**
@@ -64,7 +64,7 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 
 	/**
 	 * Returns CVE information for the given key (or null in case the key is null).
-	 * This information is retrieved from a (remote) service configured with {@link #CVE_SERVICE_URL}.
+	 * This information is retrieved from a (remote) service {@link Service#CVE}.
 	 *
 	 * @param _key a {@link java.lang.String} object.
 	 * @return a {@link com.sap.psr.vulas.backend.cve.Cve} object.
@@ -78,13 +78,10 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 		int sc = -1;
 		String result = null;
 		String uri = null;
-		
-		// URL to read CVE information from
-		final String url = VulasConfiguration.getGlobal().getConfiguration().getString(CVE_SERVICE_URL, null);
-		if(url==null)
-			throw new CacheException("Configuration parameter [" + CVE_SERVICE_URL + "] not set");
-		
+				
 		try {
+			final String url = VulasConfiguration.getGlobal().getServiceUrl(Service.CVE, true);
+			
 			final CloseableHttpClient httpclient = HttpClients.createDefault();
 			uri = new String(url).replaceAll("<ID>", _key);
 			log.info("Query details of CVE [" + _key + "] at [" + uri + "]");
@@ -114,6 +111,9 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 		} catch (IOException e) {
 			log.error("HTTP GET [url=" + uri + "] caused an exception: " + e.getMessage());
 			log.error("Error: " + e.getMessage(), e);
+			throw new CacheException(_key, e);
+		} catch (ServiceConnectionException e) {
+			log.error(e.getMessage());
 			throw new CacheException(_key, e);
 		}
 		return cve;

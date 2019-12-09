@@ -24,7 +24,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.sap.psr.vulas.backend.rest.CoverageController;
-import com.sap.psr.vulas.backend.rest.CoverageController.CveClassifierResponse;
 import com.sap.psr.vulas.backend.rest.CoverageController.JiraSearchResponse;
 import com.sap.psr.vulas.shared.connectivity.PathBuilder;
 import com.sap.psr.vulas.shared.connectivity.Service;
@@ -233,43 +232,6 @@ public class ServiceWrapper {
 			}
 		}
 		log.info(b.toString()+"]");
-	}
-
-	/**
-	 * <p>classify.</p>
-	 *
-	 * @param _cve a {@link java.lang.String} object.
-	 * @return a {@link com.sap.psr.vulas.backend.rest.CoverageController.CveClassifierResponse} object.
-	 * @throws com.sap.psr.vulas.shared.connectivity.ServiceConnectionException if any.
-	 */
-	public CveClassifierResponse classify(String _cve) throws ServiceConnectionException {
-		CveClassifierResponse response = null;
-		
-		final String service_url = VulasConfiguration.getGlobal().getServiceUrl(Service.CVE, true);
-		if(service_url==null || service_url.equals("")) {
-			log.error("Configuration setting [" + VulasConfiguration.getGlobal().getServiceUrlKey(Service.CVE) + "] not specified") ;
-		}
-		else {
-			// Parameters
-			final String param_template = "{cve}";
-			final Map<String,String> params = new HashMap<String,String>();
-			params.put("cve", _cve);
-			
-			// Make the query
-			URI uri = null;
-			try {
-				uri = new URI(service_url);
-				this.logCallInfo(uri, params);
-				final RestTemplate rest_template = new RestTemplate();	
-				response = rest_template.getForObject(service_url + param_template, CveClassifierResponse.class, params);
-			} catch (RestClientException e) {
-				throw new ServiceConnectionException(uri, e);
-			} catch (URISyntaxException use) {
-				throw new ServiceConnectionException("Cannot create service URI from [" + service_url + "]", use);
-			}
-		}
-		
-		return response;
 	}
 	
 	/**

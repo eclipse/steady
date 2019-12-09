@@ -23,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.sap.psr.vulas.backend.cve.Cve;
+import com.sap.psr.vulas.backend.cve.CveReader2;
 import com.sap.psr.vulas.backend.model.Bug;
 import com.sap.psr.vulas.backend.model.view.Views;
 import com.sap.psr.vulas.backend.repo.BugRepository;
@@ -42,10 +44,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 public class CoverageController {
 
 	private static Logger log = LoggerFactory.getLogger(CoverageController.class);
-	
-	private static final String LANG_CONF_THRESHOLD = "vulas.backend.coverageService.langConfidenceThreshold";
-	private static final String LICENSE_CONF_THRESHOLD = "vulas.backend.coverageService.licenseConfidenceThreshold";
-	
+		
 	/** Constant <code>BROWSE_ISSUE_URL="vulas.shared.jira.browseIssueUrl"</code> */
 	public static final String BROWSE_ISSUE_URL = "vulas.shared.jira.browseIssueUrl";
 	/** Constant <code>CREATE_ISSUE_URL="vulas.shared.jira.createIssueUrl"</code> */
@@ -85,36 +84,32 @@ public class CoverageController {
 	public ResponseEntity<CoverageStatusResponse> isCovered(@PathVariable String bugid) {
 		final String bugid_uc = bugid.toUpperCase();
 		final StopWatch sw = new StopWatch("Check coverage of bug [" + bugid_uc + "]").start();
-
-		// Always get basic vulnerability info and prediction
-		CveClassifierResponse classifier_response = null;
-		try {
-			classifier_response = ServiceWrapper.getInstance().classify(bugid_uc);
-		} catch (ServiceConnectionException e1) {
-			log.error("Error while calling the CVE classifier: " + e1.getMessage());
-		}
 		
 		final String browse_issue = VulasConfiguration.getGlobal().getConfiguration().getString(BROWSE_ISSUE_URL, null);
 		final String create_issue = VulasConfiguration.getGlobal().getConfiguration().getString(CREATE_ISSUE_URL, null);
 
 		// Create response and set basic info
 		final CoverageStatusResponse response = new CoverageStatusResponse(bugid_uc);
-		if(classifier_response!=null)
-			response.setDescription(classifier_response.getDescription());
 
 		// Check whether the bug is already in the database
 		try {
 			final List<Bug> bugs = this.bugRepository.findCoverageByBugId(bugid_uc);
-			sw.lap("Completed database query", true);
+			sw.lap("Completed database query for bug [" + bugid_uc + "]", true);
 			final Bug b = BugRepository.FILTER.findOne(bugs);
 
 			// It is, let's fill the response fields
 			response.status = CoverageStatus.COVERED;
+			response.setDescription(b.getDescription());
 			response.setActionUrl(VulasConfiguration.getGlobal().getConfiguration().getString(VulasConfiguration.HOMEPAGE, "n/a"));
 			response.setActionText("Learn how to detect vulnerable open-source software in your application");
 		}
 		catch(EntityNotFoundException enfe) {
 			try {
+				
+				final Cve cve = CveReader2.read(bugid_uc);
+				if(cve!=null)
+					response.setDescription(cve.getSummary());
+				
 				// It is not in the database, let's ask Jira whether there's already a ticket
 				final JiraSearchResponse jira_search_response = ServiceWrapper.getInstance().searchJira(bugid_uc);
 				sw.lap("Completed Jira query", true);
@@ -136,27 +131,6 @@ public class CoverageController {
 					// In discussion
 					else {
 						response.status = CoverageStatus.OPEN;
-					}
-				}
-				// Classifier
-				else if(classifier_response!=null) {					
-					final double license_threshold = VulasConfiguration.getGlobal().getConfiguration().getDouble(LICENSE_CONF_THRESHOLD, 0.2);
-					final double language_threshold = VulasConfiguration.getGlobal().getConfiguration().getDouble(LANG_CONF_THRESHOLD, 0.2);
-					// In scope but not covered yet
-					if(classifier_response.isSupportedLanguage(language_threshold) && classifier_response.isSupportedLicense(license_threshold)) {
-						response.status = CoverageStatus.UNKNOWN;
-						if(create_issue!=null && !create_issue.equals("")) {
-							response.setActionUrl(create_issue + bugid_uc);
-							response.setActionText("Create a Jira ticket if this CVE affects an open-source software component developed in Java or Python.");
-						}
-					}
-					// Out of scope
-					else {
-						response.status = CoverageStatus.OUT_OF_SCOPE;
-						if(create_issue!=null && !create_issue.equals("")) {
-							response.setActionUrl(create_issue + bugid_uc);
-							response.setActionText("The ML classifier predicted that this CVE does not concern an open-source software component developed in Java or Python. Create a Jira ticket if the classifier is wrong.");
-						}
 					}
 				}
 				// All other cases
@@ -186,44 +160,6 @@ public class CoverageController {
 
 		sw.stop();
 		return new ResponseEntity<CoverageStatusResponse>(response, HttpStatus.OK);
-	}
-	
-	@JsonInclude(JsonInclude.Include.ALWAYS)
-	@JsonIgnoreProperties(ignoreUnknown=true)
-	public static class CveClassifierResponse {
-		private String cve_id;
-		private String description;
-		private String language;
-		private float language_confidence;
-		private String license;
-		private  float license_confidence;
-		public String getCve_id() { return cve_id; }
-		public void setCve_id(String cve_id) { this.cve_id = cve_id; }
-		public String getDescription() { return description; }
-		public void setDescription(String description) { this.description = description; }
-		public String getLanguage() { return language; }
-
-		/**
-		 * Returns true if (a) the confidence is above the given threshold and the language equals 'java', or
-		 * (b) the confidence is below the given threshold.
-		 * @param _confidence_threshold
-		 * @return
-		 */
-		@JsonIgnore
-		public boolean isSupportedLanguage(double _confidence_threshold) {
-			return (this.language_confidence > _confidence_threshold && "java".equalsIgnoreCase(this.getLanguage())) || this.language_confidence < _confidence_threshold;
-		}
-		public void setLanguage(String language) { this.language = language; }
-		public float getLanguage_confidence() { return language_confidence; }
-		public void setLanguage_confidence(float language_confidence) { this.language_confidence = language_confidence; }
-		public String getLicense() { return license; }
-		public void setLicense(String license) { this.license = license; }
-		public float getLicense_confidence() { return license_confidence; }
-		@JsonIgnore
-		public boolean isSupportedLicense(double _confidence_threshold) {
-			return (this.license_confidence > _confidence_threshold && "oss".equalsIgnoreCase(this.getLicense())) || this.license_confidence < _confidence_threshold;
-		}
-		public void setLicense_confidence(float license_confidence) { this.license_confidence = license_confidence; }
 	}
 
 	@JsonInclude(JsonInclude.Include.ALWAYS)

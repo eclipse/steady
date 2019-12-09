@@ -7,7 +7,6 @@ import static com.xebialabs.restito.semantics.Action.contentType;
 import static com.xebialabs.restito.semantics.Action.status;
 import static com.xebialabs.restito.semantics.Action.stringContent;
 import static com.xebialabs.restito.semantics.Condition.get;
-import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -18,7 +17,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.jayway.restassured.RestAssured;
-import com.sap.psr.vulas.backend.rest.CoverageController.CveClassifierResponse;
 import com.sap.psr.vulas.shared.connectivity.Service;
 import com.sap.psr.vulas.shared.connectivity.ServiceConnectionException;
 import com.sap.psr.vulas.shared.util.FileUtil;
@@ -27,7 +25,7 @@ import com.xebialabs.restito.server.StubServer;
 
 public class ServiceWrapperTest {
 	
-	/** Mocks the CVE classifier. */
+	/** Mocks the NVD REST service. */
 	protected StubServer cveService;
 	
 	@Before
@@ -54,7 +52,7 @@ public class ServiceWrapperTest {
 			whenHttp(cveService).
 				match(get("/cves/" + s)).
 				then(
-					stringContent(FileUtil.readFile(Paths.get("./src/test/resources/cves/" + s + ".json"))),
+					stringContent(FileUtil.readFile(Paths.get("./src/test/resources/cves/" + s + "-new.json"))),
 					contentType("application/json"),
 					charset("UTF-8"),
 					status(HttpStatus.OK_200));
@@ -72,13 +70,5 @@ public class ServiceWrapperTest {
 	@Test
 	public void testClassifier() throws ServiceConnectionException, IOException {
 		this.setupMockServices("CVE-2014-0050", "CVE-2017-0001");
-		
-		final CveClassifierResponse cve20140050 = ServiceWrapper.getInstance().classify("CVE-2014-0050");
-		assertEquals("java", cve20140050.getLanguage().toLowerCase());
-		assertEquals("oss", cve20140050.getLicense().toLowerCase());
-
-		final CveClassifierResponse cve20170001 = ServiceWrapper.getInstance().classify("CVE-2017-0001");
-		assertEquals("other", cve20170001.getLanguage().toLowerCase());
-		assertEquals("proprietary", cve20170001.getLicense().toLowerCase());
 	}
 }
