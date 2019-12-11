@@ -67,7 +67,10 @@ fi
 
 
 for service in $SERVICES ; do
-    IMAGE=${REGISTRY}/${PROJECT}/vulnerability-assessment-tool-${service}:${VULAS_RELEASE}
-    docker tag vulnerability-assessment-tool-"${service}":"${VULAS_RELEASE}" "$IMAGE"
-    docker push "${IMAGE}"
+    IMAGE=${REGISTRY}/${PROJECT}/vulnerability-assessment-tool-${service}
+    docker tag vulnerability-assessment-tool-"${service}":"${VULAS_RELEASE}" "${IMAGE}:${VULAS_RELEASE}"
+    docker push "${IMAGE}:${VULAS_RELEASE}"
+
+    docker tag vulnerability-assessment-tool-"${service}":"${VULAS_RELEASE}" "${IMAGE}:latest"
+    docker push "${IMAGE}:latest"
 done
