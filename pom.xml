@@ -409,6 +409,7 @@
 			    <configuration>
 			        <header>Apache-2-Header-Template.txt</header>
 			        <excludes>
+			            <exclude>**/requirements.txt</exclude>
 			            <exclude>**/NOTICE.txt</exclude>
 			            <exclude>**/LICENSE.txt</exclude>
 			            <exclude>**/README.md</exclude>
@@ -416,12 +417,15 @@
 			            <exclude>**/CONTRIBUTORS.md</exclude>
 			            <exclude>**/findbugs-exclude.xml</exclude>
 			            <exclude>**/src/test/resources/**</exclude>
+			            <exclude>**/log4j.properties</exclude>
 			            <exclude>**/*.g4</exclude>
 			            <exclude>**/*.tokens</exclude>
 			            <exclude>**/*.log</exclude>
 			            <exclude>**/.travis/**</exclude>
 			            <exclude>**/kubernetes/**</exclude>
+			            <exclude>**/docker/**</exclude>
 			            <exclude>**/docs/**</exclude>
+			            <exclude>**/.github/**</exclude>
 			        </excludes>
 			    </configuration>
 			</plugin>
