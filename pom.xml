@@ -432,6 +432,9 @@
 			            <exclude>**/.github/**</exclude>
 			            <exclude>**/.gradle/**</exclude>
 			            <exclude>**/.gradle_home/**</exclude>
+			            <exclude>**/*.gradle</exclude>
+			            <exclude>**/gradlew.bat</exclude>
+			            <exclude>**/gradlew</exclude>
 			        </excludes>
 			    </configuration>
 			</plugin>
