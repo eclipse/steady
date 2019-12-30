@@ -402,12 +402,16 @@
 				</configuration>
 			</plugin>
 			
+			<!-- Run with 'mvn -Dproject.name="Eclipse Steady" license:format -P gradle' -->
 			<plugin>
 			    <groupId>com.mycila</groupId>
 			    <artifactId>license-maven-plugin</artifactId>
 			    <version>3.0</version>
 			    <configuration>
 			        <header>Apache-2-Header-Template.txt</header>
+			        <properties>
+            			<owner>SAP SE or an SAP affiliate company</owner>
+                    </properties>
 			        <excludes>
 			            <exclude>**/.dockerignore</exclude>
 			            <exclude>**/.gitattributes</exclude>
