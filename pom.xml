@@ -17,7 +17,7 @@
 
     SPDX-License-Identifier: Apache-2.0
 
-    Copyright (c) 2014 SAP SE or an SAP affiliate company. All rights reserved.
+    Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -32,7 +32,7 @@
 	<name>Eclipse Steady</name>
 	<description>Analyses your Java and Python applications for open-source dependencies with known vulnerabilities, using both static analysis and testing to determine code context and usage for greater accuracy.</description>
 	<url>https://sap.github.io/vulnerability-assessment-tool/</url>
-	<inceptionYear>2014</inceptionYear>
+	<inceptionYear>2018</inceptionYear>
 	
 	<licenses>
 		<license>
