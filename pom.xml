@@ -8,48 +8,51 @@
 	<version>3.1.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>${project.groupId}:${project.artifactId}</name>
+	<name>Eclipse Steady</name>
 	<description>Analyses your Java and Python applications for open-source dependencies with known vulnerabilities, using both static analysis and testing to determine code context and usage for greater accuracy.</description>
 	<url>https://sap.github.io/vulnerability-assessment-tool/</url>
+	<inceptionYear>2014</inceptionYear>
+	
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
 			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
+	
 	<developers>
 		<developer>
 			<name>Henrik Plate</name>
 			<email>henrik.plate@sap.com</email>
-			<organization>SAP</organization>
+			<organization>SAP SE</organization>
 			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 		<developer>
 			<id>ponta</id>
 			<name>Serena Elisa Ponta</name>
 			<email>serena.ponta@sap.com</email>
-			<organization>SAP</organization>
+			<organization>SAP SE</organization>
 			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 		<developer>
 			<id>sabetta</id>
 			<name>Antonino Sabetta</name>
 			<email>antonino.sabetta@sap.com</email>
-			<organization>SAP</organization>
+			<organization>SAP SE</organization>
 			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 		<developer>
 			<id>dangremont</id>
 			<name>Cedric Dangremont</name>
 			<email>cedric.dangremont@sap.com</email>
-			<organization>SAP</organization>
+			<organization>SAP SE</organization>
 			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 		<developer>
 			<id>pezze</id>
 			<name>Alessandro Pezze</name>
 			<email>a.pezze@sap.com</email>
-			<organization>SAP</organization>
+			<organization>SAP SE</organization>
 			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 	</developers>
@@ -376,6 +379,19 @@
 					<processDependencyManagement>false</processDependencyManagement>
 					<allowMajorUpdates>false</allowMajorUpdates>
 				</configuration>
+			</plugin>
+			
+			<plugin>
+			    <groupId>com.mycila</groupId>
+			    <artifactId>license-maven-plugin</artifactId>
+			    <version>3.0</version>
+			    <configuration>
+			        <header>Apache-2-Header-Template.txt</header>
+			        <excludes>
+			            <exclude>**/README</exclude>
+			            <exclude>**/src/test/resources/**</exclude>
+			        </excludes>
+			    </configuration>
 			</plugin>
 
 			<!-- Successor of Findbugs, run fully-qualified with 'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml
