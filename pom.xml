@@ -440,10 +440,10 @@
 			            <exclude>**/*.gradle</exclude>
 			            <exclude>**/gradlew.bat</exclude>
 			            <exclude>**/gradlew</exclude>
-			            <exclude>plugin-maven/src/it/settings.xml</exclude>
-			            <exclude>frontend-apps/src/main/webapp/helpers/pqueue.js</exclude>
-        	        	<exclude>frontend-apps/src/main/webapp/helpers/transpiled/pqueueES5.js</exclude>
-                    	<exclude>frontend-bugs/src/main/webapp/d3.v3.min.js</exclude>
+			            <exclude>**/src/it/settings.xml</exclude>
+			            <exclude>**/src/main/webapp/helpers/pqueue.js</exclude>
+			            <exclude>**/src/main/webapp/helpers/transpiled/pqueueES5.js</exclude>
+			            <exclude>**/src/main/webapp/d3.v3.min.js</exclude>
 			        </excludes>
 			    </configuration>
 			</plugin>
