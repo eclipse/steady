@@ -430,6 +430,7 @@
 			            <exclude>**/docker/**</exclude>
 			            <exclude>**/docs/**</exclude>
 			            <exclude>**/.github/**</exclude>
+			            <exclude>**/gradle/**</exclude>
 			            <exclude>**/.gradle/**</exclude>
 			            <exclude>**/.gradle_home/**</exclude>
 			            <exclude>**/*.gradle</exclude>
