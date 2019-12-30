@@ -409,6 +409,10 @@
 			    <configuration>
 			        <header>Apache-2-Header-Template.txt</header>
 			        <excludes>
+			            <exclude>**/.dockerignore</exclude>
+			            <exclude>**/.gitattributes</exclude>
+			            <exclude>**/.xsaccess</exclude>
+			            <exclude>**/.xsapp</exclude>
 			            <exclude>**/requirements.txt</exclude>
 			            <exclude>**/NOTICE.txt</exclude>
 			            <exclude>**/LICENSE.txt</exclude>
