@@ -392,6 +392,37 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+			    <groupId>com.mycila</groupId>
+			    <artifactId>license-maven-plugin</artifactId>
+			    <version>3.0</version>
+			    <configuration>
+			        <header>Apache-2-Header-Template.txt</header>
+			        <excludes>
+			            <exclude>**/.dockerignore</exclude>
+			            <exclude>**/.gitattributes</exclude>
+			            <exclude>**/.xsaccess</exclude>
+			            <exclude>**/.xsapp</exclude>
+			            <exclude>**/requirements.txt</exclude>
+			            <exclude>**/NOTICE.txt</exclude>
+			            <exclude>**/LICENSE.txt</exclude>
+			            <exclude>**/README.md</exclude>
+			            <exclude>**/CONTRIBUTING.md</exclude>
+			            <exclude>**/CONTRIBUTORS.md</exclude>
+			            <exclude>**/findbugs-exclude.xml</exclude>
+			            <exclude>**/src/test/resources/**</exclude>
+			            <exclude>**/log4j.properties</exclude>
+			            <exclude>**/*.g4</exclude>
+			            <exclude>**/*.tokens</exclude>
+			            <exclude>**/*.log</exclude>
+			            <exclude>**/.travis/**</exclude>
+			            <exclude>**/kubernetes/**</exclude>
+			            <exclude>**/docker/**</exclude>
+			            <exclude>**/docs/**</exclude>
+			            <exclude>**/.github/**</exclude>
+			        </excludes>
+			    </configuration>
+			</plugin>
 		</plugins>
 	</build>
 
