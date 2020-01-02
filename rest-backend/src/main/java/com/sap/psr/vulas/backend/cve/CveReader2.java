@@ -30,7 +30,7 @@ import net.minidev.json.JSONArray;
  */
 public class CveReader2 implements ObjectFetcher<String, Cve> {
 	
-	private static final String CVE_SERVICE_URL = "vulas.backend.cveCache.serviceUrl";
+	public static final String CVE_SERVICE_URL = "vulas.backend.cveCache.serviceUrl";
 	
 	private static Logger log = LoggerFactory.getLogger(CveReader2.class);
 	
@@ -87,7 +87,7 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 		try {
 			final CloseableHttpClient httpclient = HttpClients.createDefault();
 			uri = new String(url).replaceAll("<ID>", _key);
-			log.info("Query details of CVE [" + _key + "] at [" + uri + "]");
+			log.info("Query details of [" + _key + "] at [" + uri + "]");
 			final HttpGet method = new HttpGet(uri);
 			if(ConnectionUtil.getProxyConfig()!=null)
 				method.setConfig(ConnectionUtil.getProxyConfig());

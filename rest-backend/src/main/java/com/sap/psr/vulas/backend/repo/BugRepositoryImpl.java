@@ -57,7 +57,7 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 	@Override
 	@Transactional
 	public Bug customSave(Bug _bug, Boolean _considerCC) throws PersistenceException {
-		final StopWatch sw = new StopWatch("Save bug " + _bug.getBugId()).start();
+		final StopWatch sw = new StopWatch("Save bug [" + _bug.getBugId() + "]").start();
 
 		// The external ID
 		final String ext_id = _bug.getBugId();
@@ -76,7 +76,6 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 		if(_considerCC)
 			_bug = this.saveNestedConstructIds(_bug);
 		sw.lap("Updated refs to nested constructs");
-
 		
 		// Save
 		try {
@@ -168,7 +167,7 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 				final Cve cve = CveReader2.read(cve_id);
 				
 				if(cve!=null) {
-					boolean to_save=false; 
+					boolean to_save = false; 
 					if(cve.getSummary()!=null && (_b.getDescription()==null || !(cve.getSummary().equals(_b.getDescription())))) {
 						_b.setDescription(cve.getSummary());
 						to_save = true;						
@@ -185,9 +184,16 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 						_b.setCvssVector(cve.getCvssVector());
 						to_save = true;
 					}
+					
+					// Something changed, update database
 					if(to_save) {
+						log.info("CVE data of bug [" + _b.getBugId() + "] changed, triggering update of local database");
 						this.customSave(_b, false);
 						update_happened = true;
+					}
+					// Nothing changed
+					else {
+						log.info("CVE data of bug [" + _b.getBugId() + "] did not change, no update of local database needed");
 					}
 				}
 			} catch (CacheException e) {

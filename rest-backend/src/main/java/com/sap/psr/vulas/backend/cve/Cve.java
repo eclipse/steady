@@ -146,7 +146,7 @@ public class Cve {
 	@Override
 	public String toString() {
 		final StringBuffer b = new StringBuffer();
-		b.append("[id=").append(this.getId()).append(", cvss=").append(this.getCvssScore()).append("]");
+		b.append("[id=").append(this.getId()).append(", cvssScore=").append(this.getCvssScore()).append(", cvssVersion=").append(this.getCvssVersion()).append("]");
 		return b.toString();
 	}
 	
