@@ -76,7 +76,7 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 	@Override
 	@Transactional
 	public Bug customSave(Bug _bug, Boolean _considerCC) throws PersistenceException {
-		final StopWatch sw = new StopWatch("Save bug " + _bug.getBugId()).start();
+		final StopWatch sw = new StopWatch("Save bug [" + _bug.getBugId() + "]").start();
 
 		// The external ID
 		final String ext_id = _bug.getBugId();
@@ -95,7 +95,6 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 		if(_considerCC)
 			_bug = this.saveNestedConstructIds(_bug);
 		sw.lap("Updated refs to nested constructs");
-
 		
 		// Save
 		try {
@@ -165,7 +164,14 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 			   ( _bug.getDescription()==null || _bug.getCvssScore()==null || _bug.getCvssVersion()==null );
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Checks whether the database has a description, CVSS score and version for the given {@link Bug}.
+	 * If not, or in case the parameter _force is true, the CVE data for the given {@link Bug} is read using the {@link CveReader2},
+	 * and the database is updated if the CVE's summary, CVSS score, version or vector is empty or outdated.
+	 * 
+	 * @param _b the {@link Bug} whose CVE data is read
+	 * @param _force 
+	 */
 	@Override
 	public boolean updateCachedCveData(Bug _b, boolean _force) {
 		boolean update_happened = false;
@@ -174,33 +180,39 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 				// Get the CVE ID to read from cache
 				String cve_id = Cve.extractCveIdentifier(_b.getBugId());
 				if(cve_id==null)
-					Cve.extractCveIdentifier(_b.getBugIdAlt());
+					cve_id = Cve.extractCveIdentifier(_b.getBugIdAlt());
 				
 				// Read cache (note that cve_id can be null)
 				final Cve cve = CveReader2.read(cve_id);
 				
 				if(cve!=null) {
-					boolean to_save=false; 
-					if(cve.getSummary()!=null && (_b.getDescription()==null || !(cve.getSummary().equals(_b.getDescription())))){
+					boolean to_save = false; 
+					if(cve.getSummary()!=null && (_b.getDescription()==null || !(cve.getSummary().equals(_b.getDescription())))) {
 						_b.setDescription(cve.getSummary());
-						to_save=true;
-						
+						to_save = true;						
 					}
-					if(cve.getCvssScore()!=null && (_b.getCvssScore()==null || !(cve.getCvssScore().equals(_b.getCvssScore())))){
+					if(cve.getCvssScore()!=null && (_b.getCvssScore()==null || !(cve.getCvssScore().equals(_b.getCvssScore())))) {
 						_b.setCvssScore(cve.getCvssScore());
-						to_save=true;
+						to_save = true;
 					}
-					if(cve.getCvssVersion()!=null && (_b.getCvssVersion()==null || !(cve.getCvssVersion().equals(_b.getCvssVersion())))){
+					if(cve.getCvssVersion()!=null && (_b.getCvssVersion()==null || !(cve.getCvssVersion().equals(_b.getCvssVersion())))) {
 						_b.setCvssVersion(cve.getCvssVersion());
-						to_save=true;
+						to_save = true;
 					}
-					if(cve.getCvssVector()!=null && (_b.getCvssVector()==null || !(cve.getCvssVector().equals(_b.getCvssVector())))){
+					if(cve.getCvssVector()!=null && (_b.getCvssVector()==null || !(cve.getCvssVector().equals(_b.getCvssVector())))) {
 						_b.setCvssVector(cve.getCvssVector());
-						to_save=true;
+						to_save = true;
 					}
-					if(to_save){
+					
+					// Something changed, update database
+					if(to_save) {
+						log.info("CVE data of bug [" + _b.getBugId() + "] changed, triggering update of local database");
 						this.customSave(_b, false);
 						update_happened = true;
+					}
+					// Nothing changed
+					else {
+						log.info("CVE data of bug [" + _b.getBugId() + "] did not change, no update of local database needed");
 					}
 				}
 			} catch (CacheException e) {

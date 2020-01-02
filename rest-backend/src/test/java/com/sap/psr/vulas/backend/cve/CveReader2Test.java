@@ -39,6 +39,10 @@ public class CveReader2Test {
 	
 	final static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 
+	/**
+	 * Create several instances of {@link Cve} from local JSON data.
+	 * @throws CacheException
+	 */
 	@Test
 	public void testBuildFromJson() throws CacheException {
 		try {
@@ -87,5 +91,17 @@ public class CveReader2Test {
 			e.printStackTrace();
 			assertTrue(false);
 		}
+	}
+	
+	/**
+	 * Fetches CVE data.
+	 * Requires that system property vulas.backend.cveCache.serviceUrl is set.
+	 * @throws CacheException
+	 */
+	@Test
+	public void testFetch() throws CacheException {
+		NvdRestServiceMockup.create();
+		final CveReader2 reader = new CveReader2();
+		reader.fetch("CVE-2019-17531");
 	}
 }

@@ -20,8 +20,8 @@
 package com.sap.psr.vulas.backend.rest;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -32,7 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -54,13 +52,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.sap.psr.vulas.backend.cve.Cve;
+import com.sap.psr.vulas.backend.cve.CveReader2;
+import com.sap.psr.vulas.backend.cve.NvdRestServiceMockup;
 import com.sap.psr.vulas.backend.model.AffectedConstructChange;
 import com.sap.psr.vulas.backend.model.AffectedLibrary;
 import com.sap.psr.vulas.backend.model.Bug;
@@ -154,7 +154,7 @@ public class BugControllerTest {
      */
     @Test
     public void testGetBug() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	this.bugRepository.customSave(bug,true);
     	mockMvc.perform(get("/bugs/"
                 + bug.getBugId()))
@@ -170,12 +170,38 @@ public class BugControllerTest {
     }
     
     /**
+     * Save bug and update its description and score. 
+     * @throws Exception
+     */
+    @Test
+    public void testUpdateCachedCveData() throws Exception {
+    	final String id = "CVE-2019-17531";
+    	
+    	// Create mockup service and read correct CVE data
+    	NvdRestServiceMockup.create();
+    	final CveReader2 reader = new CveReader2();
+    	final Cve cve = reader.read(id);
+    	
+    	// Create bug without wrong data
+    	final Bug b1 = this.createExampleBug(id, "Lorem ipsum");
+    	this.bugRepository.customSave(b1, true);
+    	assertFalse(cve.getSummary().equals(b1.getDescription()));
+
+    	// Update cache with correct data from mockup service
+    	this.bugRepository.updateCachedCveData(b1, true);
+    	
+    	// Check whether the descr has been updated
+    	final Bug b2 = this.bugRepository.findByBugId("CVE-2019-17531").get(0);
+    	assertTrue(cve.getSummary().equals(b1.getDescription()));
+    }
+    
+    /**
      * Rest-post and rest-get.
      * @throws Exception
      */
     @Test
     public void testPost() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	
     	// Rest-post
     	final MockHttpServletRequestBuilder post_builder = post("/bugs/")
@@ -239,7 +265,7 @@ public class BugControllerTest {
      */
     @Test
     public void testDuplicatePost() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	
     	// Rest-post
     	final MockHttpServletRequestBuilder post_builder = post("/bugs/")
@@ -271,7 +297,7 @@ public class BugControllerTest {
      */
     @Test
     public void testDelete() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	
     	// Rest-post
     	final MockHttpServletRequestBuilder post_builder = post("/bugs/")
@@ -304,7 +330,7 @@ public class BugControllerTest {
      */
     @Test
     public void testPostPut() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	
     	// Rest-post
     	final MockHttpServletRequestBuilder post_builder = post("/bugs/")
@@ -345,7 +371,7 @@ public class BugControllerTest {
      */
     @Test
     public void testPostChangePut() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	
     	// Rest-post
     	final MockHttpServletRequestBuilder post_builder = post("/bugs/")
@@ -393,7 +419,7 @@ public class BugControllerTest {
      */
     @Test
     public void testPutNotFound() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	
     	// Rest-put
     	final MockHttpServletRequestBuilder put_builder = put("/bugs/" + bug.getBugId())
@@ -409,7 +435,7 @@ public class BugControllerTest {
     
     @Test
     public void testAffectedLibrary() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	
     	MockHttpServletRequestBuilder post_builder = post("/bugs/")
     			.content(JacksonUtil.asJsonString(bug).getBytes())
@@ -524,23 +550,33 @@ public class BugControllerTest {
         
     /**
      * Creates a transient bug.
+     * @param _id TODO
+     * @param _descr TODO
      * @return
      */
-    private final Bug createExampleBug() {
-    	Collection<String> references = new ArrayList<String>();
+    private final Bug createExampleBug(String _id, String _descr) {
+    	final Collection<String> references = new ArrayList<String>();
     	references.add(BUG_URL1);
     	references.add(BUG_URL2);
-    	final ConstructId cid = new ConstructId(ProgrammingLanguage.JAVA, ConstructType.CLAS, "com.acme.Foo");
-    	final ConstructChange cc1 = new ConstructChange("svn.apache.org", "123456", "/trunk/src/main/java/com/acme/Foo.java", cid, Calendar.getInstance(), ConstructChangeType.MOD);
-    	final ConstructChange cc2 = new ConstructChange("svn.apache.org", "123456", "/branch/1.x/src/main/java/com/acme/Foo.java", cid, Calendar.getInstance(), ConstructChangeType.MOD);
-    	final Bug b = new Bug(BUG_ID, BUG_DESCR, references);
+    	
+    	final Bug b = new Bug(_id, _descr, references);
     	b.setOrigin(BugOrigin.PUBLIC);
     	b.setMaturity(ContentMaturityLevel.READY);
+    	b.setCvssScore(0.1f);
+    	b.setCvssVersion("1.9"); // Note: This version does not exist
+    	b.setCvssVector("bla");
+    	
+    	final ConstructId cid = new ConstructId(ProgrammingLanguage.JAVA, ConstructType.CLAS, "com.acme.Foo");
+    	
+    	final Set<ConstructChange> ccs = new HashSet<ConstructChange>();
+    	final ConstructChange cc1 = new ConstructChange("svn.apache.org", "123456", "/trunk/src/main/java/com/acme/Foo.java", cid, Calendar.getInstance(), ConstructChangeType.MOD);
+    	final ConstructChange cc2 = new ConstructChange("svn.apache.org", "123456", "/branch/1.x/src/main/java/com/acme/Foo.java", cid, Calendar.getInstance(), ConstructChangeType.MOD);
     	cc1.setBug(b);
     	cc2.setBug(b);
-    	Set<ConstructChange> ccs = new HashSet<ConstructChange>();
-    	ccs.add(cc1); ccs.add(cc2);
+    	ccs.add(cc1);
+    	ccs.add(cc2);
     	b.setConstructChanges(ccs);
+    	
     	return b;
     }
 }
