@@ -638,7 +638,21 @@ Other settings to fine-tune the threshold for build exceptions are as follows:
 
 Deletes application-specific data in the backend, e.g., traces collected during JUnit tests, application constructs and dependencies collected through the `app` goal. Right after executing `clean` for a given application, the apps Web frontend will be empty for the respective application.
 
+Run as follows to clean the **current version**, e.g., the version specified in `pom.xml` (Maven) or `vulas-custom.properties` (CLI):
+
+```sh tab="CLI"
+java -jar vulas-cli-jar-with-dependencies.jar -goal clean
+```
+
+```sh tab="Maven"
+mvn -Dvulas vulas:clean
+```
+
 #### Configure as follows
+
+The following options can be used to delete **multiple versions**.
+
+Important: In this case, only the creation date of application versions (in the backend) is considered to select the versions to be deleted. Versions specified in `pom.xml`, `vulas-custom.properties` etc. are not considered at all. 
 
 ```ini
     # When true, all but the latest X app versions will be deleted (latest according to the application creation date).
@@ -658,17 +672,7 @@ Deletes application-specific data in the backend, e.g., traces collected during 
     vulas.core.clean.goalHistory = false
 ```
 
-Run as follows to **clean the current version**:
-
-```sh tab="CLI"
-java -jar vulas-cli-jar-with-dependencies.jar -goal clean
-```
-
-```sh tab="Maven"
-mvn -Dvulas vulas:clean
-```
-
-Run as follows to **delete an application including all its versions**:
+Run as follows to delete **all versions**:
 
 ```sh tab="CLI"
 java -Dvulas.core.clean.purgeVersions=true -Dvulas.core.clean.purgeVersions.keepLast=0 -jar vulas-cli-jar-with-dependencies.jar -goal clean
@@ -678,12 +682,13 @@ java -Dvulas.core.clean.purgeVersions=true -Dvulas.core.clean.purgeVersions.keep
 mvn -Dvulas -Dvulas.core.clean.purgeVersions=true -Dvulas.core.clean.purgeVersions.keepLast=0 vulas:clean
 ```
 
-!!! critical Troubleshooting
-    Maven will fail to delete an application if a corresponding `<module>` does not exit any longer in the `pom.xml`. The CLI must be used in these cases and the Maven coordinates (GAV) of the item to be cleaned shall be provided as system properties when calling the CLI. For example, if you want to delete an application with GAV `myGroup:myArtifact:myVersion`, the following command line should be used
+#### Troubleshooting
 
-    ```sh
-    java -Dvulas.core.clean.purgeVersions=true -Dvulas.core.clean.purgeVersions.keepLast=0 -Dvulas.core.appContext.group=myGroup -Dvulas.core.appContext.artifact=myArtifact -Dvulas.core.appContext.version=myVersion -jar vulas-cli-jar-with-dependencies.jar -goal clean
-    ```
+The Maven plugin will fail to delete an application if a corresponding `<module>` does not exit any longer in the `pom.xml`. The CLI must be used in these cases and the Maven coordinates (GAV) of the item to be cleaned shall be provided as system properties when calling the CLI. For example, if you want to delete an application with GAV `myGroup:myArtifact:myVersion`, the following command line be used
+
+```sh
+java -Dvulas.core.appContext.group=myGroup -Dvulas.core.appContext.artifact=myArtifact -Dvulas.core.appContext.version=myVersion -jar vulas-cli-jar-with-dependencies.jar -goal clean
+```
 
 ## Clean workspaces (cleanspace)
 
