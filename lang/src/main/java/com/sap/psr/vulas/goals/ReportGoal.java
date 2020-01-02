@@ -25,6 +25,7 @@ import java.util.Set;
 import org.apache.commons.configuration.Configuration;
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
+import com.sap.psr.vulas.report.BugExemption;
 import com.sap.psr.vulas.report.Report;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.model.Application;
@@ -74,7 +75,7 @@ public class ReportGoal extends AbstractAppGoal {
 		report.setExceptionThreshold(cfg.getString(CoreConfiguration.REP_EXC_THRESHOLD, Report.THRESHOLD_ACT_EXE));
 
 		// Excluded bugs
-		report.addExcludedBugs(cfg.getStringArray(CoreConfiguration.REP_EXCL_BUGS));
+		report.setExemptedBugs(BugExemption.readFromConfiguration(cfg.subset(CoreConfiguration.REP_EXCL_BUGS)));
 
 		// Excluded scopes
 		report.addExcludedScopes(cfg.getStringArray(CoreConfiguration.REP_EXC_SCOPE_BL));

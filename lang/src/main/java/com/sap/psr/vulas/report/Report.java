@@ -110,12 +110,9 @@ public class Report {
 	 * A vulnerability in blacklisted scopes will not cause an exception (multiple scopes to be separated by comma, default: test)
 	 */
 	private StringList excludedScopes = new StringList();
-
-	/**
-	 * Vulnerabilities explicitly mentioned will not cause an exception (multiple bugs to be separated by comma)
-	 */
-	private StringList excludedBugs = new StringList();
 	
+	private Set<BugExemption> exemptedBugs = new HashSet<BugExemption>();
+
 	private Application app = null;
 
 	private Set<Application> modules = null;
@@ -170,6 +167,7 @@ public class Report {
 	 * @return a {@link java.lang.String} object.
 	 */
 	public String getExceptionThreshold() { return exceptionThreshold; }
+	
 	/**
 	 * <p>Setter for the field <code>exceptionThreshold</code>.</p>
 	 *
@@ -180,29 +178,14 @@ public class Report {
 			this.exceptionThreshold = _threshold;
 		Report.log.info("Exception threshold: " + this.exceptionThreshold);
 	}
-
-	/**
-	 * <p>addExcludedBugs.</p>
-	 *
-	 * @param _items a {@link java.lang.String} object.
-	 */
-	public void addExcludedBugs(String _items) {
-		if(_items!=null && !_items.equals("")) {
-			this.excludedBugs.addAll(_items, ",", true);
-			Report.log.warn("Excluded bugs: " + this.excludedBugs);
-		}
-	}
 	
 	/**
-	 * <p>addExcludedBugs.</p>
+	 * <p>Setter for the field <code>excemptedBugs</code>.</p>
 	 *
-	 * @param _items an array of {@link java.lang.String} objects.
+	 * @param _exemptions a {@link Set} of {@link BugExemption}s.
 	 */
-	public void addExcludedBugs(String[] _items) {
-		if(_items!=null) {
-			this.excludedBugs.addAll(_items, true);
-			Report.log.warn("Excluded bugs: " + this.excludedBugs);
-		}
+	public void setExemptedBugs(Set<BugExemption> _exemptions) {
+		this.exemptedBugs = _exemptions;
 	}
 
 	/**
@@ -335,12 +318,12 @@ public class Report {
 		// Collect obsolete exemptions
 		final Set<String> obsolHistorical = new HashSet<String>();
 		final Set<String> obsolSignNotPresent = new HashSet<String>();
-		for(String v: this.excludedBugs) {
-			if(this.historicalVulns.contains(v) && !relevantVulns.contains(v)) {
-				obsolHistorical.add(v);
+		for(BugExemption e: this.exemptedBugs) {
+			if(this.historicalVulns.contains(e.getBugId()) && !relevantVulns.contains(e.getBugId())) {
+				obsolHistorical.add(e.getBugId());
 			}
-			else if(!this.historicalVulns.contains(v) && !relevantVulns.contains(v)) {
-				obsolSignNotPresent.add(v);
+			else if(!this.historicalVulns.contains(e.getBugId()) && !relevantVulns.contains(e.getBugId())) {
+				obsolSignNotPresent.add(e.getBugId());
 			}
 		}
 		if(!obsolHistorical.isEmpty())
@@ -424,7 +407,7 @@ public class Report {
 		// Configuration
 		this.context.put("exceptionThreshold", this.exceptionThreshold);
 		this.context.put("exceptionScopeBlacklist", this.excludedScopes.toString(", "));
-		this.context.put("exceptionExcludedBugs", this.excludedBugs.toString(", "));
+		this.context.put("exceptionExcludedBugs", StringUtil.join(this.exemptedBugs, ", "));
 		this.context.put("isAggregated", Boolean.valueOf(this.isAggregated()));
 		this.context.put("thresholdMet", vulnsAboveThreshold.isEmpty());
 	}
@@ -455,7 +438,7 @@ public class Report {
 		final Map<String,String> cfg = new HashMap<String,String>();
 		cfg.put("report.exceptionThreshold", this.exceptionThreshold);
 		cfg.put("report.exceptionScopeBlacklist", this.excludedScopes.toString(", "));
-		cfg.put("report.exceptionExcludedBugs", this.excludedBugs.toString(", "));
+		cfg.put("report.exceptionExcludedBugs", StringUtil.join(this.exemptedBugs, ", "));
 		cfg.put("report.aggregated", Boolean.toString(this.isAggregated()));
 		return cfg;
 	}
@@ -619,8 +602,7 @@ public class Report {
 	 */
 	private boolean isIgnoredForBuildException(VulnerableDependency _a, String _bugid) {
 		return (this.excludedScopes!=null && _a.getDep().getScope()!=null && this.excludedScopes.contains(_a.getDep().getScope().toString(), ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE)) ||
-				(this.excludedBugs!=null && this.excludedBugs.contains(_bugid, ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE))  ||
-				(this.ignoreUnassessed(_a));
+				BugExemption.isExempted(this.exemptedBugs, _a) || this.ignoreUnassessed(_a);
 	}
 
 	public static class AggregatedVuln implements Comparable {
