@@ -54,14 +54,17 @@ public class CveController {
 	
 	private Thread cveCacheFetch = null;
 	
+	private final BugRepository bugRepository;
+	
 	/**
 	 * Creates a thread pre-fetching the CVEs for all bugs.
 	 * This thread shall be started by using the REST endpoint {@link #startRefresh()}.
 	 * Note: If it would be started right away, multiple backend instances would update the database in parallel.
 	 */
 	@Autowired
-	CveController(BugRepository bugRepository) {
-		final BugRepository bug_repo = bugRepository;
+	CveController(BugRepository _bug_repo) {
+		this.bugRepository = _bug_repo;
+		final BugRepository bug_repo = _bug_repo;
 		
 		// Refresh CVE cache
 		final long refresh_all = VulasConfiguration.getGlobal().getConfiguration().getLong(CACHE_REFRESH_ALL, -1);
@@ -111,7 +114,7 @@ public class CveController {
 	/**
 	 * Returns the {@link Cve} with the given ID, e.g., CVE-2014-0050.
 	 *
-	 * @return 404 {@link HttpStatus#NOT_FOUND} if library with given digest does not exist, 200 {@link HttpStatus#OK} if the library is found
+	 * @return 404 {@link HttpStatus#NOT_FOUND} if the CVE with given ID does not exist, 200 {@link HttpStatus#OK} if the CVE is found
 	 * @param id a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
@@ -122,6 +125,24 @@ public class CveController {
 		}
 		catch(Exception enfe) {
 			return new ResponseEntity<Cve>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	/**
+	 * Refreshes the cached data of the {@link Bug} with the given ID, e.g., CVE-2014-0050.
+	 *
+	 * @return true if the bug data got updated, false otherwise
+	 * @param id a {@link java.lang.String} object.
+	 */
+	@RequestMapping(value = "/refreshCache/{id}", method = RequestMethod.POST)
+	public ResponseEntity<Boolean> updateCve(@PathVariable String id) {
+		try {
+			final Bug b = BugRepository.FILTER.findOne(this.bugRepository.findByBugId(id));
+			final boolean update_happened = this.bugRepository.updateCachedCveData(b, true);
+			return new ResponseEntity<Boolean>(update_happened, HttpStatus.OK);
+		}
+		catch(Exception enfe) {
+			return new ResponseEntity<Boolean>(HttpStatus.NOT_FOUND);
 		}
 	}
 	

@@ -188,11 +188,14 @@ public class BugControllerTest {
     	assertFalse(cve.getSummary().equals(b1.getDescription()));
 
     	// Update cache with correct data from mockup service
-    	this.bugRepository.updateCachedCveData(b1, true);
+    	//this.bugRepository.updateCachedCveData(b1, true);
+    	mockMvc.perform(post("/cves/refreshCache/"
+                + id))
+                .andExpect(status().isOk());
     	
     	// Check whether the descr has been updated
     	final Bug b2 = this.bugRepository.findByBugId("CVE-2019-17531").get(0);
-    	assertTrue(cve.getSummary().equals(b1.getDescription()));
+    	assertTrue(cve.getSummary().equals(b2.getDescription()));
     }
     
     /**
