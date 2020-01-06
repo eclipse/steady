@@ -116,7 +116,7 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 				final HttpEntity entity = response.getEntity();
 			    if (sc==org.apache.http.HttpStatus.SC_OK && entity != null) {
 			       	result = ConnectionUtil.readInputStream(entity.getContent());
-			       	cve = buildFromJson(_key, result);
+			       	cve = CveReader2.buildFromJson(_key, result);
 			    } else {
 			    	log.error("HTTP GET [url=" + uri + "] completed with [" + sc + "], and entity [" + entity + "]");
 			    }
@@ -140,7 +140,7 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 	
 	final static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 	
-	static Cve buildFromJson(String _id, String _json) throws ParseException {
+	private final static Cve buildFromJson(String _id, String _json) throws ParseException {
 		final Cve cve = new Cve();
 		cve.setId(_id);
 		
