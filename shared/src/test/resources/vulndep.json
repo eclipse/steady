@@ -1,0 +1,399 @@
+{
+    "dep": {
+        "lib": {
+            "digest": "6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10",
+            "sha1": "6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10",
+            "digestAlgorithm": "SHA1",
+            "createdAt": "2018-11-30T10:04:42.281+0000",
+            "modifiedAt": "2019-10-24T08:37:03.544+0000",
+            "libraryId": {
+                "artifact": "stuff",
+                "version": "stuff",
+                "group": "stuff"
+            },
+            "bundledLibraryIds": [],
+            "wellknownDigest": false,
+            "digestTimestamp": null,
+            "digestVerificationUrl": null
+        },
+        "parent": {
+            "lib": {
+                "digest": "CC25AC0C4E570FB5978AA50128501AEB0A376091",
+                "sha1": "CC25AC0C4E570FB5978AA50128501AEB0A376091",
+                "digestAlgorithm": "SHA1",
+                "createdAt": "2019-08-19T19:39:32.031+0000",
+                "modifiedAt": "2019-08-19T19:39:32.031+0000",
+                "libraryId": {
+                    "artifact": "vulas-testapp-core",
+                    "version": "3.1.5-MVN",
+                    "group": "com.acme.foo"
+                },
+                "bundledLibraryIds": [
+                    {
+                        "artifact": "vulas-testapp-core",
+                        "version": "3.1.5-MVN",
+                        "group": "com.acme.foo"
+                    }
+                ],
+                "wellknownDigest": false,
+                "digestTimestamp": null,
+                "digestVerificationUrl": null
+            },
+            "parent": {
+                "lib": {
+                    "digest": "B7C3AB36056B98CBE0AA098597B511B80661DABF",
+                    "sha1": "B7C3AB36056B98CBE0AA098597B511B80661DABF",
+                    "digestAlgorithm": "SHA1",
+                    "createdAt": "2019-08-19T21:41:20.420+0000",
+                    "modifiedAt": "2019-08-19T21:41:20.420+0000",
+                    "libraryId": {
+                        "artifact": "vulas-testapp-coreapi",
+                        "version": "3.1.5-MVN",
+                        "group": "com.acme.foo"
+                    },
+                    "bundledLibraryIds": [
+                        {
+                            "artifact": "vulas-testapp-coreapi",
+                            "version": "3.1.5-MVN",
+                            "group": "com.acme.foo"
+                        }
+                    ],
+                    "wellknownDigest": false,
+                    "digestTimestamp": null,
+                    "digestVerificationUrl": null
+                },
+                "parent": null,
+                "origin": null,
+                "declared": true,
+                "traced": false,
+                "scope": "COMPILE",
+                "transitive": false,
+                "filename": "vulas-testapp-coreapi-3.1.5-MVN.jar",
+                "path": "\\.m2\\repository\\com\\acme\\foo\\vulas-testapp-coreapi\\3.1.5-MVN\\vulas-testapp-coreapi-3.1.5-MVN.jar",
+                "relativePath": null
+            },
+            "origin": null,
+            "declared": true,
+            "traced": false,
+            "scope": "COMPILE",
+            "transitive": true,
+            "filename": "vulas-testapp-core-3.1.5-MVN.jar",
+            "path": "\\.m2\\repository\\com\\acme\\foo\\vulas-testapp-core\\3.1.5-MVN\\vulas-testapp-core-3.1.5-MVN.jar",
+            "relativePath": null
+        },
+        "origin": null,
+        "declared": true,
+        "traced": false,
+        "scope": "SYSTEM",
+        "transitive": true,
+        "filename": "cf1.2.2-cc1.4.jar",
+        "path": "\\Documents\\projects\\vulas\\testapp-java\\core\\lib\\cf1.2.2-cc1.4.jar",
+        "relativePath": null
+    },
+    "bug": {
+        "bugId": "CVE-2014-0050",
+        "bugIdAlt": null,
+        "maturity": "READY",
+        "origin": "PUBLIC",
+        "description": "MultipartStream.java in Apache Commons FileUpload before 1.3.1, as used in Apache Tomcat, JBoss Web, and other products, allows remote attackers to cause a denial of service (infinite loop and CPU consumption) via a crafted Content-Type header that bypasses a loop's intended exit conditions.",
+        "descriptionAlt": null,
+        "cvssScore": 7.5,
+        "cvssVersion": "2.0",
+        "cvssVector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+        "reference": [],
+        "createdAt": "2016-12-16T15:42:12.251+0000",
+        "createdBy": null,
+        "modifiedAt": "2019-03-14T23:29:23.466+0000",
+        "modifiedBy": null,
+        "cvssDisplayString": "7.5 (v2.0)"
+    },
+    "constructList": [
+        {
+            "trace": null,
+            "traced": null,
+            "reachable": null,
+            "inArchive": true,
+            "affected": null,
+            "classInArchive": null,
+            "equalChangeType": null,
+            "overall_change": null,
+            "constructChange": {
+                "repo": "http://svn.apache.org/repos/asf/commons/proper/fileupload",
+                "commit": "1565143",
+                "repoPath": "/commons/proper/fileupload/trunk/src/main/java/org/apache/commons/fileupload/FileUploadBase.java",
+                "constructId": {
+                    "lang": "JAVA",
+                    "type": "CLAS",
+                    "qname": "org.apache.commons.fileupload.FileUploadBase"
+                },
+                "committedAt": "2014-02-06T10:14:24.151+0000",
+                "constructChangeType": "MOD"
+            }
+        },
+        {
+            "trace": null,
+            "traced": null,
+            "reachable": null,
+            "inArchive": true,
+            "affected": null,
+            "classInArchive": null,
+            "equalChangeType": null,
+            "overall_change": null,
+            "constructChange": {
+                "repo": "http://svn.apache.org/repos/asf/commons/proper/fileupload",
+                "commit": "1565143",
+                "repoPath": "/commons/proper/fileupload/trunk/src/main/java/org/apache/commons/fileupload/FileUploadBase.java",
+                "constructId": {
+                    "lang": "JAVA",
+                    "type": "CLAS",
+                    "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl"
+                },
+                "committedAt": "2014-02-06T10:14:24.151+0000",
+                "constructChangeType": "MOD"
+            }
+        },
+        {
+            "trace": null,
+            "traced": null,
+            "reachable": null,
+            "inArchive": true,
+            "affected": null,
+            "classInArchive": null,
+            "equalChangeType": null,
+            "overall_change": null,
+            "constructChange": {
+                "repo": "http://svn.apache.org/repos/asf/commons/proper/fileupload",
+                "commit": "1565143",
+                "repoPath": "/commons/proper/fileupload/trunk/src/main/java/org/apache/commons/fileupload/FileUploadBase.java",
+                "constructId": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.commons.fileupload.FileUploadBase$FileItemIteratorImpl(RequestContext)"
+                },
+                "committedAt": "2014-02-06T10:14:24.151+0000",
+                "constructChangeType": "MOD",
+                "buggyBody": "{\"ast\":[ {\"Value\" : \"FileItemIteratorImpl\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 19,\"End\" : 3050}},\"EntityType\" : \"METHOD\",\"C\" : [{\"Value\" : \"(ctx == null)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 132,\"End\" : 230}},\"EntityType\" : \"IF_STATEMENT\",\"C\" : [{\"Value\" : \"(ctx == null)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 149,\"End\" : 230}},\"EntityType\" : \"THEN_STATEMENT\",\"C\" : [{\"Value\" : \"new NullPointerException(\\\"ctx parameter\\\");\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 168,\"End\" : 215}},\"EntityType\" : \"THROW_STATEMENT\"}]}]},{\"Value\" : \"String contentType = ctx.getContentType();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 247,\"End\" : 288}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"((null == contentType) || (! contentType.toLowerCase(Locale.ENGLISH).startsWith(MULTIPART)))\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 303,\"End\" : 687}},\"EntityType\" : \"IF_STATEMENT\",\"C\" : [{\"Value\" : \"((null == contentType) || (! contentType.toLowerCase(Locale.ENGLISH).startsWith(MULTIPART)))\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 419,\"End\" : 687}},\"EntityType\" : \"THEN_STATEMENT\",\"C\" : [{\"Value\" : \"new InvalidContentTypeException(format(\\\"the request doesn\\\\'t contain a %s or %s stream, content type header is %s\\\", MULTIPART_FORM_DATA, MULTIPART_FORM_DATA, contentType));\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 438,\"End\" : 672}},\"EntityType\" : \"THROW_STATEMENT\"}]}]},{\"Value\" : \"InputStream input = ctx.getInputStream();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 704,\"End\" : 744}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"final @SuppressWarnings(\\\"deprecation\\\") int contentLengthInt = ctx.getContentLength();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 852,\"End\" : 897}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"final long requestSize = (UploadContext.class.isAssignableFrom(ctx.getClass()) ? ((UploadContext) ctx).contentLength() : contentLengthInt);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 920,\"End\" : 1212}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"(sizeMax >= 0)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 1284,\"End\" : 2377}},\"EntityType\" : \"IF_STATEMENT\",\"C\" : [{\"Value\" : \"(sizeMax >= 0)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 1302,\"End\" : 2377}},\"EntityType\" : \"THEN_STATEMENT\",\"C\" : [{\"Value\" : \"((requestSize != (- 1)) && (requestSize > sizeMax))\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 1321,\"End\" : 1704}},\"EntityType\" : \"IF_STATEMENT\",\"C\" : [{\"Value\" : \"((requestSize != (- 1)) && (requestSize > sizeMax))\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 1369,\"End\" : 1704}},\"EntityType\" : \"THEN_STATEMENT\",\"C\" : [{\"Value\" : \"new SizeLimitExceededException(format(\\\"the request was rejected because its size (%s) exceeds the configured maximum (%s)\\\", Long.valueOf(requestSize), Long.valueOf(sizeMax)), requestSize, sizeMax);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 1392,\"End\" : 1685}},\"EntityType\" : \"THROW_STATEMENT\"}]}]},{\"Value\" : \"input = new LimitedInputStream(input, sizeMax) {\\n  protected @Override void raiseError(long pSizeMax, long pCount) throws IOException {\\n    FileUploadException ex = new SizeLimitExceededException(format(\\\"the request was rejected because its size (%s) exceeds the configured maximum (%s)\\\", Long.valueOf(pCount), Long.valueOf(pSizeMax)), pCount, pSizeMax);\\n    throw new FileUploadIOException(ex);\\n  }\\n};\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 1723,\"End\" : 2362}},\"EntityType\" : \"ASSIGNMENT\"}]}]},{\"Value\" : \"String charEncoding = headerEncoding;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2394,\"End\" : 2430}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"(charEncoding == null)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2445,\"End\" : 2546}},\"EntityType\" : \"IF_STATEMENT\",\"C\" : [{\"Value\" : \"(charEncoding == null)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2471,\"End\" : 2546}},\"EntityType\" : \"THEN_STATEMENT\",\"C\" : [{\"Value\" : \"charEncoding = ctx.getCharacterEncoding();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2490,\"End\" : 2531}},\"EntityType\" : \"ASSIGNMENT\"}]}]},{\"Value\" : \"boundary = getBoundary(contentType);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2563,\"End\" : 2598}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"(boundary == null)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2613,\"End\" : 2766}},\"EntityType\" : \"IF_STATEMENT\",\"C\" : [{\"Value\" : \"(boundary == null)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2635,\"End\" : 2766}},\"EntityType\" : \"THEN_STATEMENT\",\"C\" : [{\"Value\" : \"new FileUploadException(\\\"the request was rejected because no multipart boundary was found\\\");\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2654,\"End\" : 2751}},\"EntityType\" : \"THROW_STATEMENT\"}]}]},{\"Value\" : \"notifier = new MultipartStream.ProgressNotifier(listener, requestSize);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2783,\"End\" : 2853}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"multi = new MultipartStream(input, boundary, notifier);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2868,\"End\" : 2922}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"multi.setHeaderEncoding(charEncoding);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2937,\"End\" : 2974}},\"EntityType\" : \"METHOD_INVOCATION\"},{\"Value\" : \"skipPreamble = true;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2991,\"End\" : 3010}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"findNextItem();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 3025,\"End\" : 3039}},\"EntityType\" : \"METHOD_INVOCATION\"}]}]}",
+                "fixedBody": "{\"ast\":[ {\"Value\" : \"FileItemIteratorImpl\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 19,\"End\" : 3306}},\"EntityType\" : \"METHOD\",\"C\" : [{\"Value\" : \"(ctx == null)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 132,\"End\" : 230}},\"EntityType\" : \"IF_STATEMENT\",\"C\" : [{\"Value\" : \"(ctx == null)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 149,\"End\" : 230}},\"EntityType\" : \"THEN_STATEMENT\",\"C\" : [{\"Value\" : \"new NullPointerException(\\\"ctx parameter\\\");\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 168,\"End\" : 215}},\"EntityType\" : \"THROW_STATEMENT\"}]}]},{\"Value\" : \"String contentType = ctx.getContentType();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 247,\"End\" : 288}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"((null == contentType) || (! contentType.toLowerCase(Locale.ENGLISH).startsWith(MULTIPART)))\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 303,\"End\" : 687}},\"EntityType\" : \"IF_STATEMENT\",\"C\" : [{\"Value\" : \"((null == contentType) || (! contentType.toLowerCase(Locale.ENGLISH).startsWith(MULTIPART)))\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 419,\"End\" : 687}},\"EntityType\" : \"THEN_STATEMENT\",\"C\" : [{\"Value\" : \"new InvalidContentTypeException(format(\\\"the request doesn\\\\'t contain a %s or %s stream, content type header is %s\\\", MULTIPART_FORM_DATA, MULTIPART_FORM_DATA, contentType));\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 438,\"End\" : 672}},\"EntityType\" : \"THROW_STATEMENT\"}]}]},{\"Value\" : \"InputStream input = ctx.getInputStream();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 704,\"End\" : 744}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"final @SuppressWarnings(\\\"deprecation\\\") int contentLengthInt = ctx.getContentLength();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 852,\"End\" : 897}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"final long requestSize = (UploadContext.class.isAssignableFrom(ctx.getClass()) ? ((UploadContext) ctx).contentLength() : contentLengthInt);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 920,\"End\" : 1212}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"(sizeMax >= 0)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 1284,\"End\" : 2377}},\"EntityType\" : \"IF_STATEMENT\",\"C\" : [{\"Value\" : \"(sizeMax >= 0)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 1302,\"End\" : 2377}},\"EntityType\" : \"THEN_STATEMENT\",\"C\" : [{\"Value\" : \"((requestSize != (- 1)) && (requestSize > sizeMax))\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 1321,\"End\" : 1704}},\"EntityType\" : \"IF_STATEMENT\",\"C\" : [{\"Value\" : \"((requestSize != (- 1)) && (requestSize > sizeMax))\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 1369,\"End\" : 1704}},\"EntityType\" : \"THEN_STATEMENT\",\"C\" : [{\"Value\" : \"new SizeLimitExceededException(format(\\\"the request was rejected because its size (%s) exceeds the configured maximum (%s)\\\", Long.valueOf(requestSize), Long.valueOf(sizeMax)), requestSize, sizeMax);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 1392,\"End\" : 1685}},\"EntityType\" : \"THROW_STATEMENT\"}]}]},{\"Value\" : \"input = new LimitedInputStream(input, sizeMax) {\\n  protected @Override void raiseError(long pSizeMax, long pCount) throws IOException {\\n    FileUploadException ex = new SizeLimitExceededException(format(\\\"the request was rejected because its size (%s) exceeds the configured maximum (%s)\\\", Long.valueOf(pCount), Long.valueOf(pSizeMax)), pCount, pSizeMax);\\n    throw new FileUploadIOException(ex);\\n  }\\n};\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 1723,\"End\" : 2362}},\"EntityType\" : \"ASSIGNMENT\"}]}]},{\"Value\" : \"String charEncoding = headerEncoding;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2394,\"End\" : 2430}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"(charEncoding == null)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2445,\"End\" : 2546}},\"EntityType\" : \"IF_STATEMENT\",\"C\" : [{\"Value\" : \"(charEncoding == null)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2471,\"End\" : 2546}},\"EntityType\" : \"THEN_STATEMENT\",\"C\" : [{\"Value\" : \"charEncoding = ctx.getCharacterEncoding();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2490,\"End\" : 2531}},\"EntityType\" : \"ASSIGNMENT\"}]}]},{\"Value\" : \"boundary = getBoundary(contentType);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2563,\"End\" : 2598}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"(boundary == null)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2613,\"End\" : 2766}},\"EntityType\" : \"IF_STATEMENT\",\"C\" : [{\"Value\" : \"(boundary == null)\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2635,\"End\" : 2766}},\"EntityType\" : \"THEN_STATEMENT\",\"C\" : [{\"Value\" : \"new FileUploadException(\\\"the request was rejected because no multipart boundary was found\\\");\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2654,\"End\" : 2751}},\"EntityType\" : \"THROW_STATEMENT\"}]}]},{\"Value\" : \"notifier = new MultipartStream.ProgressNotifier(listener, requestSize);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2783,\"End\" : 2853}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2868,\"End\" : 3178}},\"EntityType\" : \"TRY_STATEMENT\",\"C\" : [{\"Value\" : \"\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2872,\"End\" : 2960}},\"EntityType\" : \"BODY\",\"C\" : [{\"Value\" : \"multi = new MultipartStream(input, boundary, notifier);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2891,\"End\" : 2945}},\"EntityType\" : \"ASSIGNMENT\"}]},{\"Value\" : \"\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2961,\"End\" : 3178}},\"EntityType\" : \"CATCH_CLAUSES\",\"C\" : [{\"Value\" : \"IllegalArgumentException\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 2962,\"End\" : 3178}},\"EntityType\" : \"CATCH_CLAUSE\",\"C\" : [{\"Value\" : \"new InvalidContentTypeException(format(\\\"The boundary specified in the %s header is too long\\\", CONTENT_TYPE), iae);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 3018,\"End\" : 3163}},\"EntityType\" : \"THROW_STATEMENT\"}]}]}]},{\"Value\" : \"multi.setHeaderEncoding(charEncoding);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 3193,\"End\" : 3230}},\"EntityType\" : \"METHOD_INVOCATION\"},{\"Value\" : \"skipPreamble = true;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 3247,\"End\" : 3266}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"findNextItem();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 3281,\"End\" : 3295}},\"EntityType\" : \"METHOD_INVOCATION\"}]}]}",
+                "bodyChange": "{\"StructureEntity\" :{ \"UniqueName\" : \"FileItemIteratorImpl\",\"EntityType\" : \"METHOD\",\"Modifiers\" : \"0\",\"changes\" :[{\"OperationType\" : \"Insert\",\"changeType\" : \"STATEMENT_INSERT\",\"InsertedEntity\" : {\"UniqueName\" : \"\",\"EntityType\" : \"TRY_STATEMENT\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"2868\",\"End\" : \"3178\"}},\"ParentEntity\" : {\"UniqueName\" : \"FileItemIteratorImpl\",\"EntityType\" : \"METHOD\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"19\",\"End\" : \"3050\"}}},{\"OperationType\" : \"Insert\",\"changeType\" : \"STATEMENT_INSERT\",\"InsertedEntity\" : {\"UniqueName\" : \"IllegalArgumentException\",\"EntityType\" : \"CATCH_CLAUSE\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"2962\",\"End\" : \"3178\"}},\"ParentEntity\" : {\"UniqueName\" : \"\",\"EntityType\" : \"CATCH_CLAUSES\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"2961\",\"End\" : \"3178\"}}},{\"OperationType\" : \"Insert\",\"changeType\" : \"STATEMENT_INSERT\",\"InsertedEntity\" : {\"UniqueName\" : \"new InvalidContentTypeException(format(\\\"The boundary specified in the %s header is too long\\\", CONTENT_TYPE), iae);\",\"EntityType\" : \"THROW_STATEMENT\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"3018\",\"End\" : \"3163\"}},\"ParentEntity\" : {\"UniqueName\" : \"IllegalArgumentException\",\"EntityType\" : \"CATCH_CLAUSE\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"2962\",\"End\" : \"3178\"}}},{\"OperationType\" : \"Move\",\"changeType\" : \"STATEMENT_PARENT_CHANGE\",\"OldParentEntity\" : {\"UniqueName\" : \"FileItemIteratorImpl\",\"EntityType\" : \"METHOD\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"19\",\"End\" : \"3050\"}},\"MovedEntity\" : {\"UniqueName\" : \"multi = new MultipartStream(input, boundary, notifier);\",\"EntityType\" : \"ASSIGNMENT\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"2868\",\"End\" : \"2922\"}},\"NewParentEntity\" : {\"UniqueName\" : \"\",\"EntityType\" : \"BODY\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"2872\",\"End\" : \"2960\"}},\"NewEntity\" : {\"UniqueName\" : \"multi = new MultipartStream(input, boundary, notifier);\",\"EntityType\" : \"ASSIGNMENT\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"2891\",\"End\" : \"2945\"}}}]}}"
+            }
+        },
+        {
+            "trace": null,
+            "traced": null,
+            "reachable": null,
+            "inArchive": true,
+            "affected": null,
+            "classInArchive": null,
+            "equalChangeType": null,
+            "overall_change": null,
+            "constructChange": {
+                "repo": "http://svn.apache.org/repos/asf/commons/proper/fileupload",
+                "commit": "1565143",
+                "repoPath": "/commons/proper/fileupload/trunk/src/main/java/org/apache/commons/fileupload/FileUploadBase.java",
+                "constructId": {
+                    "lang": "JAVA",
+                    "type": "CLAS",
+                    "qname": "org.apache.commons.fileupload.FileUploadBase$InvalidContentTypeException"
+                },
+                "committedAt": "2014-02-06T10:14:24.151+0000",
+                "constructChangeType": "MOD"
+            }
+        },
+        {
+            "trace": null,
+            "traced": null,
+            "reachable": null,
+            "inArchive": true,
+            "affected": null,
+            "classInArchive": null,
+            "equalChangeType": null,
+            "overall_change": null,
+            "constructChange": {
+                "repo": "http://svn.apache.org/repos/asf/commons/proper/fileupload",
+                "commit": "1565143",
+                "repoPath": "/commons/proper/fileupload/trunk/src/main/java/org/apache/commons/fileupload/FileUploadBase.java",
+                "constructId": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.commons.fileupload.FileUploadBase$InvalidContentTypeException()"
+                },
+                "committedAt": "2014-02-06T10:14:24.151+0000",
+                "constructChangeType": "MOD",
+                "buggyBody": "{\"ast\":[ {\"Value\" : \"InvalidContentTypeException\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 19,\"End\" : 91}},\"EntityType\" : \"METHOD\"}]}",
+                "fixedBody": "{\"ast\":[ {\"Value\" : \"InvalidContentTypeException\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 19,\"End\" : 82}},\"EntityType\" : \"METHOD\",\"C\" : [{\"Value\" : \"super();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 64,\"End\" : 71}},\"EntityType\" : \"CONSTRUCTOR_INVOCATION\"}]}]}",
+                "bodyChange": "{\"StructureEntity\" :{ \"UniqueName\" : \"InvalidContentTypeException\",\"EntityType\" : \"METHOD\",\"Modifiers\" : \"0\",\"changes\" :[{\"OperationType\" : \"Insert\",\"changeType\" : \"STATEMENT_INSERT\",\"InsertedEntity\" : {\"UniqueName\" : \"super();\",\"EntityType\" : \"CONSTRUCTOR_INVOCATION\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"64\",\"End\" : \"71\"}},\"ParentEntity\" : {\"UniqueName\" : \"InvalidContentTypeException\",\"EntityType\" : \"METHOD\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"19\",\"End\" : \"91\"}}}]}}"
+            }
+        },
+        {
+            "trace": null,
+            "traced": null,
+            "reachable": null,
+            "inArchive": false,
+            "affected": null,
+            "classInArchive": null,
+            "equalChangeType": null,
+            "overall_change": null,
+            "constructChange": {
+                "repo": "http://svn.apache.org/repos/asf/commons/proper/fileupload",
+                "commit": "1565143",
+                "repoPath": "/commons/proper/fileupload/trunk/src/main/java/org/apache/commons/fileupload/FileUploadBase.java",
+                "constructId": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.commons.fileupload.FileUploadBase$InvalidContentTypeException(String,Throwable)"
+                },
+                "committedAt": "2014-02-06T10:14:24.151+0000",
+                "constructChangeType": "ADD"
+            }
+        },
+        {
+            "trace": null,
+            "traced": null,
+            "reachable": null,
+            "inArchive": true,
+            "affected": null,
+            "classInArchive": null,
+            "equalChangeType": null,
+            "overall_change": null,
+            "constructChange": {
+                "repo": "http://svn.apache.org/repos/asf/commons/proper/fileupload",
+                "commit": "1565143",
+                "repoPath": "/commons/proper/fileupload/trunk/src/main/java/org/apache/commons/fileupload/MultipartStream.java",
+                "constructId": {
+                    "lang": "JAVA",
+                    "type": "PACK",
+                    "qname": "org.apache.commons.fileupload"
+                },
+                "committedAt": "2014-02-06T10:14:24.151+0000",
+                "constructChangeType": "MOD"
+            }
+        },
+        {
+            "trace": null,
+            "traced": null,
+            "reachable": null,
+            "inArchive": true,
+            "affected": null,
+            "classInArchive": null,
+            "equalChangeType": null,
+            "overall_change": null,
+            "constructChange": {
+                "repo": "http://svn.apache.org/repos/asf/commons/proper/fileupload",
+                "commit": "1565143",
+                "repoPath": "/commons/proper/fileupload/trunk/src/main/java/org/apache/commons/fileupload/MultipartStream.java",
+                "constructId": {
+                    "lang": "JAVA",
+                    "type": "CLAS",
+                    "qname": "org.apache.commons.fileupload.MultipartStream"
+                },
+                "committedAt": "2014-02-06T10:14:24.151+0000",
+                "constructChangeType": "MOD"
+            }
+        },
+        {
+            "trace": null,
+            "traced": null,
+            "reachable": null,
+            "inArchive": true,
+            "affected": null,
+            "classInArchive": null,
+            "equalChangeType": null,
+            "overall_change": null,
+            "constructChange": {
+                "repo": "http://svn.apache.org/repos/asf/commons/proper/fileupload",
+                "commit": "1565143",
+                "repoPath": "/commons/proper/fileupload/trunk/src/main/java/org/apache/commons/fileupload/MultipartStream.java",
+                "constructId": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.commons.fileupload.MultipartStream(InputStream,byte[],int,ProgressNotifier)"
+                },
+                "committedAt": "2014-02-06T10:14:24.151+0000",
+                "constructChangeType": "MOD",
+                "buggyBody": "{\"ast\":[ {\"Value\" : \"MultipartStream\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 19,\"End\" : 861}},\"EntityType\" : \"METHOD\",\"C\" : [{\"Value\" : \"this.input = input;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 162,\"End\" : 180}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"this.bufSize = bufSize;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 191,\"End\" : 213}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"this.buffer = new byte[bufSize];\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 224,\"End\" : 255}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"this.notifier = pNotifier;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 266,\"End\" : 291}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"this.boundary = new byte[(boundary.length + BOUNDARY_PREFIX.length)];\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 407,\"End\" : 473}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"this.boundaryLength = (boundary.length + BOUNDARY_PREFIX.length);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 484,\"End\" : 546}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"this.keepRegion = this.boundary.length;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 557,\"End\" : 595}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"System.arraycopy(BOUNDARY_PREFIX, 0, this.boundary, 0, BOUNDARY_PREFIX.length);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 606,\"End\" : 701}},\"EntityType\" : \"METHOD_INVOCATION\"},{\"Value\" : \"System.arraycopy(boundary, 0, this.boundary, BOUNDARY_PREFIX.length, boundary.length);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 712,\"End\" : 814}},\"EntityType\" : \"METHOD_INVOCATION\"},{\"Value\" : \"head = 0;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 827,\"End\" : 835}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"tail = 0;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 846,\"End\" : 854}},\"EntityType\" : \"ASSIGNMENT\"}]}]}",
+                "fixedBody": "{\"ast\":[ {\"Value\" : \"MultipartStream\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 19,\"End\" : 1040}},\"EntityType\" : \"METHOD\",\"C\" : [{\"Value\" : \"this.input = input;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 162,\"End\" : 180}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"this.bufSize = bufSize;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 191,\"End\" : 213}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"this.buffer = new byte[bufSize];\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 224,\"End\" : 255}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"this.notifier = pNotifier;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 266,\"End\" : 291}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"this.boundaryLength = (boundary.length + BOUNDARY_PREFIX.length);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 407,\"End\" : 469}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"(bufSize < (this.boundaryLength + 1))\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 480,\"End\" : 667}},\"EntityType\" : \"IF_STATEMENT\",\"C\" : [{\"Value\" : \"(bufSize < (this.boundaryLength + 1))\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 519,\"End\" : 667}},\"EntityType\" : \"THEN_STATEMENT\",\"C\" : [{\"Value\" : \"new IllegalArgumentException(\\\"The buffer size specified for the MultipartStream is too small\\\");\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 534,\"End\" : 656}},\"EntityType\" : \"THROW_STATEMENT\"}]}]},{\"Value\" : \"this.boundary = new byte[this.boundaryLength];\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 678,\"End\" : 723}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"this.keepRegion = this.boundary.length;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 734,\"End\" : 772}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"System.arraycopy(BOUNDARY_PREFIX, 0, this.boundary, 0, BOUNDARY_PREFIX.length);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 785,\"End\" : 880}},\"EntityType\" : \"METHOD_INVOCATION\"},{\"Value\" : \"System.arraycopy(boundary, 0, this.boundary, BOUNDARY_PREFIX.length, boundary.length);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 891,\"End\" : 993}},\"EntityType\" : \"METHOD_INVOCATION\"},{\"Value\" : \"head = 0;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 1006,\"End\" : 1014}},\"EntityType\" : \"ASSIGNMENT\"},{\"Value\" : \"tail = 0;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 1025,\"End\" : 1033}},\"EntityType\" : \"ASSIGNMENT\"}]}]}",
+                "bodyChange": "{\"StructureEntity\" :{ \"UniqueName\" : \"MultipartStream\",\"EntityType\" : \"METHOD\",\"Modifiers\" : \"0\",\"changes\" :[{\"OperationType\" : \"Insert\",\"changeType\" : \"STATEMENT_INSERT\",\"InsertedEntity\" : {\"UniqueName\" : \"new IllegalArgumentException(\\\"The buffer size specified for the MultipartStream is too small\\\");\",\"EntityType\" : \"THROW_STATEMENT\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"534\",\"End\" : \"656\"}},\"ParentEntity\" : {\"UniqueName\" : \"(bufSize < (this.boundaryLength + 1))\",\"EntityType\" : \"THEN_STATEMENT\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"519\",\"End\" : \"667\"}}},{\"OperationType\" : \"Insert\",\"changeType\" : \"STATEMENT_INSERT\",\"InsertedEntity\" : {\"UniqueName\" : \"(bufSize < (this.boundaryLength + 1))\",\"EntityType\" : \"IF_STATEMENT\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"480\",\"End\" : \"667\"}},\"ParentEntity\" : {\"UniqueName\" : \"MultipartStream\",\"EntityType\" : \"METHOD\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"19\",\"End\" : \"861\"}}},{\"OperationType\" : \"Update\",\"changeType\" : \"STATEMENT_UPDATE\",\"NewEntity\" : {\"UniqueName\" : \"this.boundary = new byte[this.boundaryLength];\",\"EntityType\" : \"ASSIGNMENT\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"678\",\"End\" : \"723\"}},\"UpdatedEntity\" : {\"UniqueName\" : \"this.boundary = new byte[(boundary.length + BOUNDARY_PREFIX.length)];\",\"EntityType\" : \"ASSIGNMENT\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"407\",\"End\" : \"473\"}},\"ParentEntity\" : {\"UniqueName\" : \"MultipartStream\",\"EntityType\" : \"METHOD\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"19\",\"End\" : \"861\"}}},{\"OperationType\" : \"Move\",\"changeType\" : \"STATEMENT_ORDERING_CHANGE\",\"OldParentEntity\" : {\"UniqueName\" : \"MultipartStream\",\"EntityType\" : \"METHOD\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"19\",\"End\" : \"861\"}},\"MovedEntity\" : {\"UniqueName\" : \"this.boundaryLength = (boundary.length + BOUNDARY_PREFIX.length);\",\"EntityType\" : \"ASSIGNMENT\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"484\",\"End\" : \"546\"}},\"NewParentEntity\" : {\"UniqueName\" : \"MultipartStream\",\"EntityType\" : \"METHOD\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"19\",\"End\" : \"861\"}},\"NewEntity\" : {\"UniqueName\" : \"this.boundaryLength = (boundary.length + BOUNDARY_PREFIX.length);\",\"EntityType\" : \"ASSIGNMENT\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"407\",\"End\" : \"469\"}}}]}}"
+            }
+        },
+        {
+            "trace": null,
+            "traced": null,
+            "reachable": null,
+            "inArchive": false,
+            "affected": null,
+            "classInArchive": null,
+            "equalChangeType": null,
+            "overall_change": null,
+            "constructChange": {
+                "repo": "http://svn.apache.org/repos/asf/commons/proper/fileupload",
+                "commit": "1565143",
+                "repoPath": "/commons/proper/fileupload/trunk/src/test/java/org/apache/commons/fileupload/MultipartStreamTest.java",
+                "constructId": {
+                    "lang": "JAVA",
+                    "type": "CLAS",
+                    "qname": "org.apache.commons.fileupload.MultipartStreamTest"
+                },
+                "committedAt": "2014-02-06T10:14:24.151+0000",
+                "constructChangeType": "MOD"
+            }
+        },
+        {
+            "trace": null,
+            "traced": null,
+            "reachable": null,
+            "inArchive": false,
+            "affected": null,
+            "classInArchive": null,
+            "equalChangeType": null,
+            "overall_change": null,
+            "constructChange": {
+                "repo": "http://svn.apache.org/repos/asf/commons/proper/fileupload",
+                "commit": "1565143",
+                "repoPath": "/commons/proper/fileupload/trunk/src/test/java/org/apache/commons/fileupload/MultipartStreamTest.java",
+                "constructId": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "org.apache.commons.fileupload.MultipartStreamTest.testSmallBuffer()"
+                },
+                "committedAt": "2014-02-06T10:14:24.151+0000",
+                "constructChangeType": "ADD"
+            }
+        },
+        {
+            "trace": null,
+            "traced": null,
+            "reachable": null,
+            "inArchive": false,
+            "affected": null,
+            "classInArchive": null,
+            "equalChangeType": null,
+            "overall_change": null,
+            "constructChange": {
+                "repo": "http://svn.apache.org/repos/asf/commons/proper/fileupload",
+                "commit": "1565143",
+                "repoPath": "/commons/proper/fileupload/trunk/src/test/java/org/apache/commons/fileupload/MultipartStreamTest.java",
+                "constructId": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "org.apache.commons.fileupload.MultipartStreamTest.testThreeParamConstructor()"
+                },
+                "committedAt": "2014-02-06T10:14:24.151+0000",
+                "constructChangeType": "MOD",
+                "buggyBody": "{\"ast\":[ {\"Value\" : \"testThreeParamConstructor\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 19,\"End\" : 566}},\"EntityType\" : \"METHOD\",\"C\" : [{\"Value\" : \"final String strData = \\\"foobar\\\";\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 86,\"End\" : 111}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"final byte[] contents = strData.getBytes();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 128,\"End\" : 164}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"InputStream input = new ByteArrayInputStream(contents);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 175,\"End\" : 229}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"byte[] boundary = BOUNDARY_TEXT.getBytes();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 240,\"End\" : 282}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"int iBufSize = boundary.length;\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 293,\"End\" : 323}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"MultipartStream ms = new MultipartStream(input, boundary, iBufSize, new MultipartStream.ProgressNotifier(null, contents.length));\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 334,\"End\" : 531}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"assertNotNull(ms);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 542,\"End\" : 559}},\"EntityType\" : \"METHOD_INVOCATION\"}]}]}",
+                "fixedBody": "{\"ast\":[ {\"Value\" : \"testThreeParamConstructor\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 19,\"End\" : 628}},\"EntityType\" : \"METHOD\",\"C\" : [{\"Value\" : \"final String strData = \\\"foobar\\\";\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 86,\"End\" : 111}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"final byte[] contents = strData.getBytes();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 128,\"End\" : 164}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"InputStream input = new ByteArrayInputStream(contents);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 175,\"End\" : 229}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"byte[] boundary = BOUNDARY_TEXT.getBytes();\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 240,\"End\" : 282}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"int iBufSize = ((boundary.length + MultipartStream.BOUNDARY_PREFIX.length) + 1);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 293,\"End\" : 385}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"MultipartStream ms = new MultipartStream(input, boundary, iBufSize, new MultipartStream.ProgressNotifier(null, contents.length));\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 396,\"End\" : 593}},\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\"},{\"Value\" : \"assertNotNull(ms);\",\"SourceCodeEntity\" :{ \"Modifiers\" : \"0\",\"SourceRange\" : {\"Start\" : 604,\"End\" : 621}},\"EntityType\" : \"METHOD_INVOCATION\"}]}]}",
+                "bodyChange": "{\"StructureEntity\" :{ \"UniqueName\" : \"testThreeParamConstructor\",\"EntityType\" : \"METHOD\",\"Modifiers\" : \"0\",\"changes\" :[{\"OperationType\" : \"Insert\",\"changeType\" : \"STATEMENT_INSERT\",\"InsertedEntity\" : {\"UniqueName\" : \"int iBufSize = ((boundary.length + MultipartStream.BOUNDARY_PREFIX.length) + 1);\",\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"293\",\"End\" : \"385\"}},\"ParentEntity\" : {\"UniqueName\" : \"testThreeParamConstructor\",\"EntityType\" : \"METHOD\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"19\",\"End\" : \"566\"}}},{\"OperationType\" : \"Delete\",\"changeType\" : \"STATEMENT_DELETE\",\"DeletedEntity\" : {\"UniqueName\" : \"int iBufSize = boundary.length;\",\"EntityType\" : \"VARIABLE_DECLARATION_STATEMENT\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"293\",\"End\" : \"323\"}},\"ParentEntity\" : {\"UniqueName\" : \"testThreeParamConstructor\",\"EntityType\" : \"METHOD\",\"Modifiers\" : \"0\",\"SourceCodeRange\" : {\"Start\" : \"19\",\"End\" : \"566\"}}}]}}"
+            }
+        }
+    ],
+    "affectedVersionSource": null,
+    "reachable": 0,
+    "traced": 0,
+    "bundledLibId": null,
+    "bundledLib": null,
+    "excemption": null,
+    "vulnDepOrigin": "CC",
+    "affected_version_confirmed": 1,
+    "affected_version": 1,
+    "traced_confirmed": 0,
+    "reachable_confirmed": 0
+}

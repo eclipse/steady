@@ -50,6 +50,7 @@ import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.shared.connectivity.Service;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Bug;
+import com.sap.psr.vulas.shared.json.model.BugExemption;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.json.model.VulnerableDependency;
 import com.sap.psr.vulas.shared.util.FileUtil;
