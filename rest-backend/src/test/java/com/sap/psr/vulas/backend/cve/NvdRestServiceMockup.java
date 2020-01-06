@@ -25,7 +25,7 @@ import com.xebialabs.restito.server.StubServer;
  */
 public class NvdRestServiceMockup {
 
-	private static  final String[] CVES = new String[] { "cve-2018-1000865", "CVE-2019-17531", "cve-2018-0123", "cve-2014-0050" };
+	private static  final String[] CVES = new String[] { "CVE-2018-1000865", "CVE-2019-17531", "CVE-2018-0123", "CVE-2014-0050", "CVE-2019-0047" };
 	
 	private static NvdRestServiceMockup instance = null;
 	
