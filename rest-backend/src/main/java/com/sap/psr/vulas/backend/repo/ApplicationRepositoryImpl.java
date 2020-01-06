@@ -517,8 +517,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		//further improvements could be:
 		// embedding the native query into the JPQL one to only get the bugs according to the requested flags, e.g., only affected or only historical ones.
 		this.affLibRepository.computeAffectedLib(vd_list_cc);
-		this.updateFlags(vd_list_cc, true);
-		
+		this.updateFlags(vd_list_cc, true);		
 		
 		// 2) Retrieve vuln w/ cc for bundled libids
 		TreeSet<VulnerableDependency> vd_list_bundled_cc = new TreeSet<VulnerableDependency>();
@@ -584,16 +583,12 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			}
 			//for bundled libraries we do have have traced and reachable information so we skip the query
 			//	this.updateFlags(vd_list_bundled_cc, true);
-			
 		}
 		
 		if(_log){
 			sw.lap("Found [" + vd_list_bundled_cc.size() + "] vulns w/  cc through bundled library ids");
 			sw.lap("Found [" + vd_list_bundled_av.size() + "] vulns w/o cc through bundled library ids");
 		}
-
-
-
 
 		// 4) Join over libids
 		final TreeSet<VulnerableDependency> vd_list_libid = this.appRepository.findJPQLVulnerableDependenciesByGAVAndAffVersion(_app.getMvnGroup(), _app.getArtifact(), _app.getVersion(), _app.getSpace(), true);

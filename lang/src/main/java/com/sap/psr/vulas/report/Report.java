@@ -50,13 +50,10 @@ import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.shared.connectivity.Service;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Bug;
-import com.sap.psr.vulas.shared.json.model.BugExemption;
+import com.sap.psr.vulas.shared.json.model.Exemption;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.json.model.VulnerableDependency;
 import com.sap.psr.vulas.shared.util.FileUtil;
-import com.sap.psr.vulas.shared.util.StringList;
-import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
-import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
@@ -106,13 +103,8 @@ public class Report {
 	private Map<String,Long> stats = new HashMap<String,Long>();
 
 	private String exceptionThreshold = THRESHOLD_POT_EXE;
-
-	/**
-	 * A vulnerability in blacklisted scopes will not cause an exception (multiple scopes to be separated by comma, default: test)
-	 */
-	private StringList excludedScopes = new StringList();
 	
-	private Set<BugExemption> exemptedBugs = new HashSet<BugExemption>();
+	private Set<Exemption> exemptions = new HashSet<Exemption>();
 
 	private Application app = null;
 
@@ -181,36 +173,12 @@ public class Report {
 	}
 	
 	/**
-	 * <p>Setter for the field <code>excemptedBugs</code>.</p>
+	 * <p>Setter for the field <code>excemptions</code>.</p>
 	 *
-	 * @param _exemptions a {@link Set} of {@link BugExemption}s.
+	 * @param _exemptions a {@link Set} of {@link Exemption}s.
 	 */
-	public void setExemptedBugs(Set<BugExemption> _exemptions) {
-		this.exemptedBugs = _exemptions;
-	}
-
-	/**
-	 * <p>addExcludedScopes.</p>
-	 *
-	 * @param _items a {@link java.lang.String} object.
-	 */
-	public void addExcludedScopes(String _items) {
-		if(_items!=null && !_items.equals("")) {
-			this.excludedScopes.addAll(_items, ",", true);
-			Report.log.warn("Excluded scopes: " + this.excludedScopes);
-		}
-	}
-	
-	/**
-	 * <p>addExcludedScopes.</p>
-	 *
-	 * @param _items an array of {@link java.lang.String} objects.
-	 */
-	public void addExcludedScopes(String[] _items) {
-		if(_items!=null) {
-			this.excludedScopes.addAll(_items, true);
-			Report.log.warn("Excluded scopes: " + this.excludedScopes);
-		}
+	public void setExemptions(Set<Exemption> _exemptions) {
+		this.exemptions = _exemptions;
 	}
 	
 	/**
@@ -319,7 +287,7 @@ public class Report {
 		// Collect obsolete exemptions
 		final Set<String> obsolHistorical = new HashSet<String>();
 		final Set<String> obsolSignNotPresent = new HashSet<String>();
-		for(BugExemption e: this.exemptedBugs) {
+		for(Exemption e: this.exemptions) {
 			if(this.historicalVulns.contains(e.getBugId()) && !relevantVulns.contains(e.getBugId())) {
 				obsolHistorical.add(e.getBugId());
 			}
@@ -407,8 +375,7 @@ public class Report {
 		
 		// Configuration
 		this.context.put("exceptionThreshold", this.exceptionThreshold);
-		this.context.put("exceptionScopeBlacklist", this.excludedScopes.toString(", "));
-		this.context.put("exceptionExcludedBugs", StringUtil.join(this.exemptedBugs, ", "));
+		this.context.put("exempt", StringUtil.join(this.exemptions, ", "));
 		this.context.put("isAggregated", Boolean.valueOf(this.isAggregated()));
 		this.context.put("thresholdMet", vulnsAboveThreshold.isEmpty());
 	}
@@ -438,8 +405,7 @@ public class Report {
 	public Map<String,String> getConfiguration() {
 		final Map<String,String> cfg = new HashMap<String,String>();
 		cfg.put("report.exceptionThreshold", this.exceptionThreshold);
-		cfg.put("report.exceptionScopeBlacklist", this.excludedScopes.toString(", "));
-		cfg.put("report.exceptionExcludedBugs", StringUtil.join(this.exemptedBugs, ", "));
+		cfg.put("report.exemptions", StringUtil.join(this.exemptions, ", "));
 		cfg.put("report.aggregated", Boolean.toString(this.isAggregated()));
 		return cfg;
 	}
@@ -602,8 +568,7 @@ public class Report {
 	 * @return
 	 */
 	private boolean isIgnoredForBuildException(VulnerableDependency _a, String _bugid) {
-		return (this.excludedScopes!=null && _a.getDep().getScope()!=null && this.excludedScopes.contains(_a.getDep().getScope().toString(), ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE)) ||
-				BugExemption.isExempted(this.exemptedBugs, _a) || this.ignoreUnassessed(_a);
+		return Exemption.isExempted(this.exemptions, _a)!=null || this.ignoreUnassessed(_a);
 	}
 
 	public static class AggregatedVuln implements Comparable {
