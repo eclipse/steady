@@ -104,16 +104,18 @@ public class BugExemption {
 		final Iterator<String> iter = _cfg.subset(CFG_PREFIX).getKeys();
 		while(iter.hasNext()) {
 			final String k = iter.next();
-			final int ind = k.lastIndexOf('.');
+			if(!k.equals("")) {
+				final int ind = k.lastIndexOf('.');
 
-			// Entry "vulas.report.exceptionExcludeBugs.<id> = <reason>" (kept for backward compatibility)
-			if(ind==-1) {
-				s.add(new BugExemption(k, _cfg.getString(CFG_PREFIX + "." + k)));
-			}
+				// Entry "vulas.report.exceptionExcludeBugs.<id> = <reason>" (kept for backward compatibility)
+				if(ind==-1) {
+					s.add(new BugExemption(k, _cfg.getString(CFG_PREFIX + "." + k)));
+				}
 
-			// Entry "vulas.report.exceptionExcludeBugs.<id>.<digest> = <reason>"
-			else {
-				s.add(new BugExemption(k.substring(0, ind), k.substring(ind+1), _cfg.getString(k)));
+				// Entry "vulas.report.exceptionExcludeBugs.<id>.<digest> = <reason>"
+				else {
+					s.add(new BugExemption(k.substring(0, ind), k.substring(ind+1), _cfg.getString(k)));
+				}
 			}
 		}
 		return s;

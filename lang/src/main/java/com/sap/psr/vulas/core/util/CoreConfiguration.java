@@ -118,8 +118,6 @@ public class CoreConfiguration {
 	public final static String REP_EXC_SCOPE_BL  = "vulas.report.exceptionScopeBlacklist";
 	/** Constant <code>REP_EXCL_UNASS="vulas.report.exceptionExcludeUnassessed"</code> */
 	public final static String REP_EXCL_UNASS    = "vulas.report.exceptionExcludeUnassessed";
-	/** Constant <code>REP_EXCL_BUGS="vulas.report.exceptionExcludeBugs"</code> */
-	public final static String REP_EXCL_BUGS     = "vulas.report.exceptionExcludeBugs";
 	/** Constant <code>REP_DIR="vulas.report.reportDir"</code> */
 	public final static String REP_DIR           = "vulas.report.reportDir";
 	/** Constant <code>REP_OVERRIDE_VER="vulas.report.overridePomVersion"</code> */

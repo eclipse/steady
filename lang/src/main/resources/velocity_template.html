@@ -433,16 +433,19 @@
 
 						<details>
 							<br />
-							<summary>exceptionScopeBlacklist: $exceptionScopeBlacklist</summary>
-							List of scopes that will be ignored when deciding whether to throw a build exception<br /><br />Possible values: compile, provided, runtime, test, system<br />Default: [TEST, PROVIDED]
+							<summary>Exempted scopes: $exceptionScopeBlacklist</summary>
+							List of scopes that will be ignored when deciding whether to throw a build exception.
+							<br /><br />Example: vulas.report.vulas.report.exceptionScopeBlacklist = test, provided
+							<br />Possible values: compile, provided, runtime, test, system
+							<br />Default: [test, provided]
 						</details>
 						<br />
 
 						<details>
 							<br />
-							<summary>exceptionExcludedBugs: $exceptionExcludedBugs</summary>
-							List of security vulnerabilities that will be ignored (exempted) when deciding whether to throw a build exception
-							<br /><br />Example: CVE-2014-0050
+							<summary>Exempted bugs: $exceptionExcludedBugs</summary>
+							List of security vulnerabilities that will be ignored (exempted) when deciding whether to throw a build exception.
+							<br /><br />Example: vulas.report.exceptionExcludeBugs.CVE-2014-0050.* = Lorem ipsum
 							<br />Default: none
 							#if( $obsoleteExemptionsHistorical || $obsoleteExemptionsSignatureNotPresent )
 							<br /><br />Obsolete exemptions (historical vulnerabilities): $obsoleteExemptionsHistorical

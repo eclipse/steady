@@ -54,6 +54,7 @@ import com.sap.psr.vulas.goals.GoalExecutionException;
 import com.sap.psr.vulas.shared.connectivity.PathBuilder;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.Application;
+import com.sap.psr.vulas.shared.json.model.BugExemption;
 import com.sap.psr.vulas.shared.util.FileUtil;
 
 
@@ -113,6 +114,10 @@ public class ReportTest extends AbstractGoalTest {
 			this.configureBackendServiceUrl(server);
 			this.setupMockServices(this.testApp);
 
+			// Exemptions
+			vulasConfiguration.setProperty("vulas.report.exceptionExcludeBugs.CVE-2014-0050.6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10", "Lorem ipsum");
+			vulasConfiguration.setProperty("vulas.report.exceptionExcludeBugs.CVE-2019-1234.*", "Foo bar");
+			
 			final Configuration cfg = vulasConfiguration.getConfiguration();
 
 			final GoalContext goal_context = new GoalContext();
@@ -127,7 +132,7 @@ public class ReportTest extends AbstractGoalTest {
 			report.setExceptionThreshold(cfg.getString(CoreConfiguration.REP_EXC_THRESHOLD, Report.THRESHOLD_ACT_EXE));
 
 			// Excluded bugs
-			report.addExcludedBugs(cfg.getStringArray(CoreConfiguration.REP_EXCL_BUGS));
+			report.setExemptedBugs(BugExemption.readFromConfiguration(cfg));
 
 			// Excluded scopes
 			report.addExcludedScopes(cfg.getStringArray(CoreConfiguration.REP_EXC_SCOPE_BL));
@@ -148,9 +153,9 @@ public class ReportTest extends AbstractGoalTest {
 			report.writeResult(report_dir);
 			
 			// Check that files exist
-			assertTrue(FileUtil.isAccessibleFile("./target/vulas/report/" + Report.REPORT_FILE_HTML));
-			assertTrue(FileUtil.isAccessibleFile("./target/vulas/report/" + Report.REPORT_FILE_XML));
-			assertTrue(FileUtil.isAccessibleFile("./target/vulas/report/" + Report.REPORT_FILE_JSON));
+			assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_HTML)));
+			assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_XML)));
+			assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_JSON)));
 			
 			// Validate Html
 			Tidy tidy = new Tidy();
