@@ -20,6 +20,7 @@
 package com.sap.psr.vulas.goals;
 
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
@@ -29,6 +30,8 @@ import com.sap.psr.vulas.report.Report;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Exemption;
+import com.sap.psr.vulas.shared.json.model.ExemptionUnassessed;
+import com.sap.psr.vulas.shared.json.model.IExemption;
 import com.sap.psr.vulas.shared.util.FileUtil;
 
 /**
@@ -36,14 +39,14 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  *
  */
 public class ReportGoal extends AbstractAppGoal {
-	
+
 	private Set<Application> modules = null;
 
 	/**
 	 * <p>Constructor for ReportGoal.</p>
 	 */
 	public ReportGoal() { super(GoalType.REPORT); }
-			
+
 	/**
 	 * <p>setApplicationModules.</p>
 	 *
@@ -68,18 +71,20 @@ public class ReportGoal extends AbstractAppGoal {
 	@Override
 	protected void executeTasks() throws Exception {
 		final Configuration cfg = this.getConfiguration().getConfiguration();
-		
+
 		final Report report = new Report(this.getGoalContext(), this.getApplicationContext(), this.modules);
 
-		// Set all kinds of exceptions
+		// Exception threshold
 		report.setExceptionThreshold(cfg.getString(CoreConfiguration.REP_EXC_THRESHOLD, Report.THRESHOLD_ACT_EXE));
 
-		// Excluded bugs
-		report.setExemptions(Exemption.readFromConfiguration(cfg));
-		
-		// Exclude non-assessed vuln deps
-		report.setIgnoreUnassessed(cfg.getString(CoreConfiguration.REP_EXCL_UNASS, Report.IGN_UNASS_KNOWN));
-		
+		// Exemptions
+		final Set<IExemption> exempts = new HashSet<IExemption>();
+		IExemption exempt = ExemptionUnassessed.readFromConfiguration(cfg);
+		if(exempt!=null)
+			exempts.add(exempt);
+		exempts.addAll(Exemption.readFromConfiguration(cfg));
+		report.setExemptions(exempts);
+
 		// Fetch the vulns
 		try {
 			report.fetchAppVulnerabilities();

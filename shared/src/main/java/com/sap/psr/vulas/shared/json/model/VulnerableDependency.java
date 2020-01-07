@@ -351,21 +351,13 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 */
 	public boolean isNotTraced() { return !isTraced() && isTracedConfirmed(); }
 
-	private Boolean is_blacklisted;
+	private IExemption exemption = null;
 	
-	/**
-	 * <p>setBlacklisted.</p>
-	 *
-	 * @param _b a boolean.
-	 */
-	public void setBlacklisted(boolean _b) { this.is_blacklisted = Boolean.valueOf(_b); }
+	public IExemption getExemption() { return this.exemption; }
 	
-	/**
-	 * <p>isBlacklisted.</p>
-	 *
-	 * @return a {@link java.lang.Boolean} object.
-	 */
-	public Boolean isBlacklisted() { return is_blacklisted; }
+	public void setExemption(IExemption _e) { this.exemption = _e; }
+	
+	public Boolean isExempted() { return this.exemption!=null; }
 
 	/**
 	 * <p>isNoneAffectedVersion.</p>
@@ -395,14 +387,14 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 *
 	 * @return a {@link java.lang.Boolean} object.
 	 */
-	public Boolean isThrowsException() { return this.isAboveThreshold() && !this.isBlacklisted(); }
+	public Boolean isThrowsException() { return this.isAboveThreshold() && !this.isExempted(); }
 	
 	/**
 	 * <p>isThrowsExceptionExcluded.</p>
 	 *
 	 * @return a {@link java.lang.Boolean} object.
 	 */
-	public Boolean isThrowsExceptionExcluded() { return this.isAboveThreshold() && this.isBlacklisted(); }
+	public Boolean isThrowsExceptionExcluded() { return this.isAboveThreshold() && this.isExempted(); }
 
 	public Application app = null;
 	

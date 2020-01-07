@@ -39,12 +39,12 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  * 
  * The elements bugId, digest and scope can also be a star (*) to indicate that all bugs, libraries or scopes are exempted.
  */
-public class Exemption {
+public class Exemption implements IExemption {
 	
 	private static final Log log = LogFactory.getLog(Exemption.class);
 	
 	private static final String ALL = "*";
-
+	
 	/** Deprecated configuration prefix. **/
 	public static final String CFG_PREFIX_EXEMPTED_BUGS = "vulas.report.exceptionExcludeBugs";
 	
@@ -85,48 +85,30 @@ public class Exemption {
 
 	public String getScope() { return scope; }
 
+	@Override
 	public String getReason() { return reason; }
 
-	/**
-	 * Returns true if the given {@link VulnerableDependency} is exempted, false otherwise.
-	 * 
-	 * @param _vd
-	 * @return
-	 */
+	@Override
 	public boolean isExempted(VulnerableDependency _vd) {
 		final boolean is_exempted =
+				// Bug ID
 				(ALL.equals(this.bugId)  || this.bugId.equalsIgnoreCase(_vd.getBug().getBugId()))  &&
+				// Digest
 				(ALL.equals(this.digest) || this.digest.equals(_vd.getDep().getLib().getDigest())) &&
+				// Scope
 				(ALL.equals(this.scope)  || this.scope.equalsIgnoreCase(_vd.getDep().getScope().toString())); 
 		return is_exempted;
 	}
 
 	/**
-	 * Loops over the given exemptions to find one that exempts the given {@link VulnerableDependency}.
-	 * If such an exemption is found, it is returned. Otherwise, the method return null.
-	 * 
-	 * @param _s
-	 * @param _vd
-	 * @return
-	 */
-	public static Exemption isExempted(Set<Exemption> _s, VulnerableDependency _vd) {
-		if(_s!=null) {
-			for(Exemption e: _s) {
-				if(e.isExempted(_vd))
-					return e;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Reads all {@link Configuration} settings starting with 'vulas.report.exceptionExcludeBugs' in order to create {@link Exemption}s.
+	 * Reads all {@link Configuration} settings starting with {@link Exemption#CFG_PREFIX} in order to create {@link Exemption}s.
+	 * Also considers the deprecated settings {@link Exemption#CFG_PREFIX_EXEMPTED_BUGS} and {@link Exemption#CFG_PREFIX_EXEMPTED_SCOPES} for backward compatibility. 
 	 * 
 	 * @param _cfg
 	 * @return
 	 */
-	public static Set<Exemption> readFromConfiguration(Configuration _cfg) {
-		final Set<Exemption> s = new HashSet<Exemption>();
+	public static Set<IExemption> readFromConfiguration(Configuration _cfg) {
+		final Set<IExemption> s = new HashSet<IExemption>();
 		
 		// New format
 		Iterator<String> iter = _cfg.subset(CFG_PREFIX).getKeys();

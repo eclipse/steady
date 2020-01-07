@@ -39,6 +39,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
 import org.glassfish.grizzly.http.Method;
@@ -55,6 +57,8 @@ import com.sap.psr.vulas.shared.connectivity.PathBuilder;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Exemption;
+import com.sap.psr.vulas.shared.json.model.ExemptionUnassessed;
+import com.sap.psr.vulas.shared.json.model.IExemption;
 import com.sap.psr.vulas.shared.util.FileUtil;
 
 
@@ -131,11 +135,13 @@ public class ReportTest extends AbstractGoalTest {
 			// Set all kinds of exceptions
 			report.setExceptionThreshold(cfg.getString(CoreConfiguration.REP_EXC_THRESHOLD, Report.THRESHOLD_ACT_EXE));
 
-			// Excluded bugs
-			report.setExemptions(Exemption.readFromConfiguration(cfg));
-
-			// Exclude non-assessed vuln deps
-			report.setIgnoreUnassessed(cfg.getString(CoreConfiguration.REP_EXCL_UNASS, Report.IGN_UNASS_KNOWN));
+			// Exemptions
+			final Set<IExemption> exempts = new HashSet<IExemption>();
+			IExemption exempt = ExemptionUnassessed.readFromConfiguration(cfg);
+			if(exempt!=null)
+				exempts.add(exempt);
+			exempts.addAll(Exemption.readFromConfiguration(cfg));
+			report.setExemptions(exempts);
 
 			// Fetch the vulns
 			report.fetchAppVulnerabilities();

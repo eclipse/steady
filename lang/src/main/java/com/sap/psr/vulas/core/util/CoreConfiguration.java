@@ -114,9 +114,7 @@ public class CoreConfiguration {
 	public final static String REP_AGGR_MODULES  = "vulas.report.aggregateModules";
 	/** Constant <code>REP_EXC_THRESHOLD="vulas.report.exceptionThreshold"</code> */
 	public final static String REP_EXC_THRESHOLD = "vulas.report.exceptionThreshold";
-	/** Constant <code>REP_EXCL_UNASS="vulas.report.exceptionExcludeUnassessed"</code> */
-	public final static String REP_EXCL_UNASS    = "vulas.report.exceptionExcludeUnassessed";
-	/** Constant <code>REP_DIR="vulas.report.reportDir"</code> */
+		/** Constant <code>REP_DIR="vulas.report.reportDir"</code> */
 	public final static String REP_DIR           = "vulas.report.reportDir";
 	/** Constant <code>REP_OVERRIDE_VER="vulas.report.overridePomVersion"</code> */
 	public final static String REP_OVERRIDE_VER  = "vulas.report.overridePomVersion";
