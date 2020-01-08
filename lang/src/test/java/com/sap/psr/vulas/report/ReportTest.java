@@ -39,8 +39,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
 import org.glassfish.grizzly.http.Method;
@@ -56,9 +54,10 @@ import com.sap.psr.vulas.goals.GoalExecutionException;
 import com.sap.psr.vulas.shared.connectivity.PathBuilder;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.Application;
-import com.sap.psr.vulas.shared.json.model.Exemption;
+import com.sap.psr.vulas.shared.json.model.ExemptionBug;
+import com.sap.psr.vulas.shared.json.model.ExemptionScope;
+import com.sap.psr.vulas.shared.json.model.ExemptionSet;
 import com.sap.psr.vulas.shared.json.model.ExemptionUnassessed;
-import com.sap.psr.vulas.shared.json.model.IExemption;
 import com.sap.psr.vulas.shared.util.FileUtil;
 
 
@@ -119,8 +118,11 @@ public class ReportTest extends AbstractGoalTest {
 			this.setupMockServices(this.testApp);
 
 			// Exemptions
-			vulasConfiguration.setProperty("vulas.report.exempt.CVE-2014-0050.6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10.*", "Lorem ipsum");
-			vulasConfiguration.setProperty("vulas.report.exempt.CVE-2019-1234.*.*", "Foo bar");
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10", "The vulnerable library with digest 6F1EBC is no problem because ...");
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2013-2186.*", "Vulnerability CVE-2013-2186 is no problem because ...");
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2019-1234.*", "Vulnerability CVE-2019-1234 is no problem because ...");
+			vulasConfiguration.setProperty(ExemptionScope.CFG, "teST, provIDED");
+			vulasConfiguration.setProperty(ExemptionUnassessed.CFG, "knOWN");
 			
 			final Configuration cfg = vulasConfiguration.getConfiguration();
 
@@ -136,12 +138,7 @@ public class ReportTest extends AbstractGoalTest {
 			report.setExceptionThreshold(cfg.getString(CoreConfiguration.REP_EXC_THRESHOLD, Report.THRESHOLD_ACT_EXE));
 
 			// Exemptions
-			final Set<IExemption> exempts = new HashSet<IExemption>();
-			IExemption exempt = ExemptionUnassessed.readFromConfiguration(cfg);
-			if(exempt!=null)
-				exempts.add(exempt);
-			exempts.addAll(Exemption.readFromConfiguration(cfg));
-			report.setExemptions(exempts);
+			report.setExemptions(ExemptionSet.createFromConfiguration(cfg));
 
 			// Fetch the vulns
 			report.fetchAppVulnerabilities();

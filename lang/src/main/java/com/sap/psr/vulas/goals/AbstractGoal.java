@@ -543,10 +543,10 @@ public abstract class AbstractGoal implements Runnable {
 		// Goal configuration
 		b.append(",\"configuration\":[");
 		int c = 0;
-		final Iterator<String> iter = this.getConfiguration().getConfiguration().subset("vulas").getKeys();
+		final Iterator<String> iter = this.getConfiguration().getConfiguration().getKeys("vulas");
 		while(iter.hasNext()) {
 			final String key = iter.next();
-			final String[] value = this.getConfiguration().getConfiguration().getStringArray("vulas." + key);
+			final String[] value = this.getConfiguration().getConfiguration().getStringArray(key);
 			if(c++>0) b.append(",");
 			b.append("{\"source\":\"GOAL_CONFIG\",\"name\":").append(JsonBuilder.escape(key)).append(",\"value\":").append(JsonBuilder.escape(StringUtil.join(value, ","))).append("}");
 		}

@@ -20,9 +20,8 @@
 package com.sap.psr.vulas.shared.json.model;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.logging.Log;
@@ -34,25 +33,22 @@ import com.sap.psr.vulas.shared.util.StringUtil;
 /**
  * Exemptions are used to prevent that {@link VulnerableDependency}s result in build exceptions during the execution of the report goal.
  * 
- * Exemptions can be created for bug identifiers, libraries (by specifying their digests) and dependency scopes using the following
- * format: vulas.report.exempt.&lt;bugId&gt;.&lt;digest&gt;.&lt;scope&gt; = &lt;reason&gt;
+ * Exemptions can be created for bug identifiers and libraries (by specifying their digests) using the following
+ * format: vulas.report.exempt.&lt;bugId&gt;.&lt;digest&gt; = &lt;reason&gt;
  * 
- * The elements bugId, digest and scope can also be a star (*) to indicate that all bugs, libraries or scopes are exempted.
+ * The wildcard * can be used to indicate that all bugs for a given digest are exempted (or vice-versa).
  */
-public class Exemption implements IExemption {
+public class ExemptionBug implements IExemption {
 	
-	private static final Log log = LogFactory.getLog(Exemption.class);
+	private static final Log log = LogFactory.getLog(ExemptionBug.class);
 	
 	private static final String ALL = "*";
 	
 	/** Deprecated configuration prefix. **/
-	public static final String CFG_PREFIX_EXEMPTED_BUGS = "vulas.report.exceptionExcludeBugs";
-	
-	/** Deprecated configuration prefix. **/
-	public static final String CFG_PREFIX_EXEMPTED_SCOPES = "vulas.report.exceptionScopeBlacklist";
-	
+	public static final String DEPRECATED_CFG_PREFIX = "vulas.report.exceptionExcludeBugs";
+		
 	/** New configuration prefix. **/
-	private static final String CFG_PREFIX = "vulas.report.exempt";
+	public static final String CFG_PREFIX = "vulas.report.exemptBug";
 	
 	/** The identifier of a bug, or star (*), which means that the exemption applies to all bugs. */ 
 	private String bugId = null;
@@ -60,9 +56,6 @@ public class Exemption implements IExemption {
 	/** The digest of a library or star (*), which means that the exemption applies to all libraries. */
 	private String digest = null;
 
-	/** The scope of a dependency or star (*), which means that the exemption applies to all scopes. */
-	private String scope = null;
-	
 	private String reason = null;
 
 	/**
@@ -72,18 +65,15 @@ public class Exemption implements IExemption {
 	 * @param _digest
 	 * @param _reason
 	 */
-	public Exemption(String _bug_id, String _digest, String _scope, String _reason) {
+	public ExemptionBug(String _bug_id, String _digest, String _reason) {
 		this.bugId  = (_bug_id==null ? ALL : _bug_id);
 		this.digest = (_digest==null ? ALL : _digest);
-		this.scope  = ( _scope==null ? ALL : _scope);
 		this.reason = _reason;
 	}
 
 	public String getBugId() { return bugId; }
 
 	public String getDigest() { return digest; }	
-
-	public String getScope() { return scope; }
 
 	@Override
 	public String getReason() { return reason; }
@@ -94,21 +84,19 @@ public class Exemption implements IExemption {
 				// Bug ID
 				(ALL.equals(this.bugId)  || this.bugId.equalsIgnoreCase(_vd.getBug().getBugId()))  &&
 				// Digest
-				(ALL.equals(this.digest) || this.digest.equals(_vd.getDep().getLib().getDigest())) &&
-				// Scope
-				(ALL.equals(this.scope)  || this.scope.equalsIgnoreCase(_vd.getDep().getScope().toString())); 
+				(ALL.equals(this.digest) || this.digest.equals(_vd.getDep().getLib().getDigest())); 
 		return is_exempted;
 	}
 
 	/**
-	 * Reads all {@link Configuration} settings starting with {@link Exemption#CFG_PREFIX} in order to create {@link Exemption}s.
-	 * Also considers the deprecated settings {@link Exemption#CFG_PREFIX_EXEMPTED_BUGS} and {@link Exemption#CFG_PREFIX_EXEMPTED_SCOPES} for backward compatibility. 
+	 * Reads all {@link Configuration} settings starting with {@link ExemptionBug#CFG_PREFIX} in order to create {@link ExemptionBug}s.
+	 * Also considers the deprecated settings {@link ExemptionBug#DEPRECATED_CFG_PREFIX} and {@link ExemptionBug#CFG_PREFIX_EXEMPTED_SCOPES} for backward compatibility. 
 	 * 
 	 * @param _cfg
 	 * @return
 	 */
-	public static Set<IExemption> readFromConfiguration(Configuration _cfg) {
-		final Set<IExemption> s = new HashSet<IExemption>();
+	public static ExemptionSet readFromConfiguration(Configuration _cfg) {
+		final ExemptionSet exempts = new ExemptionSet();
 		
 		// New format
 		Iterator<String> iter = _cfg.subset(CFG_PREFIX).getKeys();
@@ -117,40 +105,71 @@ public class Exemption implements IExemption {
 			if(!k.equals("")) {
 				final String[] key_elements = k.split("\\.");
 				final int l = key_elements.length; 
-				if(l<3) {
-					log.error("Exemption with key [" + CFG_PREFIX + "." + k + "] has less than 3 elements");
+				if(l<2) {
+					log.error("Exemption with key [" + CFG_PREFIX + "." + k + "] has less than 2 elements");
 				}
 				else {
-					s.add(new Exemption(StringUtil.join(Arrays.copyOfRange(key_elements, 0, l-2), "."), key_elements[l-2], key_elements[l-1], _cfg.getString(CFG_PREFIX + "." + k)));
+					exempts.add(new ExemptionBug(StringUtil.join(Arrays.copyOfRange(key_elements, 0, l-1), "."), key_elements[l-1], _cfg.getString(CFG_PREFIX + "." + k)));
 				}
 			}
 		}
 		
-		// Deprecated format #1
-		final String[] bugs = _cfg.getStringArray(CFG_PREFIX_EXEMPTED_BUGS);
+		// Deprecated format
+		final String[] bugs = _cfg.getStringArray(DEPRECATED_CFG_PREFIX);
 		if(bugs!=null && bugs.length>0) {
-			log.warn("Exemption with key [" + CFG_PREFIX_EXEMPTED_BUGS + "] is deprecated, switch to new format");
+			log.warn("Exemption with key [" + DEPRECATED_CFG_PREFIX + "] is deprecated, switch to new format");
 			for(String b: bugs) {
-				final String reason = _cfg.getString(CFG_PREFIX_EXEMPTED_BUGS + "." + b, null);
-				s.add(new Exemption(b, null, null, (reason==null ? "No reason provided" : reason)));
+				final String reason = _cfg.getString(DEPRECATED_CFG_PREFIX + "." + b, null);
+				exempts.add(new ExemptionBug(b, null, (reason==null ? "No reason provided" : reason)));
 			}
 		}
 		
-		// Deprecated format #2
-		final String[] scopes = _cfg.getStringArray(CFG_PREFIX_EXEMPTED_SCOPES);
-		if(scopes!=null && scopes.length>0) {
-			log.warn("Exemption with key [" + CFG_PREFIX_EXEMPTED_SCOPES + "] is deprecated, switch to new format");
-			for(String sc: scopes) {
-				s.add(new Exemption(null, null, sc, "Scope [" + sc + "] is exempted"));
+		return exempts;
+	}
+	
+	/**
+	 * Reads all {@link Configuration} settings starting with {@link ExemptionBug#CFG_PREFIX} in order to create {@link ExemptionBug}s.
+	 * Also considers the deprecated settings {@link ExemptionBug#DEPRECATED_CFG_PREFIX} and {@link ExemptionBug#CFG_PREFIX_EXEMPTED_SCOPES} for backward compatibility. 
+	 * 
+	 * @param _map
+	 * @return
+	 */
+	public static ExemptionSet readFromConfiguration(Map<String, String> _map) {
+		final ExemptionSet exempts = new ExemptionSet();
+		
+		// New format
+		for(String k: _map.keySet()) {
+			if(k.startsWith((CFG_PREFIX) + ".")) {
+				final String[] key_elements = k.substring(CFG_PREFIX.length() + 1).split("\\.");
+				final int l = key_elements.length; 
+				if(l<2) {
+					log.error("Exemption with key [" + k + "] has less than 2 elements");
+				}
+				else {
+					exempts.add(new ExemptionBug(StringUtil.join(Arrays.copyOfRange(key_elements, 0, l-1), "."), key_elements[l-1], _map.get(k)));
+				}
 			}
 		}
 		
-		return s;
+		// Deprecated format
+		if(_map.containsKey(DEPRECATED_CFG_PREFIX)) {
+			final String[] bugs = _map.get(DEPRECATED_CFG_PREFIX).split(",");
+			if(bugs!=null && bugs.length>0) {
+				log.warn("Exemption with key [" + DEPRECATED_CFG_PREFIX + "] is deprecated, switch to new format");
+				for(String b: bugs) {
+					b = b.trim();
+					final String reason = _map.get(DEPRECATED_CFG_PREFIX + "." + b);
+					exempts.add(new ExemptionBug(b, null, (reason==null ? "No reason provided" : reason)));
+				}
+			}
+		}
+		
+		return exempts;
 	}
 
 	@Override
 	public String toString() {
-		return this.bugId + "." + this.digest + "." + this.scope;
+		return "Exemption [" + this.bugId + "." + this.digest + "]";
 	}
 
 	@Override
@@ -160,7 +179,6 @@ public class Exemption implements IExemption {
 		result = prime * result + ((bugId == null) ? 0 : bugId.hashCode());
 		result = prime * result + ((digest == null) ? 0 : digest.hashCode());
 		result = prime * result + ((reason == null) ? 0 : reason.hashCode());
-		result = prime * result + ((scope == null) ? 0 : scope.hashCode());
 		return result;
 	}
 
@@ -172,7 +190,7 @@ public class Exemption implements IExemption {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Exemption other = (Exemption) obj;
+		ExemptionBug other = (ExemptionBug) obj;
 		if (bugId == null) {
 			if (other.bugId != null)
 				return false;
@@ -187,11 +205,6 @@ public class Exemption implements IExemption {
 			if (other.reason != null)
 				return false;
 		} else if (!reason.equals(other.reason))
-			return false;
-		if (scope == null) {
-			if (other.scope != null)
-				return false;
-		} else if (!scope.equals(other.scope))
 			return false;
 		return true;
 	}

@@ -61,10 +61,10 @@
 											<Button text="Reset table" press="resetVulnTable" tooltip="Reset table groups and filters" />
 										</m:MatrixLayoutCell>
 										<m:MatrixLayoutCell>
-											<CheckBox id="includeHistorical" text="Include historical vulnerabilities" selected="false" select="loadVulns"/>
+											<CheckBox id="includeHistorical" text="Show historical vulnerabilities" selected="false" select="loadVulns"/>
 										</m:MatrixLayoutCell>
 										<m:MatrixLayoutCell>
-											<CheckBox id="includeUnconfirmed" text="Include unconfirmed vulnerabilities (hourglass)" selected="true" select="loadVulns"/>
+											<CheckBox id="includeUnconfirmed" text="Show exempted vulnerabilities" selected="false" select="loadVulns"/>
 										</m:MatrixLayoutCell>
 										<m:MatrixLayoutCell>
 											<CheckBox id="toggleAdvancedResults" text="Toggle advanced analysis" selected="false" select="toggleAdvancedResults"/>
@@ -97,12 +97,12 @@
 												<Image xmlns="sap.m" decorative="true" id="vulnExcempted"
 													width="30px"
 													src="{
- 		 												parts: ['excemption'],
- 		 												formatter: 'model.Formatter.excemptedSrc'
+ 		 												parts: ['exemption'],
+ 		 												formatter: 'model.Formatter.exemptedSrc'
  		 												}"
  		 											tooltip="{
- 		 												parts: ['excemption', 'dep/scope'],
- 		 												formatter: 'model.Formatter.excemptedTooltip'
+ 		 												parts: ['exemption'],
+ 		 												formatter: 'model.Formatter.exemptedTooltip'
  		 												}">
 												</Image>
 											</template>

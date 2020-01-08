@@ -20,7 +20,6 @@
 package com.sap.psr.vulas.goals;
 
 import java.nio.file.Path;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
@@ -29,9 +28,7 @@ import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.report.Report;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.model.Application;
-import com.sap.psr.vulas.shared.json.model.Exemption;
-import com.sap.psr.vulas.shared.json.model.ExemptionUnassessed;
-import com.sap.psr.vulas.shared.json.model.IExemption;
+import com.sap.psr.vulas.shared.json.model.ExemptionSet;
 import com.sap.psr.vulas.shared.util.FileUtil;
 
 /**
@@ -78,12 +75,7 @@ public class ReportGoal extends AbstractAppGoal {
 		report.setExceptionThreshold(cfg.getString(CoreConfiguration.REP_EXC_THRESHOLD, Report.THRESHOLD_ACT_EXE));
 
 		// Exemptions
-		final Set<IExemption> exempts = new HashSet<IExemption>();
-		IExemption exempt = ExemptionUnassessed.readFromConfiguration(cfg);
-		if(exempt!=null)
-			exempts.add(exempt);
-		exempts.addAll(Exemption.readFromConfiguration(cfg));
-		report.setExemptions(exempts);
+		report.setExemptions(ExemptionSet.createFromConfiguration(cfg));
 
 		// Fetch the vulns
 		try {

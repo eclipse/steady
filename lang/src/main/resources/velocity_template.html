@@ -400,9 +400,9 @@
 							<br />
 							<summary>
 							#if($thresholdMet)
-								No critical findings (considering the below-mentioned configuration), thus, no build exception is thrown
+								No vulnerabilities, thus, no build exception is thrown
 							#else
-								$vulnsAboveThreshold.size() critical findings (considering the below-mentioned configuration), thus, a build exception is thrown
+								$vulnsAboveThreshold.size() vulnerabilities, thus, a build exception is thrown
 							#end
 							</summary>
 							The findings presented below represent archives containing code that is subject to a specific vulnerability.
@@ -435,7 +435,7 @@
 							<br />
 							<summary>Exempted scopes: $exceptionScopeBlacklist</summary>
 							List of scopes that will be ignored when deciding whether to throw a build exception.
-							<br /><br />Example: vulas.report.vulas.report.exceptionScopeBlacklist = test, provided
+							<br /><br />Example: vulas.report.exemptScopes = test, provided
 							<br />Possible values: compile, provided, runtime, test, system
 							<br />Default: [test, provided]
 						</details>
@@ -464,7 +464,7 @@
 						<div class="vulnerabilities">
 							<details>
 								<summary>
-									<h2 style="display: inline-block;">Critical Vulnerabilities ($vulnsAboveThreshold.size())</h2>
+									<h2 style="display: inline-block;">Vulnerabilities ($vulnsAboveThreshold.size())</h2>
 								</summary>
 								#foreach( $vul in $vulnsAboveThreshold )
 								<div class="vulnerability"
@@ -730,7 +730,7 @@
 															<div class="tooltip">
 																<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 																#if($exceptionThreshold=='dependsOn' && $analysis.isThrowsException()) style="color: #e94f37; font-weight: bold;"
-																#elseif($exceptionThreshold=='dependsOn' && $analysis.isThrowsExceptionExcluded()) style="color: #a5b452; font-weight: bold;"
+																#elseif($exceptionThreshold=='dependsOn' && $analysis.isThrowsExceptionExcluded()) style="color: #e94f37; font-weight: bold;"
 																#else style="color: #393e41; font-weight: bold"
 																#end target="_blank">
 																	$analysis.getApp().getArtifact()
@@ -755,7 +755,8 @@
 																	<strong>Scope: </strong>$analysis.getDep().getScope()<br />
 																	<strong>Transitive dependency: </strong>$analysis.getDep().getTransitive()
 																	#if( $exceptionThreshold=='dependsOn' && $analysis.isThrowsExceptionExcluded() )
-																	<br /><strong>Note: </strong>Above configuration settings suppressed a build exception for this finding
+																	<br />
+																	<br /><strong>Exemption reason: </strong>$analysis.getExemption().getReason()
 																	#end
 																</div>
 															</div>
@@ -771,7 +772,7 @@
 															<div class="tooltip">
 															<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 															#if( $exceptionThreshold=='potentiallyExecutes' && $analysis.isThrowsException()) style="color: #e94f37; font-weight: bold;"
-															#elseif($exceptionThreshold=='potentiallyExecutes' && $analysis.isThrowsExceptionExcluded()) style="color: #a5b452; font-weight: bold;"
+															#elseif($exceptionThreshold=='potentiallyExecutes' && $analysis.isThrowsExceptionExcluded()) style="color: #e94f37; font-weight: bold;"
 															#else style="color: #393e41; font-weight: bold"
 															#end target="_blank">
 																$analysis.getApp().getArtifact()
@@ -813,7 +814,7 @@
 															<div class="tooltip">
 																<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 																#if( $exceptionThreshold=='actuallyExecutes' && $analysis.isThrowsException()) style="color: #e94f37; font-weight: bold;"
-																#elseif($exceptionThreshold=='actuallyExecutes' && $analysis.isThrowsExceptionExcluded()) style="color: #a5b452; font-weight: bold;"
+																#elseif($exceptionThreshold=='actuallyExecutes' && $analysis.isThrowsExceptionExcluded()) style="color: #e94f37; font-weight: bold;"
 																#else style="color: #393e41; font-weight: bold"
 																#end target="_blank">
 																	$analysis.getApp().getArtifact()

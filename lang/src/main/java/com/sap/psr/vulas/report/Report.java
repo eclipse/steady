@@ -50,7 +50,8 @@ import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.shared.connectivity.Service;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Bug;
-import com.sap.psr.vulas.shared.json.model.Exemption;
+import com.sap.psr.vulas.shared.json.model.ExemptionBug;
+import com.sap.psr.vulas.shared.json.model.ExemptionSet;
 import com.sap.psr.vulas.shared.json.model.IExemption;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.json.model.VulnerableDependency;
@@ -90,7 +91,7 @@ public class Report {
 
 	private String exceptionThreshold = THRESHOLD_POT_EXE;
 
-	private Set<IExemption> exemptions = new HashSet<IExemption>();
+	private ExemptionSet exemptions = new ExemptionSet();
 
 	private Application app = null;
 
@@ -161,9 +162,9 @@ public class Report {
 	/**
 	 * <p>Setter for the field <code>excemptions</code>.</p>
 	 *
-	 * @param _exemptions a {@link Set} of {@link Exemption}s.
+	 * @param _exemptions a {@link Set} of {@link ExemptionBug}s.
 	 */
-	public void setExemptions(Set<IExemption> _exemptions) {
+	public void setExemptions(ExemptionSet _exemptions) {
 		this.exemptions = _exemptions;
 	}
 
@@ -244,12 +245,12 @@ public class Report {
 		final Set<String> obsolHistorical = new HashSet<String>();
 		final Set<String> obsolSignNotPresent = new HashSet<String>();
 		for(IExemption e: this.exemptions) {
-			if(e instanceof Exemption) {
-				if(this.historicalVulns.contains(((Exemption)e).getBugId()) && !relevantVulns.contains(((Exemption)e).getBugId())) {
-					obsolHistorical.add(((Exemption)e).getBugId());
+			if(e instanceof ExemptionBug) {
+				if(this.historicalVulns.contains(((ExemptionBug)e).getBugId()) && !relevantVulns.contains(((ExemptionBug)e).getBugId())) {
+					obsolHistorical.add(((ExemptionBug)e).getBugId());
 				}
-				else if(!this.historicalVulns.contains(((Exemption)e).getBugId()) && !relevantVulns.contains(((Exemption)e).getBugId())) {
-					obsolSignNotPresent.add(((Exemption)e).getBugId());
+				else if(!this.historicalVulns.contains(((ExemptionBug)e).getBugId()) && !relevantVulns.contains(((ExemptionBug)e).getBugId())) {
+					obsolSignNotPresent.add(((ExemptionBug)e).getBugId());
 				}
 			}
 		}
@@ -263,7 +264,8 @@ public class Report {
 			for(VulnerableDependency analysis: v.getAnalyses()) {
 
 				// Is the vulnerability exempted?
-				analysis.setExemption(this.getApplicableExemption(analysis));				
+				// Note: The vuln dependency downloaded may have an exemption already. If any, it will be overriden using the current configuration of the report goal
+				analysis.setExemption(this.exemptions.getApplicableExemption(analysis));				
 
 				// Only report if there is a confirmed problem or a manual check/activity is required (orange hourglass)
 				// In other words: ignore historical vulnerabilities, i.e., cases where a non-vulnerable archive is used
@@ -333,29 +335,12 @@ public class Report {
 
 		// Configuration
 		this.context.put("exceptionThreshold", this.exceptionThreshold);
+		this.context.put("exemptScopes", this.exceptionThreshold);
 		this.context.put("exempt", StringUtil.join(this.exemptions, ", "));
 		this.context.put("isAggregated", Boolean.valueOf(this.isAggregated()));
 		this.context.put("thresholdMet", vulnsAboveThreshold.isEmpty());
 	}
 	
-	/**
-	 * Loops over the given exemptions to find one that exempts the given {@link VulnerableDependency}.
-	 * If such an exemption is found, it is returned. Otherwise, the method return null.
-	 * 
-	 * @param _s
-	 * @param _vd
-	 * @return
-	 */
-	public IExemption getApplicableExemption(VulnerableDependency _vd) {
-		if(this.exemptions!=null) {
-			for(IExemption e: this.exemptions) {
-				if(e.isExempted(_vd))
-					return e;
-			}
-		}
-		return null;
-	}
-
 	/**
 	 * Returns true if there are any application modules, false otherwise.
 	 * @return

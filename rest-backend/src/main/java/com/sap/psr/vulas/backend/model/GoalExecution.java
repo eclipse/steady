@@ -55,7 +55,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.sap.psr.vulas.backend.model.view.Views;
 import com.sap.psr.vulas.shared.enums.GoalType;
-import com.sap.psr.vulas.shared.enums.PropertySource;
 
 /**
  * <p>GoalExecution class.</p>
@@ -326,13 +325,14 @@ public class GoalExecution implements Serializable {
 	 * @return a {@link java.util.Collection} object.
 	 */
 	public Collection<Property> getConfiguration() { return configuration; }
+	
 	/**
 	 * <p>Setter for the field <code>configuration</code>.</p>
 	 *
 	 * @param configuration a {@link java.util.Collection} object.
 	 */
 	public void setConfiguration(Collection<Property> configuration) { this.configuration = configuration; }
-
+	
 	/**
 	 * Returns the value of the configuration property with the given name (or null, if no such property exists).
 	 *
@@ -350,11 +350,27 @@ public class GoalExecution implements Serializable {
 	}
 	
 	/**
+	 * Returns all configuration properties.
+	 *
+	 * @return a {@link java.util.HashMap} object.
+	 */
+	@JsonIgnore
+	public Map<String,String> getConfigurationMap() {
+		if(this.configurationMap==null) {
+			this.configurationMap = new HashMap<String, String>();
+			for(Property p: this.getConfiguration())
+				this.configurationMap.put(p.getName(), p.getPropertyValue());
+		}
+		return this.configurationMap;
+	}
+	
+	/**
 	 * <p>Getter for the field <code>systemInfo</code>.</p>
 	 *
 	 * @return a {@link java.util.Collection} object.
 	 */
 	public Collection<Property> getSystemInfo() { return systemInfo; }
+	
 	/**
 	 * <p>Setter for the field <code>systemInfo</code>.</p>
 	 *

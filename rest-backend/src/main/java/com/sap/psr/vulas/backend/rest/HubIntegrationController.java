@@ -55,7 +55,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.sap.psr.vulas.backend.model.Application;
-import com.sap.psr.vulas.backend.model.Excemption;
 import com.sap.psr.vulas.backend.model.GoalExecution;
 import com.sap.psr.vulas.backend.model.Space;
 import com.sap.psr.vulas.backend.model.Tenant;
@@ -67,6 +66,7 @@ import com.sap.psr.vulas.backend.repo.SpaceRepository;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
 import com.sap.psr.vulas.shared.enums.ExportConfiguration;
 import com.sap.psr.vulas.shared.enums.Scope;
+import com.sap.psr.vulas.shared.json.model.IExemption;
 import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
@@ -571,19 +571,19 @@ public class HubIntegrationController {
 			// Scope excluded: State to 1 (False Positive: Secure by design)
 			// Bug excluded: State to 4 (False Positive: Sufficient mitigation in place)
 			// Else: State to 2 (True Positive)
-			final Excemption exc = _vd.getExcemption();
-			if(exc!=null && exc.isExcludedBug()) {
+			final IExemption exc = _vd.getExemption();
+			if(exc!=null) {
 				this.status = STATUS_AUDITED;
+				this.exemptionReason = exc.getReason();
+				
+				// ExemptionBug
 				this.state = FP_MITIGATED;
-				this.exemptionReason = exc.getExcludedBugReason();
+				// ExemptionScope
+				//this.state = FP_SECURE_DESIGN;
 			}
-			else if(exc!=null && exc.isExcludedScope()) {
-				this.status = STATUS_AUDITED;
-				this.state = FP_SECURE_DESIGN;
-				this.exemptionReason = "Scope " + this.scope + " excluded";
-			}
-			else
+			else {
 				this.state = TP;
+			}
 		}
 
 		public int getCount() { return count; }

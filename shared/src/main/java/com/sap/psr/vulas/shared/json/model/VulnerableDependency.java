@@ -33,7 +33,12 @@ import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VulnerableDependency  implements Serializable, Comparable {
+public class VulnerableDependency  implements Serializable, Comparable<VulnerableDependency> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private Dependency dep;
 
@@ -55,6 +60,8 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	int reachableConfirmed;
 
 	int traced;
+	
+	IExemption exemption = null;
 
 	/**
 	 * <p>Constructor for VulnerableDependency.</p>
@@ -334,6 +341,27 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 */
 	@JsonProperty(value = "traced_confirmed")
 	public int getTracedConfirmed() { return this.dep.getTraced()!=null && this.dep.getTraced() ? 1 : 0; }
+	
+	/**
+	 * <p>Getter for the field <code>exemption</code>.</p>
+	 *
+	 * @return a {@link Exemption} object.
+	 */
+	public IExemption getExemption() { return this.exemption; }
+	
+	/**
+	 * <p>Setter for the field <code>exemption</code>.</p>
+	 *
+	 * @param _e a {@link Exemption} object.
+	 */
+	public void setExemption(IExemption _e) { this.exemption = _e; }
+	
+	/**
+	 * Returns true if the an exemption has been set before, false otherwise.
+	 * 
+	 * @return
+	 */
+	public Boolean isExempted() { return this.exemption!=null; }
 
 	// =================== Added on top of the original class from vulas-backend
 
@@ -350,14 +378,6 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 * @return a boolean.
 	 */
 	public boolean isNotTraced() { return !isTraced() && isTracedConfirmed(); }
-
-	private IExemption exemption = null;
-	
-	public IExemption getExemption() { return this.exemption; }
-	
-	public void setExemption(IExemption _e) { this.exemption = _e; }
-	
-	public Boolean isExempted() { return this.exemption!=null; }
 
 	/**
 	 * <p>isNoneAffectedVersion.</p>
@@ -442,7 +462,7 @@ public class VulnerableDependency  implements Serializable, Comparable {
 
 	/** {@inheritDoc} */
 	@Override
-	public int compareTo(Object _o) {
+	public int compareTo(VulnerableDependency _o) {
 		VulnerableDependency other = null;
 		if(_o instanceof VulnerableDependency)
 			other = (VulnerableDependency)_o;
