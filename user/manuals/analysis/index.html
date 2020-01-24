@@ -10,10 +10,10 @@
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
-        <meta name="description" content="vulnerability-assessment-tool Documentation">
+        <meta name="description" content="Eclipse Steady Documentation">
       
       
-        <link rel="canonical" href="https://sap.github.io/vulnerability-assessment-tool/user/manuals/analysis/">
+        <link rel="canonical" href="https://eclipse.github.io/steady/user/manuals/analysis/">
       
       
       
@@ -40,7 +40,7 @@
     
     
       
-        <title>Analysis - vulnerability-assessment-tool 3.1.6</title>
+        <title>Analysis - Eclipse Steady (Incubator Project) 3.1.6</title>
       
     
     
@@ -124,7 +124,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -138,7 +138,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.1.6
+                Eclipse Steady (Incubator Project) 3.1.6
               </span>
               <span class="md-header-nav__topic">
                 Analysis
@@ -186,7 +186,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -195,7 +195,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -310,12 +310,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.1.6
+    Eclipse Steady (Incubator Project) 3.1.6
   </label>
   
     <div class="md-nav__source">
@@ -325,7 +325,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -334,7 +334,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -1323,7 +1323,7 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/sap/vulnerability-assessment-tool/edit/master/docs/user/manuals/analysis.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/eclipse/steady/edit/master/docs/user/manuals/analysis.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
                 <h1 id="analysis-manual">Analysis Manual<a class="headerlink" href="#analysis-manual" title="Permanent link">&para;</a></h1>
@@ -1366,17 +1366,17 @@
 <ul>
 <li>A workspace has been created and its token is known</li>
 <li>Java 7 or later is installed</li>
-<li>Maven: The vulnerability-assessment-tool Maven plugin must be available in the local <code>.m2</code> repository or in a Nexus repository configured in <code>settings.xml</code> (see <a href="https://maven.apache.org/guides/mini/guide-mirror-settings.html">here</a> for more information on how to configure Maven)</li>
+<li>Maven: The Eclipse Steady Maven plugin must be available in the local <code>.m2</code> repository or in a Nexus repository configured in <code>settings.xml</code> (see <a href="https://maven.apache.org/guides/mini/guide-mirror-settings.html">here</a> for more information on how to configure Maven)</li>
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Java 9 support</p>
-<p>The reachability analysis (goals <code>a2c</code> and <code>t2c</code>) is not supported with Java 9, due to limitations of the  3<sup>rd</sup>-party analysis frameworks that vulnerability-assessment-tool relies upon.</p>
+<p>The reachability analysis (goals <code>a2c</code> and <code>t2c</code>) is not supported with Java 9, due to limitations of the  3<sup>rd</sup>-party analysis frameworks that Eclipse Steady relies upon.</p>
 </div>
 <h2 id="bill-of-material-analysis-app">Bill of material analysis (app)<a class="headerlink" href="#bill-of-material-analysis-app" title="Permanent link">&para;</a></h2>
 <h4>Objective</h4>
 <p>Create a complete bill of material (BOM) of the application and of all its dependencies (direct and transitive). Most importantly, the BOM comprises the signatures of all methods of the application and all dependencies, which is compared with a list of methods known to be vulnerable. Moreover, the BOM also comprises meta-info on archive level, e.g., the manifest file entries or the archive's digest (SHA1 in case of Java archives, MD5 in case of Python).</p>
 <h4>Result</h4>
-<p>In the vulnerability-assessment-tool frontend, the table in tab "Dependencies" is populated. In case any of the dependencies has vulnerabilities, they are shown in tab "Vulnerabilities". The column "Inclusion of vulnerable code" indicates whether the version in use is known to be vulnerable or not (see tooltip for more information).</p>
+<p>In the Eclipse Steady frontend, the table in tab "Dependencies" is populated. In case any of the dependencies has vulnerabilities, they are shown in tab "Vulnerabilities". The column "Inclusion of vulnerable code" indicates whether the version in use is known to be vulnerable or not (see tooltip for more information).</p>
 <h4>Important</h4>
 <p>By default, the Maven plugin searches for application source and compiled code in the folders <code>src/main/java</code> and <code>target/classes</code>. If source or byte code is generated or modified during the build process, and stored in other folders than the ones mentioned, you need to add those directories using the parameter <code>vulas.core.app.sourceDir</code>. Otherwise, the respective code will not be recognized as application code, hence, ignored when performing the reachability analysis. Example: Suppose source code is generated into the folder <code>target/generated-sources</code>. If this code is compiled into the folder <code>target/classes</code>, you do not need to do anything. If it is compiled into a different folder, you would need to add this folder to entries of <code>vulas.core.app.sourceDir</code>.</p>
 <h4>Run as follows</h4>
@@ -1402,7 +1402,7 @@
 <span class="c1"># Whether or not empty apps (w/o constructs and dependencies) are uploaded to the backend</span>
 <span class="na">vulas.core.app.uploadEmpty</span> <span class="o">=</span> <span class="s">false</span>
 
-<span class="c1"># When true, JAR not known to vulnerability-assessment-tool Maven central and not already available to the backend are posted to the backend</span>
+<span class="c1"># When true, JAR not known to Eclipse Steady Maven central and not already available to the backend are posted to the backend</span>
 <span class="na">vulas.core.app.uploadLibrary</span> <span class="o">=</span> <span class="s">false</span>
 
 <span class="c1"># Number of worker threads analyzing the JAR files from which classes are loaded</span>
@@ -1435,9 +1435,9 @@
 <li>Java 9 and later versions are not supported by the underlying frameworks</li>
 </ul>
 <h4>Result</h4>
-<p>In the vulnerability-assessment-tool frontend, tab "Vulnerabilities", the column "Static Analysis" is populated for all libraries subject to known vulnerabilities. By selecting single row of this table and the one of the detailed page, one can get more information up until the paths of potential executions (if any).</p>
+<p>In the Eclipse Steady frontend, tab "Vulnerabilities", the column "Static Analysis" is populated for all libraries subject to known vulnerabilities. By selecting single row of this table and the one of the detailed page, one can get more information up until the paths of potential executions (if any).</p>
 <h4>How does it work</h4>
-<p>vulnerability-assessment-tool uses <a href="http://wala.sourceforge.net/wiki/index.php/Main_Page">Wala</a> or <a href="https://sable.github.io/soot/">Soot</a>, both static analysis frameworks for Java, in order to construct a call graph representing all possible program executions starting from application methods. This graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.</p>
+<p>Eclipse Steady uses <a href="http://wala.sourceforge.net/wiki/index.php/Main_Page">Wala</a> or <a href="https://sable.github.io/soot/">Soot</a>, both static analysis frameworks for Java, in order to construct a call graph representing all possible program executions starting from application methods. This graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.</p>
 <h4>Run as follows</h4>
 <div class="superfences-tabs">
 <input name="__tabs_2" type="radio" id="__tab_2_0" checked="checked" />
@@ -1519,7 +1519,7 @@ mvn -Dvulas compile vulas:a2c
 </pre></div>
 
 <h5>Soot</h5>
-<p>The subset of Soot configuration options that can be set through vulnerability-assessment-tool are as follows. For all other Soot settings, the respective defaults are taken. See <a href="https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm">here</a> for a complete documentation of Soot configuration options.</p>
+<p>The subset of Soot configuration options that can be set through Eclipse Steady are as follows. For all other Soot settings, the respective defaults are taken. See <a href="https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm">here</a> for a complete documentation of Soot configuration options.</p>
 <div class="codehilite"><pre><span></span><span class="c1"># Packages that are excluded when building callgraph</span>
 <span class="c1"># Soot option: -exclude ...</span>
 <span class="c1"># https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm#section_5</span>
@@ -1576,11 +1576,11 @@ mvn -Dvulas compile vulas:a2c
 </ul>
 <h4>Result</h4>
 <ul>
-<li>In the vulnerability-assessment-tool frontend, tab "Vulnerabilities", the column "Dynamic Analysis" is populated for all libraries subject to known vulnerabilities. By selecting single row of this table and the one of the detailed page, one can get more information up until the paths of actual executions (if any).</li>
-<li>In the vulnerability-assessment-tool frontend, tab "Test coverage", the number of traced vs. the number of total methods is shown per Java package of the application.</li>
+<li>In the Eclipse Steady frontend, tab "Vulnerabilities", the column "Dynamic Analysis" is populated for all libraries subject to known vulnerabilities. By selecting single row of this table and the one of the detailed page, one can get more information up until the paths of actual executions (if any).</li>
+<li>In the Eclipse Steady frontend, tab "Test coverage", the number of traced vs. the number of total methods is shown per Java package of the application.</li>
 </ul>
 <h4>How does it work</h4>
-<p>vulnerability-assessment-tool collects runtime information during application execution, most importantly whether a vulnerable method has been called and the corresponding call stack. In order to collect this information, the byte code of the application and all its dependencies has to be changed, which can be achieved either dynamically or statically: In case of <em>dynamic instrumentation</em>, the byte code of a given Java class is changed at the time the class definition is loaded for the first time, e.g., during the execution of JUnit tests or integration tests. vulnerability-assessment-tool injects statements in order to save the timestamp of every method invocation as well as stack trace information. Per default, this information is saved in folder <code>target/vulas/upload</code> and uploaded using the goal <code>vulas:upload</code>. To that end, vulnerability-assessment-tool must be registered using the JVM option <code>-javaagent</code>. In case of JUnit tests, the agent is registered by the Maven goal <code>prepare-vulas-agent</code>. In case of <em>static instrumentation</em>, the byte code of classes residing in the file system is changed, e.g., the WAR file of a deployable Web application. This is done with help of the goal <code>vulas:instr</code> (see below).</p>
+<p>Eclipse Steady collects runtime information during application execution, most importantly whether a vulnerable method has been called and the corresponding call stack. In order to collect this information, the byte code of the application and all its dependencies has to be changed, which can be achieved either dynamically or statically: In case of <em>dynamic instrumentation</em>, the byte code of a given Java class is changed at the time the class definition is loaded for the first time, e.g., during the execution of JUnit tests or integration tests. Eclipse Steady injects statements in order to save the timestamp of every method invocation as well as stack trace information. Per default, this information is saved in folder <code>target/vulas/upload</code> and uploaded using the goal <code>vulas:upload</code>. To that end, Eclipse Steady must be registered using the JVM option <code>-javaagent</code>. In case of JUnit tests, the agent is registered by the Maven goal <code>prepare-vulas-agent</code>. In case of <em>static instrumentation</em>, the byte code of classes residing in the file system is changed, e.g., the WAR file of a deployable Web application. This is done with help of the goal <code>vulas:instr</code> (see below).</p>
 <h4>Run as follows</h4>
 <div class="superfences-tabs">
 <input name="__tabs_3" type="radio" id="__tab_3_0" checked="checked" />
@@ -1614,7 +1614,7 @@ mvn -Dvulas compile vulas:a2c
 
 <span class="c1"># Constructs of dependencies having one of the following scope(s) will not be instrumented (multiple ones to be separated by comma)</span>
 <span class="c1"># Default: test, provided</span>
-<span class="c1"># Note: Only applies to vulnerability-assessment-tool Maven plugin; in case of vulnerability-assessment-tool CLI, all dependencies have scope RUNTIME</span>
+<span class="c1"># Note: Only applies to Eclipse Steady Maven plugin; in case of Eclipse Steady CLI, all dependencies have scope RUNTIME</span>
 <span class="na">vulas.core.instr.blacklist.jars.ignoreScopes</span> <span class="o">=</span> <span class="s">test, provided</span>
 
 <span class="c1"># User-provided blacklist: Constructs of dependencies whose filename matches one of the following regular expressions will not be instrumented (multiple ones to be separated by comma)</span>
@@ -1630,7 +1630,7 @@ mvn -Dvulas compile vulas:a2c
 <span class="c1"># If true, bytecode and instrumentation code will be written to tmpDir</span>
 <span class="na">vulas.core.instr.writeCode</span> <span class="o">=</span> <span class="s">false</span>
 
-<span class="c1"># JARs for which no traces and no archive information will be uploaded (e.g., from vulnerability-assessment-tool itself)</span>
+<span class="c1"># JARs for which no traces and no archive information will be uploaded (e.g., from Eclipse Steady itself)</span>
 <span class="c1"># Multiple entries are separated by comma, each entry is a regex</span>
 <span class="na">vulas.core.monitor.blacklist.jars</span> <span class="o">=</span> <span class="s">lang-java-.*\.jar,vulas-core-.*\.jar,surefire-.*\.jar,junit-.*\.jar,org.jacoco.agent.*\.jar</span>
 
@@ -1662,7 +1662,7 @@ mvn -Dvulas compile vulas:a2c
 <h4>Result</h4>
 <p>Same as in previous section</p>
 <h4>How does it work</h4>
-<p>By registering a Java agent at JVM startup, vulnerability-assessment-tool changes the bytecode of every Java class loaded at runtime. For example, it injects Java statements in order to save the timestamp of every method invocation as well as stack trace information. This information is periodically uploaded to the vulnerability-assessment-tool backend.</p>
+<p>By registering a Java agent at JVM startup, Eclipse Steady changes the bytecode of every Java class loaded at runtime. For example, it injects Java statements in order to save the timestamp of every method invocation as well as stack trace information. This information is periodically uploaded to the Eclipse Steady backend.</p>
 <h4>Run as follows</h4>
 <ul>
 <li>Download the file <code>lang-java-3.1.6-jar-with-dependencies.jar</code> to your computer (CLI users can take it from the folder <code>./instr</code>).</li>
@@ -1727,7 +1727,7 @@ mvn -Dvulas vulas:instr
 <li>Java 9 and later versions are not supported by the underlying frameworks</li>
 </ul>
 <h4>Result</h4>
-<p>In the vulnerability-assessment-tool frontend, tab "Vulnerabilities", the column "Static Analysis" is populated for all libraries subject to known vulnerabilities. By selecting single row of this table and the one of the detailed page, one can get more information up until the paths of potential executions (if any).</p>
+<p>In the Eclipse Steady frontend, tab "Vulnerabilities", the column "Static Analysis" is populated for all libraries subject to known vulnerabilities. By selecting single row of this table and the one of the detailed page, one can get more information up until the paths of potential executions (if any).</p>
 <h4>How does it work</h4>
 <p>In contrast to the goal <code>a2c</code>, the callgraph is built starting from all methods that were previously traced. As such, the call graph construction overcomes weaknesses of static source analysis related to the use of reflection and control inversion. What remains the same is that the resulting graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.</p>
 <h4>Run as follows</h4>
@@ -1807,7 +1807,7 @@ mvn -Dvulas vulas:instr
 </div>
 <h2 id="create-result-report-report">Create result report (report)<a class="headerlink" href="#create-result-report-report" title="Permanent link">&para;</a></h2>
 <h4>Objective</h4>
-<p>Creates result reports in HTML, XML and JSON format (on the basis of analysis results downloaded from the vulnerability-assessment-tool backend). Additionally, the Maven and Gradle plugins can be configured to throw a build exception in order break Jenkins jobs and pipelines in case vulnerable code is present (or reachable/executed). The HTML report can be copied into a Jenkins dashboard using the <a href="http://wiki.jenkins-ci.org/display/JENKINS/HTML+Publisher+Plugin">HTML Publisher Plugin</a> (see <a href="../../tutorials/jenkins_howto/">automation</a> for a configuration example).</p>
+<p>Creates result reports in HTML, XML and JSON format (on the basis of analysis results downloaded from the Eclipse Steady backend). Additionally, the Maven and Gradle plugins can be configured to throw a build exception in order break Jenkins jobs and pipelines in case vulnerable code is present (or reachable/executed). The HTML report can be copied into a Jenkins dashboard using the <a href="http://wiki.jenkins-ci.org/display/JENKINS/HTML+Publisher+Plugin">HTML Publisher Plugin</a> (see <a href="../../tutorials/jenkins_howto/">automation</a> for a configuration example).</p>
 <h4>Multi-module Maven projects</h4>
 <p>The report goal should be called in a separate build step, e.g., <code>mvn -Dvulas vulas:report</code>. It must NOT be called together with other goals, e.g., <code>mvn -Dvulas compile vulas:app vulas:report</code>, because the build may fail before <code>app</code> and other goals are executed for all the modules. Alternatively, you can use the Maven option <code>--fail-at-end</code> (see <a href="https://maven.apache.org/guides/mini/guide-multiple-modules.html">here</a> for more info).</p>
 <h4>Result</h4>
@@ -2018,7 +2018,7 @@ mvn -Dvulas vulas:instr
   <div class="md-footer-social">
     <link rel="stylesheet" href="../../../assets/fonts/font-awesome.css">
     
-      <a href="https://github.com/sap/vulnerability-assessment-tool" class="md-footer-social__link fa fa-github"></a>
+      <a href="https://github.com/eclipse/steady" class="md-footer-social__link fa fa-github"></a>
     
   </div>
 

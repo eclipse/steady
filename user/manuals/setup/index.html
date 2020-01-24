@@ -10,10 +10,10 @@
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
-        <meta name="description" content="vulnerability-assessment-tool Documentation">
+        <meta name="description" content="Eclipse Steady Documentation">
       
       
-        <link rel="canonical" href="https://sap.github.io/vulnerability-assessment-tool/user/manuals/setup/">
+        <link rel="canonical" href="https://eclipse.github.io/steady/user/manuals/setup/">
       
       
       
@@ -40,7 +40,7 @@
     
     
       
-        <title>Configuration - vulnerability-assessment-tool 3.1.6</title>
+        <title>Configuration - Eclipse Steady (Incubator Project) 3.1.6</title>
       
     
     
@@ -124,7 +124,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -138,7 +138,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.1.6
+                Eclipse Steady (Incubator Project) 3.1.6
               </span>
               <span class="md-header-nav__topic">
                 Configuration
@@ -186,7 +186,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -195,7 +195,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -310,12 +310,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.1.6
+    Eclipse Steady (Incubator Project) 3.1.6
   </label>
   
     <div class="md-nav__source">
@@ -325,7 +325,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -334,7 +334,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -1401,15 +1401,15 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/sap/vulnerability-assessment-tool/edit/master/docs/user/manuals/setup.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/eclipse/steady/edit/master/docs/user/manuals/setup.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
                 <h1 id="setup-and-configuration-manual">Setup and Configuration Manual<a class="headerlink" href="#setup-and-configuration-manual" title="Permanent link">&para;</a></h1>
 <h2 id="workspace">Workspace<a class="headerlink" href="#workspace" title="Permanent link">&para;</a></h2>
-<p>A workspace acts as a container to group the results of several application analyses. In that context, please note that each module of a multi-module Maven project appears as a separate application in the vulnerability-assessment-tool Web frontend.</p>
-<p>Before using workspaces, you need to create one using the vulnerability-assessment-tool Web frontend (see below); you will obtain a token that you will need to pass as a configuration parameter when performing scans.</p>
+<p>A workspace acts as a container to group the results of several application analyses. In that context, please note that each module of a multi-module Maven project appears as a separate application in the Eclipse Steady Web frontend.</p>
+<p>Before using workspaces, you need to create one using the Eclipse Steady Web frontend (see below); you will obtain a token that you will need to pass as a configuration parameter when performing scans.</p>
 <h3 id="create-workspaces-once">Create workspace(s) (once)<a class="headerlink" href="#create-workspaces-once" title="Permanent link">&para;</a></h3>
-<p>You need to create a workspace once using the vulnerability-assessment-tool Web frontend. Use the "create workspace" icon in the lower-left corner toolbar of the apps Web frontend to do so.</p>
+<p>You need to create a workspace once using the Eclipse Steady Web frontend. Use the "create workspace" icon in the lower-left corner toolbar of the apps Web frontend to do so.</p>
 <p><center>
 <img alt="Setup workspace button" src="../../tutorials/img/frontend_toolbar_create_workspace.png" />
 </center></p>
@@ -1432,7 +1432,7 @@
 </ul>
 <p>Once the fields have been filled, press the "Save" button. The system then returns with a pop-up containing the random <strong>token</strong> generated upon workspace creation. Do not forget to note down this token, it will be needed later on for each scan of your application(s).</p>
 <h3 id="use-the-generated-token-during-application-analysis">Use the generated token (during application analysis)<a class="headerlink" href="#use-the-generated-token-during-application-analysis" title="Permanent link">&para;</a></h3>
-<p>The workspace token generated at previous step has to be used as value for the configuration setting <code>vulas.core.space.token</code>. This information is mandatory during the scans as it allows the user's data to be uploaded to the correct place/workspace in the vulnerability-assessment-tool backend. See <a href="#configuration">here</a> for more information regarding the configuration of vulnerability-assessment-tool clients.</p>
+<p>The workspace token generated at previous step has to be used as value for the configuration setting <code>vulas.core.space.token</code>. This information is mandatory during the scans as it allows the user's data to be uploaded to the correct place/workspace in the Eclipse Steady backend. See <a href="#configuration">here</a> for more information regarding the configuration of Eclipse Steady clients.</p>
 <h3 id="choose-a-workspace-in-the-apps-web-frontend">Choose a workspace (in the apps Web frontend)<a class="headerlink" href="#choose-a-workspace-in-the-apps-web-frontend" title="Permanent link">&para;</a></h3>
 <p>Use the configuration icon in the lower-left corner in order to select a workspace.</p>
 <p><center><img alt="Setup workspace button" src="../../tutorials/img/frontend_toolbar_choose_workspace.png" /></center></p>
@@ -1471,7 +1471,7 @@ For single applications, call HTTP GET <code>http://localhost:8033/backend/hubIn
 </tr>
 <tr>
 <td>type</td>
-<td>Identifier of vulnerability in vulnerability-assessment-tool knowledge base</td>
+<td>Identifier of vulnerability in Eclipse Steady knowledge base</td>
 <td></td>
 </tr>
 <tr>
@@ -1516,7 +1516,7 @@ For single applications, call HTTP GET <code>http://localhost:8033/backend/hubIn
 <p>The plugin for Maven can be used with or without adding a <code>&lt;profile&gt;</code> section to the <code>pom.xml</code>.</p>
 <ul>
 <li>
-<p><strong>With profile</strong>, the execution of goals is more concise (readable), e.g., <code>mvn -Dvulas compile vulas:app</code>. A sample profile can be found <a href="../../tutorials/java_maven/#setup">here</a>, just copy&amp;paste it into the <code>&lt;profiles&gt;</code> section of your <code>pom.xml</code>. In case of aggregated, multi-module Maven projects with modules inheriting from their parent, it is sufficient to include the profile in the top-level (parent) <code>pom.xml</code>. If a module does not inherit from the parent, the profile has to be added to its POM file. Once added, run <code>mvn -Dvulas versions:display-property-updates</code> every now and then to check whether there are new plugin versions available. If so, manually update the property <code>vulas.version</code> in the vulnerability-assessment-tool profile.</p>
+<p><strong>With profile</strong>, the execution of goals is more concise (readable), e.g., <code>mvn -Dvulas compile vulas:app</code>. A sample profile can be found <a href="../../tutorials/java_maven/#setup">here</a>, just copy&amp;paste it into the <code>&lt;profiles&gt;</code> section of your <code>pom.xml</code>. In case of aggregated, multi-module Maven projects with modules inheriting from their parent, it is sufficient to include the profile in the top-level (parent) <code>pom.xml</code>. If a module does not inherit from the parent, the profile has to be added to its POM file. Once added, run <code>mvn -Dvulas versions:display-property-updates</code> every now and then to check whether there are new plugin versions available. If so, manually update the property <code>vulas.version</code> in the Eclipse Steady profile.</p>
 </li>
 <li>
 <p><strong>Without profile</strong>, the execution of goals requires the use of the plugin's fully qualified name, e.g., <code>mvn compile com.sap.research.security.vulas:plugin-maven:3.1.6:app</code>. Moreover, you need to specify the following mandatory configuration settings. As described <a href="#configuration">here</a>, there are several ways of doing so, however, a file as follows is very common:</p>
@@ -1586,7 +1586,7 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 <p>The Gradle plugin only works with later releases of Gradle. How to upgrade is described <a href="https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:upgrading_wrapper">here</a>.</p>
 <h3 id="command-line-interface">Command-line interface<a class="headerlink" href="#command-line-interface" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Create a new folder, download the latest ZIP archive <code>vulas-cli-3.1.6.zip</code> from <a href="https://github.com/SAP/vulnerability-assessment-tool/releases">Releases</a> and extract it into the newly created folder. This folder will then contain the following items:</li>
+<li>Create a new folder, download the latest ZIP archive <code>vulas-cli-3.1.6.zip</code> from <a href="https://github.com/eclipse/steady/releases">Releases</a> and extract it into the newly created folder. This folder will then contain the following items:</li>
 </ol>
 <table>
 <thead>
@@ -1602,7 +1602,7 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 </tr>
 <tr>
 <td><code>./vulas-cli-&lt;version&gt;-jar-with-dependencies.jar</code></td>
-<td>An executable JAR used to run the different vulnerability-assessment-tool goals.</td>
+<td>An executable JAR used to run the different Eclipse Steady goals.</td>
 </tr>
 <tr>
 <td><code>./instr/lang-java-&lt;version&gt;-jar-with-dependencies.jar</code></td>
@@ -1610,11 +1610,11 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 </tr>
 <tr>
 <td><code>./vulas-custom.properties.sample</code></td>
-<td>Configuration settings for vulnerability-assessment-tool. <strong>Important</strong>: (1) Rename the file to <code>vulas-custom.properties</code>. (2) Specify <code>&lt;GROUP&gt;</code>, <code>&lt;ARTIFACT&gt;</code> and <code>&lt;VERSION&gt;</code> of the application to be analyzed. (3) Specify how vulnerability-assessment-tool identifies your application code (either using <code>vulas.core.app.appPrefixes</code> or <code>vulas.core.app.appJarNames</code>, see below for more information). (4) Specify the workspace token <code>vulas.core.space.token</code>.</td>
+<td>Configuration settings for Eclipse Steady. <strong>Important</strong>: (1) Rename the file to <code>vulas-custom.properties</code>. (2) Specify <code>&lt;GROUP&gt;</code>, <code>&lt;ARTIFACT&gt;</code> and <code>&lt;VERSION&gt;</code> of the application to be analyzed. (3) Specify how Eclipse Steady identifies your application code (either using <code>vulas.core.app.appPrefixes</code> or <code>vulas.core.app.appJarNames</code>, see below for more information). (4) Specify the workspace token <code>vulas.core.space.token</code>.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Identification of application code</strong>: You can use <code>vulas.core.app.appPrefixes</code> or <code>vulas.core.app.appJarNames</code> to tell vulnerability-assessment-tool how to identify the code of your application, which is important for the call graph construction during the <code>a2c</code> reachability analysis. This analysis is not complete if not all the relevant application methods are used as entry points for the call graph construction. As such, the potential execution of vulnerable open-source methods may be missed. A good indicator to see whether specification is correct is to see whether there are items in the Dependencies tab that are created by you (or your organization), or whether there are open-source packages mentioned in the table on the Statistics tab.</p>
+<p><strong>Identification of application code</strong>: You can use <code>vulas.core.app.appPrefixes</code> or <code>vulas.core.app.appJarNames</code> to tell Eclipse Steady how to identify the code of your application, which is important for the call graph construction during the <code>a2c</code> reachability analysis. This analysis is not complete if not all the relevant application methods are used as entry points for the call graph construction. As such, the potential execution of vulnerable open-source methods may be missed. A good indicator to see whether specification is correct is to see whether there are items in the Dependencies tab that are created by you (or your organization), or whether there are open-source packages mentioned in the table on the Statistics tab.</p>
 <div class="codehilite"><pre><span></span><span class="c1"># Package prefix(es) of application code (multiple values to be separated by comma), only relevant for CLI</span>
 <span class="na">vulas.core.app.appPrefixes</span> <span class="o">=</span>
 
@@ -1627,14 +1627,14 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 <p>The client-side analysis tools can be configured in different ways. At runtime, the following layers are combined in order to establish the effective configuration (which is printed to console upon goal execution).</p>
 <ul>
 <li><strong>Java system properties</strong>: Can be specified when running <code>java</code> or <code>mvn</code>, each setting must be prefixed with <code>-D</code></li>
-<li><strong>Property files in file system</strong>: Can be specified by adding property file(s) in the folder where vulnerability-assessment-tool is executed (or any of its subfolders). The file name must adhere to the format <code>vulas-*.properties</code>, and its entries must be specified according to the <a href="https://en.wikipedia.org/wiki/.properties">Java spec</a></li>
+<li><strong>Property files in file system</strong>: Can be specified by adding property file(s) in the folder where Eclipse Steady is executed (or any of its subfolders). The file name must adhere to the format <code>vulas-*.properties</code>, and its entries must be specified according to the <a href="https://en.wikipedia.org/wiki/.properties">Java spec</a></li>
 <li><strong>Plugin configuration</strong>:<ul>
 <li>Maven: Can be specified in the <code>&lt;layeredConfiguration&gt;</code> section of the Maven plugin</li>
 <li>Gradle: <strong>todo</strong></li>
 </ul>
 </li>
 <li><strong>Environment variables</strong>: Can be specified using <code>export</code> (nix) and <code>set</code> (Windows)</li>
-<li><strong>Property files in JAR files</strong>: Default values for many settings are set within vulnerability-assessment-tool JAR files</li>
+<li><strong>Property files in JAR files</strong>: Default values for many settings are set within Eclipse Steady JAR files</li>
 </ul>
 <h3 id="general-settings">General settings<a class="headerlink" href="#general-settings" title="Permanent link">&para;</a></h3>
 <p>The following settings, however, have to be present for every goal execution:</p>
@@ -1644,8 +1644,8 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 <li><code>vulas.shared.backend.serviceUrl</code>: The URL of the backend service to which clients upload analysis results.</li>
 </ul>
 <h2 id="check-setup">Check setup<a class="headerlink" href="#check-setup" title="Permanent link">&para;</a></h2>
-<p>Proceed as follows to check whether the vulnerability-assessment-tool setup and goal execution works:</p>
-<p><strong>On the client</strong>, after executing a specific vulnerability-assessment-tool goal on your application, a log entry similar to the one below should be printed to the console. It is used to upload goal-related information to the vulnerability-assessment-tool backend, e.g., the vulnerability-assessment-tool version used or the average memory consumption. In this example, information related to a goal execution for an application with GAV <code>com.acme.foo:vulas-testapp-webapp:3.0.9-MVN</code> was uploaded to <code>http://localhost:8033/backend/</code>, workspace <code>123456789</code>. The successful upload is indicated by the HTTP response code <code>201</code>.</p>
+<p>Proceed as follows to check whether the Eclipse Steady setup and goal execution works:</p>
+<p><strong>On the client</strong>, after executing a specific Eclipse Steady goal on your application, a log entry similar to the one below should be printed to the console. It is used to upload goal-related information to the Eclipse Steady backend, e.g., the Eclipse Steady version used or the average memory consumption. In this example, information related to a goal execution for an application with GAV <code>com.acme.foo:vulas-testapp-webapp:3.0.9-MVN</code> was uploaded to <code>http://localhost:8033/backend/</code>, workspace <code>123456789</code>. The successful upload is indicated by the HTTP response code <code>201</code>.</p>
 <div class="codehilite"><pre><span></span>[main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST [uri=http://localhost:8033/backend/apps/com.acme.foo/vulas-testapp-webapp/3.0.9-MVN/goals, size=23,50 KB, tenant=123456789, space=123456789]
 [main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST completed with response code [201] in [03.019 ms] (proxy=false)
 </pre></div>
@@ -1728,7 +1728,7 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
   <div class="md-footer-social">
     <link rel="stylesheet" href="../../../assets/fonts/font-awesome.css">
     
-      <a href="https://github.com/sap/vulnerability-assessment-tool" class="md-footer-social__link fa fa-github"></a>
+      <a href="https://github.com/eclipse/steady" class="md-footer-social__link fa fa-github"></a>
     
   </div>
 

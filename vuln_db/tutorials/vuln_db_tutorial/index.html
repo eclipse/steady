@@ -10,10 +10,10 @@
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
-        <meta name="description" content="vulnerability-assessment-tool Documentation">
+        <meta name="description" content="Eclipse Steady Documentation">
       
       
-        <link rel="canonical" href="https://sap.github.io/vulnerability-assessment-tool/vuln_db/tutorials/vuln_db_tutorial/">
+        <link rel="canonical" href="https://eclipse.github.io/steady/vuln_db/tutorials/vuln_db_tutorial/">
       
       
       
@@ -40,7 +40,7 @@
     
     
       
-        <title>Tutorial - vulnerability-assessment-tool 3.1.6</title>
+        <title>Tutorial - Eclipse Steady (Incubator Project) 3.1.6</title>
       
     
     
@@ -124,7 +124,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -138,7 +138,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.1.6
+                Eclipse Steady (Incubator Project) 3.1.6
               </span>
               <span class="md-header-nav__topic">
                 Tutorial
@@ -186,7 +186,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -195,7 +195,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -310,12 +310,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.1.6
+    Eclipse Steady (Incubator Project) 3.1.6
   </label>
   
     <div class="md-nav__source">
@@ -325,7 +325,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -334,7 +334,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -1235,11 +1235,11 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/sap/vulnerability-assessment-tool/edit/master/docs/vuln_db/tutorials/vuln_db_tutorial.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/eclipse/steady/edit/master/docs/vuln_db/tutorials/vuln_db_tutorial.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
                 <h1 id="getting-started-with-the-vulnerability-database">Getting started with the Vulnerability Database<a class="headerlink" href="#getting-started-with-the-vulnerability-database" title="Permanent link">&para;</a></h1>
-<p>Vulnerabilities in vulnerability-assessment-tool are represented at code level. This tutorial will guide you through the creation of the following vulnerabilities in the vulnerability database:</p>
+<p>Vulnerabilities in Eclipse Steady are represented at code level. This tutorial will guide you through the creation of the following vulnerabilities in the vulnerability database:</p>
 <ul>
 <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-7525">CVE-2017-7525</a> (Jackson Databind)</li>
 <li><a href="https://nvd.nist.gov/vuln/detail/CVE-2018-5382">CVE-2018-5382</a> (BouncyCastle)</li>
@@ -1248,13 +1248,13 @@
 <li><a href="https://issues.jboss.org/browse/JBDS-3560?attachmentViewMode=list&amp;_sscc=t">COLLECTIONS-580</a> (Apache Commons Collections)</li>
 </ul>
 <p>The tutorial also explains how to consume the import script available in the <a href="https://github.com/SAP/vulnerability-assessment-kb">knowledge base</a>. Such script triggers the analysis of the available vulnerabilities.</p>
-<p>If you have a working installation of the vulnerability-assessment-tool backend services you will need
+<p>If you have a working installation of the Eclipse Steady backend services you will need
 to import vulnerability data before you can actually perform scans.</p>
 <div class="admonition tip">
-<p class="admonition-title">Installing the vulnerability-assessment-tool backend services</p>
+<p class="admonition-title">Installing the Eclipse Steady backend services</p>
 <p>Instructions on how to setup backend services are available <a href="../../../admin/tutorials/docker/">here</a>.</p>
 </div>
-<p>It is possible to add new vulnerabilities to the database using the <code>patch-analyzer</code> module of the vulnerability-assessment-tool project.</p>
+<p>It is possible to add new vulnerabilities to the database using the <code>patch-analyzer</code> module of the Eclipse Steady project.</p>
 <h2 id="patch-analyzer">Patch Analyzer<a class="headerlink" href="#patch-analyzer" title="Permanent link">&para;</a></h2>
 <h3 id="creation-of-above-listed-vulnerabilities">Creation of above-listed vulnerabilities<a class="headerlink" href="#creation-of-above-listed-vulnerabilities" title="Permanent link">&para;</a></h3>
 <p>Run the following commands to create the change list for the vulnerability and upload it to the backend</p>
@@ -1272,7 +1272,7 @@ java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8
 <p>To run such commands in your own environment, you may need to adapt:</p>
 <ul>
 <li>the path to the patch analyzer artifact and the artifact version, <code>-jar ./patch-analyzer/target/patch-analyzer-3.1.6-jar-with-dependencies.jar</code></li>
-<li>the URL of the vulnerability-assessment-tool backend, <code>-Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/</code></li>
+<li>the URL of the Eclipse Steady backend, <code>-Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/</code></li>
 <li>the proxy settings; the proxy is not configured in the example but you can do so using the following configurations:</li>
 </ul>
 <div class="codehilite"><pre><span></span>-Dhttp.proxyHost<span class="o">=</span>
@@ -1383,7 +1383,7 @@ java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8
   <div class="md-footer-social">
     <link rel="stylesheet" href="../../../assets/fonts/font-awesome.css">
     
-      <a href="https://github.com/sap/vulnerability-assessment-tool" class="md-footer-social__link fa fa-github"></a>
+      <a href="https://github.com/eclipse/steady" class="md-footer-social__link fa fa-github"></a>
     
   </div>
 

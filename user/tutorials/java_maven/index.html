@@ -10,10 +10,10 @@
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
-        <meta name="description" content="vulnerability-assessment-tool Documentation">
+        <meta name="description" content="Eclipse Steady Documentation">
       
       
-        <link rel="canonical" href="https://sap.github.io/vulnerability-assessment-tool/user/tutorials/java_maven/">
+        <link rel="canonical" href="https://eclipse.github.io/steady/user/tutorials/java_maven/">
       
       
       
@@ -40,7 +40,7 @@
     
     
       
-        <title>Scanning Java (Maven) - vulnerability-assessment-tool 3.1.6</title>
+        <title>Scanning Java (Maven) - Eclipse Steady (Incubator Project) 3.1.6</title>
       
     
     
@@ -124,7 +124,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -138,7 +138,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.1.6
+                Eclipse Steady (Incubator Project) 3.1.6
               </span>
               <span class="md-header-nav__topic">
                 Scanning Java (Maven)
@@ -186,7 +186,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -195,7 +195,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -310,12 +310,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.1.6
+    Eclipse Steady (Incubator Project) 3.1.6
   </label>
   
     <div class="md-nav__source">
@@ -325,7 +325,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -334,7 +334,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -1279,7 +1279,7 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/sap/vulnerability-assessment-tool/edit/master/docs/user/tutorials/java_maven.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/eclipse/steady/edit/master/docs/user/tutorials/java_maven.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
                 <h1 id="scanning-java-apps-built-with-maven">Scanning Java apps built with Maven<a class="headerlink" href="#scanning-java-apps-built-with-maven" title="Permanent link">&para;</a></h1>
@@ -1289,9 +1289,9 @@ HP: Not needed in my option.
 
 !!! info "Not using Maven?"
 
-    If your Java application is not build with Maven, you can still use vulnerability-assessment-tool.
+    If your Java application is not build with Maven, you can still use Eclipse Steady.
 
-    We have a dedicated tutorial showing [how to use vulnerability-assessment-tool with non-Maven Java applications](../tutorials/java_cli/),
+    We have a dedicated tutorial showing [how to use Eclipse Steady with non-Maven Java applications](../tutorials/java_cli/),
     check that out!
 
 -->
@@ -1299,13 +1299,13 @@ HP: Not needed in my option.
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ol>
 <li>JDK 7 or later</li>
-<li>Apache Maven 3.x with <code>settings.xml</code> configured to download from the Maven repository hosting the vulnerability-assessment-tool plugin for Maven</li>
+<li>Apache Maven 3.x with <code>settings.xml</code> configured to download from the Maven repository hosting the Eclipse Steady plugin for Maven</li>
 <li>URLs of the <strong>backend service</strong> and <strong>apps Web frontend</strong><ul>
 <li>Apps Web frontend: <a href="http://localhost:8033/apps">http://localhost:8033/apps</a></li>
 <li>Backend service: <a href="http://localhost:8033/backend/">http://localhost:8033/backend/</a></li>
 </ul>
 </li>
-<li>The token of a vulnerability-assessment-tool workspace</li>
+<li>The token of a Eclipse Steady workspace</li>
 </ol>
 <div class="admonition info">
 <p class="admonition-title">Workspace creation</p>
@@ -1316,10 +1316,10 @@ the third button in the lower left corner:</p>
 please see <a href="../../manuals/setup/#workspace">this section of the manual</a>.</p>
 </div>
 <h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
-<p>The plugin for Maven can be used with or without adding a vulnerability-assessment-tool profile to the <code>pom.xml</code> of your application. This tutorial guides you through the setup <strong><em>with vulnerability-assessment-tool profile</em></strong>.</p>
+<p>The plugin for Maven can be used with or without adding a Eclipse Steady profile to the <code>pom.xml</code> of your application. This tutorial guides you through the setup <strong><em>with Eclipse Steady profile</em></strong>.</p>
 <div class="admonition info">
-<p class="admonition-title">Cannot add the vulnerability-assessment-tool profile?</p>
-<p>If possible we recommend to use the vulnerability-assessment-tool profile as the execution of goals using the command-line is more concise (readable). If you cannot paste the vulnerability-assessment-tool profile in the <code>pom.xml</code> of your application you can still use the vulnerability-assessment-tool plugin for Maven. Check out the Manual <a href="../../manuals/setup/#maven">Java (Maven)</a></p>
+<p class="admonition-title">Cannot add the Eclipse Steady profile?</p>
+<p>If possible we recommend to use the Eclipse Steady profile as the execution of goals using the command-line is more concise (readable). If you cannot paste the Eclipse Steady profile in the <code>pom.xml</code> of your application you can still use the Eclipse Steady plugin for Maven. Check out the Manual <a href="../../manuals/setup/#maven">Java (Maven)</a></p>
 </div>
 <p>Add the following to the <code>&lt;profiles&gt;</code> section of the <code>pom.xml</code> of your application project and make sure that <code>&lt;vulas.shared.backend.serviceUrl&gt;</code> points to the URL of the backend service and that <code>&lt;vulas.core.space.token&gt;</code> specifies the token of your individual workspace (see highlighted lines).</p>
 <div class="codehilite"><pre><span></span>    <span class="nt">&lt;profile&gt;</span>
@@ -1396,7 +1396,7 @@ please see <a href="../../manuals/setup/#workspace">this section of the manual</
 <p>Connect to the apps Web frontend, then select your workspace and application. The table in tab <a href="../../manuals/frontend/#dependencies">Dependencies</a> is populated. Dependencies with known vulnerabilities are shown in tab <a href="../../manuals/frontend/#vulnerabilities">Vulnerabilities</a>.</p>
 </li>
 </ol>
-<p>In case your application does not follow the standard structure of Maven applications, please refer to the Manual <a href="../../manuals/setup/#maven">Java (Maven)</a> to learn how to configure the vulnerability-assessment-tool plugin accordingly.</p>
+<p>In case your application does not follow the standard structure of Maven applications, please refer to the Manual <a href="../../manuals/setup/#maven">Java (Maven)</a> to learn how to configure the Eclipse Steady plugin accordingly.</p>
 <div class="admonition info">
 <p class="admonition-title">Assess and mitigate</p>
 <p>Once <code>app</code> has been run, the assessment of findings can already start: Each finding shown on the <a href="../../manuals/frontend/#vulnerabilities">Vulnerabilities</a> tab corresponds to a dependency of an application on a component with a known security vulnerability. See <a href="../../manuals/assess_and_mitigate/">here</a> for more information on how to assess and mitigate findings. Other analysis goals can be used to collect further evidence concerning the reachability of vulnerable code.</p>
@@ -1420,7 +1420,7 @@ please see <a href="../../manuals/setup/#workspace">this section of the manual</
 <p><code>mvn -Dvulas vulas:clean</code></p>
 </li>
 <li>
-<p>All application-specific data in the vulnerability-assessment-tool backend are deleted.</p>
+<p>All application-specific data in the Eclipse Steady backend are deleted.</p>
 </li>
 </ol>
 <div class="admonition info">
@@ -1506,7 +1506,7 @@ please see <a href="../../manuals/setup/#workspace">this section of the manual</
   <div class="md-footer-social">
     <link rel="stylesheet" href="../../../assets/fonts/font-awesome.css">
     
-      <a href="https://github.com/sap/vulnerability-assessment-tool" class="md-footer-social__link fa fa-github"></a>
+      <a href="https://github.com/eclipse/steady" class="md-footer-social__link fa fa-github"></a>
     
   </div>
 

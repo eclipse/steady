@@ -10,10 +10,10 @@
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
-        <meta name="description" content="vulnerability-assessment-tool Documentation">
+        <meta name="description" content="Eclipse Steady Documentation">
       
       
-        <link rel="canonical" href="https://sap.github.io/vulnerability-assessment-tool/user/manuals/assess_and_mitigate/">
+        <link rel="canonical" href="https://eclipse.github.io/steady/user/manuals/assess_and_mitigate/">
       
       
       
@@ -40,7 +40,7 @@
     
     
       
-        <title>Assessment and Mitigation - vulnerability-assessment-tool 3.1.6</title>
+        <title>Assessment and Mitigation - Eclipse Steady (Incubator Project) 3.1.6</title>
       
     
     
@@ -124,7 +124,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -138,7 +138,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.1.6
+                Eclipse Steady (Incubator Project) 3.1.6
               </span>
               <span class="md-header-nav__topic">
                 Assessment and Mitigation
@@ -186,7 +186,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -195,7 +195,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -310,12 +310,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.1.6
+    Eclipse Steady (Incubator Project) 3.1.6
   </label>
   
     <div class="md-nav__source">
@@ -325,7 +325,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -334,7 +334,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -1347,18 +1347,18 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/sap/vulnerability-assessment-tool/edit/master/docs/user/manuals/assess_and_mitigate.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/eclipse/steady/edit/master/docs/user/manuals/assess_and_mitigate.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
                 <h1 id="assessment-and-mitigation-manual">Assessment and Mitigation Manual<a class="headerlink" href="#assessment-and-mitigation-manual" title="Permanent link">&para;</a></h1>
 <p>The presence of vulnerable open-source code must be <a href="#assess">assessed</a>. If the vulnerability <strong>IS NOT</strong> considered exploitable, it can be <a href="#exempt">exempted</a>. If it <strong>IS</strong> considered exploitable, it has to be <a href="#mitigate">mitigated</a>.</p>
 <h2 id="assess">Assess<a class="headerlink" href="#assess" title="Permanent link">&para;</a></h2>
-<p>You can start to assess vulnerability-assessment-tool findings as soon as you ran the <code>app</code> analysis goal. Assessing means to clarify whether the respective vulnerability is exploitable in the given application context. The other analysis goals provide further evidence in regards to whether vulnerable code is executable, which is a prerequisite for being exploitable, but they do not bring up new findings.</p>
+<p>You can start to assess Eclipse Steady findings as soon as you ran the <code>app</code> analysis goal. Assessing means to clarify whether the respective vulnerability is exploitable in the given application context. The other analysis goals provide further evidence in regards to whether vulnerable code is executable, which is a prerequisite for being exploitable, but they do not bring up new findings.</p>
 <p>A finding (table row) in the <em>Vulnerabilities</em> tab represents a tuple (library, vulnerability). Depending on whether the library <em>contains the vulnerable or the fixed code</em>, the column <em>Inclusion of vulnerable code</em> contains one of the following icons:</p>
 <ul>
 <li><strong>Green exclamation mark</strong>: The library version in use contains the fixed code for the respective vulnerability, hence, is not affected. Such <em>historical vulnerabilities</em> do not need to be assessed and mitigated.</li>
 <li><strong>Red exclamation mark</strong>: The library version in use contains the vulnerable code, hence, is affected by the respective vulnerability, and the finding requires assessment. A findings should be mitigated if considered exploitable (see below). A finding can be <a href="#exempt">exempted</a> if it is not considered exploitable.</li>
-<li><strong>Orange Hourglass</strong>: It is unclear whether the library version in use contains the vulnerable or the fixed code. Hourglasses are resolved by the vulnerability-assessment-tool operations team (automatically or manually) by comparing the source or byte code of the library in question with the vulnerable and fixed code. Depending on whether the source or byte code of the library is available, e.g., in Maven Central or PyPi, this can take more or less time.</li>
+<li><strong>Orange Hourglass</strong>: It is unclear whether the library version in use contains the vulnerable or the fixed code. Hourglasses are resolved by the Eclipse Steady operations team (automatically or manually) by comparing the source or byte code of the library in question with the vulnerable and fixed code. Depending on whether the source or byte code of the library is available, e.g., in Maven Central or PyPi, this can take more or less time.</li>
 </ul>
 <h3 id="static-and-dynamic-analysis">Static and Dynamic Analysis<a class="headerlink" href="#static-and-dynamic-analysis" title="Permanent link">&para;</a></h3>
 <p>The columns <em>Static Analysis</em> and <em>Dynamic Analysis</em> provide information whether vulnerable code can be potentially executed (according to static call graph construction and analysis), or whether its execution has been observed during the execution of tests.</p>
@@ -1394,7 +1394,7 @@
 <li>Transitive dependencies can be removed by adding an <code>&lt;exclusions&gt;</code> section to the respective direct <code>&lt;dependency&gt;</code>(s), cf. <a href="https://maven.apache.org/guides/introduction/introduction-to-optional-and-excludes-dependencies.html">Dependency Exclusions</a> for more details.</li>
 </ul>
 <h3 id="update-dependency-default">Update dependency (default)<a class="headerlink" href="#update-dependency-default" title="Permanent link">&para;</a></h3>
-<p>An update is the default solution for fixing a dependency with known-vulnerabilities. It is possible for the majority of vulnerabilities in the vulnerability-assessment-tool Vulnerability Database.</p>
+<p>An update is the default solution for fixing a dependency with known-vulnerabilities. It is possible for the majority of vulnerabilities in the Eclipse Steady Vulnerability Database.</p>
 <ul>
 <li>Direct dependencies can be updated by declaring a non-vulnerable version in the respective <code>&lt;dependency&gt;</code> section.</li>
 <li>Transitive dependencies can be updated by two means:<ul>
@@ -1502,7 +1502,7 @@
   <div class="md-footer-social">
     <link rel="stylesheet" href="../../../assets/fonts/font-awesome.css">
     
-      <a href="https://github.com/sap/vulnerability-assessment-tool" class="md-footer-social__link fa fa-github"></a>
+      <a href="https://github.com/eclipse/steady" class="md-footer-social__link fa fa-github"></a>
     
   </div>
 

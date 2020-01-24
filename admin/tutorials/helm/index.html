@@ -10,10 +10,10 @@
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
-        <meta name="description" content="vulnerability-assessment-tool Documentation">
+        <meta name="description" content="Eclipse Steady Documentation">
       
       
-        <link rel="canonical" href="https://sap.github.io/vulnerability-assessment-tool/admin/tutorials/helm/">
+        <link rel="canonical" href="https://eclipse.github.io/steady/admin/tutorials/helm/">
       
       
       
@@ -40,7 +40,7 @@
     
     
       
-        <title>Deploy on Kubernetes with Helm - vulnerability-assessment-tool 3.1.6</title>
+        <title>Deploy on Kubernetes with Helm - Eclipse Steady (Incubator Project) 3.1.6</title>
       
     
     
@@ -124,7 +124,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -138,7 +138,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.1.6
+                Eclipse Steady (Incubator Project) 3.1.6
               </span>
               <span class="md-header-nav__topic">
                 Deploy on Kubernetes with Helm
@@ -186,7 +186,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -195,7 +195,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -310,12 +310,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.1.6
+    Eclipse Steady (Incubator Project) 3.1.6
   </label>
   
     <div class="md-nav__source">
@@ -325,7 +325,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -334,7 +334,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -1265,11 +1265,11 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/sap/vulnerability-assessment-tool/edit/master/docs/admin/tutorials/helm.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/eclipse/steady/edit/master/docs/admin/tutorials/helm.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
                 <h1 id="deploy-on-kubernetes-with-helm">Deploy on Kubernetes with Helm<a class="headerlink" href="#deploy-on-kubernetes-with-helm" title="Permanent link">&para;</a></h1>
-<p>In this tutorial you will be guided through the necessary steps to set-up the vulnerability-assessment-tool services in a Kubernetes cluster using <a href="https://helm.sh/">Helm</a> version <a href="https://github.com/helm/helm/releases/tag/v3.0.0-beta.4">3.0.0-beta4</a> and is compatible with any helm2 version <a href="https://github.com/helm/helm/releases/tag/v2.15.0">2.15.0</a>.</p>
+<p>In this tutorial you will be guided through the necessary steps to set-up the Eclipse Steady services in a Kubernetes cluster using <a href="https://helm.sh/">Helm</a> version <a href="https://github.com/helm/helm/releases/tag/v3.0.0-beta.4">3.0.0-beta4</a> and is compatible with any helm2 version <a href="https://github.com/helm/helm/releases/tag/v2.15.0">2.15.0</a>.</p>
 <div class="admonition info">
 <p class="admonition-title">Helm2 and Helm3</p>
 <p><code>Helm2</code> has officially gone into maintenance mode (no further release after 2.15.0) but this chart is meant to be compatible with both major versions of Helm. The main difference being that in <code>helm 3</code> tiller is no longer required and all charts are namespaced.</p>
@@ -1301,7 +1301,7 @@ helm template vulnerability-assessment-tool-monitoring
 </pre></div>
 
 <h2 id="run">Run<a class="headerlink" href="#run" title="Permanent link">&para;</a></h2>
-<p>You are now ready to deploy vulnerability-assessment-tool inside your Kubernetes cluster:</p>
+<p>You are now ready to deploy Eclipse Steady inside your Kubernetes cluster:</p>
 <h3 id="vulnerability-assessment-tool-core-chart">Vulnerability-assessment-tool-core chart<a class="headerlink" href="#vulnerability-assessment-tool-core-chart" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><span class="c1"># For helm 2</span>
 helm install vulnerability-assessment-tool-core/ --name ReleaseName
@@ -1334,7 +1334,7 @@ helm install vulnerability-assessment-tool-admin ReleaseName
 
 <p>The above command will create a <code>Namespace</code> called <code>vulnerability-assessment-tool-admin</code> (which can be specified in the <a href="https://github.com/SAP/vulnerability-assessment-tool/blob/master/kubernetes/helm/vulnerability-assessment-tool-admin/values.yaml">vulnerability-assessment-tool-admin/values.yaml</a>) and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command <code>kubectl get pods -n vulnerability-assessment-tool-admin</code>. The deployment will request a <code>LoadBalancer</code> which could need some time to be created depending on the cloud provider you are running on.</p>
 <div class="admonition warning">
-<p class="admonition-title">Reaching vulnerability-assessment-tool from the Internet</p>
+<p class="admonition-title">Reaching Eclipse Steady from the Internet</p>
 <p>This chart creates a <code>LoadBalancer</code> to allow Internet traffic to reach the cluster provisioned by your provider and will connect to it. This <code>LoadBalancer</code> will be exposed on the Internet so be careful to change the authentication ingress values from the default ones. The <code>Service type:LoadBalancer</code> should work with most providers such as GKE, Azure. If not, you can follow this <a href="https://github.com/kubernetes/ingress-nginx/blob/master/docs/deploy/index.md#provider-specific-steps">ingress-nginx guide</a></p>
 </div>
                 
@@ -1409,7 +1409,7 @@ helm install vulnerability-assessment-tool-admin ReleaseName
   <div class="md-footer-social">
     <link rel="stylesheet" href="../../../assets/fonts/font-awesome.css">
     
-      <a href="https://github.com/sap/vulnerability-assessment-tool" class="md-footer-social__link fa fa-github"></a>
+      <a href="https://github.com/eclipse/steady" class="md-footer-social__link fa fa-github"></a>
     
   </div>
 

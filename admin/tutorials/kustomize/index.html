@@ -10,10 +10,10 @@
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
-        <meta name="description" content="vulnerability-assessment-tool Documentation">
+        <meta name="description" content="Eclipse Steady Documentation">
       
       
-        <link rel="canonical" href="https://sap.github.io/vulnerability-assessment-tool/admin/tutorials/kustomize/">
+        <link rel="canonical" href="https://eclipse.github.io/steady/admin/tutorials/kustomize/">
       
       
       
@@ -40,7 +40,7 @@
     
     
       
-        <title>Deploy on Kubernetes with Kustomize - vulnerability-assessment-tool 3.1.6</title>
+        <title>Deploy on Kubernetes with Kustomize - Eclipse Steady (Incubator Project) 3.1.6</title>
       
     
     
@@ -124,7 +124,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -138,7 +138,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.1.6
+                Eclipse Steady (Incubator Project) 3.1.6
               </span>
               <span class="md-header-nav__topic">
                 Deploy on Kubernetes with Kustomize
@@ -186,7 +186,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -195,7 +195,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -310,12 +310,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.1.6
+    Eclipse Steady (Incubator Project) 3.1.6
   </label>
   
     <div class="md-nav__source">
@@ -325,7 +325,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -334,7 +334,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -1237,14 +1237,14 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/sap/vulnerability-assessment-tool/edit/master/docs/admin/tutorials/kustomize.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/eclipse/steady/edit/master/docs/admin/tutorials/kustomize.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
                 <h1 id="deploy-on-kubernetes-with-kustomize">Deploy on Kubernetes with Kustomize<a class="headerlink" href="#deploy-on-kubernetes-with-kustomize" title="Permanent link">&para;</a></h1>
-<p>In this tutorial you will be guided through the necessary steps to set-up the vulnerability-assessment-tool backend services in a Kubernetes cluster using <a href="https://github.com/kubernetes-sigs/kustomize">Kustomize</a> version <a href="https://github.com/kubernetes-sigs/kustomize/releases/tag/v2.0.3">2.0.3</a></p>
+<p>In this tutorial you will be guided through the necessary steps to set-up the Eclipse Steady backend services in a Kubernetes cluster using <a href="https://github.com/kubernetes-sigs/kustomize">Kustomize</a> version <a href="https://github.com/kubernetes-sigs/kustomize/releases/tag/v2.0.3">2.0.3</a></p>
 <div class="admonition info">
 <p class="admonition-title">Kustomize and Kubectl</p>
-<p><code>kubectl</code> starting version 1.14 already comes with Kustomize 2.0.3 bundled. As of now Kustomize 3.1.0 is not supported by <code>kubectl</code> so it will also not be supported by vulnerability-assessment-tool</p>
+<p><code>kubectl</code> starting version 1.14 already comes with Kustomize 2.0.3 bundled. As of now Kustomize 3.1.0 is not supported by <code>kubectl</code> so it will also not be supported by Eclipse Steady</p>
 </div>
 <h2 id="pre-requisites">Pre-requisites<a class="headerlink" href="#pre-requisites" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1265,17 +1265,17 @@ cp secrets/bugs-frontend-credentials.sample secrets/bugs-frontend-credentials
 </pre></div>
 
 <h2 id="run">Run<a class="headerlink" href="#run" title="Permanent link">&para;</a></h2>
-<p>You are now ready to deploy vulnerability-assessment-tool inside your Kubernetes cluster:</p>
+<p>You are now ready to deploy Eclipse Steady inside your Kubernetes cluster:</p>
 <div class="codehilite"><pre><span></span>kubectl apply -k .
 </pre></div>
 
 <p>The above command will create a <code>Namespace</code> called <code>vulnerability-assessment-tool</code> and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command <code>kubectl -n vulnerability-assessment-tool get pods -w</code>. The deployment will request two <code>PersistentVolumeClaims</code> and a <code>Service type:LoadBalancer</code> which could need some time to be created depending on the provider you are running on.</p>
 <div class="admonition warning">
-<p class="admonition-title">Reaching vulnerability-assessment-tool from the Internet</p>
-<p>vulnerability-assessment-tool uses a <code>Service</code> of type <code>LoadBalancer</code> to allow Internet traffic to reach the cluster. This <code>Service</code> will request an external <code>LoadBalancer</code> to your provider and will connect to it. This <code>LoadBalancer</code> will be exposed on the Internet so be careful. The <code>Service type:LoadBalancer</code> should work with most providers such as GKE, Azure. If not, you can follow this <a href="https://github.com/kubernetes/ingress-nginx/blob/master/docs/deploy/index.md#provider-specific-steps">ingress-nginx guide</a></p>
+<p class="admonition-title">Reaching Eclipse Steady from the Internet</p>
+<p>Eclipse Steady uses a <code>Service</code> of type <code>LoadBalancer</code> to allow Internet traffic to reach the cluster. This <code>Service</code> will request an external <code>LoadBalancer</code> to your provider and will connect to it. This <code>LoadBalancer</code> will be exposed on the Internet so be careful. The <code>Service type:LoadBalancer</code> should work with most providers such as GKE, Azure. If not, you can follow this <a href="https://github.com/kubernetes/ingress-nginx/blob/master/docs/deploy/index.md#provider-specific-steps">ingress-nginx guide</a></p>
 </div>
 <div class="admonition info">
-<p class="admonition-title">Debugging vulnerability-assessment-tool from the local network</p>
+<p class="admonition-title">Debugging Eclipse Steady from the local network</p>
 <p>You can avoid listening to the Internet by disabling the <code>Service</code> present in the <code>services/cloud.yml</code> file. To disable the file you can just comment the relative line in the root-level <code>kustomization.yaml</code> file. You can then connect to the main <code>Service</code> by <code>port-forward</code>ing with the command <code>kubectl -n vulnerability-assessment-tool port-forward svc/haproxy-ingress 7000:8080</code> and then opening your browser at <code>localhost:8080/apps</code></p>
 </div>
 <h3 id="populatemaintain-the-vulnerability-database">Populate/maintain the vulnerability database<a class="headerlink" href="#populatemaintain-the-vulnerability-database" title="Permanent link">&para;</a></h3>
@@ -1368,7 +1368,7 @@ cp secrets/bugs-frontend-credentials.sample secrets/bugs-frontend-credentials
   <div class="md-footer-social">
     <link rel="stylesheet" href="../../../assets/fonts/font-awesome.css">
     
-      <a href="https://github.com/sap/vulnerability-assessment-tool" class="md-footer-social__link fa fa-github"></a>
+      <a href="https://github.com/eclipse/steady" class="md-footer-social__link fa fa-github"></a>
     
   </div>
 

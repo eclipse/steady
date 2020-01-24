@@ -10,10 +10,10 @@
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
-        <meta name="description" content="vulnerability-assessment-tool Documentation">
+        <meta name="description" content="Eclipse Steady Documentation">
       
       
-        <link rel="canonical" href="https://sap.github.io/vulnerability-assessment-tool/user/tutorials/jenkins_howto/">
+        <link rel="canonical" href="https://eclipse.github.io/steady/user/tutorials/jenkins_howto/">
       
       
       
@@ -40,7 +40,7 @@
     
     
       
-        <title>Jenkins automation - vulnerability-assessment-tool 3.1.6</title>
+        <title>Jenkins automation - Eclipse Steady (Incubator Project) 3.1.6</title>
       
     
     
@@ -124,7 +124,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -138,7 +138,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.1.6
+                Eclipse Steady (Incubator Project) 3.1.6
               </span>
               <span class="md-header-nav__topic">
                 Jenkins automation
@@ -186,7 +186,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -195,7 +195,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -310,12 +310,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.1.6
+    Eclipse Steady (Incubator Project) 3.1.6
   </label>
   
     <div class="md-nav__source">
@@ -325,7 +325,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -334,7 +334,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -1197,7 +1197,7 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/sap/vulnerability-assessment-tool/edit/master/docs/user/tutorials/jenkins_howto.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/eclipse/steady/edit/master/docs/user/tutorials/jenkins_howto.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
                 <h1 id="jenkins-automation">Jenkins automation<a class="headerlink" href="#jenkins-automation" title="Permanent link">&para;</a></h1>
@@ -1217,17 +1217,17 @@
 <div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dvulas clean compile vulas:clean vulas:app vulas:a2c vulas:prepare-vulas-agent package vulas:upload vulas:t2c
 </pre></div></div>
 </div>
-<p>See <a href="../../manuals/analysis/">here</a> for more information on vulnerability-assessment-tool goals.</p>
+<p>See <a href="../../manuals/analysis/">here</a> for more information on Eclipse Steady goals.</p>
 <h2 id="jenkins">Jenkins<a class="headerlink" href="#jenkins" title="Permanent link">&para;</a></h2>
-<p>A typical Jenkins job configuration using the vulnerability-assessment-tool plugin for Maven comprises the following two build steps and one post-build action (see screenshot below):</p>
+<p>A typical Jenkins job configuration using the Eclipse Steady plugin for Maven comprises the following two build steps and one post-build action (see screenshot below):</p>
 <ol>
 <li>Build step for a <strong>quick scan</strong> or <strong>deep scan</strong>, depending on the expected run frequency.</li>
 <li>Build step <code>-Dvulas vulas:report</code> to create result reports (per default in folder <code>target/vulas/result</code>).</li>
-<li>Post-build action with <a href="https://wiki.jenkins.io/display/JENKINS/HTML+Publisher+Plugin">HTML Publisher Plugin</a> to copy the Html report created by <code>report</code> into the Jenkins dashboard. As such, vulnerability-assessment-tool results can be consumed w/o the need to scroll through the verbose console output.</li>
+<li>Post-build action with <a href="https://wiki.jenkins.io/display/JENKINS/HTML+Publisher+Plugin">HTML Publisher Plugin</a> to copy the Html report created by <code>report</code> into the Jenkins dashboard. As such, Eclipse Steady results can be consumed w/o the need to scroll through the verbose console output.</li>
 </ol>
 <p>Additional notes:</p>
 <ul>
-<li>The above assumes that the vulnerability-assessment-tool Maven profile is present in the project's <code>pom.xml</code>.</li>
+<li>The above assumes that the Eclipse Steady Maven profile is present in the project's <code>pom.xml</code>.</li>
 </ul>
 <div class="admonition info">
 <p class="admonition-title">The <code>report</code> goal should always be run in a separate Maven invocation.</p>
@@ -1308,7 +1308,7 @@
   <div class="md-footer-social">
     <link rel="stylesheet" href="../../../assets/fonts/font-awesome.css">
     
-      <a href="https://github.com/sap/vulnerability-assessment-tool" class="md-footer-social__link fa fa-github"></a>
+      <a href="https://github.com/eclipse/steady" class="md-footer-social__link fa fa-github"></a>
     
   </div>
 

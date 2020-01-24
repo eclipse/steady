@@ -10,10 +10,10 @@
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
-        <meta name="description" content="vulnerability-assessment-tool Documentation">
+        <meta name="description" content="Eclipse Steady Documentation">
       
       
-        <link rel="canonical" href="https://sap.github.io/vulnerability-assessment-tool/user/tutorials/python_cli/">
+        <link rel="canonical" href="https://eclipse.github.io/steady/user/tutorials/python_cli/">
       
       
       
@@ -40,7 +40,7 @@
     
     
       
-        <title>Scanning Python (CLI) - vulnerability-assessment-tool 3.1.6</title>
+        <title>Scanning Python (CLI) - Eclipse Steady (Incubator Project) 3.1.6</title>
       
     
     
@@ -124,7 +124,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -138,7 +138,7 @@
           
             
               <span class="md-header-nav__topic">
-                vulnerability-assessment-tool 3.1.6
+                Eclipse Steady (Incubator Project) 3.1.6
               </span>
               <span class="md-header-nav__topic">
                 Scanning Python (CLI)
@@ -186,7 +186,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -195,7 +195,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -310,12 +310,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/" title="vulnerability-assessment-tool 3.1.6" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.6" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    vulnerability-assessment-tool 3.1.6
+    Eclipse Steady (Incubator Project) 3.1.6
   </label>
   
     <div class="md-nav__source">
@@ -325,7 +325,7 @@
   
 
 
-  <a href="https://github.com/sap/vulnerability-assessment-tool/" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -334,7 +334,7 @@
       </div>
     
     <div class="md-source__repository">
-      sap/vulnerability-assessment-tool
+      eclipse/steady
     </div>
   </a>
 
@@ -1293,12 +1293,12 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/sap/vulnerability-assessment-tool/edit/master/docs/user/tutorials/python_cli.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/eclipse/steady/edit/master/docs/user/tutorials/python_cli.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
                 <h1 id="scanning-python-apps-with-the-cli">Scanning Python apps with the CLI<a class="headerlink" href="#scanning-python-apps-with-the-cli" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Using vulnerability-assessment-tool for Python applications not built with SetupTools</p>
+<p>Using Eclipse Steady for Python applications not built with SetupTools</p>
 </blockquote>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ol>
@@ -1309,7 +1309,7 @@
 <li>Backend service: <a href="http://localhost:8033/backend/">http://localhost:8033/backend/</a></li>
 </ul>
 </li>
-<li>The token of a vulnerability-assessment-tool workspace</li>
+<li>The token of a Eclipse Steady workspace</li>
 </ol>
 <div class="admonition info">
 <p class="admonition-title">Workspace creation</p>
@@ -1320,7 +1320,7 @@ the third button in the lower left corner:</p>
 please see <a href="../../manuals/setup/#workspace">this section of the manual</a>.</p>
 </div>
 <h2 id="download">Download<a class="headerlink" href="#download" title="Permanent link">&para;</a></h2>
-<p>Please download the latest ZIP archive <code>vulas-cli-&lt;VERSION&gt;.zip</code> from <a href="https://github.com/SAP/vulnerability-assessment-tool/releases">Releases</a> and extract it into a newly created folder.
+<p>Please download the latest ZIP archive <code>vulas-cli-&lt;VERSION&gt;.zip</code> from <a href="https://github.com/eclipse/steady/releases">Releases</a> and extract it into a newly created folder.
 This folder will contain the following items:</p>
 <dl>
 <dt><strong><code>./app/</code></strong></dt>
@@ -1329,11 +1329,11 @@ This folder will contain the following items:</p>
 </dd>
 <dt><strong><code>./vulas-cli-&lt;version&gt;-jar-with-dependencies.jar</code></strong></dt>
 <dd>
-<p>An executable JAR, which is the actual command-line version of the vulnerability-assessment-tool client. This is what you will use later to execute vulnerability-assessment-tool scans.</p>
+<p>An executable JAR, which is the actual command-line version of the Eclipse Steady client. This is what you will use later to execute Eclipse Steady scans.</p>
 </dd>
 <dt><strong><code>./vulas-custom.properties.sample</code></strong></dt>
 <dd>
-<p>This is a template for the configuration file required by vulnerability-assessment-tool. You will change it in order to specify an identifier for your application (see below).</p>
+<p>This is a template for the configuration file required by Eclipse Steady. You will change it in order to specify an identifier for your application (see below).</p>
 </dd>
 </dl>
 <h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
@@ -1353,7 +1353,7 @@ This folder will contain the following items:</p>
 <p>Java resources contained in folder <code>./app/</code> will also be added as application code or dependencies.</p>
 </li>
 <li>
-<p>For the above reason, make sure that the vulnerability-assessment-tool CLI is not contained in <code>./app/</code> or other folders specified by setting <code>vulas.core.app.sourceDir</code>, if any.</p>
+<p>For the above reason, make sure that the Eclipse Steady CLI is not contained in <code>./app/</code> or other folders specified by setting <code>vulas.core.app.sourceDir</code>, if any.</p>
 </li>
 </ul>
 <h2 id="goal-execution">Goal execution<a class="headerlink" href="#goal-execution" title="Permanent link">&para;</a></h2>
@@ -1386,7 +1386,7 @@ This folder will contain the following items:</p>
 <p><code>java -jar vulas-cli-3.1.6-jar-with-dependencies.jar -goal clean</code></p>
 </li>
 <li>
-<p>All application-specific data in the vulnerability-assessment-tool backend are deleted.</p>
+<p>All application-specific data in the Eclipse Steady backend are deleted.</p>
 </li>
 </ol>
 <div class="admonition info">
@@ -1472,7 +1472,7 @@ This folder will contain the following items:</p>
   <div class="md-footer-social">
     <link rel="stylesheet" href="../../../assets/fonts/font-awesome.css">
     
-      <a href="https://github.com/sap/vulnerability-assessment-tool" class="md-footer-social__link fa fa-github"></a>
+      <a href="https://github.com/eclipse/steady" class="md-footer-social__link fa fa-github"></a>
     
   </div>
 
