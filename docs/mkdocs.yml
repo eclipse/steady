@@ -1,10 +1,10 @@
-site_name: vulnerability-assessment-tool 3.1.6
-site_description: vulnerability-assessment-tool Documentation
-site_url: https://sap.github.io/vulnerability-assessment-tool/
+site_name: Eclipse Steady (Incubator Project) 3.1.6
+site_description: Eclipse Steady Documentation
+site_url: https://eclipse.github.io/steady/
 dev_addr: 0.0.0.0:8000
 
-repo_name: 'sap/vulnerability-assessment-tool'
-repo_url: 'https://github.com/sap/vulnerability-assessment-tool'
+repo_name: 'eclipse/steady'
+repo_url: 'https://github.com/eclipse/steady'
 
 docs_dir: .merged
 
@@ -107,7 +107,7 @@ markdown_extensions:
 extra:
   social:
     - type: 'github'
-      link: 'https://github.com/sap/vulnerability-assessment-tool'
+      link: 'https://github.com/eclipse/steady'
 
 theme:
   name: 'material'
