@@ -5,7 +5,7 @@
 </p>
 
 # Eclipse Steady (Incubator Project)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![Build Status](https://travis-ci.org/SAP/vulnerability-assessment-tool.svg?branch=master)](https://travis-ci.org/SAP/vulnerability-assessment-tool) [![Release](https://img.shields.io/github/release/SAP/vulnerability-assessment-tool.svg)](https://github.com/SAP/vulnerability-assessment-tool/releases)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![Build Status](https://travis-ci.org/eclipse/steady.svg?branch=master)](https://travis-ci.org/eclipse/steady) [![Release](https://img.shields.io/github/release/eclipse/steady.svg)](https://github.com/eclipse/steady/releases)
 
 **Discover, assess and mitigate known vulnerabilities in your Java and Python projects**
 
