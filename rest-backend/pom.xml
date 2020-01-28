@@ -33,7 +33,7 @@
 
 	<groupId>com.sap.research.security.vulas</groupId>
 	<artifactId>rest-backend</artifactId>
-	<version>3.1.7-SNAPSHOT</version>
+	<version>3.1.7</version>
 	<packaging>${packaging.type}</packaging>
 
 	<name>REST service to manage scan results and bugs</name>
