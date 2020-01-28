@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.report;
 
 import java.io.File;
@@ -101,13 +120,24 @@ public class Report {
 
 	private Set<Application> modules = null;
 
+	/**
+	 *  All vulnerabilities of all application modules, collected in {@link Report#fetchAppVulnerabilities()}.
+	 */
 	private Set<AggregatedVuln> vulns = new TreeSet<AggregatedVuln>();
+	
+	/**
+	 *  Vulnerabilities that cause a build exception, determined in {@link Report#processVulnerabilities()}.
+	 */
+	private Set<AggregatedVuln> vulnsAboveThreshold = new TreeSet<AggregatedVuln>();
+		
+	/**
+	 *  Vulnerabilities that do not cause a build exception, determined in {@link Report#processVulnerabilities()}.
+	 */
+	private Set<AggregatedVuln> vulnsBelowThreshold = new TreeSet<AggregatedVuln>();
 	
 	// The following are used to inform about obsolete exemptions
 	private Set<String> historicalVulns = new HashSet<String>();
 	private Set<String> relevantVulns = new HashSet<String>();
-
-	private Set<AggregatedVuln> vulnsAboveThreshold = new HashSet<AggregatedVuln>();
 
 	final VelocityContext context = new VelocityContext();
 	
@@ -244,7 +274,7 @@ public class Report {
 	 * 
 	 * The member variable {@link #modules} only contains multiple {@link Application}s if the report is created through the Maven plugin and
 	 * the respective Maven project (for which the report goal is executed) is a multi-module aggregator project. If both conditions are met,
-	 * each project module corresponds to one {@link Application} in member varaiable {@link #modules}.
+	 * each project module corresponds to one {@link Application} in member variable {@link #modules}.
 	 *
 	 * @throws java.io.IOException
 	 * @throws com.sap.psr.vulas.backend.BackendConnectionException
@@ -291,15 +321,14 @@ public class Report {
 	}
 
 	/**
-	 * <p>processVulnerabilities.</p>
+	 * Processes all the vulnerabilities of all application modules as obtained from the backend.
+	 * Populates the Velocity {@link #context} required for rendering the templates in {@link #writeResult(Path)}. 
 	 */
 	public void processVulnerabilities() {
 		// Will be shown but do not raise a build exception
 		final Set<AggregatedVuln> vulnsToReport = new TreeSet<AggregatedVuln>();
 
 		// Stats to be added to the goal execution
-		long vulns_total_incl = 0, vulns_total_reach = 0, vulns_total_traced = 0;
-		long scope_in = 0, scope_out = 0;
 		long vulns_incl = 0, vulns_reach = 0, vulns_traced = 0;
 		long vulns_traced_not_reach = 0; // A particularly interesting case: Static analysis says it is not reachable, however, we collected a trace
 		
@@ -313,36 +342,33 @@ public class Report {
 			else if(!this.historicalVulns.contains(v) && !relevantVulns.contains(v)) {
 				obsolSignNotPresent.add(v);
 			}
-		}		
+		}
 		if(!obsolHistorical.isEmpty())
 			log.warn("Exemptions for the following vulnerabilities are obsolete, because they concern previous version(s) of the respective application dependency(ies) (historical vulnerability): [" + StringUtil.join(obsolHistorical, ", ") + "]");
 		if(!obsolSignNotPresent.isEmpty())
 			log.warn("Exemptions for the following vulnerabilities are obsolete, because none of the application dependencies contain potentially affected code signatures: [" + StringUtil.join(obsolSignNotPresent, ", ") + "]");
 
-		// Process all vuln dependencies
+		// Process all vulnerable dependencies obtained from the backend
 		for(AggregatedVuln v: this.vulns) {
 			for(VulnerableDependency analysis: v.getAnalyses()) {
 				
-				// Overall counters
-				if(analysis.isAffectedVersion()) vulns_total_incl++;
-				if(analysis.isReachable()) vulns_total_reach++;
-				if(analysis.isTraced()) vulns_total_traced++;
+				// Is the vulnerability exempted?
+				analysis.setBlacklisted(this.isIgnoredForBuildException(analysis, v.getBug().getBugId()));				
 
-				// Will this be considered for throwing a build exception?
-				analysis.setBlacklisted(this.isIgnoredForBuildException(analysis, v.getBug().getBugId()));
-				if(analysis.isBlacklisted()) scope_out++;
-				else scope_in++;
-
-				// An interesting case
-				if(analysis.isTraced() && analysis.isReachable() && analysis.isReachableConfirmed())
-					vulns_traced_not_reach++;
-
-				// Only report if there is a confirmed problem or a manual check/activity is required
+				// Only report if there is a confirmed problem or a manual check/activity is required (orange hourglass)
 				// In other words: ignore historical vulnerabilities, i.e., cases where a non-vulnerable archive is used
-				if(!analysis.isNoneAffectedVersion()) { vulns_incl++; vulnsToReport.add(v); }
-				if(!analysis.isNoneAffectedVersion() && ( analysis.isReachable() || !analysis.isReachableConfirmed() )) { vulns_reach++; vulnsToReport.add(v); }
-				if(!analysis.isNoneAffectedVersion() && ( analysis.isTraced() || !analysis.isTracedConfirmed() )) { vulns_traced++; vulnsToReport.add(v); }
-
+				if(!analysis.isNoneAffectedVersion()) {
+					vulnsToReport.add(v);
+					vulns_incl++;
+				}
+				
+				// Counters
+				if(!analysis.isNoneAffectedVersion() && ( analysis.isReachable() || !analysis.isReachableConfirmed() )) { vulns_reach++; }
+				if(!analysis.isNoneAffectedVersion() && ( analysis.isTraced() || !analysis.isTracedConfirmed() )) { vulns_traced++; }
+				
+				// Interesting case: Traced but not reachable
+				if(analysis.isTraced() && analysis.isReachable() && analysis.isReachableConfirmed()) { vulns_traced_not_reach++; }
+				
 				// Is analysis above the configured exception threshold?
 				if( (exceptionThreshold.equalsIgnoreCase(THRESHOLD_DEP_ON)  && ( analysis.isAffectedVersion() || !analysis.isAffectedVersionConfirmed() ) ) ||
 						(exceptionThreshold.equalsIgnoreCase(THRESHOLD_POT_EXE) && ( !analysis.isNoneAffectedVersion() && ( analysis.isReachable() || !analysis.isReachableConfirmed() ) ) ) ||
@@ -352,43 +378,43 @@ public class Report {
 					analysis.setAboveThreshold(false);
 				}
 
-				// Is vulnerability above the configured exception threshold?
-				if(analysis.isThrowsException()) {
-					v.aboveThreshold = true;
-					vulnsAboveThreshold.add(v);
-				}
+				// Will this vuln result in a build exception (depending on blacklist and analysis threshold)?
+				if(analysis.isThrowsException()) { v.aboveThreshold = true; }
 			}
+		}
+		
+		// Split vulnerabilities to be reported into 2 sets
+		for(AggregatedVuln v: vulnsToReport) {
+			if(v.aboveThreshold)
+				vulnsAboveThreshold.add(v);
+			else
+				vulnsBelowThreshold.add(v);
 		}
 
 		// Write stats to map
-		this.stats.put("report.vulnsTotal", (long)Integer.valueOf(vulns.size())); // All retrieved from the central engine
-		this.stats.put("report.vulnsTotalIncluded", vulns_total_incl); // Stats overall (incl. blacklisted)
-		this.stats.put("report.vulnsTotalReachable", vulns_total_reach); // 
-		this.stats.put("report.vulnsTotalTraced", vulns_total_traced); // 
-
-		this.stats.put("report.vulnsOutScope", scope_out); // Those not considered due to the scope BL
-		this.stats.put("report.vulnsInScope", scope_in); // Those considered after blacklisting
 		this.stats.put("report.vulnsIncluded", vulns_incl); // Stats for non-blacklisted ones
 		this.stats.put("report.vulnsReachable", vulns_reach); // 
 		this.stats.put("report.vulnsTraced", vulns_traced); //
 		this.stats.put("report.vulnsTracedNotReachable", vulns_traced_not_reach); //
 
 		this.stats.put("report.buildFailure", Long.valueOf(this.isThrowBuildException()?1:0) );
-		this.stats.put("report.vulnsAboveThreshold", Long.valueOf(vulnsAboveThreshold.size())); // Those make the build fail
+		
+		this.stats.put("report.vulnsAboveThreshold", Long.valueOf(vulnsAboveThreshold.size()));
+		this.stats.put("report.vulnsBelowThreshold", Long.valueOf(vulnsBelowThreshold.size()));
+		
 		this.stats.put("report.isAggregated", Long.valueOf((this.isAggregated() ? 1 : 0)));
 		this.stats.put("report.projectsReportedOn", Long.valueOf(modules.size()));
 
 		// Analysis results
-		this.context.put("vulns", vulns);
 		this.context.put("vulnsToReport", vulnsToReport);
-		this.context.put("vulnsAboveTreshold", vulnsAboveThreshold);
+		this.context.put("vulnsAboveThreshold", vulnsAboveThreshold);
+		this.context.put("vulnsBelowThreshold", vulnsBelowThreshold);
 		
 		this.context.put("obsoleteExemptionsHistorical", StringUtil.join(obsolHistorical, ", "));
 		this.context.put("obsoleteExemptionsSignatureNotPresent", StringUtil.join(obsolSignNotPresent, ", "));
 
 		// Basic info
 		this.context.put("vulas-backend-serviceUrl", this.goalContext.getVulasConfiguration().getServiceUrl(Service.BACKEND));
-		this.context.put("vulas-cia-serviceUrl", this.goalContext.getVulasConfiguration().getServiceUrl(Service.CIA));
 		this.context.put("app", app);
 		this.context.put("space", this.goalContext.getSpace());
 		this.context.put("projects", modules);
@@ -496,7 +522,7 @@ public class Report {
 	}
 	
 	/**
-	 * <p>writeResult.</p>
+	 * Creates result reports in HTML, XML and JSON.
 	 *
 	 * @param _dir a {@link java.nio.file.Path} object.
 	 */
@@ -599,7 +625,7 @@ public class Report {
 
 	public static class AggregatedVuln implements Comparable {
 
-		public String archiveid;
+		public String archiveid; // Digest
 		public String getArchiveid() { return archiveid; }
 
 		public String filename;
@@ -618,7 +644,7 @@ public class Report {
 		}
 		public Set<VulnerableDependency> getAnalyses() { return analyses; }
 
-		public AggregatedVuln(String _sha1, String _filename, Bug _bug) { this.archiveid = _sha1; this.filename = _filename; this.bug = _bug;}
+		public AggregatedVuln(String _digest, String _filename, Bug _bug) { this.archiveid = _digest; this.filename = _filename; this.bug = _bug;}
 
 		public boolean aboveThreshold = false;
 		public boolean hasFindingsAboveThreshold() { return aboveThreshold; }
@@ -637,6 +663,9 @@ public class Report {
 			return result;
 		}
 
+		/**
+		 * Returns true if both digest and bug are equals, false otherwise.
+		 */
 		@Override
 		public boolean equals(Object obj) {
 			if (this == obj)
@@ -645,9 +674,8 @@ public class Report {
 				return false;
 			if (getClass() != obj.getClass())
 				return false;
+			
 			AggregatedVuln other = (AggregatedVuln) obj;
-//			if (aboveThreshold != other.aboveThreshold)
-//				return false;
 			if (archiveid == null) {
 				if (other.archiveid != null)
 					return false;
