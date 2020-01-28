@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://eclipse.github.io/steady/">
-        <img height="64" src="docs/public/content/images/vulas.png">
+        <img height="64" src="docs/public/content/images/ES-logo-152-transparent.png">
     </a>
 </p>
 
@@ -19,7 +19,7 @@ As such, it addresses the OWASP Top 10 security risk A9, [Using Components with 
 
 In comparison to other tools, the detection is code-centric and usage-based, which allows for more accurate detection and assessment than tools relying on meta-data.  It is a collection of client-side scan tools, microservices and rich [OpenUI5](https://openui5.hana.ondemand.com/) Web frontends.
 
-Read more in our [**Docs**](https://sap.github.io/vulnerability-assessment-tool/)
+Read more in our [**Docs**](https://eclipse.github.io/steady/)
 
 ## History
 
