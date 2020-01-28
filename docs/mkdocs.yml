@@ -113,8 +113,8 @@ theme:
   name: 'material'
   custom_dir: './public/custom_theme/'
   language: en
-  favicon: 'images/vulas.png'
-  # logo: 'images/vulas-white.png'
+  favicon: 'images/ES-favicon-48-transparent.png'
+#  logo: 'images/ES-logo-152-transparent.png'
   palette:
     primary: 'blue'
     accent: 'blue'
