@@ -22,7 +22,7 @@
 <core:FragmentDefinition xmlns="sap.m"
 	xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout"
 	xmlns:m="sap.ui.commons.layout">
-	<Popover title="About VULAS" class="sapUiContentPadding"
+	<Popover title="About Eclipse Steady" class="sapUiContentPadding"
 		placement="Horizontal" contentWidth="400px">
 		<!-- footer>
 			<Bar>
@@ -39,7 +39,7 @@
 						<m:MatrixLayoutRow>
 							<m:MatrixLayoutCell colSpan="2">
 								<Text
-									text="Vulas analyses the impact of vulnerabilities in open-source software in specific application contexts." />
+									text="Eclipse Steady analyses the impact of vulnerabilities in open-source software in specific application contexts." />
 								<Label />
 								<Text
 									text="The following three assessment levels represent an increasing security risk for the application under analysis, and are displayed in the 'Vulnerabilities' tab:" />
