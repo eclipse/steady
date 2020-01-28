@@ -208,7 +208,7 @@ The setting `vulas.reach.wala.callgraph.algorithm` determines the construction a
 vulas.reach.wala.callgraph.algorithm = 0-1-CFA
 ```
 
-The setting `vulas.reach.wala.callgraph.reflection` determines the consideration of reflection, which is commonly used to instantiate and invoke classes and methods. See [here](https://github.com/wala/WALA/blob/master/com.ibm.wala.core/src/com/ibm/wala/ipa/callgraph/AnalysisOptions.java) for more information.
+The setting `vulas.reach.wala.callgraph.reflection` determines the consideration of reflection, which is commonly used to instantiate and invoke classes and methods. See [here](https://github.com/wala/WALA/blob/master/com.ibm.wala.core/src/main/java/com/ibm/wala/ipa/callgraph/AnalysisOptions.java) for more information.
 
 ```ini
 # Reflection option to be used for call graph construction
@@ -650,7 +650,7 @@ Deletes application-specific data in the backend, e.g., traces collected during 
     # Set this to 0 to delete all versions.
     # Default: 3
     vulas.core.clean.purgeVersions.keepLast = 3
-    
+
     # When true, the history of past goal executions will be deleted (NOTE: this does not delete the scan results themselves!
     # you may want to use the two directives above to purge scan results.)
     # The default value is recommended, in normal scenarios you should leave this to false.
