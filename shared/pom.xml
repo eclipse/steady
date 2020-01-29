@@ -28,7 +28,7 @@
 	<parent>
 		<groupId>com.sap.research.security.vulas</groupId>
 		<artifactId>root</artifactId>
-		<version>3.1.7</version>
+		<version>3.1.8-SNAPSHOT</version>
 	</parent>
 	<artifactId>shared</artifactId>
 
