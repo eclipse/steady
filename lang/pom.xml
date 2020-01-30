@@ -93,6 +93,12 @@
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		  <groupId>com.github.jtidy</groupId>
+		  <artifactId>jtidy</artifactId>
+		  <version>1.0.2</version>
+		  <scope>test</scope>
+		</dependency>
 
 		<!-- Used to mock REST services -->
 		<dependency>
