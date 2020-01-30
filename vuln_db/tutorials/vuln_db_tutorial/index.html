@@ -40,7 +40,7 @@
     
     
       
-        <title>Tutorial - Eclipse Steady (Incubator Project) 3.1.7</title>
+        <title>Tutorial - Eclipse Steady 3.1.8 (Incubator Project)</title>
       
     
     
@@ -124,7 +124,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.7" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.8 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -138,7 +138,7 @@
           
             
               <span class="md-header-nav__topic">
-                Eclipse Steady (Incubator Project) 3.1.7
+                Eclipse Steady 3.1.8 (Incubator Project)
               </span>
               <span class="md-header-nav__topic">
                 Tutorial
@@ -310,12 +310,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.7" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.8 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady (Incubator Project) 3.1.7
+    Eclipse Steady 3.1.8 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1258,20 +1258,20 @@ to import vulnerability data before you can actually perform scans.</p>
 <h2 id="patch-analyzer">Patch Analyzer<a class="headerlink" href="#patch-analyzer" title="Permanent link">&para;</a></h2>
 <h3 id="creation-of-above-listed-vulnerabilities">Creation of above-listed vulnerabilities<a class="headerlink" href="#creation-of-above-listed-vulnerabilities" title="Permanent link">&para;</a></h3>
 <p>Run the following commands to create the change list for the vulnerability and upload it to the backend</p>
-<div class="codehilite"><pre><span></span>java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend/ -jar ./patch-analyzer/target/patch-analyzer-3.1.7-jar-with-dependencies.jar com.sap.psr.vulas.PatchAnalyzer -r https://github.com/FasterXML/jackson-databind -b CVE-2017-7525 -e e8f043d1aac9b82eee907e0f0c3abbdea723a935,ddfddfba6414adbecaff99684ef66eebd3a92e92,60d459cedcf079c6106ae7da2ac562bc32dcabe1 -links https://github.com/FasterXML/jackson-databind/issues/1599,https://github.com/FasterXML/jackson-databind/issues/1680,https://github.com/FasterXML/jackson-databind/issues/1737  -descr <span class="s2">&quot;When configured to enable default typing, Jackson contained a deserialization vulnerability that could lead to arbitrary code execution. Jackson fixed this vulnerability by blacklisting known &#39;deserialization gadgets&#39;. This vulnerability solves an incomplete fix for CVE-2017-4995-JK (main description at: https://github.com/FasterXML/jackson-databind/issues/1599 Issues not addressed by the incomplete fix of CVE-2017-4995-JK: https://github.com/FasterXML/jackson-databind/issues/1680 and https://github.com/FasterXML/jackson-databind/issues/1737) &quot;</span> -u
+<div class="codehilite"><pre><span></span>java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend/ -jar ./patch-analyzer/target/patch-analyzer-3.1.8-jar-with-dependencies.jar com.sap.psr.vulas.PatchAnalyzer -r https://github.com/FasterXML/jackson-databind -b CVE-2017-7525 -e e8f043d1aac9b82eee907e0f0c3abbdea723a935,ddfddfba6414adbecaff99684ef66eebd3a92e92,60d459cedcf079c6106ae7da2ac562bc32dcabe1 -links https://github.com/FasterXML/jackson-databind/issues/1599,https://github.com/FasterXML/jackson-databind/issues/1680,https://github.com/FasterXML/jackson-databind/issues/1737  -descr <span class="s2">&quot;When configured to enable default typing, Jackson contained a deserialization vulnerability that could lead to arbitrary code execution. Jackson fixed this vulnerability by blacklisting known &#39;deserialization gadgets&#39;. This vulnerability solves an incomplete fix for CVE-2017-4995-JK (main description at: https://github.com/FasterXML/jackson-databind/issues/1599 Issues not addressed by the incomplete fix of CVE-2017-4995-JK: https://github.com/FasterXML/jackson-databind/issues/1680 and https://github.com/FasterXML/jackson-databind/issues/1737) &quot;</span> -u
 
-java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend/ -jar ./patch-analyzer/target/patch-analyzer-3.1.7-jar-with-dependencies.jar com.sap.psr.vulas.PatchAnalyzer -r https://github.com/bcgit/bc-java/ -b CVE-2018-5382 -e 81b00861cd5711e85fe8dce2a0e119f684120255 -links https://snyk.io/vuln/SNYK-JAVA-ORGBOUNCYCASTLE-31659,https://www.kb.cert.org/vuls/id/306792 -u
+java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend/ -jar ./patch-analyzer/target/patch-analyzer-3.1.8-jar-with-dependencies.jar com.sap.psr.vulas.PatchAnalyzer -r https://github.com/bcgit/bc-java/ -b CVE-2018-5382 -e 81b00861cd5711e85fe8dce2a0e119f684120255 -links https://snyk.io/vuln/SNYK-JAVA-ORGBOUNCYCASTLE-31659,https://www.kb.cert.org/vuls/id/306792 -u
 
-java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend/ -jar ./patch-analyzer/target/patch-analyzer-3.1.7-jar-with-dependencies.jar com.sap.psr.vulas.patcha.PatchAnalyzer -r https://github.com/spring-projects/spring-framework/ -b CVE-2018-11039 -e dac97f1b7dac3e70ff603fb6fc9f205b95dd6b01,f2694a8ed93f1f63f87ce45d0bb638478b426acd -links https://pivotal.io/security/cve-2018-11039,https://jira.spring.io/browse/SPR-16836 -descr <span class="s2">&quot;Cross Site Tracing (XST) with Spring Framework. Description: Spring Framework (versions 5.0.x prior to 5.0.7, versions 4.3.x prior to 4.3.18, and older unsupported versions) allow web applications to change the HTTP request method to any HTTP method (including TRACE) using the HiddenHttpMethodFilter in Spring MVC. If an application has a pre-existing XSS vulnerability, a malicious user (or attacker) can use this filter to escalate to an XST (Cross Site Tracing) attack. Affected Pivotal Products and Versions: Spring Framework 5.0 to 5.0.6, Spring Framework 4.3 to 4.3.17, Older unsupported versions are also affected. Mitigation: Users of affected versions should apply the following mitigation: \n 5.0.x users should upgrade to 5.0.7. \n- 4.3.x users should upgrade to 4.3.18. - Older versions should upgrade to a supported branch. \nThere are no other mitigation steps necessary. This attack applies to applications that: \n1/ Use the HiddenHttpMethodFilter (it is enabled by default in Spring Boot). \n2/ Allow HTTP TRACE requests to be handled by the application server. \nThis attack is not exploitable directly because an attacker would have to make a cross-domain request via HTTP POST, which is forbidden by the Same Origin Policy. This is why a pre-existing XSS (Cross Site Scripting) vulnerability in the web application itself is necessary to enable an escalation to XST.&quot;</span> -u
+java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend/ -jar ./patch-analyzer/target/patch-analyzer-3.1.8-jar-with-dependencies.jar com.sap.psr.vulas.patcha.PatchAnalyzer -r https://github.com/spring-projects/spring-framework/ -b CVE-2018-11039 -e dac97f1b7dac3e70ff603fb6fc9f205b95dd6b01,f2694a8ed93f1f63f87ce45d0bb638478b426acd -links https://pivotal.io/security/cve-2018-11039,https://jira.spring.io/browse/SPR-16836 -descr <span class="s2">&quot;Cross Site Tracing (XST) with Spring Framework. Description: Spring Framework (versions 5.0.x prior to 5.0.7, versions 4.3.x prior to 4.3.18, and older unsupported versions) allow web applications to change the HTTP request method to any HTTP method (including TRACE) using the HiddenHttpMethodFilter in Spring MVC. If an application has a pre-existing XSS vulnerability, a malicious user (or attacker) can use this filter to escalate to an XST (Cross Site Tracing) attack. Affected Pivotal Products and Versions: Spring Framework 5.0 to 5.0.6, Spring Framework 4.3 to 4.3.17, Older unsupported versions are also affected. Mitigation: Users of affected versions should apply the following mitigation: \n 5.0.x users should upgrade to 5.0.7. \n- 4.3.x users should upgrade to 4.3.18. - Older versions should upgrade to a supported branch. \nThere are no other mitigation steps necessary. This attack applies to applications that: \n1/ Use the HiddenHttpMethodFilter (it is enabled by default in Spring Boot). \n2/ Allow HTTP TRACE requests to be handled by the application server. \nThis attack is not exploitable directly because an attacker would have to make a cross-domain request via HTTP POST, which is forbidden by the Same Origin Policy. This is why a pre-existing XSS (Cross Site Scripting) vulnerability in the web application itself is necessary to enable an escalation to XST.&quot;</span> -u
 
-java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend/ -jar ./patch-analyzer/target/patch-analyzer-3.1.7-jar-with-dependencies.jar com.sap.psr.vulas.PatchAnalyzer -r https://github.com/apache/commons-fileupload -b CVE-2014-0050 -e c61ff05b3241cb14d989b67209e57aa71540417a -u
+java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend/ -jar ./patch-analyzer/target/patch-analyzer-3.1.8-jar-with-dependencies.jar com.sap.psr.vulas.PatchAnalyzer -r https://github.com/apache/commons-fileupload -b CVE-2014-0050 -e c61ff05b3241cb14d989b67209e57aa71540417a -u
 
-java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend/ -jar ./patch-analyzer/target/patch-analyzer-3.1.7-jar-with-dependencies.jar com.sap.psr.vulas.PatchAnalyzer -r https://github.com/apache/commons-collections -b COLLECTIONS-580 -e 3eee44cf63b1ebb0da6925e98b3dcc6ef1e4d610,78d47d4d098ab814a7a00a0b1c81646b27f050cf,e585cd0433ae4cfbc56e58572b9869bd0c86b611,b2b8f4adc557e4ef1ee2fe5e0ab46866c06ec55b,da1a5fe00d79e1840b7e52317933e9eb56e88246,1642b00d67b96de87cad44223efb9ab5b4fb7be5:3_2_X,5ec476b0b756852db865b2e442180f091f8209ee:3_2_X,bce4d022f27a723fa0e0b7484dcbf0afa2dd210a:3_2_X,d9a00134f16d685bea11b2b12de824845e6473e3:3_2_X -descr <span class="s2">&quot;Arbitrary remote code execution with InvokerTransformer. With InvokerTransformer serializable collections can be build that execute arbitrary Java code. sun.reflect.annotation.AnnotationInvocationHandler#readObject invokes #entrySet and #get on a deserialized collection. If you have an endpoint that accepts serialized Java objects (JMX, RMI, remote EJB, ...) you can combine the two to create arbitrary remote code execution vulnerability. Fixed in versions 3.2.2, 4.1&quot;</span> -links https://issues.apache.org/jira/browse/COLLECTIONS-580,https://commons.apache.org/proper/commons-collections/security-reports.html -u
+java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend/ -jar ./patch-analyzer/target/patch-analyzer-3.1.8-jar-with-dependencies.jar com.sap.psr.vulas.PatchAnalyzer -r https://github.com/apache/commons-collections -b COLLECTIONS-580 -e 3eee44cf63b1ebb0da6925e98b3dcc6ef1e4d610,78d47d4d098ab814a7a00a0b1c81646b27f050cf,e585cd0433ae4cfbc56e58572b9869bd0c86b611,b2b8f4adc557e4ef1ee2fe5e0ab46866c06ec55b,da1a5fe00d79e1840b7e52317933e9eb56e88246,1642b00d67b96de87cad44223efb9ab5b4fb7be5:3_2_X,5ec476b0b756852db865b2e442180f091f8209ee:3_2_X,bce4d022f27a723fa0e0b7484dcbf0afa2dd210a:3_2_X,d9a00134f16d685bea11b2b12de824845e6473e3:3_2_X -descr <span class="s2">&quot;Arbitrary remote code execution with InvokerTransformer. With InvokerTransformer serializable collections can be build that execute arbitrary Java code. sun.reflect.annotation.AnnotationInvocationHandler#readObject invokes #entrySet and #get on a deserialized collection. If you have an endpoint that accepts serialized Java objects (JMX, RMI, remote EJB, ...) you can combine the two to create arbitrary remote code execution vulnerability. Fixed in versions 3.2.2, 4.1&quot;</span> -links https://issues.apache.org/jira/browse/COLLECTIONS-580,https://commons.apache.org/proper/commons-collections/security-reports.html -u
 </pre></div>
 
 <p>To run such commands in your own environment, you may need to adapt:</p>
 <ul>
-<li>the path to the patch analyzer artifact and the artifact version, <code>-jar ./patch-analyzer/target/patch-analyzer-3.1.7-jar-with-dependencies.jar</code></li>
+<li>the path to the patch analyzer artifact and the artifact version, <code>-jar ./patch-analyzer/target/patch-analyzer-3.1.8-jar-with-dependencies.jar</code></li>
 <li>the URL of the Eclipse Steady backend, <code>-Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/</code></li>
 <li>the proxy settings; the proxy is not configured in the example but you can do so using the following configurations:</li>
 </ul>
@@ -1303,7 +1303,7 @@ java -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8
 <p>To get the best of the tutorial, we recommend to proceed to the next step only after having analyzed at least one application (see <a href="../../../user/tutorials/">tutorial page</a>).</p>
 </div>
 <p>Run for all bugs</p>
-<div class="codehilite"><pre><span></span>java -Dvulas.patchEval.uploadResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.onlyAddNewResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.basefolder<span class="o">=</span>&lt;csv_folder&gt; -Dvulas.patchEval.bugId<span class="o">=</span>&lt;comma_separated_list_of_bugs&gt; -Dvulas.shared.cia.serviceUrl<span class="o">=</span>http://localhost:8033/cia -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend/-Xmx6G -Xms6G -jar patch-lib-analyzer-3.1.7-jar-with-dependencies.jar
+<div class="codehilite"><pre><span></span>java -Dvulas.patchEval.uploadResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.onlyAddNewResults<span class="o">=</span><span class="nb">true</span> -Dvulas.patchEval.basefolder<span class="o">=</span>&lt;csv_folder&gt; -Dvulas.patchEval.bugId<span class="o">=</span>&lt;comma_separated_list_of_bugs&gt; -Dvulas.shared.cia.serviceUrl<span class="o">=</span>http://localhost:8033/cia -Dvulas.shared.backend.serviceUrl<span class="o">=</span>http://localhost:8033/backend/-Xmx6G -Xms6G -jar patch-lib-analyzer-3.1.8-jar-with-dependencies.jar
 </pre></div>
 
 <p>To check how to run it as a job, check <a href="../../manuals/patch_lib_analyzer/">here</a></p>

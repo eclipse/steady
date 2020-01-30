@@ -40,7 +40,7 @@
     
     
       
-        <title>Configuration - Eclipse Steady (Incubator Project) 3.1.7</title>
+        <title>Configuration - Eclipse Steady 3.1.8 (Incubator Project)</title>
       
     
     
@@ -124,7 +124,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.7" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.8 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -138,7 +138,7 @@
           
             
               <span class="md-header-nav__topic">
-                Eclipse Steady (Incubator Project) 3.1.7
+                Eclipse Steady 3.1.8 (Incubator Project)
               </span>
               <span class="md-header-nav__topic">
                 Configuration
@@ -310,12 +310,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady (Incubator Project) 3.1.7" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.8 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady (Incubator Project) 3.1.7
+    Eclipse Steady 3.1.8 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1519,7 +1519,7 @@ For single applications, call HTTP GET <code>http://localhost:8033/backend/hubIn
 <p><strong>With profile</strong>, the execution of goals is more concise (readable), e.g., <code>mvn -Dvulas compile vulas:app</code>. A sample profile can be found <a href="../../tutorials/java_maven/#setup">here</a>, just copy&amp;paste it into the <code>&lt;profiles&gt;</code> section of your <code>pom.xml</code>. In case of aggregated, multi-module Maven projects with modules inheriting from their parent, it is sufficient to include the profile in the top-level (parent) <code>pom.xml</code>. If a module does not inherit from the parent, the profile has to be added to its POM file. Once added, run <code>mvn -Dvulas versions:display-property-updates</code> every now and then to check whether there are new plugin versions available. If so, manually update the property <code>vulas.version</code> in the Eclipse Steady profile.</p>
 </li>
 <li>
-<p><strong>Without profile</strong>, the execution of goals requires the use of the plugin's fully qualified name, e.g., <code>mvn compile com.sap.research.security.vulas:plugin-maven:3.1.7:app</code>. Moreover, you need to specify the following mandatory configuration settings. As described <a href="#configuration">here</a>, there are several ways of doing so, however, a file as follows is very common:</p>
+<p><strong>Without profile</strong>, the execution of goals requires the use of the plugin's fully qualified name, e.g., <code>mvn compile com.sap.research.security.vulas:plugin-maven:3.1.8:app</code>. Moreover, you need to specify the following mandatory configuration settings. As described <a href="#configuration">here</a>, there are several ways of doing so, however, a file as follows is very common:</p>
 <p><strong>vulas-custom.properties</strong></p>
 <div class="codehilite"><pre><span></span>vulas.core.space.token = &lt;YOUR WORKSPACE TOKEN&gt;
 vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
@@ -1558,7 +1558,7 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
         }
 
         dependencies {
-            classpath(&#39;com.sap.research.security.vulas:plugin-gradle:3.1.7&#39;) { changing = true }
+            classpath(&#39;com.sap.research.security.vulas:plugin-gradle:3.1.8&#39;) { changing = true }
         }
     }
 
@@ -1586,7 +1586,7 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 <p>The Gradle plugin only works with later releases of Gradle. How to upgrade is described <a href="https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:upgrading_wrapper">here</a>.</p>
 <h3 id="command-line-interface">Command-line interface<a class="headerlink" href="#command-line-interface" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Create a new folder, download the latest ZIP archive <code>vulas-cli-3.1.7.zip</code> from <a href="https://github.com/eclipse/steady/releases">Releases</a> and extract it into the newly created folder. This folder will then contain the following items:</li>
+<li>Create a new folder, download the latest ZIP archive <code>vulas-cli-3.1.8.zip</code> from <a href="https://github.com/eclipse/steady/releases">Releases</a> and extract it into the newly created folder. This folder will then contain the following items:</li>
 </ol>
 <table>
 <thead>
