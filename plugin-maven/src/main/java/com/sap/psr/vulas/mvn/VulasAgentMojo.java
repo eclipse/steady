@@ -113,8 +113,14 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 					else {
 						val_str = val.toString();
 					}
-					this.agentOptions.put(key, val_str);
-					getLog().info("    [" + key + "=" + val + "]");
+					
+					// Do not include exemptions, as too many would result in error "The command line is too long."
+					if(key.startsWith(CoreConfiguration.REP_EXCL_BUGS)) {
+						getLog().warn("  Ignoring  [" + key + "=...]");
+					} else {
+						this.agentOptions.put(key, val_str);
+						getLog().info("    [" + key + "=" + val + "]");						
+					}
 				}
 			}
 			
@@ -137,8 +143,14 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 						else {
 							val_str = val.toString();
 						}
-						this.agentOptions.put(key, val_str);
-						getLog().info("    [" + key + "=" + val + "]");
+						
+						// Do not include exemptions, as too many would result in error "The command line is too long."
+						if(key.startsWith(CoreConfiguration.REP_EXCL_BUGS)) {
+							getLog().warn("  Ignoring  [" + key + "=...]");
+						} else {
+							this.agentOptions.put(key, val_str);
+							getLog().info("    [" + key + "=" + val + "]");						
+						}
 					}
 				}
 			}
