@@ -40,7 +40,7 @@ BEGIN
   LOOP
     StartTime := clock_timestamp();
   
-    -- Get lib id of one not used as app dep
+    -- Select n un-used lib ids (un-used = not referenced by app dependency)
     for rec in select distinct(l.id) from lib l where l.digest NOT IN (select distinct lib from app_dependency) limit n offset o
 	loop
 	  libid = rec.id;
@@ -52,13 +52,13 @@ BEGIN
 	    GET DIAGNOSTICS prop_count = ROW_COUNT;
 		prop_del_total = prop_del_total + prop_count;
 		
-  	    -- Construct rels not needed
+        -- Construct rels not needed
         --select count(*) from lib_constructs lc where lc.library_id = libid into cons_count;
 	    delete from lib_constructs lc where lc.library_id = libid;
 	    GET DIAGNOSTICS cons_count = ROW_COUNT;
 		cons_del_total = cons_del_total + cons_count;
 		
-	    --RAISE NOTICE '[%] Processed un-used lib [id=%]: Deleted [%] construct rels and [%] property rels', libid_count, libid, cons_count, prop_count; 
+	--RAISE NOTICE '[%] Processed un-used lib [id=%]: Deleted [%] construct rels and [%] property rels', libid_count, libid, cons_count, prop_count; 
 		
 	    COMMIT;
 	  END;	  
@@ -69,7 +69,7 @@ BEGIN
 	Delta := 1000 * ( extract(epoch from EndTime) - extract(epoch from StartTime) );
     RAISE NOTICE '[%] millisecs to process next [%] libraries: Processed [%] libs, deleted [%] construct rels and [%] property rels', Delta, n, libid_count, cons_del_total, prop_del_total;
 		
-	-- Get sizes current
+	-- Get sizes current (note: useless: sizes will only change when VACUUM FULL is called)
     SELECT pg_total_relation_size(relid) FROM pg_catalog.pg_statio_user_tables where relname = 'lib_constructs' into cons_size_current;
     SELECT pg_total_relation_size(relid) FROM pg_catalog.pg_statio_user_tables where relname = 'lib_properties' into prop_size_current;
     RAISE NOTICE 'Table sizes (before, current, saving)';
