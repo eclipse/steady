@@ -19,7 +19,7 @@ DECLARE
   EndTime timestamptz;
   Delta double precision;
   
-  o integer := 1100000;
+  o integer := 0;
   n integer := 5000;
   
   rec RECORD;
