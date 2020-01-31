@@ -40,7 +40,7 @@ BEGIN
   LOOP
     StartTime := clock_timestamp();
   
-    -- Select n un-used lib ids (un-used = not referenced by app dependency)
+    -- Select and loop over n un-used lib ids (un-used = not referenced by app dependency)
     for rec in select distinct(l.id) from lib l where l.digest NOT IN (select distinct lib from app_dependency) limit n offset o
 	loop
 	  libid = rec.id;
