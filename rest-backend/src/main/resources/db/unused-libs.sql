@@ -41,7 +41,7 @@ BEGIN
     StartTime := clock_timestamp();
   
     -- Select and loop over n un-used lib ids (un-used = not referenced by app dependency)
-    for rec in select distinct(l.id) from lib l where l.digest NOT IN (select distinct lib from app_dependency) limit n offset o
+    for rec in select distinct(l.id) from lib l where l.digest NOT IN (select distinct lib from app_dependency) and NOT wellknown_digest = TRUE limit n offset o
 	loop
 	  libid = rec.id;
 	  libid_count = libid_count + 1;
@@ -57,8 +57,8 @@ BEGIN
 	    delete from lib_constructs lc where lc.library_id = libid;
 	    GET DIAGNOSTICS cons_count = ROW_COUNT;
 		cons_del_total = cons_del_total + cons_count;
-		
-	--RAISE NOTICE '[%] Processed un-used lib [id=%]: Deleted [%] construct rels and [%] property rels', libid_count, libid, cons_count, prop_count; 
+				
+        --RAISE NOTICE '[%] Processed un-used lib [id=%]: Deleted [%] construct rels and [%] property rels', libid_count, libid, cons_count, prop_count; 
 		
 	    COMMIT;
 	  END;	  
@@ -75,6 +75,9 @@ BEGIN
     RAISE NOTICE 'Table sizes (before, current, saving)';
     RAISE NOTICE '  lib_constructs [%], [%], [%]', pg_size_pretty(cons_size_before), pg_size_pretty(cons_size_current), pg_size_pretty(cons_size_before - cons_size_current); 
     RAISE NOTICE '  lib_properties [%], [%], [%]', pg_size_pretty(prop_size_before), pg_size_pretty(prop_size_current), pg_size_pretty(prop_size_before - prop_size_current); 
+	
+	-- Exit loop when all un-used libs are processed
+	EXIT WHEN libid_count = libid_total;
 	
 	o = o + n;
   END LOOP;
