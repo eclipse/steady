@@ -33,7 +33,7 @@ BEGIN
   RAISE NOTICE '  lib_properties [%]', pg_size_pretty(prop_size_before); 
 
   -- Count all un-used libs
-  select count(*) from lib l where l.digest NOT IN (select distinct lib from app_dependency) into libid_total;
+  select count(*) from lib l where l.digest NOT IN (select distinct lib from app_dependency) and wellknown_digest = FALSE into libid_total;
   RAISE NOTICE '[%] libs are un-used', libid_total; 
 
   -- Loop over all un-used libs
