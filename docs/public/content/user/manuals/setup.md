@@ -206,6 +206,10 @@ The following settings, however, have to be present for every goal execution:
 - `vulas.core.appContext.group`, `vulas.core.appContext.artifact` and `vulas.core.appContext.version`: Altogether, they uniquely identify an application within a space. Depending on the client used, one or more of them are automatically inferred, e.g., using data from `pom.xml` or `build.gradle`.
 - `vulas.shared.backend.serviceUrl`: The URL of the backend service to which clients upload analysis results.
 
+### Log level
+
+The default [Log4j log level](https://logging.apache.org/log4j/2.x/manual/customloglevels.html) is `INFO`, it can be adjusted with help of system property `vulas.log4j.threshold`, e.g., `-Dvulas.log4j.threshold=WARN`. 
+
 ## Check setup
 
 Proceed as follows to check whether the @@PROJECT_NAME@@ setup and goal execution works:
