@@ -1,3 +1,11 @@
+-- This script determines all libraries not referenced by any dependency and
+-- unknown to public package repositories.
+--
+-- For each such library, the corresponding entries in the relationship tables
+-- lib_properties and lib_constructs are deleted. This deletion can significantly
+-- reduce the database size.
+--
+-- However, to actually recover the disk space, one has to run a VACUUM FULL.
 DO $$ 
 <<first_block>>
 DECLARE
@@ -20,7 +28,7 @@ DECLARE
   Delta double precision;
   
   o integer := 0;
-  n integer := 5000;
+  n integer := 5000; -- Batches to be read and deleted
   
   rec RECORD;
 BEGIN
@@ -82,11 +90,3 @@ BEGIN
 	o = o + n;
   END LOOP;
 END first_block $$;
-
---SELECT pg_database.datname, pg_size_pretty(pg_database_size(pg_database.datname)) AS size FROM pg_database;
--- ==> vulas 274GB
--- SELECT relname as "Table",
---   pg_size_pretty(pg_total_relation_size(relid)) As "Size",
---   pg_size_pretty(pg_total_relation_size(relid) - pg_relation_size(relid)) as "External Size"
---   FROM pg_catalog.pg_statio_user_tables ORDER BY pg_total_relation_size(relid) DESC; 
- 
