@@ -88,6 +88,6 @@ public class ServiceWrapperTest {
 	 */
 	@Test
 	public void testClassifier() throws ServiceConnectionException, IOException {
-		this.setupMockServices("CVE-2014-0050", "CVE-2017-0001");
+		this.setupMockServices("CVE-2014-0050");
 	}
 }
