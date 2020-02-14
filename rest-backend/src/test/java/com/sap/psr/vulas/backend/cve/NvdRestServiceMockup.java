@@ -16,7 +16,9 @@ import org.glassfish.grizzly.http.Method;
 import org.glassfish.grizzly.http.util.HttpStatus;
 
 import com.jayway.restassured.RestAssured;
+import com.sap.psr.vulas.shared.connectivity.Service;
 import com.sap.psr.vulas.shared.util.FileUtil;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import com.xebialabs.restito.server.StubServer;
 
 /**
@@ -38,7 +40,7 @@ public class NvdRestServiceMockup {
 	public NvdRestServiceMockup() {
 		server = new StubServer().run();
 		RestAssured.port = server.getPort();
-		System.setProperty(CveReader2.CVE_SERVICE_URL, "http://localhost:" + server.getPort() + "/nvdrest/vulnerabilities/<ID>");
+		System.setProperty(VulasConfiguration.getServiceUrlKey(Service.CVE), "http://localhost:" + server.getPort() + "/nvdrest/vulnerabilities/<ID>");
 		int cves_registered = 0;
 		for(String cve: CVES) {
 			try {
