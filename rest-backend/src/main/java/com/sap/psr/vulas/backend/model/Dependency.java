@@ -64,10 +64,7 @@ import com.sap.psr.vulas.shared.enums.Scope;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown=true, value={"traced", "reachableConstructIds", "touchPoints"}, allowGetters=true)
 @Entity
-@Table( name="AppDependency")
-///uniqueConstraints=@UniqueConstraint( columnNames = { "lib" , "app"} )
-// Note, the unique constraint is not defined as an annotation any longer as we need more expressiveness than what JPA allows
-// The new constraints are defined in the flyway migration V20180828.1730__depParent.sql as partial indexes
+@Table( name="AppDependency", uniqueConstraints=@UniqueConstraint( columnNames = { "lib" , "app", "parent", "relativePath"} ))
 public class Dependency implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
