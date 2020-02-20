@@ -40,7 +40,7 @@
     
     
       
-        <title>Configuration - Eclipse Steady 3.1.8 (Incubator Project)</title>
+        <title>Configuration - Eclipse Steady 3.1.9 (Incubator Project)</title>
       
     
     
@@ -124,7 +124,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.8 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.9 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -138,7 +138,7 @@
           
             
               <span class="md-header-nav__topic">
-                Eclipse Steady 3.1.8 (Incubator Project)
+                Eclipse Steady 3.1.9 (Incubator Project)
               </span>
               <span class="md-header-nav__topic">
                 Configuration
@@ -310,12 +310,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.8 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.9 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.8 (Incubator Project)
+    Eclipse Steady 3.1.9 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -732,6 +732,13 @@
           <li class="md-nav__item">
   <a href="#general-settings" title="General settings" class="md-nav__link">
     General settings
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-level" title="Log level" class="md-nav__link">
+    Log level
   </a>
   
 </li>
@@ -1373,6 +1380,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#log-level" title="Log level" class="md-nav__link">
+    Log level
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1519,7 +1533,7 @@ For single applications, call HTTP GET <code>http://localhost:8033/backend/hubIn
 <p><strong>With profile</strong>, the execution of goals is more concise (readable), e.g., <code>mvn -Dvulas compile vulas:app</code>. A sample profile can be found <a href="../../tutorials/java_maven/#setup">here</a>, just copy&amp;paste it into the <code>&lt;profiles&gt;</code> section of your <code>pom.xml</code>. In case of aggregated, multi-module Maven projects with modules inheriting from their parent, it is sufficient to include the profile in the top-level (parent) <code>pom.xml</code>. If a module does not inherit from the parent, the profile has to be added to its POM file. Once added, run <code>mvn -Dvulas versions:display-property-updates</code> every now and then to check whether there are new plugin versions available. If so, manually update the property <code>vulas.version</code> in the Eclipse Steady profile.</p>
 </li>
 <li>
-<p><strong>Without profile</strong>, the execution of goals requires the use of the plugin's fully qualified name, e.g., <code>mvn compile com.sap.research.security.vulas:plugin-maven:3.1.8:app</code>. Moreover, you need to specify the following mandatory configuration settings. As described <a href="#configuration">here</a>, there are several ways of doing so, however, a file as follows is very common:</p>
+<p><strong>Without profile</strong>, the execution of goals requires the use of the plugin's fully qualified name, e.g., <code>mvn compile com.sap.research.security.vulas:plugin-maven:3.1.9:app</code>. Moreover, you need to specify the following mandatory configuration settings. As described <a href="#configuration">here</a>, there are several ways of doing so, however, a file as follows is very common:</p>
 <p><strong>vulas-custom.properties</strong></p>
 <div class="codehilite"><pre><span></span>vulas.core.space.token = &lt;YOUR WORKSPACE TOKEN&gt;
 vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
@@ -1558,7 +1572,7 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
         }
 
         dependencies {
-            classpath(&#39;com.sap.research.security.vulas:plugin-gradle:3.1.8&#39;) { changing = true }
+            classpath(&#39;com.sap.research.security.vulas:plugin-gradle:3.1.9&#39;) { changing = true }
         }
     }
 
@@ -1586,7 +1600,7 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 <p>The Gradle plugin only works with later releases of Gradle. How to upgrade is described <a href="https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:upgrading_wrapper">here</a>.</p>
 <h3 id="command-line-interface">Command-line interface<a class="headerlink" href="#command-line-interface" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Create a new folder, download the latest ZIP archive <code>vulas-cli-3.1.8.zip</code> from <a href="https://github.com/eclipse/steady/releases">Releases</a> and extract it into the newly created folder. This folder will then contain the following items:</li>
+<li>Create a new folder, download the latest ZIP archive <code>vulas-cli-3.1.9.zip</code> from <a href="https://github.com/eclipse/steady/releases">Releases</a> and extract it into the newly created folder. This folder will then contain the following items:</li>
 </ol>
 <table>
 <thead>
@@ -1643,6 +1657,8 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 <li><code>vulas.core.appContext.group</code>, <code>vulas.core.appContext.artifact</code> and <code>vulas.core.appContext.version</code>: Altogether, they uniquely identify an application within a space. Depending on the client used, one or more of them are automatically inferred, e.g., using data from <code>pom.xml</code> or <code>build.gradle</code>.</li>
 <li><code>vulas.shared.backend.serviceUrl</code>: The URL of the backend service to which clients upload analysis results.</li>
 </ul>
+<h3 id="log-level">Log level<a class="headerlink" href="#log-level" title="Permanent link">&para;</a></h3>
+<p>The default <a href="https://logging.apache.org/log4j/2.x/manual/customloglevels.html">Log4j log level</a> is <code>INFO</code>, it can be adjusted with help of system property <code>vulas.log4j.threshold</code>, e.g., <code>-Dvulas.log4j.threshold=WARN</code>. </p>
 <h2 id="check-setup">Check setup<a class="headerlink" href="#check-setup" title="Permanent link">&para;</a></h2>
 <p>Proceed as follows to check whether the Eclipse Steady setup and goal execution works:</p>
 <p><strong>On the client</strong>, after executing a specific Eclipse Steady goal on your application, a log entry similar to the one below should be printed to the console. It is used to upload goal-related information to the Eclipse Steady backend, e.g., the Eclipse Steady version used or the average memory consumption. In this example, information related to a goal execution for an application with GAV <code>com.acme.foo:vulas-testapp-webapp:3.0.9-MVN</code> was uploaded to <code>http://localhost:8033/backend/</code>, workspace <code>123456789</code>. The successful upload is indicated by the HTTP response code <code>201</code>.</p>

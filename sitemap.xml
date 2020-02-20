@@ -2,182 +2,182 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
      <loc>https://eclipse.github.io/steady/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/about/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/tutorials/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/tutorials/workspace_howto/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/tutorials/workspace_howto_advanced/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/tutorials/java_maven/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/tutorials/java_gradle/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/tutorials/java_cli/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/tutorials/java_maven_advanced/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/tutorials/python_cli/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/tutorials/jenkins_howto/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/tutorials/reports/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/manuals/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/manuals/setup/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/manuals/analysis/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/manuals/frontend/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/manuals/report/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/manuals/assess_and_mitigate/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/support/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/user/support/faq/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/admin/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/admin/tutorials/docker/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/admin/tutorials/build/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/admin/tutorials/registry/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/admin/tutorials/kustomize/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/admin/tutorials/helm/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/admin/tutorials/kubernetes_resources/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/contributor/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/contributor/tutorials/project_structure/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/vuln_db/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/vuln_db/tutorials/vuln_db_tutorial/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/vuln_db/manuals/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/vuln_db/manuals/patch_analyzer/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/vuln_db/manuals/patch_lib_analyzer/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://eclipse.github.io/steady/vuln_db/manuals/manual_assessment/</loc>
-     <lastmod>2020-01-30</lastmod>
+     <lastmod>2020-02-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
