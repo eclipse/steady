@@ -109,20 +109,20 @@ public class ConditionalHttpRequest extends BasicHttpRequest {
 			for(ResponseCondition rc: this.conditions) {
 				meets = meets && rc.meetsCondition(condition_response);
 				if(!meets) {
-					ConditionalHttpRequest.log.info("Condition " + rc + " not met");
+					ConditionalHttpRequest.log.debug("Condition " + rc + " not met");
 					break;
 				} else {
-					ConditionalHttpRequest.log.info("Condition " + rc + " met");
+					ConditionalHttpRequest.log.debug("Condition " + rc + " met");
 				}
 			}
 
 			// Only send if they are met
 			if(meets) {
-				ConditionalHttpRequest.log.info("Condition(s) met, do " + this.toString());
+				ConditionalHttpRequest.log.debug("Condition(s) met, do " + this.toString());
 				return super.send();
 			}
 			else {
-				ConditionalHttpRequest.log.info("Condition(s) not met, skip " + this.toString());
+				ConditionalHttpRequest.log.debug("Condition(s) not met, skip " + this.toString());
 				return null;
 			}	
 		}	
