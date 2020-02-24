@@ -103,7 +103,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
             	//doesArtifactExist works for both Java and Python as the called api (/artifacts/g/a/v) does not use the package information for Python
             	// doesArtifactExist sets the package to Jar; as a result it checks that a Jar exists for java and that an artifact for the given gav exists for python (no matter which packaging)
 
-            	binAvailable = BackendConnector.getInstance().doesArtifactExist(l.getMvnGroup(), l.getArtifact(), l.getVersion(), false, (lang==ProgrammingLanguage.JAVA)?"jar":"sdist");
+            //	binAvailable = BackendConnector.getInstance().doesArtifactExist(l.getMvnGroup(), l.getArtifact(), l.getVersion(), false, (lang==ProgrammingLanguage.JAVA)?"jar":"sdist");
                 if(!binAvailable){
                 	log.warn("No artifact available for library Id [" + l.toString() +"], it will not be included in the csv");
                 }
