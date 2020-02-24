@@ -131,7 +131,7 @@ public class ByteCodeComparator implements Runnable{
 		    					
 	    					}
 					 		
-					 		// libid whose source was found equal to vuln
+					 		// libid whose source was found equal to fix
 					 		for(LibraryId l: mgr.getFixedLids()){
     					
 					 			log.info("Artifact ["+ar.toString()+"] fixed comparison number [" + done_comparisons+"/"+comparisonsToBeDone + "]");						
