@@ -64,6 +64,8 @@ import com.sap.psr.vulas.shared.enums.Scope;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown=true, value={"traced", "reachableConstructIds", "touchPoints"}, allowGetters=true)
 @Entity
+// Note that the unique constraint at DB level (when using PostgreSQL) does not ensure the uniqueness of lib,app when parent
+// and relativePath are null as null values are considered different by PostgreSQL. Their uniqueness must be ensured at Java level
 @Table( name="AppDependency", uniqueConstraints=@UniqueConstraint( columnNames = { "lib" , "app", "parent", "relativePath"} ))
 public class Dependency implements Serializable{
 	
