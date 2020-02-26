@@ -19,7 +19,8 @@ import javax.persistence.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
+//hateos.Resource was renamed into EntityModel (see https://docs.spring.io/spring-hateoas/docs/current/reference/html/#migrate-to-1.0)
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -120,7 +121,7 @@ public class LibraryController {
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
 	 * @param skipResponseBody a {@link java.lang.Boolean} object.
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"})
+	@RequestMapping(value = "", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.LibDetails.class)
 	public ResponseEntity<Library> createLibrary(@RequestBody Library library,@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody) {
 		try {
@@ -188,7 +189,7 @@ public class LibraryController {
 	 * @param library a {@link com.sap.psr.vulas.backend.model.Library} object.
 	 * @param skipResponseBody a {@link java.lang.Boolean} object.
 	 */
-	@RequestMapping(value = "/{digest}", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"})
+	@RequestMapping(value = "/{digest}", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.LibDetails.class)
 	public ResponseEntity<Library> updateLibrary(@PathVariable String digest, @RequestBody Library library,@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody) {
 		if(!digest.equals(library.getDigest()))
@@ -216,7 +217,7 @@ public class LibraryController {
 	 * 		   200 {@link HttpStatus#OK} if the library metadata were successfully updated
 	 * @param skipResponseBody a {@link java.lang.Boolean} object.
 	 */
-	@RequestMapping(value = "/{digest}/updateMetadata", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"})
+	@RequestMapping(value = "/{digest}/updateMetadata", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.LibDetails.class)
 	public ResponseEntity<Library> updateLibraryMetaData(@PathVariable String digest, @RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody) {
 		try {
@@ -258,14 +259,14 @@ public class LibraryController {
 	 * @param digest a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{digest}", method = RequestMethod.DELETE, produces = {"application/json;charset=UTF-8"})
-	public ResponseEntity<Resource<Library>> deleteLibrary(@PathVariable String digest) {
+	public ResponseEntity<EntityModel<Library>> deleteLibrary(@PathVariable String digest) {
 		try {
 			final Library lib = LibraryRepository.FILTER.findOne(this.libRepository.findByDigest(digest));
 			this.libRepository.delete(lib);
-			return new ResponseEntity<Resource<Library>>(HttpStatus.OK);
+			return new ResponseEntity<EntityModel<Library>>(HttpStatus.OK);
 		}
 		catch(EntityNotFoundException enfe) {
-			return new ResponseEntity<Resource<Library>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<EntityModel<Library>>(HttpStatus.NOT_FOUND);
 		}
 	}	
 

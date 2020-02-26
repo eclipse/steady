@@ -1,27 +1,23 @@
 package com.sap.psr.vulas.backend.rest;
 
-import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import  org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
-import com.fasterxml.classmate.TypeResolver;
-import com.google.common.base.Predicate;
 import com.sap.psr.vulas.backend.repo.BugRepositoryImpl;
 import com.sap.psr.vulas.backend.util.ReferenceUpdater;
 import com.sap.psr.vulas.shared.util.Constants;
@@ -40,7 +36,7 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.ApiKeyVehicle;
 import springfox.documentation.swagger.web.SecurityConfiguration;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 /**
  * <p>MainController class.</p>
@@ -49,12 +45,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @ComponentScan({"com.sap.psr.vulas.backend.component,com.sap.psr.vulas.backend.rest"})
 @EnableAutoConfiguration
-//@EnableWebMvc 
-//@SpringBootApplication
 @EnableCaching
 @EntityScan({"com.sap.psr.vulas.backend.model"}) // So that managed entities in the model package are discovered
 @EnableJpaRepositories({"com.sap.psr.vulas.backend.repo"}) // So that repos in the repo package are discovered
-@EnableSwagger2
+@EnableSwagger2WebMvc
 public class MainController extends SpringBootServletInitializer {
 	
 	/**
@@ -99,11 +93,9 @@ public class MainController extends SpringBootServletInitializer {
 	 */
 	@SuppressWarnings("unchecked")
 	private Predicate<String> bugPaths() {
-        return or(
-        		regex("/bugs.*"),
-        		regex("/coverage.*"),
-                regex("/cves.*")
-        );
+        return regex("/bugs.*")
+        		.or(regex("/coverage.*"))
+        		.or(regex("/cves.*"));
     }
 	
 	/**
@@ -112,13 +104,11 @@ public class MainController extends SpringBootServletInitializer {
 	 */
 	@SuppressWarnings("unchecked")
 	private Predicate<String> userPaths() {
-        return or(
-        		regex("/apps.*"),
-                regex("/hubIntegration.*"),
-                regex("/libs.*"),
-                regex("/libids.*"),
-                regex("/spaces.*")
-        );
+        return regex("/apps.*")
+        		.or(regex("/hubIntegration.*"))
+        		.or(regex("/libs.*"))
+        		.or(regex("/libids.*"))
+                .or(regex("/spaces.*"));
     }
 
 	/**
@@ -126,10 +116,8 @@ public class MainController extends SpringBootServletInitializer {
 	 * @return
 	 */
 	private Predicate<String> configPaths() {
-        return or(
-                regex("/configuration.*"),
-                regex("/tenants.*")
-        );
+        return regex("/configuration.*")
+        		.or(regex("/tenants.*"));
     }
 	
 	/**
@@ -231,8 +219,8 @@ public class MainController extends SpringBootServletInitializer {
 				.securitySchemes(newArrayList(this.tenantKey())).securityContexts(newArrayList(securityContext()));*/
 	}
 	
-	@Autowired
-	private TypeResolver typeResolver;
+//	@Autowired
+//	private TypeResolver typeResolver;
 	
     @Bean
     SecurityScheme tenantKey() {
@@ -298,4 +286,5 @@ public class MainController extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(MainController.class);
     }
+	
 }

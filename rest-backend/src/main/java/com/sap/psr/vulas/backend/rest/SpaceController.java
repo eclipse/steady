@@ -224,7 +224,7 @@ public class SpaceController {
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if space with given token does not exist, 200 {@link HttpStatus#OK} if the space is found
 	 * @param tenant a {@link java.lang.String} object.
 	 */
-	@RequestMapping(value = "/{token:.+}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{token:.+}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Space> getSpace(
 			@PathVariable String token,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {

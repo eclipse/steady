@@ -18,7 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.hateoas.Resource;
+//hateos.Resource was renamed into EntityModel (see https://docs.spring.io/spring-hateoas/docs/current/reference/html/#migrate-to-1.0)
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -255,21 +256,21 @@ public class BugController {
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given bug ID does not exist, 200 {@link HttpStatus#OK} if the bug was successfully deleted
 	 * @param bugid a {@link java.lang.String} object.
 	 */
-	@RequestMapping(value = "/{bugid}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{bugid}", method = RequestMethod.DELETE, produces = {"application/json;charset=UTF-8"})
 	@CacheEvict(value = "bug")
-	public ResponseEntity<Resource<Bug>> deleteBug(@PathVariable String bugid) {
+	public ResponseEntity<EntityModel<Bug>> deleteBug(@PathVariable String bugid) {
 		try {
 			final Bug b = BugRepository.FILTER.findOne(this.bugRepository.findByBugId(bugid));
 			
 			// Ensure that no affected libs for bug exist
 			final List<AffectedLibrary> aff_libs = this.afflibRepository.findByBug(b);
 			if(aff_libs!=null && aff_libs.size()>0) 
-				return new ResponseEntity<Resource<Bug>>(HttpStatus.UNPROCESSABLE_ENTITY);
+				return new ResponseEntity<EntityModel<Bug>>(HttpStatus.UNPROCESSABLE_ENTITY);
 			this.bugRepository.delete(b);
-			return new ResponseEntity<Resource<Bug>>(HttpStatus.OK);
+			return new ResponseEntity<EntityModel<Bug>>(HttpStatus.OK);
 		}
 		catch(EntityNotFoundException enfe) {
-			return new ResponseEntity<Resource<Bug>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<EntityModel<Bug>>(HttpStatus.NOT_FOUND);
 		}
 	}
 

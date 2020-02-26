@@ -231,7 +231,7 @@ public class ApplicationController {
 	 * @param mode a {@link java.lang.String} object.
 	 * @param space a {@link java.lang.String} object.
 	 */
-	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}", method = RequestMethod.DELETE, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
 	public ResponseEntity<List<Application>> purgeApplicationVersions(@PathVariable String mvnGroup, 
 			@PathVariable String artifact,
@@ -675,7 +675,7 @@ public class ApplicationController {
 	 * @param wildcardSearch a boolean.
 	 * @param space a {@link java.lang.String} object.
 	 */
-	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/search", method = RequestMethod.GET)
+	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/search", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
 	public ResponseEntity<Set<ConstructSearchResult>> searchConstructsInAppDependencies(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version,
 			@RequestParam(value="searchString", required=true, defaultValue="") String searchString,
