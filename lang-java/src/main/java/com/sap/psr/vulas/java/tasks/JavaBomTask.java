@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.java.tasks;
 
 import java.nio.file.Path;
@@ -295,9 +314,9 @@ public class JavaBomTask extends AbstractBomTask {
 				if(known_dep!=null && known_dep.getParent()!=null) {
 					// Complete the draft parent dependency with library info
 					for(JarAnalyzer ja2: app_dependencies) {
+						//TODO: As soon as we add the relative path to the JARAnalyzer, it must also be used to uniquely identify the parent and set all its fields
 						if(ja2.getPath().toString().equals(known_dep.getParent().getPath())) {
 							known_dep.getParent().setLib(ja2.getLibrary());
-							known_dep.getParent().setFilename(ja2.getFileName());
 							break;
 						}
 					}
@@ -309,6 +328,26 @@ public class JavaBomTask extends AbstractBomTask {
 				log.error(e.getMessage(), e);
 			}
 		}
+		
+		// Get a clean set of dependencies
+		final Set<Dependency> no_dupl_deps = DependencyUtil.removeDuplicateLibraryDependencies(a.getDependencies());
+		a.setDependencies(no_dupl_deps);
+		
+		// Fix parents on dependencies that were removed (this block should be removed once we use the relativePath and we get a dependency tree representing the actual one 
+		for(Dependency d : a.getDependencies()) {
+			if(d.getParent()!=null ) {
+				for(Dependency existing: a.getDependencies()) {
+					//TODO: as soon as we add the relative path to the JARAnalyzer, it must also be used to uniquely identify the parent
+					if(existing.getLib().getDigest().equals(d.getParent().getLib().getDigest())) {
+						d.getParent().setLib(existing.getLib());
+						d.getParent().setPath(existing.getPath());
+						d.getParent().setFilename(existing.getFilename());
+						break;
+					}
+				}
+			}
+		}
+	
 		
 		// Check whether the parent-child dependency relationships are consistent
 		final boolean consistent_deps = DependencyUtil.isValidDependencyCollection(a);

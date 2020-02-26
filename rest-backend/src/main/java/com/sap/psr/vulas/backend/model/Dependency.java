@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.model;
 
 import java.io.Serializable;
@@ -45,10 +64,9 @@ import com.sap.psr.vulas.shared.enums.Scope;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown=true, value={"traced", "reachableConstructIds", "touchPoints"}, allowGetters=true)
 @Entity
-@Table( name="AppDependency")
-///uniqueConstraints=@UniqueConstraint( columnNames = { "lib" , "app"} )
-// Note, the unique constraint is not defined as an annotation any longer as we need more expressiveness than what JPA allows
-// The new constraints are defined in the flyway migration V20180828.1730__depParent.sql as partial indexes
+// Note that the unique constraint at DB level (when using PostgreSQL) does not ensure the uniqueness of lib,app when parent
+// and relativePath are null as null values are considered different by PostgreSQL. Their uniqueness must be ensured at Java level
+@Table( name="AppDependency", uniqueConstraints=@UniqueConstraint( columnNames = { "lib" , "app", "parent", "relativePath"} ))
 public class Dependency implements Serializable{
 	
 	private static final long serialVersionUID = 1L;

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    component: frontend-apps
+  name: frontend-apps
+spec:
+  selector:
+    component: frontend-apps
+  ports:
+    - port: 8080
+      targetPort: 8080

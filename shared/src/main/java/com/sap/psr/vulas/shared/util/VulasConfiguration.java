@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.shared.util;
 
 import java.io.ByteArrayInputStream;
@@ -749,7 +768,7 @@ public class VulasConfiguration {
 	}
 
 	/**
-	 * <p>getServiceUrl.</p>
+	 * Returns the URL of the given {@link Service}. Trailing slashes (/), if any, are removed.
 	 *
 	 * @param _service a {@link com.sap.psr.vulas.shared.connectivity.Service} object.
 	 * @param _throw_exception a boolean.
@@ -758,9 +777,13 @@ public class VulasConfiguration {
 	 */
 	public String getServiceUrl(Service _service, boolean _throw_exception) throws ServiceConnectionException {
 		final String key = VulasConfiguration.getServiceUrlKey(_service);
-		final String value = cfg.getString(key, null);
+		String value = cfg.getString(key, null);
 		if(_throw_exception && value==null)
 			throw new ServiceConnectionException("Service URL is not configured (parameter [" + key + "])", null);
+		if(value!=null) {
+			while(value.endsWith("/"))
+				value = value.substring(0, value.length()-1);
+		}
 		return value;
 	}
 

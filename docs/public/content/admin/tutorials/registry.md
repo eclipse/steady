@@ -45,3 +45,9 @@ You can use Docker to pull your images from a registry.
 ```sh
 docker pull [registry]/[username]/vulnerability-assessment-tool-rest-backend:[vulnerability-assessment-tool-version]
 ```
+
+---
+
+Get going:
+
+1. [Deploy](../kustomize/) a Kubernetes cluster on the Internet with the images you just pushed

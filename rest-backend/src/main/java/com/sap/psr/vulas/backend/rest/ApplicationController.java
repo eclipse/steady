@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.rest;
 
 import java.io.BufferedReader;
@@ -23,6 +42,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.Filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +50,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,6 +95,7 @@ import com.sap.psr.vulas.backend.repo.SpaceRepository;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
 import com.sap.psr.vulas.backend.repo.TracesRepository;
 import com.sap.psr.vulas.backend.repo.V_AppVulndepRepository;
+import com.sap.psr.vulas.backend.util.CacheFilter;
 import com.sap.psr.vulas.backend.util.DependencyUtil;
 import com.sap.psr.vulas.backend.util.Message;
 import com.sap.psr.vulas.backend.util.ServiceWrapper;
@@ -130,6 +152,8 @@ public class ApplicationController {
 	private final V_AppVulndepRepository appVulDepRepository;
 	
 	private final ApplicationExporter appExporter;
+
+	private final Filter cacheFilter;
 	
 	/** Constant <code>SENDER_EMAIL="vulas.backend.smtp.sender"</code> */
 	public final static String SENDER_EMAIL = "vulas.backend.smtp.sender";
@@ -150,7 +174,7 @@ public class ApplicationController {
 	}
 
 	@Autowired
-	ApplicationController(ApplicationRepository appRepository, GoalExecutionRepository gexeRepository, DependencyRepository depRepository, TracesRepository traceRepository, LibraryRepository libRepository, PathRepository pathRepository, BugRepository bugRepository, SpaceRepository tokenRepository, ConstructIdRepository cidRepository, AffectedLibraryRepository affLibRepository, TenantRepository tenantRepository, V_AppVulndepRepository appVulDepRepository, ApplicationExporter appExporter) {
+	ApplicationController(ApplicationRepository appRepository, GoalExecutionRepository gexeRepository, DependencyRepository depRepository, TracesRepository traceRepository, LibraryRepository libRepository, PathRepository pathRepository, BugRepository bugRepository, SpaceRepository tokenRepository, ConstructIdRepository cidRepository, AffectedLibraryRepository affLibRepository, TenantRepository tenantRepository, V_AppVulndepRepository appVulDepRepository, ApplicationExporter appExporter, Filter cacheFilter) {
 		this.appRepository = appRepository;
 		this.gexeRepository = gexeRepository;
 		this.depRepository = depRepository;
@@ -164,6 +188,7 @@ public class ApplicationController {
 		this.tenantRepository = tenantRepository;
 		this.appVulDepRepository = appVulDepRepository;
 		this.appExporter = appExporter;
+		this.cacheFilter = cacheFilter;
 	}
 
 	//TODO: The space headers must become mandatory once we get (most of) users to switch to vulas3
@@ -1614,6 +1639,7 @@ public class ApplicationController {
 	 * @param affected a {@link java.lang.Boolean} object.
 	 * @param includeAffectedUnconfirmed a {@link java.lang.Boolean} object.
 	 * @param addExcemptionInfo a {@link java.lang.Boolean} object.
+	 * @param lastChange a {@link java.lang.String} object.
 	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/vulndeps", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
@@ -1624,6 +1650,7 @@ public class ApplicationController {
 			@RequestParam(value="includeAffected", required=false, defaultValue="true") Boolean affected, // affected==1
 			@RequestParam(value="includeAffectedUnconfirmed", required=false, defaultValue="true") Boolean includeAffectedUnconfirmed, // affectedConfirmed==0
 			@RequestParam(value="addExcemptionInfo", required=false, defaultValue="false") Boolean addExcemptionInfo, // consider configuration setting "vulas.report.exceptionScopeBlacklist" and "vulas.report.exceptionExcludeBugs"
+			@RequestParam(value="lastChange", required=false, defaultValue="") String lastChange, // a timestamp identifier which is used to cache the response or not
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
@@ -1656,8 +1683,15 @@ public class ApplicationController {
 					vd_list.add(vd);
 				}
 			}
+
+			// If the request has a valid `lastChange` querystring parameter,
+			// then we instruct Nginx to cache the response for 2 months
+			HttpHeaders headers = new HttpHeaders();
+			if (lastChange != null && !lastChange.equals("")) {
+				headers.add("X-Accel-Expires", "5256000");
+			}
 			
-			return new ResponseEntity<TreeSet<VulnerableDependency>>(vd_list, HttpStatus.OK);
+			return new ResponseEntity<TreeSet<VulnerableDependency>>(vd_list, headers, HttpStatus.OK);
 		}
 		catch(EntityNotFoundException enfe) {
 			return new ResponseEntity<TreeSet<VulnerableDependency>>(HttpStatus.NOT_FOUND);
@@ -2000,7 +2034,13 @@ public class ApplicationController {
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}/paths/{bugId}/{qname}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
-	public ResponseEntity<List<Path>> getVulndepConstructPaths(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String digest, @PathVariable String bugId, @PathVariable String qname,
+	public ResponseEntity<List<Path>> getVulndepConstructPaths(
+			@PathVariable String mvnGroup,
+			@PathVariable String artifact,
+			@PathVariable String version,
+			@PathVariable String digest,
+			@PathVariable String bugId,
+			@PathVariable String qname,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
@@ -2010,6 +2050,7 @@ public class ApplicationController {
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<List<Path>>(HttpStatus.NOT_FOUND);
 		}
+		
 		// Ensure that app exists
 		Application app = null;
 		try { app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s)); }

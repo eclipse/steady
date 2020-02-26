@@ -29,3 +29,10 @@ docs/site
 docs/.merged
 docs/.tmp
 /*/src/main/webapp/model/Version.js
+values_dev.yaml
+test.yaml
+kubernetes/helm/vulnerability-assessment-tool-admin/charts/nginx-ingress/files/tls/*.key
+kubernetes/helm/vulnerability-assessment-tool-admin/charts/nginx-ingress/files/tls/*.crt
+/kubernetes/kustomize/secrets/*
+!/kubernetes/kustomize/secrets/*.sample
+/docker/**/import_vulas_kb.sh

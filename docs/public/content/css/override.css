@@ -7,24 +7,24 @@
     .md-sidebar--secondary {
         margin: 0;
         float: right;
-        right: -20rem;
+        right: -300px;
     }
 }
 
 @media only screen and (min-width: 60em){
     .md-sidebar--secondary {
-        right: -22rem;
+        right: -270px;
     }
 }
 
 /* Logo - start */
 a.md-header-nav__button.md-logo {
-    height: 4.8rem;
-    width: 4.8rem;
+    height: 50px;
+    width: 50px;
     background-size: 80%;
     background-repeat: no-repeat;
     background-position: 50% 50%;
-    background-image: url(../images/vulas-white.png);
+    background-image: url(../images/ES-logo-152-transparent.png);
     margin: 0;
     padding: 0;
 }
@@ -215,7 +215,7 @@ a>code {
 
 /* Tips - start */
 .md-typeset .admonition, .md-typeset details {
-    font-size: 1.38rem;
+    font-size: 18px;
 }
 
 /* Hidden - start */

@@ -1,0 +1,6 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: vulnerability-assessment-tool
+  labels:
+    name: vulnerability-assessment-tool

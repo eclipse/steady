@@ -1,6 +1,6 @@
 matrix:
   include:
-  - name: OpenJDK8 - Run all the test on the Open JVM
+  - name: OpenJDK8 - Test and install Maven artifacts, Deploys Jib images
     language: java
     jdk: openjdk8
     cache:
@@ -11,7 +11,34 @@ matrix:
     - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
     install:
     - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
-    script: mvn -e -B -P gradle -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
+    script: mvn -e -B -P gradle -Dspring.standalone -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
+    before_deploy:
+    - set -a; source .travis/.env; set +a;
+    - echo "VULAS_RELEASE=${VULAS_RELEASE}"
+    - curl -Lo .travis/skaffold https://storage.googleapis.com/skaffold/releases/v0.40.0/skaffold-linux-amd64
+    - chmod +x .travis/skaffold
+    - export JIB=true
+    deploy:
+    - provider: script
+      skip_cleanup: true
+      script: bash .travis/docker_hub_push_snapshot.sh
+      on:
+        branch: master
+        condition: $TRAVIS_EVENT_TYPE = push
+    - provider: script
+      skip_cleanup: true
+      script: bash .travis/docker_hub_push_release.sh
+      on:
+        all_branches: true
+        condition: tag =~ /^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$/
+
+  - name: OpenJDK8 - Create Maven artifacts for JavaDoc and sources
+    language: java
+    jdk: openjdk8
+    install:
+    - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
+    script: mvn -e -B -P gradle,javadoc -Dspring.standalone -DskipTests --settings .travis/settings.xml clean package
+
   - name: Docker - Build the Modules' Jars, Run all Java tests, Create vital containers, Check if they stay alive for more than 20 seconds
     language: bash
     sudo: required
@@ -45,11 +72,18 @@ matrix:
       skip_cleanup: true
       script: bash .travis/docker_hub_push_release.sh
       on:
-        condition: "$TRAVIS_TAG =~ ^(\\d+\\.\\d+\\.\\d.*)$"
-  - name: Docker - Check if Dockerfile sources are present at fixed location
+        all_branches: true
+        condition: tag =~ /^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$/
+
+  # According to the ECCN team re Docker images on DockerHub: “…if you posted the source code on the Internet,
+  # you must notify BIS and the ENC Encryption Request Coordinator each time the Internet location is changed,
+  # but you are not required to notify them of updates or modifications made to the encryption source code at
+  # the previously notified location.”
+  - name: Docker - Check if Dockerfile sources are present at fixed location (ECCN req)
     language: bash
     script:
     - bash .travis/check_dockerfile_location.sh
+
   - name: Docs - Build and check the docs for dead links
     language: bash
     sudo: required
@@ -60,16 +94,16 @@ matrix:
     - docker-compose -v
     install:
     - docker build --tag docs ./docs
-    - docker build --tag checklinks -f ./docs/Dockerfile.checklinks ./docs
     - docker network create docs
     script:
-    - docker run --rm --network=docs  -d --name docs --hostname docs -p 8000:8000 docs
-    - sleep 20
-    - docker run --rm --network=docs --name checklinks checklinks
+    - docker run --rm --network=docs -d --name docs --hostname docs -p 8000:8000 docs
+    - sleep 10
+    - docker run --entrypoint=/tmp/checklinks.sh -e URL=docs:8000 -v ${PWD}/docs/:/tmp/ --rm --network=docs --name checklinks raviqqe/muffet:1.3.1
+
     after_failure:
     - docker images
     - docker ps -as
-    - "(cd docker && docker logs)"
+    - docker logs docs
 notifications:
   email: false
 env:

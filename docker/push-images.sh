@@ -56,7 +56,7 @@ if [[ ! $VULAS_RELEASE =~ $RELEASE_PATTERN ]]; then
     exit 1
 fi
 
-SERVICES='frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils'
+SERVICES='frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils patch-analyzer'
 
 VULAS_RELEASE=${VULAS_RELEASE} docker-compose -f docker-compose.build.yml build
 
@@ -67,7 +67,10 @@ fi
 
 
 for service in $SERVICES ; do
-    IMAGE=${REGISTRY}/${PROJECT}/vulnerability-assessment-tool-${service}:${VULAS_RELEASE}
-    docker tag vulnerability-assessment-tool-"${service}":"${VULAS_RELEASE}" "$IMAGE"
-    docker push "${IMAGE}"
+    IMAGE=${REGISTRY}/${PROJECT}/vulnerability-assessment-tool-${service}
+    docker tag vulnerability-assessment-tool-"${service}":"${VULAS_RELEASE}" "${IMAGE}:${VULAS_RELEASE}"
+    docker push "${IMAGE}:${VULAS_RELEASE}"
+
+    docker tag vulnerability-assessment-tool-"${service}":"${VULAS_RELEASE}" "${IMAGE}:latest"
+    docker push "${IMAGE}:latest"
 done

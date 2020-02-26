@@ -15,13 +15,13 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-VULAS_JAVA_BACKEND_COMPONENTS="frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils"
+VULAS_JAVA_PACKAGES="frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils patch-analyzer"
 VULAS_JAVA_CLIENT_COMPONENTS="patch-analyzer cli-scanner plugin-maven"
 VULAS_JAVA_COMPONENTS="cli-scanner frontend-apps frontend-bugs lang-java-reach-wala lang-java-reach lang-java lang-python lang patch-analyzer patch-lib-analyzer plugin-maven repo-client rest-backend rest-lib-utils shared"
 
 echo -e '\n[+] Copying new archives'
 
-for i in $VULAS_JAVA_BACKEND_COMPONENTS ; do
+for i in $VULAS_JAVA_PACKAGES ; do
     mkdir -p /exporter/$i/
     cp $i/target/*.?ar /exporter/$i/
 done

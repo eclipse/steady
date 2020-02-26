@@ -1,0 +1,272 @@
+apiVersion: apps/v1
+kind: StatefulSet
+
+metadata:
+  name: {{ template "postgres.master.name" . }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+
+spec:
+  serviceName: {{ .Release.Name }}-db-master-headless
+
+  updateStrategy:
+    type: {{ .Values.postgres.master.updateStrategy }}
+
+  {{- if and .Values.global.masterReplicas (ge (int .Values.global.masterReplicas) 1) }}
+  replicas: {{ int .Values.global.masterReplicas }}
+  {{- else }}
+  replicas: 1
+  {{- end }}
+
+  selector:
+    matchLabels:
+      {{- include "postgres.master.enrichedLabels" . | nindent 6 }}
+
+  template:
+    metadata:
+      labels:
+        {{- include "postgres.master.enrichedLabels" . | nindent 8 }}
+      {{- if .Values.postgres.metrics.enabled }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9187"
+      {{- end }}
+    spec:
+      {{- if .Values.global.podPriorityClass.enabled }}
+      {{- if .Values.postgres.master.podPriorityClass }}
+      priorityClassName: {{ template "postgres.master.priorityClassName" . }}
+      {{- end }}
+      {{- end }}
+      automountServiceAccountToken: false
+      containers:
+        - name: {{ template "postgres.master.name" . }}-container
+          image: {{ template "containerName" .Values.postgres.image.mainContainer }}
+          imagePullPolicy: {{ .Values.postgres.image.mainContainer.pullPolicy }}
+          args:
+          - -c
+          - config_file=/etc/postgres.conf
+          - -c
+          - hba_file=/etc/pg_hba.conf
+
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                - sh
+                - -c
+                - |
+                  #!/bin/sh
+                  set -e
+                  mkdir -p {{ .Values.postgres.master.pvcMountPath }}/archive
+                  ls {{ .Values.postgres.master.pvcMountPath }}
+                  chown -R postgres:postgres {{ .Values.postgres.master.pvcMountPath }}
+
+          ports:
+          - name: db
+            containerPort: 5432
+
+          envFrom:
+            - secretRef:
+                name: {{ template "postgres.secretName" . }}
+
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: PGDATA
+              value: {{ .Values.postgres.master.pvcMountPath }}/pgdata
+            - name: PGPOOL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "pgpool.secretName" . }}
+                  key: PCP_USER
+            - name: PGPOOL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "pgpool.secretName" . }}
+                  key: PCP_PASSWORD
+
+          volumeMounts:
+          - name: {{ template "postgres.master.pvcName" . }}
+            mountPath: {{ .Values.postgres.master.pvcMountPath }}
+          - name: {{ template "postgres.configMapName" . }}
+            mountPath: /etc/postgres.conf
+            subPath: postgres.conf
+          - name: {{ template "postgres.configMapName" . }}
+            mountPath: /etc/pg_hba.conf
+            subPath: pg_hba.conf
+          - name: {{ template "postgres.configMapName" . }}
+            mountPath: /etc/master.conf
+            subPath: master.conf
+          - name: {{ template "postgres.script.configMapName" . }}
+            mountPath: /docker-entrypoint-initdb.d/01-postgres-users-setup.sh
+            subPath: 01-postgres-users-setup.sh
+          - name: {{ template "postgres.script.configMapName" . }}
+            mountPath: /docker-entrypoint-initdb.d/02-postgres-storage-setup.sh
+            subPath: 02-postgres-storage-setup.sh
+          - name: dshm
+            mountPath: /dev/shm
+
+          {{- if .Values.postgres.master.readinessProbe }}
+          {{- if .Values.postgres.master.readinessProbe.enabled }}
+          {{- with .Values.postgres.master.readinessProbe }}
+          readinessProbe:
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            periodSeconds: {{ .periodSeconds }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            failureThreshold: {{ .failureThreshold }}
+            exec:
+              command:
+                - 'psql'
+                - '-c'
+                - 'SELECT 1'
+          {{- end }}
+          {{- end }}
+          {{- end }}
+          {{- if .Values.postgres.master.livenessProbe }}
+          {{- if .Values.postgres.master.livenessProbe.enabled }}
+          {{- with .Values.postgres.master.livenessProbe }}
+          livenessProbe:
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            periodSeconds: {{ .periodSeconds }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            failureThreshold: {{ .failureThreshold }}
+            exec:
+              command:
+                - 'sh'
+                - '-c'
+                - 'exec pg_isready --host $POD_IP'
+          {{- end }}
+          {{- end }}
+          {{- end }}
+          {{/*{{- if .Values.postgres.image.mainContainer.securityContext }}
+          securityContext:
+            {{- toYaml .Values.postgres.image.mainContainer.securityContext | nindent 12 }}
+          {{- end }}*/}}
+          {{ if .Values.postgres.master.resources -}}
+          resources:
+            {{- toYaml .Values.postgres.master.resources | nindent 12 }}
+          {{- end }}
+
+        {{- if .Values.postgres.metrics.enabled }}
+        - name: {{ template "postgres.master.name" . }}-exporter-container
+          image: {{ template "containerName" .Values.postgres.image.exporterContainer }}
+          imagePullPolicy: {{ .Values.postgres.image.exporterContainer.pullPolicy }}
+          ports:
+          - name: metrics
+            containerPort: 9187
+          env:
+          {{- with .Values.global.dbCredentials }}
+          - name: DATA_SOURCE_NAME
+            value: "postgresql://{{ .postgres_user }}:{{ .postgres_password }}@localhost:5432/?sslmode=disable"
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: PG_EXPORTER_CONSTANT_LABELS
+            value: "origin=${POD_NAME}"
+          resources:
+            limits:
+              cpu: "50m"
+              memory: "50Mi"
+          {{- end }}
+        {{- end }}
+
+      volumes:
+        - name: {{ template "postgres.configMapName" . }}
+          configMap:
+            name: {{ template "postgres.configMapName" . }}
+        - name: {{ template "postgres.script.configMapName" . }}
+          configMap:
+            name: {{ template "postgres.script.configMapName" . }}
+            defaultMode: 0755
+        {{- if .Values.global.existingClaim }}
+        - name: {{ template "postgres.master.pvcName" . }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.global.existingClaim }}
+        {{- else }}
+        - name: {{ template "postgres.master.pvcName" . }}
+          persistentVolumeClaim:
+            claimName: {{ template "postgres.master.pvcName" . }}
+        {{- end }}
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: "3Gi"
+
+      terminationGracePeriodSeconds: {{ int .Values.postgres.master.terminationGracePeriodSeconds }}
+
+    {{- if .Values.postgres.masterAntiAffinity }}
+      affinity:
+        podAntiAffinity:
+        {{- if .Values.postgres.masterAntiAffinity.mastermasterAntiaffinity }}
+          {{- if .Values.postgres.masterAntiAffinity.soft }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+          {{- else }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+          {{ end }}
+          {{- if .Values.postgres.masterAntiAffinity.mastermasterAntiaffinity }}
+            {{- if ge (int .Values.postgres.masterAntiAffinity.mastermasterAntiaffinity) 1 }}
+            - weight: {{ .Values.postgres.masterAntiAffinity.mastermasterAntiaffinity }}
+            {{- else }}
+            # ERROR: .Values.postgres.masterAntiAffinity.mastermasterAntiaffinity < 1
+            #        replaced with default value 100
+            - weight: 100
+            {{- end }}
+          {{- else }}
+            # ERROR: .Values.postgres.masterAntiAffinity.mastermasterAntiaffinity undefined
+            #        replaced with default value 100
+            - weight: 100
+          {{- end }}
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app.kubernetes.io/part-of
+                    operator: In
+                    values: [{{ include "name" . }}]
+                  - key: app.kubernetes.io/instance
+                    operator: In
+                    values: [{{ template "postgres.master.name" . }}]
+                topologyKey: "kubernetes.io/hostname"
+        {{- end }}
+          {{- if .Values.postgres.masterAntiAffinity.masterslaveAntiaffinity }}
+            {{- if ge (int .Values.postgres.masterAntiAffinity.masterslaveAntiaffinity) 1 }}
+            - weight: {{ .Values.postgres.masterAntiAffinity.masterslaveAntiaffinity }}
+            {{- else }}
+            # ERROR: .Values.postgres.masterAntiAffinity.masterslaveAntiaffinity < 1
+            #        replaced with default value 100
+            - weight: 100
+            {{- end }}
+          {{- else }}
+            # ERROR: .Values.postgres.masterAntiAffinity.masterslaveAntiaffinity undefined
+            #        replaced with default value 100
+            - weight: 100
+          {{- end }}
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values: [{{ include "name" . }}]
+                  - key: app.kubernetes.io/instance
+                    operator: In
+                    values: [{{ template "postgres.slave.name" . }}]
+                topologyKey: "kubernetes.io/hostname"
+    {{- end }}
+
+  {{- if not .Values.global.existingClaim }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ template "postgres.master.pvcName" . }}
+      labels:
+        {{- include "postgres.master.enrichedLabels" . | nindent 8 }}
+
+    spec:
+      accessModes: [{{ .Values.postgres.master.accessModes | quote }}]
+      resources:
+        requests:
+          storage: {{ .Values.postgres.master.requests.storage | quote }}
+  {{- end }}

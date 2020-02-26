@@ -1,10 +1,10 @@
-site_name: vulnerability-assessment-tool 3.1.5
-site_description: vulnerability-assessment-tool Documentation
-site_url: https://sap.github.io/vulnerability-assessment-tool/
+site_name: Eclipse Steady 3.1.9 (Incubator Project)
+site_description: Eclipse Steady Documentation
+site_url: https://eclipse.github.io/steady/
 dev_addr: 0.0.0.0:8000
 
-repo_name: 'sap/vulnerability-assessment-tool'
-repo_url: 'https://github.com/sap/vulnerability-assessment-tool'
+repo_name: 'eclipse/steady'
+repo_url: 'https://github.com/eclipse/steady'
 
 docs_dir: .merged
 
@@ -37,10 +37,14 @@ nav:
       - 'FAQ': user/support/faq.md
   - DevOps:
     - DevOps: 'admin/index.md'
-    - Tutorials: 
+    - Tutorials:
       - 'Deploy on Docker': 'admin/tutorials/docker.md'
       - 'Build JAVA archives/Docker images': 'admin/tutorials/build.md'
       - 'Push Docker images to a registry': 'admin/tutorials/registry.md'
+      - 'Deploy on Kubernetes with Kustomize': 'admin/tutorials/kustomize.md'
+      - 'Deploy on Kubernetes with Helm': 'admin/tutorials/helm.md'
+    - Misc:
+      - 'Kubernetes resources requirements': 'admin/tutorials/kubernetes_resources.md'
   - Contribute:
     - Contribute: contributor/index.md
     # - Tutorials:
@@ -64,7 +68,7 @@ nav:
       - 'Patch Analyzer' : vuln_db/manuals/patch_analyzer.md
       - 'Patch Lib Analyzer' : vuln_db/manuals/patch_lib_analyzer.md
       - 'Manual Assessment' : vuln_db/manuals/manual_assessment.md
-  - Blog: 
+  - Blog:
     - https://blogs.sap.com/tag/vulas/
 
 copyright: 'Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.'
@@ -103,14 +107,14 @@ markdown_extensions:
 extra:
   social:
     - type: 'github'
-      link: 'https://github.com/sap/vulnerability-assessment-tool'
+      link: 'https://github.com/eclipse/steady'
 
 theme:
   name: 'material'
   custom_dir: './public/custom_theme/'
   language: en
-  favicon: 'images/vulas.png'
-  # logo: 'images/vulas-white.png'
+  favicon: 'images/ES-favicon-48-transparent.png'
+#  logo: 'images/ES-logo-152-transparent.png'
   palette:
     primary: 'blue'
     accent: 'blue'

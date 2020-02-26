@@ -40,3 +40,12 @@ services:
       args:
         - VULAS_RELEASE=${VULAS_RELEASE}
     image: vulnerability-assessment-tool-rest-lib-utils:${VULAS_RELEASE}
+
+  patch-analyzer:
+    build: 
+      context: ./patch-analyzer 
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+    image: vulnerability-assessment-tool-patch-analyzer:${VULAS_RELEASE}
+    entrypoint: /bin/sleep 1

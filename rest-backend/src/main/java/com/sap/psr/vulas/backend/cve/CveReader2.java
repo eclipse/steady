@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.cve;
 
 import java.io.IOException;
@@ -21,17 +40,17 @@ import com.sap.psr.vulas.backend.util.ConnectionUtil;
 import com.sap.psr.vulas.shared.cache.Cache;
 import com.sap.psr.vulas.shared.cache.CacheException;
 import com.sap.psr.vulas.shared.cache.ObjectFetcher;
+import com.sap.psr.vulas.shared.connectivity.Service;
+import com.sap.psr.vulas.shared.connectivity.ServiceConnectionException;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 import net.minidev.json.JSONArray;
 
 /**
- * Reads {@link CVE} information from a service configured with {@link #CVE_SERVICE_URL}.
+ * Reads {@link Cve} information from a service configured with {@link #CVE_SERVICE_URL}.
  */
 public class CveReader2 implements ObjectFetcher<String, Cve> {
-	
-	private static final String CVE_SERVICE_URL = "vulas.backend.cveCache.serviceUrl";
-	
+
 	private static Logger log = LoggerFactory.getLogger(CveReader2.class);
 	
 	/**
@@ -64,7 +83,7 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 
 	/**
 	 * Returns CVE information for the given key (or null in case the key is null).
-	 * This information is retrieved from a (remote) service configured with {@link #CVE_SERVICE_URL}.
+	 * This information is retrieved from a (remote) service {@link Service#CVE}.
 	 *
 	 * @param _key a {@link java.lang.String} object.
 	 * @return a {@link com.sap.psr.vulas.backend.cve.Cve} object.
@@ -78,16 +97,13 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 		int sc = -1;
 		String result = null;
 		String uri = null;
-		
-		// URL to read CVE information from
-		final String url = VulasConfiguration.getGlobal().getConfiguration().getString(CVE_SERVICE_URL, null);
-		if(url==null)
-			throw new CacheException("Configuration parameter [" + CVE_SERVICE_URL + "] not set");
-		
+				
 		try {
+			final String url = VulasConfiguration.getGlobal().getServiceUrl(Service.CVE, true);
+			
 			final CloseableHttpClient httpclient = HttpClients.createDefault();
 			uri = new String(url).replaceAll("<ID>", _key);
-			log.info("Query details of CVE [" + _key + "] at [" + uri + "]");
+			log.info("Query details of [" + _key + "] at [" + uri + "]");
 			final HttpGet method = new HttpGet(uri);
 			if(ConnectionUtil.getProxyConfig()!=null)
 				method.setConfig(ConnectionUtil.getProxyConfig());
@@ -97,7 +113,7 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 				final HttpEntity entity = response.getEntity();
 			    if (sc==org.apache.http.HttpStatus.SC_OK && entity != null) {
 			       	result = ConnectionUtil.readInputStream(entity.getContent());
-			       	cve = buildFromJson(_key, result);
+			       	cve = CveReader2.buildFromJson(_key, result);
 			    } else {
 			    	log.error("HTTP GET [url=" + uri + "] completed with [" + sc + "], and entity [" + entity + "]");
 			    }
@@ -115,13 +131,16 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 			log.error("HTTP GET [url=" + uri + "] caused an exception: " + e.getMessage());
 			log.error("Error: " + e.getMessage(), e);
 			throw new CacheException(_key, e);
+		} catch (ServiceConnectionException e) {
+			log.error(e.getMessage());
+			throw new CacheException(_key, e);
 		}
 		return cve;
 	}
 	
 	final static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 	
-	static Cve buildFromJson(String _id, String _json) throws ParseException {
+	private final static Cve buildFromJson(String _id, String _json) throws ParseException {
 		final Cve cve = new Cve();
 		cve.setId(_id);
 		
