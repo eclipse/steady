@@ -284,8 +284,6 @@
 				<dependency>
 					<groupId>com.h2database</groupId>
 					<artifactId>h2</artifactId>
-					<version>1.4.199</version><!-- Fix Spring Boot's dependency on vulnerable
-						h2 1.4.197 (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
 				</dependency>
 				<dependency>
 					<groupId>org.postgresql</groupId>
