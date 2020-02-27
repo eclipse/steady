@@ -21,3 +21,4 @@ fi
        -e .*stackoverflow\.com.* \
        -e .*github\.com/kubernetes/ingress-nginx.* \
        -t 80 http://$URL
+
