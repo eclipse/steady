@@ -112,7 +112,7 @@ public class Dependency implements Serializable{
 	@Column(columnDefinition = "text")
 	private String path;
 	
-	@Column(columnDefinition = "text")
+	@Column(length = 1024)
 	private String relativePath;
 	
 	@ManyToMany(cascade = {}, fetch = FetchType.LAZY)
