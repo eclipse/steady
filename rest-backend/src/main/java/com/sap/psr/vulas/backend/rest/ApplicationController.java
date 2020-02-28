@@ -114,7 +114,10 @@ import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
-import springfox.documentation.annotations.ApiIgnore;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;;
+
 
 
 /**
@@ -123,6 +126,9 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping(path="/apps")
+@OpenAPIDefinition(
+        security = {@SecurityRequirement(name = "tenant"),@SecurityRequirement(name = "space")}
+   )
 public class ApplicationController {
 
 	private static Logger log = LoggerFactory.getLogger(ApplicationController.class);
@@ -205,7 +211,7 @@ public class ApplicationController {
 	@JsonView(Views.Default.class)
 	public ResponseEntity<Application> createApplication(@RequestBody Application application, 
 			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -262,7 +268,7 @@ public class ApplicationController {
 			@PathVariable String artifact,
 			@RequestParam(value="keep", required=false, defaultValue="3") Integer keep,
 			@RequestParam(value="mode", required=false, defaultValue="versions") String mode,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER,  required=false)  String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER,  required=false)  String space) {
 
 		Space s = null;
 		try {
@@ -397,7 +403,7 @@ public class ApplicationController {
 			@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version,
 			@RequestBody Application application,
 			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -464,7 +470,7 @@ public class ApplicationController {
 			@RequestParam(value="artifact", required=false, defaultValue="*") String a,
 			@RequestParam(value="version", required=false, defaultValue="*") String v,
 			@RequestParam(value="asOf", required=false, defaultValue="0") String   asOfTimestamp,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER,  required=false)  String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER,  required=false)  String space) {
 
 		Space s = null;
 		try {
@@ -656,7 +662,7 @@ public class ApplicationController {
 			@PathVariable String artifact, @PathVariable String version,
 			@RequestParam(value="clean", required=true) Boolean clean,
 			@RequestParam(value="cleanGoalHistory", required=false, defaultValue="false") Boolean cleanGoalHistory,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -706,7 +712,7 @@ public class ApplicationController {
 			@RequestParam(value="searchString", required=true, defaultValue="") String searchString,
 			@RequestParam(value="constructTypes", required=false, defaultValue="") ConstructType[] constructTypes,
 			@RequestParam(value="wildcardSearch", required=false, defaultValue="true") boolean wildcardSearch,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -767,7 +773,7 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}", method = RequestMethod.OPTIONS)
 	public ResponseEntity<Application> isApplicationExisting(
 			@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -801,7 +807,7 @@ public class ApplicationController {
 	public ResponseEntity<Application> getApplication(@PathVariable String mvnGroup, @PathVariable String artifact,
 			@PathVariable String version, 
 			@RequestParam(value="inclTraces", required=false, defaultValue="true") Boolean inclTraces,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER,  required=false)  String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER,  required=false)  String space) {
 
 		Space s = null;
 		try {
@@ -843,7 +849,7 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/constructIds", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Collection<ConstructId>> getApplicationConstructIds(@PathVariable String mvnGroup, 
 			@PathVariable String artifact, @PathVariable String version,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -877,7 +883,7 @@ public class ApplicationController {
 			@PathVariable String artifact, @PathVariable String version, 
 			@RequestBody GoalExecution goalExecution,
 			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -930,7 +936,7 @@ public class ApplicationController {
 			@PathVariable String executionId,
 			@RequestBody GoalExecution goalExecution,
 			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -975,7 +981,7 @@ public class ApplicationController {
 	public ResponseEntity<GoalExecution> isGoalExecutionExisting(@PathVariable String mvnGroup, 
 			@PathVariable String artifact, @PathVariable String version, 
 			@PathVariable String executionId,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1012,7 +1018,7 @@ public class ApplicationController {
 	@JsonView(Views.GoalDetails.class)
 	public ResponseEntity<GoalExecution> getGoalExecution(@PathVariable String mvnGroup, 
 			@PathVariable String artifact, @PathVariable String version, @PathVariable Long id,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1048,7 +1054,7 @@ public class ApplicationController {
 	public ResponseEntity<GoalExecution> getLatestGoalExecution(@PathVariable String mvnGroup, 
 			@PathVariable String artifact, @PathVariable String version,
 			@RequestParam(value="type", required=false, defaultValue="") String type,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1089,7 +1095,7 @@ public class ApplicationController {
 	@JsonView(Views.Default.class)
 	public ResponseEntity<List<GoalExecution>> getGoalExecutions(@PathVariable String mvnGroup, 
 			@PathVariable String artifact, @PathVariable String version,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1119,7 +1125,7 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals", method = RequestMethod.DELETE)
 	public ResponseEntity<List<GoalExecution>> deleteGoalExecutions(@PathVariable String mvnGroup, 
 			@PathVariable String artifact, @PathVariable String version,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1161,7 +1167,7 @@ public class ApplicationController {
 	public ResponseEntity<List<Bug>> getApplicationBugs(@PathVariable String mvnGroup, @PathVariable String artifact, 
 			@PathVariable String version,
 			@RequestParam(value="historical", required=false, defaultValue="false") Boolean historical,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1205,7 +1211,7 @@ public class ApplicationController {
 	@JsonView(Views.Default.class)
 	public ResponseEntity<List<DependencyIntersection>> findDependencyIntersections(@PathVariable String mvnGroup, 
 			@PathVariable String artifact, @PathVariable String version,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1242,7 +1248,7 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
 	public ResponseEntity<List<Dependency>> getDependencies(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1282,7 +1288,7 @@ public class ApplicationController {
 	@JsonView(Views.DepDetails.class) // extends View LibDetails that allows to see the properties
 	public ResponseEntity<Dependency> getDependency(@PathVariable String mvnGroup, @PathVariable String artifact, 
 			@PathVariable String version, @PathVariable String digest,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1324,7 +1330,7 @@ public class ApplicationController {
 	public ResponseEntity<Metrics> getApplicationMetrics(
 			@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version,
 			@RequestParam(value="excludedScopes", required=false, defaultValue="") Scope[] excludedScopes,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1402,7 +1408,7 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}/updateMetrics", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.DepDetails.class) // extends View LibDetails that allows to see the properties
 	public ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate> getUpdateMetrics(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String digest, @RequestBody LibraryId otherVersion,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1563,7 +1569,7 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}/updateChanges", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.DepDetails.class) // extends View LibDetails that allows to see the properties
 	public ResponseEntity<com.sap.psr.vulas.backend.model.DependencyUpdate> getUpdateChanges(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String digest, @RequestBody LibraryId otherVersion,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1651,7 +1657,7 @@ public class ApplicationController {
 			@RequestParam(value="includeAffectedUnconfirmed", required=false, defaultValue="true") Boolean includeAffectedUnconfirmed, // affectedConfirmed==0
 			@RequestParam(value="addExcemptionInfo", required=false, defaultValue="false") Boolean addExcemptionInfo, // consider configuration setting "vulas.report.exceptionScopeBlacklist" and "vulas.report.exceptionExcludeBugs"
 			@RequestParam(value="lastChange", required=false, defaultValue="") String lastChange, // a timestamp identifier which is used to cache the response or not
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1775,7 +1781,7 @@ public class ApplicationController {
 			@RequestParam(value="bundledArtifact", required=false, defaultValue="") String bundledArtifact,
 			@RequestParam(value="bundledVersion", required=false, defaultValue="") String bundledVersion,
 			@RequestParam(value="bundledLibrary", required=false, defaultValue="") String bundledLibrary,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1812,7 +1818,7 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/traces", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
 	public ResponseEntity<List<Trace>> createTraces(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @RequestBody Trace[] traces,@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1854,7 +1860,7 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/traces", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
 	public ResponseEntity<List<Trace>> getTraces(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1884,7 +1890,7 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/reachableConstructIds", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.DepDetails.class)
 	public ResponseEntity<Collection<Dependency>> getReachableContructIds(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1916,7 +1922,7 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/paths", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
 	public ResponseEntity<List<Path>> createPaths(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @RequestBody Path[] paths, @RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1958,7 +1964,7 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/paths", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
 	public ResponseEntity<List<Path>> getPaths(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -1990,7 +1996,7 @@ public class ApplicationController {
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}/paths/{bugId}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
 	public ResponseEntity<List<Path>> getVulndepPaths(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String digest, @PathVariable String bugId,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -2041,7 +2047,7 @@ public class ApplicationController {
 			@PathVariable String digest,
 			@PathVariable String bugId,
 			@PathVariable String qname,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -2103,7 +2109,7 @@ public class ApplicationController {
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}/reachableConstructIds", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Set<ConstructId>> createReachableConstructIds(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String digest, @RequestBody ConstructId[] constructIds,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
@@ -2147,7 +2153,7 @@ public class ApplicationController {
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}/touchPoints", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Set<TouchPoint>> createTouchPoints(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String digest, @RequestBody TouchPoint[] touchPoints, @RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
-			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
+			@Parameter(hidden = true) @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
 		try {
