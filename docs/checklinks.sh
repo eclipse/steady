@@ -20,5 +20,6 @@ fi
        -e .*wala\.sourceforge\.net.* \
        -e .*stackoverflow\.com.* \
        -e .*github\.com/kubernetes/ingress-nginx.* \
+       -e .*\.apache\.org.* \
        -t 80 http://$URL
 
