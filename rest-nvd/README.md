@@ -1,4 +1,4 @@
-# nvd-rest
+# rest-nvd
 
 NVD RESTful API to serve CVE data
 
@@ -27,3 +27,21 @@ You might want to automate this with cron. The following line in your crontab wi
 do the update every 30 minutes. Once every hour would be ok too.
 
 `*/30 *  *  *   *   /usr/bin/docker exec nvd_rest python /app/update.py --verbose >> /var/log/nvd_rest.log`
+
+### Predicting license and language
+
+We return this information when the service is called with the parameter `extended=true`.
+
+```
+Input: cve_id
+
+if the URL has `extended=true`:
+    if the file cve_id + "ext" (call it f) does not exist:
+        ext_data = do_classification(cve_id)
+        save ext_data to f
+    else:
+        ext_data = content of f
+    return nvd data merged with ext_data
+return data
+
+```
