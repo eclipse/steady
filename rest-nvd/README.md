@@ -19,14 +19,14 @@ This module is part of Eclipse Steady, but it can be run as a stand-alone servic
 
 (this assumes the container is called `rest-nvd`)
 
-`docker exec -ti rest_nvd bash -c "python /app/update.py --verbose --force"`
+`docker exec -ti rest_nvd bash -c "python /app/app/update.py --verbose --force"`
 
 NOTE: the first time you run the container, the data folder and the metadata file that stores
 the information about the last fetch are both absent, hence this forced update is triggered automatically.
 
 ### Regular update
 
-`docker exec -ti rest_nvd bash -c "python /app/update.py --verbose"`
+`docker exec -ti rest_nvd bash -c "python /app/app/update.py --verbose"`
 
 This compares the checksum of the last fetch with the one of the most recent feed available on the NVD.
 Based on this comparison, the script determines if a full fetch is needed, if an incremental update is enough,
@@ -35,4 +35,4 @@ or if there is nothing new to fetch.
 You might want to automate this with cron. The following line in your crontab will
 do the update every 30 minutes. Once every hour would be ok too.
 
-`*/30 *  *  *   *   /usr/bin/docker exec rest_nvd python /app/update.py --verbose >> /var/log/rest_nvd.log`
+`*/30 *  *  *   *   /usr/bin/docker exec rest_nvd python /app/app/update.py --verbose >> /var/log/rest_nvd.log`
