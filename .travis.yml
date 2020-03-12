@@ -29,8 +29,8 @@ matrix:
       skip_cleanup: true
       script: bash .travis/docker_hub_push_release.sh
       on:
-        all_branches: true
-        condition: tag =~ /^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$/
+        tags: true
+        condition: $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$
 
   - name: OpenJDK8 - Create Maven artifacts for JavaDoc and sources
     language: java
@@ -72,8 +72,8 @@ matrix:
       skip_cleanup: true
       script: bash .travis/docker_hub_push_release.sh
       on:
-        all_branches: true
-        condition: tag =~ /^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$/
+        tags: true
+        condition: $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$
 
   # According to the ECCN team re Docker images on DockerHub: “…if you posted the source code on the Internet,
   # you must notify BIS and the ENC Encryption Request Coordinator each time the Internet location is changed,
