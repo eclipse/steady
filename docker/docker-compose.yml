@@ -120,6 +120,11 @@ services:
       - no-new-privileges
     restart: always
 
+  rest-nvd:
+    extends:
+     file: ../rest-nvd/docker-compose.yml
+     service: rest-nvd
+
   cache:
     container_name: vulnerability-assessment-tool-cache
     hostname: cache
