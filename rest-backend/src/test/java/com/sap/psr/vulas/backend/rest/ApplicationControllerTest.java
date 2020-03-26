@@ -462,6 +462,13 @@ public class ApplicationControllerTest {
     	// Repo must contain 1
     	assertEquals(1, this.appRepository.count());
     	
+
+       	final MockHttpServletRequestBuilder get_builder = get(getAppUri(app)+"/deps");
+    	mockMvc.perform(get_builder)	
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentTypeJson))
+                .andExpect(jsonPath("$[1].parent.lib.digest", is("16CF5A6B78951F50713D29BFAE3230A611DC01F0")));
+ 
     }
     
     @Test

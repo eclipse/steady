@@ -188,17 +188,14 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	}	
 	
 	private Dependency updateParent(Dependency _dep,Application _app){
-
 		if(_dep.getParent()!=null)
 			_dep.setParent(updateParent(_dep.getParent(),_app));
-		try{		
-			_dep = DependencyRepository.FILTER.findOne(depRepository.findByAppAndLibAndParentAndRelPath(_app, _dep.getLib().getDigest(),_dep.getParent(),_dep.getRelativePath()));			
-		}catch(EntityNotFoundException e){
-			//this should not happen, as we ordered the list, when we came across a parent it should have been already saved
-			log.warn("Parent entity not already existing");
-			_dep=this.depRepository.save(_dep);
+		
+		for(Dependency d:_app.getDependencies()) {
+			if(d.equalLibParentRelPath(_dep))
+				return d;
 		}
-		return _dep;
+		throw new PersistenceException("Error while saving parent dependency on lib " + _dep.getLib() + "] of application " + _app + ": parent does not exist in application collection");
 	}
 	
 	
