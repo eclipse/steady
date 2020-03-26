@@ -3,8 +3,6 @@ version: '2'
 services:
   rest-nvd:
     build: .
-    container_name: vulnerability-assessment-tool-rest-nvd
-    hostname: rest-nvd
     ports:
       - "22222:80"
     environment:

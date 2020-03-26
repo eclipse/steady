@@ -124,6 +124,12 @@ services:
     extends:
      file: ../rest-nvd/docker-compose.yml
      service: rest-nvd
+    container_name: vulnerability-assessment-tool-rest-nvd
+    hostname: rest-nvd
+    image: vulas/vulnerability-assessment-tool-rest-nvd:${VULAS_RELEASE}
+    security_opt:
+      - no-new-privileges
+    restart: always
 
   cache:
     container_name: vulnerability-assessment-tool-cache
