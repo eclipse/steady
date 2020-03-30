@@ -69,7 +69,7 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 			//	_s.setSpaceOwners(managed_space.getSpaceOwners());
 			
 		} catch (EntityNotFoundException e1) {			
-			SpaceRepositoryImpl.log.info("Space [" + _s.getSpaceToken() + "] does not yet exist, going to save it.");
+			SpaceRepositoryImpl.log.debug("Space [" + _s.getSpaceToken() + "] does not yet exist, going to save it.");
 		}
 		
 		// Update refs to independent entities
@@ -136,7 +136,7 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 			}
 		}
 		
-		log.info("Found " + space + " for token [" + _spaceToken + "]");
+		log.debug("Found " + space + " for token [" + _spaceToken + "]");
 		return space;
 	}
 }

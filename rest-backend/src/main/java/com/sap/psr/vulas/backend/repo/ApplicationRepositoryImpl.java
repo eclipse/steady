@@ -495,7 +495,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		// 1) Join over construct changes (origin=cc)
 		final TreeSet<VulnerableDependency> vd_list_cc = this.appRepository.findJPQLVulnerableDependenciesByGAV(_app.getMvnGroup(), _app.getArtifact(), _app.getVersion(), _app.getSpace());
 		if(_log)
-			sw.lap("Found [" + vd_list_cc.size() + "] through joining constructs", true);
+			sw.lap("Found [" + vd_list_cc.size() + "] through joining constructs");
 		
 		//to improve performances we use a native query to get the affected version (having moved to SQL the computation of the affected version source having priority.
 		//further improvements could be:
@@ -509,7 +509,8 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		
 		List<Object[]> bundledDigests = this.libRepository.findBundledLibByApp(_app);
 		
-		log.info("Found ["+bundledDigests.size()+"] libs digest for bundled libids.");
+		if(_log)
+			sw.lap("Found ["+bundledDigests.size()+"] libs digest for bundled libids.");
 		
 		for (Object[] e: bundledDigests){
 			Dependency depWithBundledLibId = DependencyRepository.FILTER.findOne(this.depRepository.findById(((BigInteger)e[0]).longValue()));
@@ -571,8 +572,8 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		}
 		
 		if(_log){
-			sw.lap("Found [" + vd_list_bundled_cc.size() + "] vulns w/  cc through bundled library ids", true);
-			sw.lap("Found [" + vd_list_bundled_av.size() + "] vulns w/o cc through bundled library ids", true);
+			sw.lap("Found [" + vd_list_bundled_cc.size() + "] vulns w/  cc through bundled library ids");
+			sw.lap("Found [" + vd_list_bundled_av.size() + "] vulns w/o cc through bundled library ids");
 		}
 
 
@@ -591,7 +592,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		}
 		vd_list_libid.addAll(vd_list_libid_false);
 		if(_log)
-			sw.lap("Found [" + vd_list_libid.size() + "] through joining libids", true);
+			sw.lap("Found [" + vd_list_libid.size() + "] through joining libids");
 		//this.affLibRepository.computeAffectedLib(vd_list_libid); this is not required for vulns w/o cc as we select by affectedVersions.affected (in this way we save the additional queries to get the affected flag afterwards)
 		this.updateFlags(vd_list_libid, false);
 
@@ -739,7 +740,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			listOfConstructs.add(cc.getConstructId());
 		}
 		List<Application> apps = appRepository.findAppsByCC(listOfConstructs); 
-		sw.lap("LastVulnChange by CC, [" +apps.size()+"] apps to be refreshed",true);
+		sw.lap("LastVulnChange by CC, [" +apps.size()+"] apps to be refreshed");
 
 		//we partition the list to work around the PostgreSQL's limit of 32767 bind variables per statement
 		for(List<Application> sub: Lists.partition(apps, 30000))
@@ -756,7 +757,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			if(_affLib.getAffected()!=null)
 				apps.addAll(appRepository.findAppsByAffLib(_affLib.getLibraryId()));
 		}
-		sw.lap("LastVulnChange by AffLib, [" +apps.size()+"] apps to be refreshed", true);
+		sw.lap("LastVulnChange by AffLib, [" +apps.size()+"] apps to be refreshed");
 		//we partition the list to work around the PostgreSQL's limit of 32767 bind variables per statement
 		for(List<Application> sub: Lists.partition(apps, 30000))
 			appRepository.updateAppLastVulnChange(sub);
