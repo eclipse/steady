@@ -10,7 +10,7 @@ This module is part of Eclipse Steady, but it can be run as a stand-alone servic
 ## Features
 
 * Fetch NVD feeds and extract their content to individual static files (one per CVE).
-* Serve CVE data through a REST API (`GET /vulnerabilities/CVE-<YEAR>-<NUMBER>`).
+* Serve CVE data through a REST API (`GET /nvd/vulnerabilities/CVE-<YEAR>-<NUMBER>`).
 * Supports full sync (fetch all feeds from scratch) as well as periodic incremental sync.
 
 ## Synchronizing with the NVD
