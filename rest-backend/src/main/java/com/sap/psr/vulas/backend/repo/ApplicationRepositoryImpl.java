@@ -140,7 +140,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			_app = this.updateDependencies(managed_app, _app);
 			sw.lap("Updated refs to nested deps of existing application' dependencies");
 		} catch (EntityNotFoundException e1) {
-			//if the applcation does not exist, we create an empty one so that we can later add the dependencies incrementally
+			//if the application does not exist, we create an empty one so that we can later add the dependencies incrementally
 			Application new_app = new Application(group,artifact,version);
 			new_app.setSpace(_app.getSpace());
 			managed_app = this.appRepository.save(new_app);		
@@ -162,10 +162,10 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		
 		
 		_app.orderDependenciesByDepth();
-		_app = this.saveAndupdateDependencyTree(_app);
+		_app = this.saveDependencyTree(_app);
 		sw.lap("Saved and updated refs to dependencies' (including parents)");
 		
-		// Save (if existing, saves the updated fields, otherwise iti should all already be there
+		// Save (if existing, saves the updated fields, otherwise it should all already be there)
 		try {
 			managed_app = this.appRepository.save(_app);
 			sw.stop();
@@ -177,31 +177,46 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		return managed_app;
 	}
 	
-	private Application saveAndupdateDependencyTree(@NotNull Application _app) {
+	/**
+	 * <p>Saves the dependency tree ensuring that no transient entities are used for parent dependencies. This is done by setting the parent with 
+	 *  its already saved entity. Note that after the save operation the entity is still just handled by Hibernate and may not be persisted in the database yet. 
+	 *  Still the handling of Hibernate ensures that once persisted the id will be set correctly linking the parent to its entity).</p>
+	 * 
+	 * @return a  {@link com.sap.psr.vulas.backend.model.Application} object.
+	 */
+	private Application saveDependencyTree(@NotNull Application _app) {
 		for(Dependency d: _app.getDependencies()) { 
 			if(d.getParent()!=null){
-				d.setParent(updateParent(d.getParent(),_app));
+				d.setParent(getManagedParent(d.getParent(),_app));
 			}
 			d = this.depRepository.save(d);
 		}
 		return _app;
 	}	
 	
-	private Dependency updateParent(Dependency _dep,Application _app){
-
+	/**
+	 * <p> Given a dependency parent <code>_dep</code>, it retrieves the dependency within the plain list of  all dependencies of the application <code>_app</code>.
+	 * 	Because of how dependencies are saved, this operation amounts to retrieve the managed dependency (with id) corresponding to the provided one <code>_dep</code>.</p>
+	 * 
+	 * @return a  {@link com.sap.psr.vulas.backend.model.Dependency} object.
+	 */
+	private Dependency getManagedParent(Dependency _dep,Application _app){
 		if(_dep.getParent()!=null)
-			_dep.setParent(updateParent(_dep.getParent(),_app));
-		try{		
-			_dep = DependencyRepository.FILTER.findOne(depRepository.findByAppAndLibAndParentAndRelPath(_app, _dep.getLib().getDigest(),_dep.getParent(),_dep.getRelativePath()));			
-		}catch(EntityNotFoundException e){
-			//this should not happen, as we ordered the list, when we came across a parent it should have been already saved
-			log.warn("Parent entity not already existing");
-			_dep=this.depRepository.save(_dep);
+			_dep.setParent(getManagedParent(_dep.getParent(),_app));
+		
+		for(Dependency d:_app.getDependencies()) {
+			if(d.equalLibParentRelPath(_dep))
+				return d;
 		}
-		return _dep;
+		throw new PersistenceException("Error while saving parent dependency on lib " + _dep.getLib() + "] of application " + _app + ": parent does not exist in application collection");
 	}
 	
 	
+	/**
+	 * <p>Updates the provided dependencies of the provided application with managed ones of the managed application if the same dependency exists in both.</p>
+	 * 
+	 * @return a  {@link com.sap.psr.vulas.backend.model.Application} object.
+	 */
 	private Application updateDependencies(@NotNull Application _managed_app, @NotNull Application _provided_app) {
 		for(Dependency provided_dep: _provided_app.getDependencies()) {
 			for(Dependency managed_dep: _managed_app.getDependencies()) {
