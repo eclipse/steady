@@ -28,9 +28,9 @@ if __name__ != '__main__':
 #    app.logger.debug('Monitoring dashboard is disabled')
 
 DATA_PATH=os.environ.get('CVE_DATA_PATH') or os.path.join(os.path.realpath(os.path.dirname(__file__)), '..', 'data')
-PREFIX = "/nvd"
+PREFIX_URL = "/nvd"
 
-@app.route(PREFIX + '/vulnerabilities/<vuln_id>')
+@app.route(PREFIX_URL + '/vulnerabilities/<vuln_id>')
 def get_vuln_data(vuln_id):
     extended_data = request.args.get('extended', default = False, type = bool)
     app.logger.debug('Requested data for vulnerability ' + vuln_id )
@@ -54,7 +54,7 @@ def get_vuln_data(vuln_id):
     return data, 200, {'Content-Type': 'application/json; charset=utf-8'}
 
 
-@app.route(PREFIX + '/status')
+@app.route(PREFIX_URL + '/status')
 def status():
     app.logger.debug('Serving status page')
     out = dict()
@@ -68,7 +68,7 @@ def status():
 
 
 @app.route('/')
-@app.route(PREFIX + '/')
+@app.route(PREFIX_URL + '/')
 def index():
     app.logger.debug('Serving root resource')
     return "try with /nvd/vulnerabilities/<VULN_ID>"
