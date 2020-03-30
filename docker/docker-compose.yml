@@ -37,6 +37,7 @@ services:
       - frontend-bugs
       - rest-backend
       - rest-lib-utils
+      - rest-nvd
     security_opt:
       - no-new-privileges
     restart: always
@@ -116,6 +117,19 @@ services:
         - "8092"
     volumes:
       - "./data/rest-lib-utils:/root/"
+    security_opt:
+      - no-new-privileges
+    restart: always
+
+  rest-nvd:
+    extends:
+     file: ../rest-nvd/docker-compose.yml
+     service: rest-nvd
+    container_name: vulnerability-assessment-tool-rest-nvd
+    hostname: rest-nvd
+    image: vulas/vulnerability-assessment-tool-rest-nvd:${VULAS_RELEASE}
+    expose:
+      - "80"
     security_opt:
       - no-new-privileges
     restart: always
