@@ -97,7 +97,7 @@ public class TenantRepositoryImpl implements TenantRepositoryCustom {
 			}
 		}
 		
-		log.info("Found " + tenant + " for token [" + _tenantToken + "]");
+		log.debug("Found " + tenant + " for token [" + _tenantToken + "]");
 		return tenant;
 	}
 }

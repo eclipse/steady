@@ -206,13 +206,13 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
 					
 					// Something changed, update database
 					if(to_save) {
-						log.info("CVE data of bug [" + _b.getBugId() + "] changed, triggering update of local database");
+						log.debug("CVE data of bug [" + _b.getBugId() + "] changed, triggering update of local database");
 						this.customSave(_b, false);
 						update_happened = true;
 					}
 					// Nothing changed
 					else {
-						log.info("CVE data of bug [" + _b.getBugId() + "] did not change, no update of local database needed");
+						log.debug("CVE data of bug [" + _b.getBugId() + "] did not change, no update of local database needed");
 					}
 				}
 			} catch (CacheException e) {
