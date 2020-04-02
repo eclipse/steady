@@ -26,7 +26,7 @@
 	<parent>
 		<groupId>com.sap.research.security.vulas</groupId>
 		<artifactId>root</artifactId>
-		<version>3.1.10-SNAPSHOT</version>
+		<version>3.1.10</version>
 	</parent>
 	<artifactId>lang</artifactId>
 
