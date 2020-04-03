@@ -40,7 +40,7 @@
     
     
       
-        <title>Scanning Java (Gradle) - Eclipse Steady 3.1.9 (Incubator Project)</title>
+        <title>Scanning Java (Gradle) - Eclipse Steady 3.1.10 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.9 (Incubator Project)" aria-label="Eclipse Steady 3.1.9 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.10 (Incubator Project)" aria-label="Eclipse Steady 3.1.10 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.9 (Incubator Project)
+              Eclipse Steady 3.1.10 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.9 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.10 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.9 (Incubator Project)
+    Eclipse Steady 3.1.10 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1267,7 +1267,6 @@
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ol>
 <li>JDK 7 or later</li>
-<li>URL of the package repository to download the plugin JAR (<code>&lt;PACKAGE-REPO&gt;</code>)</li>
 <li>URLs of the <strong>backend service</strong> and <strong>apps Web frontend</strong><ul>
 <li>Apps Web frontend: <a href="http://localhost:8033/apps">http://localhost:8033/apps</a></li>
 <li>Backend service: <a href="http://localhost:8033/backend/">http://localhost:8033/backend/</a></li>
@@ -1288,12 +1287,11 @@ please see <a href="../../manuals/setup/#workspace">this section of the manual</
 <p><strong>build.gradle</strong></p>
 <div class="codehilite"><pre><span></span><code>    buildscript {
         repositories {
-            maven { url &#39;&lt;PACKAGE-REPO&gt;&#39; }
             mavenCentral()
         }
 
         dependencies {
-            classpath(&#39;com.sap.research.security.vulas:plugin-gradle:3.1.9&#39;) { changing = true }
+            classpath(&#39;com.sap.research.security.vulas:plugin-gradle:3.1.10&#39;) { changing = true }
         }
     }
 
@@ -1315,7 +1313,7 @@ please see <a href="../../manuals/setup/#workspace">this section of the manual</
 
 <p>Note: Rather than adding configuration settings to <code>gradle.properties</code>, they can also be passed as project properties in the command line, e.g., <code>-Pvulas.report.exceptionThreshold=noException</code>. The use of <code>-D</code> system properties for changing configuration settings is discouraged (because of the cache of the Gradle daemon).</p>
 <p>The configuration is correct if the Eclipse Steady analysis goals <code>app</code>, <code>a2c</code> etc. are listed among <strong>Other tasks</strong> when running the following command:</p>
-<div class="codehilite"><pre><span></span><code>    ./gradlew tasks -all
+<div class="codehilite"><pre><span></span><code>    ./gradlew tasks --all
 </code></pre></div>
 
 <p>The Gradle plugin only works with later releases of Gradle. How to upgrade is described <a href="https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:upgrading_wrapper">here</a>.</p>

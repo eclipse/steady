@@ -40,7 +40,7 @@
     
     
       
-        <title>Analysis - Eclipse Steady 3.1.9 (Incubator Project)</title>
+        <title>Analysis - Eclipse Steady 3.1.10 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.9 (Incubator Project)" aria-label="Eclipse Steady 3.1.9 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.10 (Incubator Project)" aria-label="Eclipse Steady 3.1.10 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.9 (Incubator Project)
+              Eclipse Steady 3.1.10 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.9 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.10 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.9 (Incubator Project)
+    Eclipse Steady 3.1.10 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1364,7 +1364,7 @@
 <div class="superfences-tabs">
 <input name="__tabs_1" type="radio" id="__tab_1_0" checked="checked" />
 <label for="__tab_1_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><code>java -jar vulas-cli-3.1.9-jar-with-dependencies.jar -goal app
+<div class="superfences-content"><div class="codehilite"><pre><span></span><code>java -jar vulas-cli-3.1.10-jar-with-dependencies.jar -goal app
 </code></pre></div></div>
 <input name="__tabs_1" type="radio" id="__tab_1_1" />
 <label for="__tab_1_1">Maven</label>
@@ -1423,7 +1423,7 @@
 <div class="superfences-tabs">
 <input name="__tabs_2" type="radio" id="__tab_2_0" checked="checked" />
 <label for="__tab_2_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><code>java -Xmx8g -Xms2g -jar vulas-cli-3.1.9-jar-with-dependencies.jar -goal a2c
+<div class="superfences-content"><div class="codehilite"><pre><span></span><code>java -Xmx8g -Xms2g -jar vulas-cli-3.1.10-jar-with-dependencies.jar -goal a2c
 </code></pre></div></div>
 <input name="__tabs_2" type="radio" id="__tab_2_1" />
 <label for="__tab_2_1">Maven</label>
@@ -1646,10 +1646,10 @@ mvn -Dvulas compile vulas:a2c
 <p>By registering a Java agent at JVM startup, Eclipse Steady changes the bytecode of every Java class loaded at runtime. For example, it injects Java statements in order to save the timestamp of every method invocation as well as stack trace information. This information is periodically uploaded to the Eclipse Steady backend.</p>
 <h4>Run as follows</h4>
 <ul>
-<li>Download the file <code>lang-java-3.1.9-jar-with-dependencies.jar</code> to your computer (CLI users can take it from the folder <code>./instr</code>).</li>
+<li>Download the file <code>lang-java-3.1.10-jar-with-dependencies.jar</code> to your computer (CLI users can take it from the folder <code>./instr</code>).</li>
 <li>Add the following arguments to the Java runtime (and replace line breaks by a single space characters).</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>-javaagent:lang-java-3.1.9-jar-with-dependencies.jar
+<div class="codehilite"><pre><span></span><code>-javaagent:lang-java-3.1.10-jar-with-dependencies.jar
 -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/
 -Dvulas.core.backendConnection=READ_WRITE
 -Dvulas.core.monitor.periodicUpload.enabled=true
@@ -1665,11 +1665,11 @@ mvn -Dvulas compile vulas:a2c
 <li>Start the application and perform some application-specific tests and workflows.</li>
 </ul>
 <h4>Example</h4>
-<p>In case of Tomcat 8.x, one needs to (1) copy <code>lang-java-3.1.9-jar-with-dependencies.jar</code> into the folder <code>./bin</code> and (2) specify the variable <code>CATALINA_OPTS</code> as follows in the file <code>./bin/setenv.bat</code>. Do not forget to specify <code>&lt;GROUP&gt;</code>, <code>&lt;ARTIFACT&gt;</code>, <code>&lt;VERSION&gt;</code> and <code>&lt;WORKSPACE-TOKEN&gt;</code> for the application under analysis. Note: The use of <code>setenv.bat</code> does not work if Tomcat is run as Windows service.</p>
+<p>In case of Tomcat 8.x, one needs to (1) copy <code>lang-java-3.1.10-jar-with-dependencies.jar</code> into the folder <code>./bin</code> and (2) specify the variable <code>CATALINA_OPTS</code> as follows in the file <code>./bin/setenv.bat</code>. Do not forget to specify <code>&lt;GROUP&gt;</code>, <code>&lt;ARTIFACT&gt;</code>, <code>&lt;VERSION&gt;</code> and <code>&lt;WORKSPACE-TOKEN&gt;</code> for the application under analysis. Note: The use of <code>setenv.bat</code> does not work if Tomcat is run as Windows service.</p>
 <div class="superfences-tabs">
 <input name="__tabs_4" type="radio" id="__tab_4_0" checked="checked" />
 <label for="__tab_4_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><code><span class="nb">set</span> <span class="s2">&quot;CATALINA_OPTS=-javaagent:lang-java-3.1.9-jar-with-dependencies.jar -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/-Dvulas.core.backendConnection=READ_WRITE -Dvulas.core.monitor.periodicUpload.enabled=true -Dvulas.core.appContext.group=&lt;GROUP&gt; -Dvulas.core.appContext.artifact=&lt;ARTIFACT&gt; -Dvulas.core.appContext.version=&lt;VERSION&gt; -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor -Dvulas.core.space.token=&lt;WORKSPACE-TOKEN&gt; -noverify&quot;</span>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><code><span class="nb">set</span> <span class="s2">&quot;CATALINA_OPTS=-javaagent:lang-java-3.1.10-jar-with-dependencies.jar -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/-Dvulas.core.backendConnection=READ_WRITE -Dvulas.core.monitor.periodicUpload.enabled=true -Dvulas.core.appContext.group=&lt;GROUP&gt; -Dvulas.core.appContext.artifact=&lt;ARTIFACT&gt; -Dvulas.core.appContext.version=&lt;VERSION&gt; -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor -Dvulas.core.space.token=&lt;WORKSPACE-TOKEN&gt; -noverify&quot;</span>
 </code></pre></div></div>
 </div>
 <h2 id="static-instrumentation-instr">Static instrumentation (instr)<a class="headerlink" href="#static-instrumentation-instr" title="Permanent link">&para;</a></h2>
@@ -1778,7 +1778,7 @@ mvn -Dvulas vulas:instr
 <div class="superfences-tabs">
 <input name="__tabs_7" type="radio" id="__tab_7_0" checked="checked" />
 <label for="__tab_7_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><code>java -Dvulas.core.appContext.group<span class="o">=</span>&lt;GROUP&gt; -Dvulas.core.appContext.artifact<span class="o">=</span>&lt;ARTIFACT&gt; -Dvulas.core.appContext.version<span class="o">=</span><span class="m">3</span>.1.9
+<div class="superfences-content"><div class="codehilite"><pre><span></span><code>java -Dvulas.core.appContext.group<span class="o">=</span>&lt;GROUP&gt; -Dvulas.core.appContext.artifact<span class="o">=</span>&lt;ARTIFACT&gt; -Dvulas.core.appContext.version<span class="o">=</span><span class="m">3</span>.1.10
      -jar vulas-cli-jar-with-dependencies.jar -goal upload
 </code></pre></div></div>
 <input name="__tabs_7" type="radio" id="__tab_7_1" />
