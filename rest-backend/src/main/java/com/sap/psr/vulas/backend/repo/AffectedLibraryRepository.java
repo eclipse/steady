@@ -72,6 +72,18 @@ public interface AffectedLibraryRepository extends CrudRepository<AffectedLibrar
 	List<AffectedLibrary> findByBugAndSource(@Param("bug") Bug bug, @Param("source") AffectedVersionSource source);
 	
 	/**
+	 * For a given {@link Bug} and {@link AffectedVersionSource}, find all entries that are linked to a library whose digest is well known. 
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 * @return a {@link java.util.List} object.
+	 */
+	@Query("SELECT afflib FROM AffectedLibrary AS afflib JOIN afflib.libraryId lid, Library l "
+			+ "WHERE l.libraryId=lid AND l.wellknownDigest='true' AND"
+			+ " afflib.bugId = :bug AND afflib.source = :source")
+	List<AffectedLibrary> findWellKnownByBugAndSource(@Param("bug") Bug bug, @Param("source") AffectedVersionSource source);
+	
+	/**
 	 * <p>findByBugAndLibIdAndSource.</p>
 	 *
 	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
@@ -113,6 +125,18 @@ public interface AffectedLibraryRepository extends CrudRepository<AffectedLibrar
 	 */
 	@Query("SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.bugId = :bug")
 	List<AffectedLibrary> findByBug(@Param("bug") Bug bug);
+	
+	/**
+	 * For a given {@link Bug} and {@link AffectedVersionSource}, find all entries that are linked to a library whose digest is well known. 
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 * @return a {@link java.util.List} object.
+	 */
+	@Query("SELECT afflib FROM AffectedLibrary AS afflib JOIN afflib.libraryId lid, Library l "
+			+ "WHERE l.libraryId=lid AND l.wellknownDigest='true' AND"
+			+ " afflib.bugId = :bug")
+	List<AffectedLibrary> findWellKnownByBug(@Param("bug") Bug bug);
 	
 	
 	/**

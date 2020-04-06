@@ -26,6 +26,7 @@ import com.sap.psr.vulas.backend.model.AffectedLibrary;
 import com.sap.psr.vulas.backend.model.Bug;
 import com.sap.psr.vulas.backend.model.Library;
 import com.sap.psr.vulas.backend.model.VulnerableDependency;
+import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 
 /**
  * Specifies additional methods of the {@link AffectedLibraryRepository}.
@@ -55,4 +56,14 @@ public interface AffectedLibraryRepositoryCustom {
 	 * @param _lib a {@link com.sap.psr.vulas.backend.model.Library} object.
 	 */
 	public void computeAffectedLib(VulnerableDependency _vd, Library _lib);
+	
+	/**
+	 * <p>Get affected libraries.</p>
+	 *
+	 * @param _bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @param _source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 * @param _onlyWellknown a {@link java.lang.Boolean} object. 
+	 * @return a {@link java.util.List} object.
+	 */
+	public List<AffectedLibrary> getAffectedLibraries(Bug _bug, AffectedVersionSource _source, Boolean _onlyWellknown);
 }
