@@ -8,5 +8,5 @@ services:
     environment:
       - CVE_DATA_PATH=/data
       - FEED_SCHEMA_VERSION=1.1
-      - LOG_LEVEL=debug
+      - LOG_LEVEL=info
       - WORKERS_PER_CORE=1
