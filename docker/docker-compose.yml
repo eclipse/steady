@@ -94,8 +94,7 @@ services:
     environment:
       - DELAY_STARTUP=5
       - vulas.shared.cia.serviceUrl=http://cia:8092/cia
-      - vulas.backend.coverageService.langConfidenceThreshold=0.2
-      - vulas.backend.coverageService.licenseConfidenceThreshold=0.2
+      - vulas.shared.cve.serviceUrl=http://rest-nvd:80/nvd/vulnerabilities/<ID>
       - spring.datasource.username=${POSTGRES_USER}
       - spring.datasource.password=${POSTGRES_PASSWORD}
     links:
