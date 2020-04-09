@@ -33,6 +33,8 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.sap.psr.vulas.backend.model.AffectedConstructChange;
 import com.sap.psr.vulas.backend.model.AffectedLibrary;
@@ -42,6 +44,7 @@ import com.sap.psr.vulas.backend.model.ConstructId;
 import com.sap.psr.vulas.backend.model.Library;
 import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.backend.model.VulnerableDependency;
+import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
 /**
@@ -265,5 +268,16 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 			_vd.setAffectedVersionConfirmed(0);
 			_vd.setAffectedVersion(1); // when the confirmed flag is 0, the value of affected-version is irrelevant but we set it to 1 so that the UI doesn't filter it out when filtering out historical vulnerabilities
 		}
+	}
+	
+	public List<AffectedLibrary> getAffectedLibraries(Bug _bug, AffectedVersionSource _source, Boolean _onlyWellknown){
+		if(_source==null && !_onlyWellknown)
+			return this.affLibRepository.findByBug(_bug);
+		else if (_source!=null && !_onlyWellknown)
+			return this.affLibRepository.findByBugAndSource(_bug, _source);
+		else if(_source!=null && _onlyWellknown)
+			return this.affLibRepository.findWellKnownByBugAndSource(_bug, _source);
+		else 
+			return this.affLibRepository.findWellKnownByBug(_bug);
 	}
 }
