@@ -124,6 +124,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
 	
 	/** {@inheritDoc} */
+	@Transactional
 	public Application customSave(Application _app) {
 		final StopWatch sw = new StopWatch("Save app " + _app).start();
 
