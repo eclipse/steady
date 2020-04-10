@@ -270,6 +270,7 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
 		}
 	}
 	
+	/** {@inheritDoc} */
 	public List<AffectedLibrary> getAffectedLibraries(Bug _bug, AffectedVersionSource _source, Boolean _onlyWellknown){
 		if(_source==null && !_onlyWellknown)
 			return this.affLibRepository.findByBug(_bug);
