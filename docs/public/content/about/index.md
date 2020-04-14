@@ -6,7 +6,7 @@
 - **collect evidence** of the execution of vulnerable code in a given application context (through a novel combination of static and dynamic analysis), and
 - support developers in the **mitigation** of such vulnerable dependencies.
 
-@@PROJECT_NAME@@ addresses the OWASP Top 10 security risk A9, [Using Components with Known Vulnerabilities](https://www.owasp.org/index.php/Top_10-2017_A9-Using_Components_with_Known_Vulnerabilities).
+@@PROJECT_NAME@@ addresses the OWASP Top 10 security risk A9, [Using Components with Known Vulnerabilities](https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A9-Using_Components_with_Known_Vulnerabilities).
 Differently from other tools that have similar goals, the detection approach of @@PROJECT_NAME@@ is _code-centric and usage-based_,
 which allows for a more accurate detection and assessment than tools relying on meta-data.
 
