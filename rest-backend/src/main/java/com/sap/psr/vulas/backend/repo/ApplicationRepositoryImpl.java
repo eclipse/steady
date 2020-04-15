@@ -493,7 +493,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	 * Finds all @{VulnerableDependency}s for a given {@link Space} and {@link Application}.
 	 */
 	@Override
-	public TreeSet<VulnerableDependency> findAppVulnerableDependencies(Application _app, boolean _add_excemption_info, boolean _log) {
+	public TreeSet<VulnerableDependency> findAppVulnerableDependencies(Application _app, boolean _add_exemption_info, boolean _log) {
 		final StopWatch sw = new StopWatch("Query vulnerable dependencies for application " + _app);
 		if(_log)
 			sw.start();
@@ -605,7 +605,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 		vd_all.addAll(vd_list_libid); // this must be added after the vd_list_bundled_av, to ensure that we get the info that a pair dep,bug comes out of something rebundled, though we overwrite it as FP at the level of the rebundling artifact
 
 		// Read exemption info from configuration and enrich vuln dep
-		if(_add_excemption_info) {
+		if(_add_exemption_info) {
 			final GoalExecution latest = this.gexeRepository.findLatestGoalExecution(_app, null);
 			if(latest!=null) {
 				final ExemptionSet exempts = ExemptionSet.createFromMap(latest.getConfigurationMap());
