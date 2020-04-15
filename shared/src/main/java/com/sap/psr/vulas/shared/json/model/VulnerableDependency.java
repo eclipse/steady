@@ -35,9 +35,6 @@ import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VulnerableDependency  implements Serializable, Comparable<VulnerableDependency> {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private Dependency dep;
@@ -87,6 +84,7 @@ public class VulnerableDependency  implements Serializable, Comparable<Vulnerabl
 	 * @return a {@link com.sap.psr.vulas.shared.json.model.Dependency} object.
 	 */
 	public Dependency getDep() { return dep; }
+	
 	/**
 	 * <p>Setter for the field <code>dep</code>.</p>
 	 *

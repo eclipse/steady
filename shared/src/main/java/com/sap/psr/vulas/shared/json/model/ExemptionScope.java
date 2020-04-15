@@ -115,6 +115,10 @@ public class ExemptionScope implements IExemption {
 
 	@Override
 	public String toString() { return "Exemption [scope=" + this.scope + "]"; }
+	
+	public String toShortString() {
+		return this.scope.toString();
+	}
 
 	@Override
 	public int hashCode() {

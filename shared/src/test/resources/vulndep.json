@@ -392,7 +392,7 @@
     "bundledLib": null,
     "excemption": null,
     "vulnDepOrigin": "CC",
-    "affected_version_confirmed": 1,
+    "affected_version_confirmed": 0,
     "affected_version": 1,
     "traced_confirmed": 0,
     "reachable_confirmed": 0

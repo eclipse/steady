@@ -109,6 +109,10 @@ public class ExemptionUnassessed implements IExemption {
 
 	@Override
 	public String toString() { return "Exemption [unassessed=" + value + "]"; }
+	
+	public String toShortString() {
+		return this.value.toString();
+	}
 
 	@Override
 	public int hashCode() {

@@ -51,6 +51,7 @@ import com.sap.psr.vulas.shared.connectivity.Service;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Bug;
 import com.sap.psr.vulas.shared.json.model.ExemptionBug;
+import com.sap.psr.vulas.shared.json.model.ExemptionScope;
 import com.sap.psr.vulas.shared.json.model.ExemptionSet;
 import com.sap.psr.vulas.shared.json.model.IExemption;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
@@ -67,7 +68,7 @@ public class Report {
 
 	private static final Log log = LogFactory.getLog(Report.class);
 
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH:mm:ss");
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH:mm Z");
 
 	/** Constant <code>THRESHOLD_NONE="noException"</code> */
 	public static final String THRESHOLD_NONE    = "noException";
@@ -335,8 +336,8 @@ public class Report {
 
 		// Configuration
 		this.context.put("exceptionThreshold", this.exceptionThreshold);
-		this.context.put("exemptScopes", this.exceptionThreshold);
-		this.context.put("exempt", StringUtil.join(this.exemptions, ", "));
+		this.context.put("exemptScopes", this.exemptions.subset(ExemptionScope.class).toString());
+		this.context.put("exemptBugs", this.exemptions.subset(ExemptionBug.class).toString());
 		this.context.put("isAggregated", Boolean.valueOf(this.isAggregated()));
 		this.context.put("thresholdMet", vulnsAboveThreshold.isEmpty());
 	}

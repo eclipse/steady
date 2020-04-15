@@ -68,7 +68,7 @@ public class IExemptionTest {
 	@Test
 	public void testIsExempted() {
 		try {
-			// digest = 6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10, bugId = CVE-2014-0050, scope = SYSTEM, cvssScore = 7.5, wellknownDigest = false
+			// digest = 6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10, bugId = CVE-2014-0050, scope = SYSTEM, cvssScore = 7.5, wellknownDigest = false, affected_version_confirmed = 0
 			final VulnerableDependency vd = (VulnerableDependency)JacksonUtil.asObject(FileUtil.readFile("./src/test/resources/vulndep.json"), VulnerableDependency.class);
 
 			// New format for bugs
@@ -86,8 +86,8 @@ public class IExemptionTest {
 			assertFalse(new ExemptionScope(Scope.COMPILE).isExempted(vd));
 						
 			// Unassessed
-			//assertTrue(new ExemptionUnassessed(ExemptionUnassessed.Value.ALL).isExempted(vd));
-			//assertFalse(new ExemptionUnassessed(ExemptionUnassessed.Value.KNOWN).isExempted(vd));
+			assertTrue(new ExemptionUnassessed(ExemptionUnassessed.Value.ALL).isExempted(vd));
+			assertFalse(new ExemptionUnassessed(ExemptionUnassessed.Value.KNOWN).isExempted(vd));
 		} catch (IOException e) {
 			e.printStackTrace();
 			assertTrue(false);
@@ -100,5 +100,28 @@ public class IExemptionTest {
 		final Set<IExemption> s = ExemptionBug.readFromConfiguration(cfg.getConfiguration());
 		assertEquals(1, s.size());
 		return s.iterator().next();
+	}
+	
+	@Test
+	public void testSerialization() {
+		final VulasConfiguration c1 = new VulasConfiguration();
+		c1.setProperty(ExemptionBug.DEPRECATED_CFG_PREFIX, "CVE-2014-0050, CVE-2014-0051"); // Will result in 2 exemptions
+		final ExemptionSet e = ExemptionSet.createFromConfiguration(c1.getConfiguration());
+		assertEquals(2, e.size());
+		
+		try {
+			// digest = 6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10, bugId = CVE-2014-0050, scope = SYSTEM, cvssScore = 7.5, wellknownDigest = false, affected_version_confirmed = 0
+			final VulnerableDependency vd = (VulnerableDependency)JacksonUtil.asObject(FileUtil.readFile("./src/test/resources/vulndep.json"), VulnerableDependency.class);
+			vd.setExemption(e.getApplicableExemption(vd));
+			assertTrue(vd.getExemption()!=null);
+
+			vd.setAboveThreshold(false);
+			final String serialized_vd = JacksonUtil.asJsonString(vd);
+			assertTrue(serialized_vd!=null);
+			assertTrue(serialized_vd.indexOf("\"exemption\":{\"bugId\":\"CVE-2014-0050\",\"digest\":\"*\",\"reason\":\"No reason provided\"}")!=-1);
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			assertTrue(false);
+		}
 	}
 }

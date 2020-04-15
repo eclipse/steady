@@ -39,7 +39,7 @@ public class ExemptionSet extends HashSet<IExemption> {
 
 	/**
 	 * Loops over the exemptions to find one that exempts the given {@link VulnerableDependency}.
-	 * If such an exemption is found, it is returned. Otherwise, the method return null.
+	 * If such an exemption is found, it is returned. Otherwise, the method returns null.
 	 * 
 	 * @param _s
 	 * @param _vd
@@ -56,6 +56,31 @@ public class ExemptionSet extends HashSet<IExemption> {
 	}
 
 	/**
+	 * Returns the subset of {@link IExemption}s that are of the given {@link Class}(es).
+	 */
+	public ExemptionSet subset(Class<? extends IExemption> _class) {
+		final ExemptionSet subset = new ExemptionSet();
+		for(IExemption e: this) {
+			if(_class.isInstance(e)) {
+				subset.add(e);
+				continue;
+			}
+		}
+		return subset;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuffer b = new StringBuffer();
+		for(IExemption e: this) {
+			if(b.length()>0)
+				b.append(", ");
+			b.append(e.toShortString());
+		}
+		return b.toString();
+	}
+
+	/**
 	 * Creates a set of {@link IExemption}s by reading the settings from the given {@link Configuration}.
 	 * 
 	 * @param _cfg
@@ -68,7 +93,7 @@ public class ExemptionSet extends HashSet<IExemption> {
 		set.addAll(ExemptionUnassessed.readFromConfiguration(_cfg));
 		return set;
 	}
-	
+
 	/**
 	 * Creates a set of {@link IExemption}s by reading the settings from the given {@link Map<String,String>}.
 	 * 

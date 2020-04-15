@@ -37,4 +37,9 @@ public interface IExemption {
 	 * @return the reason for the exemption
 	 */
 	public String getReason();
+	
+	/**
+	 * Returns a short representation of the exemption.
+	 */
+	public String toShortString();
 }

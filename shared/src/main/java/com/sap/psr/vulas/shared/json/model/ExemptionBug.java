@@ -169,7 +169,11 @@ public class ExemptionBug implements IExemption {
 
 	@Override
 	public String toString() {
-		return "Exemption [" + this.bugId + "." + this.digest + "]";
+		return "Exemption [" + this.toShortString() + "]";
+	}
+	
+	public String toShortString() {
+		return this.bugId + "." + this.digest;
 	}
 
 	@Override
