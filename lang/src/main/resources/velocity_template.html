@@ -515,7 +515,12 @@
 										</div>
 										<br />
 										<div>
-											$vul.bug.getDescription()
+											#if($vul.bug.getDescription())
+												$vul.bug.getDescription()
+											#end
+											#if($vul.bug.getDescriptionAlt())
+												$vul.bug.getDescriptionAlt()
+											#end
 										</div>
 										<br />
 										<table class="vulnerable_apps">
@@ -713,7 +718,12 @@
 										</div>
 										<br />
 										<div>
-											$vul.bug.getDescription()
+											#if($vul.bug.getDescription())
+												$vul.bug.getDescription()
+											#end
+											#if($vul.bug.getDescriptionAlt())
+												$vul.bug.getDescriptionAlt()
+											#end
 										</div>
 										<br />
 										<table class="vulnerable_apps">
