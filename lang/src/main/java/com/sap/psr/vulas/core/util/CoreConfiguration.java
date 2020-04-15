@@ -78,6 +78,8 @@ public class CoreConfiguration {
 	public final static String UPLOAD_DIR       = "vulas.core.uploadDir";
 	/** Constant <code>UPLOAD_DEL_AFTER="vulas.core.upload.deleteAfterSuccess"</code> */
 	public final static String UPLOAD_DEL_AFTER = "vulas.core.upload.deleteAfterSuccess";
+	/** Constant <code>UPLOAD_MAX_SIZE="vulas.core.upload.maxSize"</code> */
+	public final static String UPLOAD_MAX_SIZE  = "vulas.core.upload.maxSize";
 
 	/** Constant <code>REPEAT_MAX="vulas.core.repeatHttp.max"</code> */
 	public final static String REPEAT_MAX     = "vulas.core.repeatHttp.max";

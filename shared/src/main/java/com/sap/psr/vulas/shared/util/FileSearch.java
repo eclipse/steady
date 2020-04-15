@@ -42,17 +42,34 @@ public class FileSearch extends AbstractFileSearch {
 	private static final Log log = LogFactory.getLog(FileSearch.class);
 
 	private String[] suffixes = null;
+	
+	private int maxSize = -1;
 
 	/**
 	 * <p>Constructor for FileSearch.</p>
 	 *
-	 * @param _s an array of {@link java.lang.String} objects.
+	 * @param _s an array with accepted file extensions
 	 * @throws java.lang.IllegalArgumentException if any.
 	 */
 	public FileSearch(String[] _s) throws IllegalArgumentException {
 		if(_s==null || _s.length==0)
 			throw new IllegalArgumentException("At least one file extension must be provided");
 		this.suffixes = _s.clone();
+	}
+	
+	/**
+	 * <p>Constructor for FileSearch.</p>
+	 *
+	 * @param _s an array with accepted file extensions
+	 * @param _size maximum accepted file size
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
+	public FileSearch(String[] _s, int _size) throws IllegalArgumentException {
+		this(_s);
+		if(_size <= 0)
+			throw new IllegalArgumentException("Maximum accepted file size must be greater than 0");
+		else
+			this.maxSize = _size;
 	}
 	
 	/**
@@ -65,8 +82,18 @@ public class FileSearch extends AbstractFileSearch {
 	/** {@inheritDoc} */
 	@Override
 	public FileVisitResult visitFile(Path _f, BasicFileAttributes attrs) {
-		if(!this.foundFile(_f) && FileUtil.hasFileExtension(_f, this.suffixes))
-			this.addFile(_f);
+		if(!this.foundFile(_f) && FileUtil.hasFileExtension(_f, this.suffixes)) {
+			if(this.maxSize==-1) {
+				this.addFile(_f);
+			}
+			else {
+				if(_f.toFile().length() < this.maxSize) {
+					this.addFile(_f);
+				} else {
+					log.warn("File [" + _f.toAbsolutePath() + "] ignored because it exceeds the maximum accepted size [" + _f.toFile().length() + " > " + this.maxSize + "] bytes");
+				}
+			}
+		}
 		return FileVisitResult.CONTINUE;
 	}
 }

@@ -1035,17 +1035,17 @@ public class BackendConnector {
 	}
 
 	/**
-	 * Loads all upload requests form the upload folder and
+	 * Loads all upload requests (smaller than {@link CoreConfiguration#UPLOAD_MAX_SIZE} bytes) form the upload folder and sends them to the backend.
 	 *
 	 * @param _ctx a {@link com.sap.psr.vulas.goals.GoalContext} object.
 	 */
 	public void batchUpload(GoalContext _ctx) {
-		final FileSearch fs = new FileSearch(new String[] { "obj" });		
+		final FileSearch fs = new FileSearch(new String[] { "obj" }, _ctx.getVulasConfiguration().getConfiguration().getInt(CoreConfiguration.UPLOAD_MAX_SIZE, 5000000));		
 		final Set<Path> objs = fs.search(_ctx.getVulasConfiguration().getDir(CoreConfiguration.UPLOAD_DIR));
 		for(Path obj: objs) {
 			HttpRequest ur = null;
 			try {
-				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(obj.toFile()));
+				final ObjectInputStream ois = new ObjectInputStream(new FileInputStream(obj.toFile()));
 				ur = (HttpRequest)ois.readObject();
 				ois.close();
 				ur.setGoalContext(_ctx); // The Vulas configuration is not serialized to disk (cf. GoalContext), hence, has to be set again
