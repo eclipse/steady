@@ -80,13 +80,13 @@ public class Report {
 	public static final String THRESHOLD_ACT_EXE = "actuallyExecutes";
 
 	private static final String TEMPLATE_FILE_HTML = "velocity_template.html";
-	private static final String REPORT_FILE_HTML = "vulas-report.html";
+	static final String REPORT_FILE_HTML = "vulas-report.html";
 	
 	private static final String TEMPLATE_FILE_XML = "velocity_template.xml";
-	private static final String REPORT_FILE_XML = "vulas-report.xml";
+	static final String REPORT_FILE_XML = "vulas-report.xml";
 
 	private static final String TEMPLATE_FILE_JSON = "velocity_template.json";
-	private static final String REPORT_FILE_JSON = "vulas-report.json";
+	static final String REPORT_FILE_JSON = "vulas-report.json";
 
 	private Map<String,Long> stats = new HashMap<String,Long>();
 
