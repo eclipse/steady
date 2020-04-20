@@ -80,11 +80,26 @@ public class ExemptionBug implements IExemption {
 
 	@Override
 	public boolean isExempted(VulnerableDependency _vd) {
-		final boolean is_exempted =
-				// Bug ID
-				(ALL.equals(this.bugId)  || this.bugId.equalsIgnoreCase(_vd.getBug().getBugId()))  &&
-				// Digest
-				(ALL.equals(this.digest) || this.digest.equals(_vd.getDep().getLib().getDigest())); 
+		// Bug ID
+		boolean is_exempted = ALL.equals(this.bugId)  || this.bugId.equalsIgnoreCase(_vd.getBug().getBugId());
+		
+		// Archive
+		if(is_exempted) {
+			// All
+			if(ALL.equals(this.digest)) { ; }
+
+			// Digest
+			else if(this.digest.startsWith("dig:")) {
+				is_exempted = is_exempted && this.digest.substring(4).equals(_vd.getDep().getLib().getDigest());
+			}
+			
+			//TODO: Support purl format to exempt findings: https://github.com/package-url/purl-spec
+			else if(this.digest.startsWith("pkg:")) {
+				log.warn("Purl format not yet supported");
+				is_exempted = false;
+			}
+		}
+				 
 		return is_exempted;
 	}
 
