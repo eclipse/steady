@@ -50,7 +50,7 @@ public class IExemptionTest {
 
 		// Bug exemption: New format
 		c1.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0052.*", "Lorem ipsum");
-		c1.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0053.ABCDEFGHIJKLMNOPQRSTUVWXYZ", "Lorem ipsum");
+		c1.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0053.dig:ABCDEFGHIJKLMNOPQRSTUVWXYZ", "Lorem ipsum");
 		
 		// Scope exemption: Old format
 		c1.setProperty(ExemptionScope.DEPRECATED_CFG, "teST, PROVided"); // Will result in 2 exemptions
@@ -74,8 +74,8 @@ public class IExemptionTest {
 			// New format for bugs
 			assertTrue(this.getExemption(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.*", "Lorem ipsum").isExempted(vd));
 			assertFalse(this.getExemption(ExemptionBug.CFG_PREFIX + ".CVE-2014-0051.*", "Lorem ipsum").isExempted(vd));
-			assertTrue(this.getExemption(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10", "Lorem ipsum").isExempted(vd));
-			assertFalse(this.getExemption(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.ABCDEFGHIJKLMNOPQRSTUVWXYZ", "Lorem ipsum").isExempted(vd));
+			assertTrue(this.getExemption(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.dig:6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10", "Lorem ipsum").isExempted(vd));
+			assertFalse(this.getExemption(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.dig:ABCDEFGHIJKLMNOPQRSTUVWXYZ", "Lorem ipsum").isExempted(vd));
 
 			// Old format for bugs
 			assertTrue(this.getExemption(ExemptionBug.DEPRECATED_CFG_PREFIX, "CVE-2014-0050").isExempted(vd));

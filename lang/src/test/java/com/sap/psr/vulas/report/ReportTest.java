@@ -118,7 +118,7 @@ public class ReportTest extends AbstractGoalTest {
 			this.setupMockServices(this.testApp);
 
 			// Exemptions
-			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10", "The vulnerable library with digest 6F1EBC is no problem because ...");
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.dig:6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10", "The vulnerable library with digest 6F1EBC is no problem because ...");
 			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2013-2186.*", "Vulnerability CVE-2013-2186 is no problem because ...");
 			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2019-1234.*", "Vulnerability CVE-2019-1234 is no problem because ...");
 			vulasConfiguration.setProperty(ExemptionScope.CFG, "teST, provIDED");
