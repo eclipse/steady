@@ -610,7 +610,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			if(latest!=null) {
 				final ExemptionSet exempts = ExemptionSet.createFromMap(latest.getConfigurationMap());
 				for(VulnerableDependency vd: vd_all) {
-					com.sap.psr.vulas.shared.json.model.VulnerableDependency svd = (com.sap.psr.vulas.shared.json.model.VulnerableDependency)JacksonUtil.fromTo(vd,  null,  com.sap.psr.vulas.shared.json.model.view.Views.class,  com.sap.psr.vulas.shared.json.model.VulnerableDependency.class);
+					com.sap.psr.vulas.shared.json.model.VulnerableDependency svd = (com.sap.psr.vulas.shared.json.model.VulnerableDependency)JacksonUtil.fromTo(vd,  null,  com.sap.psr.vulas.backend.model.view.Views.class,  com.sap.psr.vulas.shared.json.model.VulnerableDependency.class);
 					final IExemption exempt = exempts.getApplicableExemption(svd);
 					if(exempt!=null) {
 						vd.setExemption(exempt);
