@@ -18,10 +18,12 @@ The approach implemented in @@PROJECT_NAME@@ is described in detail in the the f
 - Serena Ponta, Henrik Plate, Antonino Sabetta, [Beyond Metadata: Code-centric and Usage-based Analysis of Known Vulnerabilities in Open-source Software](https://arxiv.org/abs/1806.05893), 34th International Conference on Software Maintenance and Evolution (ICSME), 2018 (recipient of the IEEE TCSE Distinguished Paper Award)
 - Henrik Plate, Serena Ponta, Antonino Sabetta, [Impact Assessment for Vulnerabilities in Open-Source Software Libraries](https://arxiv.org/pdf/1504.04971.pdf), 31st International Conference on Software Maintenance and Evolution (ICSME), 2015
 
-## The Team
+## Contributors
 
 - Henrik Plate (SAP Security Research)
 - Serena E. Ponta (SAP Security Research)
 - Antonino Sabetta (SAP Security Research)
 - Cédric Dangremont (SAP Security Testing and Validation)
-- Alessandro Pezzé (SAP Security Testing and Validation)
+- Sumeet Patil (SAP Security Testing and Validation)
+- Alessandro Pezzé
+- Hoang Quoc Trung
