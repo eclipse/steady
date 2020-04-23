@@ -15,35 +15,31 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.kb;
+package com.sap.psr.vulas.kb.task;
 
-import java.util.Arrays;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.sap.psr.vulas.kb.cmd.Command;
 import com.sap.psr.vulas.kb.cmd.CommandsLoader;
+import com.sap.psr.vulas.kb.meta.CommandMeta;
 
-public class Main {
-  private static final Logger log = LoggerFactory.getLogger(Main.class);
+public class Help implements Task {
+  private static final Logger log = LoggerFactory.getLogger(Help.class);
 
-  public static void main(String[] _args) {
-    
+  @Override
+  public void run(String _args[]) {
     if (_args.length == 0) {
-      log.error("Command not found");
+      noArgsHelp();
     }
 
-    String command = _args.length == 0 ? "help" : _args[0];
-    Map<String, Command> commands = CommandsLoader.getInstance().getCommands();
+    // TODO: other help with args. Example - kbhub help import
+  }
 
-    Command cmd = commands.get(command);
-    if (cmd == null) {
-      log.error("Command not found");
-      command = "help";
+  private void noArgsHelp() {
+    log.info(String.format("List of kb-hub commands:%n"));
+    for (Command command : CommandsLoader.getInstance().getCommands().values()) {
+      CommandMeta commandInfo = command.getInfo();
+      log.info(String.format("  %-13s %s", commandInfo.getCommand(), commandInfo.getDescription()));
     }
-
-    String[] argsWithoutCmd =
-        _args.length == 0 ? _args : Arrays.copyOfRange(_args, 1, _args.length);
-    cmd.execute(argsWithoutCmd);
   }
 }

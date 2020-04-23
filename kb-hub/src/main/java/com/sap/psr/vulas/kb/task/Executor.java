@@ -15,22 +15,19 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.kb.cmd;
-
-import com.sap.psr.vulas.kb.meta.CommandMeta;
+package com.sap.psr.vulas.kb.task;
 
 /**
- * Command interface
+ * Task Executor
  */
-public interface Command {
+public class Executor {
+  private Task task;
 
-  /**
-   * @return Command Options
-   */
-  public CommandMeta getInfo();
+  public Executor(Task _task) {
+    this.task = _task;
+  }
 
-  /**
-   * Execute the command
-   */
-  public void execute(String _args[]);
+  public void execute(String _args[]) {
+    task.run(_args);
+  }
 }

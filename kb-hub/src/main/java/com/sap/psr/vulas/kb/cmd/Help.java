@@ -17,24 +17,21 @@
  */
 package com.sap.psr.vulas.kb.cmd;
 
-import java.util.List;
-import org.apache.commons.cli.Option;
-import com.sap.psr.vulas.kb.context.Context;
+import com.sap.psr.vulas.kb.task.Task;
+import com.sap.psr.vulas.kb.meta.CommandMeta;
+import com.sap.psr.vulas.kb.task.Executor;
 
-/**
- * Command for Repository
- */
-public class Repository implements Command {
+public class Help implements Command {
 
   @Override
-  public Option getCommandOption() {
-    Option option = new Option("r", "repo", true, "VCS repository URL");
-    option.setRequired(true);
-    return option;
+  public void execute(String _args[]) {
+    Task helpTask = new com.sap.psr.vulas.kb.task.Help();
+    Executor runner = new Executor(helpTask);
+    runner.execute(_args);
   }
 
   @Override
-  public void execute(List<String> cmdValues, Context context) {
-    context.setBugId(cmdValues.get(0));
+  public CommandMeta getInfo() {
+    return new CommandMeta("help", "Help for all commands");
   }
 }

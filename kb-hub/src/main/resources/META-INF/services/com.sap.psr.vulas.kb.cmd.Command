@@ -1,2 +1,3 @@
-com.sap.psr.vulas.kb.cmd.Repository
-com.sap.psr.vulas.kb.cmd.BugIdentifier
+com.sap.psr.vulas.kb.cmd.Import
+com.sap.psr.vulas.kb.cmd.Version
+com.sap.psr.vulas.kb.cmd.Help

@@ -17,15 +17,15 @@
  */
 package com.sap.psr.vulas.kb.cmd;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ServiceLoader;
 
 /**
  * Loader for all commands
  */
 public class CommandsLoader {
-  private static List<Command> commands = new ArrayList<>();
+  private static Map<String, Command> commands = new HashMap<>();
   private static CommandsLoader commandsLoader;
 
   private CommandsLoader() {}
@@ -45,14 +45,14 @@ public class CommandsLoader {
    * 
    * @return commands
    */
-  public List<Command> getCommands() {
+  public Map<String, Command> getCommands() {
     return commands;
   }
 
   private static void init() {
     ServiceLoader<Command> serviceLoader = ServiceLoader.load(Command.class);
     for (Command command : serviceLoader) {
-      commands.add(command);
+      commands.put(command.getInfo().getCommand(), command);
     }
   }
 }

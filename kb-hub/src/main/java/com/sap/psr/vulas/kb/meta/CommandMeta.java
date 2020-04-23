@@ -15,22 +15,25 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.kb.cmd;
-
-import com.sap.psr.vulas.kb.meta.CommandMeta;
+package com.sap.psr.vulas.kb.meta;
 
 /**
- * Command interface
+ * Command Metadata
  */
-public interface Command {
+public class CommandMeta {
+  private String command;
+  private String description;
 
-  /**
-   * @return Command Options
-   */
-  public CommandMeta getInfo();
+  public CommandMeta(String _command, String _description) {
+    this.command = _command;
+    this.description = _description;
+  }
 
-  /**
-   * Execute the command
-   */
-  public void execute(String _args[]);
+  public String getCommand() {
+    return command;
+  }
+
+  public String getDescription() {
+    return description;
+  }
 }

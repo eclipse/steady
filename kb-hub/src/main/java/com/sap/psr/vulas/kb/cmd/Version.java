@@ -19,18 +19,15 @@ package com.sap.psr.vulas.kb.cmd;
 
 import com.sap.psr.vulas.kb.meta.CommandMeta;
 
-/**
- * Command interface
- */
-public interface Command {
+public class Version implements Command {
 
-  /**
-   * @return Command Options
-   */
-  public CommandMeta getInfo();
+  @Override
+  public void execute(String _args[]) {
+    System.out.println("Version - 1.0.0");
+  }
 
-  /**
-   * Execute the command
-   */
-  public void execute(String _args[]);
+  @Override
+  public CommandMeta getInfo() {
+    return new CommandMeta("version", "kb-hub version");
+  }
 }

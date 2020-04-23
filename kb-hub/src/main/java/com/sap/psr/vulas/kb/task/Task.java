@@ -15,27 +15,11 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.kb.cmd;
-
-import java.util.List;
-import org.apache.commons.cli.Option;
-import com.sap.psr.vulas.kb.context.Context;
+package com.sap.psr.vulas.kb.task;
 
 /**
- * Command for bug identifier
- *
+ * tasks for the Commands
  */
-public class BugIdentifier implements Command {
-
-  @Override
-  public Option getCommandOption() {
-    Option option = new Option("b", "bug", true, "Bug identifier");
-    option.setRequired(true);
-    return option;
-  }
-
-  @Override
-  public void execute(List<String> cmdValues, Context context) {
-    context.setBugId(cmdValues.get(0));
-  }
+public interface Task {
+  public void run(String _args[]);
 }

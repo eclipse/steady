@@ -15,22 +15,39 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.kb.cmd;
+package com.sap.psr.vulas.kb.meta;
 
-import com.sap.psr.vulas.kb.meta.CommandMeta;
+import java.util.List;
 
 /**
- * Command interface
+ * Metadata information
  */
-public interface Command {
+public class Metadata {
+  private String vulnId;
+  private String description;
+  private List<String> links;
 
-  /**
-   * @return Command Options
-   */
-  public CommandMeta getInfo();
+  public String getVulnId() {
+    return vulnId;
+  }
 
-  /**
-   * Execute the command
-   */
-  public void execute(String _args[]);
+  public void setVulnId(String vulnId) {
+    this.vulnId = vulnId;
+  }
+
+  public void setLinks(List<String> links) {
+    this.links = links;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public List<String> getLinks() {
+    return links;
+  }
 }

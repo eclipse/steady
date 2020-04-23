@@ -18,19 +18,20 @@
 package com.sap.psr.vulas.kb.cmd;
 
 import com.sap.psr.vulas.kb.meta.CommandMeta;
+import com.sap.psr.vulas.kb.task.Executor;
+import com.sap.psr.vulas.kb.task.Task;
 
-/**
- * Command interface
- */
-public interface Command {
+public class Import implements Command {
 
-  /**
-   * @return Command Options
-   */
-  public CommandMeta getInfo();
+  @Override
+  public void execute(String _args[]) {
+    Task importTask = new com.sap.psr.vulas.kb.task.Import();
+    Executor executor = new Executor(importTask);
+    executor.execute(_args);
+  }
 
-  /**
-   * Execute the command
-   */
-  public void execute(String _args[]);
+  @Override
+  public CommandMeta getInfo() {
+    return new CommandMeta("import", "Import data to steady");
+  }
 }
