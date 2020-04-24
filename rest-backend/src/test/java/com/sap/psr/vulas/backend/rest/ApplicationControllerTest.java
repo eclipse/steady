@@ -739,6 +739,9 @@ public class ApplicationControllerTest {
 		        .andExpect(status().isOk())
 		        .andExpect(content().contentType(contentTypeJson))
 		        .andExpect(jsonPath("$[0].exempted", is(true)))
+		        .andExpect(jsonPath("$[0].exemption.bugId", is("CVE-2015-5262")))
+		        .andExpect(jsonPath("$[0].exemption.digest", is("16CF5A6B78951F50713D29BFAE3230A611DC01F0")))
+		        .andExpect(jsonPath("$[0].exemption.reason", is("Lorem ipsum")))
 		        .andExpect(jsonPath("$[0].vulnDepOrigin", is("CC")));
     }
     

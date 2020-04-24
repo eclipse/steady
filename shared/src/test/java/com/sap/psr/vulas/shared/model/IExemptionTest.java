@@ -108,11 +108,16 @@ public class IExemptionTest {
 		c1.setProperty(ExemptionBug.DEPRECATED_CFG_PREFIX, "CVE-2014-0050, CVE-2014-0051"); // Will result in 2 exemptions
 		final ExemptionSet e1 = ExemptionSet.createFromConfiguration(c1.getConfiguration());
 		assertEquals(2, e1.size());
-		
+			
 		final VulasConfiguration c2 = new VulasConfiguration();
 		c2.setProperty(ExemptionScope.CFG, "sysTEM, provIDED"); // Will result in 2 exemptions
 		final ExemptionSet e2 = ExemptionSet.createFromConfiguration(c2.getConfiguration());
 		assertEquals(2, e2.size());
+		
+		final VulasConfiguration c3 = new VulasConfiguration();
+		c3.setProperty(ExemptionBug.CFG_PREFIX+ ".CVE-2014-0050.dig:6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10", "Lorem ipsum"); //Will result in 1 exemption
+		final ExemptionSet e3 = ExemptionSet.createFromConfiguration(c3.getConfiguration());
+		assertEquals(1, e3.size());
 		
 		try {
 			// digest = 6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10, bugId = CVE-2014-0050, scope = SYSTEM, cvssScore = 7.5, wellknownDigest = false, affected_version_confirmed = 0
@@ -130,6 +135,13 @@ public class IExemptionTest {
 			assertTrue(vd.getExemption()!=null);
 			serialized_vd = JacksonUtil.asJsonString(vd);
 			assertTrue(serialized_vd!=null && serialized_vd.indexOf("\"exemption\":{\"reason\":\"Vulnerable dependencies with scope [SYSTEM] are exempted through configuration settings [vulas.report.exemptScope] or [vulas.report.exceptionScopeBlacklist] (deprecated)\"}")!=-1);
+			
+			// Exempt bug per digest and serialize
+			vd.setExemption(e3.getApplicableExemption(vd));
+			assertTrue(vd.getExemption()!=null);
+			serialized_vd = JacksonUtil.asJsonString(vd);
+			System.out.println(serialized_vd);
+			assertTrue(serialized_vd!=null && serialized_vd.indexOf("\"exemption\":{\"bugId\":\"CVE-2014-0050\",\"digest\":\"6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10\",\"reason\":\"Lorem ipsum\"}")!=-1);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			assertTrue(false);
