@@ -46,7 +46,10 @@ public class ExemptionBug implements IExemption {
 	
 	/** Deprecated configuration prefix. **/
 	public static final String DEPRECATED_CFG_PREFIX = "vulas.report.exceptionExcludeBugs";
-		
+	
+	/** Deprecated configuration key in backend. **/
+	public static final String DEPRECATED_KEY_BACKEND = "report.exceptionExcludeBugs";
+	
 	/** New configuration prefix. **/
 	public static final String CFG_PREFIX = "vulas.report.exemptBug";
 	
@@ -166,7 +169,7 @@ public class ExemptionBug implements IExemption {
 			}
 		}
 		
-		// Deprecated format
+		// Deprecated configuration format
 		if(_map.containsKey(DEPRECATED_CFG_PREFIX)) {
 			final String[] bugs = _map.get(DEPRECATED_CFG_PREFIX).split(",");
 			if(bugs!=null && bugs.length>0) {
@@ -178,6 +181,19 @@ public class ExemptionBug implements IExemption {
 				}
 			}
 		}
+		
+		// Deprecated key value from backend (to support backward compatibility with results already existing in backend for apps that scanned with client versions <3.1.12)
+		if(_map.containsKey(DEPRECATED_KEY_BACKEND)) {
+			final String[] bugs = _map.get(DEPRECATED_KEY_BACKEND).split(",");
+			if(bugs!=null && bugs.length>0) {
+				for(String b: bugs) {
+					b = b.trim();
+					final String reason = _map.get(DEPRECATED_KEY_BACKEND + "." + b);
+					exempts.add(new ExemptionBug(b, null, (reason==null ? "No reason provided" : reason)));
+				}
+			}
+		}
+	
 		
 		return exempts;
 	}

@@ -33,6 +33,9 @@ public class ExemptionUnassessed implements IExemption {
 	 * Configuration setting <code>REP_EXCL_UNASS="vulas.report.exceptionExcludeUnassessed"</code>.
 	 */
 	public final static String CFG = "vulas.report.exceptionExcludeUnassessed";
+	
+	/** Deprecated configuration key in backend. **/
+	public static final String DEPRECATED_KEY_BACKEND = "report.exceptionExcludeUnassessed";
 
 	/**
 	 * Determines whether unassessed vulnerable dependencies throw a build exception or not.
@@ -104,6 +107,20 @@ public class ExemptionUnassessed implements IExemption {
 				ExemptionUnassessed.log.warn("All unassessed vulnerabilities in archives with known digests will be ignored");
 			}
 		}
+		else {
+			final String deprecated_key_setting = _map.get(DEPRECATED_KEY_BACKEND);
+			if(deprecated_key_setting!=null && !deprecated_key_setting.equals("")) {
+				if(deprecated_key_setting.equalsIgnoreCase(Value.ALL.toString())) {
+					exempts.add(new ExemptionUnassessed(Value.ALL));
+					ExemptionUnassessed.log.warn("All unassessed vulnerabilities will be ignored");
+				}
+				else if(deprecated_key_setting.equalsIgnoreCase(Value.KNOWN.toString())) {
+					exempts.add(new ExemptionUnassessed(Value.KNOWN));
+					ExemptionUnassessed.log.warn("All unassessed vulnerabilities in archives with known digests will be ignored");
+				}
+			}
+		}
+		
 		return exempts;
 	}
 

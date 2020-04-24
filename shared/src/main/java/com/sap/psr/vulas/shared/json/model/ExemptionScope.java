@@ -32,6 +32,9 @@ public class ExemptionScope implements IExemption {
 	 */
 	public static final String DEPRECATED_CFG = "vulas.report.exceptionScopeBlacklist";
 
+	/** Deprecated configuration key in backend. **/
+	public static final String DEPRECATED_KEY_BACKEND = "report.exceptionScopeBlacklist";
+	
 	/**
 	 * New configuration setting <code>REP_EXCL_UNASS="vulas.report.exemptScope"</code>.
 	 */
@@ -87,12 +90,22 @@ public class ExemptionScope implements IExemption {
 	 * @param _cfg
 	 * @return
 	 */
-	public static ExemptionSet readFromConfiguration(Map<String, String> _cfg) {
+	public static ExemptionSet readFromConfiguration(Map<String, String> _map) {
 		final ExemptionSet exempts = new ExemptionSet();
 
 		// Deprecated setting
-		if(_cfg.containsKey(DEPRECATED_CFG)) {
-			final String[] scopes = _cfg.get(DEPRECATED_CFG).split(",");
+		if(_map.containsKey(DEPRECATED_CFG)) {
+			final String[] scopes = _map.get(DEPRECATED_CFG).split(",");
+			if(scopes!=null && scopes.length>0) {
+				for(Scope s: Scope.fromStringArray(scopes)) {
+					exempts.add(new ExemptionScope(s));
+				}
+			}
+		}
+		
+		// Deprecated key value from backend (to support backward compatibility with results already existing in backend for apps that scanned with client versions <3.1.12)
+		if(_map.containsKey(DEPRECATED_KEY_BACKEND)) {
+			final String[] scopes = _map.get(DEPRECATED_KEY_BACKEND).split(",");
 			if(scopes!=null && scopes.length>0) {
 				for(Scope s: Scope.fromStringArray(scopes)) {
 					exempts.add(new ExemptionScope(s));
@@ -101,8 +114,8 @@ public class ExemptionScope implements IExemption {
 		}
 
 		// New setting
-		if(_cfg.containsKey(CFG)) {
-			final String[] scopes = _cfg.get(DEPRECATED_CFG).split(",");
+		if(_map.containsKey(CFG)) {
+			final String[] scopes = _map.get(DEPRECATED_CFG).split(",");
 			if(scopes!=null && scopes.length>0) {
 				for(Scope s: Scope.fromStringArray(scopes)) {
 					exempts.add(new ExemptionScope(s));
