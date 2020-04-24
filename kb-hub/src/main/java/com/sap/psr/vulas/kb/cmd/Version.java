@@ -17,13 +17,20 @@
  */
 package com.sap.psr.vulas.kb.cmd;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.kb.meta.CommandMeta;
 
 public class Version implements Command {
 
+  private static final Logger log = LoggerFactory.getLogger(Version.class);
+
   @Override
   public void execute(String _args[]) {
-    System.out.println("Version - 1.0.0");
+    String vulasRelease = CoreConfiguration.getVulasRelease();
+    if(!StringUtils.isEmpty(vulasRelease) && !vulasRelease.equals("unknown")) log.info(vulasRelease);
   }
 
   @Override

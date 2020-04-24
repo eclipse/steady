@@ -31,6 +31,7 @@ public class Main {
     
     if (_args.length == 0) {
       log.error("Command not found");
+      return;
     }
 
     String command = _args.length == 0 ? "help" : _args[0];
@@ -38,8 +39,9 @@ public class Main {
 
     Command cmd = commands.get(command);
     if (cmd == null) {
-      log.error("Command not found");
+      log.error("[{}] command not found", command);
       command = "help";
+      cmd = commands.get(command);
     }
 
     String[] argsWithoutCmd =
