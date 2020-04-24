@@ -21,8 +21,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
@@ -37,7 +35,6 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.sap.psr.vulas.ConstructChange;
@@ -132,20 +129,17 @@ public class Import implements Task {
           "The following options are mandatory as part of meta json file: repo and bugId");
 
     List<Commit> commits = new ArrayList<Commit>();
-
-    try {
-      Files.list(Paths.get(rootDir + File.separator)).filter(Files::isDirectory)
-      .forEach(dirPath -> {
-        String dir = dirPath.toUri().getPath();
+    File file = new File(rootDir);
+    File commitFiles[] = file.listFiles();
+    for(File commitFile: commitFiles) {
+      if(commitFile.isDirectory()) {
+        String dir = commitFile.getAbsolutePath();
         Commit commit = readCommitMetaFile(dir + File.separator + META_PROPERTIES_FILE);
         if (commit != null) {
           commit.setDirectory(dir);
           commits.add(commit);
         }
-      });
-    } catch (IOException e) {
-      log.error("Error reading commits in the directory {}", ExceptionUtils.getRootCauseMessage(e));
-      return;
+      }
     }
 
     Set<ConstructChange> changes = null;

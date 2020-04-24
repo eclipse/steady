@@ -18,10 +18,10 @@
 package com.sap.psr.vulas.kb.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.sap.psr.vulas.ConstructChange;
@@ -117,11 +117,18 @@ public class Constructs {
     final Set<FileChange> filesChanged = new HashSet<>();
 
     final List<String> filesModifiedOrDeleted = new ArrayList<>();
-    try {
-      Files.walk(Paths.get(_path + File.separator + "before"))
-      .filter(Files::isRegularFile)
-      .forEach(file->{
-        String filePathWithDir = file.toUri().getPath();
+
+    String beforePath = _path + File.separator + "before";
+    File beforeFile = new File(beforePath);
+    if(!beforeFile.exists()) {
+      Constructs.log.error("Path - {} does not exists", beforePath);
+      return Collections.emptySet();
+    }
+
+    Collection<File> beforeFiles = FileUtils.listFiles(beforeFile, null, true);
+    for(File file: beforeFiles) {
+      if(file.isFile()) {
+        String filePathWithDir = file.getAbsolutePath();
         String filePath = filePathWithDir.split(File.separator + "before")[1];
         String afterFilePath = _path + File.separator + "after" +filePath;
         if(Files.exists(Paths.get(afterFilePath))) {
@@ -130,25 +137,25 @@ public class Constructs {
           filesChanged.add(new FileChange(_url, filePath, new File(filePathWithDir), null));
         }
         filesModifiedOrDeleted.add(filePath);
-      });
-    } catch (IOException e) {
-      Constructs.log.error("Error while analyzing - {}", ExceptionUtils.getRootCauseMessage(e));
+      }
+    }
+
+    String afterPath = _path + File.separator + "after";
+    File afterFile = new File(afterPath);
+    if(!afterFile.exists()) {
+      Constructs.log.error("Path - {} does not exists", afterPath);
       return Collections.emptySet();
     }
 
-    try {
-      Files.walk(Paths.get(_path + File.separator + "after"))
-      .filter(Files::isRegularFile)
-      .forEach(file->{
-        String filePathWithDir = file.toUri().getPath();
+    Collection<File> afterFiles = FileUtils.listFiles(afterFile, null, true);
+    for(File file: afterFiles) {
+      if(file.isFile()) {
+        String filePathWithDir = file.getAbsolutePath();
         String filePath = filePathWithDir.split(File.separator + "after")[1];
         if(!filesModifiedOrDeleted.contains(filePath)) {
           filesChanged.add(new FileChange(_url, filePath, null, new File(filePathWithDir)));
         }
-      });
-    } catch (IOException e) {
-      Constructs.log.error("Error while analyzing - {}", ExceptionUtils.getCause(e).getMessage());
-      return Collections.emptySet();
+      }
     }
 
     return filesChanged;

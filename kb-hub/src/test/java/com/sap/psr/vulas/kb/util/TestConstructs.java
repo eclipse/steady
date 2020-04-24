@@ -30,7 +30,7 @@ public class TestConstructs {
     Commit commit = new Commit();
     commit.setBranch("master");
     commit.setCommitId("b2b8f4adc557e4ef1ee2fe5e0ab46866c06ec55b");
-    commit.setDirectory(destPathToUnzip+File.separator+REPO+File.separator+"b2b8f4adc557e4ef1ee2fe5e0ab46866c06ec55b");
+    commit.setDirectory(destPathToUnzip+REPO+File.separator+"b2b8f4adc557e4ef1ee2fe5e0ab46866c06ec55b");
     commit.setTimestamp("1447974481000");
     commit.setRepoUrl("https://github.com/apache/commons-collections");
 
