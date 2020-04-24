@@ -140,8 +140,7 @@ public class IExemptionTest {
 			vd.setExemption(e3.getApplicableExemption(vd));
 			assertTrue(vd.getExemption()!=null);
 			serialized_vd = JacksonUtil.asJsonString(vd);
-			System.out.println(serialized_vd);
-			assertTrue(serialized_vd!=null && serialized_vd.indexOf("\"exemption\":{\"bugId\":\"CVE-2014-0050\",\"digest\":\"6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10\",\"reason\":\"Lorem ipsum\"}")!=-1);
+			assertTrue(serialized_vd!=null && serialized_vd.indexOf("\"exemption\":{\"bugId\":\"CVE-2014-0050\",\"digest\":\"dig:6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10\",\"reason\":\"Lorem ipsum\"}")!=-1);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			assertTrue(false);
