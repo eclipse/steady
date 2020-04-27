@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.shared.json.model;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -27,7 +26,8 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.sap.psr.vulas.shared.util.StringUtil;
+import com.github.packageurl.MalformedPackageURLException;
+import com.github.packageurl.PackageURL;
 
 
 /**
@@ -57,7 +57,7 @@ public class ExemptionBug implements IExemption {
 	private String bugId = null;
 
 	/** The digest of a library or star (*), which means that the exemption applies to all libraries. */
-	private String digest = null;
+	private String library = null;
 
 	private String reason = null;
 
@@ -65,18 +65,18 @@ public class ExemptionBug implements IExemption {
 	 * Creates a new exemption, whereby parameters equal to null will be interpreted as star (*).
 	 * 
 	 * @param _bug_id
-	 * @param _digest
+	 * @param _library
 	 * @param _reason
 	 */
-	public ExemptionBug(String _bug_id, String _digest, String _reason) {
+	public ExemptionBug(String _bug_id, String _library, String _reason) {
 		this.bugId  = (_bug_id==null ? ALL : _bug_id);
-		this.digest = (_digest==null ? ALL : _digest);
+		this.library = (_library==null ? ALL : _library);
 		this.reason = _reason;
 	}
 
 	public String getBugId() { return bugId; }
 
-	public String getDigest() { return digest; }	
+	public String getLibrary() { return library; }	
 
 	@Override
 	public String getReason() { return reason; }
@@ -89,17 +89,31 @@ public class ExemptionBug implements IExemption {
 		// Archive
 		if(is_exempted) {
 			// All
-			if(ALL.equals(this.digest)) { ; }
+			if(ALL.equals(this.library)) { ; }
 
-			// Digest
-			else if(this.digest.startsWith("dig:")) {
-				is_exempted = is_exempted && this.digest.substring(4).equals(_vd.getDep().getLib().getDigest());
+			// Package URL according to https://github.com/package-url/purl-spec
+			else if(this.library.startsWith("pkg:") && _vd.getDep().getLib().getLibraryId()!=null) {
+				try {
+					final LibraryId libid = _vd.getDep().getLib().getLibraryId();
+					final PackageURL purl = new PackageURL(this.library);
+					if(purl.getName()==null) {
+						log.error("The package URL [" + this.library + "] does not contain a name");
+					}
+					else {
+						is_exempted = is_exempted &&
+								(purl.getNamespace()==null || libid.getMvnGroup().equals(purl.getNamespace())) && // No purl.namespace || purl.namespace==libid.mvnGroup
+								libid.getArtifact().equals(purl.getName()) &&
+								(purl.getVersion()==null || libid.getVersion().equals(purl.getVersion())); // No purl.version || purl.version==libid.version
+					}
+				} catch (MalformedPackageURLException e) {
+					log.error("Invalid package URL [" + this.library + "]: " + e.getMessage());
+					is_exempted = false;
+				}
 			}
 			
-			//TODO: Support purl format to exempt findings: https://github.com/package-url/purl-spec
-			else if(this.digest.startsWith("pkg:")) {
-				log.warn("Purl format not yet supported");
-				is_exempted = false;
+			// Digest
+			else {
+				is_exempted = is_exempted && this.library.equals(_vd.getDep().getLib().getDigest());
 			}
 		}
 				 
@@ -117,17 +131,42 @@ public class ExemptionBug implements IExemption {
 		final ExemptionSet exempts = new ExemptionSet();
 		
 		// New format
-		Iterator<String> iter = _cfg.subset(CFG_PREFIX).getKeys();
+		final Iterator<String> iter = _cfg.getKeys(CFG_PREFIX);
 		while(iter.hasNext()) {
 			final String k = iter.next();
-			if(!k.equals("")) {
+			if(k.endsWith("." + "reason")) {
 				final String[] key_elements = k.split("\\.");
-				final int l = key_elements.length; 
-				if(l<2) {
-					log.error("Exemption with key [" + CFG_PREFIX + "." + k + "] has less than 2 elements");
+				if(key_elements.length == 5) {
+					final String vuln = key_elements[3];
+					final String reason = _cfg.getString(CFG_PREFIX + "." + vuln + "." + "reason");
+					final String[] libs = _cfg.getStringArray(CFG_PREFIX + "." + vuln + "." + "libraries");
+					
+					if(libs==null || libs.length==0) {
+						exempts.add(new ExemptionBug(vuln, ExemptionBug.ALL, reason));
+					}
+					else {
+						for(String lib: libs) {
+							if(lib.startsWith("pkg:")) {
+								try {
+									final PackageURL purl = new PackageURL(lib);
+									if(purl.getName()==null) {
+										log.error("The package URL [" + lib + "] does not contain a name");
+										continue;
+									}
+									exempts.add(new ExemptionBug(vuln, lib, reason));
+								} catch(MalformedPackageURLException e) {
+									log.error("Invalid package URL [" + lib + "]: " + e.getMessage());
+									continue;
+								}
+							}
+							else {
+								exempts.add(new ExemptionBug(vuln, lib, reason));
+							}
+						}
+					}
 				}
 				else {
-					exempts.add(new ExemptionBug(StringUtil.join(Arrays.copyOfRange(key_elements, 0, l-1), "."), key_elements[l-1], _cfg.getString(CFG_PREFIX + "." + k)));
+					log.error("Invalid exemption format [" + CFG_PREFIX + "." + k + "]");
 				}
 			}
 		}
@@ -157,14 +196,38 @@ public class ExemptionBug implements IExemption {
 		
 		// New format
 		for(String k: _map.keySet()) {
-			if(k.startsWith((CFG_PREFIX) + ".")) {
-				final String[] key_elements = k.substring(CFG_PREFIX.length() + 1).split("\\.");
-				final int l = key_elements.length; 
-				if(l<2) {
-					log.error("Exemption with key [" + k + "] has less than 2 elements");
+			if(k.startsWith((CFG_PREFIX) + ".") && k.endsWith("." + "reason")) {
+				final String[] key_elements = k.split("\\.");
+				if(key_elements.length == 5) {
+					final String vuln = key_elements[3];
+					final String reason = _map.get(CFG_PREFIX + "." + vuln + "." + "reason");
+					final String[] libs = _map.get(CFG_PREFIX + "." + vuln + "." + "libraries").split(",");
+					
+					if(libs==null || libs.length==0) {
+						exempts.add(new ExemptionBug(vuln, ExemptionBug.ALL, reason));
+					}
+					else {
+						for(String lib: libs) {
+							if(lib.startsWith("pkg:")) {
+								try {
+									final PackageURL purl = new PackageURL(lib);
+									if(purl.getName()==null) {
+										log.error("The package URL [" + lib + "] does not contain a name");
+										continue;
+									}
+									exempts.add(new ExemptionBug(vuln, lib, reason));
+								} catch(MalformedPackageURLException e) {
+									log.error("Invalid package URL [" + lib + "]: " + e.getMessage());
+								}
+							}
+							else {
+								exempts.add(new ExemptionBug(vuln, lib, reason));
+							}
+						}
+					}
 				}
 				else {
-					exempts.add(new ExemptionBug(StringUtil.join(Arrays.copyOfRange(key_elements, 0, l-1), "."), key_elements[l-1], _map.get(k)));
+					log.error("Invalid exemption format: [" + CFG_PREFIX + "." + k + "]");
 				}
 			}
 		}
@@ -204,7 +267,7 @@ public class ExemptionBug implements IExemption {
 	}
 	
 	public String toShortString() {
-		return this.bugId + "." + this.digest;
+		return this.bugId + "." + this.library;
 	}
 
 	@Override
@@ -212,7 +275,7 @@ public class ExemptionBug implements IExemption {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((bugId == null) ? 0 : bugId.hashCode());
-		result = prime * result + ((digest == null) ? 0 : digest.hashCode());
+		result = prime * result + ((library == null) ? 0 : library.hashCode());
 		result = prime * result + ((reason == null) ? 0 : reason.hashCode());
 		return result;
 	}
@@ -231,10 +294,10 @@ public class ExemptionBug implements IExemption {
 				return false;
 		} else if (!bugId.equals(other.bugId))
 			return false;
-		if (digest == null) {
-			if (other.digest != null)
+		if (library == null) {
+			if (other.library != null)
 				return false;
-		} else if (!digest.equals(other.digest))
+		} else if (!library.equals(other.library))
 			return false;
 		if (reason == null) {
 			if (other.reason != null)

@@ -49,42 +49,54 @@ public class IExemptionTest {
 		c1.setProperty(ExemptionBug.DEPRECATED_CFG_PREFIX, "CVE-2014-0050, CVE-2014-0051"); // Will result in 2 exemptions
 
 		// Bug exemption: New format
-		c1.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0052.*", "Lorem ipsum");
-		c1.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0053.dig:ABCDEFGHIJKLMNOPQRSTUVWXYZ", "Lorem ipsum");
-		
+		c1.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0052.reason", "Lorem ipsum");
+
+		c1.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0053.reason", "Lorem ipsum");
+		c1.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0053.libraries", "*, 6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10, pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1"); // Will result in 3 exemptions
+
 		// Scope exemption: Old format
 		c1.setProperty(ExemptionScope.DEPRECATED_CFG, "teST, PROVided"); // Will result in 2 exemptions
 
 		// Scope exemption: New format
 		c1.setProperty(ExemptionScope.CFG, "sysTEM");
-		
+
 		// Unassessed exemption
 		c1.setProperty(ExemptionUnassessed.CFG, "aLL");
 
 		final ExemptionSet e = ExemptionSet.createFromConfiguration(c1.getConfiguration());
-		assertEquals(8, e.size());
+		assertEquals(10, e.size());
 	}
 
 	@Test
 	public void testIsExempted() {
 		try {
-			// digest = 6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10, bugId = CVE-2014-0050, scope = SYSTEM, cvssScore = 7.5, wellknownDigest = false, affected_version_confirmed = 0
+			// digest = 6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10, bugId = CVE-2014-0050,
+			// scope = SYSTEM, cvssScore = 7.5, wellknownDigest = false, affected_version_confirmed = 0
+			// libid = stuff:stuff:stuff
 			final VulnerableDependency vd = (VulnerableDependency)JacksonUtil.asObject(FileUtil.readFile("./src/test/resources/vulndep.json"), VulnerableDependency.class);
 
-			// New format for bugs
-			assertTrue(this.getExemption(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.*", "Lorem ipsum").isExempted(vd));
-			assertFalse(this.getExemption(ExemptionBug.CFG_PREFIX + ".CVE-2014-0051.*", "Lorem ipsum").isExempted(vd));
-			assertTrue(this.getExemption(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.dig:6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10", "Lorem ipsum").isExempted(vd));
-			assertFalse(this.getExemption(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.dig:ABCDEFGHIJKLMNOPQRSTUVWXYZ", "Lorem ipsum").isExempted(vd));
+			// * exemptions
+			assertTrue( this.getExemption(ExemptionBug.CFG_PREFIX, "CVE-2014-0050", "Lorem ipsum", "*").isExempted(vd));
+			assertFalse(this.getExemption(ExemptionBug.CFG_PREFIX, "CVE-2014-0051", "Lorem ipsum", "*").isExempted(vd));
+
+			// Digest exemptions
+			assertTrue( this.getExemption(ExemptionBug.CFG_PREFIX, "CVE-2014-0050", "Lorem ipsum", "6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10").isExempted(vd));
+			assertFalse(this.getExemption(ExemptionBug.CFG_PREFIX, "CVE-2014-0050", "Lorem ipsum", "ABCDEFGHIJKLMNOPQRSTUVWXYZ").isExempted(vd));
+
+			// Purl exemptions
+			assertTrue( this.getExemption(ExemptionBug.CFG_PREFIX, "CVE-2014-0050", "Lorem ipsum", "pkg:maven/stuff/stuff@stuff").isExempted(vd));
+			assertTrue( this.getExemption(ExemptionBug.CFG_PREFIX, "CVE-2014-0050", "Lorem ipsum", "pkg:maven/stuff/stuff").isExempted(vd));
+			assertFalse(this.getExemption(ExemptionBug.CFG_PREFIX, "CVE-2014-0050", "Lorem ipsum", "pkg:maven/stuff/stuff@1.2.3").isExempted(vd));
+			assertFalse(this.getExemption(ExemptionBug.CFG_PREFIX, "CVE-2014-0050", "Lorem ipsum", "pkg:maven/stuff/foo@stuff").isExempted(vd));
 
 			// Old format for bugs
-			assertTrue(this.getExemption(ExemptionBug.DEPRECATED_CFG_PREFIX, "CVE-2014-0050").isExempted(vd));
-			assertFalse(this.getExemption(ExemptionBug.DEPRECATED_CFG_PREFIX, "CVE-2014-0051").isExempted(vd));
-			
+			assertTrue( this.getExemption(ExemptionBug.DEPRECATED_CFG_PREFIX, "CVE-2014-0050", "Lorem ipsum", null).isExempted(vd));
+			assertFalse(this.getExemption(ExemptionBug.DEPRECATED_CFG_PREFIX, "CVE-2014-0051", "Lorem ipsum", null).isExempted(vd));
+
 			// Scope
 			assertTrue(new ExemptionScope(Scope.SYSTEM).isExempted(vd));
 			assertFalse(new ExemptionScope(Scope.COMPILE).isExempted(vd));
-						
+
 			// Unassessed
 			assertTrue(new ExemptionUnassessed(ExemptionUnassessed.Value.ALL).isExempted(vd));
 			assertFalse(new ExemptionUnassessed(ExemptionUnassessed.Value.KNOWN).isExempted(vd));
@@ -94,53 +106,84 @@ public class IExemptionTest {
 		}
 	}
 
-	private IExemption getExemption(String _key, String _value) {
+	private IExemption getExemption(String _prefix, String _vuln, String _reason, String _library) {
 		final VulasConfiguration cfg = new VulasConfiguration();
-		cfg.setProperty(_key, _value);
+		if(ExemptionBug.CFG_PREFIX.equals(_prefix)) {
+			cfg.setProperty(ExemptionBug.CFG_PREFIX + "." + _vuln + "." + "reason", _reason);
+			cfg.setProperty(ExemptionBug.CFG_PREFIX + "." + _vuln + "." + "libraries", _library);
+		} else if (ExemptionBug.DEPRECATED_CFG_PREFIX.equals(_prefix)) {
+			cfg.setProperty(ExemptionBug.DEPRECATED_CFG_PREFIX, _vuln);
+			cfg.setProperty(ExemptionBug.DEPRECATED_CFG_PREFIX + "." + _vuln, _reason);
+		}
+
 		final Set<IExemption> s = ExemptionBug.readFromConfiguration(cfg.getConfiguration());
 		assertEquals(1, s.size());
 		return s.iterator().next();
 	}
-	
+
 	@Test
 	public void testSerialization() {
 		final VulasConfiguration c1 = new VulasConfiguration();
 		c1.setProperty(ExemptionBug.DEPRECATED_CFG_PREFIX, "CVE-2014-0050, CVE-2014-0051"); // Will result in 2 exemptions
 		final ExemptionSet e1 = ExemptionSet.createFromConfiguration(c1.getConfiguration());
 		assertEquals(2, e1.size());
-			
+
 		final VulasConfiguration c2 = new VulasConfiguration();
 		c2.setProperty(ExemptionScope.CFG, "sysTEM, provIDED"); // Will result in 2 exemptions
 		final ExemptionSet e2 = ExemptionSet.createFromConfiguration(c2.getConfiguration());
 		assertEquals(2, e2.size());
-		
+
 		final VulasConfiguration c3 = new VulasConfiguration();
-		c3.setProperty(ExemptionBug.CFG_PREFIX+ ".CVE-2014-0050.dig:6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10", "Lorem ipsum"); //Will result in 1 exemption
+		c3.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.reason", "Lorem ipsum"); // Will result in 1 exemption
+		c3.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.libraries", "6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10");
 		final ExemptionSet e3 = ExemptionSet.createFromConfiguration(c3.getConfiguration());
 		assertEquals(1, e3.size());
+
+		final VulasConfiguration c4 = new VulasConfiguration();
+		c4.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.reason", "Lorem ipsum"); // Will result in 1 exemption
+		final ExemptionSet e4 = ExemptionSet.createFromConfiguration(c4.getConfiguration());
+		assertEquals(1, e4.size());
 		
+		final VulasConfiguration c5 = new VulasConfiguration();
+		c5.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.reason", "Lorem ipsum"); // Will result in 2 exemption
+		c5.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.libraries", "123, pkg:maven/stuff/stuff@stuff, abc");
+		final ExemptionSet e5 = ExemptionSet.createFromConfiguration(c5.getConfiguration());
+		assertEquals(3, e5.size());
+
 		try {
 			// digest = 6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10, bugId = CVE-2014-0050, scope = SYSTEM, cvssScore = 7.5, wellknownDigest = false, affected_version_confirmed = 0
 			final VulnerableDependency vd = (VulnerableDependency)JacksonUtil.asObject(FileUtil.readFile("./src/test/resources/vulndep.json"), VulnerableDependency.class);
 			vd.setAboveThreshold(false);
-			
+
 			// Exempt bug and serialize
 			vd.setExemption(e1.getApplicableExemption(vd));
 			assertTrue(vd.getExemption()!=null);
 			String serialized_vd = JacksonUtil.asJsonString(vd);
-			assertTrue(serialized_vd!=null && serialized_vd.indexOf("\"exemption\":{\"bugId\":\"CVE-2014-0050\",\"digest\":\"*\",\"reason\":\"No reason provided\"}")!=-1);
-			
+			assertTrue(serialized_vd!=null && serialized_vd.indexOf("\"exemption\":{\"bugId\":\"CVE-2014-0050\",\"library\":\"*\",\"reason\":\"No reason provided\"}")!=-1);
+
 			// Exempt scope and serialize
 			vd.setExemption(e2.getApplicableExemption(vd));
 			assertTrue(vd.getExemption()!=null);
 			serialized_vd = JacksonUtil.asJsonString(vd);
 			assertTrue(serialized_vd!=null && serialized_vd.indexOf("\"exemption\":{\"reason\":\"Vulnerable dependencies with scope [SYSTEM] are exempted through configuration settings [vulas.report.exemptScope] or [vulas.report.exceptionScopeBlacklist] (deprecated)\"}")!=-1);
-			
+
 			// Exempt bug per digest and serialize
 			vd.setExemption(e3.getApplicableExemption(vd));
 			assertTrue(vd.getExemption()!=null);
 			serialized_vd = JacksonUtil.asJsonString(vd);
-			assertTrue(serialized_vd!=null && serialized_vd.indexOf("\"exemption\":{\"bugId\":\"CVE-2014-0050\",\"digest\":\"dig:6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10\",\"reason\":\"Lorem ipsum\"}")!=-1);
+			assertTrue(serialized_vd!=null && serialized_vd.indexOf("\"exemption\":{\"bugId\":\"CVE-2014-0050\",\"library\":\"6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10\",\"reason\":\"Lorem ipsum\"}")!=-1);
+
+			// Exempt bug and serialize
+			vd.setExemption(e4.getApplicableExemption(vd));
+			assertTrue(vd.getExemption()!=null);
+			serialized_vd = JacksonUtil.asJsonString(vd);
+			assertTrue(serialized_vd!=null && serialized_vd.indexOf("\"exemption\":{\"bugId\":\"CVE-2014-0050\",\"library\":\"*\",\"reason\":\"Lorem ipsum\"}")!=-1);
+			
+			// Exempt bug and serialize
+			vd.setExemption(e5.getApplicableExemption(vd));
+			assertTrue(vd.getExemption()!=null);
+			serialized_vd = JacksonUtil.asJsonString(vd);
+			assertTrue(serialized_vd!=null && serialized_vd.indexOf("\"exemption\":{\"bugId\":\"CVE-2014-0050\",\"library\":\"pkg:maven/stuff/stuff@stuff\",\"reason\":\"Lorem ipsum\"}")!=-1);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			assertTrue(false);

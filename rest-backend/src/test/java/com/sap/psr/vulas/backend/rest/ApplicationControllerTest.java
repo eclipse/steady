@@ -730,7 +730,9 @@ public class ApplicationControllerTest {
     	
     	// Exempt bug
 		GoalExecution gexe = this.createExampleGoalExecution(app, GoalType.APP);
-		gexe.setConfiguration(this.createExampleProperties(PropertySource.GOAL_CONFIG, ExemptionBug.CFG_PREFIX + ".CVE-2015-5262.dig:16CF5A6B78951F50713D29BFAE3230A611DC01F0", "Lorem ipsum"));
+		final Collection<Property> props = this.createExampleProperties(PropertySource.GOAL_CONFIG, ExemptionBug.CFG_PREFIX + ".CVE-2015-5262.reason", "Lorem ipsum");
+		props.add(new Property(PropertySource.GOAL_CONFIG, ExemptionBug.CFG_PREFIX + ".CVE-2015-5262.libraries", "16CF5A6B78951F50713D29BFAE3230A611DC01F0, abc"));
+		gexe.setConfiguration(props);
 		this.gexeRepository.customSave(app, gexe);
     	//Get app vulnerabilies via http request
 		mockMvc.perform(get("/apps/" + APP_GROUP + "/" + APP_ARTIFACT + "/" + "0.0." + APP_VERSION + "/vulndeps?addExcemptionInfo=true")
@@ -740,7 +742,7 @@ public class ApplicationControllerTest {
 		        .andExpect(content().contentType(contentTypeJson))
 		        .andExpect(jsonPath("$[0].exempted", is(true)))
 		        .andExpect(jsonPath("$[0].exemption.bugId", is("CVE-2015-5262")))
-		        .andExpect(jsonPath("$[0].exemption.digest", is("dig:16CF5A6B78951F50713D29BFAE3230A611DC01F0")))
+		        .andExpect(jsonPath("$[0].exemption.library", is("16CF5A6B78951F50713D29BFAE3230A611DC01F0")))
 		        .andExpect(jsonPath("$[0].exemption.reason", is("Lorem ipsum")))
 		        .andExpect(jsonPath("$[0].vulnDepOrigin", is("CC")));
     }

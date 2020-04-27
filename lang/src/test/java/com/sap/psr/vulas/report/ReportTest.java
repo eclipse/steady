@@ -118,9 +118,14 @@ public class ReportTest extends AbstractGoalTest {
 			this.setupMockServices(this.testApp);
 
 			// Exemptions
-			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.dig:6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10", "The vulnerable library with digest 6F1EBC is no problem because ...");
-			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2013-2186.*", "Vulnerability CVE-2013-2186 is no problem because ...");
-			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2019-1234.*", "Vulnerability CVE-2019-1234 is no problem because ...");
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.reason", "The vulnerable library with digest 6F1EBC is no problem because ...");
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.libraries", "6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10");
+			
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2013-2186.reason", "Vulnerability CVE-2013-2186 is no problem because ...");
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2013-2186.libraries", "*");
+			
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2019-1234.reason", "Vulnerability CVE-2019-1234 is no problem because ...");
+			
 			vulasConfiguration.setProperty(ExemptionScope.CFG, "teST, provIDED");
 			vulasConfiguration.setProperty(ExemptionUnassessed.CFG, "knOWN");
 			
@@ -158,7 +163,7 @@ public class ReportTest extends AbstractGoalTest {
 			assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_JSON)));
 			
 			// Validate Html
-			Tidy tidy = new Tidy();
+			final Tidy tidy = new Tidy();
 			tidy.parse(new ByteArrayInputStream(FileUtil.readInputStream(new FileInputStream(new File("./target/vulas/report/" + Report.REPORT_FILE_HTML)))), new FileOutputStream(new File("./target/jtidy-html.txt")));
 			
 			// Allow no errors
