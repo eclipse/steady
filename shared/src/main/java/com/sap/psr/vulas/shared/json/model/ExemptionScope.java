@@ -115,7 +115,7 @@ public class ExemptionScope implements IExemption {
 
 		// New setting
 		if(_map.containsKey(CFG)) {
-			final String[] scopes = _map.get(DEPRECATED_CFG).split(",");
+			final String[] scopes = _map.get(CFG).split(",");
 			if(scopes!=null && scopes.length>0) {
 				for(Scope s: Scope.fromStringArray(scopes)) {
 					exempts.add(new ExemptionScope(s));
