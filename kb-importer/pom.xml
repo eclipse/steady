@@ -9,9 +9,9 @@
 		<version>3.1.11-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>kb-hub</artifactId>
+	<artifactId>kb-importer</artifactId>
 
-	<name>Knowledge Base Hub</name>
+	<name>Knowledge Base Importer</name>
 	<description></description>
 
 	<dependencies>

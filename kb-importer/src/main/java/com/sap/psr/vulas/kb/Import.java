@@ -18,16 +18,11 @@
 package com.sap.psr.vulas.kb;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -44,6 +39,7 @@ import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.kb.meta.Commit;
 import com.sap.psr.vulas.kb.meta.Vulnerability;
 import com.sap.psr.vulas.kb.util.Constructs;
+import com.sap.psr.vulas.kb.util.Metadata;
 import com.sap.psr.vulas.shared.enums.BugOrigin;
 import com.sap.psr.vulas.shared.enums.ContentMaturityLevel;
 import com.sap.psr.vulas.shared.json.JsonBuilder;
@@ -55,14 +51,8 @@ public class Import{
   private static final String DIRECTORY_OPTION = "d";
   private static final String OVERWRITE_OPTION = "o";
   private static final String VERBOSE_OPTION = "v";
-  private static final String META_PROPERTIES_FILE = "meta.properties";
-  private static final String REPO = "repo";
-  private static final String TIMESTAMP = "timestamp";
-  private static final String COMMIT_ID = "commitId";
-  private static final String BRANCH = "branch";
 
   private static final Logger log = LoggerFactory.getLogger(Import.class);
-  private Map<String, Set<ConstructChange>> changes = new HashMap<String, Set<ConstructChange>>();
 
   public void run(String[] _args) {
     final CommandLineParser parser = new DefaultParser();
@@ -86,7 +76,7 @@ public class Import{
     rootDir = cmd.getOptionValue(DIRECTORY_OPTION);
 
     Vulnerability meta = null;
-    meta = readMetaFile(rootDir + File.separator + META_PROPERTIES_FILE);
+    meta = Metadata.getVulnerabilityMetadata(rootDir);
     if (meta == null) {
       return;
     }
@@ -127,17 +117,17 @@ public class Import{
     for(File commitFile: commitFiles) {
       if(commitFile.isDirectory()) {
         String dir = commitFile.getAbsolutePath();
-        Commit commit = readCommitMetaFile(dir + File.separator + META_PROPERTIES_FILE);
+        Commit commit = Metadata.getCommitMetadata(dir);
         if (commit != null) {
-          commit.setDirectory(dir);
           commits.add(commit);
         }
       }
     }
 
     Set<ConstructChange> changes = null;
+    Map<String, Set<ConstructChange>> allChanges = new HashMap<String, Set<ConstructChange>>();
     for (Commit commit : commits) {
-      changes = Constructs.identifyConstructChanges(commit, this.changes);
+      changes = Constructs.identifyConstructChanges(commit, allChanges);
       if (verbose) {
         for (ConstructChange chg : changes) {
           Import.log.info(chg.toString());
@@ -145,7 +135,7 @@ public class Import{
       }
     }
 
-    final String json = toJSON(meta, commits);
+    final String json = toJSON(meta, commits, allChanges);
 
     try {
       BackendConnector.getInstance().uploadChangeList(vulnId, json);
@@ -166,85 +156,16 @@ public class Import{
   }
 
   /**
-   * read vulnerability information from meta file
-   * 
-   * @param filePath a {@link java.lang.String} object.
-   * @return _commit a {@link com.sap.psr.vulas.kb.meta.Vulnerability} object.
-   */
-  private Vulnerability readMetaFile(String filePath) {
-    File rootMetaFile = new File(filePath);
-    if (!rootMetaFile.exists() || !rootMetaFile.isFile()) {
-      throw new IllegalArgumentException("The meta file in root directory is missing");
-    }
-
-    Properties prop = new Properties();
-    try (FileInputStream inStream = new FileInputStream(rootMetaFile)) {
-      prop.load(inStream);
-    } catch (FileNotFoundException e) {
-      log.error("Error reading meta file {}", e.getMessage());
-      return null;
-    } catch (IOException e) {
-      log.error("Error reading meta file {}", e.getMessage());
-      return null;
-    }
-
-    Vulnerability metadata = new Vulnerability();
-    String vulnId = prop.getProperty("vulnId");
-    if (vulnId == null) {
-      throw new IllegalArgumentException("The vulnId is missing missing in the root.meta file");
-    }
-
-    metadata.setVulnId(vulnId);
-    metadata.setDescription(prop.getProperty("description"));
-    String links = prop.getProperty("links");
-    metadata.setLinks(Arrays.asList(links.split(",")));
-
-    return metadata;
-  }
-
-  /**
-   * read commit information from meta file
-   * 
-   * @param filePath a {@link java.lang.String} object.
-   * @return _commit a {@link com.sap.psr.vulas.kb.meta.Commit} object.
-   */
-  private Commit readCommitMetaFile(String filePath) {
-    File commitFile = new File(filePath);
-    if (!commitFile.exists() || !commitFile.isFile()) {
-      log.error("The meta file is missing {}", filePath);
-      return null;
-    }
-
-    Properties prop = new Properties();
-    try (FileInputStream inStream = new FileInputStream(commitFile)) {
-      prop.load(inStream);
-    } catch (FileNotFoundException e) {
-      log.error("Error reading meta file {}", e.getMessage());
-      return null;
-    } catch (IOException e) {
-      log.error("Error reading meta file {}", e.getMessage());
-      return null;
-    }
-
-    Commit commit = new Commit();
-    commit.setBranch(prop.getProperty(BRANCH));
-    commit.setCommitId(prop.getProperty(COMMIT_ID));
-    commit.setTimestamp(prop.getProperty(TIMESTAMP));
-    commit.setRepoUrl(prop.getProperty(REPO));
-
-    return commit;
-  }
-
-  /**
    * <p>
    * toJSON.
    * </p>
+   * @param allChanges 
    *
    * @param _revs an array of {@link java.lang.String} objects.
    * @return a {@link java.lang.String} object.
    * @throws java.util.ConcurrentModificationException if any.
    */
-  private String toJSON(Vulnerability _meta, List<Commit> _commits)
+  private String toJSON(Vulnerability _meta, List<Commit> _commits, Map<String, Set<ConstructChange>> allChanges)
       throws ConcurrentModificationException {
     final StringBuilder b = new StringBuilder();
     b.append(" { ");
@@ -275,7 +196,7 @@ public class Import{
     b.append(" \"constructChanges\" : [ ");
     int i = 0;
     final Set<ConstructChange> consol_ch =
-        Constructs.getConsolidatedChanges(_commits, this.changes);
+        Constructs.getConsolidatedChanges(_commits, allChanges);
     for (ConstructChange c : consol_ch) {
       b.append(c.toJSON());
       if (++i < consol_ch.size())

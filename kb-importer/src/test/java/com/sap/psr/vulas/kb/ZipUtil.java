@@ -1,4 +1,4 @@
-package com.sap.psr.vulas.kb.util;
+package com.sap.psr.vulas.kb;
 
 import java.io.File;
 import java.io.FileOutputStream;

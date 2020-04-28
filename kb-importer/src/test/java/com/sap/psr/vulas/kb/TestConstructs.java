@@ -1,4 +1,4 @@
-package com.sap.psr.vulas.kb.util;
+package com.sap.psr.vulas.kb;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import com.sap.psr.vulas.ConstructChange;
 import com.sap.psr.vulas.kb.meta.Commit;
+import com.sap.psr.vulas.kb.util.Constructs;
 
 public class TestConstructs {
   private static final String REPO = "rootDir";

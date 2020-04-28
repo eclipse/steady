@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.kb.util;
+package com.sap.psr.vulas.kb.meta;
 
 import java.io.File;
 import com.sap.psr.vulas.shared.util.FileUtil;
@@ -57,7 +57,7 @@ public class FileChange {
 	/**
 	 * Returns the type of change, either an addition, a modification or a deletion.
 	 *
-	 * @return a {@link com.sap.psr.vulas.kb.util.vcs.FileChange.Type} object.
+	 * @return a {@link com.sap.psr.vulas.kb.meta.vcs.FileChange.Type} object.
 	 */
 	public Type getType() {
 		if(this.oldFile == null) return Type.ADD;

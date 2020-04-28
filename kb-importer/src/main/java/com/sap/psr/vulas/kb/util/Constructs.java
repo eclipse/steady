@@ -36,6 +36,7 @@ import com.sap.psr.vulas.ConstructChange;
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalyzerFactory;
 import com.sap.psr.vulas.kb.meta.Commit;
+import com.sap.psr.vulas.kb.meta.FileChange;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 
 /**

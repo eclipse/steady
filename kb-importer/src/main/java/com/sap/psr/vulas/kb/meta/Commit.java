@@ -32,7 +32,8 @@ public class Commit {
   }
 
   public void setTimestamp(String timestamp) {
-    this.timestamp = timestamp;
+    if (timestamp == null) return;
+    this.timestamp = timestamp.trim();
   }
 
   public String getCommitId() {
@@ -40,7 +41,8 @@ public class Commit {
   }
 
   public void setCommitId(String commitId) {
-    this.commitId = commitId;
+    if (commitId == null) return;
+    this.commitId = commitId.trim();
   }
 
   public String getBranch() {
@@ -48,7 +50,8 @@ public class Commit {
   }
 
   public void setBranch(String branch) {
-    this.branch = branch;
+    if (branch == null)return;
+    this.branch = branch.trim();
   }
 
   public String getRepoUrl() {
@@ -56,7 +59,8 @@ public class Commit {
   }
 
   public void setRepoUrl(String repoUrl) {
-    this.repoUrl = repoUrl;
+    if (repoUrl == null) return;
+    this.repoUrl = repoUrl.trim();
   }
 
   public String getDirectory() {
@@ -64,6 +68,13 @@ public class Commit {
   }
 
   public void setDirectory(String directory) {
-    this.directory = directory;
+    if (directory == null) return;
+    this.directory = directory.trim();
+  }
+
+  @Override
+  public String toString() {
+    return "Commit [timestamp=" + timestamp + ", commitId=" + commitId + ", branch=" + branch
+        + ", repoUrl=" + repoUrl + ", directory=" + directory + "]";
   }
 }
