@@ -20,7 +20,6 @@ package com.sap.psr.vulas.kb;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.sap.psr.vulas.core.util.CoreConfiguration;
 
 public class Main {
   private static final Logger log = LoggerFactory.getLogger(Main.class);
@@ -34,14 +33,21 @@ public class Main {
 
     String cmd = _args[0];
     if (cmd.equals("version")) {
-      String vulasRelease = CoreConfiguration.getVulasRelease();
-      if (!StringUtils.isEmpty(vulasRelease) && !vulasRelease.equals("unknown"))
-        log.info(vulasRelease);
+      getVersion();
     } else if (cmd.equals("help")) {
       printImportHelp();
     } else {
       Import imp = new Import();
       imp.run(_args);
+    }
+  }
+
+  private static void getVersion() {
+    String vulasRelease = Main.class.getPackage().getImplementationVersion();
+    if (StringUtils.isEmpty(vulasRelease)) {
+      log.error("unable to get vulas version");
+    } else {
+      log.info(vulasRelease);
     }
   }
 
