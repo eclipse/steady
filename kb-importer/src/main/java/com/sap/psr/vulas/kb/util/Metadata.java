@@ -37,7 +37,7 @@ public class Metadata {
     String filePath = commitDir + File.separator + META_PROPERTIES_FILE;
     File commitFile = new File(filePath);
     if (!commitFile.exists() || !commitFile.isFile()) {
-      log.error("The meta file is missing {}", filePath);
+      log.error("The commit folder {} or the meta file is missing {} in commit folder", commitDir,  filePath);
       return null;
     }
 
@@ -58,10 +58,10 @@ public class Metadata {
     commit.setTimestamp(prop.getProperty(TIMESTAMP));
     commit.setRepoUrl(prop.getProperty(REPO));
     commit.setDirectory(commitDir);
-    
+
     return commit;
   }
-  
+
   /**
    * read vulnerability information from meta file
    * 
@@ -72,7 +72,7 @@ public class Metadata {
     String filePath = rootDir + File.separator + META_PROPERTIES_FILE;
     File rootMetaFile = new File(filePath);
     if (!rootMetaFile.exists() || !rootMetaFile.isFile()) {
-      throw new IllegalArgumentException("The meta file in root directory is missing");
+      throw new IllegalArgumentException("The root folder "+rootDir+"  or the meta file in root directory is missing "+filePath);
     }
 
     Properties prop = new Properties();

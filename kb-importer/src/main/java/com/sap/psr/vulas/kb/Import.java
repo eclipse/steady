@@ -18,6 +18,8 @@
 package com.sap.psr.vulas.kb;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
@@ -60,20 +62,17 @@ public class Import{
 
     Options options = getOptions();
     try {
-      cmd = parser.parse(options, _args);
+      cmd = parser.parse(options, _args, true);
     } catch (ParseException e) {
       Import.log.error(e.getMessage());
       HelpFormatter formatter = new HelpFormatter();
       formatter.printHelp("java -jar <jar> <options>", options);
-    }
-
-    String rootDir = null;
-    if (!cmd.hasOption(DIRECTORY_OPTION)) {
-      Import.log.error("The option (d)irectory is mandatory");
       return;
     }
 
+    String rootDir = null;
     rootDir = cmd.getOptionValue(DIRECTORY_OPTION);
+    rootDir = getDirPath(rootDir);
 
     Vulnerability meta = null;
     meta = Metadata.getVulnerabilityMetadata(rootDir);
@@ -144,14 +143,31 @@ public class Import{
     }
   }
 
+  /**
+   * get directory absolute path if it is relative
+   * 
+   * @param rootDir
+   * @return
+   */
+  private String getDirPath(String rootDir) {
+    Path p = Paths.get(rootDir); 
+    if(p.isAbsolute()) {
+      return rootDir;
+    }else {
+      String jarPath = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile().getAbsolutePath();
+      return (jarPath+File.separator+rootDir);
+    }
+  }
+
   private Options getOptions() {
     Options options = new Options();
-    options.addOption(DIRECTORY_OPTION, "directory", true,
+    options.addRequiredOption(DIRECTORY_OPTION, "directory", true,
         "directory containing mutiple commit folders with meta files");
     options.addOption(OVERWRITE_OPTION, "overwrite", false,
         "overwrite the bug if it already exists in the backend");
     options.addOption(VERBOSE_OPTION, "verbose", false, "Verbose mode");
     options.addOption(UPLOAD_CONSTRUCT_OPTION, "upload", false, "Upload construct changes");
+
     return options;
   }
 
