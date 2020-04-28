@@ -15,7 +15,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.kb.task;
+package com.sap.psr.vulas.kb;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,14 +42,14 @@ import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.kb.meta.Commit;
-import com.sap.psr.vulas.kb.meta.Metadata;
+import com.sap.psr.vulas.kb.meta.Vulnerability;
 import com.sap.psr.vulas.kb.util.Constructs;
 import com.sap.psr.vulas.shared.enums.BugOrigin;
 import com.sap.psr.vulas.shared.enums.ContentMaturityLevel;
 import com.sap.psr.vulas.shared.json.JsonBuilder;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
-public class Import implements Task {
+public class Import{
 
   private static final String UPLOAD_CONSTRUCT_OPTION = "u";
   private static final String DIRECTORY_OPTION = "d";
@@ -64,24 +64,17 @@ public class Import implements Task {
   private static final Logger log = LoggerFactory.getLogger(Import.class);
   private Map<String, Set<ConstructChange>> changes = new HashMap<String, Set<ConstructChange>>();
 
-  @Override
   public void run(String[] _args) {
-    Options options = new Options();
-    options.addOption(DIRECTORY_OPTION, "root-directory", true,
-        "directory containing meta file and multiple folders containing vcs data");
-    options.addOption(OVERWRITE_OPTION, "overwrite-if-existing", false,
-        "overwrite the bug if it already exists in the backend");
-    options.addOption(VERBOSE_OPTION, "verbose", false, "Verbose mode");
-    options.addOption(UPLOAD_CONSTRUCT_OPTION, "upload", false, "Upload construct changes");
-
     final CommandLineParser parser = new DefaultParser();
     CommandLine cmd = null;
+
+    Options options = getOptions();
     try {
       cmd = parser.parse(options, _args);
     } catch (ParseException e) {
       Import.log.error(e.getMessage());
       HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp("Import", options);
+      formatter.printHelp("java -jar <jar> <options>", options);
     }
 
     String rootDir = null;
@@ -92,7 +85,7 @@ public class Import implements Task {
 
     rootDir = cmd.getOptionValue(DIRECTORY_OPTION);
 
-    Metadata meta = null;
+    Vulnerability meta = null;
     meta = readMetaFile(rootDir + File.separator + META_PROPERTIES_FILE);
     if (meta == null) {
       return;
@@ -161,13 +154,24 @@ public class Import implements Task {
     }
   }
 
+  private Options getOptions() {
+    Options options = new Options();
+    options.addOption(DIRECTORY_OPTION, "directory", true,
+        "directory containing mutiple commit folders with meta files");
+    options.addOption(OVERWRITE_OPTION, "overwrite", false,
+        "overwrite the bug if it already exists in the backend");
+    options.addOption(VERBOSE_OPTION, "verbose", false, "Verbose mode");
+    options.addOption(UPLOAD_CONSTRUCT_OPTION, "upload", false, "Upload construct changes");
+    return options;
+  }
+
   /**
    * read vulnerability information from meta file
    * 
    * @param filePath a {@link java.lang.String} object.
-   * @return _commit a {@link com.sap.psr.vulas.kb.meta.Metadata} object.
+   * @return _commit a {@link com.sap.psr.vulas.kb.meta.Vulnerability} object.
    */
-  private Metadata readMetaFile(String filePath) {
+  private Vulnerability readMetaFile(String filePath) {
     File rootMetaFile = new File(filePath);
     if (!rootMetaFile.exists() || !rootMetaFile.isFile()) {
       throw new IllegalArgumentException("The meta file in root directory is missing");
@@ -184,7 +188,7 @@ public class Import implements Task {
       return null;
     }
 
-    Metadata metadata = new Metadata();
+    Vulnerability metadata = new Vulnerability();
     String vulnId = prop.getProperty("vulnId");
     if (vulnId == null) {
       throw new IllegalArgumentException("The vulnId is missing missing in the root.meta file");
@@ -240,7 +244,7 @@ public class Import implements Task {
    * @return a {@link java.lang.String} object.
    * @throws java.util.ConcurrentModificationException if any.
    */
-  public String toJSON(Metadata _meta, List<Commit> _commits)
+  private String toJSON(Vulnerability _meta, List<Commit> _commits)
       throws ConcurrentModificationException {
     final StringBuilder b = new StringBuilder();
     b.append(" { ");
@@ -279,5 +283,10 @@ public class Import implements Task {
     }
     b.append(" ] } ");
     return b.toString();
+  }
+
+  public void printHelp() {
+    HelpFormatter formatter = new HelpFormatter();
+    formatter.printHelp("java -jar <jar> <options>", getOptions());
   }
 }

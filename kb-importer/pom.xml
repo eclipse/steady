@@ -28,13 +28,6 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.2</version>
 		</dependency>
-		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
-			<artifactId>shared</artifactId>
-			<classifier>tests</classifier> <!-- type=test-jar does not seem to work here, use classifier instead -->
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
 		<!-- Only basic lang classes should be used at compile time -->
 		<dependency>
 			<groupId>com.sap.research.security.vulas</groupId>

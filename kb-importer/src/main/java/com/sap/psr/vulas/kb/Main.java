@@ -15,31 +15,38 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.kb.task;
+package com.sap.psr.vulas.kb;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.sap.psr.vulas.kb.cmd.Command;
-import com.sap.psr.vulas.kb.cmd.CommandsLoader;
-import com.sap.psr.vulas.kb.meta.CommandMeta;
+import com.sap.psr.vulas.core.util.CoreConfiguration;
 
-public class Help implements Task {
-  private static final Logger log = LoggerFactory.getLogger(Help.class);
+public class Main {
+  private static final Logger log = LoggerFactory.getLogger(Main.class);
 
-  @Override
-  public void run(String _args[]) {
+  public static void main(String[] _args) {
     if (_args.length == 0) {
-      noArgsHelp();
+      log.error("Command not found");
+      printImportHelp();
+      return;
     }
 
-    // TODO: other help with args. Example - kbhub help import
+    String cmd = _args[0];
+    if (cmd.equals("version")) {
+      String vulasRelease = CoreConfiguration.getVulasRelease();
+      if (!StringUtils.isEmpty(vulasRelease) && !vulasRelease.equals("unknown"))
+        log.info(vulasRelease);
+    } else if (cmd.equals("help")) {
+      printImportHelp();
+    } else {
+      Import imp = new Import();
+      imp.run(_args);
+    }
   }
 
-  private void noArgsHelp() {
-    log.info(String.format("List of kb-hub commands:%n"));
-    for (Command command : CommandsLoader.getInstance().getCommands().values()) {
-      CommandMeta commandInfo = command.getInfo();
-      log.info(String.format("  %-13s %s", commandInfo.getCommand(), commandInfo.getDescription()));
-    }
+  private static void printImportHelp() {
+    Import imp = new Import();
+    imp.printHelp();
   }
 }
