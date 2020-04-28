@@ -503,6 +503,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	 * Finds all @{VulnerableDependency}s for a given {@link Space} and {@link Application}.
 	 */
 	@Override
+	@Transactional(readOnly=true)
 	public TreeSet<VulnerableDependency> findAppVulnerableDependencies(Application _app, boolean _add_excemption_info, boolean _log) {
 		final StopWatch sw = new StopWatch("Query vulnerable dependencies for application " + _app);
 		if(_log)
