@@ -435,7 +435,7 @@
 							<br />
 							<summary>Exempted scopes: $exemptScopes</summary>
 							List of scopes that will be ignored (exempted) when deciding whether to throw a build exception.
-							<br /><br />Example: vulas.report.exemptScopes = test, provided
+							<br /><br />Example: vulas.report.exemptScope = test, provided
 							<br />Possible values: compile, provided, runtime, test, system
 							<br />Default: [test, provided]
 						</details>
@@ -445,7 +445,7 @@
 							<br />
 							<summary>Exempted bugs: $exemptBugs</summary>
 							List of security vulnerabilities that will be ignored (exempted) when deciding whether to throw a build exception.
-							<br /><br />Example: vulas.report.exemptBugs.CVE-2014-0050.* = Lorem ipsum
+							<br /><br />Example: vulas.report.exemptBug.CVE-2014-0050.reason = Lorem ipsum
 							<br />Default: none
 							#if( $obsoleteExemptionsHistorical || $obsoleteExemptionsSignatureNotPresent )
 							<br /><br />Obsolete exemptions (historical vulnerabilities): $obsoleteExemptionsHistorical
