@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import com.github.packageurl.MalformedPackageURLException;
 import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.ExemptionBug;
@@ -187,6 +188,44 @@ public class IExemptionTest {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			assertTrue(false);
+		}
+	}
+	
+	@Test
+	public void testCreatePackageUrl() {
+		// type == maven
+		String purl = "pkg:maven/a@v";
+		try {
+			ExemptionBug.createPackageUrl(purl);
+			assertTrue(false);
+		} catch(MalformedPackageURLException e) {
+			assertTrue(true);
+			assertEquals("Package URLs of type [maven] require a valid namespace and name: [" + purl + "]",  e.getMessage());
+		}
+		
+		try {
+			ExemptionBug.createPackageUrl("pkg:maven/g/@v");
+			assertTrue(false);
+		} catch(MalformedPackageURLException e) {
+			assertTrue(true);
+		}
+	
+		// type == pypi
+		try {
+			ExemptionBug.createPackageUrl("pkg:pypi/a@v");
+			assertTrue(true);
+		} catch(MalformedPackageURLException e) { 
+			assertTrue(false);
+		}
+
+		// other unsupported type(s)
+		purl = "pkg:npm/g/a@v";
+		try {
+			ExemptionBug.createPackageUrl(purl);
+			assertTrue(false);
+		} catch(MalformedPackageURLException e) {
+			assertTrue(true);
+			assertEquals("Package URLs of type [npm] are not supported: [" + purl + "]", e.getMessage());
 		}
 	}
 }

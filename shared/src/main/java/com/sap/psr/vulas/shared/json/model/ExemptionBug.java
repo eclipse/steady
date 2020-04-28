@@ -95,18 +95,13 @@ public class ExemptionBug implements IExemption {
 			else if(this.library.startsWith("pkg:") && _vd.getDep().getLib().getLibraryId()!=null) {
 				try {
 					final LibraryId libid = _vd.getDep().getLib().getLibraryId();
-					final PackageURL purl = new PackageURL(this.library);
-					if(purl.getName()==null) {
-						log.error("The package URL [" + this.library + "] does not contain a name");
-					}
-					else {
-						is_exempted = is_exempted &&
-								(purl.getNamespace()==null || libid.getMvnGroup().equals(purl.getNamespace())) && // No purl.namespace || purl.namespace==libid.mvnGroup
-								libid.getArtifact().equals(purl.getName()) &&
-								(purl.getVersion()==null || libid.getVersion().equals(purl.getVersion())); // No purl.version || purl.version==libid.version
-					}
+					final PackageURL purl = ExemptionBug.createPackageUrl(this.library);
+					is_exempted = is_exempted &&
+							(purl.getNamespace()==null || libid.getMvnGroup().equals(purl.getNamespace())) && // No purl.namespace || purl.namespace==libid.mvnGroup
+							libid.getArtifact().equals(purl.getName()) &&
+							(purl.getVersion()==null || libid.getVersion().equals(purl.getVersion())); // No purl.version || purl.version==libid.version
 				} catch (MalformedPackageURLException e) {
-					log.error("Invalid package URL [" + this.library + "]: " + e.getMessage());
+					log.error(e.getMessage());
 					is_exempted = false;
 				}
 			}
@@ -148,14 +143,10 @@ public class ExemptionBug implements IExemption {
 						for(String lib: libs) {
 							if(lib.startsWith("pkg:")) {
 								try {
-									final PackageURL purl = new PackageURL(lib);
-									if(purl.getName()==null) {
-										log.error("The package URL [" + lib + "] does not contain a name");
-										continue;
-									}
+									ExemptionBug.createPackageUrl(lib);
 									exempts.add(new ExemptionBug(vuln, lib, reason));
 								} catch(MalformedPackageURLException e) {
-									log.error("Invalid package URL [" + lib + "]: " + e.getMessage());
+									log.error(e.getMessage());
 									continue;
 								}
 							}
@@ -210,14 +201,11 @@ public class ExemptionBug implements IExemption {
 						for(String lib: libs) {
 							if(lib.startsWith("pkg:")) {
 								try {
-									final PackageURL purl = new PackageURL(lib);
-									if(purl.getName()==null) {
-										log.error("The package URL [" + lib + "] does not contain a name");
-										continue;
-									}
+									ExemptionBug.createPackageUrl(lib);
 									exempts.add(new ExemptionBug(vuln, lib, reason));
 								} catch(MalformedPackageURLException e) {
-									log.error("Invalid package URL [" + lib + "]: " + e.getMessage());
+									log.error(e.getMessage());
+									continue;
 								}
 							}
 							else {
@@ -259,6 +247,40 @@ public class ExemptionBug implements IExemption {
 	
 		
 		return exempts;
+	}
+	
+	/**
+	 * Creates a {@link PackageURL} from the given {@link String}, whereby URLs of type 'maven' require
+	 * namespace and name, and URLs of type 'pypi' require a name. All other types are not supported and
+	 * will result in a {@link MalformedPackageURLException}.
+	 * 
+	 * @param _url
+	 * @return
+	 * @throws MalformedPackageURLException
+	 */
+	public static final PackageURL createPackageUrl(String _url) throws MalformedPackageURLException {
+		final PackageURL purl = new PackageURL(_url);
+		
+		// PURL type == maven
+		if("maven".equalsIgnoreCase(purl.getType())) {
+			if(purl.getNamespace()==null || purl.getNamespace().equals("") || purl.getName()==null || purl.getName().equals("")) {
+				throw new MalformedPackageURLException("Package URLs of type [" + purl.getType() + "] require a valid namespace and name: [" + purl + "]");
+			}
+		}
+		
+		// PURL type == pypi
+		else if("pypi".equalsIgnoreCase(purl.getType())) {
+			if(purl.getName()==null || purl.getName().equals("")) {
+				throw new MalformedPackageURLException("Package URLs of type [" + purl.getType() + "] require a valid name: [" + purl + "]");
+			}
+		}
+		
+		// Other types are not supported
+		else {
+			throw new MalformedPackageURLException("Package URLs of type [" + purl.getType() + "] are not supported: [" + purl + "]");
+		}
+		
+		return purl;
 	}
 
 	@Override
