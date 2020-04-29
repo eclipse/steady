@@ -16,12 +16,12 @@ import com.sap.psr.vulas.kb.meta.Vulnerability;
  */
 public class Metadata {
 
-  private static final String VULN_ID = "vulnId";
+  private static final String VULN_ID = "vulnerability_id";
   private static final String LINKS = "links";
   private static final String DESCRIPTION = "description";
-  private static final String REPO = "repo";
+  private static final String REPO = "repository";
   private static final String TIMESTAMP = "timestamp";
-  private static final String COMMIT_ID = "commitId";
+  private static final String COMMIT_ID = "commit_id";
   private static final String BRANCH = "branch";
   private static final String META_PROPERTIES_FILE = "meta.properties";
 
