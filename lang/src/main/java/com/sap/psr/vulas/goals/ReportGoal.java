@@ -70,12 +70,9 @@ public class ReportGoal extends AbstractAppGoal {
 		final Configuration cfg = this.getConfiguration().getConfiguration();
 
 		final Report report = new Report(this.getGoalContext(), this.getApplicationContext(), this.modules);
-
-		// Exception threshold
 		report.setExceptionThreshold(cfg.getString(CoreConfiguration.REP_EXC_THRESHOLD, Report.THRESHOLD_ACT_EXE));
-
-		// Exemptions
 		report.setExemptions(ExemptionSet.createFromConfiguration(cfg));
+		report.setCreateAffectedLibraries(cfg.getBoolean(CoreConfiguration.REP_CREATE_AFF_LIB, false));
 
 		// Fetch the vulns
 		try {

@@ -114,10 +114,12 @@ public class CoreConfiguration {
 	public final static String REP_AGGR_MODULES  = "vulas.report.aggregateModules";
 	/** Constant <code>REP_EXC_THRESHOLD="vulas.report.exceptionThreshold"</code> */
 	public final static String REP_EXC_THRESHOLD = "vulas.report.exceptionThreshold";
-		/** Constant <code>REP_DIR="vulas.report.reportDir"</code> */
+	/** Constant <code>REP_DIR="vulas.report.reportDir"</code> */
 	public final static String REP_DIR           = "vulas.report.reportDir";
 	/** Constant <code>REP_OVERRIDE_VER="vulas.report.overridePomVersion"</code> */
 	public final static String REP_OVERRIDE_VER  = "vulas.report.overridePomVersion";
+	/** Constant <code>REP_LIB_ASSESS="vulas.report.createLibraryAssessments"</code> */
+	public final static String REP_CREATE_AFF_LIB = "vulas.report.createLibraryAssessments";
 
 	/** Constant <code>SEQ_DEFAULT="vulas.core.sequence.defaultGoals"</code> */
 	public final static String SEQ_DEFAULT       = "vulas.core.sequence.defaultGoals";

@@ -24,6 +24,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
@@ -55,6 +57,9 @@ public class IExemptionTest {
 		c1.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0053.reason", "Lorem ipsum");
 		c1.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0053.libraries", "*, 6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10, pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1"); // Will result in 3 exemptions
 
+		c1.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0054.reason", "Lorem ipsum");
+		c1.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0054.libraries", "pkg:maven/g@1.9.1, pkg:npm/g@1.9.1"); // No exemptions due to wrong PURLs
+		
 		// Scope exemption: Old format
 		c1.setProperty(ExemptionScope.DEPRECATED_CFG, "teST, PROVided"); // Will result in 2 exemptions
 
@@ -65,6 +70,35 @@ public class IExemptionTest {
 		c1.setProperty(ExemptionUnassessed.CFG, "aLL");
 
 		final ExemptionSet e = ExemptionSet.createFromConfiguration(c1.getConfiguration());
+		assertEquals(10, e.size());
+	}
+	
+	@Test
+	public void testReadFromMap() {
+		final Map<String, String> map = new HashMap<String, String>();
+		
+		// Bug exemption: Old format
+		map.put(ExemptionBug.DEPRECATED_CFG_PREFIX, "CVE-2014-0050, CVE-2014-0051"); // Will result in 2 exemptions
+
+		// Bug exemption: New format
+		map.put(ExemptionBug.CFG_PREFIX + ".CVE-2014-0052.reason", "Lorem ipsum");
+
+		map.put(ExemptionBug.CFG_PREFIX + ".CVE-2014-0053.reason", "Lorem ipsum");
+		map.put(ExemptionBug.CFG_PREFIX + ".CVE-2014-0053.libraries", "*, 6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10, pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1"); // Will result in 3 exemptions
+
+		map.put(ExemptionBug.CFG_PREFIX + ".CVE-2014-0054.reason", "Lorem ipsum");
+		map.put(ExemptionBug.CFG_PREFIX + ".CVE-2014-0054.libraries", "pkg:maven/g@1.9.1, pkg:npm/g@1.9.1"); // No exemptions due to wrong PURLs
+		
+		// Scope exemption: Old format
+		map.put(ExemptionScope.DEPRECATED_CFG, "teST, PROVided"); // Will result in 2 exemptions
+
+		// Scope exemption: New format
+		map.put(ExemptionScope.CFG, "sysTEM");
+
+		// Unassessed exemption
+		map.put(ExemptionUnassessed.CFG, "aLL");
+
+		final ExemptionSet e = ExemptionSet.createFromMap(map);
 		assertEquals(10, e.size());
 	}
 

@@ -28,15 +28,18 @@ import org.apache.commons.logging.LogFactory;
 
 import com.github.packageurl.MalformedPackageURLException;
 import com.github.packageurl.PackageURL;
+import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 
 
 /**
  * Exemptions are used to prevent that {@link VulnerableDependency}s result in build exceptions during the execution of the report goal.
  * 
- * Exemptions can be created for bug identifiers and libraries (by specifying their digests) using the following
- * format: vulas.report.exempt.&lt;bugId&gt;.&lt;digest&gt; = &lt;reason&gt;
+ * Exemptions can be created for bug identifiers and libraries (by specifying their digests) using the following format:
  * 
- * The wildcard * can be used to indicate that all bugs for a given digest are exempted (or vice-versa).
+ * vulas.report.exemptBug.&lt;vuln-id&gt;.reason = &lt;reason&gt;
+ * vulas.report.exemptBug.&lt;vuln-id&gt;.libraries = [ * | &lt;digest&gt; | &lt;package-url&gt; ] [, &lt;digest&gt; | &lt;package-url&gt; ]
+ * 
+ * The wildcard * can be used to indicate that a bug is exempted for all libraries (no matter the digest or package URL).
  */
 public class ExemptionBug implements IExemption {
 	
@@ -44,13 +47,15 @@ public class ExemptionBug implements IExemption {
 	
 	private static final String ALL = "*";
 	
+	private static final String PURL_PREFIX = "pkg:";
+	
 	/** Deprecated configuration prefix. **/
 	public static final String DEPRECATED_CFG_PREFIX = "vulas.report.exceptionExcludeBugs";
 	
-	/** Deprecated configuration key in backend. **/
+	/** Deprecated configuration key in backend (where the vulas prefix was removed before 3.1.12). **/
 	public static final String DEPRECATED_KEY_BACKEND = "report.exceptionExcludeBugs";
 	
-	/** New configuration prefix. **/
+	/** New configuration prefix (as of 3.1.12). **/
 	public static final String CFG_PREFIX = "vulas.report.exemptBug";
 	
 	/** The identifier of a bug, or star (*), which means that the exemption applies to all bugs. */ 
@@ -86,13 +91,13 @@ public class ExemptionBug implements IExemption {
 		// Bug ID
 		boolean is_exempted = ALL.equals(this.bugId)  || this.bugId.equalsIgnoreCase(_vd.getBug().getBugId());
 		
-		// Archive
+		// Library
 		if(is_exempted) {
 			// All
 			if(ALL.equals(this.library)) { ; }
 
 			// Package URL according to https://github.com/package-url/purl-spec
-			else if(this.library.startsWith("pkg:") && _vd.getDep().getLib().getLibraryId()!=null) {
+			else if(this.library.startsWith(PURL_PREFIX) && _vd.getDep().getLib().getLibraryId()!=null) {
 				try {
 					final LibraryId libid = _vd.getDep().getLib().getLibraryId();
 					final PackageURL purl = ExemptionBug.createPackageUrl(this.library);
@@ -113,6 +118,52 @@ public class ExemptionBug implements IExemption {
 		}
 				 
 		return is_exempted;
+	}
+	
+	/**
+	 * Creates an instance of {@link AffectedLibrary}, which can be used to mark libraries as non-vulnerable with regards to
+	 * a given vulnerability.
+	 * @return
+	 */
+	public AffectedLibrary createAffectedLibrary(VulnerableDependency _vd) {
+		AffectedLibrary al = null;
+		
+		if(ALL.equals(this.bugId) || ALL.equals(this.library)) {
+			log.warn("Cannot create library assessment for the wildcard (" + ALL + ") exemption [" + this.toShortString() + "]");
+		}
+		
+		// Create for libraryId
+		else if(this.library.startsWith(PURL_PREFIX)) {
+			try {
+				final PackageURL purl = ExemptionBug.createPackageUrl(this.library);
+				if(purl.getVersion()==null) {
+					log.warn("Cannot create affected library for Package URL exemptions without version identifier: [" + this.toShortString() + "]");
+				} else {
+					al = new AffectedLibrary();
+					al.setSource(AffectedVersionSource.MANUAL);
+					al.setLibraryId(_vd.getDep().getLib().getLibraryId());
+					al.setExplanation(this.reason);
+					al.setBugId(_vd.getBug());
+					al.setAffected(false);
+				}
+			} catch (MalformedPackageURLException e) {
+				log.error("Cannot create affected library from exemption [" + this.toShortString() + "]:" + e.getMessage());
+			} catch (Exception e) {
+				log.error("Cannot create affected library from exemption [" + this.toShortString() + "]:" + e.getMessage());
+			}
+		}
+		
+		// Create for lib
+		else {
+			al = new AffectedLibrary();
+			al.setSource(AffectedVersionSource.MANUAL);
+			al.setLib(_vd.getDep().getLib());
+			al.setExplanation(this.reason);
+			al.setBugId(_vd.getBug());
+			al.setAffected(false);
+		}
+		
+		return al;
 	}
 
 	/**
@@ -141,7 +192,7 @@ public class ExemptionBug implements IExemption {
 					}
 					else {
 						for(String lib: libs) {
-							if(lib.startsWith("pkg:")) {
+							if(lib.startsWith(PURL_PREFIX)) {
 								try {
 									ExemptionBug.createPackageUrl(lib);
 									exempts.add(new ExemptionBug(vuln, lib, reason));
@@ -190,16 +241,16 @@ public class ExemptionBug implements IExemption {
 			if(k.startsWith((CFG_PREFIX) + ".") && k.endsWith("." + "reason")) {
 				final String[] key_elements = k.split("\\.");
 				if(key_elements.length == 5) {
-					final String vuln = key_elements[3];
+					final String vuln   = key_elements[3];
 					final String reason = _map.get(CFG_PREFIX + "." + vuln + "." + "reason");
-					final String[] libs = _map.get(CFG_PREFIX + "." + vuln + "." + "libraries").split(",");
+					final String libs   = _map.get(CFG_PREFIX + "." + vuln + "." + "libraries");
 					
-					if(libs==null || libs.length==0) {
+					if(libs==null || libs.equals("")) {
 						exempts.add(new ExemptionBug(vuln, ExemptionBug.ALL, reason));
 					}
 					else {
-						for(String lib: libs) {
-							if(lib.startsWith("pkg:")) {
+						for(String lib: libs.split(",")) {
+							if(lib.startsWith(PURL_PREFIX)) {
 								try {
 									ExemptionBug.createPackageUrl(lib);
 									exempts.add(new ExemptionBug(vuln, lib, reason));
@@ -243,8 +294,7 @@ public class ExemptionBug implements IExemption {
 					exempts.add(new ExemptionBug(b, null, (reason==null ? "No reason provided" : reason)));
 				}
 			}
-		}
-	
+		}	
 		
 		return exempts;
 	}
@@ -285,11 +335,11 @@ public class ExemptionBug implements IExemption {
 
 	@Override
 	public String toString() {
-		return "Exemption [" + this.toShortString() + "]";
+		return "[bug=" + this.bugId + ", libs=" + this.library + "]";
 	}
 	
 	public String toShortString() {
-		return this.bugId + "." + this.library;
+		return this.bugId + " (" + this.library + ")";
 	}
 
 	@Override

@@ -47,7 +47,10 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.goals.GoalContext;
+import com.sap.psr.vulas.shared.connectivity.PathBuilder;
 import com.sap.psr.vulas.shared.connectivity.Service;
+import com.sap.psr.vulas.shared.json.JacksonUtil;
+import com.sap.psr.vulas.shared.json.model.AffectedLibrary;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Bug;
 import com.sap.psr.vulas.shared.json.model.ExemptionBug;
@@ -79,18 +82,21 @@ public class Report {
 	/** Constant <code>THRESHOLD_ACT_EXE="actuallyExecutes"</code> */
 	public static final String THRESHOLD_ACT_EXE = "actuallyExecutes";
 
+	// Templates and report names for HTML, XML and JSON
 	private static final String TEMPLATE_FILE_HTML = "velocity_template.html";
 	static final String REPORT_FILE_HTML = "vulas-report.html";
-	
 	private static final String TEMPLATE_FILE_XML = "velocity_template.xml";
 	static final String REPORT_FILE_XML = "vulas-report.xml";
-
 	private static final String TEMPLATE_FILE_JSON = "velocity_template.json";
 	static final String REPORT_FILE_JSON = "vulas-report.json";
 
 	private Map<String,Long> stats = new HashMap<String,Long>();
 
 	private String exceptionThreshold = THRESHOLD_POT_EXE;
+	
+	private boolean createAffectedLibraries = false;
+	
+	private Set<AffectedLibrary> affectedLibraries = new HashSet<AffectedLibrary>();
 
 	private ExemptionSet exemptions = new ExemptionSet();
 
@@ -158,6 +164,29 @@ public class Report {
 		if(_threshold!=null)
 			this.exceptionThreshold = _threshold;
 		Report.log.info("Exception threshold: " + this.exceptionThreshold);
+	}
+	
+	public boolean isCreateAffectedLibraries() {
+		return createAffectedLibraries;
+	}
+
+	public void setCreateAffectedLibraries(boolean createAffectedLibraries) {
+		this.createAffectedLibraries = createAffectedLibraries;
+	}
+	
+	private void writeAffectedLibraries(@NotNull Path _dir) {
+		for(AffectedLibrary aff_lib: this.affectedLibraries) {
+			Path p = null;
+			try {
+				p = _dir.resolve(aff_lib.getBugId().getBugId() + "-" + Math.abs(Math.random()*100000) + ".json");
+				final AffectedLibrary[] aff_libs = new AffectedLibrary[1];
+				aff_libs[0] = aff_lib;
+				FileUtil.writeToFile(p.toFile(), JacksonUtil.asJsonString(aff_libs));
+				log.info("Created affected library at [" + p.getFileName() + "], upload with [curl -X PUT " + this.goalContext.getVulasConfiguration().getServiceUrl(Service.BACKEND) + PathBuilder.bugAffectedLibs(aff_lib.getBugId().getBugId()) + "?source=MANUAL -H \"Content-Type: application/json\" --upload-file " + p + "]");
+			} catch (Exception e) {
+				log.error("Cannot write affected library to [" + p + "]");
+			}
+		}
 	}
 
 	/**
@@ -259,14 +288,22 @@ public class Report {
 			log.warn("Exemptions for the following vulnerabilities are obsolete, because they concern previous version(s) of the respective application dependency(ies) (historical vulnerability): [" + StringUtil.join(obsolHistorical, ", ") + "]");
 		if(!obsolSignNotPresent.isEmpty())
 			log.warn("Exemptions for the following vulnerabilities are obsolete, because none of the application dependencies contain potentially affected code signatures: [" + StringUtil.join(obsolSignNotPresent, ", ") + "]");
-
+		
 		// Process all vulnerable dependencies obtained from the backend
 		for(AggregatedVuln v: this.vulns) {
 			for(VulnerableDependency analysis: v.getAnalyses()) {
 
 				// Is the vulnerability exempted?
-				// Note: The vuln dependency downloaded may have an exemption already. If any, it will be overriden using the current configuration of the report goal
-				analysis.setExemption(this.exemptions.getApplicableExemption(analysis));				
+				// Important: The vuln dependency downloaded may have an exemption already.
+				// If any, it will be overriden using the current configuration of the report goal
+				final IExemption exemption = this.exemptions.getApplicableExemption(analysis); 
+				analysis.setExemption(exemption);
+				if(exemption!=null && exemption instanceof ExemptionBug && this.isCreateAffectedLibraries()) {
+					final AffectedLibrary aff_lib = ((ExemptionBug)exemption).createAffectedLibrary(analysis);
+					if(aff_lib!=null) {
+						affectedLibraries.add(aff_lib);
+					}
+				}
 
 				// Only report if there is a confirmed problem or a manual check/activity is required (orange hourglass)
 				// In other words: ignore historical vulnerabilities, i.e., cases where a non-vulnerable archive is used
@@ -351,12 +388,13 @@ public class Report {
 	}
 
 	/**
-	 * Returns true if a build exception shall be thrown, which is the case if a threshold other than NONE is defined and vulnerabilities exist above this threshold.
+	 * Returns true if a build exception shall be thrown, which is the case if a threshold other than
+	 * {@link Report#THRESHOLD_NONE} is defined and vulnerabilities exist above this threshold.
 	 *
 	 * @return a boolean.
 	 */
 	public boolean isThrowBuildException() {
-		return !this.exceptionThreshold.equalsIgnoreCase("none") && !this.vulnsAboveThreshold.isEmpty();
+		return !this.exceptionThreshold.equalsIgnoreCase(THRESHOLD_NONE) && !this.vulnsAboveThreshold.isEmpty();
 	}
 
 	/**
@@ -442,6 +480,7 @@ public class Report {
 		this.writeResultAsHtml(_dir);
 		this.writeResultAsXml(_dir);
 		this.writeResultAsJson(_dir);
+		this.writeAffectedLibraries(_dir);
 	}
 
 	/**

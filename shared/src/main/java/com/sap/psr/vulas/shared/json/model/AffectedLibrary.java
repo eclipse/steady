@@ -46,7 +46,7 @@ public class AffectedLibrary implements Serializable {
 
 	private LibraryId libraryId;
 	
-        private Library lib;
+    private Library lib;
         
 	private AffectedVersionSource source;
 	
@@ -84,6 +84,7 @@ public class AffectedLibrary implements Serializable {
 	 * @return a {@link java.lang.Long} object.
 	 */
 	public Long getId() { return id; }
+	
 	/**
 	 * <p>Setter for the field <code>id</code>.</p>
 	 *
@@ -97,6 +98,7 @@ public class AffectedLibrary implements Serializable {
 	 * @return a {@link com.sap.psr.vulas.shared.json.model.Bug} object.
 	 */
 	public Bug getBugId() { return bugId; }
+	
 	/**
 	 * <p>Setter for the field <code>bugId</code>.</p>
 	 *
@@ -109,7 +111,8 @@ public class AffectedLibrary implements Serializable {
 	 *
 	 * @return a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
 	 */
-	public LibraryId getLibraryId() { return libraryId; } 
+	public LibraryId getLibraryId() { return libraryId; }
+	
 	/**
 	 * <p>Setter for the field <code>libraryId</code>.</p>
 	 *
@@ -123,6 +126,7 @@ public class AffectedLibrary implements Serializable {
 	 * @return a {@link java.lang.Boolean} object.
 	 */
 	public Boolean getAffected() { return affected; }
+	
 	/**
 	 * <p>Setter for the field <code>affected</code>.</p>
 	 *
@@ -136,6 +140,7 @@ public class AffectedLibrary implements Serializable {
 	 * @return a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
 	 */
 	public AffectedVersionSource getSource() { return source; }
+	
 	/**
 	 * <p>Setter for the field <code>source</code>.</p>
 	 *
@@ -149,6 +154,7 @@ public class AffectedLibrary implements Serializable {
 	 * @return a {@link java.util.Calendar} object.
 	 */
 	public java.util.Calendar getCreatedAt() { return createdAt; }
+	
 	/**
 	 * <p>Setter for the field <code>createdAt</code>.</p>
 	 *
@@ -162,6 +168,7 @@ public class AffectedLibrary implements Serializable {
 	 * @return a {@link java.lang.String} object.
 	 */
 	public String getCreatedBy() { return createdBy; }
+	
 	/**
 	 * <p>Setter for the field <code>createdBy</code>.</p>
 	 *
@@ -175,6 +182,7 @@ public class AffectedLibrary implements Serializable {
 	 * @return a {@link java.lang.String} object.
 	 */
 	public String getExplanation() { return explanation; }
+	
 	/**
 	 * <p>Setter for the field <code>explanation</code>.</p>
 	 *
@@ -189,6 +197,7 @@ public class AffectedLibrary implements Serializable {
 		int result = 1;
 		result = prime * result + ((bugId == null) ? 0 : bugId.hashCode());
 		result = prime * result + ((libraryId == null) ? 0 : libraryId.hashCode());
+		result = prime * result + ((lib == null) ? 0 : lib.hashCode());
 		return result;
 	}
 
@@ -212,26 +221,31 @@ public class AffectedLibrary implements Serializable {
 				return false;
 		} else if (!libraryId.equals(other.libraryId))
 			return false;
+		if (lib == null) {
+			if (other.lib != null)
+				return false;
+		} else if (!lib.equals(other.lib))
+			return false;
 		return true;
 	}
 
-        /**
-         * <p>Getter for the field <code>lib</code>.</p>
-         *
-         * @return a {@link com.sap.psr.vulas.shared.json.model.Library} object.
-         */
-        public Library getLib() {
-            return lib;
-        }
+	/**
+	 * <p>Getter for the field <code>lib</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Library} object.
+	 */
+	public Library getLib() {
+		return lib;
+	}
 
-        /**
-         * <p>Setter for the field <code>lib</code>.</p>
-         *
-         * @param lib a {@link com.sap.psr.vulas.shared.json.model.Library} object.
-         */
-        public void setLib(Library lib) {
-            this.lib = lib;
-        }
+	/**
+	 * <p>Setter for the field <code>lib</code>.</p>
+	 *
+	 * @param lib a {@link com.sap.psr.vulas.shared.json.model.Library} object.
+	 */
+	public void setLib(Library lib) {
+		this.lib = lib;
+	}
 
 	
 	/** {@inheritDoc} */
