@@ -97,6 +97,7 @@
 		<module>repo-client</module>
 		<module>patch-analyzer</module>
 		<module>patch-lib-analyzer</module>
+		<module>kb-importer</module>
 
 		<!-- Allow the scanning of applications -->
 		<module>cli-scanner</module>
