@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.kb.meta;
+package com.sap.psr.vulas.kb.model;
 
 import java.io.File;
 import com.sap.psr.vulas.shared.util.FileUtil;

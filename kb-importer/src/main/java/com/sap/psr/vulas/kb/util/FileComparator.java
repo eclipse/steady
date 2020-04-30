@@ -28,7 +28,7 @@ import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.FileAnalyzer;
 import com.sap.psr.vulas.FileAnalyzerFactory;
-import com.sap.psr.vulas.kb.meta.FileChange;
+import com.sap.psr.vulas.kb.model.FileChange;
 
 
 /**
@@ -39,7 +39,7 @@ import com.sap.psr.vulas.kb.meta.FileChange;
  */
 public class FileComparator {
 
-  private static final Logger log = LoggerFactory.getLogger(Constructs.class);
+  private static final Logger log = LoggerFactory.getLogger(ConstructSet.class);
   private File def, fix = null;
 
   private FileAnalyzer defAnalyzer, fixAnalyzer = null;

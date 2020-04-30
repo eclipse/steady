@@ -12,8 +12,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import com.sap.psr.vulas.ConstructChange;
-import com.sap.psr.vulas.kb.meta.Commit;
-import com.sap.psr.vulas.kb.util.Constructs;
+import com.sap.psr.vulas.kb.model.Commit;
+import com.sap.psr.vulas.kb.util.ConstructSet;
 
 public class TestConstructs {
   private static final String REPO = "rootDir";
@@ -22,7 +22,7 @@ public class TestConstructs {
 
   @Before
   public void setup() {
-    String path = Constructs.class.getClassLoader().getResource(ZIP).getPath();
+    String path = ConstructSet.class.getClassLoader().getResource(ZIP).getPath();
     ZipUtil.unzip(path, destPathToUnzip);
   }
 
@@ -36,7 +36,7 @@ public class TestConstructs {
     commit.setRepoUrl("https://github.com/apache/commons-collections");
 
     Map<String, Set<ConstructChange>> changes = new HashMap<String, Set<ConstructChange>>(); 
-    Set<ConstructChange> constructChanges = Constructs.identifyConstructChanges(commit, changes);
+    Set<ConstructChange> constructChanges = ConstructSet.identifyConstructChanges(commit, changes);
     ConstructChange contructChangeFirstElement = (ConstructChange) constructChanges.toArray()[0];
     assertEquals(150, constructChanges.size());
     assertEquals("1447974481000", contructChangeFirstElement.getCommittedAt());

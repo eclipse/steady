@@ -1,3 +1,20 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.kb.util;
 
 import java.io.File;
@@ -8,8 +25,8 @@ import java.util.Arrays;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.sap.psr.vulas.kb.meta.Commit;
-import com.sap.psr.vulas.kb.meta.Vulnerability;
+import com.sap.psr.vulas.kb.model.Commit;
+import com.sap.psr.vulas.kb.model.Vulnerability;
 
 /**
  * Metadata 
@@ -31,7 +48,7 @@ public class Metadata {
    * read commit information from meta file
    * 
    * @param commitDir a {@link java.lang.String} object.
-   * @return _commit a {@link com.sap.psr.vulas.kb.meta.Commit} object.
+   * @return _commit a {@link com.sap.psr.vulas.kb.model.Commit} object.
    */
   public static Commit getCommitMetadata(String commitDir) {
     String filePath = commitDir + File.separator + META_PROPERTIES_FILE;
@@ -66,7 +83,7 @@ public class Metadata {
    * read vulnerability information from meta file
    * 
    * @param rootDir a {@link java.lang.String} object.
-   * @return _commit a {@link com.sap.psr.vulas.kb.meta.Vulnerability} object.
+   * @return _commit a {@link com.sap.psr.vulas.kb.model.Vulnerability} object.
    */
   public static Vulnerability getVulnerabilityMetadata(String rootDir) {
     String filePath = rootDir + File.separator + META_PROPERTIES_FILE;

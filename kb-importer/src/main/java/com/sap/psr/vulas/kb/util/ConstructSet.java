@@ -35,15 +35,18 @@ import org.slf4j.LoggerFactory;
 import com.sap.psr.vulas.ConstructChange;
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalyzerFactory;
-import com.sap.psr.vulas.kb.meta.Commit;
-import com.sap.psr.vulas.kb.meta.FileChange;
+import com.sap.psr.vulas.kb.model.Commit;
+import com.sap.psr.vulas.kb.model.FileChange;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 
 /**
  * Identifying all the constructs
  */
-public class Constructs {
-  private static final Logger log = LoggerFactory.getLogger(Constructs.class);
+public class ConstructSet {
+  private static final String BEFORE_FOLDER = "before";
+  private static final String AFTER_FOLDER = "after";
+  
+  private static final Logger log = LoggerFactory.getLogger(ConstructSet.class);
 
   /**
    * 
@@ -51,7 +54,7 @@ public class Constructs {
    * sets of before and after commit, and afterwards compared according to the syntax of the
    * respective programming language.
    * 
-   * @param _commit a {@link com.sap.psr.vulas.kb.meta.Commit} object.
+   * @param _commit a {@link com.sap.psr.vulas.kb.model.Commit} object.
    * @param _changes a {@link java.util.Set} object.
    * @return a {@link java.util.Set} object.
    */
@@ -77,7 +80,7 @@ public class Constructs {
             ch.addAll(comparator.identifyChanges());
           }
         } catch (Exception e) {
-          Constructs.log.error("Error while analyzing {} : {}", c, e.getMessage());
+          ConstructSet.log.error("Error while analyzing {} : {}", c, e.getMessage());
         }
       }
 
@@ -96,7 +99,7 @@ public class Constructs {
           }
           if (toDelete) {
             ch.remove(c);
-            Constructs.log.info("Class [{}] removed from changeList as no METH/CONS included", tocheck.toString());
+            ConstructSet.log.info("Class [{}] removed from changeList as no METH/CONS included", tocheck.toString());
           }
         }
       }
@@ -119,10 +122,10 @@ public class Constructs {
 
     final List<String> filesModifiedOrDeleted = new ArrayList<>();
 
-    String beforePath = _path + File.separator + "before";
+    String beforePath = _path + File.separator + BEFORE_FOLDER;
     File beforeFile = new File(beforePath);
     if(!beforeFile.exists()) {
-      Constructs.log.error("Path - {} does not exists", beforePath);
+      ConstructSet.log.error("Path - {} does not exists", beforePath);
       return Collections.emptySet();
     }
 
@@ -130,8 +133,8 @@ public class Constructs {
     for(File file: beforeFiles) {
       if(file.isFile()) {
         String filePathWithDir = file.getAbsolutePath();
-        String filePath = filePathWithDir.split(File.separator + "before")[1];
-        String afterFilePath = _path + File.separator + "after" +filePath;
+        String filePath = filePathWithDir.split(File.separator + BEFORE_FOLDER)[1];
+        String afterFilePath = _path + File.separator + AFTER_FOLDER +filePath;
         if(Files.exists(Paths.get(afterFilePath))) {
           filesChanged.add(new FileChange(_url, filePath, new File(filePathWithDir), new File(afterFilePath)));
         }else {
@@ -141,10 +144,10 @@ public class Constructs {
       }
     }
 
-    String afterPath = _path + File.separator + "after";
+    String afterPath = _path + File.separator + AFTER_FOLDER;
     File afterFile = new File(afterPath);
     if(!afterFile.exists()) {
-      Constructs.log.error("Path - {} does not exists", afterPath);
+      ConstructSet.log.error("Path - {} does not exists", afterPath);
       return Collections.emptySet();
     }
 
@@ -152,7 +155,7 @@ public class Constructs {
     for(File file: afterFiles) {
       if(file.isFile()) {
         String filePathWithDir = file.getAbsolutePath();
-        String filePath = filePathWithDir.split(File.separator + "after")[1];
+        String filePath = filePathWithDir.split(File.separator + AFTER_FOLDER)[1];
         if(!filesModifiedOrDeleted.contains(filePath)) {
           filesChanged.add(new FileChange(_url, filePath, null, new File(filePathWithDir)));
         }

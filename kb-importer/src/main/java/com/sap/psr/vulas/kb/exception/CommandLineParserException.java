@@ -15,12 +15,23 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.kb;
+package com.sap.psr.vulas.kb.exception;
 
-import com.sap.psr.vulas.kb.command.CommandExecutor;
+/**
+ * Command Line parser exception
+ */
+public class CommandLineParserException extends Exception {
+  private static final long serialVersionUID = -4923677968243017658L;
 
-public class Main {
-  public static void main(String[] _args) {
-    CommandExecutor.getInstance().execute(_args);
+  public CommandLineParserException(String message) {
+    super(message);
+  }
+
+  public CommandLineParserException(String message, Throwable throwable) {
+    super(message, throwable);
+  }
+
+  public CommandLineParserException(Throwable throwable) {
+    super(throwable);
   }
 }

@@ -15,12 +15,20 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.kb;
+package com.sap.psr.vulas.kb.exception;
 
-import com.sap.psr.vulas.kb.command.CommandExecutor;
+/**
+ * Validation exception
+ */
+public class ValidationException extends Exception {
 
-public class Main {
-  public static void main(String[] _args) {
-    CommandExecutor.getInstance().execute(_args);
+  private static final long serialVersionUID = 4113470472092415302L;
+
+  public ValidationException(String message) {
+    super(message);
+  }
+
+  public ValidationException(String message, Throwable cause) {
+    super(message, cause);
   }
 }

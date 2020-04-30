@@ -3,8 +3,8 @@ package com.sap.psr.vulas.kb.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import org.junit.Test;
-import com.sap.psr.vulas.kb.meta.Commit;
-import com.sap.psr.vulas.kb.meta.Vulnerability;
+import com.sap.psr.vulas.kb.model.Commit;
+import com.sap.psr.vulas.kb.model.Vulnerability;
 
 public class MetadataTest {
   @Test
