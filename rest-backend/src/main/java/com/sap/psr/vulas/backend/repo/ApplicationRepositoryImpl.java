@@ -580,18 +580,11 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 			sw.lap("Found [" + vd_list_bundled_av.size() + "] vulns w/o cc through bundled library ids");
 		}
 
-		// 4) Join over libids
-		final TreeSet<VulnerableDependency> vd_list_libid = this.appRepository.findJPQLVulnerableDependenciesByGAVAndAffVersion(_app.getMvnGroup(), _app.getArtifact(), _app.getVersion(), _app.getSpace(), true);
-		for(VulnerableDependency vd : vd_list_libid){
-			vd.setAffectedVersion(1);
-			vd.setAffectedVersionConfirmed(1);
-		}
-		final TreeSet<VulnerableDependency> vd_list_libid_false = this.appRepository.findJPQLVulnerableDependenciesByGAVAndAffVersion(_app.getMvnGroup(), _app.getArtifact(), _app.getVersion(), _app.getSpace(), false);
-		for(VulnerableDependency vd : vd_list_libid_false){
-			vd.setAffectedVersion(0);
-			vd.setAffectedVersionConfirmed(1);
-		}
-		vd_list_libid.addAll(vd_list_libid_false);
+		// 4) Join over libids to identify vulnerable dependencies based on affectedLibraries that were created based on the GAV
+		final TreeSet<VulnerableDependency> vd_list_libid = this.appRepository.findJPQLVulnerableDependenciesByGAVAndAffVersion(_app.getMvnGroup(), _app.getArtifact(), _app.getVersion(), _app.getSpace());
+		// compute affected flag (note that the computation keeps into account the existance of affectedLibs defined for the library digest) 
+		this.affLibRepository.computeAffectedLib(vd_list_libid);
+
 		if(_log)
 			sw.lap("Found [" + vd_list_libid.size() + "] through joining libids");
 		//this.affLibRepository.computeAffectedLib(vd_list_libid); this is not required for vulns w/o cc as we select by affectedVersions.affected (in this way we save the additional queries to get the affected flag afterwards)
