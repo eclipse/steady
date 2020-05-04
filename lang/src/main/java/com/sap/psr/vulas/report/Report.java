@@ -459,6 +459,7 @@ public class Report {
 				if(analysis.isThrowsException()) {
 					builder.append(System.getProperty("line.separator")).append("      ").append(++i).append(": ");
 					builder.append("[filename=").append(v.filename);
+					builder.append(", digest=").append(analysis.getDep().getLib().getDigest());
 					builder.append(", scope=").append(analysis.getDep().getScope());
 					builder.append(", transitive=").append(analysis.getDep().getTransitive());
 					builder.append(", wellknownSha1=").append(analysis.getDep().getLib().isWellknownDigest());
