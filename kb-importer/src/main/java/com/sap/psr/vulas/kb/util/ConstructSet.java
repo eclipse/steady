@@ -36,8 +36,8 @@ import com.sap.psr.vulas.ConstructChange;
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalyzerFactory;
 import com.sap.psr.vulas.kb.model.Commit;
-import com.sap.psr.vulas.kb.model.FileChange;
 import com.sap.psr.vulas.shared.enums.ConstructType;
+import com.sap.psr.vulas.shared.json.model.FileChange;
 
 /**
  * Identifying all the constructs

@@ -28,7 +28,7 @@ import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.FileAnalyzer;
 import com.sap.psr.vulas.FileAnalyzerFactory;
-import com.sap.psr.vulas.kb.model.FileChange;
+import com.sap.psr.vulas.shared.json.model.FileChange;
 
 
 /**
