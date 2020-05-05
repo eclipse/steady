@@ -23,6 +23,11 @@ public class TestConstructs {
   @Before
   public void setup() {
     String path = ConstructSet.class.getClassLoader().getResource(ZIP).getPath();
+    //For some OS slash is not added at the end of tmp dir 
+    if(!destPathToUnzip.endsWith(File.separator)) {
+      destPathToUnzip = destPathToUnzip + File.separator;
+    }
+    
     ZipUtil.unzip(path, destPathToUnzip);
   }
 
