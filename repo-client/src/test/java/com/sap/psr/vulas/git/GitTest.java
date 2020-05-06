@@ -20,7 +20,6 @@
 package com.sap.psr.vulas.git;
 
 import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -31,11 +30,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-
-import com.sap.psr.vulas.vcs.FileChange;
+import com.sap.psr.vulas.shared.json.model.FileChange;
 
 /*
  * Basic tests of the Git client
