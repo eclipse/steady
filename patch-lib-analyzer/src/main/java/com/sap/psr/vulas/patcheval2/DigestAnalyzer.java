@@ -19,20 +19,32 @@
  */
 package com.sap.psr.vulas.patcheval2;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.zip.ZipException;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -43,11 +55,16 @@ import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.backend.EntityNotFoundInBackendException;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
+import com.sap.psr.vulas.java.JavaClassId;
+import com.sap.psr.vulas.java.JavaEnumId;
+import com.sap.psr.vulas.java.JavaId;
+import com.sap.psr.vulas.java.JavaInterfaceId;
+import com.sap.psr.vulas.java.sign.ASTConstructBodySignature;
 import com.sap.psr.vulas.java.sign.ASTSignatureChange;
 import com.sap.psr.vulas.java.sign.gson.GsonHelper;
-import com.sap.psr.vulas.patcheval.representation.ArtifactResult2;
 import com.sap.psr.vulas.patcheval.representation.Bug;
 import com.sap.psr.vulas.patcheval.utils.ConstructBytecodeASTManager;
+import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
 import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 import com.sap.psr.vulas.shared.enums.ConstructChangeType;
 import com.sap.psr.vulas.shared.enums.ConstructType;
@@ -60,6 +77,7 @@ import com.sap.psr.vulas.shared.json.model.Library;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.json.model.Property;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
+import com.sap.psr.vulas.sign.SignatureFactory;
 
 /**
  * <p>DigestAnalyzer class.</p>
@@ -86,8 +104,9 @@ public class DigestAnalyzer {
 
 	/**
 	 * <p>analyze.</p>
+	 * @throws IOException 
 	 */
-	public void analyze(){
+	public void analyze() throws IOException{
 		//necessary read_write as we use GET PUT POST
 		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.READ_WRITE.toString());
 		final Gson gson = GsonHelper.getCustomGsonBuilder().create();
@@ -202,10 +221,9 @@ public class DigestAnalyzer {
 						}
 					} 
 					//establish affectedness based on bytecode (for now only if digest has lidid)
-					else if(l.getLibraryId()!=null) {
-						
-						LibraryId toAssess = l.getLibraryId();
-						
+					else { //if(l.getLibraryId()!=null) {
+									        
+				        
 						boolean vuln = false;
 						boolean fixed = false;
 						
@@ -216,10 +234,71 @@ public class DigestAnalyzer {
 									(cc.getConstructId().getType().equals(ConstructType.CONS) || cc.getConstructId().getType().equals(ConstructType.METH))) {
 								
 								
+								String ast_current = null;
 								// retrieve the bytecode of the currently analyzed library
-								String ast_current = BackendConnector.getInstance().getAstForQnameInLib(toAssess.getMvnGroup()+"/"+toAssess.getArtifact()+"/"+toAssess.getVersion()+"/"
-														+cc.getConstructId().getType().toString()+"/"+cc.getConstructId().getQname(),false,ProgrammingLanguage.JAVA);	
-				
+								if(l.getLibraryId()!=null) {
+									LibraryId toAssess = l.getLibraryId();
+									ast_current = BackendConnector.getInstance().getAstForQnameInLib(toAssess.getMvnGroup()+"/"+toAssess.getArtifact()+"/"+toAssess.getVersion()+"/"
+														+cc.getConstructId().getType().toString()+"/"+cc.getConstructId().getQname(),false,ProgrammingLanguage.JAVA);
+								}
+								else {
+									//read from file
+									//retrieve archive from path
+							        Path p = Paths.get(PEConfiguration.getBaseFolder().toString()+File.separator+l.getDigest()+".jar").normalize();
+							        if(p==null || !p.toFile().exists()) {
+							        	DigestAnalyzer.log.info("Archive file [" + p +"] does not exists");
+							        	break;
+							        }
+									JarFile archive = null; 
+									try{
+										archive = new JarFile(p.toFile());
+									} catch (ZipException ze){
+										log.error("Error in opening zip file.");
+										break;
+									}
+									
+									JavaId jid = this.getJavaId(cc.getConstructId().getType().toString(), cc.getConstructId().getQname());
+									JavaId def_ctx = this.getCompilationUnit(jid);
+									
+									final String entry_name = def_ctx.getQualifiedName().replace('.', '/') + ".jar";
+									final Enumeration<JarEntry> en = archive.entries();
+									JarEntry entry = null;
+									while(en.hasMoreElements()) {
+										entry = en.nextElement();
+										if(entry.getName().equals(entry_name)) {
+											break;
+										}
+									}
+									Path classfile = null;
+									if(entry!=null) {
+										classfile = Files.createTempFile(def_ctx.getQualifiedName(), ".jar");
+										log.debug("classfile at " + classfile.toAbsolutePath());
+										final InputStream ais = archive.getInputStream(entry);
+										final FileOutputStream fos = new FileOutputStream(classfile.toFile());
+										IOUtils.copy(ais, fos);
+										fos.flush();
+										fos.close();
+										ais.close();
+									}
+									else {
+										log.warn("Artifact does not contain entry [" + entry_name + "] for class [" + def_ctx.getQualifiedName() + "]");
+									}
+									archive.close();
+									ASTConstructBodySignature sign =null;
+									if(classfile!=null) {
+										SignatureFactory sf = CoreConfiguration.getSignatureFactory(JavaId.toSharedType(jid));
+										sign = (ASTConstructBodySignature)sf.createSignature(JavaId.toSharedType(jid), classfile.toFile());
+										ast_current = sign.toJson();
+										// Delete
+										try {
+											Files.delete(classfile);
+										} catch (Exception e) {
+											log.error("Cannot delete file [" + classfile + "]: " + e.getMessage());
+										}
+									}
+									
+								}
+								
 								if(ast_current!=null){
 									
 									ConstructBytecodeASTManager astMgr = new ConstructBytecodeASTManager(cc.getConstructId().getQname(),cc.getRepoPath(),cc.getConstructId().getType());
@@ -253,7 +332,7 @@ public class DigestAnalyzer {
 			                                	
 			                                	//check that there isn't also a construct = to vuln
 			                                	
-			                                	log.info("LID ["+toAssess.toString()+"] equal to vuln based on AST bytecode comparison with  [" + v.toString() + "]");
+			                                	log.info("LID equal to vuln based on AST bytecode comparison with  [" + v.toString() + "]");
 			                                	vuln=true;
 			                                	list.add(v);
 			                                	break;
@@ -280,7 +359,7 @@ public class DigestAnalyzer {
 				                            if(scV.getModifications().size()==0){
 				                            	
 				                            
-				                            	log.info("LID ["+toAssess.toString()+"] equal to fix based on AST bytecode comparison with  [" + f.toString() + "]");
+				                            	log.info("LID  equal to fix based on AST bytecode comparison with  [" + f.toString() + "]");
 				                            //	cpa2.addLibsSameBytecode(l);
 				                            	fixed=true;
 				                            	list.add(f);
@@ -379,8 +458,9 @@ public class DigestAnalyzer {
 		 * <p>main.</p>
 		 *
 		 * @param _args an array of {@link java.lang.String} objects.
+		 * @throws IOException 
 		 */
-		public static void main(String[] _args){
+		public static void main(String[] _args) throws IOException{
 			// Prepare parsing of cmd line arguments
 			final Options options = new Options();
 			
@@ -397,7 +477,7 @@ public class DigestAnalyzer {
 			    	bytecode = Boolean.valueOf(true);
 				if(cmd.hasOption("digest")){
 					String digest = cmd.getOptionValue("digest");
-					log.info("Running patcheval to assess all bugs of digest["+digest+"], all other options (excluding -bytecode-) will be ignored.");
+					log.info("Running patcheval to assess all bugs of digest["+digest+"], all other options (excluding -bytecode and basefolder-) will be ignored.");
 					DigestAnalyzer d = new DigestAnalyzer(digest, bytecode);
 					d.analyze();
 				}
@@ -406,5 +486,39 @@ public class DigestAnalyzer {
 				e.printStackTrace();
 			}
 		}
+
+
+	/**
+	 * 
+	 * @param _jid
+	 * @return
+	 */
+	private JavaId getCompilationUnit(JavaId _jid) {
+		// Got it --> return provided object
+		if( (_jid.getType().equals(JavaId.Type.CLASS) && !((JavaClassId)_jid).isNestedClass()) ||
+				(_jid.getType().equals(JavaId.Type.INTERFACE) && !((JavaInterfaceId)_jid).isNested()) ||
+				(_jid.getType().equals(JavaId.Type.ENUM) && !((JavaEnumId)_jid).isNested()) ) {
+			return _jid;
+		} else {
+			return this.getCompilationUnit((JavaId)_jid.getDefinitionContext());
+		}
+	}
+	
+	private JavaId getJavaId(String _type, String _qname) {
+		JavaId.Type type = JavaId.typeFromString(_type);
+	
+		// Check params
+		if(JavaId.Type.METHOD!=type && JavaId.Type.CONSTRUCTOR!=type)
+			throw new IllegalArgumentException("Only types METH and CONS are supported, got [" + type + "]");
+	
+		// Parse JavaId
+		JavaId jid = null;
+		if(JavaId.Type.CONSTRUCTOR==type)
+			jid = JavaId.parseConstructorQName(_qname);
+		else if(JavaId.Type.METHOD==type)
+			jid = JavaId.parseMethodQName(_qname);
+	
+		return jid;
+	}
 
 }
