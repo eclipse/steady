@@ -32,7 +32,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -55,9 +54,8 @@ import org.tmatesoft.svn.core.wc.SVNUpdateClient;
 import org.tmatesoft.svn.core.wc2.SvnCheckout;
 import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
 import org.tmatesoft.svn.core.wc2.SvnTarget;
-
+import com.sap.psr.vulas.shared.json.model.FileChange;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
-import com.sap.psr.vulas.vcs.FileChange;
 import com.sap.psr.vulas.vcs.IVCSClient;
 import com.sap.psr.vulas.vcs.RepoMismatchException;
 

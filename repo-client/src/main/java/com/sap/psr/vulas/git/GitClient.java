@@ -34,7 +34,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,9 +56,8 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
-
+import com.sap.psr.vulas.shared.json.model.FileChange;
 import com.sap.psr.vulas.shared.util.StopWatch;
-import com.sap.psr.vulas.vcs.FileChange;
 import com.sap.psr.vulas.vcs.IVCSClient;
 import com.sap.psr.vulas.vcs.RepoMismatchException;
 

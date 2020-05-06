@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
+import com.sap.psr.vulas.shared.json.model.FileChange;
 
 /**
  * Client of a versioning control system (VCS), e.g., SVN or GIT.

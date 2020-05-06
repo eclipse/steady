@@ -23,16 +23,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 import java.util.TreeSet;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import com.sap.psr.vulas.ConstructChange;
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.FileAnalyzer;
 import com.sap.psr.vulas.FileAnalyzerFactory;
-import com.sap.psr.vulas.vcs.FileChange;
+import com.sap.psr.vulas.shared.json.model.FileChange;
 
 
 /**

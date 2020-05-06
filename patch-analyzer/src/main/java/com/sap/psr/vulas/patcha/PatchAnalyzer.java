@@ -31,7 +31,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -40,7 +39,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.ConstructChange;
 import com.sap.psr.vulas.ConstructId;
@@ -52,11 +50,11 @@ import com.sap.psr.vulas.shared.enums.BugOrigin;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.ContentMaturityLevel;
 import com.sap.psr.vulas.shared.json.JsonBuilder;
+import com.sap.psr.vulas.shared.json.model.FileChange;
 import com.sap.psr.vulas.shared.util.FileSearch;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
-import com.sap.psr.vulas.vcs.FileChange;
 import com.sap.psr.vulas.vcs.IVCSClient;
 import com.sap.psr.vulas.vcs.NoRepoClientException;
 import com.sap.psr.vulas.vcs.RepoMismatchException;
