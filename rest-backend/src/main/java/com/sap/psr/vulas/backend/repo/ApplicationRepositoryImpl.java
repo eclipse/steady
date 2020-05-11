@@ -494,7 +494,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 	 */
 	@Override
 	@Transactional(readOnly=true)
-	public TreeSet<VulnerableDependency> findAppVulnerableDependencies(Application _app, boolean _add_excemption_info, boolean _log) {
+	public TreeSet<VulnerableDependency> findAppVulnerableDependencies(Application _app, boolean _add_exemption_info, boolean _log) {
 		final StopWatch sw = new StopWatch("Query vulnerable dependencies for application " + _app);
 		if(_log)
 			sw.start();
