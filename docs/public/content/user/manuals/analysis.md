@@ -563,18 +563,19 @@ Identified vulnerabilities including any information gathered during static and 
 #### Configure as follows
 
 ```ini
-    # A vulnerability in blacklisted scopes will not cause an exception  (multiple scopes to be separated by comma)
+    # Exempts the given vulnerability from causing a build exception
+    # This can apply to all libraries including the vulnerable code (by omitting `libraries` or explicitely specifying `*`)
+    # or to selected libraries with the given digest(s).
+    # 
+    # Default: -
+    vulas.report.exemptBug.<vuln-id>.reason = <reason>
+    vulas.report.exemptBug.<vuln-id>.libraries = [ * | digest [, digest] ]
+
+    # A vulnerability in exempted scopes will not cause an exception  (multiple scopes to be separated by comma)
+    #
     # Default: test, provided
     # Note: For CLI, all dependencies are considered as RUNTIME dependencies
-    vulas.report.exceptionScopeBlacklist = TEST, PROVIDED
-
-    # Specified vulnerabilities will not cause a build exception (multiple bugs to be separated by comma)
-    # Default: -
-    vulas.report.exceptionExcludeBugs = <vuln-id>
-
-    # Explanation why the given vulnerability is not relevant/exploitable in the specific application context
-    # Default: -
-    vulas.report.exceptionExcludeBugs.<vuln-id> = Not exploitable because ...
+    vulas.report.exemptScope = TEST, PROVIDED
 
     # Determines whether un-assessed vulnerabilities (e.g. vulnerabilities marked with an orange hourglass symbol) throw a build exception. Un-assessed vulns are those where
     # the method signature(s) of a bug appear in an archive, however, it is yet unclear whether the methods
@@ -623,13 +624,13 @@ mvn -Dvulas vulas:report
 
 #### Exemptions
 
-The settings `vulas.report.exceptionExcludeBugs` and `vulas.report.exceptionExcludeBugs.<vuln-id>` can be used to capture the results of an audit or assessment by developers in regards to whether a vulnerability is problematic in a given application context. Exempted bugs do not result in build exceptions and are also shown in the apps Web frontend.
+The setting `vulas.report.exemptBug.<vuln-id>.reason` can be used to capture the results of an audit or assessment by developers in regards to whether a vulnerability is problematic in a given application context. Exempted bugs do not result in build exceptions and are also shown in the apps Web frontend.
 
 #### Build exceptions
 
 Other settings to fine-tune the threshold for build exceptions are as follows:
 
-- `vulas.report.exceptionScopeBlacklist` can be used to exclude certain Maven scopes (default: test)
+- `vulas.report.exemptScope` can be used to exclude certain Maven scopes (default: test)
 - `vulas.report.exceptionThreshold` can be used to specify whether a build exception is thrown when vulnerable code is included, potentially reachable, actually reached or not at all (values: `noException`, `dependsOn`, `potentiallyExecutes`, `actuallyExecutes`; default: `actuallyExecutes`)
 
 ## Clean and delete apps (clean)

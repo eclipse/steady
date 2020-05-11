@@ -53,12 +53,12 @@
 			<value>$exceptionThreshold</value>
 		</configuration>
 		<configuration>
-			<name>exceptionScopeBlacklist</name>
-			<value>$exceptionScopeBlacklist</value>
+			<name>exemptScopes</name>
+			<value>$exemptScopes</value>
 		</configuration>
 		<configuration>
-			<name>exceptionExcludedBugs</name>
-			<value>$exceptionExcludedBugs</value>
+			<name>exemptBugs</name>
+			<value>$exemptBugs</value>
 		</configuration>
 	</configurations>
 	
@@ -67,9 +67,7 @@
 		
 		#foreach( $vul in $vulnsToReport )
 		<vulnerability>
-		
-			<!-- Removed with Vulas v3: <bugId>$vul.bugid</bugId> -->
-		
+				
 			<bug>
 				<id>$vul.bug.getBugId()</id>
 				<cvssScore>$vul.bug.getCvssScore()</cvssScore>

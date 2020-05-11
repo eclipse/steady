@@ -21,12 +21,14 @@ package com.sap.psr.vulas.shared.json;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Calendar;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
@@ -109,5 +111,39 @@ public class JacksonUtilTest {
 		// All properties without view and those with view LibDetails
 		final String json_lib_view = JacksonUtil.asJsonString(app, null, Views.LibDetails.class);
 		//assertEquals("{\"artifact\":\"foo\",\"version\":\"0.1\",\"createdAt\":null,\"modifiedAt\":null,\"lastScan\":null,\"lastVulnChange\":null,\"constructs\":[],\"dependencies\":[{\"lib\":{\"digest\":\"digest-123\",\"digestAlgorithm\":\"SHA256\",\"createdAt\":null,\"properties\":[{\"source\":\"JAVA_MANIFEST\",\"name\":\"foo-prop\",\"value\":\"bar-prop\"}],\"constructs\":[{\"lang\":\"JAVA\",\"type\":\"METH\",\"qname\":\"com.foo.Bar\",\"relates\":null,\"attributes\":null}],\"libraryId\":null,\"wellknownDigest\":null,\"digestVerificationUrl\":null,\"constructCounter\":1,\"constructTypeCounters\":{\"PACK\":0,\"ENUM\":0,\"CONS\":0,\"CLASS\":0,\"INIT\":0,\"METH\":1,\"MODU\":0,\"FUNC\":0}},\"declared\":true,\"traced\":false,\"scope\":\"COMPILE\",\"transitive\":false,\"filename\":\"fo0-lib.jar\",\"path\":\"/tmp/\",\"reachableConstructIds\":null,\"touchPoints\":null,\"parent\":null,\"origin\":null,\"relativePath\":null}],\"empty\":false,\"complete\":true,\"group\":\"com.acme\",\"constructCounter\":0,\"countDependencies\":1,\"constructTypeCounters\":{\"PACK\":0,\"ENUM\":0,\"CONS\":0,\"CLASS\":0,\"INIT\":0,\"METH\":0,\"MODU\":0,\"FUNC\":0}}", json_lib_view);
+	}
+	
+	@Test
+	public void testFromTo() {
+		final A a = new A();
+		a.setAnInt(1);
+		a.setAString("Foo");
+		final B b = (B)JacksonUtil.fromTo(a, null, null, B.class);
+		assertEquals(1, b.anInt);
+		assertEquals("Foo", b.aString);
+	}
+	
+	@JsonInclude(JsonInclude.Include.ALWAYS)
+	static class A implements Serializable {
+		@JsonProperty(value="i")
+		int anInt = -1;
+		@JsonProperty(value="s")
+		String aString = null;
+		int getAnInt() { return anInt; }
+		void setAnInt(int _i) { anInt = _i; }
+		String getAString() { return aString; }
+		void setAString(String _s) { aString = _s; }
+	}
+	
+	@JsonInclude(JsonInclude.Include.ALWAYS)
+	static class B implements Serializable {
+		@JsonProperty(value="i")
+		int anInt = -1;
+		@JsonProperty(value="s")
+		String aString = null;
+		int getAnInt() { return anInt; }
+		void setAnInt(int _i) { anInt = _i; }
+		String getAString() { return aString; }
+		void setAString(String _s) { aString = _s; }
 	}
 }

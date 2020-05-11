@@ -51,7 +51,6 @@
                             <vulas.reach.timeout>60</vulas.reach.timeout>
 
                             <!-- vulas:report -->
-                            <vulas.report.exceptionExcludeBugs></vulas.report.exceptionExcludeBugs>
                             <vulas.report.reportDir>${project.build.directory}/vulas/report</vulas.report.reportDir>
                         </layeredConfiguration>
                     </configuration>
