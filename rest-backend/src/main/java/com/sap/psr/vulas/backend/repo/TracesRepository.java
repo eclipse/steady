@@ -155,11 +155,13 @@ public interface TracesRepository extends CrudRepository<Trace, Long>, TracesRep
 			+ "   Trace t,"
 			+ "   Bug b"
 			+ "   JOIN b.constructChanges cc"
+			+ "   JOIN cc.constructId c"
 			+ " WHERE"
 			+ "   cc.constructId = t.constructId"
 			+ "   AND t.lib = :lib"
 			+ "   AND t.app = :app"
-			+ "   AND b.id = :bug_id")
+			+ "   AND b.id = :bug_id"
+			+ "	  AND NOT (c.type='PACK' OR c.type='CLAS')")
 	List<Trace> findVulnerableTracesOfLibraries(@Param("app") Application app, @Param("lib") Library lib, @Param("bug_id") Long bug_id);
 
 

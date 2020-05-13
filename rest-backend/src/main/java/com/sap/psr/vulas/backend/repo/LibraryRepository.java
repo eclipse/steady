@@ -299,12 +299,19 @@ public interface LibraryRepository extends CrudRepository<Library, Long>, Librar
 	@Query("SELECT l FROM Library l WHERE l.libraryId =:bundledLibId")
 	List<Library> findByLibraryId(@Param("bundledLibId") LibraryId bundledLibId);
 
+	/**
+	 * <p>Finds libraries that are rebundled in an application dependency. It returns a list of pairs dependency, bundled library.
+	 *  Note that bundled libraries must have a digest and a GAV different from the one of the dependency rebundling it.</p>
+	 *
+	 * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
+	 * @return a {@link java.util.List} object.
+	 */
 	@Query(value="select distinct d.id as dep_id, l2.id as bundled_lib_id"
 			+ "   from app_dependency d "
-			+ "   inner join lib l1 on d.lib=l1.digest "
-			+ "   inner join lib_bundled_library_ids bl on l1.id=bl.library_id "
+			+ "   inner join lib l1 on d.lib=l1.digest inner join library_id lid1 on l1.library_id_id =lid1.id "
+			+ "   inner join lib_bundled_library_ids bl on l1.id=bl.library_id inner join library_id lid2 on bl.bundled_library_ids_id=lid2.id "
 			+ "   inner join lib l2 on bl.bundled_library_ids_id=l2.library_id_id "
-			+ "   where d.app=:app and not l1.id = l2.id and l2.wellknown_digest='true'  ", nativeQuery=true)
+			+ "   where d.app=:app and not l1.id = l2.id and l2.wellknown_digest='true' and not lid1.id=lid2.id", nativeQuery=true)
 	List<Object[]> findBundledLibByApp(@Param("app") Application app);
 
 }

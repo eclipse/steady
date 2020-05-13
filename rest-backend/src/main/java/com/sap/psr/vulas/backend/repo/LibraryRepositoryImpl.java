@@ -108,7 +108,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 			}
 					
 		} catch(EntityNotFoundException e1) {			
-			LibraryRepositoryImpl.log.info("Library [" + _lib.getDigest() + "] does not yet exist, going to save it.");
+			LibraryRepositoryImpl.log.debug("Library [" + _lib.getDigest() + "] does not yet exist, going to save it.");
 		}
 		
 		// Retrieve libId from Maven if digest verified
@@ -170,16 +170,16 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 	public Library saveIncomplete(Library _lib) throws PersistenceException {
 		Library incomplete = new Library(_lib.getDigest());
 		if (_lib.getLibraryId()!=null){
-			LibraryRepositoryImpl.log.info("Setting library Id ["+_lib.getLibraryId().toString()+"] of incomplete library [" +_lib.getDigest()+ "]");
+			LibraryRepositoryImpl.log.debug("Setting library Id ["+_lib.getLibraryId().toString()+"] of incomplete library [" +_lib.getDigest()+ "]");
 			incomplete.setLibraryId(_lib.getLibraryId());
 		}
 		else
 			incomplete.setLibraryId(null);
 		
 		if(_lib.getConstructs()!=null)
-			LibraryRepositoryImpl.log.info("Library ["+_lib.getDigest()+"] to be saved has [" +_lib.getConstructs().size()+"] constructs");
+			LibraryRepositoryImpl.log.debug("Library ["+_lib.getDigest()+"] to be saved has [" +_lib.getConstructs().size()+"] constructs");
 		if(_lib.getProperties()!=null)
-			LibraryRepositoryImpl.log.info("Library ["+_lib.getDigest()+"] to be saved has [" +_lib.getProperties().size()+"] properties");
+			LibraryRepositoryImpl.log.debug("Library ["+_lib.getDigest()+"] to be saved has [" +_lib.getProperties().size()+"] properties");
 		
 		try{
 			return this.libRepository.save(incomplete);

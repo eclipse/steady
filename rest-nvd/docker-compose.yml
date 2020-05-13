@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  rest-nvd:
+    build: .
+    ports:
+      - "22222:80"
+    environment:
+      - CVE_DATA_PATH=/data
+      - FEED_SCHEMA_VERSION=1.1
+      - LOG_LEVEL=info
+      - WORKERS_PER_CORE=1

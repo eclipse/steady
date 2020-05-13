@@ -27,7 +27,7 @@
     <parent>
         <groupId>com.sap.research.security.vulas</groupId>
         <artifactId>root</artifactId>
-        <version>3.1.10-SNAPSHOT</version>
+        <version>3.1.12-SNAPSHOT</version>
     </parent>
      <!-- NOTE: This plugin name violates the Maven naming convention, which results in a warning during build. -->
     <artifactId>plugin-maven</artifactId>
@@ -71,12 +71,12 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
-            <version>3.6.1</version>
+            <version>3.6.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
-            <version>3.6.1</version>
+            <version>3.6.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
@@ -114,7 +114,7 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-compat</artifactId>
-            <version>3.6.1</version>
+            <version>3.6.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
