@@ -19,14 +19,12 @@
  */
 package com.sap.psr.vulas.backend.requests;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -40,13 +38,10 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.sap.psr.vulas.backend.BackendConnectionException;
-import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.backend.HttpMethod;
 import com.sap.psr.vulas.backend.HttpResponse;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
@@ -57,7 +52,6 @@ import com.sap.psr.vulas.shared.json.JsonSyntaxException;
 import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringUtil;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 /**
  * <p>BasicHttpRequest class.</p>
@@ -334,6 +328,14 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 				// Include version and component as request header
 				connection.setRequestProperty(Constants.HTTP_VERSION_HEADER, CoreConfiguration.getVulasRelease());
 				connection.setRequestProperty(Constants.HTTP_COMPONENT_HEADER, Constants.VulasComponent.client.toString());
+				
+				// Include additional headers from configuration (if any)
+				final Map<String, String> add_headers = this.getVulasConfiguration().getServiceHeaders(this.service);
+				if(add_headers!=null && add_headers.size()>0) {
+					for(String key: add_headers.keySet()) {
+						connection.setRequestProperty(key, add_headers.get(key));
+					}
+				}
 				
 				// Only if put something in the body
 				if(this.hasPayload()) {
