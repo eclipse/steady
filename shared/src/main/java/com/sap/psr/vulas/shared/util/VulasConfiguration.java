@@ -790,7 +790,7 @@ public class VulasConfiguration {
 	 * Returns key-value pairs to be added as HTTP headers in calls to the given {@link Service}.
 	 * 
 	 * All configuration settings of the following form will be included in the map:
-	 * vulas.shared.&lt;service&gt;.&lt;header&gt; = &lt;value&gt;
+	 * vulas.shared.&lt;service&gt;.header.&lt;key&gt; = &lt;value&gt;
 	 *
 	 * Note: Does not work for comma-separated enumerations
 	 * 
