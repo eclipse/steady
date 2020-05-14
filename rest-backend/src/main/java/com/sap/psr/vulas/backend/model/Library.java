@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -406,9 +407,9 @@ public class Library implements Serializable {
 		if(this.getModifiedAt()==null) {
 			this.setModifiedAt(Calendar.getInstance());
 		}
-		if(this.getWellknownDigest()==null) {
-			this.verifyDigest();
-		}
+//		if(this.getWellknownDigest()==null) {
+//			this.verifyDigest();
+//		}
 		// If uploaded by old client (<3.0.0), the digest also must be set
 		if(this.sha1!=null && (this.digest==null || this.digestAlgorithm==null)) {
 			this.digest = this.sha1;
@@ -478,17 +479,25 @@ public class Library implements Serializable {
 
 	//changed to public temporarily to recreate wellknownDigest flag for already persisted libs
 	/**
-	 * <p>verifyDigest.</p>
+	 * Verifies that the digest is well known by either one of the existing
+	 * verifiers (e.g. maven central, pypi). If the digests is well known and the
+	 * provided libraryId is not among those returned by the verifiers, it sets the
+	 * LibraryId with the (first) value returned by the verifier.
+	 * 
 	 */
 	public void verifyDigest() {
 		if(this.getWellknownDigest()==null || this.getDigestVerificationUrl()==null || this.getDigestTimestamp()==null) {
 			try {
 				final DigestVerifierEnumerator dv = new DigestVerifierEnumerator();
-				final Boolean verified = dv.verify(this);
+				final List<LibraryId> verified = dv.verify(this);
 				if(verified!=null) {
 					this.setDigestVerificationUrl(dv.getVerificationUrl());
-					this.setWellknownDigest(verified);
+					this.setWellknownDigest(verified.size()>0);
 					this.setDigestTimestamp(dv.getReleaseTimestamp());
+					 
+					if(this.getLibraryId()!=null && verified.size()>0 && !verified.contains(this.getLibraryId())) {
+						this.setLibraryId(verified.get(0));
+					}
 				}
 			} catch (VerificationException e) {
 				log.error(e.getMessage());

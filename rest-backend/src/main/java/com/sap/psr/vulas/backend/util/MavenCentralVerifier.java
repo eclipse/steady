@@ -19,8 +19,10 @@
  */
 package com.sap.psr.vulas.backend.util;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -83,14 +85,14 @@ public class MavenCentralVerifier implements DigestVerifier {
 
 	/** {@inheritDoc} */
 	@Override
-	public Boolean verify(final Library _lib) throws VerificationException {
+	public List<LibraryId> verify(final Library _lib) throws VerificationException {
 		if(_lib==null || _lib.getDigest()==null)
 			throw new IllegalArgumentException("No library or digest provided: [" + _lib + "]");
 
 		this.url = new String("http://search.maven.org/solrsearch/select?q=1:<SHA1>&rows=20&wt=json").replaceAll("<SHA1>", _lib.getDigest());
 
 		String mvnResponse = null;
-		Boolean verified = null;
+		List<LibraryId> verified_lids = null;
 		int sc = -1;
 		try {
 			final CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -104,20 +106,18 @@ public class MavenCentralVerifier implements DigestVerifier {
 				if (sc==HttpStatus.SC_OK && entity != null) {
 					mvnResponse = ConnectionUtil.readInputStream(entity.getContent());
 					int num_found = ((Integer)JsonPath.read(mvnResponse, "$.response.numFound")).intValue();
-					verified = num_found > 0;
 					
-					if(num_found==1) {
+					verified_lids = new ArrayList<LibraryId>();
+					if(num_found>1) {
+						log.warn("The lookup of SHA1 digest [" + _lib.getDigest() + "] in Maven Central returned [" + num_found + "] artifacts");
+					}
+					if(num_found>=1) {
 						final long ms = (Long)JsonPath.read(mvnResponse, "$.response.docs[0].timestamp");
 						this.timestamp = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 						this.timestamp.setTimeInMillis(ms);						
 						
-						// Check whether given and returned libid correspond
-						final LibraryId returned_libid = new LibraryId((String)JsonPath.read(mvnResponse, "$.response.docs[0].g"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].a"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].v"));
-						if(_lib.getLibraryId()!=null && !_lib.getLibraryId().equals(returned_libid))
-							log.warn("Given and returned library identifiers do not match: Given [" + _lib.getLibraryId() + "], returned [" + returned_libid + "]");
-					}
-					else if(num_found>1) {
-						log.warn("The lookup of SHA1 digest [" + _lib.getDigest() + "] in Maven Central returned [" + num_found + "] artifacts");
+						// TODO: read all returned libids (for now we only return the first one
+						verified_lids.add(new LibraryId((String)JsonPath.read(mvnResponse, "$.response.docs[0].g"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].a"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].v")));
 					}
 				}
 			} finally {
@@ -126,6 +126,6 @@ public class MavenCentralVerifier implements DigestVerifier {
 		} catch (Exception e) {
 			throw new VerificationException(_lib, this.url, e);
 		}
-		return verified;
+		return verified_lids;
 	}
 }

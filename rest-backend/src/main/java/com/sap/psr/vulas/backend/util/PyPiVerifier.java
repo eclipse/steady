@@ -21,6 +21,7 @@ package com.sap.psr.vulas.backend.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -39,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jayway.jsonpath.JsonPath;
 import com.sap.psr.vulas.backend.model.Library;
+import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 
@@ -96,7 +98,7 @@ public class PyPiVerifier implements DigestVerifier {
 	
 	/** {@inheritDoc} */
 	@Override
-	public Boolean verify(final Library _lib) throws VerificationException {
+	public List<LibraryId> verify(final Library _lib) throws VerificationException {
 		if(_lib==null || _lib.getDigest()==null)
 			throw new IllegalArgumentException("No library or digest provided: [" + _lib + "]");
 		
@@ -106,7 +108,7 @@ public class PyPiVerifier implements DigestVerifier {
 		this.url = new String("https://pypi.python.org/pypi/<name>/<version>/json").replaceAll("<name>", _lib.getLibraryId().getMvnGroup()).replaceAll("<version>", _lib.getLibraryId().getVersion());
 
 		String response_body = null;
-		Boolean verified = false;
+		List<LibraryId> verified_lids = null;
 		int sc = -1;
 		try {
 			final CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -119,12 +121,10 @@ public class PyPiVerifier implements DigestVerifier {
 				HttpEntity entity = response.getEntity();
 				if (sc==HttpStatus.SC_OK && entity != null) {
 					response_body = ConnectionUtil.readInputStream(entity.getContent());
-					verified = this.containsMD5(response_body, _lib.getDigest());
+					verified_lids = new ArrayList<LibraryId>();
+					if(this.containsMD5(response_body, _lib.getDigest()))
+						verified_lids.add(_lib.getLibraryId());
 
-					// Check whether given and returned libid correspond
-					//final LibraryId returned_libid = new LibraryId((String)JsonPath.read(response_body, "$.response.docs[0].g"),(String)JsonPath.read(response_body, "$.response.docs[0].a"),(String)JsonPath.read(response_body, "$.response.docs[0].v"));
-					//if(_lib.getLibraryId()!=null && !_lib.getLibraryId().equals(returned_libid))
-					//	log.warn("Given and returned library identifiers do not match: Given [" + _lib.getLibraryId() + "], returned [" + returned_libid + "]");
 				}
 			} finally {
 				response.close();
@@ -132,7 +132,7 @@ public class PyPiVerifier implements DigestVerifier {
 		} catch (Exception e) {
 			throw new VerificationException(_lib, this.url, e);
 		}
-		return verified;
+		return verified_lids;
 	}
 	
 	/**
