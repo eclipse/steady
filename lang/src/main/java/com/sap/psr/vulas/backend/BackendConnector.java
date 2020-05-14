@@ -977,9 +977,10 @@ public class BackendConnector {
 	 * @return an array of {@link com.sap.psr.vulas.shared.json.model.AffectedLibrary} objects.
 	 * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
 	 */
-	public AffectedLibrary[] getBugAffectedLibraries(String _bugId, String _source) throws BackendConnectionException {
+	public AffectedLibrary[] getBugAffectedLibraries(String _bugId, String _source,Boolean _onlyWellKnown) throws BackendConnectionException {
 		final HashMap<String, String> params = new HashMap<String, String>();
 		params.put("source", _source);
+		params.put("onlyWellKnown", _onlyWellKnown.toString());
 		final String json = new BasicHttpRequest(HttpMethod.GET, PathBuilder.bugAffectedLibs(_bugId), params).send().getBody();
 		return (AffectedLibrary[])JacksonUtil.asObject(json, AffectedLibrary[].class);
 	}

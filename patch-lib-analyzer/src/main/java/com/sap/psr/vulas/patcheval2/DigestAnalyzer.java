@@ -98,7 +98,7 @@ public class DigestAnalyzer {
 	 */
 	public DigestAnalyzer(String _digestl, Boolean _bytecode) {
 		super();
-		this.digest = _digestl;
+		this.digest = _digestl.toUpperCase();
 		this.bytecode = _bytecode;
 	}
 
@@ -153,7 +153,7 @@ public class DigestAnalyzer {
 					
 					//retrieve existing affectedVersions
 					for(AffectedVersionSource s : AffectedVersionSource.values()){
-			    		AffectedLibrary[] al = BackendConnector.getInstance().getBugAffectedLibraries(b.getBugId(),s.toString());
+			    		AffectedLibrary[] al = BackendConnector.getInstance().getBugAffectedLibraries(b.getBugId(),s.toString(),true);
 			    		existingxSource.put(s, al);
 			    		log.info("Existing [" + al.length + "] affected libraries in backend for source [" +s.toString()+"]");
 			    	}
@@ -260,7 +260,7 @@ public class DigestAnalyzer {
 									JavaId jid = this.getJavaId(cc.getConstructId().getType().toString(), cc.getConstructId().getQname());
 									JavaId def_ctx = this.getCompilationUnit(jid);
 									
-									final String entry_name = def_ctx.getQualifiedName().replace('.', '/') + ".jar";
+									final String entry_name = def_ctx.getQualifiedName().replace('.', '/') + ".class";
 									final Enumeration<JarEntry> en = archive.entries();
 									JarEntry entry = null;
 									while(en.hasMoreElements()) {
@@ -271,7 +271,7 @@ public class DigestAnalyzer {
 									}
 									Path classfile = null;
 									if(entry!=null) {
-										classfile = Files.createTempFile(def_ctx.getQualifiedName(), ".jar");
+										classfile = Files.createTempFile(def_ctx.getQualifiedName(), ".class");
 										log.debug("classfile at " + classfile.toAbsolutePath());
 										final InputStream ais = archive.getInputStream(entry);
 										final FileOutputStream fos = new FileOutputStream(classfile.toFile());
@@ -288,7 +288,8 @@ public class DigestAnalyzer {
 									if(classfile!=null) {
 										SignatureFactory sf = CoreConfiguration.getSignatureFactory(JavaId.toSharedType(jid));
 										sign = (ASTConstructBodySignature)sf.createSignature(JavaId.toSharedType(jid), classfile.toFile());
-										ast_current = sign.toJson();
+										if(sign!=null)
+											ast_current = sign.toJson();
 										// Delete
 										try {
 											Files.delete(classfile);
