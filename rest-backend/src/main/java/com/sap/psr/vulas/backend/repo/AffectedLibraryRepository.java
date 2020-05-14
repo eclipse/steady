@@ -62,6 +62,19 @@ public interface AffectedLibraryRepository extends CrudRepository<AffectedLibrar
 	List<AffectedLibrary> findByBugAndLibraryIdAndSource(@Param("bug") Bug bug, @Param("group") String group, @Param("artifact") String artifact, @Param("version") String version, @Param("source") AffectedVersionSource source);
 	
 	/**
+	 * Find all entries for a given {@link Bug}, Group, Artifact and {@link AffectedVersionSource}.
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @param group a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 * @return a {@link java.util.List} object.
+	 */
+	@Query("SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.bugId = :bug AND afflib.libraryId.mvnGroup = :group AND afflib.libraryId.artifact = :artifact AND afflib.source = :source")
+	List<AffectedLibrary> findByBugAndGAAndSource(@Param("bug") Bug bug, @Param("group") String group, @Param("artifact") String artifact, @Param("source") AffectedVersionSource source);
+	
+	
+	/**
 	 * Find all entries for a given {@link Bug} and {@link AffectedVersionSource}.
 	 *
 	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
@@ -150,6 +163,17 @@ public interface AffectedLibraryRepository extends CrudRepository<AffectedLibrar
 	 */
 	@Query("SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.bugId = :bug AND afflib.libraryId.mvnGroup = :group AND afflib.libraryId.artifact = :artifact AND afflib.libraryId.version = :version")
 	List<AffectedLibrary> findByBugAndLibId(@Param("bug") Bug bug, @Param("group") String group, @Param("artifact") String artifact,@Param("version") String version);
+	
+	/**
+	 * <p>findByBugAndGA.</p>
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
+	 * @param group a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @return a {@link java.util.List} object.
+	 */
+	@Query("SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.bugId = :bug AND afflib.libraryId.mvnGroup = :group AND afflib.libraryId.artifact = :artifact")
+	List<AffectedLibrary> findByBugAndGA(@Param("bug") Bug bug, @Param("group") String group, @Param("artifact") String artifact);
 	
 	/**
 	 * <p>findByBugAndLibAndSource.</p>
