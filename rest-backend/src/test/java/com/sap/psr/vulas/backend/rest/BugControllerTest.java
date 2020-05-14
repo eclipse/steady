@@ -512,8 +512,16 @@ public class BugControllerTest {
     	
     	assertTrue(createdAffLib.getModifiedAt().getTimeInMillis()==afterPutAffLib.getModifiedAt().getTimeInMillis());
 
+    	//Get affLib by GA
+    	MockHttpServletRequestBuilder get_builder = get("/bugs/CVE-2014-0050/affectedLibIds/bar/bar");
+    	mockMvc.perform(get_builder)	
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType))
+        .andExpect(jsonPath("$.length()", is(1)));
+    	
+    	
     	// Get affected library with affectedcc
-    	MockHttpServletRequestBuilder get_builder = get("/bugs/CVE-2014-0050/affectedLibIds/bar/bar/0.0.1?source=PROPAGATE_MANUAL");
+    	get_builder = get("/bugs/CVE-2014-0050/affectedLibIds/bar/bar/0.0.1?source=PROPAGATE_MANUAL");
     	mockMvc.perform(get_builder)	
         .andExpect(status().isOk())
         .andExpect(content().contentType(contentType))
