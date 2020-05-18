@@ -2,6 +2,7 @@ matrix:
   include:
   - name: OpenJDK8 - Test and install Maven artifacts, Deploys Jib images
     language: java
+    dist: trusty
     jdk: openjdk8
     cache:
       timeout: 1000
