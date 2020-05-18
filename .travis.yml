@@ -11,8 +11,11 @@ matrix:
     before_cache:
     - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
     install:
-    - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
-    script: mvn -e -B -P gradle -Dspring.standalone -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean install
+    - echo 'Skipping install stage, dependencies will be downloaded during build and
+      test stages.'
+    script: mvn -e -B -P gradle -Dspring.standalone -Dit.test='!IT01_PatchAnalyzerIT,
+      IT*, *IT, *ITCase' -DfailIfNoTests=false --settings .travis/settings.xml clean
+      install
     before_deploy:
     - set -a; source .travis/.env; set +a;
     - echo "VULAS_RELEASE=${VULAS_RELEASE}"
@@ -27,30 +30,31 @@ matrix:
       script: bash .travis/docker_hub_push_snapshot.sh
       on:
         branch: master
-        condition: $TRAVIS_EVENT_TYPE = push
+        condition: "$TRAVIS_EVENT_TYPE = push"
     - provider: script
       skip_cleanup: true
       script: bash .travis/docker_hub_push_release.sh
       on:
         tags: true
-        condition: $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$
+        condition: "$TRAVIS_TAG =~ ^[0-9]+\\.[0-9]+\\.[0-9]+(\\..+)?$"
     - provider: releases
       api_key: "$GIT_USER"
       file: "/tmp/cli/vulas-cli-${VULAS_RELEASE}.zip"
       skip_cleanup: true
       on:
-       tags: true
-       condition: $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$
-
+        tags: true
+        condition: "$TRAVIS_TAG =~ ^[0-9]+\\.[0-9]+\\.[0-9]+(\\..+)?$"
   - name: OpenJDK8 - Create Maven artifacts for JavaDoc and sources
     language: java
     jdk: openjdk8
     dist: trusty
     install:
-    - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
-    script: mvn -e -B -P gradle,javadoc -Dspring.standalone -DskipTests --settings .travis/settings.xml clean package
-
-  - name: Docker - Build the Modules' Jars, Run all Java tests, Create vital containers, Check if they stay alive for more than 20 seconds
+    - echo 'Skipping install stage, dependencies will be downloaded during build and
+      test stages.'
+    script: mvn -e -B -P gradle,javadoc -Dspring.standalone -DskipTests --settings
+      .travis/settings.xml clean package
+  - name: Docker - Build the Modules' Jars, Run all Java tests, Create vital containers,
+      Check if they stay alive for more than 20 seconds
     language: bash
     dist: trusty
     sudo: required
@@ -61,15 +65,19 @@ matrix:
     - docker-compose -v
     - cp .travis/.env docker/.env
     install:
-    - docker build --tag vulnerability-assessment-tool-generator -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
-    - docker run -it --rm -v ${PWD}/docker:/exporter -v ${PWD}/.travis/settings.xml:/settings.xml --env-file ./docker/.env -e mvn_flags='-q -P gradle -Dit.test=!IT01_PatchAnalyzerIT,IT*,*IT,*ITCase -DfailIfNoTests=false --settings /settings.xml' vulnerability-assessment-tool-generator
+    - docker build --tag vulnerability-assessment-tool-generator -f docker/Dockerfile
+      --build-arg http_proxy= --build-arg https_proxy= .
+    - docker run -it --rm -v ${PWD}/docker:/exporter -v ${PWD}/.travis/settings.xml:/settings.xml
+      --env-file ./docker/.env -e mvn_flags='-q -P gradle -Dit.test=!IT01_PatchAnalyzerIT,IT*,*IT,*ITCase
+      -DfailIfNoTests=false --settings /settings.xml' vulnerability-assessment-tool-generator
     script:
-    - "(cd docker && docker-compose -f docker-compose.yml -f docker-compose.build.yml up -d --build)"
+    - "(cd docker && docker-compose -f docker-compose.yml -f docker-compose.build.yml
+      up -d --build)"
     - sh .travis/check.sh
     after_failure:
     - docker images
     - docker ps -as
-    - (cd docker && docker-compose logs)
+    - "(cd docker && docker-compose logs)"
     before_deploy:
     - set -a; source docker/.env; set +a;
     - echo "VULAS_RELEASE=${VULAS_RELEASE}"
@@ -79,23 +87,18 @@ matrix:
       script: bash .travis/docker_hub_push_snapshot.sh
       on:
         branch: master
-        condition: $TRAVIS_EVENT_TYPE = push
+        condition: "$TRAVIS_EVENT_TYPE = push"
     - provider: script
       skip_cleanup: true
       script: bash .travis/docker_hub_push_release.sh
       on:
         tags: true
-        condition: $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$
-
-  # According to the ECCN team re Docker images on DockerHub: “…if you posted the source code on the Internet,
-  # you must notify BIS and the ENC Encryption Request Coordinator each time the Internet location is changed,
-  # but you are not required to notify them of updates or modifications made to the encryption source code at
-  # the previously notified location.”
-  - name: Docker - Check if Dockerfile sources are present at fixed location (ECCN req)
+        condition: "$TRAVIS_TAG =~ ^[0-9]+\\.[0-9]+\\.[0-9]+(\\..+)?$"
+  - name: Docker - Check if Dockerfile sources are present at fixed location (ECCN
+      req)
     language: bash
     script:
     - bash .travis/check_dockerfile_location.sh
-
   - name: Docs - Build and check the docs for dead links
     language: bash
     sudo: required
@@ -110,14 +113,16 @@ matrix:
     script:
     - docker run --rm --network=docs -d --name docs --hostname docs -p 8000:8000 docs
     - sleep 10
-    - docker run --entrypoint=/tmp/checklinks.sh -e URL=docs:8000 -v ${PWD}/docs/:/tmp/ --rm --network=docs --name checklinks raviqqe/muffet:1.3.1
+    - docker run --entrypoint=/tmp/checklinks.sh -e URL=docs:8000 -v ${PWD}/docs/:/tmp/
+      --rm --network=docs --name checklinks raviqqe/muffet:1.3.1
     before_deploy:
     - git remote set-url origin https://"$GIT_USER":"$GIT_TOKEN"@github.com/eclipse/steady.git
     - git config --local user.email "$GIT_MAIL"
     deploy:
     - provider: script
       skip_cleanup: true
-      script: cd docs && pip install -r requirements.txt && sed -i.bak '/dev_addr/d' mkdocs.yml && python docs.py public --mkghdeploy
+      script: cd docs && pip install -r requirements.txt && sed -i.bak '/dev_addr/d'
+        mkdocs.yml && python docs.py public --mkghdeploy
       on:
         tags: true
         condition: "$TRAVIS_TAG =~ ^[0-9]+\\.[0-9]+\\.[0-9]+(\\..+)?$"
@@ -129,8 +134,6 @@ notifications:
   email: false
 env:
   global:
-  - secure: OTJydEG1v1bfteaiSYCz015XntC9VpciEgIiPpDB9RbNf1TfQc1xtmpBaKNJpWQ+zDgFUfnkAtgBnisJfXDDcjoHZzyF5vQpvU/4dmKfRCNbzCV889jMNhAqnrUoviGhfFszZEkkClnkkjDvM0QaFa4oX3lQlZZgr3QPiVl09dmUsPjZSG1pprGmkOlgz7qCIwJL1TFpht3IlQLQicSsjwSdaWJN17oxgBUO8VaSiYmOK4rrOrdQAsMO1KusarQFEbyIUaZfYOJK9a7ZbkK8/q4sYW9+Mo4HAbR/d5Cq752SFOSxUpeSEiCKOeyK1S+um40uCxIFgHTvYKpXPdA4n+H0GaHynt6fo6Itze7xzzEV3u2bWe0xyQGspEultI265vVLCqEIicyCMaAhAGh7+qxUJC9NYflIEQspAqWEfOqRTBmejCzxCx27bgDbhqA/U4smBgt4Kar1MRXfeGhobKZrl+ck5EWNAqcq4+2z7hEdH2VnOqyevj1o7RejQWbmWwlTUpDxn8tpC3jj12Y0y7gAzLEPL01fC63ZeXwULyT9SlR/MUOwYfG7Q0Wvl7sdVk9+A/MDA00YUvNaqsQat5Hr9KqiR72ZIXkiDv2v+9i8ULtLlhtd5qNVTr0RIIOx61UTEbWu3ZREEXu6ab8JOt3tmcccQXepB0CR9bzDpLs=
-  - secure: vcLLHmyg9EdWWZexfOq+tqGNOij4EYvm/0c1fyTVpIqPSN/I4hIQfuraFgyuBjo5VDkZ0Ty6DN+7vMXI9zGFAVJ4qYEWet4qrRG1TPDXFAmtx/HwSqPj1twoxZ9H1uNg4ot90VJ13OPQXAplH+hO7mlT/ZHDWvv3ddEGNv9wglQC9zQooVy0Cyw6xyoJEStV7m3g1kCfmCD1XnSEcpIPSIcnVBe7y5fwK+whJa91oJjYXB4BEmC1sDyZfMIOQWfuQMP5efAWKAanYCPtIg0wa2jua2OB+77REzrvvgVa7DJOP6SzkBD/znBrh631AtHIRvT4XjhVKTIT+pAny6fZEy0WcM3wbRE3Dxe88yEzX+al+INUpF7VSSXWQkidkbk10Uoxp2t72OFMKwtRKAq5NH5TpO+ViCbgCa24HU7GqvBmu63XF2fu4AL5Jc77MAH1asNN3Ik3xekUZ1/OAzkNpORJB4NBt9qCCUhR5D6zh5k2vdFwvvmZF0AT/CNShDl+iNfXLD8fGKoGgTIFcgnJl+FGTmokWnfTbm3fHz4v8C8Wu/hEBmn4Nu8WHpiHUNEoilmQ57m5tUEGQ9z2hokFrsMKz5hPcpy0+pfFadYzbKYlamdbxOpBde0Z/6sJ0exhR9QX6bIgeB4moF1wZaLh4Kvm/uomEEWOTd1Jydx3qn4=
-  - secure: eew3c6WkkNenE03DR8aE/pu4XD4RB7ve+ghjGSwiAoAGP6jwoPO5MSEBOyQjXknOpy8g4linFGrtSB6Q1dKjejTJcH3+bnTUGWa/4or2t8D857u1inLoGDSrLm0pVn7BYBT/e2qViBaVMM2jgQQ8F00y1qAewFULmP5dnRjJvIecqIOYIfvDENcWRN0PjBM6+IbY8ZGxBwosBU1fvVWHrmSPdJ0v4DDC2D/Ni5fKTLrigU82HXeQa0w17KFkZ6nhAyDUK4Eq14eIgQcrGgPZrTM2QDOl49jiQsZr0AXU5a4M5QxkCglEz4t0Gj+kSVfaOeOKh4ijTr9Jk0wROY5ov8RccxeMCYkmepidh2Jx/+dK64PFn/3AhUH6OfpmDuP4E2DjURE6nntDBiIAIHbOZOdzxGZK5QPSNtG3oZpqf9SUlrie9WF9DmFAhBzlhQ01Jq2cuw+GIZR2v0l8Ie+Q1EvB9Q/pjm8aq2P7sen7C+JyBpUaqXaF7lB94ab1NJRJ4jQmg+V5V20KskMrIPNLH6wYXp8rKyTJgcvQjJcVSOvyi4UNw0rxWzCmbv4D970QxhR1tHO4rzymsTlZghYhm3l7gvg2OVErJZIEB8eB2oEem/fAfWaQf4eoTdSuXwdUmf4uRiNGIDr6wQy3dhnXlD7Hs/l+ZnGUBTeKC3qN/E4=
-  - secure: j9ii+abfyBsHRBlVMebnDK0fJ8vjf7gWjdBBuOs6Cghp+MrnNHjojeGp1ylNQGGQB4/fcEjOr9HpbB0CRg8u/MC1AFydntIGcNwDWPCPEGlZtsolELRyhSr16N9KRfbGC7zOzI8H1jCPs8jtDeK3Fyn+XVrVWAJTNeAVlfyE74840YFZagl3WCooDjrTkcpxgSqjNRsKT722os3hRQ7CKWMeOptHxfWtMmIELvQNnYIk+6aY562sjLZ5ObfsdUddnrpxO94wpZn/O6nqxJx0qSKYnY/suVn7vDq9nzjqaPefRJUZL7r0AarAFYNH6z5mcSD9UpusckZXuV85SgRH1MbgjoqxIjsEdVWZXs0vvs5WdeVlEbTBceeF78bmjgk7dZSkQhGiakxwenPtVEygmsevqLyyHyk8QPD/r+NjV+PonfHmzVpeKfgc7L2mJqHFvf//+Ko4fZYvwsN4127ZQCSv88MP5eauJcDNDPKJObX3xItaGSACAsnvHlYfZqS2Iqo0/0p5dKcFy5lEcU8aecgiSwpSbPesCvDCZtldFXSU4f7JYn5RF/TWWfKQDrVsVZ+aN1T4Tup8V6zlj8kMCLxJKI44C+hsBrO+MNC5UeG/3lQw30UibMQmUt8S47GEGc39NlQaKo+JhhYfr6XrQuZQVV2zmaxD4S23W42gpx4=
-  - secure: If96mZyElKZkdkzT3DoiTUgn99tuGicwpHu+M+hyYYgUOvqV0ngSNtYQry56kJjKd99SSOWyDmtOpw4YgyFltD7DdX5hHcMg1hDGQQne0doP7A04KhY7l98qoXEjLzVID4D01LnNstVaqpAX7PS4yxYocapFTpc1UxqbH248toPutiXY6kupcSTveL29ImTCBW4B9J0Dq4I6M3ouDjSUTVaP12I1bslN/sui7lL2t06QYE3D4KGq1T0JdOk7Jhmk/EcdMPisM1+qaDwycXFL1bK837HVbwLNTgyDpjAHdQeoibZunRqiY3u2N6OqlRgwG8FBsxvjqneD5wTqi2GGvm/utY/iq0/TnUqIsSKlboDd/Zb/WknRNihWEogiVPA9+yw7B6Q/wxTg4bKqsP9aq++6Av/vO6VGjy+Rg1Wr08e19A3JEhf/XuZlkThCtHWnudMEKzlZ+ZhKsI9tKimmy9p9mlSUeojoyYmEVa+lfhdSXdqT/unIhqZtYn20+HZQe8mGgAqJbTYDkHIeYfzL1QtoSHdBykOryxvxY8hMldMqHRrUGRIxIk6JCjzLtKTyotBJ+blIcBfJJfsF49rX8rnVlOgSWDONHnAitxDgflVvI6uHUwxlYEcnY5Jqq4cYKgv6vTm2hjEsWC54TGUq6ouo6vtOwxHUkB72bn7KMiQ=
+  - secure: HMXBWqla0X48/I2kS3Wv20XHT/j7l95kdxBMJAvzwXh2jqa5OxnkUjMC1DNVc9INh1qZVFzKLAscbhD1jfLH1G6nEFYelIJfZ3GHRtAP80VMABhZ+qi6d3QQp+Q/4jzPPNyRYeeXT5hZc8ej2atjDCizk0+oiXFogKuTh7Prb3EkyVmXTzsViqJ6VGMmxgyCTKD6aKlPJaIk0nrY3jCqDAwRDrbpWEIzzS+caE+7md7pIVspnBrd1EyD7+PBYKvLByO8ENUucwS3rUtmd//+1erkUjF0xqL0TWmur6bwvh7hijfhFcIpHVV2F2TC3E3DJDtAGFMmJCr7oQbab4NqbphXRPXkkBXqiU4OCH6F4RsYdUYoAq9mk4ymVPeu+lFY7qmqChqGPqaLTolVOL8srrQJB0K8p9bWK8PEANQsLvxdWrv0nWJreiH1F8Ux/tPBjAzd4Uw4CbN/n1cdgOHT0qfost+lJkPcoPO42AgpXoDzfO/QlQbbWkFQkYDFmU1pSZ/uw8C8CzveqpOs7M97+h1w28cFrsQFvpBh5LdpaELo+hLOw/EmwQ38a8OvjcDw0M++kfqfp0KipYaNjC45clanAbIxwHyZL/SgEmJuq8TueF3g1DfW7zrd1mKJrmcM+CN71qBuYVwn5oRg4JG1TJDjeVm691rkmosSG7cj8tM=
+  - secure: L2qRxeyuyoQWE14pmhLkkxCUDPYdF/l9Wl+UBnTJaJwKWpwx+7Onw+R8oYZD+ddWJPx5AjTA4WlKbhbSLoS5uidCzTBLNWN0a8KT7J5LTR6zPT5GlKqHnb/JASU6UHMi5i3btUGFlk/bhhj7bx1RVrVKg31xU5dsETseNpFCvTUmurn0G6TfR2H0haPjL4kM/wy0WvnnJQPJmnaIsohrnJ9o7S9CTsNXp2pJcJ+tiWUy7DSGTzsUI9QLsEx9fjWwWSjpW2RxK2K5jvXt+2oirUYJQeE1cXXqzi0LjhPCdAiIqCFUAUbs8zypkRQmborPegQzkFalFKRo0XPxk03aP0N8Z/uAj0qCNun+sbWLjGZx5hKL6gCdhd2gbLvuUuRubTeYx9v52U1XqGAKOAKIKH/gDk8NOUNh+qGUL89I4A0y6zQz9PTt/Uvve1ZvMhqQM3absfusUyTYpgenFa8V0Ia0HRqabIzKlH13SjFh+2Diz1Zl7151/bJ25NPzQB83Yhe+IGbmV4741rNtKIpiuX3NHOQL6/g1PBG0rM5f9SwtUpaOFGKcLNiXsdfsrrfspyH53/ETkS+NqyJiWf88y6aS+eE0SMhENNfhRf7joweuLC8+/AWKRnUwirUautWy71QDgYRTWXbCIvJNBrZKNGnyq2RZxf/mpaC82aL4DFY=
+  - secure: r7DZp4oVMMGfgiR8ac5au+pxNY9+zSV1GBTXzmnX+lYUEDm03UPZyt9ZDngJ0R/zni4U+N+oug4EJCN8+xj13QoJYXg9To8IBBSlz4GYQWyj6gtRrEWDhnwfBSgw6GbXIdE1Ovd50YH0f4YVmhlYCqABSp7mlyjBLjA+WaWdeZf+0ljnMC0CvOe2TLtwjQV4vZr9Ub8qaGF+GFzFTWZsfOMTF7v22dLZ7RhB51fBE/ZqijimOniIBKw4hG1o1By0e/7qnyZWxH5oMgkYyvVbLjTET1id7rHNiHZtjlZcUP9Pt84+wpsw3qnmz3IuG1ICHC1xvShNok794bjbarClXJeM+dMryGsfNsr4x67eQf7PP7e/WnP68P/fVKXT7o/CC+mGnnystb0KBe/tC1fULC67NUO0k8Ki2KhbXtKFj+lOZop+KRIpTJcLg8EBbNdT36TbS159x2Y1qce/uE3qyJnzIc38f4mT+LWib5NatqZv8adb5LZQgarjwz2m7ViwjP4q0t2SLsgUA+BJNBPo2r2A+Aa7u38ij0MAvvINIEk8udgopkje8NaEsfSPrZvHfMTDCoaJRfJgf4m8ETvIp6INzIOrL/bxyeD8Z73mtaEB88Xv2UuTGsZs8B/mCtx7BRz8ltcYmpbnCKHSWa7mUIs2RdkxsgiD2OmlW/uU5Ik=
