@@ -18,6 +18,8 @@ matrix:
     - curl -Lo .travis/skaffold https://storage.googleapis.com/skaffold/releases/v0.40.0/skaffold-linux-amd64
     - chmod +x .travis/skaffold
     - export JIB=true
+    - chmod +x .travis/package_steady_cli.sh
+    - bash .travis/package_steady_cli.sh ${VULAS_RELEASE}
     deploy:
     - provider: script
       skip_cleanup: true
@@ -31,6 +33,13 @@ matrix:
       on:
         tags: true
         condition: $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$
+    - provider: releases
+      api_key: "$GIT_TOKEN"
+      file: "/tmp/cli/steady-cli-${VULAS_RELEASE}.zip"
+      skip_cleanup: true
+      on:
+        tags: true
+        condition: "$TRAVIS_TAG =~ ^[0-9]+\\.[0-9]+\\.[0-9]+(\\..+)?$"
 
   - name: OpenJDK8 - Create Maven artifacts for JavaDoc and sources
     language: java
