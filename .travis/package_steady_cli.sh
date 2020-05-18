@@ -2,11 +2,6 @@
 set -e
 echo "Packaging CLI"
 
-if [ "$VULAS_RELEASE" != "$TRAVIS_TAG" ]; then
- echo "This is not a tag release. No CLI Packaging needed."
- exit 0
-fi
-
 if [ -z $1 ];
 then
   echo "You did not specify a release (format: X.Y.Z)"
