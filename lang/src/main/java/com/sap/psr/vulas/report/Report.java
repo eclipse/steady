@@ -182,7 +182,7 @@ public class Report {
 				final AffectedLibrary[] aff_libs = new AffectedLibrary[1];
 				aff_libs[0] = aff_lib;
 				FileUtil.writeToFile(p.toFile(), JacksonUtil.asJsonString(aff_libs));
-				log.info("Created affected library at [" + p.getFileName() + "], upload with [curl -X PUT " + this.goalContext.getVulasConfiguration().getServiceUrl(Service.BACKEND) + PathBuilder.bugAffectedLibs(aff_lib.getBugId().getBugId()) + "?source=MANUAL -H \"Content-Type: application/json\" --upload-file " + p + "]");
+				log.info("Created affected library at [" + p.getFileName() + "], upload with [curl -X PUT " + this.goalContext.getVulasConfiguration().getServiceUrl(Service.BACKEND) + PathBuilder.bugAffectedLibs(aff_lib.getBugId().getBugId()) + "?source=MANUAL -H \"Content-Type: application/json\" -H \"X-Vulas-Client-Token: <token>\" --upload-file " + p + "]");
 			} catch (Exception e) {
 				log.error("Cannot write affected library to [" + p + "]");
 			}
