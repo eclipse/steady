@@ -210,4 +210,19 @@ public class VulasConfigurationTest {
 		c1.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), url);
 		assertEquals(url, c1.getServiceUrl(Service.BACKEND));
 	}
+	
+	@Test
+	public void testGetServiceHeaders() {
+		final String url = "http://localhost:8000/backend";
+		VulasConfiguration c1 = new VulasConfiguration();
+		c1.setProperty("vulas.shared.backend.header.foo", "bar");
+		c1.setProperty("vulas.shared.backend.header.baz", 1);
+		c1.setProperty("vulas.shared.backend.header.X-Vulas-Client-Token", "AJDEY@HEX@EWX@XEH@I*QA");
+		//c1.setProperty("vulas.shared.backend.header.test", "123, 456");
+		final Map<String, String> headers = c1.getServiceHeaders(Service.BACKEND);
+		assertEquals("bar", headers.get("foo"));
+		assertEquals("1", headers.get("baz"));
+		assertEquals("AJDEY@HEX@EWX@XEH@I*QA", headers.get("X-Vulas-Client-Token"));
+		//assertEquals("123, 456", headers.get("test"));
+	}
 }
