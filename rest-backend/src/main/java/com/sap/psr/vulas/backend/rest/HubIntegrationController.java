@@ -55,7 +55,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.sap.psr.vulas.backend.model.Application;
-import com.sap.psr.vulas.backend.model.Excemption;
 import com.sap.psr.vulas.backend.model.GoalExecution;
 import com.sap.psr.vulas.backend.model.Space;
 import com.sap.psr.vulas.backend.model.Tenant;
@@ -67,6 +66,9 @@ import com.sap.psr.vulas.backend.repo.SpaceRepository;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
 import com.sap.psr.vulas.shared.enums.ExportConfiguration;
 import com.sap.psr.vulas.shared.enums.Scope;
+import com.sap.psr.vulas.shared.json.model.ExemptionBug;
+import com.sap.psr.vulas.shared.json.model.ExemptionScope;
+import com.sap.psr.vulas.shared.json.model.IExemption;
 import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
@@ -78,7 +80,7 @@ import com.sap.psr.vulas.shared.util.StopWatch;
 @CrossOrigin(origins = "*")
 @RequestMapping(path="/hubIntegration/apps")
 public class HubIntegrationController {
-	
+
 	/**
 	 * Whether or not archives with question marks will be ignored. This behavior is comparable to Report.ignoreUnassessed().
 	 */
@@ -117,7 +119,7 @@ public class HubIntegrationController {
 		this.spaceRepository = spaceRepository;
 		this.tenantRepository = tenantRepository;
 	}
-	
+
 	/**
 	 * Returns a sorted set of item identifiers. Items can correspond to either {@link Space}s or {@link Application}s, depending on the value of {@link Space#getExportConfiguration()}.
 	 * The identifiers looks as follows:
@@ -153,48 +155,48 @@ public class HubIntegrationController {
 			log.error("Tenant [" + tenant + "] not found");
 			throw new RuntimeException("Tenant [" + tenant + "] not found");
 		}
-		
+
 		// To be returned
 		final Collection<ExportItem> items = new HashSet<ExportItem>();
 
 		// Get all spaces and evaluate the export setting
 		final List<Space> spaces = this.spaceRepository.findAllTenantSpaces(t.getTenantToken());
-		
+
 		outerloop:
-		for(Space s: spaces) {
-			// Export will be aggregated (one item only, corresponding to the space)
-			if(aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) {
-				//if asOfTimestamp has been specified, we check if at least 1 application in the space has lastChange>asOfTimestamp
-				Boolean toAdd=true;
-				if(Long.parseLong(asOfTimestamp)>0){
+			for(Space s: spaces) {
+				// Export will be aggregated (one item only, corresponding to the space)
+				if(aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) {
+					//if asOfTimestamp has been specified, we check if at least 1 application in the space has lastChange>asOfTimestamp
+					Boolean toAdd=true;
+					if(Long.parseLong(asOfTimestamp)>0){
+						final Set<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
+						if(apps.isEmpty())
+							toAdd=false;
+					}
+					if(toAdd){
+						final ExportItem item = new ExportItem(s, null);
+						if(max==-1 || items.size()<max)
+							items.add(item);
+						else
+							break outerloop;
+					}
+				}
+				// Export will be individual (one item per space application)
+				else if((!aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) || s.getExportConfiguration()==ExportConfiguration.DETAILED) {
 					final Set<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
-					if(apps.isEmpty())
-						toAdd=false;
+					for(Application app: apps) {
+						final ExportItem item = new ExportItem(s, app);
+						if(max==-1 || items.size()<max)
+							items.add(item);
+						else
+							break outerloop;
+					}
 				}
-				if(toAdd){
-					final ExportItem item = new ExportItem(s, null);
-					if(max==-1 || items.size()<max)
-						items.add(item);
-					else
-						break outerloop;
-				}
-			}
-			// Export will be individual (one item per space application)
-			else if((!aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) || s.getExportConfiguration()==ExportConfiguration.DETAILED) {
-				final Set<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
-				for(Application app: apps) {
-					final ExportItem item = new ExportItem(s, app);
-					if(max==-1 || items.size()<max)
-						items.add(item);
-					else
-						break outerloop;
+				// No export
+				else if(s.getExportConfiguration()==ExportConfiguration.OFF) {
+					continue;
 				}
 			}
-			// No export
-			else if(s.getExportConfiguration()==ExportConfiguration.OFF) {
-				continue;
-			}
-		}
 
 		return new ResponseEntity<Collection<ExportItem>>(items, HttpStatus.OK);
 	}
@@ -235,48 +237,48 @@ public class HubIntegrationController {
 			log.error("Tenant [" + tenant + "] not found");
 			throw new RuntimeException("Tenant [" + tenant + "] not found");
 		}
-		
+
 		// To be returned
 		final Collection<String> items = new TreeSet<String>();
 
 		// Get all spaces and evaluate the export setting
 		final List<Space> spaces = this.spaceRepository.findAllTenantSpaces(t.getTenantToken());
-		
+
 		outerloop:
-		for(Space s: spaces) {
-			// Export will be aggregated (one item only, corresponding to the space)
-			if(aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) {
-				//if asOfTimestamp has been specified, we check if at least 1 application in the space has lastChange>asOfTimestamp
-				Boolean toAdd=true;
-				if(Long.parseLong(asOfTimestamp)>0){
+			for(Space s: spaces) {
+				// Export will be aggregated (one item only, corresponding to the space)
+				if(aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) {
+					//if asOfTimestamp has been specified, we check if at least 1 application in the space has lastChange>asOfTimestamp
+					Boolean toAdd=true;
+					if(Long.parseLong(asOfTimestamp)>0){
+						final Set<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
+						if(apps.isEmpty())
+							toAdd=false;
+					}
+					if(toAdd){
+						final ExportItem item = new ExportItem(s, null);
+						if(max==-1 || items.size()<max)
+							items.add(item.toString(separator));
+						else
+							break outerloop;
+					}
+				}
+				// Export will be individual (one item per space application)
+				else if((!aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) || s.getExportConfiguration()==ExportConfiguration.DETAILED) {
 					final Set<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
-					if(apps.isEmpty())
-						toAdd=false;
+					for(Application app: apps) {
+						final ExportItem item = new ExportItem(s, app);
+						if(max==-1 || items.size()<max)
+							items.add(item.toString(separator));
+						else
+							break outerloop;
+					}
 				}
-				if(toAdd){
-					final ExportItem item = new ExportItem(s, null);
-					if(max==-1 || items.size()<max)
-						items.add(item.toString(separator));
-					else
-						break outerloop;
-				}
-			}
-			// Export will be individual (one item per space application)
-			else if((!aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) || s.getExportConfiguration()==ExportConfiguration.DETAILED) {
-				final Set<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
-				for(Application app: apps) {
-					final ExportItem item = new ExportItem(s, app);
-					if(max==-1 || items.size()<max)
-						items.add(item.toString(separator));
-					else
-						break outerloop;
+				// No export
+				else if(s.getExportConfiguration()==ExportConfiguration.OFF) {
+					continue;
 				}
 			}
-			// No export
-			else if(s.getExportConfiguration()==ExportConfiguration.OFF) {
-				continue;
-			}
-		}
 
 		return new ResponseEntity<Collection<String>>(items, HttpStatus.OK);
 	}
@@ -316,13 +318,13 @@ public class HubIntegrationController {
 		try {
 			// Build from the simple string argument
 			final ExportItem item = ExportItem.fromString(itemId, separator, spaceRepository, appRepository);
-			
+
 			// Fail if the given space does not belong to the tenant in question
 			if(!t.hasSpace(item.getSpace())) {
 				log.error("Space " + item.getSpace() + " is not part of tenant " + t);
 				throw new IllegalArgumentException("Space " + item.getSpace() + " is not part of tenant " + t);
 			}
-			
+
 			final StopWatch sw = new StopWatch("Query vulnerable dependencies for item [" + itemId + "] (total)").start();
 
 			// The set to be returned
@@ -356,7 +358,7 @@ public class HubIntegrationController {
 
 	private TreeSet<VulnerableItemDependency> getVulnerableItemDependencies(Space _s, Application _app, Scope[] _excluded_scopes, boolean _include_app_gav, String _ignore_unassessed) {
 		final TreeSet<VulnerableItemDependency> vd_list = new TreeSet<VulnerableItemDependency>();
-		
+
 		// Get latest goal execution date
 		final GoalExecution latest_gexe = gexeRepository.findLatestGoalExecution(_app, null); 
 		final Calendar snapshot_date = (latest_gexe==null ? null : latest_gexe.getCreatedAt());
@@ -378,12 +380,12 @@ public class HubIntegrationController {
 
 				// Add application id to ease integration
 				vhd.setAppId(_app.getId());
-				
+
 				// Last scan date and client version
 				vhd.setLastScan(_app.getLastScan());
 				if(latest_gexe!=null)
 					vhd.setClientVersion(latest_gexe.getClientVersion());
-				
+
 				// Set to null if among excluded scopes
 				if(_excluded_scopes!=null && _excluded_scopes.length>0) {
 					for(Scope scope: _excluded_scopes) {
@@ -393,7 +395,7 @@ public class HubIntegrationController {
 						}
 					}
 				}
-				
+
 				// Set to null depending on treatment of unassessed findings (comparable impl. than in method Report.ignoreUnassessed())
 				if(!vd.isAffectedVersionConfirmed()) {
 					if(_ignore_unassessed.equalsIgnoreCase(IGN_UNASS_OFF))
@@ -470,11 +472,11 @@ public class HubIntegrationController {
 				b.append(" ").append(escapeCharacters(this.app.getMvnGroup())).append(_separator).append(escapeCharacters(this.app.getArtifact())).append(_separator).append(escapeCharacters(this.app.getVersion()));
 			return b.toString();
 		}	
-		
+
 		private String escapeCharacters(String _param){
 			return _param.replace("/", "%2F");
 		}
-		
+
 		private static String revertEscapedCharacters(String _param){
 			return _param.replace("%2F", "/");
 		}
@@ -487,9 +489,9 @@ public class HubIntegrationController {
 		private int count = 1;
 
 		private String projectId;
-		
+
 		// === Property PRIORITY
-		
+
 		// Priority (1 = high, 5 = low)
 		public static final int AUDIT_ALL = 1;
 		public static final int SPOT_CHECKS = 2;
@@ -497,46 +499,46 @@ public class HubIntegrationController {
 		public static final int NO_PRIO = 5;
 
 		private int priority = AUDIT_ALL; // default to highest prio
-		
+
 		// === Property STATE
-		
+
 		public static final int NOT_AUDITED = -1;
 		public static final int FP_TOOL_LIMIT = 0;
 		public static final int FP_SECURE_DESIGN = 1;
 		public static final int TP = 2;
 		public static final int FP_MITIGATED = 4;
-		
+
 		/** Defaults to {@link #TP}, will be set to {@link #FP_SECURE_DESIGN} if the dependency scope has been exempted or to {@link #FP_MITIGATED} if the vulnerability has been exempted. */
 		private int state = TP;
 
 		private String exemptionReason = null;
-		
+
 		// === Property STATUS
-		
+
 		/** Not audited in Vulas. */
 		public static final int STATUS_NOT_AUDITED = -1;
-		
+
 		/** Audited in Vulas. */
 		public static final int STATUS_AUDITED = 1;
-		
+
 		/** Defaults to {@link #STATUS_NOT_AUDITED}, will be set to {@link #STATUS_AUDITED} if the state equals {@link #FP_SECURE_DESIGN} or {@link #FP_MITIGATED}. */
 		private int status = STATUS_NOT_AUDITED;
 
 		/** Vulnerability identifier. */
 		private String type;
-		
+
 		private String scope = null;
-		
+
 		private String spaceToken = null;
-		
+
 		private Long appId = null;
-		
+
 		private Boolean reachable = null;
-		
+
 		private String clientVersion = null;
-		
+
 		private Calendar lastScan = null;
-		
+
 		@JsonIgnore
 		private VulnerableDependency vulnerableDependency = null;
 
@@ -565,33 +567,34 @@ public class HubIntegrationController {
 			this.snapshotDate = _date;
 			this.scope = _vd.getDep().getScope()==null ? null : _vd.getDep().getScope().toString();
 			this.spaceToken = _spaceToken;
-			
+
 			this.reachable = (_vd.getReachable()==1 || _vd.getTraced()==1);
 
 			// Scope excluded: State to 1 (False Positive: Secure by design)
 			// Bug excluded: State to 4 (False Positive: Sufficient mitigation in place)
 			// Else: State to 2 (True Positive)
-			final Excemption exc = _vd.getExcemption();
-			if(exc!=null && exc.isExcludedBug()) {
+			final IExemption exc = _vd.getExemption();
+			if(exc!=null && exc instanceof ExemptionBug) {
 				this.status = STATUS_AUDITED;
+				this.exemptionReason = exc.getReason();
 				this.state = FP_MITIGATED;
-				this.exemptionReason = exc.getExcludedBugReason();
 			}
-			else if(exc!=null && exc.isExcludedScope()) {
+			else if(exc!=null && exc instanceof ExemptionScope) {
 				this.status = STATUS_AUDITED;
+				this.exemptionReason = exc.getReason();
 				this.state = FP_SECURE_DESIGN;
-				this.exemptionReason = "Scope " + this.scope + " excluded";
 			}
-			else
+			else {
 				this.state = TP;
+			}
 		}
 
 		public int getCount() { return count; }
-		
+
 		public String getExemptionReason() { return this.exemptionReason; }
-		
+
 		public String getScope() { return this.scope; }
-		
+
 		public String getSpaceToken() { return this.spaceToken; }
 
 		public String getProjectId() { return projectId; }
@@ -606,28 +609,28 @@ public class HubIntegrationController {
 		public String getType() { return type; }
 
 		public java.util.Calendar getSnapshotDate() { return snapshotDate; }
-		
+
 		public Long getAppId() { return this.appId; }
-		
+
 		public void setAppId(Long _id){
 			this.appId = _id;
 		}
-		
+
 		public Boolean getReachable() { return this.reachable; }
 
-		
+
 		public String getClientVersion() { return this.clientVersion; }
-		
+
 		public void setClientVersion(String _clientVersion){
 			this.clientVersion = _clientVersion;
 		}
-		
+
 		public Calendar getLastScan() { return this.lastScan; }
-		
+
 		public void setLastScan(Calendar _lastScan){
 			this.lastScan = _lastScan;
 		}
-		
+
 		/**
 		 * Delegates the comparison to {@link Application#compareTo(Application)} and {@link VulnerableDependency#compareTo(VulnerableDependency)}.
 		 */

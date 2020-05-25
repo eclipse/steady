@@ -28,6 +28,7 @@ import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.report.Report;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.model.Application;
+import com.sap.psr.vulas.shared.json.model.ExemptionSet;
 import com.sap.psr.vulas.shared.util.FileUtil;
 
 /**
@@ -35,14 +36,14 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  *
  */
 public class ReportGoal extends AbstractAppGoal {
-	
+
 	private Set<Application> modules = null;
 
 	/**
 	 * <p>Constructor for ReportGoal.</p>
 	 */
 	public ReportGoal() { super(GoalType.REPORT); }
-			
+
 	/**
 	 * <p>setApplicationModules.</p>
 	 *
@@ -67,21 +68,12 @@ public class ReportGoal extends AbstractAppGoal {
 	@Override
 	protected void executeTasks() throws Exception {
 		final Configuration cfg = this.getConfiguration().getConfiguration();
-		
+
 		final Report report = new Report(this.getGoalContext(), this.getApplicationContext(), this.modules);
-
-		// Set all kinds of exceptions
 		report.setExceptionThreshold(cfg.getString(CoreConfiguration.REP_EXC_THRESHOLD, Report.THRESHOLD_ACT_EXE));
+		report.setExemptions(ExemptionSet.createFromConfiguration(cfg));
+		report.setCreateAffectedLibraries(cfg.getBoolean(CoreConfiguration.REP_CREATE_AFF_LIB, false));
 
-		// Excluded bugs
-		report.addExcludedBugs(cfg.getStringArray(CoreConfiguration.REP_EXCL_BUGS));
-
-		// Excluded scopes
-		report.addExcludedScopes(cfg.getStringArray(CoreConfiguration.REP_EXC_SCOPE_BL));
-		
-		// Exclude non-assessed vuln deps
-		report.setIgnoreUnassessed(cfg.getString(CoreConfiguration.REP_EXCL_UNASS, Report.IGN_UNASS_KNOWN));
-		
 		// Fetch the vulns
 		try {
 			report.fetchAppVulnerabilities();

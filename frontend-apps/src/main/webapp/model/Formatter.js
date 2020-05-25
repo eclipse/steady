@@ -84,28 +84,20 @@ model.Formatter = {
 	},
 	
 	// Delivers the img src for a single archive and vulnerability
-	excemptedSrc : function(_excemption) {
-		if (_excemption === null) {
+	exemptedSrc : function(_exemption) {
+		if (_exemption === null) {
 			return "img/transparent.png";
 		} else {
-			if(_excemption.excludedBug || _excemption.excludedScope)
-				return "img/excempted.png";
-			else
-				return "img/transparent.png";
+			return "img/exempted.png";
 		}
 	},
 	
 	// Delivers the img src for a single archive and vulnerability
-	excemptedTooltip : function(_excemption, _scope) {
-		if (_excemption === null) {
+	exemptedTooltip : function(_exemption) {
+		if (_exemption === null) {
 			return "";
 		} else {
-			if(_excemption.excludedBug)
-				return _excemption.excludedBugReason;
-			else if(_excemption.excludedScope)
-	            return "Scope " + _scope + " excluded";
-			else
-				return "";
+			return _exemption.reason;
 		}
 	},
 	
