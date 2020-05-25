@@ -801,4 +801,37 @@ public abstract class JavaId extends ConstructId {
 		}
 		return comp_unit;
 	}
+	
+	/**
+	 * 
+	 * @param _jid
+	 * @return
+	 */
+	public static JavaId getCompilationUnit(JavaId _jid) {
+		// Got it --> return provided object
+		if( (_jid.getType().equals(JavaId.Type.CLASS) && !((JavaClassId)_jid).isNestedClass()) ||
+				(_jid.getType().equals(JavaId.Type.INTERFACE) && !((JavaInterfaceId)_jid).isNested()) ||
+				(_jid.getType().equals(JavaId.Type.ENUM) && !((JavaEnumId)_jid).isNested()) ) {
+			return _jid;
+		} else {
+			return getCompilationUnit((JavaId)_jid.getDefinitionContext());
+		}
+	}
+
+	public static JavaId getJavaId(String _type, String _qname) {
+		JavaId.Type type = JavaId.typeFromString(_type);
+
+		// Check params
+		if(JavaId.Type.METHOD!=type && JavaId.Type.CONSTRUCTOR!=type)
+			throw new IllegalArgumentException("Only types METH and CONS are supported, got [" + type + "]");
+
+		// Parse JavaId
+		JavaId jid = null;
+		if(JavaId.Type.CONSTRUCTOR==type)
+			jid = JavaId.parseConstructorQName(_qname);
+		else if(JavaId.Type.METHOD==type)
+			jid = JavaId.parseMethodQName(_qname);
+
+		return jid;
+	}
 }

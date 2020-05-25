@@ -20,64 +20,43 @@
 package com.sap.psr.vulas.patcheval2;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.zip.ZipException;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.backend.EntityNotFoundInBackendException;
+import com.sap.psr.vulas.bytecode.BytecodeComparator;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
-import com.sap.psr.vulas.java.JavaClassId;
-import com.sap.psr.vulas.java.JavaEnumId;
-import com.sap.psr.vulas.java.JavaId;
-import com.sap.psr.vulas.java.JavaInterfaceId;
-import com.sap.psr.vulas.java.sign.ASTConstructBodySignature;
-import com.sap.psr.vulas.java.sign.ASTSignatureChange;
 import com.sap.psr.vulas.java.sign.gson.GsonHelper;
 import com.sap.psr.vulas.patcheval.representation.Bug;
-import com.sap.psr.vulas.patcheval.utils.ConstructBytecodeASTManager;
 import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
 import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
-import com.sap.psr.vulas.shared.enums.ConstructChangeType;
-import com.sap.psr.vulas.shared.enums.ConstructType;
-import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.AffectedLibrary;
 import com.sap.psr.vulas.shared.json.model.BugChangeList;
-import com.sap.psr.vulas.shared.json.model.ConstructChange;
 import com.sap.psr.vulas.shared.json.model.Library;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.json.model.Property;
+import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
-import com.sap.psr.vulas.sign.SignatureFactory;
 
 /**
  * <p>DigestAnalyzer class.</p>
@@ -111,80 +90,76 @@ public class DigestAnalyzer {
 		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.READ_WRITE.toString());
 		final Gson gson = GsonHelper.getCustomGsonBuilder().create();
 		
-		try {
-		//check that the 'Implementation-version' is available among the properties
-		String lib;
 		
-			lib = BackendConnector.getInstance().getLibrary(digest);
-			Library l = (Library) JacksonUtil.asObject(lib, Library.class);
-	//		Library l = gson.fromJson(lib, Library.class);
-	
-			boolean canAnalyze = false;
-			if(bytecode) {
-				canAnalyze = true;
-			}else {
-				for(Property p: l.getProperties()){
-					if(p.getName().equals("Implementation-Version")){
+		if(!bytecode) {
+			try {
+				//check that the 'Implementation-version' is available among the properties		
+				String lib;
+				
+					lib = BackendConnector.getInstance().getLibrary(digest);
+				
+				Library l = (Library) JacksonUtil.asObject(lib, Library.class);
+		
+				boolean canAnalyze = false;
+				for(Property p1: l.getProperties()){
+					if(p1.getName().equals("Implementation-Version")){
 						canAnalyze = true;
-						version = p.getValue();
+						version = p1.getValue();
 						break;
 					}
 				}
-			}
 			
-			if(canAnalyze){
-				
-				//get all bugs for the given digest
-				List<Bug> bugsToAnalyze = new ArrayList<Bug>();
-				
-				String allbugs;
-				
-				allbugs = BackendConnector.getInstance().getBugsForLib(digest);
-				bugsToAnalyze = Arrays.asList(gson.fromJson(allbugs, Bug[].class));
-				//bugsToAnalyze= Arrays.asList((Bug[]) JacksonUtil.asObject(allbugs, Bug[].class));
-				
-				log.info("["+bugsToAnalyze.size()+"] bugs to analyze");
-				
-				bugLoop:
-				for (Bug b: bugsToAnalyze){
-					BugChangeList b1 = BackendConnector.getInstance().getBug(b.getBugId());
+				if(canAnalyze){
 					
-					HashMap<AffectedVersionSource, AffectedLibrary[]> existingxSource = new HashMap<AffectedVersionSource, AffectedLibrary[]>();
+					//get all bugs for the given digest
+					List<Bug> bugsToAnalyze = new ArrayList<Bug>();
 					
-					//retrieve existing affectedVersions
-					for(AffectedVersionSource s : AffectedVersionSource.values()){
-			    		AffectedLibrary[] al = BackendConnector.getInstance().getBugAffectedLibraries(b.getBugId(),s.toString(),true);
-			    		existingxSource.put(s, al);
-			    		log.info("Existing [" + al.length + "] affected libraries in backend for source [" +s.toString()+"]");
-			    	}
-							
-					for(AffectedLibrary a: existingxSource.get(AffectedVersionSource.MANUAL)){
-						if(a.getLib()!=null && a.getLib().getDigest().equals(digest)){
-							continue bugLoop;
-						}
-					}
-					for(AffectedLibrary a: existingxSource.get(AffectedVersionSource.PROPAGATE_MANUAL)){
-						if(a.getLib()!=null && a.getLib().getDigest().equals(digest)){
-							continue bugLoop;
-						}
-					}
-					existingxSource.remove(AffectedVersionSource.TO_REVIEW);
+					String allbugs = BackendConnector.getInstance().getBugsForLib(digest);
+					bugsToAnalyze = Arrays.asList(gson.fromJson(allbugs, Bug[].class));
+					//bugsToAnalyze= Arrays.asList((Bug[]) JacksonUtil.asObject(allbugs, Bug[].class));
 					
-					//skip analysis if libid already assessed with some strategy
-					for(AffectedLibrary[] array: existingxSource.values()){
-						for(AffectedLibrary a: array)
-							if(a.getLibraryId()!=null && a.getLibraryId().equals(l.getLibraryId())){
+					log.info("["+bugsToAnalyze.size()+"] bugs to analyze");
+					
+					bugLoop:
+					for (Bug b: bugsToAnalyze){
+						BugChangeList b1 = BackendConnector.getInstance().getBug(b.getBugId());
+						
+						HashMap<AffectedVersionSource, AffectedLibrary[]> existingxSource = new HashMap<AffectedVersionSource, AffectedLibrary[]>();
+						
+						//retrieve existing affectedVersions
+						for(AffectedVersionSource s : AffectedVersionSource.values()){
+				    		AffectedLibrary[] al = BackendConnector.getInstance().getBugAffectedLibraries(b.getBugId(),s.toString(),true);
+				    		existingxSource.put(s, al);
+				    		log.info("Existing [" + al.length + "] affected libraries in backend for source [" +s.toString()+"]");
+				    	}
+								
+						for(AffectedLibrary a: existingxSource.get(AffectedVersionSource.MANUAL)){
+							if(a.getLib()!=null && a.getLib().getDigest().equals(digest)){
 								continue bugLoop;
 							}
-					}
+						}
+						for(AffectedLibrary a: existingxSource.get(AffectedVersionSource.PROPAGATE_MANUAL)){
+							if(a.getLib()!=null && a.getLib().getDigest().equals(digest)){
+								continue bugLoop;
+							}
+						}
+						existingxSource.remove(AffectedVersionSource.TO_REVIEW);
+						
+						//skip analysis if libid already assessed with some strategy
+						for(AffectedLibrary[] array: existingxSource.values()){
+							for(AffectedLibrary a: array)
+								if(a.getLibraryId()!=null && a.getLibraryId().equals(l.getLibraryId())){
+									continue bugLoop;
+								}
+						}
+						
+						
+						
+						Boolean affected = null;
+						boolean toUpload = false;
+						Set<LibraryId> list = new HashSet<LibraryId>();
+						
 					
-					
-					
-					Boolean affected = null;
-					boolean toUpload = false;
-					Set<LibraryId> list = new HashSet<LibraryId>();
-					
-					if(!bytecode) {
 						//loop over affected versions, if the same version for org.apache.tomcat was assessed consistently to VULN/FIXED, propagate it to SHA1 (meant to be used for tomcat >6 right now)	
 						for(AffectedLibrary[] array: existingxSource.values()){
 							for(AffectedLibrary a : array){
@@ -219,242 +194,62 @@ public class DigestAnalyzer {
 								}
 							}
 						}
-					} 
-					//establish affectedness based on bytecode (for now only if digest has lidid)
-					else { //if(l.getLibraryId()!=null) {
-									        
-				        
-						boolean vuln = false;
-						boolean fixed = false;
-						
-						//check for each construct change
-						for(ConstructChange cc: b1.getConstructChanges()) {
-							//only compare for type MOD
-							if(cc.getConstructChangeType().equals(ConstructChangeType.MOD) && 
-									(cc.getConstructId().getType().equals(ConstructType.CONS) || cc.getConstructId().getType().equals(ConstructType.METH))) {
-								
-								
-								String ast_current = null;
-								// retrieve the bytecode of the currently analyzed library
-								if(l.getLibraryId()!=null) {
-									LibraryId toAssess = l.getLibraryId();
-									ast_current = BackendConnector.getInstance().getAstForQnameInLib(toAssess.getMvnGroup()+"/"+toAssess.getArtifact()+"/"+toAssess.getVersion()+"/"
-														+cc.getConstructId().getType().toString()+"/"+cc.getConstructId().getQname(),false,ProgrammingLanguage.JAVA);
-								}
-								else {
-									//read from file
-									//retrieve archive from path
-							        Path p = Paths.get(PEConfiguration.getBaseFolder().toString()+File.separator+l.getDigest()+".jar").normalize();
-							        if(p==null || !p.toFile().exists()) {
-							        	DigestAnalyzer.log.info("Archive file [" + p +"] does not exists");
-							        	break;
-							        }
-									JarFile archive = null; 
-									try{
-										archive = new JarFile(p.toFile());
-									} catch (ZipException ze){
-										log.error("Error in opening zip file.");
-										break;
-									}
-									
-									JavaId jid = this.getJavaId(cc.getConstructId().getType().toString(), cc.getConstructId().getQname());
-									JavaId def_ctx = this.getCompilationUnit(jid);
-									
-									final String entry_name = def_ctx.getQualifiedName().replace('.', '/') + ".class";
-									final Enumeration<JarEntry> en = archive.entries();
-									JarEntry entry = null;
-									while(en.hasMoreElements()) {
-										entry = en.nextElement();
-										if(entry.getName().equals(entry_name)) {
-											break;
-										}
-									}
-									Path classfile = null;
-									if(entry!=null) {
-										classfile = Files.createTempFile(def_ctx.getQualifiedName(), ".class");
-										log.debug("classfile at " + classfile.toAbsolutePath());
-										final InputStream ais = archive.getInputStream(entry);
-										final FileOutputStream fos = new FileOutputStream(classfile.toFile());
-										IOUtils.copy(ais, fos);
-										fos.flush();
-										fos.close();
-										ais.close();
-									}
-									else {
-										log.warn("Artifact does not contain entry [" + entry_name + "] for class [" + def_ctx.getQualifiedName() + "]");
-									}
-									archive.close();
-									ASTConstructBodySignature sign =null;
-									if(classfile!=null) {
-										SignatureFactory sf = CoreConfiguration.getSignatureFactory(JavaId.toSharedType(jid));
-										sign = (ASTConstructBodySignature)sf.createSignature(JavaId.toSharedType(jid), classfile.toFile());
-										if(sign!=null)
-											ast_current = sign.toJson();
-										// Delete
-										try {
-											Files.delete(classfile);
-										} catch (Exception e) {
-											log.error("Cannot delete file [" + classfile + "]: " + e.getMessage());
-										}
-									}
-									
-								}
-								
-								if(ast_current!=null){
-									
-									ConstructBytecodeASTManager astMgr = new ConstructBytecodeASTManager(cc.getConstructId().getQname(),cc.getRepoPath(),cc.getConstructId().getType());
-									
-									for(AffectedLibrary[] array: existingxSource.values()){
-										for(AffectedLibrary a : array){
-											if(a.getAffected() && a.getLibraryId()!=null)
-												astMgr.addVulnLid(a.getLibraryId());
-											else if(!a.getAffected() && a.getLibraryId()!=null)
-												astMgr.addFixedLid(a.getLibraryId());
-										}
-									}
-									
-							 		
-							 		//retrieve and compare source whose libid was assessed as vuln
-							 		for(LibraryId v: astMgr.getVulnLids()){
-							 		   	log.info(v.toString());
-		    							//retrieve bytecode of the known to be vulnerable library
-		    						 	String ast_lid = astMgr.getVulnAst(v); 
-		    						 			
-		    							if (ast_lid != null) {    						 	
-			    						 	//check if the ast's diff is empty
-			    						 	
-			    							String body = "["+ast_lid + "," + ast_current +"]";
-			                                String editV = BackendConnector.getInstance().getAstDiff(body);
-			                                ASTSignatureChange scV = gson.fromJson(editV, ASTSignatureChange.class);
-			                                /* */
-
-			                                log.debug("size to vulnerable lib " +v.toString()+ " is [" + scV.getModifications().size() + "]");
-			                                if(scV.getModifications().size()==0){
-			                                	
-			                                	//check that there isn't also a construct = to vuln
-			                                	
-			                                	log.info("LID equal to vuln based on AST bytecode comparison with  [" + v.toString() + "]");
-			                                	vuln=true;
-			                                	list.add(v);
-			                                	break;
-			                                }
-		    							}
-				    					
-			    					}
-							 		
-							 		//retrieve and compare source whose libid was assessed as fixed
-							 		for(LibraryId f: astMgr.getFixedLids()){
-		    					
-							 			//retrieve bytecode of the known to be vulnerable library
-									 	String ast_lid = astMgr.getFixedAst(f);
-										
-									 	if (ast_lid != null) { 	
-											//check if the ast's diff is empty
-										 	
-											String body = "["+ast_lid + "," + ast_current +"]";
-				                            String editV = BackendConnector.getInstance().getAstDiff(body);
-				                            ASTSignatureChange scV = gson.fromJson(editV, ASTSignatureChange.class);
-				                            /* */
-
-				                            log.debug("size to fixed lib " +l.toString()+ " is [" + scV.getModifications().size() + "]");
-				                            if(scV.getModifications().size()==0){
-				                            	
-				                            
-				                            	log.info("LID  equal to fix based on AST bytecode comparison with  [" + f.toString() + "]");
-				                            //	cpa2.addLibsSameBytecode(l);
-				                            	fixed=true;
-				                            	list.add(f);
-				                            	break;
-				            				}
-									 	}
-			                        }
-								}
-							}
-							// cia does not serve code for type class
-//							if(cc.getConstructChangeType().equals(ConstructChangeType.MOD) && cc.getConstructId().getType().equals(ConstructType.CLAS)) {
-//								// retrieve the bytecode of the currently analyzed library
-//								String cls_current = BackendConnector.getInstance().getSourcesForQnameInLib(toAssess.getMvnGroup()+"/"+toAssess.getArtifact()
-//										+"/"+toAssess.getVersion()+"/"+cc.getConstructId().getType().toString()+"/"+cc.getConstructId().getQname());
-//				
-//								if(cls_current!=null){
-//									for(AffectedLibrary[] array: existingxSource.values()){
-//										for(AffectedLibrary a : array){
-//											if(a.getLibraryId()!=null) {
-//												String cls_known = BackendConnector.getInstance().getSourcesForQnameInLib(a.getLibraryId().getMvnGroup()+"/"+a.getLibraryId().getArtifact()
-//												+"/"+a.getLibraryId().getVersion()+"/"+cc.getConstructId().getType().toString()+"/"+cc.getConstructId().getQname());
-//											
-//												if(cls_known!=null && cls_current.equals(cls_known)) {
-//													list.add(a.getLibraryId());
-//													if(a.getAffected()) 
-//														vuln=true;
-//													else if(!a.getAffected()) 
-//														fixed=true;
-//												}
-//											}
-//										}
-//									}
-//								}
-//							}
-						}
-						if(vuln && ! fixed) {
-							affected = true;
-							toUpload = true;
-						}
-						else if(!vuln && fixed) {
-							affected = false;
-							toUpload = true;
-						}
 					}
-					if(toUpload){
-						log.info("Creating Json for PROPAGATE_MANUAL for digest [" + digest +"] and bug [" + b.getBugId() +"]");
-						JsonObject result = createJsonResult(l, affected,list);
-
-						JsonArray sourceResult = new JsonArray();
-						
-						sourceResult.add(result);
-						
-						BackendConnector.getInstance().uploadPatchEvalResults(b.getBugId(),sourceResult.toString(), "PROPAGATE_MANUAL");
-					}
-					
-					
-					
 				}
-				
-				
+			} catch (EntityNotFoundInBackendException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (BackendConnectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (EntityNotFoundInBackendException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (BackendConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+		else {
+	
+			BytecodeComparator comparator = new BytecodeComparator();
+			Iterator<File> it = FileUtils.iterateFiles(new File(PEConfiguration.getBaseFolder().toString()+File.separator), null, false);
+			//Path p = Paths.get(PEConfiguration.getBaseFolder().toString()+File.separator+l.getDigest()+".jar").normalize();
+			while(it.hasNext()){
+          		File j = (File) it.next();
+	            Path p = j.toPath();
+		        if(p==null || !p.toFile().exists()) {
+		        	DigestAnalyzer.log.info("Archive file [" + p +"] does not exists");
+		        	break;
+		        }
+
+	        	this.digest= FileUtil.getSHA1(j).toUpperCase();
+	        
+	        	log.info("Digest to be analyzed: " + this.digest);
+	    		String lib;
+				try {
+					lib = BackendConnector.getInstance().getLibrary(digest);
+					
+					Library l = (Library) JacksonUtil.asObject(lib, Library.class);
+			//		Library l = gson.fromJson(lib, Library.class);
+					
+					List<Bug> bugsToAnalyze = new ArrayList<Bug>();
+					
+					String allbugs = BackendConnector.getInstance().getBugsForLib(digest);
+					bugsToAnalyze = Arrays.asList(gson.fromJson(allbugs, Bug[].class));
+					//bugsToAnalyze= Arrays.asList((Bug[]) JacksonUtil.asObject(allbugs, Bug[].class));
+					
+					log.info("["+bugsToAnalyze.size()+"] bugs to analyze");
+					
+					for (Bug b: bugsToAnalyze){
+						comparator.compareLibForBug(l, b.getBugId(), p);
+					}
+				} catch (EntityNotFoundInBackendException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (BackendConnectionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
-	 private JsonObject createJsonResult(Library _lib, Boolean _affected, Set<LibraryId> _list){
-			JsonObject result = new JsonObject();
-			result.addProperty("source", "PROPAGATE_MANUAL");
-			if(_list == null)
-				result.addProperty("explanation", "Generated automatically by DigestAnalyzer on " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
-			else
-				result.addProperty("explanation", "Same bytecode found in library(ies) ["+_list.toString()+"] by DigestAnalyzer on " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
-			if(_affected!=null)
-				result.addProperty("affected", _affected);
-				if(_lib.getLibraryId()!=null){
-					JsonObject lib = new JsonObject();
-					lib.addProperty("group", _lib.getLibraryId().getMvnGroup());
-					lib.addProperty("artifact", _lib.getLibraryId().getArtifact());
-					lib.addProperty("version", _lib.getLibraryId().getVersion());
-					result.add("libraryId", lib);
-			}
-			else{
-				JsonObject lib = new JsonObject();
-				lib.addProperty("digest", _lib.getDigest());
-				result.add("lib", lib);
-			}
-			return result;
-	    }
-	 
+	
 		/**
 		 * <p>main.</p>
 		 *
@@ -465,7 +260,7 @@ public class DigestAnalyzer {
 			// Prepare parsing of cmd line arguments
 			final Options options = new Options();
 			
-			options.addOption("digest", "digest", true, "Delete all existing results before upload; otherwise only upload results for AffectedLibraries not already existing in the backend");
+			options.addOption("digest", "digest", false, "");
 			options.addOption("bytecode", "bytecode", false, "Compare bytecode with assessed Jars");
 			
 						 
@@ -476,9 +271,10 @@ public class DigestAnalyzer {
 			    Boolean bytecode = false;
 			    if(cmd.hasOption("bytecode"))
 			    	bytecode = Boolean.valueOf(true);
+					log.info("Assess all bugs of Jars found at basefolder, all other options will be ignored.");
 				if(cmd.hasOption("digest")){
 					String digest = cmd.getOptionValue("digest");
-					log.info("Running patcheval to assess all bugs of digest["+digest+"], all other options (excluding -bytecode and basefolder-) will be ignored.");
+					log.info("Assess all bugs of digest["+digest+"] using metadata, all other options will be ignored.");
 					DigestAnalyzer d = new DigestAnalyzer(digest, bytecode);
 					d.analyze();
 				}
@@ -487,39 +283,5 @@ public class DigestAnalyzer {
 				e.printStackTrace();
 			}
 		}
-
-
-	/**
-	 * 
-	 * @param _jid
-	 * @return
-	 */
-	private JavaId getCompilationUnit(JavaId _jid) {
-		// Got it --> return provided object
-		if( (_jid.getType().equals(JavaId.Type.CLASS) && !((JavaClassId)_jid).isNestedClass()) ||
-				(_jid.getType().equals(JavaId.Type.INTERFACE) && !((JavaInterfaceId)_jid).isNested()) ||
-				(_jid.getType().equals(JavaId.Type.ENUM) && !((JavaEnumId)_jid).isNested()) ) {
-			return _jid;
-		} else {
-			return this.getCompilationUnit((JavaId)_jid.getDefinitionContext());
-		}
-	}
-	
-	private JavaId getJavaId(String _type, String _qname) {
-		JavaId.Type type = JavaId.typeFromString(_type);
-	
-		// Check params
-		if(JavaId.Type.METHOD!=type && JavaId.Type.CONSTRUCTOR!=type)
-			throw new IllegalArgumentException("Only types METH and CONS are supported, got [" + type + "]");
-	
-		// Parse JavaId
-		JavaId jid = null;
-		if(JavaId.Type.CONSTRUCTOR==type)
-			jid = JavaId.parseConstructorQName(_qname);
-		else if(JavaId.Type.METHOD==type)
-			jid = JavaId.parseMethodQName(_qname);
-	
-		return jid;
-	}
 
 }

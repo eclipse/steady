@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.patcheval.utils;
+package com.sap.psr.vulas.bytecode;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -100,7 +100,7 @@ public class ConstructBytecodeASTManager {
 			 if (ast_lid != null) {
 				 this.lidVulnBytecodeAST.put(l,ast_lid);
 			 }
-			 else { // the file is not found and cannot be used as a comparison basis, we set it to BytecodeNotFound to avoid furthur requests
+			 else { // the file is not found and cannot be used as a comparison basis, we set it to BytecodeNotFound to avoid further requests
 				 this.lidVulnBytecodeAST.put (l,BYTECODE_NOT_FOUND);
 			 }
 		 }

@@ -93,8 +93,8 @@ public class ConstructController {
 		JavaId jid = null;
 		JavaId def_ctx = null;
 		try {
-			jid = this.getJavaId(type, qname);
-			def_ctx = this.getCompilationUnit(jid);
+			jid = JavaId.getJavaId(type, qname);
+			def_ctx = JavaId.getCompilationUnit(jid);
 			log.debug("Determined compilation unit " + def_ctx + " for qname [" + qname + "]");
 			file = ClassDownloader.getInstance().getClass(mvnGroup, artifact, version, def_ctx.getQualifiedName(), ClassDownloader.Format.JAVA);
 
@@ -161,8 +161,8 @@ public class ConstructController {
 			if(doc==null)
 				throw new RuntimeException("SHA1 [" + sha1 + "] not found");
 
-			jid = this.getJavaId(type, qname);
-			def_ctx = this.getCompilationUnit(jid);
+			jid = JavaId.getJavaId(type, qname);
+			def_ctx = JavaId.getCompilationUnit(jid);
 			log.debug("Determined compilation unit " + def_ctx + " for qname [" + qname + "]");
 			file = ClassDownloader.getInstance().getClass(doc.getLibId().getMvnGroup(), doc.getLibId().getArtifact(), doc.getLibId().getVersion(), def_ctx.getQualifiedName(), ClassDownloader.Format.JAVA);
 
@@ -203,38 +203,38 @@ public class ConstructController {
 		}
 	}
 
-	/**
-	 * 
-	 * @param _jid
-	 * @return
-	 */
-	private JavaId getCompilationUnit(JavaId _jid) {
-		// Got it --> return provided object
-		if( (_jid.getType().equals(JavaId.Type.CLASS) && !((JavaClassId)_jid).isNestedClass()) ||
-				(_jid.getType().equals(JavaId.Type.INTERFACE) && !((JavaInterfaceId)_jid).isNested()) ||
-				(_jid.getType().equals(JavaId.Type.ENUM) && !((JavaEnumId)_jid).isNested()) ) {
-			return _jid;
-		} else {
-			return this.getCompilationUnit((JavaId)_jid.getDefinitionContext());
-		}
-	}
-
-	private JavaId getJavaId(String _type, String _qname) {
-		JavaId.Type type = JavaId.typeFromString(_type);
-
-		// Check params
-		if(JavaId.Type.METHOD!=type && JavaId.Type.CONSTRUCTOR!=type)
-			throw new IllegalArgumentException("Only types METH and CONS are supported, got [" + type + "]");
-
-		// Parse JavaId
-		JavaId jid = null;
-		if(JavaId.Type.CONSTRUCTOR==type)
-			jid = JavaId.parseConstructorQName(_qname);
-		else if(JavaId.Type.METHOD==type)
-			jid = JavaId.parseMethodQName(_qname);
-
-		return jid;
-	}
+//	/**
+//	 * 
+//	 * @param _jid
+//	 * @return
+//	 */
+//	private JavaId getCompilationUnit(JavaId _jid) {
+//		// Got it --> return provided object
+//		if( (_jid.getType().equals(JavaId.Type.CLASS) && !((JavaClassId)_jid).isNestedClass()) ||
+//				(_jid.getType().equals(JavaId.Type.INTERFACE) && !((JavaInterfaceId)_jid).isNested()) ||
+//				(_jid.getType().equals(JavaId.Type.ENUM) && !((JavaEnumId)_jid).isNested()) ) {
+//			return _jid;
+//		} else {
+//			return this.getCompilationUnit((JavaId)_jid.getDefinitionContext());
+//		}
+//	}
+//
+//	private JavaId getJavaId(String _type, String _qname) {
+//		JavaId.Type type = JavaId.typeFromString(_type);
+//
+//		// Check params
+//		if(JavaId.Type.METHOD!=type && JavaId.Type.CONSTRUCTOR!=type)
+//			throw new IllegalArgumentException("Only types METH and CONS are supported, got [" + type + "]");
+//
+//		// Parse JavaId
+//		JavaId jid = null;
+//		if(JavaId.Type.CONSTRUCTOR==type)
+//			jid = JavaId.parseConstructorQName(_qname);
+//		else if(JavaId.Type.METHOD==type)
+//			jid = JavaId.parseMethodQName(_qname);
+//
+//		return jid;
+//	}
 
 	/**
 	 * Provided that (1) the given GAV is known to the software repo (e.g., Maven Central) and (2) an artifact with classifier 'source' exists for it,
@@ -262,8 +262,8 @@ public class ConstructController {
 			JavaId jid = null;
 			JavaId def_ctx = null;
 			try {			
-				jid = this.getJavaId(type, qname);
-				def_ctx = this.getCompilationUnit(jid);
+				jid = JavaId.getJavaId(type, qname);
+				def_ctx = JavaId.getCompilationUnit(jid);
 				log.debug("Determined compilation unit " + def_ctx + " for qname [" + qname + "]");
 				if(sources)
 					file = ClassDownloader.getInstance().getClass(mvnGroup, artifact, version, def_ctx.getQualifiedName(), ClassDownloader.Format.JAVA);
@@ -363,8 +363,8 @@ public class ConstructController {
 			JavaId jid = null;
 			JavaId def_ctx = null;
 
-			jid = this.getJavaId(type, qname);
-			def_ctx = this.getCompilationUnit(jid);
+			jid = JavaId.getJavaId(type, qname);
+			def_ctx = JavaId.getCompilationUnit(jid);
 			log.info("Determined compilation unit " + def_ctx + " for qname [" + qname + "]");
 
 			file = ClassDownloader.getInstance().getClass(doc.getLibId().getMvnGroup(), doc.getLibId().getArtifact(), doc.getLibId().getVersion(), def_ctx.getQualifiedName(), ClassDownloader.Format.JAVA);

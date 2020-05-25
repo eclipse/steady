@@ -50,13 +50,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
+import com.sap.psr.vulas.bytecode.ConstructBytecodeASTManager;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.patcheval.representation.ArtifactResult2;
 import com.sap.psr.vulas.patcheval.representation.Bug;
 import com.sap.psr.vulas.patcheval.representation.ConstructPathAssessment2;
 import com.sap.psr.vulas.patcheval.representation.Intersection2;
 import com.sap.psr.vulas.patcheval.representation.ReleaseTree;
-import com.sap.psr.vulas.patcheval.utils.ConstructBytecodeASTManager;
 import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
 import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 import com.sap.psr.vulas.shared.enums.ConstructChangeType;
@@ -269,7 +269,7 @@ public class BugLibManager {
     	// we always get all the existing affected versions (even if onlyAddNew is false)
     	// as we always need the results for MANUAL and PROGATE_MANUAL in order to further propagate
     	for(AffectedVersionSource s : AffectedVersionSource.values()){
-    		AffectedLibrary[] al = BackendConnector.getInstance().getBugAffectedLibraries(bugChangeList.getBugId(),s.toString());
+    		AffectedLibrary[] al = BackendConnector.getInstance().getBugAffectedLibraries(bugChangeList.getBugId(),s.toString(),false);
     		existingxSource.put(s, al);
     		BugLibManager.log.info("Existing [" + al.length + "] affected libraries in backend for source [" +s.toString()+"]");
     	}
@@ -948,8 +948,8 @@ public class BugLibManager {
     //this method is used for bugs without construct changes to propagate manual (and already propagated) assessments (affected-false) to newer versions within the same major release
     private void computeAndUploadPropagateResults() throws BackendConnectionException{
     	List<AffectedLibrary> existingManual = new ArrayList<AffectedLibrary>();
-		existingManual.addAll(Arrays.asList(BackendConnector.getInstance().getBugAffectedLibraries(bugChangeList.getBugId(),AffectedVersionSource.MANUAL.toString())));
-		existingManual.addAll(Arrays.asList(BackendConnector.getInstance().getBugAffectedLibraries(bugChangeList.getBugId(),AffectedVersionSource.PROPAGATE_MANUAL.toString())));
+		existingManual.addAll(Arrays.asList(BackendConnector.getInstance().getBugAffectedLibraries(bugChangeList.getBugId(),AffectedVersionSource.MANUAL.toString(),false)));
+		existingManual.addAll(Arrays.asList(BackendConnector.getInstance().getBugAffectedLibraries(bugChangeList.getBugId(),AffectedVersionSource.PROPAGATE_MANUAL.toString(),false)));
     	
 		BugLibManager.log.info("Existing [" + existingManual.size() + "] affected libraries in backend for sources MANUAL and PROPAGATE_MANUAL.");
 		
@@ -1071,10 +1071,11 @@ public class BugLibManager {
     	}
     	this.pool.shutdown();
     	try {
-			while (!this.pool.awaitTermination(10, TimeUnit.SECONDS))
-				log.info("Wait for the completion of Bytecode comparison...");
+    		this.pool.awaitTermination(2, TimeUnit.HOURS);
+			//while (!this.pool.awaitTermination(10, TimeUnit.SECONDS))
+				//log.info("Wait for the completion of Bytecode comparison...");
 		} catch (InterruptedException e) {
-			log.error("Interrupt exception");
+			log.error("Interrupt execution of bytecode comparison (timeout of 2H)");
 		}
 		
 		log.info("ByteCodeComparison: a total of [" + count + "] archives compared for [" + bytecodes.size()+"] construct paths.");

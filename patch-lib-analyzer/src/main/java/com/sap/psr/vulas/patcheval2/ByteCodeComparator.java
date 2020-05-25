@@ -27,12 +27,12 @@ import org.apache.commons.logging.LogFactory;
 
 import com.google.gson.Gson;
 import com.sap.psr.vulas.backend.BackendConnector;
+import com.sap.psr.vulas.bytecode.ConstructBytecodeASTManager;
 import com.sap.psr.vulas.java.sign.gson.GsonHelper;
 import com.sap.psr.vulas.patcheval.representation.ArtifactResult2;
 import com.sap.psr.vulas.patcheval2.BugLibManager;
 import com.sap.psr.vulas.patcheval.representation.ConstructPathAssessment2;
 import com.sap.psr.vulas.patcheval.utils.CSVHelper2;
-import com.sap.psr.vulas.patcheval.utils.ConstructBytecodeASTManager;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.java.sign.ASTSignatureChange;
