@@ -605,6 +605,12 @@ Identified vulnerabilities including any information gathered during static and 
     #   CLI: -
     #   MVN: ${project.build.directory}/vulas/report
     vulas.report.reportDir =
+
+    # If true, a CURL command will be printed to the console for all exempted findings in order to permanently mark
+    # a given library as non-vulnerable, independent of the specific application.
+    # Default: false
+    # Note: The scope of this assessment is beyond a specific application, hence, the CURL command requires a security token.
+    vulas.report.createLibraryAssessments = 
 ```
 
 #### Run as follows
@@ -624,7 +630,7 @@ mvn -Dvulas vulas:report
 
 #### Exemptions
 
-The setting `vulas.report.exemptBug.<vuln-id>.reason` can be used to capture the results of an audit or assessment by developers in regards to whether a vulnerability is problematic in a given application context. Exempted bugs do not result in build exceptions and are also shown in the apps Web frontend.
+The setting `vulas.report.exemptBug.<vuln-id>.reason` can be used to capture the results of an audit or assessment by developers in regards to whether a vulnerability is problematic in a given application context. Exempted bugs do not result in build exceptions, but are still shown in both the report and the apps Web frontend.
 
 #### Build exceptions
 
