@@ -2,15 +2,15 @@
 
 ## Introduction
 
-The reports are generated after the execution of the `report` goal. They are generated in three different formats (JSON, XML and HTML). See the [report goal documentation section](../analysis/#create-result-report-report).
+Result reports are generated through the execution of the `report` goal, more information on how to run and configure the goal can be found [here](../analysis/#create-result-report-report). They are generated in three different formats (JSON, XML and HTML), but the remainder of this page will focus on the HTML report.
 
-We will mainly present the HTML version in this documentation.
+A big advantage of reports is that they aggregate the findings of all Maven modules of a multi-module reactor project.
 
-Reports come with the advantage of having an aggregate view on a set of modules. They can mainly be divided into two parts.
+Reports are divided into the following two parts.
 
 ## Report Header
 
-The report header contains general information about the scanned  module(s).
+The report header contains general information about the scanned applications, e.g., Maven modules.
 
 <center class='expandable'>
     [![start_page](./img/report_header.png)](./img/report_header.png)
@@ -18,24 +18,25 @@ The report header contains general information about the scanned  module(s).
 
 It provides:
 
-- The date & time the report was created.
-- The information if the report is an aggregated report or not.
-- The list of projects/modules included in this report.
-- The settings used to generate the report (in the "Plugin Configuration" section).
-- The conclusion of the exceution of the "report" goal. It is displayed in red when the relevant vulnerabilities were found. Relevant is to be understood as relevant againts the provided settings for the scan, e.g. considering the different settings provided by the user.
+- Date and time of the report creation.
+- Information if the report is an aggregated report or not (incl. the list of considered projects/modules).
+- The conclusion of the `report` goal, displayed in red if vulnerabilities were found and an exception is thrown, green otherwise.
+- Important configuration settings used when running the `report` goal (exemptions and exception threshold).
 
+## Report Body
 
-## Report Core
-
-The report "core" contains the list of findings. This part is basically was can be seen when opening the Frontend.
-
-Please notice that the "core" section could be empty in case no vulnerability could be identified into the scanned project(s).
+The report body contains two lists of findings: Those below the header "Vulnerabilities" are relevant findings resulting in a build exception, those below the header "Exempted Vulnerabilities" have been exempted according to the configuration settings mentioned in the report header.
 
 <center class='expandable'>
     [![start_page](./img/report_core.png)](./img/report_core.png)
 </center>
 
-This list contains the complete list of vulnerabilities identified in the scanned project(s), including assessed and mitigated ones.
+The color code on the left of each item reflects the CVSS score of the respective vulnerability, it is grey in case no CVSS score is present.
 
-- CVEs listed with a red background color and for which the text in the  "Applications including vulnerable code" column is red are vulnerabilities impacting the scanned project(s).
-- CVEs with a white background and for which the text in the  "Applications including vulnerable code" column is greyed out are assessed vulnerabilities.
+The table below each item contains a subset of those projects/modules having a dependency on the respective vulnerable archive.
+
+You can reach the Web frontend of each module/project by clicking on its name.
+
+Moreover, each project/module comes with a tooltip showing more information about the respective project/module, the nature of its dependency on the respective archive (scope and transitivity), and, for exempted vulnerabilities, the exemption reason.
+
+The three columns indicate whether the vulnerable code is present, whether it is potentially executable or actually executed.
