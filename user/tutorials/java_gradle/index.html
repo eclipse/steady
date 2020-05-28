@@ -2,7 +2,7 @@
 
 
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="no-js">
   <head>
     
@@ -36,17 +36,17 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../../images/ES-favicon-48-transparent.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-3.0.6">
+      <meta name="generator" content="mkdocs-1.0, mkdocs-material-4.6.3">
     
     
       
-        <title>Scanning Java (Gradle) - Eclipse Steady 3.1.11 (Incubator Project)</title>
+        <title>Scanning Java (Gradle) - Eclipse Steady 3.1.12 (Incubator Project)</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/application.451f80e5.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application.adb8469c.css">
       
-        <link rel="stylesheet" href="../../../assets/stylesheets/application-palette.22915126.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/application-palette.a8b3c06d.css">
       
       
         
@@ -55,18 +55,22 @@
       
     
     
-      <script src="../../../assets/javascripts/modernizr.1aa3b519.js"></script>
+      <script src="../../../assets/javascripts/modernizr.86422ebf.js"></script>
     
     
     <!-- Suppress Material fonts -->
 
     <link rel="stylesheet" href="../../../assets/fonts/material-icons.css">
     
+    
       <link rel="stylesheet" href="../../../css/faq.css">
     
       <link rel="stylesheet" href="../../../css/override.css">
     
       <link rel="stylesheet" href="../../../css/scrollTop.css">
+    
+    
+      
     
     
 
@@ -85,24 +89,7 @@
       <defs>
         
         
-          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
-    viewBox="0 0 416 448" id="__github">
-  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
-        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
-        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
-        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
-        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
-        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
-        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
-        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
-        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
-        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
-        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
-        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
-        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
-        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
-        99.5z" />
-</svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
         
       </defs>
     </svg>
@@ -110,7 +97,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#scanning-java-apps-built-with-gradle" tabindex="1" class="md-skip">
+      <a href="#scanning-java-apps-built-with-gradle" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -124,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.11 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.12 (Incubator Project)" aria-label="Eclipse Steady 3.1.12 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -136,27 +123,26 @@
       <div class="md-flex__cell md-flex__cell--stretch">
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
-            
-              <span class="md-header-nav__topic">
-                Eclipse Steady 3.1.11 (Incubator Project)
-              </span>
-              <span class="md-header-nav__topic">
+            <span class="md-header-nav__topic">
+              Eclipse Steady 3.1.12 (Incubator Project)
+            </span>
+            <span class="md-header-nav__topic">
+              
                 Scanning Java (Gradle)
-              </span>
-            
+              
+            </span>
           
         </div>
       </div>
       <div class="md-flex__cell md-flex__cell--shrink">
         
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
           
-            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
-            
 <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -174,7 +160,6 @@
     </div>
   </div>
 </div>
-          
         
       </div>
       
@@ -185,20 +170,18 @@
 
   
 
-
-  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
-    
-      <div class="md-source__icon">
-        <svg viewBox="0 0 24 24" width="24" height="24">
-          <use xlink:href="#__github" width="24" height="24"></use>
-        </svg>
-      </div>
-    
-    <div class="md-source__repository">
-      eclipse/steady
+<a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
     </div>
-  </a>
-
+  
+  <div class="md-source__repository">
+    eclipse/steady
+  </div>
+</a>
           </div>
         </div>
       
@@ -224,7 +207,7 @@
   
     <li class="md-tabs__item">
       
-        <a href="../../.." title="Home" class="md-tabs__link">
+        <a href="../../.." class="md-tabs__link">
           Home
         </a>
       
@@ -237,7 +220,7 @@
   
     <li class="md-tabs__item">
       
-        <a href="../../" title="Docs" class="md-tabs__link md-tabs__link--active">
+        <a href="../../" class="md-tabs__link md-tabs__link--active">
           Docs
         </a>
       
@@ -250,7 +233,7 @@
   
     <li class="md-tabs__item">
       
-        <a href="../../../admin/" title="DevOps" class="md-tabs__link">
+        <a href="../../../admin/" class="md-tabs__link">
           DevOps
         </a>
       
@@ -263,7 +246,7 @@
   
     <li class="md-tabs__item">
       
-        <a href="../../../contributor/" title="Contribute" class="md-tabs__link">
+        <a href="../../../contributor/" class="md-tabs__link">
           Contribute
         </a>
       
@@ -276,7 +259,7 @@
   
     <li class="md-tabs__item">
       
-        <a href="../../../vuln_db/" title="Vulnerability database" class="md-tabs__link">
+        <a href="../../../vuln_db/" class="md-tabs__link">
           Vulnerability database
         </a>
       
@@ -289,7 +272,7 @@
   
     <li class="md-tabs__item">
       
-        <a href="https://blogs.sap.com/tag/vulas/" title="Blog" class="md-tabs__link">
+        <a href="https://blogs.sap.com/tag/vulas/" class="md-tabs__link">
           Blog
         </a>
       
@@ -301,7 +284,7 @@
   </div>
 </nav>
       
-      <main class="md-main">
+      <main class="md-main" role="main">
         <div class="md-main__inner md-grid" data-md-component="container">
           
             
@@ -310,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.11 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.12 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.11 (Incubator Project)
+    Eclipse Steady 3.1.12 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -324,20 +307,18 @@
 
   
 
-
-  <a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
-    
-      <div class="md-source__icon">
-        <svg viewBox="0 0 24 24" width="24" height="24">
-          <use xlink:href="#__github" width="24" height="24"></use>
-        </svg>
-      </div>
-    
-    <div class="md-source__repository">
-      eclipse/steady
+<a href="https://github.com/eclipse/steady/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
     </div>
-  </a>
-
+  
+  <div class="md-source__repository">
+    eclipse/steady
+  </div>
+</a>
     </div>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -525,21 +506,21 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#prerequisites" title="Prerequisites" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     Prerequisites
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#setup" title="Setup" class="md-nav__link">
+  <a href="#setup" class="md-nav__link">
     Setup
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#goal-execution" title="Goal execution" class="md-nav__link">
+  <a href="#goal-execution" class="md-nav__link">
     Goal execution
   </a>
   
@@ -547,21 +528,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#app" title="app" class="md-nav__link">
+  <a href="#app" class="md-nav__link">
     app
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#report" title="report" class="md-nav__link">
+  <a href="#report" class="md-nav__link">
     report
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#clean" title="clean" class="md-nav__link">
+  <a href="#clean" class="md-nav__link">
     clean
   </a>
   
@@ -573,7 +554,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-links" title="Useful links" class="md-nav__link">
+  <a href="#useful-links" class="md-nav__link">
     Useful links
   </a>
   
@@ -1209,21 +1190,21 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#prerequisites" title="Prerequisites" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     Prerequisites
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#setup" title="Setup" class="md-nav__link">
+  <a href="#setup" class="md-nav__link">
     Setup
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#goal-execution" title="Goal execution" class="md-nav__link">
+  <a href="#goal-execution" class="md-nav__link">
     Goal execution
   </a>
   
@@ -1231,21 +1212,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#app" title="app" class="md-nav__link">
+  <a href="#app" class="md-nav__link">
     app
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#report" title="report" class="md-nav__link">
+  <a href="#report" class="md-nav__link">
     report
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#clean" title="clean" class="md-nav__link">
+  <a href="#clean" class="md-nav__link">
     clean
   </a>
   
@@ -1257,7 +1238,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-links" title="Useful links" class="md-nav__link">
+  <a href="#useful-links" class="md-nav__link">
     Useful links
   </a>
   
@@ -1304,23 +1285,23 @@ please see <a href="../../manuals/setup/#workspace">this section of the manual</
 <h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
 <p>The plugin for Gradle requires changes of the following two files:</p>
 <p><strong>build.gradle</strong></p>
-<div class="codehilite"><pre><span></span>    buildscript {
+<div class="codehilite"><pre><span></span><code>    buildscript {
         repositories {
             mavenCentral()
         }
 
         dependencies {
-            classpath(&#39;com.sap.research.security.vulas:plugin-gradle:3.1.11&#39;) { changing = true }
+            classpath(&#39;com.sap.research.security.vulas:plugin-gradle:3.1.12&#39;) { changing = true }
         }
     }
 
     allprojects {
         apply plugin: &quot;vulas&quot;
     }
-</pre></div>
+</code></pre></div>
 
 <p><strong>gradle.properties</strong></p>
-<div class="codehilite"><pre><span></span>    // Used to identify the scan in the apps Web frontend
+<div class="codehilite"><pre><span></span><code>    // Used to identify the scan in the apps Web frontend
     group = &lt;GROUP&gt;
     version = &lt;VERSION&gt;
 
@@ -1328,12 +1309,12 @@ please see <a href="../../manuals/setup/#workspace">this section of the manual</
     vulas.core.space.token = &lt;WORKSPACE-TOKEN&gt;
 
     vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
-</pre></div>
+</code></pre></div>
 
 <p>Note: Rather than adding configuration settings to <code>gradle.properties</code>, they can also be passed as project properties in the command line, e.g., <code>-Pvulas.report.exceptionThreshold=noException</code>. The use of <code>-D</code> system properties for changing configuration settings is discouraged (because of the cache of the Gradle daemon).</p>
 <p>The configuration is correct if the Eclipse Steady analysis goals <code>app</code>, <code>a2c</code> etc. are listed among <strong>Other tasks</strong> when running the following command:</p>
-<div class="codehilite"><pre><span></span>    ./gradlew tasks --all
-</pre></div>
+<div class="codehilite"><pre><span></span><code>    ./gradlew tasks --all
+</code></pre></div>
 
 <p>The Gradle plugin only works with later releases of Gradle. How to upgrade is described <a href="https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:upgrading_wrapper">here</a>.</p>
 <h2 id="goal-execution">Goal execution<a class="headerlink" href="#goal-execution" title="Permanent link">&para;</a></h2>
@@ -1382,6 +1363,7 @@ please see <a href="../../manuals/setup/#workspace">this section of the manual</
 </ul>
                 
                   
+                
                 
               
               
@@ -1442,21 +1424,19 @@ please see <a href="../../manuals/setup/#workspace">this section of the manual</
           </div>
         
         powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
+        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs</a>
       </div>
       
-        
   <div class="md-footer-social">
     <link rel="stylesheet" href="../../../assets/fonts/font-awesome.css">
     
-      <a href="https://github.com/eclipse/steady" class="md-footer-social__link fa fa-github"></a>
+      <a href="https://github.com/eclipse/steady" target="_blank" rel="noopener" title="github" class="md-footer-social__link fa fa-github"></a>
     
   </div>
 
-      
     </div>
   </div>
 </footer>
@@ -1471,14 +1451,11 @@ please see <a href="../../manuals/setup/#workspace">this section of the manual</
 
     </div>
     
-      <script src="../../../assets/javascripts/application.5e60981f.js"></script>
+      <script src="../../../assets/javascripts/application.c33a9706.js"></script>
       
-      <script>app.initialize({version:"1.0.4",url:{base:"../../.."}})</script>
+      <script>app.initialize({version:"1.0",url:{base:"../../.."}})</script>
       
         <script src="../../../js/scrollTop.js"></script>
-      
-    
-    
       
     
   </body>
