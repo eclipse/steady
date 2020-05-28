@@ -30,7 +30,7 @@ import com.sap.psr.vulas.java.goals.CheckBytecodeGoal;
  *
  */
 
-@Mojo( name = "checkbytecode", defaultPhase = LifecyclePhase.VERIFY,  requiresOnline = true ) //requiresDependencyResolution = ResolutionScope.TEST,
+@Mojo( name = "checkcode", defaultPhase = LifecyclePhase.VERIFY,  requiresOnline = true ) //requiresDependencyResolution = ResolutionScope.TEST,
 public class MvnPluginCheckBytecode extends AbstractVulasMojo {
 	
 	/** {@inheritDoc} */
