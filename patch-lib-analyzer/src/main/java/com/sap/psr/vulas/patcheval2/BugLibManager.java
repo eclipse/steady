@@ -24,7 +24,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -52,7 +51,6 @@ import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.bytecode.ConstructBytecodeASTManager;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
-import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.patcheval.representation.ArtifactResult2;
 import com.sap.psr.vulas.patcheval.representation.ConstructPathAssessment2;
 import com.sap.psr.vulas.patcheval.representation.Intersection2;
@@ -64,9 +62,7 @@ import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.json.model.AffectedLibrary;
 import com.sap.psr.vulas.shared.json.model.Artifact;
 import com.sap.psr.vulas.shared.json.model.Bug;
-import com.sap.psr.vulas.shared.json.model.BugChangeList;
 import com.sap.psr.vulas.shared.json.model.ConstructChange;
-import com.sap.psr.vulas.shared.json.model.Library;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.json.model.Version;
 import com.sap.psr.vulas.shared.json.model.metrics.Counter;
@@ -112,7 +108,7 @@ public class BugLibManager {
 	/**
 	 * <p>resetToBug.</p>
 	 *
-	 * @param b a {@link com.sap.psr.vulas.shared.json.model.BugChangeList} object.
+	 * @param b a {@link com.sap.psr.vulas.shared.json.model.Bug} object.
 	 */
 	public void resetToBug(Bug b){
 		this.bugChangeList = b;

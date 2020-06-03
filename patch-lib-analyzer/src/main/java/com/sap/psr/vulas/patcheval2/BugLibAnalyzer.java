@@ -83,7 +83,7 @@ public class BugLibAnalyzer {
     /**
      * <p>Setter for the field <code>bug</code>.</p>
      *
-     * @param _b a {@link com.sap.psr.vulas.shared.json.model.BugChangeList} object.
+     * @param _b a {@link com.sap.psr.vulas.shared.json.model.Bug} object.
      */
     public void setBug(Bug _b){
     	this.bug=_b;

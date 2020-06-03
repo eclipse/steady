@@ -1089,7 +1089,7 @@ public class BackendConnector {
 	 *
 	 * @param _bugId a {@link java.lang.String} object.
 	 * @throws com.sap.psr.vulas.backend.BackendConnectionException
-	 * @return a {@link com.sap.psr.vulas.shared.json.model.BugChangeList} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Bug} object.
 	 */
 	public Bug getBug(GoalContext _g,String _bugId) throws BackendConnectionException {
 		BasicHttpRequest request = new BasicHttpRequest(HttpMethod.GET, PathBuilder.bug(_bugId), null);
