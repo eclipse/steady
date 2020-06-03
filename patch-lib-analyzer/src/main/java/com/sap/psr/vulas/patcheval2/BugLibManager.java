@@ -52,8 +52,8 @@ import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.bytecode.ConstructBytecodeASTManager;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
+import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.patcheval.representation.ArtifactResult2;
-import com.sap.psr.vulas.patcheval.representation.Bug;
 import com.sap.psr.vulas.patcheval.representation.ConstructPathAssessment2;
 import com.sap.psr.vulas.patcheval.representation.Intersection2;
 import com.sap.psr.vulas.patcheval.representation.ReleaseTree;
@@ -63,6 +63,7 @@ import com.sap.psr.vulas.shared.enums.ConstructChangeType;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.json.model.AffectedLibrary;
 import com.sap.psr.vulas.shared.json.model.Artifact;
+import com.sap.psr.vulas.shared.json.model.Bug;
 import com.sap.psr.vulas.shared.json.model.BugChangeList;
 import com.sap.psr.vulas.shared.json.model.ConstructChange;
 import com.sap.psr.vulas.shared.json.model.Library;
@@ -85,7 +86,7 @@ public class BugLibManager {
 	private static final Log log = LogFactory.getLog(BugLibManager.class);
 
 	// used to serialize cc
-	BugChangeList bugChangeList = null; 
+	Bug bugChangeList = null; 
     static List<ConstructChange> methsConsCC = null;
     private Set<ArtifactResult2> lids = null;
    
@@ -113,7 +114,7 @@ public class BugLibManager {
 	 *
 	 * @param b a {@link com.sap.psr.vulas.shared.json.model.BugChangeList} object.
 	 */
-	public void resetToBug(BugChangeList b){
+	public void resetToBug(Bug b){
 		this.bugChangeList = b;
     	this.setChangeList();
 		this.lids = new TreeSet<ArtifactResult2>();
@@ -269,7 +270,7 @@ public class BugLibManager {
     	// we always get all the existing affected versions (even if onlyAddNew is false)
     	// as we always need the results for MANUAL and PROGATE_MANUAL in order to further propagate
     	for(AffectedVersionSource s : AffectedVersionSource.values()){
-    		AffectedLibrary[] al = BackendConnector.getInstance().getBugAffectedLibraries(bugChangeList.getBugId(),s.toString(),false);
+    		AffectedLibrary[] al = BackendConnector.getInstance().getBugAffectedLibraries(null,bugChangeList.getBugId(),s.toString(),false);
     		existingxSource.put(s, al);
     		BugLibManager.log.info("Existing [" + al.length + "] affected libraries in backend for source [" +s.toString()+"]");
     	}
@@ -780,7 +781,7 @@ public class BugLibManager {
 									BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), e.getKey());
 									
 								}
-								BackendConnector.getInstance().uploadPatchEvalResults(bugChangeList.getBugId(),gaResxSource.get(e.getKey()).toString(), e.getKey());
+							//SP	BackendConnector.getInstance().uploadBugAffectedLibraries(null,bugChangeList.getBugId(),gaResxSource.get(e.getKey()).toString(), e.getKey());
 							}
 						
 						}
@@ -839,7 +840,7 @@ public class BugLibManager {
         int count=0;	        
         for ( Bug bug : bugsToAnalyze ){
         	try {
-	        	BugChangeList b = BackendConnector.getInstance().getBug(bug.getBugId());
+	        	Bug b = BackendConnector.getInstance().getBug(null, bug.getBugId());
 	    		
 	        	if(b==null){ 
 					BugLibManager.log.error("Error getting bug; the bug [" + bug.getBugId() + "] does not exist in the backend");
@@ -948,8 +949,8 @@ public class BugLibManager {
     //this method is used for bugs without construct changes to propagate manual (and already propagated) assessments (affected-false) to newer versions within the same major release
     private void computeAndUploadPropagateResults() throws BackendConnectionException{
     	List<AffectedLibrary> existingManual = new ArrayList<AffectedLibrary>();
-		existingManual.addAll(Arrays.asList(BackendConnector.getInstance().getBugAffectedLibraries(bugChangeList.getBugId(),AffectedVersionSource.MANUAL.toString(),false)));
-		existingManual.addAll(Arrays.asList(BackendConnector.getInstance().getBugAffectedLibraries(bugChangeList.getBugId(),AffectedVersionSource.PROPAGATE_MANUAL.toString(),false)));
+		existingManual.addAll(Arrays.asList(BackendConnector.getInstance().getBugAffectedLibraries(null, bugChangeList.getBugId(),AffectedVersionSource.MANUAL.toString(),false)));
+		existingManual.addAll(Arrays.asList(BackendConnector.getInstance().getBugAffectedLibraries(null,bugChangeList.getBugId(),AffectedVersionSource.PROPAGATE_MANUAL.toString(),false)));
     	
 		BugLibManager.log.info("Existing [" + existingManual.size() + "] affected libraries in backend for sources MANUAL and PROPAGATE_MANUAL.");
 		
@@ -1023,7 +1024,7 @@ public class BugLibManager {
 		BugLibManager.log.info("Propagated results for [" + propagate + "] artifacts.");
 		if(propagate>0){
 			if (VulasConfiguration.getGlobal().getConfiguration().getBoolean(PEConfiguration.UPLOAD_RESULTS) == true) {
-				BackendConnector.getInstance().uploadPatchEvalResults(bugChangeList.getBugId(),sourceResult.toString(), source);
+	//SP			BackendConnector.getInstance().uploadBugAffectedLibraries(null,bugChangeList.getBugId(),sourceResult.toString(), source);
 			} else {
 				// save to file
 	

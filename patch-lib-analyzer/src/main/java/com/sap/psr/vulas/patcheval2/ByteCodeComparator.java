@@ -111,7 +111,7 @@ public class ByteCodeComparator implements Runnable{
 	    						 	//check if the ast's diff is empty
 	    						 	
 	    							String body = "["+ast_lid + "," + ast_current +"]";
-	                                String editV = BackendConnector.getInstance().getAstDiff(body);
+	                                String editV = BackendConnector.getInstance().getAstDiff(null,body);
 	                                ASTSignatureChange scV = gson.fromJson(editV, ASTSignatureChange.class);
 	                                /* */
 	                                done_comparisons++;
@@ -143,7 +143,7 @@ public class ByteCodeComparator implements Runnable{
 									//check if the ast's diff is empty
 								 	
 									String body = "["+ast_lid + "," + ast_current +"]";
-		                            String editV = BackendConnector.getInstance().getAstDiff(body);
+		                            String editV = BackendConnector.getInstance().getAstDiff(null,body);
 		                            ASTSignatureChange scV = gson.fromJson(editV, ASTSignatureChange.class);
 		                            /* */
 		                            done_comparisons++;

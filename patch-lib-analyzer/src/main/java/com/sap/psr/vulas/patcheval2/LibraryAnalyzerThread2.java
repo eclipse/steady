@@ -103,7 +103,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
             	//doesArtifactExist works for both Java and Python as the called api (/artifacts/g/a/v) does not use the package information for Python
             	// doesArtifactExist sets the package to Jar; as a result it checks that a Jar exists for java and that an artifact for the given gav exists for python (no matter which packaging)
 
-            //	binAvailable = BackendConnector.getInstance().doesArtifactExist(l.getMvnGroup(), l.getArtifact(), l.getVersion(), false, (lang==ProgrammingLanguage.JAVA)?"jar":"sdist");
+            	binAvailable = BackendConnector.getInstance().doesArtifactExist(l.getMvnGroup(), l.getArtifact(), l.getVersion(), false, (lang==ProgrammingLanguage.JAVA)?"jar":"sdist");
                 if(!binAvailable){
                 	log.warn("No artifact available for library Id [" + l.toString() +"], it will not be included in the csv");
                 }
@@ -190,7 +190,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 						                    			if(mcCC.getBuggyBody()!=null){
 					
 							                            	String lidToVulnBody = "["+mcCC.getBuggyBody() + "," + ast_lid +"]";
-							                            	  String editV = BackendConnector.getInstance().getAstDiff(lidToVulnBody);
+							                            	  String editV = BackendConnector.getInstance().getAstDiff(null,lidToVulnBody);
 							                            	  ASTSignatureChange scV = gson.fromJson(editV, ASTSignatureChange.class);
 			
 							                             //   ASTSignatureChange scV = (ASTSignatureChange)BackendConnector.getInstance().getAstDiff(lidToVulnBody);
@@ -199,7 +199,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 						                    			}
 						                    			if(mcCC.getFixedBody()!=null){
 							                                String lidToFixedBody = "["+ast_lid + "," + mcCC.getFixedBody()+"]";
-							                                String editF = BackendConnector.getInstance().getAstDiff(lidToFixedBody);
+							                                String editF = BackendConnector.getInstance().getAstDiff(null,lidToFixedBody);
 							                                ASTSignatureChange scF = gson.fromJson(editF, ASTSignatureChange.class);
 			
 							                              //  ASTSignatureChange scF = (ASTSignatureChange)BackendConnector.getInstance().getAstDiff(lidToFixedBody);
