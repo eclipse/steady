@@ -24,11 +24,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -39,21 +36,15 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.google.gson.Gson;
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.backend.EntityNotFoundInBackendException;
 import com.sap.psr.vulas.bytecode.BytecodeComparator;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
-import com.sap.psr.vulas.java.sign.gson.GsonHelper;
 import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
-import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
-import com.sap.psr.vulas.shared.json.model.AffectedLibrary;
 import com.sap.psr.vulas.shared.json.model.Bug;
 import com.sap.psr.vulas.shared.json.model.Library;
-import com.sap.psr.vulas.shared.json.model.LibraryId;
-import com.sap.psr.vulas.shared.json.model.Property;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 

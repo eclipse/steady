@@ -104,6 +104,34 @@ public class JacksonUtil {
     }
 	
 	/**
+	 * Deserializes the given JSON, using the given custom {@link StdDeserializer}s.
+	 *
+	 * @param _json a {@link java.lang.String} object.
+	 * @param _clazz a {@link java.lang.Class} object.
+	 * @param _custom_deserializers a {@link java.util.Map} object.
+	 * @return a {@link java.lang.Object} object.
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static Object asObject(final String _json, final Map<Class<?>, StdDeserializer<?>> _custom_deserializers, final Class<?> _clazz) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            
+            // Register custom deserializers
+    		final SimpleModule module = new SimpleModule();
+            if(_custom_deserializers!=null && !_custom_deserializers.isEmpty()) {
+    			for(Class clazz: _custom_deserializers.keySet()) {
+    				module.addDeserializer(clazz, _custom_deserializers.get(clazz));
+    			}
+    		}
+    		mapper.registerModule(module);
+            
+            return mapper.readValue(_json, _clazz);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+	
+	/**
 	 * Transforms the given {@link Object} into an instance of the given {@link Class}.
 	 * 
 	 * This is done by serialiazing the object into JSON with {@link #asJsonString(Object, Map, Class)},

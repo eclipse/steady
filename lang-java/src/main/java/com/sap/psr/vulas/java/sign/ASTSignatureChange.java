@@ -19,6 +19,7 @@
  */
 package com.sap.psr.vulas.java.sign;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,14 +39,13 @@ import ch.uzh.ifi.seal.changedistiller.distilling.DistillerFactory;
 import ch.uzh.ifi.seal.changedistiller.model.classifiers.java.JavaEntityType;
 import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange;
 import ch.uzh.ifi.seal.changedistiller.model.entities.StructureEntityVersion;
-import ch.uzh.ifi.seal.changedistiller.model.entities.Update;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 
 /**
  * <p>ASTSignatureChange class.</p>
  *
  */
-public class ASTSignatureChange extends DistillerUtil implements SignatureChange  {
+public class ASTSignatureChange extends DistillerUtil implements SignatureChange,Serializable  {
 	
 	public static enum OperationType { Insert, Update, Move, Delete };
 
@@ -142,10 +142,19 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
 	/**
 	 * <p>Constructor for ASTSignatureChange.</p>
 	 *
+	 */
+	public ASTSignatureChange(){
+		super();
+	}
+	
+	/**
+	 * <p>Constructor for ASTSignatureChange.</p>
+	 *
 	 * @param defSignature a {@link com.sap.psr.vulas.sign.Signature} object.
 	 * @param fixSignature a {@link com.sap.psr.vulas.sign.Signature} object.
 	 */
 	public ASTSignatureChange(Signature defSignature, Signature fixSignature){
+		super();
 		this.mDefSignature = defSignature;
 		this.mFixSignature = fixSignature;
 		//Name of the root of the AST for either the fixed or for the defective AST

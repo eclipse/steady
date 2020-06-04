@@ -8,8 +8,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -19,7 +21,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
@@ -27,7 +29,7 @@ import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.java.JavaId;
 import com.sap.psr.vulas.java.sign.ASTConstructBodySignature;
 import com.sap.psr.vulas.java.sign.ASTSignatureChange;
-import com.sap.psr.vulas.java.sign.gson.GsonHelper;
+import com.sap.psr.vulas.java.sign.gson.ASTSignatureChangeDeserializer;
 import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 import com.sap.psr.vulas.shared.enums.ConstructChangeType;
 import com.sap.psr.vulas.shared.enums.ConstructType;
@@ -45,15 +47,18 @@ public class BytecodeComparator  {
 	private static final Log log = LogFactory.getLog(BytecodeComparator.class);
 	
 	GoalContext context;
+	Map<Class<?>,StdDeserializer<?>> custom_deserializers = new HashMap<Class<?>,StdDeserializer<?>>();
+	
+
 	
 	public BytecodeComparator(GoalContext _g) {
 		context = _g;
+		custom_deserializers.put(ASTSignatureChange.class, new ASTSignatureChangeDeserializer());
 	}
 	
 	public BytecodeComparator() {}
 	
 	public void compareLibForBug(Library _l,String _b, Path _p) throws BackendConnectionException, IOException {
-		Gson gson = GsonHelper.getCustomGsonBuilder().create();
 		String digest = new String(_l.getDigest());
 		String bugId = _b;
 		boolean vuln = false;
@@ -159,8 +164,7 @@ public class BytecodeComparator  {
 	
 								String body = "[" + ast_lid + "," + ast_current + "]";
 								String editV = BackendConnector.getInstance().getAstDiff(context, body);
-								ASTSignatureChange scV = gson.fromJson(editV, ASTSignatureChange.class);
-								//ASTSignatureChange scV1 = (ASTSignatureChange) JacksonUtil.asObject(editV,ASTSignatureChange.class);
+								ASTSignatureChange scV = (ASTSignatureChange) JacksonUtil.asObject(editV, custom_deserializers, ASTSignatureChange.class);
 								/* */
 	
 								// SP check if scV get mofidications is null?
@@ -191,8 +195,7 @@ public class BytecodeComparator  {
 	
 								String body = "[" + ast_lid + "," + ast_current + "]";
 								String editV = BackendConnector.getInstance().getAstDiff(context, body);
-								ASTSignatureChange scV = gson.fromJson(editV, ASTSignatureChange.class);
-								//ASTSignatureChange scV = (ASTSignatureChange) JacksonUtil.asObject(editV,ASTSignatureChange.class);
+								ASTSignatureChange scV = (ASTSignatureChange) JacksonUtil.asObject(editV, custom_deserializers, ASTSignatureChange.class);
 								/* */
 	
 								log.debug("size to fixed lib " + f.toString() + " is [" + scV.getModifications().size()

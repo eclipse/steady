@@ -981,9 +981,9 @@ public class BackendConnector {
 	 * @param _source a {@link java.lang.String} object.
 	 * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
 	 */
-	public void deletePatchEvalResults(String _bugId, String _source) throws BackendConnectionException {
+	public void deletePatchEvalResults(String _bugId, AffectedVersionSource _source) throws BackendConnectionException {
 		final HashMap<String, String> params = new HashMap<String, String>();
-		params.put("source", _source);
+		params.put("source", _source.toString());
 		final BasicHttpRequest del_req = new BasicHttpRequest(HttpMethod.DELETE, PathBuilder.bugAffectedLibs(_bugId), params);
 		// payload cannot be empty otherwise request doesn t work
 		del_req.setPayload("[]", "application/json", true);

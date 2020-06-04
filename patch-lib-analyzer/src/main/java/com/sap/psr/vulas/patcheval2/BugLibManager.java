@@ -59,6 +59,8 @@ import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
 import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 import com.sap.psr.vulas.shared.enums.ConstructChangeType;
 import com.sap.psr.vulas.shared.enums.ConstructType;
+import com.sap.psr.vulas.shared.json.JacksonUtil;
+import com.sap.psr.vulas.shared.json.JsonBuilder;
 import com.sap.psr.vulas.shared.json.model.AffectedLibrary;
 import com.sap.psr.vulas.shared.json.model.Artifact;
 import com.sap.psr.vulas.shared.json.model.Bug;
@@ -252,7 +254,7 @@ public class BugLibManager {
      * 
      */
     private void computeAndUploadResults() throws BackendConnectionException{
-    	HashMap<String, JsonArray> gaResxSource = new HashMap<String, JsonArray>();
+    	HashMap<AffectedVersionSource, List<AffectedLibrary>> gaResxSource = new HashMap<AffectedVersionSource, List<AffectedLibrary>>();
     	int overall_ast_equality_v = 0, overall_ast_equality_f = 0, overall_minor = 0, overall_major = 0, overall_intersection = 0, overall_greater = 0,
     			overall_toreview = 0;
     	int upload_ast_equality_v = 0, upload_ast_equality_f = 0, upload_minor = 0, upload_major = 0, upload_intersection = 0, upload_greater = 0,
@@ -287,7 +289,7 @@ public class BugLibManager {
 
 			for (int r = 0; r < relsxGA.size(); r++) {
 	
-				String source = null;
+				AffectedVersionSource source = null;
 				List<String> libAssessed = new ArrayList<String>();
 
 				ReleaseTree tree = relsxGA.get(r);
@@ -317,7 +319,7 @@ public class BugLibManager {
 					if (!libAssessed.contains(v.get(i).getGroup().concat(v.get(i).getArtifact().concat(v.get(i).getVersion())))) {
 						libAssessed.add(v.get(i).getGroup().concat(v.get(i).getArtifact().concat(v.get(i).getVersion())));
 						ast_equality_v++;
-						source = "AST_EQUALITY";
+						source = AffectedVersionSource.AST_EQUALITY;
 						
 						toAdd = true;
 						if(addnew){
@@ -332,17 +334,21 @@ public class BugLibManager {
 						}
 						if(toAdd){
 							new_ast_equality_v++;
-							JsonObject result = createJsonResult(v.get(i), source, true);
-							result.addProperty("overallConfidence", v.get(i).getVConfidence());
-							result.addProperty("pathConfidence", v.get(i).getVPathConfidence());
-							JsonArray sourceResult = null;
+							AffectedLibrary al = createJsonResult(v.get(i), source, true);
+							al.setOverallConfidence(v.get(i).getVConfidence().toString());
+							al.setPathConfidence(v.get(i).getVPathConfidence().toString());
+							
+							List<AffectedLibrary> sourceResult = null;
 							if (gaResxSource.containsKey(source)) {
 								sourceResult = gaResxSource.get(source);
 							} else {
-								sourceResult = new JsonArray();
+								sourceResult = new ArrayList<AffectedLibrary>();
 							}
-							sourceResult.add(result);
+							sourceResult.add(al);
 							gaResxSource.put(source, sourceResult);
+							
+							
+							
 						}
 					}
 				}
@@ -351,7 +357,7 @@ public class BugLibManager {
 					if (!libAssessed.contains(f.get(i).getGroup().concat(f.get(i).getArtifact().concat(f.get(i).getVersion())))) {
 						libAssessed.add(f.get(i).getGroup().concat(f.get(i).getArtifact().concat(f.get(i).getVersion())));
 						ast_equality_f++;
-						source = "AST_EQUALITY";
+						source = AffectedVersionSource.AST_EQUALITY;
 						
 						toAdd = true;
 						if(addnew){
@@ -367,17 +373,19 @@ public class BugLibManager {
 						}
 						if(toAdd){
 							new_ast_equality_f++;
-							JsonObject result = createJsonResult(f.get(i), source, false);
-							result.addProperty("overallConfidence", f.get(i).getFConfidence());
-							result.addProperty("pathConfidence", f.get(i).getFPathConfidence());
-							JsonArray sourceResult = null;
+							AffectedLibrary al = createJsonResult(f.get(i), source, false);
+							al.setOverallConfidence(f.get(i).getFConfidence().toString());
+							al.setPathConfidence(f.get(i).getFPathConfidence().toString());
+							
+							List<AffectedLibrary> sourceResult = null;
 							if (gaResxSource.containsKey(source)) {
 								sourceResult = gaResxSource.get(source);
 							} else {
-								sourceResult = new JsonArray();
+								sourceResult = new ArrayList<AffectedLibrary>();
 							}
-							sourceResult.add(result);
+							sourceResult.add(al);
 							gaResxSource.put(source, sourceResult);
+							
 						}
 					}
 				}
@@ -389,7 +397,7 @@ public class BugLibManager {
 							.concat(el.getKey().getArtifact().concat(el.getKey().getVersion())))) {
 						libAssessed.add(el.getKey().getGroup()
 								.concat(el.getKey().getArtifact().concat(el.getKey().getVersion())));
-						source = "MINOR_EQUALITY";
+						source = AffectedVersionSource.MINOR_EQUALITY;
 						minor++;
 						toAdd = true;
 						if(addnew){
@@ -405,18 +413,18 @@ public class BugLibManager {
 						}
 						if(toAdd){
 							new_minor++;
-							JsonObject result = createJsonResult(el.getKey(), source, true);
-	
-							result.addProperty("lastVulnerable", el.getValue().toString());
-	
-							JsonArray sourceResult = null;
+							
+							AffectedLibrary al = createJsonResult(el.getKey(), source, true);
+							al.setLastVulnerable(el.getValue().toString());
+							List<AffectedLibrary> sourceResult = null;
 							if (gaResxSource.containsKey(source)) {
 								sourceResult = gaResxSource.get(source);
 							} else {
-								sourceResult = new JsonArray();
+								sourceResult = new ArrayList<AffectedLibrary>();
 							}
-							sourceResult.add(result);
+							sourceResult.add(al);
 							gaResxSource.put(source, sourceResult);
+							
 						}
 
 					}
@@ -431,7 +439,7 @@ public class BugLibManager {
 						libAssessed.add(el.getKey().getGroup()
 								.concat(el.getKey().getArtifact().concat(el.getKey().getVersion())));
 
-						source = "MAJOR_EQUALITY";
+						source = AffectedVersionSource.MAJOR_EQUALITY;
 						major++;
 						toAdd = true;
 						if(addnew){
@@ -447,19 +455,17 @@ public class BugLibManager {
 						}
 						if(toAdd){
 							new_major++;
-							JsonObject result = createJsonResult(el.getKey(), source, false);
-							result.addProperty("source", "MAJOR_EQUALITY");
-	
-							result.addProperty("firstFixed", el.getValue().toString());
-	
-							JsonArray sourceResult = null;
+							AffectedLibrary al = createJsonResult(el.getKey(), source, false);
+							al.setFirstFixed(el.getValue().toString());
+							List<AffectedLibrary> sourceResult = null;
 							if (gaResxSource.containsKey(source)) {
 								sourceResult = gaResxSource.get(source);
 							} else {
-								sourceResult = new JsonArray();
+								sourceResult = new ArrayList<AffectedLibrary>();
 							}
-							sourceResult.add(result);
+							sourceResult.add(al);
 							gaResxSource.put(source, sourceResult);
+						
 						}
 					}
 				}
@@ -473,7 +479,7 @@ public class BugLibManager {
 						libAssessed.add(el.getKey().getGroup()
 								.concat(el.getKey().getArtifact().concat(el.getKey().getVersion())));
 
-						source = "INTERSECTION";
+						source = AffectedVersionSource.INTERSECTION;
 						intersection++;
 						toAdd = true;
 						if(addnew){
@@ -490,18 +496,16 @@ public class BugLibManager {
 						}
 						if(toAdd){
 							new_intersection++;
-							JsonObject result = createJsonResult(el.getKey(), source, false);
-	
-							result.addProperty("fromIntersection", el.getValue().getFrom().toString());
-							result.addProperty("toIntersection", el.getValue().getTo().toString());
-	
-							JsonArray sourceResult = null;
+							AffectedLibrary al = createJsonResult(el.getKey(), source, false);
+							al.setFromIntersection(el.getValue().getFrom().toString());
+							al.setToIntersection(el.getValue().getTo().toString());
+							List<AffectedLibrary> sourceResult = null;
 							if (gaResxSource.containsKey(source)) {
 								sourceResult = gaResxSource.get(source);
 							} else {
-								sourceResult = new JsonArray();
+								sourceResult = new ArrayList<AffectedLibrary>();
 							}
-							sourceResult.add(result);
+							sourceResult.add(al);
 							gaResxSource.put(source, sourceResult);
 						}
 					}
@@ -516,7 +520,7 @@ public class BugLibManager {
 						libAssessed.add(el.getKey().getGroup()
 								.concat(el.getKey().getArtifact().concat(el.getKey().getVersion())));
 
-						source = "INTERSECTION";
+						source = AffectedVersionSource.INTERSECTION;
 						intersection++;
 						
 						toAdd = true;
@@ -534,19 +538,17 @@ public class BugLibManager {
 						}
 						if(toAdd){
 							new_intersection++;
-							JsonObject result = createJsonResult(el.getKey(), source, true);
-	
-							result.addProperty("fromIntersection", el.getValue().getFrom().toString());
-							result.addProperty("toIntersection", el.getValue().getTo().toString());
-							result.addProperty("overallConfidence", el.getValue().getConfidence());
-	
-							JsonArray sourceResult = null;
+							AffectedLibrary al = createJsonResult(el.getKey(), source, true);
+							al.setFromIntersection(el.getValue().getFrom().toString());
+							al.setToIntersection(el.getValue().getTo().toString());
+							al.setOverallConfidence(el.getValue().getConfidence().toString());
+							List<AffectedLibrary> sourceResult = null;
 							if (gaResxSource.containsKey(source)) {
 								sourceResult = gaResxSource.get(source);
 							} else {
-								sourceResult = new JsonArray();
+								sourceResult = new ArrayList<AffectedLibrary>();
 							}
-							sourceResult.add(result);
+							sourceResult.add(al);
 							gaResxSource.put(source, sourceResult);
 						}
 					}
@@ -559,7 +561,7 @@ public class BugLibManager {
 					for (ArtifactResult2 a : tree.getNodes()) {
 						greater++;
 
-						source = "GREATER_RELEASE";
+						source = AffectedVersionSource.GREATER_RELEASE;
 						toAdd = true;
 						if(addnew){
 							for(int j=0;j<existingxSource.get(AffectedVersionSource.GREATER_RELEASE).length;j++){
@@ -575,16 +577,16 @@ public class BugLibManager {
 						}
 						if(toAdd){
 							new_greater++;
-							JsonObject result = createJsonResult(a, source, false);
-	
-							JsonArray sourceResult = null;
+							AffectedLibrary al = createJsonResult(a, source, false);
+							List<AffectedLibrary> sourceResult = null;
 							if (gaResxSource.containsKey(source)) {
 								sourceResult = gaResxSource.get(source);
 							} else {
-								sourceResult = new JsonArray();
+								sourceResult = new ArrayList<AffectedLibrary>();
 							}
-							sourceResult.add(result);
+							sourceResult.add(al);
 							gaResxSource.put(source, sourceResult);
+							
 						}
 					}
 				}
@@ -621,7 +623,7 @@ public class BugLibManager {
 							//add artifactResult to to_review
 							toreview++;
 
-							source = "TO_REVIEW";
+							source = AffectedVersionSource.TO_REVIEW;
 							toAdd = true;
 							if(addnew){
 								for(int j=0;j<existingxSource.get(AffectedVersionSource.TO_REVIEW).length;j++){
@@ -636,20 +638,20 @@ public class BugLibManager {
 							}
 							if(toAdd){
 								new_toreview++;
-								JsonObject result = createJsonResult(a, source, null);
-	
-								JsonArray sourceResult = null;
+								AffectedLibrary al = createJsonResult(a, source, null);
+								List<AffectedLibrary> sourceResult = null;
 								if (gaResxSource.containsKey(source)) {
 									sourceResult = gaResxSource.get(source);
 								} else {
-									sourceResult = new JsonArray();
+									sourceResult = new ArrayList<AffectedLibrary>();
 								}
-								sourceResult.add(result);
+								sourceResult.add(al);
 								gaResxSource.put(source, sourceResult);
+								
 							}
 							
 							//add artifactResult to propagate_manual
-							source = "PROPAGATE_MANUAL";
+							source = AffectedVersionSource.PROPAGATE_MANUAL;
 							boolean isGreater=false,isSmaller=false;
 							for(AffectedLibrary i :manual){
 								if(i.getLibraryId()!=null && i.getLibraryId().getMvnGroup().equals(a.getGroup()) && 
@@ -674,16 +676,16 @@ public class BugLibManager {
 							if(isGreater&&!isSmaller){
 								propagate++;
 								log.info("Creating Json for PROPAGATE_MANUAL for artifact [" + a.toString()+"]");
-								JsonObject result = createJsonResult(a, source, false);
-	
-								JsonArray sourceResult = null;
+								AffectedLibrary al = createJsonResult(a, source, false);
+								List<AffectedLibrary> sourceResult = null;
 								if (gaResxSource.containsKey(source)) {
 									sourceResult = gaResxSource.get(source);
 								} else {
-									sourceResult = new JsonArray();
+									sourceResult = new ArrayList<AffectedLibrary>();
 								}
-								sourceResult.add(result);
+								sourceResult.add(al);
 								gaResxSource.put(source, sourceResult);
+								
 							}
 							
 							
@@ -745,18 +747,18 @@ public class BugLibManager {
 						
 						//delete old results for sources that did not lead any result
 						if(overall_ast_equality_v==0 && overall_ast_equality_f==0)
-							BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), "AST_EQUALITY");
+							BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), AffectedVersionSource.AST_EQUALITY);
 						if(overall_minor==0)
-							BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), "MINOR_EQUALITY");
+							BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), AffectedVersionSource.MINOR_EQUALITY);
 						if(overall_major==0)
-							BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), "MAJOR_EQUALITY");
+							BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), AffectedVersionSource.MAJOR_EQUALITY);
 						if(overall_intersection==0)
-							BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), "INTERSECTION");
+							BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), AffectedVersionSource.INTERSECTION);
 						if(overall_greater==0)
-							BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), "GREATER_RELEASE");
+							BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), AffectedVersionSource.GREATER_RELEASE);
 						//upload results if they are more or less than the already existing ones 
 					
-						for (Entry<String,JsonArray> e : gaResxSource.entrySet()) {
+						for (Entry<AffectedVersionSource,List<AffectedLibrary>> e : gaResxSource.entrySet()) {
 							log.info("Uploading results for source " + e.getKey());
 							
 							boolean toUpload = true;
@@ -777,7 +779,7 @@ public class BugLibManager {
 									BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), e.getKey());
 									
 								}
-							//SP	BackendConnector.getInstance().uploadBugAffectedLibraries(null,bugChangeList.getBugId(),gaResxSource.get(e.getKey()).toString(), e.getKey());
+								BackendConnector.getInstance().uploadBugAffectedLibraries(null,bugChangeList.getBugId(),gaResxSource.get(e.getKey()).toString(), e.getKey());
 							}
 						
 						}
@@ -786,7 +788,7 @@ public class BugLibManager {
 					}
 				} else {
 					// save to file
-					for (Entry<String,JsonArray> e : gaResxSource.entrySet()) {
+					for (Entry<AffectedVersionSource,List<AffectedLibrary>> e : gaResxSource.entrySet()) {
 						final File json_file = Paths.get(PEConfiguration.getBaseFolder().toString() + File.separator+ bugChangeList.getBugId() + "_" + e.getKey() + "_" + ".json").toFile();
 						try {
 							FileUtil.writeToFile(json_file, gaResxSource.get(e.getKey()).toString());
@@ -973,10 +975,10 @@ public class BugLibManager {
 		
 		
 		//add artifactResult to propagate_manual
-		String source = "PROPAGATE_MANUAL";
+        AffectedVersionSource source = AffectedVersionSource.PROPAGATE_MANUAL;
 		boolean isGreater=false,isSmaller=false;
 		int propagate=0;
-		JsonArray sourceResult = new JsonArray();
+		List<AffectedLibrary> sourceResult = new ArrayList<AffectedLibrary>();
 		
 		for(Artifact a : gavToBeAssessed){
 			if(!gavAssessed.contains(a)){
@@ -1011,7 +1013,7 @@ public class BugLibManager {
 				if(isGreater&&!isSmaller){
 					propagate++;
 					log.info("Creating Json for PROPAGATE_MANUAL for artifact [" + a.toString()+"]");
-					JsonObject result = createJsonResult(a, source, false);
+					AffectedLibrary result = createJsonResult(a, source, false);
 					
 					sourceResult.add(result);
 				}
@@ -1264,36 +1266,32 @@ public class BugLibManager {
 		}
     }
     
-    private JsonObject createJsonResult(ArtifactResult2 a, String s, Boolean affected){
-		JsonObject result = new JsonObject();
-		result.addProperty("source", s);
+    private AffectedLibrary createJsonResult(ArtifactResult2 a, AffectedVersionSource s, Boolean affected){
+    	AffectedLibrary al = new AffectedLibrary();
+    	al.setSource(s);
+    	
 		if(affected!=null)
-			result.addProperty("affected", affected);
-		JsonObject libraryId = new JsonObject();
-		libraryId.addProperty("group", a.getGroup());
-		libraryId.addProperty("artifact", a.getArtifact());
-		libraryId.addProperty("version", a.getVersion());
-		result.add("libraryId", libraryId);
-		result.addProperty("sourcesAvailable", a.getSourceAvailable());
+			al.setAffected(affected);
+		al.setLibraryId(new LibraryId(a.getGroup(), a.getArtifact(), a.getVersion()));
+		
+		al.setSourcesAvailable(a.getSourceAvailable());
 		if (a.containsAD()) {
-			result.addProperty("adfixed", a.isADFixed());
-			result.addProperty("adpathfixed", a.isPathADFixed());
+			al.setADFixed(String.valueOf(a.isADFixed()));
+			al.setADPathFixed(String.valueOf(a.isPathADFixed()));
 		}
-		result.add("affectedcc", a.getAffectedcc(methsConsCC));
-		return result;
+		al.setAffectedcc(a.getAffectedcc(methsConsCC));
+		return al;
     }
     
-    private JsonObject createJsonResult(Artifact a, String s, Boolean affected){
-		JsonObject result = new JsonObject();
-		result.addProperty("source", s);
+    private AffectedLibrary createJsonResult(Artifact a, AffectedVersionSource s, Boolean affected){
+    	
+    	AffectedLibrary al = new AffectedLibrary();
+    	al.setSource(s);
+    	
 		if(affected!=null)
-			result.addProperty("affected", affected);
-		JsonObject libraryId = new JsonObject();
-		libraryId.addProperty("group", a.getLibId().getMvnGroup());
-		libraryId.addProperty("artifact", a.getLibId().getArtifact());
-		libraryId.addProperty("version", a.getLibId().getVersion());
-		result.add("libraryId", libraryId);
-		return result;
+			al.setAffected(affected);
+		al.setLibraryId(a.getLibId());
+		return al;
     }
 
 
