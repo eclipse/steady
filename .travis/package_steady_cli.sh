@@ -8,6 +8,12 @@ then
   exit 1
 fi
 
+if [ "$1" != "$TRAVIS_TAG" ]; 
+then
+  echo "Skipping Packaging CLI as this is not a tag release"
+  exit 0 
+fi
+
 cd `dirname $0`
 VULAS_RELEASE="$1"
 mkdir -p /tmp/cli
