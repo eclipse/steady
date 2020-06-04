@@ -52,11 +52,13 @@ public class BytecodeComparator  {
 
 	
 	public BytecodeComparator(GoalContext _g) {
+		this();
 		context = _g;
-		custom_deserializers.put(ASTSignatureChange.class, new ASTSignatureChangeDeserializer());
 	}
 	
-	public BytecodeComparator() {}
+	public BytecodeComparator() {
+		custom_deserializers.put(ASTSignatureChange.class, new ASTSignatureChangeDeserializer());
+	}
 	
 	public void compareLibForBug(Library _l,String _b, Path _p) throws BackendConnectionException, IOException {
 		String digest = new String(_l.getDigest());
