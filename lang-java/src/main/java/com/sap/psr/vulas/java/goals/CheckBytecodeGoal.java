@@ -108,8 +108,13 @@ public class CheckBytecodeGoal extends AbstractAppGoal {
 						break;
 					}
 				}
-				if(p==null)
+				if(p==null) {
 					p=Paths.get(vulndep.getDep().getPath());
+					if(p==null || !p.toFile().exists()) {
+				       	log.info("Path [" + p +"] for vulnerability ["+vulndep.getBug().getBugId() +"] in dependency ["+vulndep.getDep().toString()+"] does not exists");
+				       	continue;
+				    }
+				}
 				
 				comparator.compareLibForBug(vulndep.getDep().getLib(), vulndep.getBug().getBugId(), p);
 			}

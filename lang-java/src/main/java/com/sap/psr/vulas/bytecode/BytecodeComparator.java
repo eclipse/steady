@@ -176,8 +176,7 @@ public class BytecodeComparator  {
 	
 									// check that there isn't also a construct = to vuln
 	
-									log.info("LID equal to vuln based on AST bytecode comparison with  [" + v.toString()
-											+ "]");
+									log.info("LID equal to vuln based on AST bytecode comparison with  [" + v.toString() + "]");
 									vuln = true;
 									list.add(v);
 									break;
