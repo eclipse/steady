@@ -779,7 +779,11 @@ public class BugLibManager {
 									BackendConnector.getInstance().deletePatchEvalResults(bugChangeList.getBugId(), e.getKey());
 									
 								}
-								BackendConnector.getInstance().uploadBugAffectedLibraries(null,bugChangeList.getBugId(),gaResxSource.get(e.getKey()).toString(), e.getKey());
+								JsonBuilder json = new JsonBuilder().startArray();
+								for(AffectedLibrary al:gaResxSource.get(e.getKey()))
+									json.appendJsonToArray(JacksonUtil.asJsonString(al));
+								json.endArray();
+								BackendConnector.getInstance().uploadBugAffectedLibraries(null,bugChangeList.getBugId(),json.getJson(), e.getKey());
 							}
 						
 						}
@@ -1022,7 +1026,13 @@ public class BugLibManager {
 		BugLibManager.log.info("Propagated results for [" + propagate + "] artifacts.");
 		if(propagate>0){
 			if (VulasConfiguration.getGlobal().getConfiguration().getBoolean(PEConfiguration.UPLOAD_RESULTS) == true) {
-	//SP			BackendConnector.getInstance().uploadBugAffectedLibraries(null,bugChangeList.getBugId(),sourceResult.toString(), source);
+				
+				JsonBuilder json = new JsonBuilder().startArray();
+				for(AffectedLibrary al:sourceResult)
+					json.appendJsonToArray(JacksonUtil.asJsonString(al));
+				json.endArray();
+			
+				BackendConnector.getInstance().uploadBugAffectedLibraries(null,bugChangeList.getBugId(),json.getJson(), source);
 			} else {
 				// save to file
 	
