@@ -35,11 +35,13 @@ import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jayway.jsonpath.JsonPath;
 import com.sap.psr.vulas.backend.model.Library;
 import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
+import com.sap.psr.vulas.shared.json.JacksonUtil;
+import com.sap.psr.vulas.shared.json.model.mavenCentral.MavenVersionsSearch;
+import com.sap.psr.vulas.shared.json.model.mavenCentral.ResponseDoc;
 
 /**
  * <p>MavenCentralVerifier class.</p>
@@ -105,19 +107,29 @@ public class MavenCentralVerifier implements DigestVerifier {
 				HttpEntity entity = response.getEntity();
 				if (sc==HttpStatus.SC_OK && entity != null) {
 					mvnResponse = ConnectionUtil.readInputStream(entity.getContent());
-					int num_found = ((Integer)JsonPath.read(mvnResponse, "$.response.numFound")).intValue();
+					MavenVersionsSearch json_response = (MavenVersionsSearch) JacksonUtil.asObject(mvnResponse, MavenVersionsSearch.class);
+					long num_found = json_response.getResponse().getNumFound();
 					
 					verified_lids = new ArrayList<LibraryId>();
 					if(num_found>1) {
 						log.warn("The lookup of SHA1 digest [" + _lib.getDigest() + "] in Maven Central returned [" + num_found + "] artifacts");
 					}
 					if(num_found>=1) {
-						final long ms = (Long)JsonPath.read(mvnResponse, "$.response.docs[0].timestamp");
-						this.timestamp = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-						this.timestamp.setTimeInMillis(ms);						
 						
 						// TODO: read all returned libids (for now we only return the first one
-						verified_lids.add(new LibraryId((String)JsonPath.read(mvnResponse, "$.response.docs[0].g"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].a"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].v")));
+						//verified_lids.add(new LibraryId((String)JsonPath.read(mvnResponse, "$.response.docs[0].g"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].a"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].v")));
+						//MavenSearchResponse json_response = JsonPath.parse(mvnResponse).read("$.response", MavenSearchResponse.class);
+						
+						for(ResponseDoc d: json_response.getResponse().getSortedDocs()) {
+							verified_lids.add(new LibraryId(d.getG(),d.getA(),d.getV()));
+							//takes timestamp of the first artifact
+							if(this.timestamp==null) {
+								final long ms = d.getTimestamp();;
+								this.timestamp = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+								this.timestamp.setTimeInMillis(ms);						
+							}
+						}
+							
 					}
 				}
 			} finally {

@@ -21,7 +21,6 @@ package com.sap.psr.vulas.backend.repo;
 
 import java.nio.file.Path;
 import java.util.Calendar;
-import java.util.Collection;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
