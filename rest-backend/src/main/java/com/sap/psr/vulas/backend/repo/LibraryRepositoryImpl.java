@@ -86,17 +86,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 			_lib.setId(managed_lib.getId());
 			_lib.setCreatedAt(managed_lib.getCreatedAt());
 			_lib.setModifiedAt(Calendar.getInstance());
-			
-//			//	Re-create wellknownDigest if it is null in our current db (this part should be removed once it is created for all)
-//			if(managed_lib.getWellknownDigest()==null || (managed_lib.getDigestTimestamp()==null && managed_lib.getWellknownDigest())) {
-//				_lib.verifyDigest();
-//			}
-//			else {
-//				_lib.setWellknownDigest(managed_lib.getWellknownDigest());
-//				_lib.setDigestVerificationUrl(managed_lib.getDigestVerificationUrl());
-//				_lib.setDigestTimestamp(managed_lib.getDigestTimestamp());
-//			}
-			
+						
 			//keep the existing lib GAV if the newly posted/put doesn't have one
 			if(_lib.getLibraryId()==null){
 				// Recreate libId if null (to be removed once we ensure we added to the existing libs)

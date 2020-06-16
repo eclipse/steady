@@ -407,9 +407,6 @@ public class Library implements Serializable {
 		if(this.getModifiedAt()==null) {
 			this.setModifiedAt(Calendar.getInstance());
 		}
-//		if(this.getWellknownDigest()==null) {
-//			this.verifyDigest();
-//		}
 		// If uploaded by old client (<3.0.0), the digest also must be set
 		if(this.sha1!=null && (this.digest==null || this.digestAlgorithm==null)) {
 			this.digest = this.sha1;
