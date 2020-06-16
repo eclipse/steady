@@ -481,7 +481,7 @@ public class Library implements Serializable {
 	/**
 	 * Verifies that the digest is well known by either one of the existing
 	 * verifiers (e.g. maven central, pypi). If the digests is well known and the
-	 * provided libraryId is not among those returned by the verifiers, it sets the
+	 * provided libraryId is NOT among those returned by the verifiers, it sets the
 	 * LibraryId with the (first) value returned by the verifier.
 	 * 
 	 */

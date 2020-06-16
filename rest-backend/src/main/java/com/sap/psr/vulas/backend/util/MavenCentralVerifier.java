@@ -121,15 +121,17 @@ public class MavenCentralVerifier implements DigestVerifier {
 						//MavenSearchResponse json_response = JsonPath.parse(mvnResponse).read("$.response", MavenSearchResponse.class);
 						
 						for(ResponseDoc d: json_response.getResponse().getSortedDocs()) {
-							verified_lids.add(new LibraryId(d.getG(),d.getA(),d.getV()));
-							//takes timestamp of the first artifact
-							if(this.timestamp==null) {
+							LibraryId current = new LibraryId(d.getG(),d.getA(),d.getV());
+							verified_lids.add(current);
+							// take timestamp of the artifact corresponding to the provided libraryId or the
+							// first one as that's the one we will use in case the provided one is not among
+							// the list of verified 
+							if(this.timestamp==null || current.equals(_lib.getLibraryId())) {
 								final long ms = d.getTimestamp();;
 								this.timestamp = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 								this.timestamp.setTimeInMillis(ms);						
 							}
-						}
-							
+						}	
 					}
 				}
 			} finally {
