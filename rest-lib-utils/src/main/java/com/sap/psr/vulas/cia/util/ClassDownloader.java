@@ -37,9 +37,9 @@ import org.apache.tomcat.jni.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sap.psr.vulas.cia.model.mavenCentral.ResponseDoc;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.Artifact;
+import com.sap.psr.vulas.shared.json.model.mavenCentral.ResponseDoc;
 
 /**
  * Retrieves the source or compiled code of Java classes from Maven artifacts.
