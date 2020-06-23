@@ -157,7 +157,7 @@ public class BytecodeComparator  {
 	
 						// retrieve and compare source whose libid was assessed as vuln
 						for (LibraryId v : astMgr.getVulnLids()) {
-							log.info(v.toString());
+							log.debug(v.toString());
 							// retrieve bytecode of the known to be vulnerable library
 							String ast_lid = astMgr.getVulnAst(v);
 	
@@ -187,7 +187,7 @@ public class BytecodeComparator  {
 	
 						// retrieve and compare source whose libid was assessed as fixed
 						for (LibraryId f : astMgr.getFixedLids()) {
-	
+							log.debug(f.toString());
 							// retrieve bytecode of the known to be vulnerable library
 							String ast_lid = astMgr.getFixedAst(f);
 	

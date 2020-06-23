@@ -107,7 +107,7 @@ public class CheckBytecodeGoal extends AbstractAppGoal {
 				if(p==null) {
 					p=Paths.get(vulndep.getDep().getPath());
 					if(p==null || !p.toFile().exists()) {
-				       	log.info("Path [" + p +"] for vulnerability ["+vulndep.getBug().getBugId() +"] in dependency ["+vulndep.getDep().getFilename()+"] does not exists");
+				       	log.error("Path [" + p +"] for vulnerability ["+vulndep.getBug().getBugId() +"] in dependency ["+vulndep.getDep().getFilename()+"] does not exists");
 				       	continue;
 				    }
 				}
