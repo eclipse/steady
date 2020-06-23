@@ -77,10 +77,6 @@ public class CheckBytecodeGoal extends AbstractAppGoal {
 		final Application app = this.getApplicationContext();
 
 		Map<Path,Dependency> deps = this.getKnownDependencies();
-		for(Entry<Path,Dependency> e : deps.entrySet()) {
-			e.getValue().getLib().setDigest(FileUtil.getDigest(e.getKey().toFile(),DigestAlgorithm.SHA1));
-		}
-		
 		
 		// get the list of vulnerable dependencies that are NOT assessed (orange
 		// hourglasses)
