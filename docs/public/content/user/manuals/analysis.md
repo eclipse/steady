@@ -126,7 +126,7 @@ In the @@PROJECT_NAME@@ frontend, tab "Vulnerabilities", the column "Static Anal
 
 #### How does it work
 
-@@PROJECT_NAME@@ uses [Wala](http://wala.sourceforge.net/wiki/index.php/Main_Page) or [Soot](https://sable.github.io/soot/), both static analysis frameworks for Java, in order to construct a call graph representing all possible program executions starting from application methods. This graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.
+@@PROJECT_NAME@@ uses [Wala](http://wala.sourceforge.net/wiki/index.php/Main_Page) or [Soot](https://soot-oss.github.io/soot/), both static analysis frameworks for Java, in order to construct a call graph representing all possible program executions starting from application methods. This graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.
 
 #### Run as follows
 
@@ -192,7 +192,7 @@ vulas.reach.searchShortest = true
 
 #### Call graph construction framework
 
-Behind the scene, a source code analysis framework is used to construct the call graph, either starting from application methods (`a2c`) or from traced methods (`t2c`). Right now, the two frameworks [Wala](https://github.com/wala/WALA/wiki) and [Soot](http://www.sable.mcgill.ca/soot/) are supported and can be configured with `vulas.reach.fwk`. Both offer several configuration options to influence the accuracy of the call graph and its construction time. Once the call graph has been constructed, its size (in terms of nodes and edges) is printed to the console, which is useful for comparing the impact of the different configuration options, e.g.
+Behind the scene, a source code analysis framework is used to construct the call graph, either starting from application methods (`a2c`) or from traced methods (`t2c`). Right now, the two frameworks [Wala](https://github.com/wala/WALA/wiki) and [Soot](https://soot-oss.github.io/soot/) are supported and can be configured with `vulas.reach.fwk`. Both offer several configuration options to influence the accuracy of the call graph and its construction time. Once the call graph has been constructed, its size (in terms of nodes and edges) is printed to the console, which is useful for comparing the impact of the different configuration options, e.g.
 
 ```log
 [vulas-reach-1] INFO  com.sap.psr.vulas.cg.wala.WalaCallgraphConstructor  - Normalized call graph has [167639 nodes] (with distinct ConstructId) and [1279495 edges]

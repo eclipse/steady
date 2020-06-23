@@ -51,7 +51,7 @@ def get_vuln_data(vuln_id):
 
         data = jsonify({'extended_data': {'license': lic, 'language': lang}, 'nvd_data': data})
 
-    return data, 200, {'Content-Type': 'application/json; charset=utf-8'}
+    return data, 200
 
 
 @app.route(PREFIX_URL + '/status')
