@@ -19,9 +19,11 @@
  */
 package com.sap.psr.vulas.backend.util;
 
+import java.util.List;
 import java.util.Set;
 
 import com.sap.psr.vulas.backend.model.Library;
+import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 
@@ -64,11 +66,11 @@ public interface DigestVerifier {
 
 	/**
 	 * Returns null if the verification did not succeed, e.g., due to connectivity issues.
-	 * Returns true or false depending on whether the digest is known to the respective package repo.
+	 * Returns the list of verified LibraryId if the digest is known to the respective package repo (an empty list otherwise).
 	 *
 	 * @throws com.sap.psr.vulas.backend.util.VerificationException if the verification URL could not be reached, the HTTP response was malformed or similar
 	 * @param _lib a {@link com.sap.psr.vulas.backend.model.Library} object.
 	 * @return a {@link java.lang.Boolean} object.
 	 */
-	public Boolean verify(Library _lib) throws VerificationException;
+	public List<LibraryId> verify(Library _lib) throws VerificationException;
 }

@@ -37,12 +37,12 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.sap.psr.vulas.cia.model.mavenCentral.MavenVersionsSearch;
-import com.sap.psr.vulas.cia.model.mavenCentral.ResponseDoc;
 import com.sap.psr.vulas.cia.util.ArtifactDownloader.DefaultRequestCallback;
 import com.sap.psr.vulas.cia.util.ArtifactDownloader.FileResponseExtractor;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.Artifact;
+import com.sap.psr.vulas.shared.json.model.mavenCentral.MavenVersionsSearch;
+import com.sap.psr.vulas.shared.json.model.mavenCentral.ResponseDoc;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 

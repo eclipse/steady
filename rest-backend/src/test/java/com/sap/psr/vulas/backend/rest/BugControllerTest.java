@@ -561,17 +561,20 @@ public class BugControllerTest {
     	LibraryId lid2 = new LibraryId("com.foo", "bar", "1.0-copy");
     	libIdRepository.save(lid2);
 
-    	Library l1 = new Library("123FD");
+    	Library l1 = new Library("1E48256A2341047E7D729217ADEEC8217F6E3A1A");
     	l1.setLibraryId(lid1);
     	l1.setWellknownDigest(true);
     	libRepository.customSave(l1);
     	
-    	Library l2 = new Library("456EC");
+    	Library l2 = new Library("123FD");
     	l2.setLibraryId(lid2);
     	l2.setWellknownDigest(false);
     	libRepository.customSave(l2);
     	
-    	AffectedLibrary afflib1 = new AffectedLibrary(bug, lid1, true, null, null, null);
+		// the libraryId for l1 must have been replaced with the official one (from
+		// Maven Central) during the digest verification, thus we create the affected
+		// library for the latter
+    	AffectedLibrary afflib1 = new AffectedLibrary(bug, new LibraryId("commons-fileupload","commons-fileupload","1.2.2"), true, null, null, null);
     	afflib1.setSource(AffectedVersionSource.MANUAL);
     	
     	

@@ -104,6 +104,12 @@ matrix:
     install:
     - docker build --tag docs ./docs
     - docker network create docs
+    addons:
+      apt:
+        packages:
+          - python3.4
+          - python3-pip
+          - python3-setuptools
     script:
     - docker run --rm --network=docs -d --name docs --hostname docs -p 8000:8000 docs
     - sleep 10
@@ -114,7 +120,7 @@ matrix:
     deploy:
     - provider: script
       skip_cleanup: true
-      script: cd docs && pip install -r requirements.txt && sed -i.bak '/dev_addr/d' mkdocs.yml && python docs.py public --mkghdeploy
+      script: cd docs && pip3 install wheel --user && pip3 install -r requirements.txt --user && sed -i.bak '/dev_addr/d' mkdocs.yml && python3 docs.py public --mkghdeploy
       on:
         tags: true
         condition: "$TRAVIS_TAG =~ ^[0-9]+\\.[0-9]+\\.[0-9]+(\\..+)?$"
