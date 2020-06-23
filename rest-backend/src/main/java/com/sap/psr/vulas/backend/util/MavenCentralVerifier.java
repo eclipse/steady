@@ -116,10 +116,6 @@ public class MavenCentralVerifier implements DigestVerifier {
 					}
 					if(num_found>=1) {
 						
-						// TODO: read all returned libids (for now we only return the first one
-						//verified_lids.add(new LibraryId((String)JsonPath.read(mvnResponse, "$.response.docs[0].g"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].a"),(String)JsonPath.read(mvnResponse, "$.response.docs[0].v")));
-						//MavenSearchResponse json_response = JsonPath.parse(mvnResponse).read("$.response", MavenSearchResponse.class);
-						
 						for(ResponseDoc d: json_response.getResponse().getSortedDocs()) {
 							LibraryId current = new LibraryId(d.getG(),d.getA(),d.getV());
 							verified_lids.add(current);
