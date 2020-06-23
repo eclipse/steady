@@ -206,6 +206,10 @@ public class BytecodeComparator  {
 								}
 							}
 						}
+						if(vuln && fixed) {
+							log.warn("No conclusion taken for vulnerability ["+bugId+"] in archive [" +_l.getDigest()+"]: Construct ["+cc.toString()+"] is equal both to a vulnerable and to a fixed archive.");
+							break;
+						}
 					}
 				}
 				// cia does not serve code for type class
@@ -244,6 +248,10 @@ public class BytecodeComparator  {
 		} else if (!vuln && fixed) {
 			affected = false;
 			toUpload = true;
+		} else if (vuln && fixed) {
+			log.warn("No conclusion taken for vulnerability ["+bugId+"] in archive [" +_l.getDigest()+"]: equalities both to a vulnerable and to a fixed archive found.");
+		} else {
+			log.warn("No conclusion taken for vulnerability ["+bugId+"] in archive [" +_l.getDigest()+"]");
 		}
 	
 		if (toUpload) {
