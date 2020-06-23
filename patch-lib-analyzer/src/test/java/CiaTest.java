@@ -20,7 +20,6 @@
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -43,13 +42,11 @@ import com.sap.psr.vulas.patcheval.representation.OverallConstructChange;
 import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
 import com.sap.psr.vulas.patcheval2.BugLibAnalyzer;
 import com.sap.psr.vulas.patcheval2.LibraryAnalyzerThread2;
-import com.sap.psr.vulas.patcheval2.PE_Run;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.Artifact;
-import com.sap.psr.vulas.shared.json.model.BugChangeList;
+import com.sap.psr.vulas.shared.json.model.Bug;
 import com.sap.psr.vulas.shared.json.model.ConstructId;
-import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 public class CiaTest {
@@ -118,7 +115,7 @@ public class CiaTest {
 	public void getLibToCheckTest(){
 		PEConfiguration.getGlobal().setProperty("vulas.patchEval.excludedGa", "com.sap.customercheckout:ENV");  
 		BugLibAnalyzer b = new BugLibAnalyzer();
-		BugChangeList id = new BugChangeList();
+		Bug id = new Bug();
 		id.setBugId("SPR-7779");
 		b.setBug(id);
 		try {
@@ -136,7 +133,7 @@ public class CiaTest {
 	public void getLibToCheck2Test(){
 		PEConfiguration.getGlobal().setProperty("vulas.patchEval.gav", "org.springframework:spring-tx:4.3.16.RELEASE");  
 		BugLibAnalyzer b = new BugLibAnalyzer();
-		BugChangeList id = new BugChangeList();
+		Bug id = new Bug();
 		id.setBugId("CVE-2014-1904");
 		b.setBug(id);
 		try {

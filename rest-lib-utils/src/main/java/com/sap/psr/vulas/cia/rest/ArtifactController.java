@@ -405,11 +405,11 @@ public class ArtifactController {
 		
 				//check that the artifact exists (with the requested packaging)
 				RepositoryDispatcher r = new RepositoryDispatcher();
-			//	Artifact response = r.getArtifactVersion(mvnGroup, artifact, version, null, packaging, lang);
+				Artifact response = r.getArtifactVersion(mvnGroup, artifact, version, null, packaging, lang);
 			
-			//	if(response==null)
-			//		return new ResponseEntity<List<ConstructId>>(HttpStatus.NOT_FOUND);
-				//else{
+				if(response==null)
+					return new ResponseEntity<List<ConstructId>>(HttpStatus.NOT_FOUND);
+				else{
 					 Artifact a = new Artifact(mvnGroup,artifact,version);
 					 a.setPackaging(packaging);
 					 a.setProgrammingLanguage(lang);
@@ -432,7 +432,7 @@ public class ArtifactController {
 							intersection.add(cids[i]);
 					}
 					return new ResponseEntity<List<ConstructId>>(intersection,HttpStatus.OK);
-				//}
+				}
 				
 			} catch (Exception e) {
 				// there exists cases (e.g., jetty-all) where getArtifactVersion returns 200 but the artifact cannot be downloaded

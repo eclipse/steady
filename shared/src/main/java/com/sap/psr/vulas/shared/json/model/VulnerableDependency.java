@@ -138,7 +138,7 @@ public class VulnerableDependency  implements Serializable, Comparable<Vulnerabl
 	 * <p>evalAffectedVersion.</p>
 	 */
 	public void evalAffectedVersion() { 
-		Boolean pre_commit_pom=null, line_add = null, check_version=null, manual_libId=null, equal=null;
+		Boolean check_code=null, check_version=null, manual_libId=null, equal=null;
 		AffectedVersionSource source=null;
 		if(bug.getAffectedVersions()!=null) {
 			for( AffectedLibrary a : bug.getAffectedVersions()) {
@@ -154,10 +154,8 @@ public class VulnerableDependency  implements Serializable, Comparable<Vulnerabl
 							equal = a.getAffected();
 							source = a.getSource();
 						}
-						else if(a.getSource() == AffectedVersionSource.PRE_COMMIT_POM)
-							pre_commit_pom = a.getAffected();
-						else if(a.getSource() == AffectedVersionSource.LINE_ADD)
-							line_add = a.getAffected();
+						else if(a.getSource() == AffectedVersionSource.CHECK_CODE)
+							check_code = a.getAffected();
 					}
 				}
 				else if(a.getLib()!=null && a.getLib()==dep.getLib()){
@@ -192,16 +190,10 @@ public class VulnerableDependency  implements Serializable, Comparable<Vulnerabl
 					this.setAffectedVersionSource(AffectedVersionSource.CHECK_VERSION);
 					return;
 				}
-			if(pre_commit_pom != null){
-				this.setAffectedVersion(pre_commit_pom?1:0);
+			if(check_code != null){
+				this.setAffectedVersion((check_code)?1:0);
 				this.setAffectedVersionConfirmed(1);
-				this.setAffectedVersionSource(AffectedVersionSource.PRE_COMMIT_POM);
-				return;
-			}
-			else if (line_add != null){
-				this.setAffectedVersion(line_add?1:0);
-				this.setAffectedVersionConfirmed(1);
-				this.setAffectedVersionSource(AffectedVersionSource.LINE_ADD);
+				this.setAffectedVersionSource(AffectedVersionSource.CHECK_CODE);
 				return;
 			}
 		}
@@ -440,8 +432,8 @@ public class VulnerableDependency  implements Serializable, Comparable<Vulnerabl
 			return "";
 		else if(AffectedVersionSource.MANUAL.equals(this.affectedVersionSource))
 			return "M";
-		else if(AffectedVersionSource.PRE_COMMIT_POM.equals(this.affectedVersionSource))
-			return "P";
+		else if(AffectedVersionSource.CHECK_CODE.equals(this.affectedVersionSource))
+			return "BC";
 		else if(AffectedVersionSource.CHECK_VERSION.equals(this.affectedVersionSource))
 			return "C";
 		else if(AffectedVersionSource.AST_EQUALITY.equals(this.affectedVersionSource))

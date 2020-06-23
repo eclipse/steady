@@ -5,10 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,22 +21,22 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
+import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.java.JavaId;
 import com.sap.psr.vulas.java.sign.ASTConstructBodySignature;
 import com.sap.psr.vulas.java.sign.ASTSignatureChange;
-import com.sap.psr.vulas.java.sign.gson.GsonHelper;
+import com.sap.psr.vulas.java.sign.gson.ASTSignatureChangeDeserializer;
 import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 import com.sap.psr.vulas.shared.enums.ConstructChangeType;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
+import com.sap.psr.vulas.shared.json.JsonBuilder;
 import com.sap.psr.vulas.shared.json.model.AffectedLibrary;
-import com.sap.psr.vulas.shared.json.model.BugChangeList;
+import com.sap.psr.vulas.shared.json.model.Bug;
 import com.sap.psr.vulas.shared.json.model.ConstructChange;
 import com.sap.psr.vulas.shared.json.model.Library;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
@@ -48,12 +46,21 @@ public class BytecodeComparator  {
 	
 	private static final Log log = LogFactory.getLog(BytecodeComparator.class);
 	
-	// digest, JarFile of all dependencies used
-//	Map<String, JarFile> depJars = new HashMap<String, JarFile>();
+	GoalContext context;
+	Map<Class<?>,StdDeserializer<?>> custom_deserializers = new HashMap<Class<?>,StdDeserializer<?>>();
 	
+
+	
+	public BytecodeComparator(GoalContext _g) {
+		this();
+		context = _g;
+	}
+	
+	public BytecodeComparator() {
+		custom_deserializers.put(ASTSignatureChange.class, new ASTSignatureChangeDeserializer());
+	}
 	
 	public void compareLibForBug(Library _l,String _b, Path _p) throws BackendConnectionException, IOException {
-		final Gson gson = GsonHelper.getCustomGsonBuilder().create();
 		String digest = new String(_l.getDigest());
 		String bugId = _b;
 		boolean vuln = false;
@@ -63,12 +70,12 @@ public class BytecodeComparator  {
 		
 		Set<LibraryId> list = new HashSet<LibraryId>();
 
-		BugChangeList b1 = BackendConnector.getInstance().getBug(bugId);
+		Bug b1 = BackendConnector.getInstance().getBug(context, bugId);
 		// retrieve existing affectedVersions
 		List<AffectedLibrary> alist = new ArrayList<AffectedLibrary>();
 		for (AffectedVersionSource s : AffectedVersionSource.values()) {
 			if (!s.equals(AffectedVersionSource.TO_REVIEW)) {
-				AffectedLibrary[] als = BackendConnector.getInstance().getBugAffectedLibraries(bugId,s.toString(), true);
+				AffectedLibrary[] als = BackendConnector.getInstance().getBugAffectedLibraries(context, bugId,s.toString(), true);
 				alist.addAll(Arrays.asList(als));
 				log.debug("Existing [" + als.length + "] affected libraries in backend for source ["+ s.toString() + "]");
 			}
@@ -158,19 +165,18 @@ public class BytecodeComparator  {
 								// check if the ast's diff is empty
 	
 								String body = "[" + ast_lid + "," + ast_current + "]";
-								String editV = BackendConnector.getInstance().getAstDiff(body);
-								ASTSignatureChange scV = gson.fromJson(editV, ASTSignatureChange.class);
-							//	ASTSignatureChange scV = (ASTSignatureChange) JacksonUtil.asObject(editV,ASTSignatureChange.class);
+								String editV = BackendConnector.getInstance().getAstDiff(context, body);
+								ASTSignatureChange scV = (ASTSignatureChange) JacksonUtil.asObject(editV, custom_deserializers, ASTSignatureChange.class);
 								/* */
 	
+								// SP check if scV get mofidications is null?
 								log.debug("size to vulnerable lib " + v.toString() + " is ["
 										+ scV.getModifications().size() + "]");
 								if (scV.getModifications().size() == 0) {
 	
 									// check that there isn't also a construct = to vuln
 	
-									log.info("LID equal to vuln based on AST bytecode comparison with  [" + v.toString()
-											+ "]");
+									log.info("LID equal to vuln based on AST bytecode comparison with  [" + v.toString() + "]");
 									vuln = true;
 									list.add(v);
 									break;
@@ -189,9 +195,8 @@ public class BytecodeComparator  {
 								// check if the ast's diff is empty
 	
 								String body = "[" + ast_lid + "," + ast_current + "]";
-								String editV = BackendConnector.getInstance().getAstDiff(body);
-								ASTSignatureChange scV = gson.fromJson(editV, ASTSignatureChange.class);
-								//ASTSignatureChange scV = (ASTSignatureChange) JacksonUtil.asObject(editV,ASTSignatureChange.class);
+								String editV = BackendConnector.getInstance().getAstDiff(context, body);
+								ASTSignatureChange scV = (ASTSignatureChange) JacksonUtil.asObject(editV, custom_deserializers, ASTSignatureChange.class);
 								/* */
 	
 								log.debug("size to fixed lib " + f.toString() + " is [" + scV.getModifications().size()
@@ -212,14 +217,14 @@ public class BytecodeComparator  {
 				// cia does not serve code for type class
 	//		if(cc.getConstructChangeType().equals(ConstructChangeType.MOD) && cc.getConstructId().getType().equals(ConstructType.CLAS)) {
 	//			// retrieve the bytecode of the currently analyzed library
-	//			String cls_current = BackendConnector.getInstance().getSourcesForQnameInLib(toAssess.getMvnGroup()+"/"+toAssess.getArtifact()
+	//			String cls_current = BackendConnector.getInstance().getSourcesForQnameInLib(context, toAssess.getMvnGroup()+"/"+toAssess.getArtifact()
 	//					+"/"+toAssess.getVersion()+"/"+cc.getConstructId().getType().toString()+"/"+cc.getConstructId().getQname());
 	//
 	//			if(cls_current!=null){
 	//				for(AffectedLibrary[] array: existingxSource.values()){
 	//					for(AffectedLibrary a : array){
 	//						if(a.getLibraryId()!=null) {
-	//							String cls_known = BackendConnector.getInstance().getSourcesForQnameInLib(a.getLibraryId().getMvnGroup()+"/"+a.getLibraryId().getArtifact()
+	//							String cls_known = BackendConnector.getInstance().getSourcesForQnameInLib(context, a.getLibraryId().getMvnGroup()+"/"+a.getLibraryId().getArtifact()
 	//							+"/"+a.getLibraryId().getVersion()+"/"+cc.getConstructId().getType().toString()+"/"+cc.getConstructId().getQname());
 	//						
 	//							if(cls_known!=null && cls_current.equals(cls_known)) {
@@ -248,42 +253,22 @@ public class BytecodeComparator  {
 		}
 	
 		if (toUpload) {
-			log.info("Creating Json for PROPAGATE_MANUAL for digest [" + digest + "] and bug [" + b1.getBugId()
-					+ "]");
-			JsonObject result = createJsonResult(_l, affected, list);
-
-			JsonArray sourceResult = new JsonArray();
-
-			sourceResult.add(result);
-
-			BackendConnector.getInstance().uploadPatchEvalResults(b1.getBugId(), sourceResult.toString(),
-					"PROPAGATE_MANUAL");
+			log.info("Creating Json for source CHECK_CODE for digest [" + digest + "] and bug [" + b1.getBugId()+ "]");
+			
+			AffectedLibrary al = new AffectedLibrary();
+			al.setBugId(b1);
+			al.setLib(_l);
+			al.setAffected(affected);
+			al.setExplanation("Same bytecode found in library(ies) ["+list.toString()+"] ");// by DigestAnalyzer on " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
+			al.setSource(AffectedVersionSource.CHECK_CODE);
+			
+			final JsonBuilder json = new JsonBuilder().startArray();
+			json.appendJsonToArray(JacksonUtil.asJsonString(al));
+			json.endArray();
+			
+			BackendConnector.getInstance().uploadBugAffectedLibraries(context, b1.getBugId(), json.getJson(),AffectedVersionSource.CHECK_CODE);
 		}
 	}
-	
-	 private JsonObject createJsonResult(Library _lib, Boolean _affected, Set<LibraryId> _list){
-			JsonObject result = new JsonObject();
-			result.addProperty("source", "PROPAGATE_MANUAL");
-			if(_list == null)
-				result.addProperty("explanation", "Generated automatically by DigestAnalyzer on " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
-			else
-				result.addProperty("explanation", "Same bytecode found in library(ies) ["+_list.toString()+"] by DigestAnalyzer on " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
-			if(_affected!=null)
-				result.addProperty("affected", _affected);
-				if(_lib.getLibraryId()!=null){
-					JsonObject lib = new JsonObject();
-					lib.addProperty("group", _lib.getLibraryId().getMvnGroup());
-					lib.addProperty("artifact", _lib.getLibraryId().getArtifact());
-					lib.addProperty("version", _lib.getLibraryId().getVersion());
-					result.add("libraryId", lib);
-			}
-			else{
-				JsonObject lib = new JsonObject();
-				lib.addProperty("digest", _lib.getDigest());
-				result.add("lib", lib);
-			}
-			return result;
-	    }
 	
 
 }

@@ -51,6 +51,7 @@ import com.sap.psr.vulas.goals.AbstractGoal;
 import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.shared.connectivity.PathBuilder;
 import com.sap.psr.vulas.shared.connectivity.Service;
+import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 import com.sap.psr.vulas.shared.enums.ConstructChangeType;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
@@ -58,7 +59,6 @@ import com.sap.psr.vulas.shared.json.model.AffectedLibrary;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Artifact;
 import com.sap.psr.vulas.shared.json.model.Bug;
-import com.sap.psr.vulas.shared.json.model.BugChangeList;
 import com.sap.psr.vulas.shared.json.model.ConstructChange;
 import com.sap.psr.vulas.shared.json.model.ConstructId;
 import com.sap.psr.vulas.shared.json.model.Dependency;
@@ -925,20 +925,6 @@ public class BackendConnector {
 		req_list.send();
 	}
 
-	/**
-	 * <p>uploadAffectedLibs.</p>
-	 *
-	 * @param _bugid a {@link java.lang.String} object.
-	 * @param _json a {@link java.lang.String} object.
-	 * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
-	 */
-	public void uploadAffectedLibs(String _bugid, String _json) throws BackendConnectionException {
-		final Map<String,String> params = new HashMap<String,String>();
-		params.put("source", "PRE_COMMIT_POM");		
-		final BasicHttpRequest req = new BasicHttpRequest(HttpMethod.POST, PathBuilder.bugAffectedLibs(_bugid), params);
-		req.setPayload(_json,  null,  true);
-		req.send();
-	}
 
 	/**
 	 * <p>uploadCheckVersionResults.</p>
@@ -977,11 +963,14 @@ public class BackendConnector {
 	 * @return an array of {@link com.sap.psr.vulas.shared.json.model.AffectedLibrary} objects.
 	 * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
 	 */
-	public AffectedLibrary[] getBugAffectedLibraries(String _bugId, String _source,Boolean _onlyWellKnown) throws BackendConnectionException {
+	public AffectedLibrary[] getBugAffectedLibraries(GoalContext _g, String _bugId, String _source,Boolean _onlyWellKnown) throws BackendConnectionException {
 		final HashMap<String, String> params = new HashMap<String, String>();
 		params.put("source", _source);
 		params.put("onlyWellKnown", _onlyWellKnown.toString());
-		final String json = new BasicHttpRequest(HttpMethod.GET, PathBuilder.bugAffectedLibs(_bugId), params).send().getBody();
+		BasicHttpRequest request = new BasicHttpRequest(HttpMethod.GET, PathBuilder.bugAffectedLibs(_bugId), params);
+		if(_g!=null)
+			request.setGoalContext(_g);
+		final String json = request.send().getBody();
 		return (AffectedLibrary[])JacksonUtil.asObject(json, AffectedLibrary[].class);
 	}
 
@@ -992,9 +981,9 @@ public class BackendConnector {
 	 * @param _source a {@link java.lang.String} object.
 	 * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
 	 */
-	public void deletePatchEvalResults(String _bugId, String _source) throws BackendConnectionException {
+	public void deletePatchEvalResults(String _bugId, AffectedVersionSource _source) throws BackendConnectionException {
 		final HashMap<String, String> params = new HashMap<String, String>();
-		params.put("source", _source);
+		params.put("source", _source.toString());
 		final BasicHttpRequest del_req = new BasicHttpRequest(HttpMethod.DELETE, PathBuilder.bugAffectedLibs(_bugId), params);
 		// payload cannot be empty otherwise request doesn t work
 		del_req.setPayload("[]", "application/json", true);
@@ -1006,13 +995,13 @@ public class BackendConnector {
 	 *
 	 * @param _bugId a {@link java.lang.String} object.
 	 * @param _json a {@link java.lang.String} object.
-	 * @param _source a {@link java.lang.String} object.
+	 * @param _source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
 	 * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
 	 */
-	public void uploadPatchEvalResults(String _bugId, String _json, String _source) throws BackendConnectionException {
+	public void uploadBugAffectedLibraries(GoalContext _g, String _bugId, String _json, AffectedVersionSource _source) throws BackendConnectionException {
 		final HashMap<String, String> params = new HashMap<String, String>();
-		params.put("source", _source);
-
+		params.put("source", _source.toString());
+		
 		final HttpRequestList req_list = new HttpRequestList();
 
 
@@ -1030,6 +1019,10 @@ public class BackendConnector {
 				.addCondition(new StatusCondition(HttpURLConnection.HTTP_OK))
 				.setPayload(_json, null , false)
 				);
+		
+		if(_g!=null) {
+			req_list.setGoalContext(_g);
+		}
 
 		req_list.send();
 
@@ -1096,13 +1089,16 @@ public class BackendConnector {
 	 *
 	 * @param _bugId a {@link java.lang.String} object.
 	 * @throws com.sap.psr.vulas.backend.BackendConnectionException
-	 * @return a {@link com.sap.psr.vulas.shared.json.model.BugChangeList} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Bug} object.
 	 */
-	public BugChangeList getBug(String _bugId) throws BackendConnectionException {
-		HttpResponse r = new BasicHttpRequest(HttpMethod.GET, PathBuilder.bug(_bugId), null).send();
+	public Bug getBug(GoalContext _g,String _bugId) throws BackendConnectionException {
+		BasicHttpRequest request = new BasicHttpRequest(HttpMethod.GET, PathBuilder.bug(_bugId), null);
+		if(_g!=null)
+			request.setGoalContext(_g);
+		HttpResponse r = request.send();
 		final String json = r.getBody();
 		if(r.getStatus()==200){
-			final BugChangeList bugChangeList = (BugChangeList)JacksonUtil.asObject(json, BugChangeList.class);
+			final Bug bugChangeList = (Bug)JacksonUtil.asObject(json, Bug.class);
 			BackendConnector.log.info("bug change list for bug " + _bugId + " received from backend");
 			return bugChangeList;
 		}
@@ -1221,12 +1217,14 @@ public class BackendConnector {
 	 * @param jsonReq a {@link java.lang.String} object.
 	 * @return a {@link java.lang.String} object.
 	 */
-	public synchronized String getAstDiff(String jsonReq) {
+	public synchronized String getAstDiff(GoalContext _g, String jsonReq) {
 		String json = null;
 		String ast =null;
 		try {
 			BasicHttpRequest bhr = new BasicHttpRequest(Service.CIA, HttpMethod.POST, PathBuilder.constructsDiff(), null);
-			bhr.setPayload(jsonReq, "application/json", false);                
+			bhr.setPayload(jsonReq, "application/json", false);   
+			if(_g!=null)
+				bhr.setGoalContext(_g);
 			final HttpResponse response = bhr.send();
 
 			if ( response.isOk() ){
