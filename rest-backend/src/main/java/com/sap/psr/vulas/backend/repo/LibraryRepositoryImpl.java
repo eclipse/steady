@@ -21,7 +21,6 @@ package com.sap.psr.vulas.backend.repo;
 
 import java.nio.file.Path;
 import java.util.Calendar;
-import java.util.Collection;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
@@ -87,17 +86,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 			_lib.setId(managed_lib.getId());
 			_lib.setCreatedAt(managed_lib.getCreatedAt());
 			_lib.setModifiedAt(Calendar.getInstance());
-			
-			//	Re-create wellknownDigest if it is null in our current db (this part should be removed once it is created for all)
-			if(managed_lib.getWellknownDigest()==null || (managed_lib.getDigestTimestamp()==null && managed_lib.getWellknownDigest())) {
-				_lib.verifyDigest();
-			}
-			else {
-				_lib.setWellknownDigest(managed_lib.getWellknownDigest());
-				_lib.setDigestVerificationUrl(managed_lib.getDigestVerificationUrl());
-				_lib.setDigestTimestamp(managed_lib.getDigestTimestamp());
-			}
-			
+						
 			//keep the existing lib GAV if the newly posted/put doesn't have one
 			if(_lib.getLibraryId()==null){
 				// Recreate libId if null (to be removed once we ensure we added to the existing libs)
@@ -123,6 +112,11 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 		sw.lap("Updated refs to nested properties");
 		
 		_lib.setBundledLibraryIds(refUpdater.saveNestedBundledLibraryIds(_lib.getBundledLibraryIds()));
+		
+		// we always verify the digest to make sure all fields are filled and check that
+		// libraryId provided by the client is known (replaced with known one otherwise)
+		// Note that this replaces digestVerificationUrl, digestTimestamp and WellknownDigest
+		_lib.verifyDigest();
 		
 		_lib = this.saveNestedLibraryId(_lib);
 		
@@ -169,6 +163,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 	/** {@inheritDoc} */
 	public Library saveIncomplete(Library _lib) throws PersistenceException {
 		Library incomplete = new Library(_lib.getDigest());
+		incomplete.setDigestAlgorithm(_lib.getDigestAlgorithm());
 		if (_lib.getLibraryId()!=null){
 			LibraryRepositoryImpl.log.debug("Setting library Id ["+_lib.getLibraryId().toString()+"] of incomplete library [" +_lib.getDigest()+ "]");
 			incomplete.setLibraryId(_lib.getLibraryId());

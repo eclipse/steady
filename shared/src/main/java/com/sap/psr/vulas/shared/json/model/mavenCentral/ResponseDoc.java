@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.cia.model.mavenCentral;
+package com.sap.psr.vulas.shared.json.model.mavenCentral;
 
 import java.util.Collection;
 import java.util.regex.Matcher;
@@ -59,6 +59,8 @@ public class ResponseDoc implements Comparable {
 	private long timestamp;
 	
 	private Collection<String> ec = null;
+	
+	private Collection<String> tags = null;
 	
 	/**
 	 * <p>Constructor for ResponseDoc.</p>
@@ -172,6 +174,24 @@ public class ResponseDoc implements Comparable {
 	 */
 	public void setEc(Collection<String> ec) { this.ec = ec; }
 	
+	/**
+	 * <p>Getter for the field <code>tags</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
+	public Collection<String> getTags() {
+		return tags;
+	}
+
+	/**
+	 * <p>Setter for the field <code>tags</code>.</p>
+	 *
+	 * @param tags a {@link java.util.Collection} object.
+	 */
+	public void setTags(Collection<String> tags) {
+		this.tags = tags;
+	}
+
 	/**
 	 * <p>availableWith.</p>
 	 *
