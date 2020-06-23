@@ -94,7 +94,7 @@
 			<artifactId>commons-compress</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Used to mock REST services -->
 		<dependency>
 			<groupId>com.xebialabs.restito</groupId>
@@ -110,29 +110,22 @@
 
 	<build>
 		<plugins>
-			<!-- Plugin configuration to create a JAR archive that can be used for 
-				instrumentation. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<executions>
+
+
+					<!-- Include changedistiller, which is not available on Maven Central -->
 					<execution>
+						<id>1</id>
 						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<transformers>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<manifestEntries>
-										<premain-class>com.sap.psr.vulas.monitor.DynamicTransformer</premain-class>
-									</manifestEntries>
-								</transformer>
-							</transformers>
 							<artifactSet>
 								<includes>
-									<include>com.sap.research.security.vulas:vulas-core</include>
 									<include>ch.uzh.ifi.seal:changedistiller</include>
 								</includes>
 							</artifactSet>
@@ -144,6 +137,51 @@
 									</excludes>
 								</filter>
 							</filters>
+						</configuration>
+					</execution>
+
+
+					<!-- For instrumentation with the -agent option, incl. a repackaged 
+						version of httpclient -->
+					<execution>
+						<id>2</id>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+							<shadedArtifactAttached>true</shadedArtifactAttached>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<manifestEntries>
+										<premain-class>com.sap.psr.vulas.monitor.DynamicTransformer</premain-class>
+									</manifestEntries>
+								</transformer>
+							</transformers>
+							<artifactSet>
+								<includes>
+									<include>*:*</include>
+								</includes>
+							</artifactSet>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+									</excludes>
+								</filter>
+							</filters>
+							<relocations>
+								<relocation>
+									<pattern>org.apache.http</pattern>
+									<shadedPattern>org.eclipse.steady.repackaged.org.apache.http</shadedPattern>
+									<includes>
+										<include>org.apache.http.*</include>
+									</includes>
+								</relocation>
+							</relocations>
 						</configuration>
 					</execution>
 				</executions>
@@ -160,38 +198,6 @@
 					<execution>
 						<goals>
 							<goal>antlr4</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- Plugin configuration to create an assembly with all necessary files. -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<index>true</index>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-						</manifest>
-						<manifestEntries>
-							<!-- Required so that the Agent can be used for instrumentation -->
-							<premain-class>com.sap.psr.vulas.monitor.DynamicTransformer</premain-class>
-						</manifestEntries>
-						<addMavenDescriptor>false</addMavenDescriptor>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id> <!-- this is used for inheritance merges -->
-						<phase>package</phase> <!-- bind to the packaging phase -->
-						<goals>
-							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
