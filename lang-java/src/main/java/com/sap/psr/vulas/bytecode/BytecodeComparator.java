@@ -105,14 +105,8 @@ public class BytecodeComparator  {
 					JavaId def_ctx = JavaId.getCompilationUnit(jid);
 	
 					final String entry_name = def_ctx.getQualifiedName().replace('.', '/') + ".class";
-					final Enumeration<JarEntry> en = archive.entries();
-					JarEntry entry = null;
-					while (en.hasMoreElements()) {
-						entry = en.nextElement();
-						if (entry.getName().equals(entry_name)) {
-							break;
-						}
-					}
+					JarEntry entry = (JarEntry) archive.getEntry(entry_name);
+
 					Path classfile = null;
 					if (entry != null) {
 						classfile = Files.createTempFile(def_ctx.getQualifiedName(), ".class");
