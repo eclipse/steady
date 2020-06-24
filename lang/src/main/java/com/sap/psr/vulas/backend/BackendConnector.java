@@ -1091,7 +1091,7 @@ public class BackendConnector {
 	 * @throws com.sap.psr.vulas.backend.BackendConnectionException
 	 * @return a {@link com.sap.psr.vulas.shared.json.model.Bug} object.
 	 */
-	public Bug getBug(GoalContext _g,String _bugId) throws BackendConnectionException {
+	public Bug getBug(GoalContext _g, String _bugId) throws BackendConnectionException {
 		BasicHttpRequest request = new BasicHttpRequest(HttpMethod.GET, PathBuilder.bug(_bugId), null);
 		if(_g!=null)
 			request.setGoalContext(_g);
@@ -1129,16 +1129,20 @@ public class BackendConnector {
 
 	/**
 	 * <p>getAstForQnameInLib.</p>
-	 *
-	 * @param qString a {@link java.lang.String} object.
+	 * @param _gc TODO
+	 * @param _qname a {@link java.lang.String} object.
 	 * @param _sources a {@link java.lang.Boolean} object.
 	 * @param _lang a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 *
 	 * @return a {@link java.lang.String} object.
 	 */
-	public synchronized String getAstForQnameInLib(String qString, Boolean _sources,ProgrammingLanguage _lang) {
+	public synchronized String getAstForQnameInLib(GoalContext _gc, String _qname, Boolean _sources, ProgrammingLanguage _lang) {
 		String json = null;
 		try {
-			final HttpResponse response = new BasicHttpRequest(Service.CIA, HttpMethod.GET, PathBuilder.astForQnameInLib(qString, _sources,_lang), null).send();
+			final BasicHttpRequest request = new BasicHttpRequest(Service.CIA, HttpMethod.GET, PathBuilder.astForQnameInLib(_qname, _sources,_lang), null);
+			if(_gc!=null)
+				request.setGoalContext(_gc);
+			final HttpResponse response = request.send();
 			if ( response.isOk() ){
 				json = response.getBody();
 			} else {
@@ -1179,7 +1183,7 @@ public class BackendConnector {
 	 * @return an array of {@link com.sap.psr.vulas.shared.json.model.ConstructId} objects.
 	 * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
 	 */
-	public synchronized ConstructId[] getArtifactBugConstructsIntersection(String _qString,List<ConstructId> c, String packaging, ProgrammingLanguage lang) throws BackendConnectionException{
+	public synchronized ConstructId[] getArtifactBugConstructsIntersection(String _qString, List<ConstructId> c, String packaging, ProgrammingLanguage lang) throws BackendConnectionException{
 		String json = null;
 		BasicHttpRequest bhr = new BasicHttpRequest(Service.CIA, HttpMethod.POST, PathBuilder.libConstructIdsIntersect(_qString,packaging, lang), null);
 		bhr.setPayload(JacksonUtil.asJsonString(c), "application/json", false);                
@@ -1214,22 +1218,22 @@ public class BackendConnector {
 	/**
 	 * <p>getAstDiff.</p>
 	 *
-	 * @param jsonReq a {@link java.lang.String} object.
+	 * @param _json a {@link java.lang.String} object.
 	 * @return a {@link java.lang.String} object.
 	 */
-	public synchronized String getAstDiff(GoalContext _g, String jsonReq) {
+	public synchronized String getAstDiff(GoalContext _g, String _json) {
 		String json = null;
-		String ast =null;
+		//String ast =null;
 		try {
-			BasicHttpRequest bhr = new BasicHttpRequest(Service.CIA, HttpMethod.POST, PathBuilder.constructsDiff(), null);
-			bhr.setPayload(jsonReq, "application/json", false);   
+			final BasicHttpRequest bhr = new BasicHttpRequest(Service.CIA, HttpMethod.POST, PathBuilder.constructsDiff(), null);
+			bhr.setPayload(_json, "application/json", false);
 			if(_g!=null)
 				bhr.setGoalContext(_g);
 			final HttpResponse response = bhr.send();
 
-			if ( response.isOk() ){
+			if(response.isOk()) {
 				json = response.getBody();
-				//		ast = (String)JacksonUtil.asObject(json, String.class);
+				//ast = (String)JacksonUtil.asObject(json, String.class);
 			} 
 		} catch (BackendConnectionException ex) {
 			log.error(ex);

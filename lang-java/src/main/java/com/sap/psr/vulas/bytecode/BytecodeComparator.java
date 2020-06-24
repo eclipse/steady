@@ -1,9 +1,9 @@
 package com.sap.psr.vulas.bytecode;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,16 +45,14 @@ public class BytecodeComparator  {
 	
 	private static final Log log = LogFactory.getLog(BytecodeComparator.class);
 	
-	GoalContext context;
-	Map<Class<?>,StdDeserializer<?>> custom_deserializers = new HashMap<Class<?>,StdDeserializer<?>>();
+	private GoalContext context;
+	private Map<Class<?>,StdDeserializer<?>> custom_deserializers = new HashMap<Class<?>,StdDeserializer<?>>();
+	
+	public BytecodeComparator() { this(null); }
 	
 	public BytecodeComparator(GoalContext _g) {
-		this();
-		context = _g;
-	}
-	
-	public BytecodeComparator() {
 		custom_deserializers.put(ASTSignatureChange.class, new ASTSignatureChangeDeserializer());
+		context = _g;
 	}
 	
 	public void compareLibForBug(Library _l, String _bug_id, Path _p) throws BackendConnectionException, IOException {
@@ -102,15 +100,11 @@ public class BytecodeComparator  {
 					final String entry_name = def_ctx.getQualifiedName().replace('.', '/') + ".class";
 					final JarEntry entry = (JarEntry)archive.getEntry(entry_name);
 					if (entry != null) {
-						classfile = Files.createTempFile(def_ctx.getQualifiedName(), ".class");
+						classfile = File.createTempFile(def_ctx.getQualifiedName(), ".class", this.context.getVulasConfiguration().getTmpDir().toFile()).toPath();
 						log.debug("Extract class file to [" + classfile.toAbsolutePath() + "]");
-						
-						final InputStream ais = archive.getInputStream(entry);
-						final FileOutputStream fos = new FileOutputStream(classfile.toFile());
-						IOUtils.copy(ais, fos);
-						fos.flush();
-						fos.close();
-						ais.close();
+						try(final InputStream ais = archive.getInputStream(entry); final FileOutputStream fos = new FileOutputStream(classfile.toFile());) {
+							IOUtils.copy(ais, fos);
+						}
 					} else {
 						log.warn("Artifact does not contain entry [" + entry_name + "] for class ["	+ def_ctx.getQualifiedName() + "]");
 					}
@@ -123,39 +117,32 @@ public class BytecodeComparator  {
 						sign = (ASTConstructBodySignature) sf.createSignature(JavaId.toSharedType(jid),classfile.toFile());
 						if (sign != null)
 							ast_current = sign.toJson();
-						// Delete
-						try {
-							Files.delete(classfile);
-						} catch (Exception e) {
-							log.error("Cannot delete file [" + classfile + "]: " + e.getMessage());
-						}
 					}
 	
 					
 					if (ast_current != null) {
 	
-						ConstructBytecodeASTManager astMgr = new ConstructBytecodeASTManager(
-								cc.getConstructId().getQname(), cc.getRepoPath(), cc.getConstructId().getType());
-	
+						final ConstructBytecodeASTManager ast_mgr = new ConstructBytecodeASTManager(
+								this.context, cc.getConstructId().getQname(), cc.getRepoPath(), cc.getConstructId().getType());
 						for (AffectedLibrary a : b1.getAffectedVersions()) {
 							if (a.getAffected() && a.getLibraryId() != null)
-								astMgr.addVulnLid(a.getLibraryId());
+								ast_mgr.addVulnLid(a.getLibraryId());
 							else if (!a.getAffected() && a.getLibraryId() != null)
-								astMgr.addFixedLid(a.getLibraryId());
+								ast_mgr.addFixedLid(a.getLibraryId());
 						}
 	
 						// Retrieve and compare source whose libid was assessed as vuln
-						for (LibraryId v : astMgr.getVulnLids()) {
+						for (LibraryId v : ast_mgr.getVulnLids()) {
 							log.debug(v.toString());
 							// retrieve bytecode of the known to be vulnerable library
-							String ast_lid = astMgr.getVulnAst(v);
+							String ast_lid = ast_mgr.getVulnAst(v);
 	
 							if (ast_lid != null) {
 								// check if the ast's diff is empty
 	
 								String body = "[" + ast_lid + "," + ast_current + "]";
 								String editV = BackendConnector.getInstance().getAstDiff(context, body);
-								ASTSignatureChange scV = (ASTSignatureChange) JacksonUtil.asObject(editV, custom_deserializers, ASTSignatureChange.class);
+								ASTSignatureChange scV = (ASTSignatureChange)JacksonUtil.asObject(editV, custom_deserializers, ASTSignatureChange.class);
 	
 								// SP check if scV get mofidications is null?
 								log.debug("size to vulnerable lib " + v.toString() + " is ["
@@ -164,7 +151,7 @@ public class BytecodeComparator  {
 	
 									// check that there isn't also a construct = to vuln
 	
-									log.info("LID equal to vuln based on AST bytecode comparison with  [" + v.toString() + "]");
+									log.info("Library ID equal to vuln based on AST bytecode comparison with " + v.toString());
 									vuln = true;
 									list.add(v);
 									break;
@@ -173,22 +160,22 @@ public class BytecodeComparator  {
 						}
 	
 						// Retrieve and compare source whose libid was assessed as fixed
-						for (LibraryId f : astMgr.getFixedLids()) {
+						for (LibraryId f : ast_mgr.getFixedLids()) {
 							log.debug(f.toString());
 							// retrieve bytecode of the known to be vulnerable library
-							String ast_lid = astMgr.getFixedAst(f);
+							String ast_lid = ast_mgr.getFixedAst(f);
 	
 							if (ast_lid != null) {
 								// check if the ast's diff is empty
 	
 								String body = "[" + ast_lid + "," + ast_current + "]";
 								String editV = BackendConnector.getInstance().getAstDiff(context, body);
-								ASTSignatureChange scV = (ASTSignatureChange) JacksonUtil.asObject(editV, custom_deserializers, ASTSignatureChange.class);
+								ASTSignatureChange scV = (ASTSignatureChange)JacksonUtil.asObject(editV, custom_deserializers, ASTSignatureChange.class);
 	
 								log.debug("size to fixed lib " + f.toString() + " is [" + scV.getModifications().size() + "]");
 								if (scV.getModifications().size() == 0) {
 	
-									log.info("LID  equal to fix based on AST bytecode comparison with  [" + f.toString() + "]");
+									log.info("Library ID equal to fix based on AST bytecode comparison with " + f.toString());
 									// cpa2.addLibsSameBytecode(l);
 									fixed = true;
 									list.add(f);
@@ -198,7 +185,7 @@ public class BytecodeComparator  {
 						}
 						
 						if(vuln && fixed) {
-							log.warn("No conclusion taken for vulnerability [" + _bug_id + "] in archive [" + _l.getDigest() + "]: Construct [" + cc.toString() + "] is equal both to a vulnerable and to a fixed archive");
+							log.warn("No conclusion taken for vulnerability [" + _bug_id + "] in archive [" + _l.getDigest() + "]: Construct " + cc.toString() + " is equal both to a vulnerable and to a fixed archive");
 							break;
 						}
 					}

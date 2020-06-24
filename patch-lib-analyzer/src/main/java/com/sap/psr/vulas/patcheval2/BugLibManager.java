@@ -1199,7 +1199,7 @@ public class BugLibManager {
 							}
 							else{
 								//add new entry
-								ConstructBytecodeASTManager mgr  = new ConstructBytecodeASTManager(splitLine[0], splitLine[1], type);
+								ConstructBytecodeASTManager mgr  = new ConstructBytecodeASTManager(null, splitLine[0], splitLine[1], type);
 								mgr.addVulnLid(current);
 								bytecodes.put(splitLine[0].concat(splitLine[1]), mgr );
 							}
@@ -1218,7 +1218,7 @@ public class BugLibManager {
 							}
 							else{
 								//add new entry
-								ConstructBytecodeASTManager mgr  = new ConstructBytecodeASTManager(splitLine[0], splitLine[1], type);
+								ConstructBytecodeASTManager mgr  = new ConstructBytecodeASTManager(null, splitLine[0], splitLine[1], type);
 								mgr.addFixedLid(current);
 								bytecodes.put(splitLine[0].concat(splitLine[1]), mgr );
 							}

@@ -185,7 +185,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 						                
 						                    if (sourcesQnameLib) {
 						                    	// GET /constructs/{mvnGroup}/{artifact}/{version}/{type}/{qname}/  : AST_LID
-						                    	ast_lid = BackendConnector.getInstance().getAstForQnameInLib(qString+"/"+mcCC.getConstructId().getType().toString()+"/"+mcCC.getConstructId().getQname(),true,ProgrammingLanguage.JAVA);
+						                    	ast_lid = BackendConnector.getInstance().getAstForQnameInLib(null,qString+"/"+mcCC.getConstructId().getType().toString()+"/"+mcCC.getConstructId().getQname(),true, ProgrammingLanguage.JAVA);
 						                    	//Gson gson = GsonHelper.getCustomGsonBuilder().create();
 			
 						                    	if ( ast_lid != null ) {
@@ -227,7 +227,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 				                	 if ( mcCC.getChangeType().equals(ConstructChangeType.MOD) &&
 					            			 (mcCC.getBuggyBody()!=null ||mcCC.getFixedBody()!=null)){
 				                		//in this case the ast_lid field will contain the digest and body
-			                			ast_lid = BackendConnector.getInstance().getAstForQnameInLib(qString+"/"+mcCC.getConstructId().getType().toString()+"/"+mcCC.getConstructId().getQname(),true,ProgrammingLanguage.PY);
+			                			ast_lid = BackendConnector.getInstance().getAstForQnameInLib(null,qString+"/"+mcCC.getConstructId().getType().toString()+"/"+mcCC.getConstructId().getQname(),true, ProgrammingLanguage.PY);
 			                			PythonConstructDigest pythonConstructDigest = (PythonConstructDigest) JacksonUtil.asObject(ast_lid, PythonConstructDigest.class);
 				                    	if(pythonConstructDigest!=null){
 				                    		PythonConstructDigest vulnConstructDigest = (PythonConstructDigest) JacksonUtil.asObject(mcCC.getBuggyBody(), PythonConstructDigest.class);

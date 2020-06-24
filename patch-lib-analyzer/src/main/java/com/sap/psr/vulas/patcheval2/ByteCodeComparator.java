@@ -98,8 +98,8 @@ public class ByteCodeComparator implements Runnable{
 						List<LibraryId> fList = new ArrayList<LibraryId>();
 						
 						// retrieve the bytecode of the currently analyzed library
-						String ast_current = BackendConnector.getInstance().getAstForQnameInLib(ar.getGroup()+"/"+ar.getArtifact()+"/"+ar.getVersion()+"/"
-												+cpa2.getConstructType().toString()+"/"+cpa2.getConstruct(),false,ProgrammingLanguage.JAVA);	
+						String ast_current = BackendConnector.getInstance().getAstForQnameInLib(null,ar.getGroup()+"/"+ar.getArtifact()+"/"+ar.getVersion()+"/"
+																		+cpa2.getConstructType().toString()+"/"+cpa2.getConstruct(),false, ProgrammingLanguage.JAVA);	
 					    							
 					 	if(ast_current!=null){
 				 		
