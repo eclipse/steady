@@ -105,14 +105,8 @@ public class BytecodeComparator  {
 					JavaId def_ctx = JavaId.getCompilationUnit(jid);
 	
 					final String entry_name = def_ctx.getQualifiedName().replace('.', '/') + ".class";
-					final Enumeration<JarEntry> en = archive.entries();
-					JarEntry entry = null;
-					while (en.hasMoreElements()) {
-						entry = en.nextElement();
-						if (entry.getName().equals(entry_name)) {
-							break;
-						}
-					}
+					JarEntry entry = (JarEntry) archive.getEntry(entry_name);
+
 					Path classfile = null;
 					if (entry != null) {
 						classfile = Files.createTempFile(def_ctx.getQualifiedName(), ".class");
@@ -157,7 +151,7 @@ public class BytecodeComparator  {
 	
 						// retrieve and compare source whose libid was assessed as vuln
 						for (LibraryId v : astMgr.getVulnLids()) {
-							log.info(v.toString());
+							log.debug(v.toString());
 							// retrieve bytecode of the known to be vulnerable library
 							String ast_lid = astMgr.getVulnAst(v);
 	
@@ -187,7 +181,7 @@ public class BytecodeComparator  {
 	
 						// retrieve and compare source whose libid was assessed as fixed
 						for (LibraryId f : astMgr.getFixedLids()) {
-	
+							log.debug(f.toString());
 							// retrieve bytecode of the known to be vulnerable library
 							String ast_lid = astMgr.getFixedAst(f);
 	
@@ -211,6 +205,10 @@ public class BytecodeComparator  {
 									break;
 								}
 							}
+						}
+						if(vuln && fixed) {
+							log.warn("No conclusion taken for vulnerability ["+bugId+"] in archive [" +_l.getDigest()+"]: Construct ["+cc.toString()+"] is equal both to a vulnerable and to a fixed archive.");
+							break;
 						}
 					}
 				}
@@ -250,6 +248,10 @@ public class BytecodeComparator  {
 		} else if (!vuln && fixed) {
 			affected = false;
 			toUpload = true;
+		} else if (vuln && fixed) {
+			log.warn("No conclusion taken for vulnerability ["+bugId+"] in archive [" +_l.getDigest()+"]: equalities both to a vulnerable and to a fixed archive found.");
+		} else {
+			log.warn("No conclusion taken for vulnerability ["+bugId+"] in archive [" +_l.getDigest()+"]");
 		}
 	
 		if (toUpload) {
