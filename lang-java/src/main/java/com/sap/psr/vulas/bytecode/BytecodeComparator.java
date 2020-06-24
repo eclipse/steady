@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,8 +48,6 @@ public class BytecodeComparator  {
 	GoalContext context;
 	Map<Class<?>,StdDeserializer<?>> custom_deserializers = new HashMap<Class<?>,StdDeserializer<?>>();
 	
-
-	
 	public BytecodeComparator(GoalContext _g) {
 		this();
 		context = _g;
@@ -60,57 +57,54 @@ public class BytecodeComparator  {
 		custom_deserializers.put(ASTSignatureChange.class, new ASTSignatureChangeDeserializer());
 	}
 	
-	public void compareLibForBug(Library _l,String _b, Path _p) throws BackendConnectionException, IOException {
-		String digest = new String(_l.getDigest());
-		String bugId = _b;
+	public void compareLibForBug(Library _l, String _bug_id, Path _p) throws BackendConnectionException, IOException {
 		boolean vuln = false;
 		boolean fixed = false;
-		Boolean affected = null;
-		boolean toUpload = false;
 		
 		Set<LibraryId> list = new HashSet<LibraryId>();
 
-		Bug b1 = BackendConnector.getInstance().getBug(context, bugId);
-		// retrieve existing affectedVersions
-		List<AffectedLibrary> alist = new ArrayList<AffectedLibrary>();
+		final Bug b1 = BackendConnector.getInstance().getBug(context, _bug_id);
+		
+		// Retrieve existing affectedVersions
+		final List<AffectedLibrary> alist = new ArrayList<AffectedLibrary>();
 		for (AffectedVersionSource s : AffectedVersionSource.values()) {
 			if (!s.equals(AffectedVersionSource.TO_REVIEW)) {
-				AffectedLibrary[] als = BackendConnector.getInstance().getBugAffectedLibraries(context, bugId,s.toString(), true);
+				AffectedLibrary[] als = BackendConnector.getInstance().getBugAffectedLibraries(context, _bug_id, s.toString(), true);
 				alist.addAll(Arrays.asList(als));
-				log.debug("Existing [" + als.length + "] affected libraries in backend for source ["+ s.toString() + "]");
+				log.debug("Existing [" + als.length + "] affected libraries in backend for source [" + s.toString() + "]");
 			}
 		}
 		
-		// check if current pair bug/digest was already assessed
+		// Check if current pair bug/digest was already assessed
 		for(AffectedLibrary a: alist){
-			if(a.getLib()!=null && a.getLib().getDigest().equals(digest)){
+			if(a.getLib()!=null && a.getLib().getDigest().equals(_l.getDigest())){
 				return;
 			}
 		}
 
 		b1.setAffectedVersions(alist);
 		
-		JarFile archive  =  null;
 		try {
-			archive = new JarFile(_p.toFile());
+			final JarFile archive = new JarFile(_p.toFile());
 			for (ConstructChange cc : b1.getConstructChanges()) {
-				// only compare for type MOD of METH,CONS
+				
+				// Only compare for type MOD of METH,CONS
 				if (cc.getConstructChangeType().equals(ConstructChangeType.MOD)
 						&& (cc.getConstructId().getType().equals(ConstructType.CONS)
 								|| cc.getConstructId().getType().equals(ConstructType.METH))) {
-					
 	
-					// retrieve the construct from JAR
+					// Retrieve the construct from JAR
 					JavaId jid = JavaId.getJavaId(cc.getConstructId().getType().toString(),cc.getConstructId().getQname());
 					JavaId def_ctx = JavaId.getCompilationUnit(jid);
 	
-					final String entry_name = def_ctx.getQualifiedName().replace('.', '/') + ".class";
-					JarEntry entry = (JarEntry) archive.getEntry(entry_name);
-
+					// Extract class file to disk
 					Path classfile = null;
+					final String entry_name = def_ctx.getQualifiedName().replace('.', '/') + ".class";
+					final JarEntry entry = (JarEntry)archive.getEntry(entry_name);
 					if (entry != null) {
 						classfile = Files.createTempFile(def_ctx.getQualifiedName(), ".class");
-						log.debug("classfile at " + classfile.toAbsolutePath());
+						log.debug("Extract class file to [" + classfile.toAbsolutePath() + "]");
+						
 						final InputStream ais = archive.getInputStream(entry);
 						final FileOutputStream fos = new FileOutputStream(classfile.toFile());
 						IOUtils.copy(ais, fos);
@@ -118,10 +112,10 @@ public class BytecodeComparator  {
 						fos.close();
 						ais.close();
 					} else {
-						log.warn("Artifact does not contain entry [" + entry_name + "] for class ["
-								+ def_ctx.getQualifiedName() + "]");
+						log.warn("Artifact does not contain entry [" + entry_name + "] for class ["	+ def_ctx.getQualifiedName() + "]");
 					}
 	
+					// Create AST of construct to assess
 					String ast_current = null;
 					ASTConstructBodySignature sign = null;
 					if (classfile != null) {
@@ -137,6 +131,7 @@ public class BytecodeComparator  {
 						}
 					}
 	
+					
 					if (ast_current != null) {
 	
 						ConstructBytecodeASTManager astMgr = new ConstructBytecodeASTManager(
@@ -149,7 +144,7 @@ public class BytecodeComparator  {
 								astMgr.addFixedLid(a.getLibraryId());
 						}
 	
-						// retrieve and compare source whose libid was assessed as vuln
+						// Retrieve and compare source whose libid was assessed as vuln
 						for (LibraryId v : astMgr.getVulnLids()) {
 							log.debug(v.toString());
 							// retrieve bytecode of the known to be vulnerable library
@@ -161,7 +156,6 @@ public class BytecodeComparator  {
 								String body = "[" + ast_lid + "," + ast_current + "]";
 								String editV = BackendConnector.getInstance().getAstDiff(context, body);
 								ASTSignatureChange scV = (ASTSignatureChange) JacksonUtil.asObject(editV, custom_deserializers, ASTSignatureChange.class);
-								/* */
 	
 								// SP check if scV get mofidications is null?
 								log.debug("size to vulnerable lib " + v.toString() + " is ["
@@ -175,11 +169,10 @@ public class BytecodeComparator  {
 									list.add(v);
 									break;
 								}
-							}
-	
+							}	
 						}
 	
-						// retrieve and compare source whose libid was assessed as fixed
+						// Retrieve and compare source whose libid was assessed as fixed
 						for (LibraryId f : astMgr.getFixedLids()) {
 							log.debug(f.toString());
 							// retrieve bytecode of the known to be vulnerable library
@@ -191,14 +184,11 @@ public class BytecodeComparator  {
 								String body = "[" + ast_lid + "," + ast_current + "]";
 								String editV = BackendConnector.getInstance().getAstDiff(context, body);
 								ASTSignatureChange scV = (ASTSignatureChange) JacksonUtil.asObject(editV, custom_deserializers, ASTSignatureChange.class);
-								/* */
 	
-								log.debug("size to fixed lib " + f.toString() + " is [" + scV.getModifications().size()
-										+ "]");
+								log.debug("size to fixed lib " + f.toString() + " is [" + scV.getModifications().size() + "]");
 								if (scV.getModifications().size() == 0) {
 	
-									log.info("LID  equal to fix based on AST bytecode comparison with  [" + f.toString()
-											+ "]");
+									log.info("LID  equal to fix based on AST bytecode comparison with  [" + f.toString() + "]");
 									// cpa2.addLibsSameBytecode(l);
 									fixed = true;
 									list.add(f);
@@ -206,13 +196,16 @@ public class BytecodeComparator  {
 								}
 							}
 						}
+						
 						if(vuln && fixed) {
-							log.warn("No conclusion taken for vulnerability ["+bugId+"] in archive [" +_l.getDigest()+"]: Construct ["+cc.toString()+"] is equal both to a vulnerable and to a fixed archive.");
+							log.warn("No conclusion taken for vulnerability [" + _bug_id + "] in archive [" + _l.getDigest() + "]: Construct [" + cc.toString() + "] is equal both to a vulnerable and to a fixed archive");
 							break;
 						}
 					}
 				}
+				
 				// cia does not serve code for type class
+				
 	//		if(cc.getConstructChangeType().equals(ConstructChangeType.MOD) && cc.getConstructId().getType().equals(ConstructType.CLAS)) {
 	//			// retrieve the bytecode of the currently analyzed library
 	//			String cls_current = BackendConnector.getInstance().getSourcesForQnameInLib(context, toAssess.getMvnGroup()+"/"+toAssess.getArtifact()
@@ -237,40 +230,39 @@ public class BytecodeComparator  {
 	//				}
 	//			}
 	//		}
+				
 			}
 			archive.close();
 		} catch (ZipException ze) {
-			log.error("Error in opening zip file.");
+			log.error("Error in opening archive [" + _p + "]: " + ze.getMessage(), ze);
 		}
-		if (vuln && !fixed) {
-			affected = true;
-			toUpload = true;
-		} else if (!vuln && fixed) {
-			affected = false;
-			toUpload = true;
-		} else if (vuln && fixed) {
-			log.warn("No conclusion taken for vulnerability ["+bugId+"] in archive [" +_l.getDigest()+"]: equalities both to a vulnerable and to a fixed archive found.");
-		} else {
-			log.warn("No conclusion taken for vulnerability ["+bugId+"] in archive [" +_l.getDigest()+"]");
-		}
-	
-		if (toUpload) {
-			log.info("Creating Json for source CHECK_CODE for digest [" + digest + "] and bug [" + b1.getBugId()+ "]");
+		
+		// Only create assessment if all constructs are equal to either vulnerable or fixed
+		if (vuln ^ fixed) {
+			log.info("Library with digest [" + _l.getDigest() + "] assessed as [" + (vuln?"vulnerable":"non-vulnerable") + "] with regard to bug [" + b1.getBugId() + "]");
 			
-			AffectedLibrary al = new AffectedLibrary();
+			final AffectedLibrary al = new AffectedLibrary();
 			al.setBugId(b1);
 			al.setLib(_l);
-			al.setAffected(affected);
-			al.setExplanation("Same bytecode found in library(ies) ["+list.toString()+"] ");// by DigestAnalyzer on " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
+			al.setAffected(vuln);
+			al.setExplanation("Same bytecode found in library(ies) [" + list.toString() + "]");
 			al.setSource(AffectedVersionSource.CHECK_CODE);
 			
 			final JsonBuilder json = new JsonBuilder().startArray();
 			json.appendJsonToArray(JacksonUtil.asJsonString(al));
 			json.endArray();
 			
-			BackendConnector.getInstance().uploadBugAffectedLibraries(context, b1.getBugId(), json.getJson(),AffectedVersionSource.CHECK_CODE);
+			BackendConnector.getInstance().uploadBugAffectedLibraries(context, b1.getBugId(), json.getJson(), AffectedVersionSource.CHECK_CODE);
+		}
+		
+		// Some constructs are equal to vulnerable, others are equal to fixed
+		else if (vuln && fixed) {
+			log.warn("No conclusion taken for bug [" + _bug_id + "] in archive [" + _l.getDigest() + "]: found equalities both to vulnerable and fixed archive");
+		}
+		
+		// No conclusion taken
+		else {
+			log.warn("No conclusion taken for bug [" + _bug_id + "] in archive [" + _l.getDigest() + "]");
 		}
 	}
-	
-
 }
