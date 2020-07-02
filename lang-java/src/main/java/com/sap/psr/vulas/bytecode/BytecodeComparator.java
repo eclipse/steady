@@ -185,7 +185,7 @@ public class BytecodeComparator  {
 						}
 						
 						if(vuln && fixed) {
-							log.warn("No conclusion taken for vulnerability [" + _bug_id + "] in archive [" + _l.getDigest() + "]: Construct " + cc.toString() + " is equal both to a vulnerable and to a fixed archive");
+							log.warn("No conclusion taken for vulnerability [" + _bug_id + "] in archive [" + _l.getDigest() + "]: Construct of change " + cc.toString() + " is equal both to a vulnerable and to a fixed archive");
 							break;
 						}
 					}

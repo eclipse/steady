@@ -180,9 +180,6 @@
 								<relocation>
 									<pattern>org.apache.http</pattern>
 									<shadedPattern>org.eclipse.steady.repackaged.org.apache.http</shadedPattern>
-									<includes>
-										<include>org.apache.http.*</include>
-									</includes>
 								</relocation>
 							</relocations>
 						</configuration>
