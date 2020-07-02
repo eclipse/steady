@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sap.psr.vulas.shared.enums.BugOrigin;
 import com.sap.psr.vulas.shared.enums.ContentMaturityLevel;
+import com.sap.psr.vulas.shared.json.model.metrics.Metrics;
 
 /**
  * <p>Bug class.</p>
@@ -91,6 +92,8 @@ public class Bug implements Serializable, Comparable {
 
 	private String modifiedBy;
 
+	private Metrics countAffLibIds;
+	
 	/**
 	 * <p>Constructor for Bug.</p>
 	 */
@@ -411,6 +414,22 @@ public class Bug implements Serializable, Comparable {
 	 * @param modifiedBy a {@link java.lang.String} object.
 	 */
 	public void setModifiedBy(String modifiedBy) { this.modifiedBy = modifiedBy; }
+	/**
+	 * <p>Getter for the field <code>countAffLibIds</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.metrics.Metrics} object.
+	 */
+	public Metrics getCountAffLibIds() {
+		return countAffLibIds;
+	}
+	/**
+	 * <p>Setter for the field <code>countAffLibIds</code>.</p>
+	 *
+	 * @param metrics a {@link com.sap.psr.vulas.shared.json.model.metrics.Metrics} object.
+	 */
+	public void setCountAffLibIds(Metrics metrics) {
+		this.countAffLibIds = metrics;
+	}
 
 	/**
 	 * <p>countConstructChanges.</p>

@@ -11,6 +11,8 @@ The following goals perform some sort of application analysis:
 - `test`: This is not an actual goal implemented by any of the clients, but describes the collection of execution traces by a so-called Java agent that _dynamically instruments_ Java bytecode during JUnit and integration tests.
 - [`instr`](#static-instrumentation-instr): Produces a modified version of Java archives (_static instrumentation_) that can be deployed/executed in order to collect traces of actual method executions.
 - [`t2c`](#reachable-from-traces-t2c): Builds a call graph (starting from traced methods) and checks whether vulnerable code is potentially reachable from those.
+- [`checkcode`](#analyze-unconfirmed-vulnerabilities-checkcode) Downloads unconfirmed vulnerabilities from the backend to the client, and checks whether the affected dependencies contain vulnerable of fixed constructs.
+
 
 The following goals are related to data management and reporting:
 
@@ -515,6 +517,28 @@ vulas.reach.identifyTouchpoints = true
 # Whether to search for the shortest path(s) from entry points to vulnerable constructs, or to quit after the first path found
 # Default: true
 vulas.reach.searchShortest = true
+```
+
+## Analyze unconfirmed vulnerabilities (checkcode)
+
+#### Objective
+
+Downloads unconfirmed vulnerable dependencies (appearing as orange hourglasses in the report and application frontend) and analyze each dependency to determine whether they contain the vulnerable or fixed code. This is done by constructing the Abstract Syntax Tree (AST) of the constructs changed to fix the vulnerability, and comparing it with the AST(s) build from the bytecode of artifacts known to be vulnerable or fixed (as a result of other evaluation strategies).
+
+#### Result
+
+In case of equalities to either vulnerable/fixed code, affected libraries are uploaded to the backend, thereby resolving the unconfirmed vulnerabilities (orange hourglasses will turn either red or green).
+
+#### Run as follows
+
+`vulas.shared.cia.serviceUrl` must be set.
+
+```sh tab="CLI"
+java -jar vulas-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal checkcode 
+```
+
+```sh tab="Maven"
+mvn -Dvulas vulas:checkcode
 ```
 
 ## Upload analysis files (upload)

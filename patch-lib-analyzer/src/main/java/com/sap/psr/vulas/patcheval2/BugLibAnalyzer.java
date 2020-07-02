@@ -25,31 +25,9 @@
 package com.sap.psr.vulas.patcheval2;
 
 
-import com.google.gson.Gson;
-import com.sap.psr.vulas.backend.BackendConnectionException;
-import com.sap.psr.vulas.backend.BackendConnector;
-import com.sap.psr.vulas.java.sign.gson.GsonHelper;
-import com.sap.psr.vulas.patcheval.representation.ArtifactLibrary;
-import com.sap.psr.vulas.patcheval.representation.ConstructPathLibResult2;
-import com.sap.psr.vulas.patcheval.representation.OrderedCCperConstructPath2;
-import com.sap.psr.vulas.patcheval.representation.OverallConstructChange;
-import com.sap.psr.vulas.patcheval.utils.CSVHelper2;
-import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
-import com.sap.psr.vulas.shared.json.model.BugChangeList;
-import com.sap.psr.vulas.shared.json.model.ConstructChange;
-import com.sap.psr.vulas.shared.json.model.ConstructId;
-import com.sap.psr.vulas.shared.json.model.Library;
-import com.sap.psr.vulas.shared.json.model.LibraryId;
-import com.sap.psr.vulas.shared.enums.ConstructChangeType;
-import com.sap.psr.vulas.shared.enums.ConstructType;
-import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
-import com.sap.psr.vulas.shared.json.model.AffectedLibrary;
-import com.sap.psr.vulas.shared.json.model.Artifact;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -68,6 +46,24 @@ import java.util.concurrent.Future;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.sap.psr.vulas.backend.BackendConnectionException;
+import com.sap.psr.vulas.backend.BackendConnector;
+import com.sap.psr.vulas.patcheval.representation.ConstructPathLibResult2;
+import com.sap.psr.vulas.patcheval.representation.OrderedCCperConstructPath2;
+import com.sap.psr.vulas.patcheval.representation.OverallConstructChange;
+import com.sap.psr.vulas.patcheval.utils.CSVHelper2;
+import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
+import com.sap.psr.vulas.shared.enums.ConstructChangeType;
+import com.sap.psr.vulas.shared.enums.ConstructType;
+import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
+import com.sap.psr.vulas.shared.json.model.Artifact;
+import com.sap.psr.vulas.shared.json.model.Bug;
+import com.sap.psr.vulas.shared.json.model.ConstructChange;
+import com.sap.psr.vulas.shared.json.model.ConstructId;
+import com.sap.psr.vulas.shared.json.model.Library;
+import com.sap.psr.vulas.shared.json.model.LibraryId;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
+
 
 
 /**
@@ -76,7 +72,7 @@ import org.apache.commons.logging.LogFactory;
 public class BugLibAnalyzer {
     private static final Log log = LogFactory.getLog(BugLibAnalyzer.class);
     
-    private BugChangeList bug;
+    private Bug bug;
     private ExecutorService executorService = null ;
     
     /**
@@ -87,9 +83,9 @@ public class BugLibAnalyzer {
     /**
      * <p>Setter for the field <code>bug</code>.</p>
      *
-     * @param _b a {@link com.sap.psr.vulas.shared.json.model.BugChangeList} object.
+     * @param _b a {@link com.sap.psr.vulas.shared.json.model.Bug} object.
      */
-    public void setBug(BugChangeList _b){
+    public void setBug(Bug _b){
     	this.bug=_b;
     }
 

@@ -24,9 +24,9 @@
  */
 package com.sap.psr.vulas.patcheval2;
 
-import com.google.gson.Gson;
-
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.sap.psr.vulas.backend.BackendConnector;
+import com.sap.psr.vulas.java.sign.gson.ASTSignatureChangeDeserializer;
 import com.sap.psr.vulas.java.sign.gson.GsonHelper;
 import com.sap.psr.vulas.java.sign.ASTSignatureChange;
 import com.sap.psr.vulas.python.sign.PythonConstructDigest;
@@ -35,6 +35,7 @@ import com.sap.psr.vulas.patcheval.representation.LidResult2;
 import com.sap.psr.vulas.patcheval.representation.OverallConstructChange;
 import com.sap.psr.vulas.shared.enums.ConstructChangeType;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
+import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.Artifact;
 import com.sap.psr.vulas.shared.json.model.ConstructId;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
@@ -42,8 +43,10 @@ import com.sap.psr.vulas.shared.json.model.LibraryId;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.logging.Log;
@@ -55,8 +58,9 @@ import org.apache.commons.logging.LogFactory;
 public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibResult2>>{
     private static final Log log = LogFactory.getLog(LibraryAnalyzerThread2.class);
     private int tid;
-     
-  //  private Gson gson;
+    
+    Map<Class<?>,StdDeserializer<?>> custom_deserializers = new HashMap<Class<?>,StdDeserializer<?>>();
+
     private LinkedList<OverallConstructChange> singleMethsConsCC;
     private LinkedList<OverallConstructChange> addedDelMethsConsCC;
     private LibraryId libId;
@@ -75,6 +79,8 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
     public LibraryAnalyzerThread2(int _id, LinkedList<OverallConstructChange> methsConsMOD, 
     		LinkedList<OverallConstructChange> methsConsAD, Artifact a , ProgrammingLanguage l){
         this.tid=_id;
+        
+        custom_deserializers.put(ASTSignatureChange.class, new ASTSignatureChangeDeserializer());
 
         this.singleMethsConsCC = methsConsMOD;    
         this.addedDelMethsConsCC = methsConsAD;
@@ -179,8 +185,8 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 						                
 						                    if (sourcesQnameLib) {
 						                    	// GET /constructs/{mvnGroup}/{artifact}/{version}/{type}/{qname}/  : AST_LID
-						                    	ast_lid = BackendConnector.getInstance().getAstForQnameInLib(qString+"/"+mcCC.getConstructId().getType().toString()+"/"+mcCC.getConstructId().getQname(),true,ProgrammingLanguage.JAVA);
-						                    	Gson gson = GsonHelper.getCustomGsonBuilder().create();
+						                    	ast_lid = BackendConnector.getInstance().getAstForQnameInLib(null,qString+"/"+mcCC.getConstructId().getType().toString()+"/"+mcCC.getConstructId().getQname(),true, ProgrammingLanguage.JAVA);
+						                    	//Gson gson = GsonHelper.getCustomGsonBuilder().create();
 			
 						                    	if ( ast_lid != null ) {
 						                    		if ( ast_lid.compareTo("")==0 ){
@@ -190,8 +196,8 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 						                    			if(mcCC.getBuggyBody()!=null){
 					
 							                            	String lidToVulnBody = "["+mcCC.getBuggyBody() + "," + ast_lid +"]";
-							                            	  String editV = BackendConnector.getInstance().getAstDiff(lidToVulnBody);
-							                            	  ASTSignatureChange scV = gson.fromJson(editV, ASTSignatureChange.class);
+							                            	  String editV = BackendConnector.getInstance().getAstDiff(null,lidToVulnBody);
+							                            	  ASTSignatureChange scV = (ASTSignatureChange) JacksonUtil.asObject(editV, custom_deserializers, ASTSignatureChange.class);
 			
 							                             //   ASTSignatureChange scV = (ASTSignatureChange)BackendConnector.getInstance().getAstDiff(lidToVulnBody);
 							                                /* */
@@ -199,8 +205,8 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 						                    			}
 						                    			if(mcCC.getFixedBody()!=null){
 							                                String lidToFixedBody = "["+ast_lid + "," + mcCC.getFixedBody()+"]";
-							                                String editF = BackendConnector.getInstance().getAstDiff(lidToFixedBody);
-							                                ASTSignatureChange scF = gson.fromJson(editF, ASTSignatureChange.class);
+							                                String editF = BackendConnector.getInstance().getAstDiff(null,lidToFixedBody);
+							                                ASTSignatureChange scF = (ASTSignatureChange) JacksonUtil.asObject(editF, custom_deserializers, ASTSignatureChange.class);
 			
 							                              //  ASTSignatureChange scF = (ASTSignatureChange)BackendConnector.getInstance().getAstDiff(lidToFixedBody);
 							                                /**/      
@@ -221,12 +227,11 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 				                	 if ( mcCC.getChangeType().equals(ConstructChangeType.MOD) &&
 					            			 (mcCC.getBuggyBody()!=null ||mcCC.getFixedBody()!=null)){
 				                		//in this case the ast_lid field will contain the digest and body
-			                			ast_lid = BackendConnector.getInstance().getAstForQnameInLib(qString+"/"+mcCC.getConstructId().getType().toString()+"/"+mcCC.getConstructId().getQname(),true,ProgrammingLanguage.PY);
-				                    	Gson gson = GsonHelper.getCustomGsonBuilder().create();
-				                    	PythonConstructDigest pythonConstructDigest = gson.fromJson(ast_lid, PythonConstructDigest.class);
+			                			ast_lid = BackendConnector.getInstance().getAstForQnameInLib(null,qString+"/"+mcCC.getConstructId().getType().toString()+"/"+mcCC.getConstructId().getQname(),true, ProgrammingLanguage.PY);
+			                			PythonConstructDigest pythonConstructDigest = (PythonConstructDigest) JacksonUtil.asObject(ast_lid, PythonConstructDigest.class);
 				                    	if(pythonConstructDigest!=null){
-					                    	PythonConstructDigest vulnConstructDigest = gson.fromJson(mcCC.getBuggyBody(), PythonConstructDigest.class);
-					                    	PythonConstructDigest fixedConstructDigest = gson.fromJson(mcCC.getFixedBody(), PythonConstructDigest.class);
+				                    		PythonConstructDigest vulnConstructDigest = (PythonConstructDigest) JacksonUtil.asObject(mcCC.getBuggyBody(), PythonConstructDigest.class);
+				                    		PythonConstructDigest fixedConstructDigest = (PythonConstructDigest) JacksonUtil.asObject(mcCC.getFixedBody(), PythonConstructDigest.class);
 					                		if(pythonConstructDigest.getDigest()!=null && vulnConstructDigest.getDigest()!=null && pythonConstructDigest.getDigest().equals(vulnConstructDigest.getDigest())){
 					                			changesToV = 0;
 					                		}

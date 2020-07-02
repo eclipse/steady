@@ -21,15 +21,12 @@ package com.sap.psr.vulas.patcheval.representation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.sap.psr.vulas.shared.enums.ConstructChangeType;
+import com.sap.psr.vulas.shared.json.model.AffectedConstructChange;
 import com.sap.psr.vulas.shared.json.model.ConstructChange;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.json.model.Version;
@@ -619,68 +616,49 @@ import com.sap.psr.vulas.shared.json.model.Version;
 	  * @param ConstructChange a {@link java.util.List} object.
 	  * @return a {@link com.google.gson.JsonArray} object.
 	  */
-	 public JsonArray getAffectedcc(List<ConstructChange> ConstructChange){
-		   JsonArray affectedcc = new JsonArray();
-		   for ( ConstructPathAssessment2 cpa : this.getConstructPathAssessments() ) {
-			   for (ConstructChange c: ConstructChange){
-				   
-				   //should enter only once in the if 
+	 public List<AffectedConstructChange> getAffectedcc(List<ConstructChange> ConstructChange){
+		 List<AffectedConstructChange> affectedcc = new ArrayList<AffectedConstructChange>();
+		 for ( ConstructPathAssessment2 cpa : this.getConstructPathAssessments() ) {
+			 for (ConstructChange c: ConstructChange){
+				  //should enter only once in the if 
 	        	   if(cpa.getConstruct().equals(c.getConstructId().getQname()) && c.getRepoPath().contains(cpa.getPath())
 	        			   && c.getConstructChangeType().toString().equals(cpa.getType())){
-	        		   JsonObject thisCc = new JsonObject();
-	        		 
-	        		   JsonObject cc = new JsonObject();
-			           cc.addProperty("repo", c.getRepo());
-			           cc.addProperty("commit", c.getCommit());
-			           cc.addProperty("repoPath", c.getRepoPath());
-			           JsonObject constructId = new JsonObject();
-			           constructId.addProperty("lang", c.getConstructId().getLang().toString());
-			           constructId.addProperty("type", c.getConstructId().getType().toString());
-			           constructId.addProperty("qname", c.getConstructId().getQname());
-			           cc.add("constructId", constructId);
-		
-			           thisCc.add("cc", cc);
-			           thisCc.addProperty("pathGroup", cpa.getPath());
-			           thisCc.addProperty("overall_chg", cpa.getType().toString());
-			           thisCc.addProperty("qnameInJar", cpa.getQnameInJar());
+	        		   
+	        		   AffectedConstructChange affcc = new AffectedConstructChange();
+	        		   
+	        		   affcc.setCc(c);
+	        		   affcc.setPathGroup(cpa.getPath());
+	        		   affcc.setOverall_chg(cpa.getType());
+	        		   
+	        		   affcc.setQnameInJar(cpa.getQnameInJar());
 			           
 	        		   if(c.getConstructChangeType().equals(ConstructChangeType.MOD)){
-						 	thisCc.addProperty("dtv", cpa.getdToV());
-				       	    thisCc.addProperty("dtf", cpa.getdToF());
-				       	    //thisCc.addProperty("vulnBody", cpa.getVBody());
-				       	    //thisCc.addProperty("fixedBody", cpa.getFBody());
-		
-				     //  	    if ( cpa.getdToV()==0 ) thisCc.addProperty("astEqual", "vuln");
-				     //  	    if ( cpa.getdToF()==0 ) thisCc.addProperty("astEqual", "fix");
-				       	    
-				       	    if(cpa.getAst()!=null){
-					       	    thisCc.addProperty("testedBody", cpa.getAst());
-					       	    thisCc.addProperty("vulnBody", cpa.getVulnAst());
-					       	    thisCc.addProperty("fixedBody", cpa.getFixedAst());
+	        			   affcc.setDtv(cpa.getdToV());
+	        			   affcc.setDtf(cpa.getdToF());
+	        			   
+	        			   if(cpa.getAst()!=null){
+	        				   affcc.setTestedBody(cpa.getAst());
+	        				   affcc.setVulnBody(cpa.getVulnAst());
+	        				   affcc.setFixedBody(cpa.getFixedAst());
 				       	    }
 				       	    else if(cpa.getLibsSameBytecode()!=null){
-				       	    	JsonArray sameBytecodeArray = new JsonArray();
+				       	    	List<LibraryId> sameBytecodeArray = new ArrayList<LibraryId>();
 				       	    	for(LibraryId l: cpa.getLibsSameBytecode()){
-					       	    	JsonObject libraryId = new JsonObject();
-					       			libraryId.addProperty("group", l.getMvnGroup());
-					       			libraryId.addProperty("artifact", l.getArtifact());
-					       			libraryId.addProperty("version", l.getVersion());
-					       			sameBytecodeArray.add(libraryId);
+					       			sameBytecodeArray.add(new LibraryId(l.getMvnGroup(),l.getArtifact(),l.getVersion()));
 				       	    	}
-				      	    	
-				       	    	thisCc.add("sameBytecodeLids", sameBytecodeArray);
+				       	    	affcc.setSameBytecodeLids(sameBytecodeArray);
 				       	    }
-				       	    
-				       	    
 	        		   }
-	        		   affectedcc.add(thisCc);
+	        		   affectedcc.add(affcc);
 	        		   break;
 		        	  }
 	           }
-	          
-		   }
-		   return affectedcc;
-	    }
-	 
+
+			 }
+		 
+			return affectedcc;
+	 }
+		 
+		 	 
 
 }

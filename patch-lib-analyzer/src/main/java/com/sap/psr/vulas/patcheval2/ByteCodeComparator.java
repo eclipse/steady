@@ -20,20 +20,25 @@
 package com.sap.psr.vulas.patcheval2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.google.gson.Gson;
 import com.sap.psr.vulas.backend.BackendConnector;
+import com.sap.psr.vulas.bytecode.ConstructBytecodeASTManager;
+import com.sap.psr.vulas.java.sign.gson.ASTSignatureChangeDeserializer;
 import com.sap.psr.vulas.java.sign.gson.GsonHelper;
 import com.sap.psr.vulas.patcheval.representation.ArtifactResult2;
 import com.sap.psr.vulas.patcheval2.BugLibManager;
 import com.sap.psr.vulas.patcheval.representation.ConstructPathAssessment2;
 import com.sap.psr.vulas.patcheval.utils.CSVHelper2;
-import com.sap.psr.vulas.patcheval.utils.ConstructBytecodeASTManager;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
+import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.java.sign.ASTSignatureChange;
 
@@ -48,7 +53,7 @@ public class ByteCodeComparator implements Runnable{
 	
 	
 	private final ArtifactResult2 ar;
-	private Gson gson = GsonHelper.getCustomGsonBuilder().create();
+	Map<Class<?>,StdDeserializer<?>> custom_deserializers = new HashMap<Class<?>,StdDeserializer<?>>();
 	String bugId;
 	
 	/**
@@ -60,6 +65,7 @@ public class ByteCodeComparator implements Runnable{
 	public ByteCodeComparator(ArtifactResult2 ar, String _b) {
 		this.ar = ar;
 		this.bugId = _b;
+		custom_deserializers.put(ASTSignatureChange.class, new ASTSignatureChangeDeserializer());
 	}
 
 	/** {@inheritDoc} */
@@ -92,8 +98,8 @@ public class ByteCodeComparator implements Runnable{
 						List<LibraryId> fList = new ArrayList<LibraryId>();
 						
 						// retrieve the bytecode of the currently analyzed library
-						String ast_current = BackendConnector.getInstance().getAstForQnameInLib(ar.getGroup()+"/"+ar.getArtifact()+"/"+ar.getVersion()+"/"
-												+cpa2.getConstructType().toString()+"/"+cpa2.getConstruct(),false,ProgrammingLanguage.JAVA);	
+						String ast_current = BackendConnector.getInstance().getAstForQnameInLib(null,ar.getGroup()+"/"+ar.getArtifact()+"/"+ar.getVersion()+"/"
+																		+cpa2.getConstructType().toString()+"/"+cpa2.getConstruct(),false, ProgrammingLanguage.JAVA);	
 					    							
 					 	if(ast_current!=null){
 				 		
@@ -111,8 +117,8 @@ public class ByteCodeComparator implements Runnable{
 	    						 	//check if the ast's diff is empty
 	    						 	
 	    							String body = "["+ast_lid + "," + ast_current +"]";
-	                                String editV = BackendConnector.getInstance().getAstDiff(body);
-	                                ASTSignatureChange scV = gson.fromJson(editV, ASTSignatureChange.class);
+	                                String editV = BackendConnector.getInstance().getAstDiff(null,body);
+	                                ASTSignatureChange scV = (ASTSignatureChange) JacksonUtil.asObject(editV, custom_deserializers, ASTSignatureChange.class);
 	                                /* */
 	                                done_comparisons++;
 	                                toRewrite = true;
@@ -131,7 +137,7 @@ public class ByteCodeComparator implements Runnable{
 		    					
 	    					}
 					 		
-					 		// libid whose source was found equal to vuln
+					 		// libid whose source was found equal to fix
 					 		for(LibraryId l: mgr.getFixedLids()){
     					
 					 			log.info("Artifact ["+ar.toString()+"] fixed comparison number [" + done_comparisons+"/"+comparisonsToBeDone + "]");						
@@ -143,8 +149,8 @@ public class ByteCodeComparator implements Runnable{
 									//check if the ast's diff is empty
 								 	
 									String body = "["+ast_lid + "," + ast_current +"]";
-		                            String editV = BackendConnector.getInstance().getAstDiff(body);
-		                            ASTSignatureChange scV = gson.fromJson(editV, ASTSignatureChange.class);
+		                            String editV = BackendConnector.getInstance().getAstDiff(null,body);
+		                            ASTSignatureChange scV = (ASTSignatureChange) JacksonUtil.asObject(editV, custom_deserializers, ASTSignatureChange.class);
 		                            /* */
 		                            done_comparisons++;
 		                            toRewrite = true;
