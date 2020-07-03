@@ -36,15 +36,15 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../../images/ES-favicon-48-transparent.png">
-      <meta name="generator" content="mkdocs-1.0, mkdocs-material-4.6.3">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.3">
     
     
       
-        <title>Push Docker images to a registry - Eclipse Steady 3.1.12 (Incubator Project)</title>
+        <title>Push Docker images to a registry - Eclipse Steady 3.1.13 (Incubator Project)</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/application.adb8469c.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application.30686662.css">
       
         <link rel="stylesheet" href="../../../assets/stylesheets/application-palette.a8b3c06d.css">
       
@@ -55,7 +55,7 @@
       
     
     
-      <script src="../../../assets/javascripts/modernizr.86422ebf.js"></script>
+      <script src="../../../assets/javascripts/modernizr.74668098.js"></script>
     
     
     <!-- Suppress Material fonts -->
@@ -97,7 +97,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#push-docker-images-on-a-registry" tabindex="0" class="md-skip">
+      <a href="#push-docker-images-on-a-registry" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.12 (Incubator Project)" aria-label="Eclipse Steady 3.1.12 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.13 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.12 (Incubator Project)
+              Eclipse Steady 3.1.13 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -142,7 +142,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.12 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.13 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.12 (Incubator Project)
+    Eclipse Steady 3.1.13 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1219,14 +1219,14 @@
 </ul>
 <h2 id="generate-eclipse-steady-images">Generate Eclipse Steady images<a class="headerlink" href="#generate-eclipse-steady-images" title="Permanent link">&para;</a></h2>
 <p>In order to generate the Docker images to upload to a local registry, you should generate Eclipse Steady's Java archives. This can be done following <a href="../build/">Build JAVA archives/Docker images</a> tutorial. To briefly summarize you should build and run an image which will populate your local directories with the Eclipse Steady JARs and WARs. In the end of this preliminary step you should have your images locally, this can be tested with the command <code>docker images | grep vulnerability-assessment-tool</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># sample output for `docker images` command</span>
-vulnerability-assessment-tool-generator          <span class="m">3</span>.1.12 a829f93eb9aa  <span class="m">22</span> hours ago 223MB
-vulnerability-assessment-tool-patch-lib-analyzer <span class="m">3</span>.1.12 fbe5ec6de811  <span class="m">22</span> hours ago 103MB
-vulnerability-assessment-tool-rest-backend       <span class="m">3</span>.1.12 277217bc35b2  <span class="m">22</span> hours ago 136MB
-vulnerability-assessment-tool-rest-lib-utils     <span class="m">3</span>.1.12 53bbb929895d  <span class="m">22</span> hours ago 127MB
-vulnerability-assessment-tool-frontend-bugs      <span class="m">3</span>.1.12 fab5925fe785  <span class="m">22</span> hours ago 316MB
-vulnerability-assessment-tool-frontend-apps      <span class="m">3</span>.1.12 191ce235c420  <span class="m">22</span> hours ago 317MB
-</code></pre></div>
+<div class="codehilite"><pre><span></span><span class="c1"># sample output for `docker images` command</span>
+vulnerability-assessment-tool-generator          <span class="m">3</span>.1.13 a829f93eb9aa  <span class="m">22</span> hours ago 223MB
+vulnerability-assessment-tool-patch-lib-analyzer <span class="m">3</span>.1.13 fbe5ec6de811  <span class="m">22</span> hours ago 103MB
+vulnerability-assessment-tool-rest-backend       <span class="m">3</span>.1.13 277217bc35b2  <span class="m">22</span> hours ago 136MB
+vulnerability-assessment-tool-rest-lib-utils     <span class="m">3</span>.1.13 53bbb929895d  <span class="m">22</span> hours ago 127MB
+vulnerability-assessment-tool-frontend-bugs      <span class="m">3</span>.1.13 fab5925fe785  <span class="m">22</span> hours ago 316MB
+vulnerability-assessment-tool-frontend-apps      <span class="m">3</span>.1.13 191ce235c420  <span class="m">22</span> hours ago 317MB
+</pre></div>
 
 <h2 id="push-the-images-to-a-registry">Push the images to a registry<a class="headerlink" href="#push-the-images-to-a-registry" title="Permanent link">&para;</a></h2>
 <p>A script was created to push the images to a local Docker registry running inside your organization. <a href="https://github.com/SAP/vulnerability-assessment-tool/blob/master/docker/push-images.sh">This script</a> simply tags the images and pushes them towards the registry.</p>
@@ -1237,14 +1237,14 @@ vulnerability-assessment-tool-frontend-apps      <span class="m">3</span>.1.12 1
 <li>Eclipse Steady used version</li>
 </ul>
 <p>Invoke the script with the following positional arguments.</p>
-<div class="codehilite"><pre><span></span><code>docker login <span class="o">[</span>registry<span class="o">]</span>
+<div class="codehilite"><pre><span></span>docker login <span class="o">[</span>registry<span class="o">]</span>
 bash push-images.sh -r <span class="o">[</span>registry<span class="o">]</span> -u <span class="o">[</span>username<span class="o">]</span> -v <span class="o">[</span>vulnerability-assessment-tool-version<span class="o">]</span>
-</code></pre></div>
+</pre></div>
 
 <h2 id="pulling-the-images-from-a-repository">Pulling the images from a repository<a class="headerlink" href="#pulling-the-images-from-a-repository" title="Permanent link">&para;</a></h2>
 <p>You can use Docker to pull your images from a registry.</p>
-<div class="codehilite"><pre><span></span><code>docker pull <span class="o">[</span>registry<span class="o">]</span>/<span class="o">[</span>username<span class="o">]</span>/vulnerability-assessment-tool-rest-backend:<span class="o">[</span>vulnerability-assessment-tool-version<span class="o">]</span>
-</code></pre></div>
+<div class="codehilite"><pre><span></span>docker pull <span class="o">[</span>registry<span class="o">]</span>/<span class="o">[</span>username<span class="o">]</span>/vulnerability-assessment-tool-rest-backend:<span class="o">[</span>vulnerability-assessment-tool-version<span class="o">]</span>
+</pre></div>
 
 <hr />
 <p>Get going:</p>
@@ -1253,7 +1253,6 @@ bash push-images.sh -r <span class="o">[</span>registry<span class="o">]</span> 
 </ol>
                 
                   
-                
                 
               
               
@@ -1314,16 +1313,16 @@ bash push-images.sh -r <span class="o">[</span>registry<span class="o">]</span> 
           </div>
         
         powered by
-        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
+        <a href="https://www.mkdocs.org">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+        <a href="https://squidfunk.github.io/mkdocs-material/">
           Material for MkDocs</a>
       </div>
       
   <div class="md-footer-social">
     <link rel="stylesheet" href="../../../assets/fonts/font-awesome.css">
     
-      <a href="https://github.com/eclipse/steady" target="_blank" rel="noopener" title="github" class="md-footer-social__link fa fa-github"></a>
+      <a href="https://github.com/eclipse/steady" class="md-footer-social__link fa fa-github"></a>
     
   </div>
 
@@ -1341,9 +1340,9 @@ bash push-images.sh -r <span class="o">[</span>registry<span class="o">]</span> 
 
     </div>
     
-      <script src="../../../assets/javascripts/application.c33a9706.js"></script>
+      <script src="../../../assets/javascripts/application.ac79c3b0.js"></script>
       
-      <script>app.initialize({version:"1.0",url:{base:"../../.."}})</script>
+      <script>app.initialize({version:"1.0.4",url:{base:"../../.."}})</script>
       
         <script src="../../../js/scrollTop.js"></script>
       

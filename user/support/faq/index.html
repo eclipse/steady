@@ -36,15 +36,15 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../../images/ES-favicon-48-transparent.png">
-      <meta name="generator" content="mkdocs-1.0, mkdocs-material-4.6.3">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.3">
     
     
       
-        <title>FAQ - Eclipse Steady 3.1.12 (Incubator Project)</title>
+        <title>FAQ - Eclipse Steady 3.1.13 (Incubator Project)</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/application.adb8469c.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application.30686662.css">
       
         <link rel="stylesheet" href="../../../assets/stylesheets/application-palette.a8b3c06d.css">
       
@@ -55,7 +55,7 @@
       
     
     
-      <script src="../../../assets/javascripts/modernizr.86422ebf.js"></script>
+      <script src="../../../assets/javascripts/modernizr.74668098.js"></script>
     
     
     <!-- Suppress Material fonts -->
@@ -97,7 +97,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#general-questions" tabindex="0" class="md-skip">
+      <a href="#general-questions" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.12 (Incubator Project)" aria-label="Eclipse Steady 3.1.12 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.13 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.12 (Incubator Project)
+              Eclipse Steady 3.1.13 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -142,7 +142,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.12 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.13 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.12 (Incubator Project)
+    Eclipse Steady 3.1.13 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1843,7 +1843,7 @@ how to get support.</p>
 <h3 id="why-do-all-http-connections-fail-from-the-eclipse-steady-maven-plugin">Why do all HTTP connections fail from the Eclipse Steady Maven plugin?<a class="headerlink" href="#why-do-all-http-connections-fail-from-the-eclipse-steady-maven-plugin" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong></p>
 <p>Not a single HTTP connection can be established, which becomes obvious if even the first connection request hangs for several minutes and eventually fails as follows:</p>
-<div class="codehilite"><pre><span></span><code>[INFO] ------------------------------------------------------------------------
+<div class="codehilite"><pre><span></span>[INFO] ------------------------------------------------------------------------
 [INFO] Building com.at.example.spring-01 0.0.1-SNAPSHOT
 [INFO] ------------------------------------------------------------------------
 [INFO]
@@ -1861,16 +1861,16 @@ how to get support.</p>
 [main] INFO com.sap.psr.vulas.backend.Collector - HTTP request started [url=, user=]
 [vulas-memo] INFO com.sap.psr.vulas.GoalExecution - Memory consumption (used/avg): [57.75 MB/57.75 MB], JVM (free/total/max): [183.75 MB/241.50 MB/3559.50 MB]
 [main] ERROR com.sap.psr.vulas.backend.Collector - HTTP request error while calling [], HTTP response written to [C:\Users\iXXXXXX\AppData\Local\Temp\vulas-tmp-8966348801119324800.html]
-</code></pre></div>
+</pre></div>
 
 <p><strong>Solution</strong></p>
 <p>Run the Eclipse Steady Maven plugin with a different proxy than the default proxy specified in the configuration (<code>none</code>). You need to change 2 settings:</p>
 <p>On the command line, run Maven as follows, whereby <code>&lt;proxy&gt;</code> can be <code>custom_proxy</code> or simply <code>proxy</code></p>
-<div class="codehilite"><pre><span></span><code>mvn -Dhttp.proxyHost<span class="o">=</span>&lt;proxy&gt; -Dvulas vulas:app
-</code></pre></div>
+<div class="codehilite"><pre><span></span>mvn -Dhttp.proxyHost<span class="o">=</span>&lt;proxy&gt; -Dvulas vulas:app
+</pre></div>
 
 <p>In the Maven Surefire plugin, include the <code>-Dhttp.proxyHost</code> system property for the JVM spawned for JUnit tests:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;plugin&gt;</span>
+<div class="codehilite"><pre><span></span><span class="nt">&lt;plugin&gt;</span>
 <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
 <span class="nt">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="nt">&lt;/artifactId&gt;</span>
 <span class="nt">&lt;version&gt;</span>2.14<span class="nt">&lt;/version&gt;</span>
@@ -1882,7 +1882,7 @@ how to get support.</p>
     <span class="nt">&lt;/argLine&gt;</span>
 <span class="nt">&lt;/configuration&gt;</span>
 <span class="nt">&lt;/plugin&gt;</span>
-</code></pre></div>
+</pre></div>
 
 <h3 id="why-does-my-workspace-stay-empty">Why does my workspace stay empty?<a class="headerlink" href="#why-does-my-workspace-stay-empty" title="Permanent link">&para;</a></h3>
 <p>When executing a vulas goal, your workspace is not filled with the results of the scan. Instead of this your results are usually uploaded to the PUBLIC workspace of the Eclipse Steady Frontend.</p>
@@ -1892,14 +1892,14 @@ how to get support.</p>
 </ul>
 <h3 id="what-is-the-cause-of-the-following-error-vulas-maven-plugin3xx-or-one-of-its-dependencies-could-not-be-resolved">What is the cause of the following <code>ERROR: vulas-maven-plugin:3.x.x or one of its dependencies could not be resolved</code>?<a class="headerlink" href="#what-is-the-cause-of-the-following-error-vulas-maven-plugin3xx-or-one-of-its-dependencies-could-not-be-resolved" title="Permanent link">&para;</a></h3>
 <p>You are running the execution of a maven goal and are facing an error similar to the following one:</p>
-<div class="codehilite"><pre><span></span><code>[ERROR] Plugin com.sap.research.security.vulas:vulas-maven-plugin:3.0.8 or one of its dependencies could not be resolved: Could not find artifact com.sap.research.security.vulas:vulas-maven-plugin:jar:3.0.8 in mirror1 (url) -&gt; [Help 1]
-</code></pre></div>
+<div class="codehilite"><pre><span></span>[ERROR] Plugin com.sap.research.security.vulas:vulas-maven-plugin:3.0.8 or one of its dependencies could not be resolved: Could not find artifact com.sap.research.security.vulas:vulas-maven-plugin:jar:3.0.8 in mirror1 (url) -&gt; [Help 1]
+</pre></div>
 
 <p>You most probably updated your settings to use Maven 3.x instead of Maven 2.x. The Eclipse Steady plugin was renamed with Eclipse Steady 3.x: it was changed from <code>vulas-maven-plugin</code> to <code>plugin-maven</code>. You may need to update your settings accordingly (click <a href="../../tutorials/java_maven/#setup">here</a> for more details on how to update your settings).</p>
 <h3 id="why-do-i-get-the-following-message-warn-app-does-not-exist-in-backend-goal-upload-skipped">Why do I get the following message: <code>WARN: App does not exist in backend, goal upload skipped</code>?<a class="headerlink" href="#why-do-i-get-the-following-message-warn-app-does-not-exist-in-backend-goal-upload-skipped" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong>: The console contains a log message as follows:</p>
-<div class="codehilite"><pre><span></span><code>WARN com.sap.psr.vulas.backend.BackendConnector - App [group=com.acme, artifact=parent, version=1-SNAPSHOT, packaging=pom] does not exist in backend, goal upload skipped
-</code></pre></div>
+<div class="codehilite"><pre><span></span>WARN com.sap.psr.vulas.backend.BackendConnector - App [group=com.acme, artifact=parent, version=1-SNAPSHOT, packaging=pom] does not exist in backend, goal upload skipped
+</pre></div>
 
 <p><strong>Explanation</strong>: Information related to the execution of a goal, e.g., execution time or memory consumption, cannot be uploaded as the respective application does not exist in the backend. This is not necessarily a problem, hence, the message is issued as warning. Examples where an application does not exist in the backend are as follows:</p>
 <ul>
@@ -1925,8 +1925,8 @@ In the following screenshot, several CVEs related to <code>jackson-databind</cod
 <h2 id="method-level-bill-of-material-goal-app">Method-level bill of material (goal app)<a class="headerlink" href="#method-level-bill-of-material-goal-app" title="Permanent link">&para;</a></h2>
 <h3 id="app-notfoundexception-when-analyzing-jar-files">app : NotFoundException when analyzing JAR files?<a class="headerlink" href="#app-notfoundexception-when-analyzing-jar-files" title="Permanent link">&para;</a></h3>
 <p>Problem: When analyzing JAR files, error messages similar to the following are printed:</p>
-<div class="codehilite"><pre><span></span><code>ERROR com.sap.psr.vulas.JarAnalyzer  - JarAnalyzer[jar/war=org.apache.servicemix.bundles.jaxb-xjc-2.2.4_1.jar, mavenId=(org.apache.servicemix.bundles:org.apache.servicemix.bundles.jaxb-xjc:2.2.4_1), instr=false, instrCtx=(com.acme:foo:pom:1.0-SNAPSHOT)]: NotFoundException while analyzing class [1.0.com.sun.xml.xsom.parser.JAXPParser]: 1.0.com.sun.xml.xsom.parser.JAXPParser
-</code></pre></div>
+<div class="codehilite"><pre><span></span>ERROR com.sap.psr.vulas.JarAnalyzer  - JarAnalyzer[jar/war=org.apache.servicemix.bundles.jaxb-xjc-2.2.4_1.jar, mavenId=(org.apache.servicemix.bundles:org.apache.servicemix.bundles.jaxb-xjc:2.2.4_1), instr=false, instrCtx=(com.acme:foo:pom:1.0-SNAPSHOT)]: NotFoundException while analyzing class [1.0.com.sun.xml.xsom.parser.JAXPParser]: 1.0.com.sun.xml.xsom.parser.JAXPParser
+</pre></div>
 
 <p>Explanation: This can be due to the use of Java identifiers that do not confirm with the <a href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html#jls-3.8">Java language specification</a>. In this example, the actual package name of "1.0.com.sun.xml.xsom.parser.JAXPParser", as seen in the JAR file, is "1.0". Eclipse Steady, however, uses dots for separating package identifiers.</p>
 <p>Note: As of Java 9, multi-release archives can contain class files in subdirectories. They are not yet supported by Eclipse Steady.</p>
@@ -1939,8 +1939,8 @@ In the following screenshot, several CVEs related to <code>jackson-databind</cod
 <p>Explanation: This can happen if multiple processes (on the same computer or remotely) try to upload the same method signature to the backend. In such cases, one can simply restart at a later time to avoid the clash.</p>
 <h3 id="app-the-goal-execution-breaks-with-a-javaniofileinvalidpathexception">app : The goal execution breaks with a java.nio.file.InvalidPathException<a class="headerlink" href="#app-the-goal-execution-breaks-with-a-javaniofileinvalidpathexception" title="Permanent link">&para;</a></h3>
 <p>Problem: The goal execution breaks with a <code>java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters</code> as viewable here below.</p>
-<div class="codehilite"><pre><span></span><code>[ERROR] Failed to execute goal com.sap.research.security.vulas:plugin-maven:3.1.12:app (default-cli) on project xxxxx: java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters: shapeless/$tilde$qmark$greater$?.class
-</code></pre></div>
+<div class="codehilite"><pre><span></span>[ERROR] Failed to execute goal com.sap.research.security.vulas:plugin-maven:3.1.13:app (default-cli) on project xxxxx: java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters: shapeless/$tilde$qmark$greater$?.class
+</pre></div>
 
 <p>Explanation : the exception  is often due to an encoding problem.</p>
 <p>Solution : Try one of the following options.</p>
@@ -1956,7 +1956,7 @@ In the following screenshot, several CVEs related to <code>jackson-databind</cod
 </ul>
 <h3 id="a2c-timeout-during-reachability-analysis">a2c : Timeout during reachability analysis<a class="headerlink" href="#a2c-timeout-during-reachability-analysis" title="Permanent link">&para;</a></h3>
 <p>Problem: The execution of the reachability analysis causes a timeout, e.g.,</p>
-<div class="codehilite"><pre><span></span><code>[main] WARN com.sap.psr.vulas.cg.ReachabilityAnalyzer - [vulas-reach-7] reached timeout and will be interrupted
+<div class="codehilite"><pre><span></span>[main] WARN com.sap.psr.vulas.cg.ReachabilityAnalyzer - [vulas-reach-7] reached timeout and will be interrupted
 [main] WARN com.sap.psr.vulas.cg.ReachabilityAnalyzer - com.ibm.wala.util.intset.BitVectorIntSet.&lt;init&gt;(BitVectorIntSet.java:45)
 [main] WARN com.sap.psr.vulas.cg.ReachabilityAnalyzer - com.ibm.wala.util.intset.BitVectorIntSet.addAllOblivious(BitVectorIntSet.java:126)
 [main] WARN com.sap.psr.vulas.cg.ReachabilityAnalyzer - com.ibm.wala.util.intset.MutableSharedBitVectorIntSet.makeDenseCopy(MutableSharedBitVectorIntSet.java:984)
@@ -1976,7 +1976,7 @@ In the following screenshot, several CVEs related to <code>jackson-databind</cod
 [main] WARN com.sap.psr.vulas.cg.ReachabilityAnalyzer - com.sap.psr.vulas.cg.ReachabilityAnalyzer.run(ReachabilityAnalyzer.java:265)
 [main] WARN com.sap.psr.vulas.cg.ReachabilityAnalyzer - java.lang.Thread.run(Thread.java:745)
 [main] ERROR com.sap.psr.vulas.cg.ReachabilityAnalyzer - [vulas-reach-7] terminated w/o success after [ 15,0 min]
-</code></pre></div>
+</pre></div>
 
 <p>Solution(s):</p>
 <ul>
@@ -1985,8 +1985,8 @@ In the following screenshot, several CVEs related to <code>jackson-databind</cod
 </ul>
 <h3 id="a2c-javaiofilenotfoundexception">a2c : java.io.FileNotFoundException?<a class="headerlink" href="#a2c-javaiofilenotfoundexception" title="Permanent link">&para;</a></h3>
 <p>Problem: During <code>a2c</code>, a given JAR cannot be found by Wala, which produces an error message as following:</p>
-<div class="codehilite"><pre><span></span><code>Exception in thread &quot;vulas-reach-1&quot; com.ibm.wala.util.debug.UnimplementedError: java.io.FileNotFoundException: .\InfoView\dep\BOE\WEB-INF\eclipse\plugins\axis2\lib\jaxb-api.jar (The system cannot find the file specified)
-</code></pre></div>
+<div class="codehilite"><pre><span></span>Exception in thread &quot;vulas-reach-1&quot; com.ibm.wala.util.debug.UnimplementedError: java.io.FileNotFoundException: .\InfoView\dep\BOE\WEB-INF\eclipse\plugins\axis2\lib\jaxb-api.jar (The system cannot find the file specified)
+</pre></div>
 
 <p>Solution(s):</p>
 <ul>
@@ -1995,21 +1995,21 @@ In the following screenshot, several CVEs related to <code>jackson-databind</cod
 <p>Explanation: The problem occurs if the MANIFEST file of a JAR refers to other dependencies using the <code>Class-Path</code> entry. Wala, for instance, will try to resolve those dependencies. The pre-processing will remove the corresponding manifest file entries.</p>
 <h3 id="a2c-invalid-byte-code-in-method">a2c : Invalid byte code in method?<a class="headerlink" href="#a2c-invalid-byte-code-in-method" title="Permanent link">&para;</a></h3>
 <p>Problem: During <code>a2c</code> or <code>t2c</code>, the call graph construction by Wala fails with an error message as follows:</p>
-<div class="codehilite"><pre><span></span><code>error: invalid byte code in method org.springframework.asm.ClassReader.readConst(I[C)Ljava/lang/Object;
+<div class="codehilite"><pre><span></span>error: invalid byte code in method org.springframework.asm.ClassReader.readConst(I[C)Ljava/lang/Object;
 Exception in thread &quot;vulas-reach-1&quot; com.ibm.wala.util.debug.UnimplementedError
     at com.ibm.wala.util.debug.Assertions.UNREACHABLE(Assertions.java:46)
     at com.ibm.wala.classLoader.ShrikeCTMethod.makeDecoder(ShrikeCTMethod.java:107)
-</code></pre></div>
+</pre></div>
 
 <p>Solution:  Append the respective package to the configuration setting <code>vulas.reach.wala.callgraph.exclusions</code>, which lists all the Java packages to be ignored by Wala. Note that dots (.) separating package names are replaced by slash (/).</p>
 <p>Example: In case of the above error message, one has to add the string <code>org/springframework/asm/.*</code> in order to ignore all classes of package <code>asm</code>. The new value of the configuration setting looks as follows:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">vulas.reach.wala.callgraph.exclusions</span> <span class="o">=</span> <span class="s">java/awt/.*;javax/swing/.*;sun/awt/.*;sun/swing/.*;org/netbeans/.*;com/sun/.*;org/openide/.*;com/ibm/crypto/.*;com/ibm/security/.*;org/apache/xerces/.*;org/springframework/asm/.*</span>
-</code></pre></div>
+<div class="codehilite"><pre><span></span><span class="na">vulas.reach.wala.callgraph.exclusions</span> <span class="o">=</span> <span class="s">java/awt/.*;javax/swing/.*;sun/awt/.*;sun/swing/.*;org/netbeans/.*;com/sun/.*;org/openide/.*;com/ibm/crypto/.*;com/ibm/security/.*;org/apache/xerces/.*;org/springframework/asm/.*</span>
+</pre></div>
 
 <h2 id="instrumentation-and-trace-collection-goals-test-and-instr">Instrumentation and trace collection (goals test and instr)<a class="headerlink" href="#instrumentation-and-trace-collection-goals-test-and-instr" title="Permanent link">&para;</a></h2>
 <h3 id="test-javalangnosuchmethoderror">TEST : java.lang.NoSuchMethodError?<a class="headerlink" href="#test-javalangnosuchmethoderror" title="Permanent link">&para;</a></h3>
 <p>Problem: The execution of the test phase throws a NoSuchMethodError exception. This can happen if an application makes use (directly or transitively) of an older release of a library that is also required by Eclipse Steady. In the below example, an application used commons-collections v3.0.0, while Eclipse Steady needs commons-collections v3.2.2 (whose classes are actually included in the vulas-with-dependencies.jar).</p>
-<div class="codehilite"><pre><span></span><code>-------------------------------------------------------
+<div class="codehilite"><pre><span></span>-------------------------------------------------------
 T E S T S
 -------------------------------------------------------
 java.lang.reflect.InvocationTargetException
@@ -2037,33 +2037,33 @@ at com.sap.psr.vulas.monitor.DynamicTransformer.premain(DynamicTransformer.java:
 ... 6 more
 FATAL ERROR in native method: processing of -javaagent failed
 Exception in thread &quot;main&quot;
-</code></pre></div>
+</pre></div>
 
 <p>Solution: Change the dependency of your application to a more recent release. In the above example, the following XML snippet was added to the application's POM (which transitively depended on it):</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<div class="codehilite"><pre><span></span><span class="nt">&lt;dependency&gt;</span>
     <span class="nt">&lt;groupId&gt;</span>commons-collections<span class="nt">&lt;/groupId&gt;</span>
     <span class="nt">&lt;artifactId&gt;</span>commons-collections<span class="nt">&lt;/artifactId&gt;</span>
     <span class="nt">&lt;version&gt;</span>3.2.2<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
-</code></pre></div>
+</pre></div>
 
 <h3 id="test-not-all-eclipse-steady-analysis-results-are-uploaded-to-the-backend">TEST : Not all Eclipse Steady analysis results are uploaded to the backend<a class="headerlink" href="#test-not-all-eclipse-steady-analysis-results-are-uploaded-to-the-backend" title="Permanent link">&para;</a></h3>
 <p>Problem: At the end of the JUnit test case execution (<code>mvn -Dvulas test</code>), not all the Eclipse Steady analysis results are uploaded to the the Eclipse Steady backend. The reason is that the Maven Surefire Plugin kills the JVM before Eclipse Steady' shutdown hook uploaded all the data.</p>
 <p>Solution: Disable the upload by changing the Surefire configuration in the POM file as follows. The analysis results will then be written in the folder <code>target/vulas/upload</code>. Afterwards, run the Eclipse Steady plugin goal "upload" in order to upload the JSON analysis results to the backend (<code>mvn -Dvulas vulas:upload</code>).</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;argLine&gt;</span>
+<div class="codehilite"><pre><span></span><span class="nt">&lt;argLine&gt;</span>
     -Dvulas.upload=false
-</code></pre></div>
+</pre></div>
 
 <h3 id="test-how-to-run-dvulas-test-in-projects-using-mockito">TEST : How to run <code>-Dvulas test</code> in projects using Mockito?<a class="headerlink" href="#test-how-to-run-dvulas-test-in-projects-using-mockito" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: when running  <code>mvn -Dvulas test</code>, tests fail with an error such as <code>org.mockito.exceptions.misusing.MissingMethodInvocationException</code></p>
 <p><strong>Solution</strong>:</p>
 <ul>
 <li>Run your tests as usual:
-    <div class="codehilite"><pre><span></span><code>mvn <span class="nb">test</span>
-</code></pre></div></li>
+    <div class="codehilite"><pre><span></span>mvn <span class="nb">test</span>
+</pre></div></li>
 <li>Then run them again with Eclipse Steady enabled to perform reachability analysis:
-    <div class="codehilite"><pre><span></span><code>mvn -Dmaven.test.failure.ignore<span class="o">=</span><span class="nb">true</span> -Dvulas <span class="nb">test</span> vulas:upload
-</code></pre></div></li>
+    <div class="codehilite"><pre><span></span>mvn -Dmaven.test.failure.ignore<span class="o">=</span><span class="nb">true</span> -Dvulas <span class="nb">test</span> vulas:upload
+</pre></div></li>
 </ul>
 <p><strong>Alternative solutions (when running <code>mvn -Dvulas test</code>)</strong>:</p>
 <ul>
@@ -2074,7 +2074,7 @@ Exception in thread &quot;main&quot;
 <p><strong>Problem</strong></p>
 <p>No  traces are collected during the execution of JUnit tests, no matter which instrumentor is used. Moreover, no corresponding error messages or exceptions are printed to the console. A possible indicator of that problem is the appearance of the log message "Completed instantiation of trace collector" <em><strong>after</strong></em> the log message "Tests run: XXX, Failures: XXX, Errors: XXX, Skipped: XXX, Time elapsed: XXX sec", which signals the termination of the actual JUnit tests.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><code>[main] INFO  com.sap.psr.vulas.monitor.InstrumentationControl  - JAR [C:\Users\XXXXXX\.m2\repository\org\apache\commons\commons-lang3\3.2\commons-lang3-3.2.jar] is blacklisted: [false]
+<div class="codehilite"><pre><span></span>[main] INFO  com.sap.psr.vulas.monitor.InstrumentationControl  - JAR [C:\Users\XXXXXX\.m2\repository\org\apache\commons\commons-lang3\3.2\commons-lang3-3.2.jar] is blacklisted: [false]
 Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in code.MainTest
 [vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP GET [uri=http://localhost:8033/backend/apps/XXXXXX/XXXXXX/XXXXXX/bugs?historical=false, proxy=false]
 [vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP GET completed with response code [200] in [0,0573 min]
@@ -2083,7 +2083,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in c
 [vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.monitor.trace.TraceCollector  - No paths collected
 [vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.monitor.trace.TraceCollector  - No traces collected
 [vulas-shutdown-trace-upload] INFO  com.sap.psr.vulas.GoalExecution  - Eclipse Steady goal execution finished [id=TEST-1487175325075-7552264, goal=TEST, app=(XXXXXX:XXXXXX:XXXXXX)] in [0,0877 min]
-</code></pre></div>
+</pre></div>
 
 <p><strong>Solution</strong></p>
 <p>Similar to the above problem, it can happen that an application depends on a previous release of Javassist. As such, methods required by Eclipse Steady are not present at the time Eclipse Steady tries to change the byte code of loaded classes. As for the previous problem, you can add an explicit dependency to the application under test in order to let Maven resolve to a recent release of Javassist.</p>
@@ -2103,11 +2103,11 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in c
 <li>Open the <code>pom.xml</code> and replace the Maven variable <code>${project.build.directory}</code> in the <code>&lt;argLine&gt;</code> configuration setting of the <code>maven-surefire-plugi</code>n by the relative path of the respective directory, typically <code>target</code>.</li>
 <li>Open the POM file and remove the <code>-Dvulas.core.uploadDir</code> and <code>-Dvulas.shared.tmpDir</code> system properties in the <code>&lt;argLine&gt;</code> configuration setting of the <code>maven-surefire-plugin</code>. Create two new system property variables in the configuration section of the <code>maven-surefire-plugin</code> as follows (see here for more information).</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;systemPropertyVariables&gt;</span>
+<div class="codehilite"><pre><span></span><span class="nt">&lt;systemPropertyVariables&gt;</span>
   <span class="nt">&lt;vulas.core.uploadDir&gt;</span>${project.build.directory}/vulas/upload<span class="nt">&lt;/vulas.core.uploadDir&gt;</span>
   <span class="nt">&lt;vulas.shared.tmpDir&gt;</span>${project.build.directory}/vulas/tmp<span class="nt">&lt;/vulas.shared.tmpDir&gt;</span>
 <span class="nt">&lt;/systemPropertyVariables&gt;</span>
-</code></pre></div>
+</pre></div>
 
 <h3 id="test-error-injecting-private-orgeclipseaetherspiloglogger-orgapachemavenrepositoryinternaldefaultversionresolverlogger">TEST : "Error injecting: private org.eclipse.aether.spi.log.Logger org.apache.maven.repository.internal.DefaultVersionResolver.logger"<a class="headerlink" href="#test-error-injecting-private-orgeclipseaetherspiloglogger-orgapachemavenrepositoryinternaldefaultversionresolverlogger" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong></p>
@@ -2137,10 +2137,10 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in c
 <li>Exclude problematic classes from being instrumented by adding their prefixes via <code>-Dvulas.core.instr.blacklist.classes.custom=foo.bar,bar.baz.Class,...</code></li>
 <li>Exclude single problematic tests by modifying the <code>&lt;excludes&gt;</code> section of the surefire configuration in the Eclipse Steady profile:</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;excludes&gt;</span>
+<div class="codehilite"><pre><span></span><span class="nt">&lt;excludes&gt;</span>
     <span class="nt">&lt;exclude&gt;</span>**/doesnotexist.java<span class="nt">&lt;/exclude&gt;</span>
 <span class="nt">&lt;/excludes&gt;</span>
-</code></pre></div>
+</pre></div>
 
 <h2 id="python">Python<a class="headerlink" href="#python" title="Permanent link">&para;</a></h2>
 <h3 id="app-goal-is-slow"><code>app</code> goal is slow<a class="headerlink" href="#app-goal-is-slow" title="Permanent link">&para;</a></h3>
@@ -2152,9 +2152,9 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in c
 <p><strong>Symptom</strong>: The HTML report is not properly rendered inside Jenkins (e.g., no images, no color-coding, no JavaScript, see the example screenshot below).</p>
 <p><img alt="Sample Eclipse Steady report in Jenkins" src="../img/vulas_report_jenkins.png" /></p>
 <p><strong>Solution</strong>: Either (a) download a ZIP of the Eclipse Steady report (the link can be found in the upper-right corner), or (b) adjust the content security policy (CSP) of Jenkins as described <a href="https://wiki.jenkins.io/display/JENKINS/Configuring+Content+Security+Policy">here</a>. In the latter case, you should execute the following command in the Jenkins script console (on a <strong>single line</strong>):</p>
-<div class="codehilite"><pre><span></span><code><span class="n">System</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="s">&quot;hudson.model.DirectoryBrowserSupport.CSP&quot;</span><span class="p">,</span>
+<div class="codehilite"><pre><span></span><span class="n">System</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="s">&quot;hudson.model.DirectoryBrowserSupport.CSP&quot;</span><span class="p">,</span>
     <span class="s">&quot;sandbox allow-scripts; default-src &#39;none&#39;; img-src &#39;self&#39; data:; style-src &#39;self&#39; &#39;unsafe-inline&#39;; script-src &#39;unsafe-inline&#39;&quot;</span><span class="p">)</span>
-</code></pre></div>
+</pre></div>
 
 <h3 id="no-log-messages-of-the-eclipse-steady-maven-plugin-appear-on-the-console-why">No log messages of the Eclipse Steady Maven plugin appear on the console. Why?<a class="headerlink" href="#no-log-messages-of-the-eclipse-steady-maven-plugin-appear-on-the-console-why" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
@@ -2164,7 +2164,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in c
 <p>The Eclipse Steady Maven plugin makes use of log4j version 1, a corresponding configuration file is included in its JAR file. If, however, the project under analysis makes use of log4j version 2, but does not have a <code>log4j2.xml</code> file in folder <code>src/main/resources</code>, no log message of Eclipse Steady but the above error message is printed. Still, the traces are actually collected and uploaded to the central engine.</p>
 <p><strong>Solution</strong></p>
 <p>Create a file <code>src/main/resources/log4j2.xml</code> with the following sample content (copied from <a href="https://logging.apache.org/log4j/2.0/manual/migration.html">here</a>) and adapt as needed.</p>
-<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<div class="codehilite"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="nt">&lt;Configuration&gt;</span>
     <span class="nt">&lt;Appenders&gt;</span>
         <span class="nt">&lt;Console</span> <span class="na">name=</span><span class="s">&quot;STDOUT&quot;</span> <span class="na">target=</span><span class="s">&quot;SYSTEM_OUT&quot;</span><span class="nt">&gt;</span>
@@ -2178,7 +2178,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in c
         <span class="nt">&lt;/Root&gt;</span>
     <span class="nt">&lt;/Loggers&gt;</span>
 <span class="nt">&lt;/Configuration&gt;</span>
-</code></pre></div>
+</pre></div>
 
 <h3 id="outofmemoryerror-gc-overhead-limit-exceeded">OutOfMemoryError: GC overhead limit exceeded?<a class="headerlink" href="#outofmemoryerror-gc-overhead-limit-exceeded" title="Permanent link">&para;</a></h3>
 <p>Use the command line options <code>-Xms</code> and <code>-Xmx</code> to adjust the heap memory available to the JVM. Chose a value for <code>-Xmx</code> that is close to your machine's physical memory. In case of Maven, use the statement <code>export MAVEN_OPTS="-Xms4g -Xmx8g"</code>. For versions before Java 8, you should also add the options <code>-XX:MaxPermSize=2024M -XX:+CMSClassUnloadingEnabled</code>.</p>
@@ -2189,7 +2189,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in c
 </ul>
 <h3 id="i-get-an-error-saying-verifyerror-inconsistent-stackmap-frames-at-branch-target-what-should-i-do">I get an error saying <code>VerifyError: Inconsistent stackmap frames at branch target</code>. What should I do?<a class="headerlink" href="#i-get-an-error-saying-verifyerror-inconsistent-stackmap-frames-at-branch-target-what-should-i-do" title="Permanent link">&para;</a></h3>
 <p>If the execution of the Maven Surefire Plugin during the Maven lifecycle phase test fails with a <code>java.lang.VerifyError</code> similar to the following:</p>
-<div class="codehilite"><pre><span></span><code>[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.16:test (default-test) on project foo-bar: Execution default-test of goal org.apache.maven.plugins:maven-surefire-plugin:2.16:test failed: There was an error in the forked process
+<div class="codehilite"><pre><span></span>[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.16:test (default-test) on project foo-bar: Execution default-test of goal org.apache.maven.plugins:maven-surefire-plugin:2.16:test failed: There was an error in the forked process
 [ERROR] java.lang.VerifyError: Inconsistent stackmap frames at branch target 54
 [ERROR] Exception Details:
 [ERROR] Location:
@@ -2219,10 +2219,10 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in c
 [ERROR] full_frame(@74,{UninitializedThis},{})
 [ERROR]
 [ERROR] at java.lang.Class.getDeclaredMethods0(Native Method)
-</code></pre></div>
+</pre></div>
 
 <p>then you should include the Java option <code>noverify</code> in the Surefire configuration as follows:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;argLine&gt;</span>
+<div class="codehilite"><pre><span></span><span class="nt">&lt;argLine&gt;</span>
     -javaagent:target/vulas/lib/vulas-core-${vulas.version}-jar-with-dependencies.jar
     -DperiodicUpload.enabled=false
     -DappContext.fixed.groupId=${project.groupId}
@@ -2232,7 +2232,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in c
     <span class="c">&lt;!-- Uncomment to debug the test execution or the Eclipse Steady plugin --&gt;</span>
     <span class="c">&lt;!-- -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 --&gt;</span>
 <span class="nt">&lt;/argLine&gt;</span>
-</code></pre></div>
+</pre></div>
 
 <p>See here for more information on the <code>noverify</code> option:</p>
 <ul>
@@ -2242,7 +2242,6 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in c
 </ul>
                 
                   
-                
                 
               
               
@@ -2303,16 +2302,16 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in c
           </div>
         
         powered by
-        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
+        <a href="https://www.mkdocs.org">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+        <a href="https://squidfunk.github.io/mkdocs-material/">
           Material for MkDocs</a>
       </div>
       
   <div class="md-footer-social">
     <link rel="stylesheet" href="../../../assets/fonts/font-awesome.css">
     
-      <a href="https://github.com/eclipse/steady" target="_blank" rel="noopener" title="github" class="md-footer-social__link fa fa-github"></a>
+      <a href="https://github.com/eclipse/steady" class="md-footer-social__link fa fa-github"></a>
     
   </div>
 
@@ -2330,9 +2329,9 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec - in c
 
     </div>
     
-      <script src="../../../assets/javascripts/application.c33a9706.js"></script>
+      <script src="../../../assets/javascripts/application.ac79c3b0.js"></script>
       
-      <script>app.initialize({version:"1.0",url:{base:"../../.."}})</script>
+      <script>app.initialize({version:"1.0.4",url:{base:"../../.."}})</script>
       
         <script src="../../../js/scrollTop.js"></script>
       
