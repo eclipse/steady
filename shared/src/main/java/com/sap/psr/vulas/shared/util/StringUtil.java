@@ -19,13 +19,12 @@
  */
 package com.sap.psr.vulas.shared.util;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -175,13 +174,13 @@ public class StringUtil {
 	}
 
 	/**
-	 * <p>join.</p>
+	 * Joins a {@link List} of {@link String}s.
 	 *
 	 * @param _strings a {@link java.util.List} object.
 	 * @param _sep a {@link java.lang.String} object.
 	 * @return a {@link java.lang.String} object.
 	 */
-	public static String join(List<String> _strings, String _sep) {
+	/*public static String join(List<String> _strings, String _sep) {
 		final StringBuilder b = new StringBuilder();
 		int i = 0;
 		for(String p: _strings) {
@@ -189,21 +188,38 @@ public class StringUtil {
 			b.append(p.toString());
 		}
 		return b.toString();
-	}
+	}*/
 
 	/**
-	 * <p>join.</p>
+	 * Joins a {@link Set} of {@link String}s.
 	 *
 	 * @param _strings a {@link java.util.Set} object.
 	 * @param _sep a {@link java.lang.String} object.
 	 * @return a {@link java.lang.String} object.
 	 */
-	public static String join(Set<String> _strings, String _sep) {
+	/*public static String join(Set<String> _strings, String _sep) {
 		final StringBuilder b = new StringBuilder();
 		int i = 0;
 		for(String p: _strings) {
 			if(i++>0) b.append(_sep);
 			b.append(p.toString());
+		}
+		return b.toString();
+	}*/
+	
+	/**
+	 * Joins a {@link Collection} of {@link Object}s into a {@link String} by calling {@link Object#toString()}.
+	 *
+	 * @param _objs a collection of {@link java.lang.Object} objects.
+	 * @param _sep a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
+	public static String join(Collection<?> _objs, String _sep) {
+		final StringBuilder b = new StringBuilder();
+		int i = 0;
+		for(Object o: _objs) {
+			if(i++>0) b.append(_sep);
+			b.append(o.toString());
 		}
 		return b.toString();
 	}

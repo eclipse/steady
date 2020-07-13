@@ -28,7 +28,7 @@
 	<parent>
 		<groupId>com.sap.research.security.vulas</groupId>
 		<artifactId>root</artifactId>
-		<version>3.1.10-SNAPSHOT</version>
+		<version>3.1.14-SNAPSHOT</version>
 	</parent>
 	<artifactId>shared</artifactId>
 
@@ -69,6 +69,11 @@
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.package-url</groupId>
+			<artifactId>packageurl-java</artifactId>
+			<version>1.1.1</version>
 		</dependency>
 	</dependencies>
 

@@ -756,7 +756,7 @@ public class ApplicationController {
 			return new ResponseEntity<Set<ConstructSearchResult>>(HttpStatus.NOT_FOUND);
 		}
 		catch(Exception e) {
-			log.info("Error while searching for constructs in dependencies of app " + app + ": " + e.getMessage());
+			log.error("Error while searching for constructs in dependencies of app " + app + ": " + e.getMessage());
 			return new ResponseEntity<Set<ConstructSearchResult>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -1147,7 +1147,7 @@ public class ApplicationController {
 			try {
 				this.gexeRepository.delete(gexe);
 			} catch (Exception e) {
-				log.info("Error while deleting goal execution " + gexe + ": " + e.getMessage());
+				log.error("Error while deleting goal execution " + gexe + ": " + e.getMessage());
 			}
 		}
 		return new ResponseEntity<List<GoalExecution>>(HttpStatus.OK);
@@ -1468,7 +1468,7 @@ public class ApplicationController {
 							if(jdr.isDeleted(tp.getTo().toSharedType())) {
 								deleted_callees.add(tp.getTo());
 								ratio_callers_to_modify.incrementCount();
-								log.info("Touch point callee " + tp.getTo().toString() + " deleted from " + dep.getLib().getLibraryId().toString() + " to " + otherVersion);
+								log.debug("Touch point callee " + tp.getTo().toString() + " deleted from " + dep.getLib().getLibraryId().toString() + " to " + otherVersion);
 							}
 						}
 					}
@@ -1614,7 +1614,7 @@ public class ApplicationController {
 					if(tp.getDirection()==TouchPoint.Direction.A2L) {
 						if(jdr.isDeleted(tp.getTo().toSharedType())) {
 							callsToModify.add(tp);
-							log.info("Touch point callee " + tp.getTo().toString() + " deleted from " + dep.getLib().getLibraryId().toString() + " to " + otherVersion);
+							log.debug("Touch point callee " + tp.getTo().toString() + " deleted from " + dep.getLib().getLibraryId().toString() + " to " + otherVersion);
 						}
 					}
 				}
@@ -1678,10 +1678,10 @@ public class ApplicationController {
 			final TreeSet<VulnerableDependency> vd_list = new TreeSet<VulnerableDependency>();
 			
 			// Update traced and reachable flags 
-			// Populate the set to be returned depending on the historical flag
+			// Populate the set to be returned depending on the historical, affected, unconfirmed flags
 			for (VulnerableDependency vd : vd_all){
-				if(   (includeAffectedUnconfirmed || vd.getAffectedVersionConfirmed()==1) &&
-					 ((historical && vd.getAffectedVersion()==0) || (affected && vd.getAffectedVersion()==1)) ) {
+				if( (includeAffectedUnconfirmed && vd.getAffectedVersionConfirmed()==0) ||  ( vd.getAffectedVersionConfirmed()==1 &&
+					 ((historical && vd.getAffectedVersion()==0) || (affected && vd.getAffectedVersion()==1)))  ) {
 					
 					// Update CVE data (if needed)
 					this.bugRepository.updateCachedCveData(vd.getBug(), false);

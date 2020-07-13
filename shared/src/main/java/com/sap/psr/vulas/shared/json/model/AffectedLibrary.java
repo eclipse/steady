@@ -20,12 +20,15 @@
 package com.sap.psr.vulas.shared.json.model;
 
 import java.io.Serializable;
+import java.util.Collection;
+
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.sap.psr.vulas.shared.json.model.AffectedConstructChange;
 import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 
 /**
@@ -46,7 +49,7 @@ public class AffectedLibrary implements Serializable {
 
 	private LibraryId libraryId;
 	
-        private Library lib;
+    private Library lib;
         
 	private AffectedVersionSource source;
 	
@@ -58,6 +61,26 @@ public class AffectedLibrary implements Serializable {
 	private String createdBy;
 	
 	private String explanation;
+	
+	private String lastVulnerable;
+	
+	private String firstFixed;
+	
+	private String fromIntersection;
+	
+	private String toIntersection;
+	
+	private Boolean sourcesAvailable;
+	
+	private String ADFixed;
+	
+	private String ADPathFixed;
+	
+	private Collection<AffectedConstructChange> affectedcc;
+	
+	private String overallConfidence;
+	
+	private String pathConfidence;	
 	
 	/**
 	 * <p>Constructor for AffectedLibrary.</p>
@@ -84,6 +107,7 @@ public class AffectedLibrary implements Serializable {
 	 * @return a {@link java.lang.Long} object.
 	 */
 	public Long getId() { return id; }
+	
 	/**
 	 * <p>Setter for the field <code>id</code>.</p>
 	 *
@@ -97,6 +121,7 @@ public class AffectedLibrary implements Serializable {
 	 * @return a {@link com.sap.psr.vulas.shared.json.model.Bug} object.
 	 */
 	public Bug getBugId() { return bugId; }
+	
 	/**
 	 * <p>Setter for the field <code>bugId</code>.</p>
 	 *
@@ -109,7 +134,8 @@ public class AffectedLibrary implements Serializable {
 	 *
 	 * @return a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
 	 */
-	public LibraryId getLibraryId() { return libraryId; } 
+	public LibraryId getLibraryId() { return libraryId; }
+	
 	/**
 	 * <p>Setter for the field <code>libraryId</code>.</p>
 	 *
@@ -123,6 +149,7 @@ public class AffectedLibrary implements Serializable {
 	 * @return a {@link java.lang.Boolean} object.
 	 */
 	public Boolean getAffected() { return affected; }
+	
 	/**
 	 * <p>Setter for the field <code>affected</code>.</p>
 	 *
@@ -136,6 +163,7 @@ public class AffectedLibrary implements Serializable {
 	 * @return a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
 	 */
 	public AffectedVersionSource getSource() { return source; }
+	
 	/**
 	 * <p>Setter for the field <code>source</code>.</p>
 	 *
@@ -149,6 +177,7 @@ public class AffectedLibrary implements Serializable {
 	 * @return a {@link java.util.Calendar} object.
 	 */
 	public java.util.Calendar getCreatedAt() { return createdAt; }
+	
 	/**
 	 * <p>Setter for the field <code>createdAt</code>.</p>
 	 *
@@ -162,6 +191,7 @@ public class AffectedLibrary implements Serializable {
 	 * @return a {@link java.lang.String} object.
 	 */
 	public String getCreatedBy() { return createdBy; }
+	
 	/**
 	 * <p>Setter for the field <code>createdBy</code>.</p>
 	 *
@@ -175,6 +205,7 @@ public class AffectedLibrary implements Serializable {
 	 * @return a {@link java.lang.String} object.
 	 */
 	public String getExplanation() { return explanation; }
+	
 	/**
 	 * <p>Setter for the field <code>explanation</code>.</p>
 	 *
@@ -189,6 +220,7 @@ public class AffectedLibrary implements Serializable {
 		int result = 1;
 		result = prime * result + ((bugId == null) ? 0 : bugId.hashCode());
 		result = prime * result + ((libraryId == null) ? 0 : libraryId.hashCode());
+		result = prime * result + ((lib == null) ? 0 : lib.hashCode());
 		return result;
 	}
 
@@ -212,26 +244,31 @@ public class AffectedLibrary implements Serializable {
 				return false;
 		} else if (!libraryId.equals(other.libraryId))
 			return false;
+		if (lib == null) {
+			if (other.lib != null)
+				return false;
+		} else if (!lib.equals(other.lib))
+			return false;
 		return true;
 	}
 
-        /**
-         * <p>Getter for the field <code>lib</code>.</p>
-         *
-         * @return a {@link com.sap.psr.vulas.shared.json.model.Library} object.
-         */
-        public Library getLib() {
-            return lib;
-        }
+	/**
+	 * <p>Getter for the field <code>lib</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Library} object.
+	 */
+	public Library getLib() {
+		return lib;
+	}
 
-        /**
-         * <p>Setter for the field <code>lib</code>.</p>
-         *
-         * @param lib a {@link com.sap.psr.vulas.shared.json.model.Library} object.
-         */
-        public void setLib(Library lib) {
-            this.lib = lib;
-        }
+	/**
+	 * <p>Setter for the field <code>lib</code>.</p>
+	 *
+	 * @param lib a {@link com.sap.psr.vulas.shared.json.model.Library} object.
+	 */
+	public void setLib(Library lib) {
+		this.lib = lib;
+	}
 
 	
 	/** {@inheritDoc} */
@@ -258,4 +295,185 @@ public class AffectedLibrary implements Serializable {
 		}
 		return builder.toString();
 	}
+	
+	/**
+	 * <p>Getter for the field <code>sourcesAvailable</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public Boolean getSourcesAvailable() {
+		return sourcesAvailable;
+	}
+
+	/**
+	 * <p>Setter for the field <code>sourcesAvailable</code>.</p>
+	 *
+	 * @param sourcesAvailable a {@link java.lang.Boolean} object.
+	 */
+	public void setSourcesAvailable(Boolean sourcesAvailable) {
+		this.sourcesAvailable = sourcesAvailable;
+	}
+
+	/**
+	 * <p>Getter for the field <code>ADFixed</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getADFixed() {
+		return ADFixed;
+	}
+
+	/**
+	 * <p>Setter for the field <code>aDFixed</code>.</p>
+	 *
+	 * @param aDFixed a {@link java.lang.String} object.
+	 */
+	public void setADFixed(String aDFixed) {
+		ADFixed = aDFixed;
+	}
+
+	/**
+	 * <p>Getter for the field <code>ADPathFixed</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getADPathFixed() {
+		return ADPathFixed;
+	}
+
+	/**
+	 * <p>Setter for the field <code>aDPathFixed</code>.</p>
+	 *
+	 * @param aDPathFixed a {@link java.lang.String} object.
+	 */
+	public void setADPathFixed(String aDPathFixed) {
+		ADPathFixed = aDPathFixed;
+	}
+
+	/**
+	 * <p>Getter for the field <code>affectedcc</code>.</p>
+	 *
+	 * @return a collection of {@link com.sap.psr.vulas.shared.json.model.AffectedConstructChange} object.
+	 */
+	public Collection<AffectedConstructChange> getAffectedcc() {
+		return affectedcc;
+	}
+
+	/**
+	 * <p>Setter for the field <code>affectedcc</code>.</p>
+	 *
+	 * @param affectedcc a collection of {@link com.sap.psr.vulas.shared.json.model.AffectedConstructChange} object.
+	 */
+	public void setAffectedcc(Collection<AffectedConstructChange> affectedcc) {
+		this.affectedcc = affectedcc;
+	}
+
+	/**
+	 * <p>Getter for the field <code>overallConfidence</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getOverallConfidence() {
+		return overallConfidence;
+	}
+
+	/**
+	 * <p>Setter for the field <code>overallConfidence</code>.</p>
+	 *
+	 * @param overallConfidence a {@link java.lang.String} object.
+	 */
+	public void setOverallConfidence(String overallConfidence) {
+		this.overallConfidence = overallConfidence;
+	}
+
+	/**
+	 * <p>Getter for the field <code>pathConfidence</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getPathConfidence() {
+		return pathConfidence;
+	}
+
+	/**
+	 * <p>Setter for the field <code>pathConfidence</code>.</p>
+	 *
+	 * @param pathConfidence a {@link java.lang.String} object.
+	 */
+	public void setPathConfidence(String pathConfidence) {
+		this.pathConfidence = pathConfidence;
+	}
+
+	/**
+	 * <p>Getter for the field <code>lastVulnerable</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getLastVulnerable() {
+		return lastVulnerable;
+	}
+
+	/**
+	 * <p>Setter for the field <code>lastVulnerable</code>.</p>
+	 *
+	 * @param lastVulnerable a {@link java.lang.String} object.
+	 */
+	public void setLastVulnerable(String lastVulnerable) {
+		this.lastVulnerable = lastVulnerable;
+	}
+
+	/**
+	 * <p>Getter for the field <code>firstFixed</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getFirstFixed() {
+		return firstFixed;
+	}
+
+	/**
+	 * <p>Setter for the field <code>firstFixed</code>.</p>
+	 *
+	 * @param firstFixed a {@link java.lang.String} object.
+	 */
+	public void setFirstFixed(String firstFixed) {
+		this.firstFixed = firstFixed;
+	}
+
+	/**
+	 * <p>Getter for the field <code>fromIntersection</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getFromIntersection() {
+		return fromIntersection;
+	}
+
+	/**
+	 * <p>Setter for the field <code>fromIntersection</code>.</p>
+	 *
+	 * @param fromIntersection a {@link java.lang.String} object.
+	 */
+	public void setFromIntersection(String fromIntersection) {
+		this.fromIntersection = fromIntersection;
+	}
+
+	/**
+	 * <p>Getter for the field <code>toIntersection</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getToIntersection() {
+		return toIntersection;
+	}
+
+	/**
+	 * <p>Setter for the field <code>toIntersection</code>.</p>
+	 *
+	 * @param toIntersection a {@link java.lang.String} object.
+	 */
+	public void setToIntersection(String toIntersection) {
+		this.toIntersection = toIntersection;
+	}
+
 }

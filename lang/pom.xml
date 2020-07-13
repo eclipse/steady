@@ -26,7 +26,7 @@
 	<parent>
 		<groupId>com.sap.research.security.vulas</groupId>
 		<artifactId>root</artifactId>
-		<version>3.1.10-SNAPSHOT</version>
+		<version>3.1.14-SNAPSHOT</version>
 	</parent>
 	<artifactId>lang</artifactId>
 
@@ -188,45 +188,6 @@
 						</replacement>
 					</replacements>
 				</configuration>
-			</plugin>
-
-			<!-- Plugin configuration to create a JAR archive that can be used for 
-				instrumentation. -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<transformers>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<manifestEntries>
-										<premain-class>com.sap.psr.vulas.monitor.DynamicTransformer</premain-class>
-									</manifestEntries>
-								</transformer>
-							</transformers>
-							<artifactSet>
-								<includes>
-									<include>com.sap.research.security.vulas:vulas-core</include>
-									<include>ch.uzh.ifi.seal:changedistiller</include>
-								</includes>
-							</artifactSet>
-							<filters>
-								<filter>
-									<artifact>ch.uzh.ifi.seal:changedistiller</artifact>
-									<excludes>
-										<exclude>META-INF/**</exclude>
-									</excludes>
-								</filter>
-							</filters>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 
 			<!-- Include Impl and Spec entries in the Manifest. -->

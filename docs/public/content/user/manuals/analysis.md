@@ -11,6 +11,8 @@ The following goals perform some sort of application analysis:
 - `test`: This is not an actual goal implemented by any of the clients, but describes the collection of execution traces by a so-called Java agent that _dynamically instruments_ Java bytecode during JUnit and integration tests.
 - [`instr`](#static-instrumentation-instr): Produces a modified version of Java archives (_static instrumentation_) that can be deployed/executed in order to collect traces of actual method executions.
 - [`t2c`](#reachable-from-traces-t2c): Builds a call graph (starting from traced methods) and checks whether vulnerable code is potentially reachable from those.
+- [`checkcode`](#analyze-unconfirmed-vulnerabilities-checkcode) Downloads unconfirmed vulnerabilities from the backend to the client, and checks whether the affected dependencies contain vulnerable of fixed constructs.
+
 
 The following goals are related to data management and reporting:
 
@@ -126,7 +128,7 @@ In the @@PROJECT_NAME@@ frontend, tab "Vulnerabilities", the column "Static Anal
 
 #### How does it work
 
-@@PROJECT_NAME@@ uses [Wala](http://wala.sourceforge.net/wiki/index.php/Main_Page) or [Soot](https://sable.github.io/soot/), both static analysis frameworks for Java, in order to construct a call graph representing all possible program executions starting from application methods. This graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.
+@@PROJECT_NAME@@ uses [Wala](http://wala.sourceforge.net/wiki/index.php/Main_Page) or [Soot](https://soot-oss.github.io/soot/), both static analysis frameworks for Java, in order to construct a call graph representing all possible program executions starting from application methods. This graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.
 
 #### Run as follows
 
@@ -192,7 +194,7 @@ vulas.reach.searchShortest = true
 
 #### Call graph construction framework
 
-Behind the scene, a source code analysis framework is used to construct the call graph, either starting from application methods (`a2c`) or from traced methods (`t2c`). Right now, the two frameworks [Wala](https://github.com/wala/WALA/wiki) and [Soot](http://www.sable.mcgill.ca/soot/) are supported and can be configured with `vulas.reach.fwk`. Both offer several configuration options to influence the accuracy of the call graph and its construction time. Once the call graph has been constructed, its size (in terms of nodes and edges) is printed to the console, which is useful for comparing the impact of the different configuration options, e.g.
+Behind the scene, a source code analysis framework is used to construct the call graph, either starting from application methods (`a2c`) or from traced methods (`t2c`). Right now, the two frameworks [Wala](https://github.com/wala/WALA/wiki) and [Soot](https://soot-oss.github.io/soot/) are supported and can be configured with `vulas.reach.fwk`. Both offer several configuration options to influence the accuracy of the call graph and its construction time. Once the call graph has been constructed, its size (in terms of nodes and edges) is printed to the console, which is useful for comparing the impact of the different configuration options, e.g.
 
 ```log
 [vulas-reach-1] INFO  com.sap.psr.vulas.cg.wala.WalaCallgraphConstructor  - Normalized call graph has [167639 nodes] (with distinct ConstructId) and [1279495 edges]
@@ -517,6 +519,28 @@ vulas.reach.identifyTouchpoints = true
 vulas.reach.searchShortest = true
 ```
 
+## Analyze unconfirmed vulnerabilities (checkcode)
+
+#### Objective
+
+Downloads unconfirmed vulnerable dependencies (appearing as orange hourglasses in the report and application frontend) and analyze each dependency to determine whether they contain the vulnerable or fixed code. This is done by constructing the Abstract Syntax Tree (AST) of the constructs changed to fix the vulnerability, and comparing it with the AST(s) build from the bytecode of artifacts known to be vulnerable or fixed (as a result of other evaluation strategies).
+
+#### Result
+
+In case of equalities to either vulnerable/fixed code, affected libraries are uploaded to the backend, thereby resolving the unconfirmed vulnerabilities (orange hourglasses will turn either red or green).
+
+#### Run as follows
+
+`vulas.shared.cia.serviceUrl` must be set.
+
+```sh tab="CLI"
+java -jar vulas-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal checkcode 
+```
+
+```sh tab="Maven"
+mvn -Dvulas vulas:checkcode
+```
+
 ## Upload analysis files (upload)
 
 #### Objective
@@ -563,18 +587,19 @@ Identified vulnerabilities including any information gathered during static and 
 #### Configure as follows
 
 ```ini
-    # A vulnerability in blacklisted scopes will not cause an exception  (multiple scopes to be separated by comma)
+    # Exempts the given vulnerability from causing a build exception
+    # This can apply to all libraries including the vulnerable code (by omitting `libraries` or explicitely specifying `*`)
+    # or to selected libraries with the given digest(s).
+    # 
+    # Default: -
+    vulas.report.exemptBug.<vuln-id>.reason = <reason>
+    vulas.report.exemptBug.<vuln-id>.libraries = [ * | digest [, digest] ]
+
+    # A vulnerability in exempted scopes will not cause an exception  (multiple scopes to be separated by comma)
+    #
     # Default: test, provided
     # Note: For CLI, all dependencies are considered as RUNTIME dependencies
-    vulas.report.exceptionScopeBlacklist = TEST, PROVIDED
-
-    # Specified vulnerabilities will not cause a build exception (multiple bugs to be separated by comma)
-    # Default: -
-    vulas.report.exceptionExcludeBugs = <vuln-id>
-
-    # Explanation why the given vulnerability is not relevant/exploitable in the specific application context
-    # Default: -
-    vulas.report.exceptionExcludeBugs.<vuln-id> = Not exploitable because ...
+    vulas.report.exemptScope = TEST, PROVIDED
 
     # Determines whether un-assessed vulnerabilities (e.g. vulnerabilities marked with an orange hourglass symbol) throw a build exception. Un-assessed vulns are those where
     # the method signature(s) of a bug appear in an archive, however, it is yet unclear whether the methods
@@ -604,6 +629,12 @@ Identified vulnerabilities including any information gathered during static and 
     #   CLI: -
     #   MVN: ${project.build.directory}/vulas/report
     vulas.report.reportDir =
+
+    # If true, a CURL command will be printed to the console for all exempted findings in order to permanently mark
+    # a given library as non-vulnerable, independent of the specific application.
+    # Default: false
+    # Note: The scope of this assessment is beyond a specific application, hence, the CURL command requires a security token.
+    vulas.report.createLibraryAssessments = 
 ```
 
 #### Run as follows
@@ -623,13 +654,13 @@ mvn -Dvulas vulas:report
 
 #### Exemptions
 
-The settings `vulas.report.exceptionExcludeBugs` and `vulas.report.exceptionExcludeBugs.<vuln-id>` can be used to capture the results of an audit or assessment by developers in regards to whether a vulnerability is problematic in a given application context. Exempted bugs do not result in build exceptions and are also shown in the apps Web frontend.
+The setting `vulas.report.exemptBug.<vuln-id>.reason` can be used to capture the results of an audit or assessment by developers in regards to whether a vulnerability is problematic in a given application context. Exempted bugs do not result in build exceptions, but are still shown in both the report and the apps Web frontend.
 
 #### Build exceptions
 
 Other settings to fine-tune the threshold for build exceptions are as follows:
 
-- `vulas.report.exceptionScopeBlacklist` can be used to exclude certain Maven scopes (default: test)
+- `vulas.report.exemptScope` can be used to exclude certain Maven scopes (default: test)
 - `vulas.report.exceptionThreshold` can be used to specify whether a build exception is thrown when vulnerable code is included, potentially reachable, actually reached or not at all (values: `noException`, `dependsOn`, `potentiallyExecutes`, `actuallyExecutes`; default: `actuallyExecutes`)
 
 ## Clean and delete apps (clean)

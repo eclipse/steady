@@ -45,6 +45,7 @@ import org.apache.tools.ant.types.Environment;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.GoalExecutionException;
 import com.sap.psr.vulas.shared.enums.GoalType;
+import com.sap.psr.vulas.shared.json.model.ExemptionBug;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
@@ -115,7 +116,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 					}
 					
 					// Do not include exemptions, as too many would result in error "The command line is too long."
-					if(key.startsWith(CoreConfiguration.REP_EXCL_BUGS)) {
+					if(key.startsWith(ExemptionBug.CFG_PREFIX) || key.startsWith(ExemptionBug.DEPRECATED_CFG_PREFIX)) {
 						getLog().warn("  Ignoring  [" + key + "=...]");
 					} else {
 						this.agentOptions.put(key, val_str);
@@ -145,7 +146,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 						}
 						
 						// Do not include exemptions, as too many would result in error "The command line is too long."
-						if(key.startsWith(CoreConfiguration.REP_EXCL_BUGS)) {
+						if(key.startsWith(ExemptionBug.CFG_PREFIX) || key.startsWith(ExemptionBug.DEPRECATED_CFG_PREFIX)) {
 							getLog().warn("  Ignoring  [" + key + "=...]");
 						} else {
 							this.agentOptions.put(key, val_str);

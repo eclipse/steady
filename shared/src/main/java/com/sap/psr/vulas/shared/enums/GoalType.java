@@ -30,6 +30,7 @@ public enum GoalType {
 	CLEAN,
 	APP,
 	CHECKVER, // Deprecated, related coding requires refactoring/update
+	CHECKCODE,
 	A2C,
 	TEST,
 	INSTR,

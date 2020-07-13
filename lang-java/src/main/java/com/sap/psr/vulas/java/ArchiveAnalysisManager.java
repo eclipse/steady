@@ -332,9 +332,9 @@ public class ArchiveAnalysisManager {
 				}
 				// There are remaining tasks, but no timeout is set or reached
 				else if(!open_tasks.isEmpty()) {
-					ArchiveAnalysisManager.log.info("Waiting for the completion of [" + open_tasks.size() + "] analysis tasks:");
+					ArchiveAnalysisManager.log.info("Waiting for the completion of [" + open_tasks.size() + "] analysis tasks");
 					for(JarAnalyzer ja: open_tasks.keySet())
-						ArchiveAnalysisManager.log.info("    " + ja);
+						ArchiveAnalysisManager.log.debug("    " + ja);
 				}
 			}
 			

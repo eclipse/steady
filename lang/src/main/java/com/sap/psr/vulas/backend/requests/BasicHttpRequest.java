@@ -19,34 +19,33 @@
  */
 package com.sap.psr.vulas.backend.requests;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Map;
-
-import javax.validation.constraints.NotNull;
-
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.apache.http.Header;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.config.SocketConfig;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
 import com.sap.psr.vulas.backend.BackendConnectionException;
-import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.backend.HttpMethod;
 import com.sap.psr.vulas.backend.HttpResponse;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
@@ -57,7 +56,6 @@ import com.sap.psr.vulas.shared.json.JsonSyntaxException;
 import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringUtil;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 /**
  * <p>BasicHttpRequest class.</p>
@@ -303,208 +301,221 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	}
 
 	private final HttpResponse sendRequest() throws BackendConnectionException {
-		HttpResponse response = null;
-		HttpURLConnection connection = null;
-		int response_code = -1;
-		final URI uri = this.getUri();
-		Map<String,List<String>> request_fields = null;
-		final RequestRepeater repeater = new RequestRepeater(this.getVulasConfiguration().getConfiguration().getLong(CoreConfiguration.REPEAT_MAX, 50), this.getVulasConfiguration().getConfiguration().getLong(CoreConfiguration.REPEAT_WAIT, 60000));
-		
-		boolean is_503;
-		try {
-			do {
-				is_503 = false;
-				
-				final long start_nano = System.nanoTime();
-				
-				connection = (HttpURLConnection)uri.toURL().openConnection();
-				connection.setRequestMethod(this.method.toString().toUpperCase());
 
-				// Include tenant and space Http headers
-				String tenant_token = null, space_token = null;
-				if(this.context!=null && this.context.hasTenant()) {
-					tenant_token = this.context.getTenant().getTenantToken();
-					connection.setRequestProperty(Constants.HTTP_TENANT_HEADER, tenant_token);
-				}
-				if(this.context!=null && this.context.hasSpace()) {
-					space_token = this.context.getSpace().getSpaceToken();
-					connection.setRequestProperty(Constants.HTTP_SPACE_HEADER, space_token);
-				}
-				
-				// Include version and component as request header
-				connection.setRequestProperty(Constants.HTTP_VERSION_HEADER, CoreConfiguration.getVulasRelease());
-				connection.setRequestProperty(Constants.HTTP_COMPONENT_HEADER, Constants.VulasComponent.client.toString());
-				
-				// Only if put something in the body
-				if(this.hasPayload()) {
-					connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-					connection.setRequestProperty("Content-Length", Integer.toString(this.payload.getBytes().length));
-					connection.setRequestProperty("Content-Language", "en-US");
-				}
-				else if(this.binPayload!=null){
-					connection.setRequestProperty("Content-Type", this.contentType);
-				}
+	  int response_code = -1;
+	  org.apache.http.HttpResponse httpResponse = null;
+	  final URI uri = this.getUri();
+	  HttpUriRequest httpUriRequest = null;
+	  final RequestRepeater repeater = new RequestRepeater(this.getVulasConfiguration().getConfiguration().getLong(CoreConfiguration.REPEAT_MAX, 50), this.getVulasConfiguration().getConfiguration().getLong(CoreConfiguration.REPEAT_WAIT, 60000));
 
-				if(!this.hasPayload())
-					BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
-				else if(this.binPayload==null)	
-					BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + ", size=" + StringUtil.byteToKBString(this.payload.getBytes().length) + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
-				else
-					BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + ", size=" + this.binPayload.available() + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
+	  boolean is_503;
+	  RequestBuilder requestBuilder = null;
+	  switch (this.method) {
+	    case GET:
+	      requestBuilder = RequestBuilder.get();
+	      break;
+	    case PUT:
+	      requestBuilder = RequestBuilder.put();
+	      break;
+	    case POST:
+	      requestBuilder = RequestBuilder.post();
+	      break;
+	    case OPTIONS:
+	      requestBuilder = RequestBuilder.options();
+	      break;
+	    case DELETE:
+	      requestBuilder = RequestBuilder.delete();
+	      break;
+	  }
 
-				connection.setUseCaches(false);
-				connection.setDoInput(true);
+	  requestBuilder = requestBuilder.setUri(uri);
 
-				if(this.hasPayload()) {
-					connection.setDoOutput(true);
-					request_fields = connection.getRequestProperties();
-					final DataOutputStream wr = new DataOutputStream (connection.getOutputStream ());
-					wr.write(this.payload.getBytes("UTF-8"));
-					wr.flush();
-					wr.close();
-				}
-				else if(this.binPayload!=null){
-					connection.setDoOutput(true);
-					//required only for multipart/fileupload
-					//	String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
-					//	String CRLF = "\r\n"; // Line separator required by multipart/form-data.
+	  // Include tenant and space Http headers
+	  String tenant_token = null, space_token = null;
+	  if(this.context!=null && this.context.hasTenant()) {
+	    tenant_token = this.context.getTenant().getTenantToken();
+	    requestBuilder.addHeader(Constants.HTTP_TENANT_HEADER, tenant_token);
+	  }
+	  if(this.context!=null && this.context.hasSpace()) {
+	    space_token = this.context.getSpace().getSpaceToken();
+	    requestBuilder.addHeader(Constants.HTTP_SPACE_HEADER, space_token);
+	  }
 
-					request_fields = connection.getRequestProperties();
-					final OutputStream output = connection.getOutputStream();
-					//	PrintWriter writer = new PrintWriter(new OutputStreamWriter(output), true); 
+	  // Include version and component as request header
+	  requestBuilder.addHeader(Constants.HTTP_VERSION_HEADER, CoreConfiguration.getVulasRelease());
+	  requestBuilder.addHeader(Constants.HTTP_COMPONENT_HEADER, Constants.VulasComponent.client.toString());
 
-					byte[] buffer = new byte[4096];
-					int length;
-					while ((length = this.binPayload.read(buffer)) > 0) {
-						output.write(buffer, 0, length);
-					} 
-					output.flush();
-					output.close();
-					//    writer.append(CRLF).flush();
-					//   writer.append("--" + boundary + "--").append(CRLF).flush();
+	  // Include additional headers from configuration (if any)
+	  final Map<String, String> add_headers = this.getVulasConfiguration().getServiceHeaders(this.service);
+	  if(add_headers!=null && !add_headers.isEmpty()) {
+	    for(String key: add_headers.keySet()) {
+	      requestBuilder.addHeader(key, add_headers.get(key));
+	    }
+	  }
 
-				}
-				else {
-					connection.setDoOutput(false);
-					request_fields = connection.getRequestProperties();
-					connection.connect();
-				}
+	  // Only if put something in the body
+	  if(this.hasPayload()) {
+	    requestBuilder.addHeader("Content-Type", "application/json; charset=utf-8");
+	    requestBuilder.addHeader("Content-Language", "en-US");
+	  }else if(this.binPayload!=null){
+	    requestBuilder.addHeader("Content-Type", this.contentType);
+	  }
 
-				// Read response
-				response_code = connection.getResponseCode();
-				response = new HttpResponse(response_code);
+	  if(this.hasPayload()) {
+	    requestBuilder.setEntity(new StringEntity(this.payload, StandardCharsets.UTF_8));
+	  }else if(this.binPayload!=null){
+	    requestBuilder.setEntity(new InputStreamEntity(this.binPayload));
+	  }
 
-				// If the response body contains a JAR file, save it
-				if(response.isOk() && connection.getContentType()!=null && connection.getContentType().contains("application/java-archive")){
-					String fileName = "";
-					String disposition = connection.getHeaderField("Content-Disposition");
-					if (disposition != null) {
-						// Extracts file name from header field
-						int index = disposition.indexOf("filename=");
-						if (index > 0) {
-							fileName = disposition.substring(index + 9, disposition.length() );
-						}
-					} else {
-						// Extracts file name from URL
-						fileName = this.path.substring(this.path.lastIndexOf("/") + 1, this.path.length());
-					}
+	  httpUriRequest = requestBuilder.build();
 
-					// Opens input stream from the HTTP connection
-					InputStream inputStream = connection.getInputStream();
-					String saveFilePath = null; 
-					if (this.dir!=null){
-						//create directories if not existing
-						if(!Files.exists(Paths.get(dir))){
-							Files.createDirectories(Paths.get(dir));
-						}
-						saveFilePath= dir + File.separator + fileName;
-					}
-					else
-						saveFilePath= Paths.get(this.getVulasConfiguration().getTmpDir().toString()).toString()+ File.separator + fileName;
+	  try {
+	    do {
+	      is_503 = false;
 
-					// Opens an output stream to save into file
-					FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+	      final long start_nano = System.nanoTime();
 
-					int bytesRead = -1;
-					byte[] buffer = new byte[inputStream.available()];
-					while ((bytesRead = inputStream.read(buffer)) != -1) {
-						outputStream.write(buffer, 0, bytesRead);
-					}
+	      if(!this.hasPayload()) {
+	        BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
+	      }else if(this.binPayload==null)  {
+	        BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + ", size=" + StringUtil.byteToKBString(this.payload.getBytes().length) + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
+	      }else {
+	        BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + ", size=" + this.binPayload.available() + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
+	      }
 
-					response.setBody(saveFilePath);
-					outputStream.close();
-					inputStream.close();
-				}
-				else if(response.isOk() || response.isCreated())
-					response.setBody(FileUtil.readInputStream(connection.getInputStream(), FileUtil.getCharset()));
+	      SocketConfig socketConfig = SocketConfig.custom().setSoKeepAlive(true).build();
+	      HttpClient client = HttpClients.custom().setDefaultSocketConfig(socketConfig).useSystemProperties().build();
 
-				// Stats
-				final long end_nano = System.nanoTime();
-				BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " completed with response code [" + response_code + "] in " + StringUtil.nanoToFlexDurationString(end_nano-start_nano) + " (proxy=" + connection.usingProxy() + ")") ;
+	      // Read response
+	      httpResponse = client.execute(httpUriRequest);
+	      response_code = httpResponse.getStatusLine().getStatusCode();
+	      response = new HttpResponse(response_code);
 
-				// 503: Retry
-				if(response.isServiceUnavailable()) {
-					is_503 = true;
-				}
-				// 5xx: Throw exception
-				else if(response.isServerError() || response.getStatus()==400) {
-					final BackendConnectionException bce = new BackendConnectionException(this.method, uri, response_code, null);
-					try {
-						final String body = this.readErrorStream(connection);
-						if(body!=null && !body.trim().equals(""))
-							bce.setHttpResponseBody(body);
-					} catch (IOException e1) {
-						//BasicHttpRequest.log.error("Cannot read input stream: " + e1.getMessage());
-					}
-					throw bce;
-				}
-			}
-			while(repeater.repeat(is_503));
-			if(is_503)
-				throw new BackendConnectionException(this.method, uri, 503, null);
-		} catch(BackendConnectionException bce) {
-			this.logHeaderFields("    Request-header", request_fields);	
-			this.logHeaderFields("    Response-header", connection.getHeaderFields());
-			if(bce.getHttpResponseBody()!=null)
-				BasicHttpRequest.log.error("    Response-body: [" + bce.getHttpResponseBody().replaceAll("[\\t\\n\\x0B\\f\\r]*", "") + "]");
-			BasicHttpRequest.log.error("    Exception message: [" + bce.getMessage() + "]");
-			if(this.hasPayload())
-				BasicHttpRequest.log.error("    HTTP Request body: [" + this.payload.toString() + "]");
-			//throw bce;
-		} catch(Exception e) {
-			final BackendConnectionException bce = new BackendConnectionException(this.method, uri, response_code, e);
-			try {
-				bce.setHttpResponseBody(this.readErrorStream(connection));
-			} catch (IOException e1) {
-				//BasicHttpRequest.log.error("Cannot read error stream: " + e1.getMessage());
-			}
-			throw bce;
-		}
-		finally {
-			if(connection != null) connection.disconnect();
-		}
-		return response;
+	      // If the response body contains a JAR file, save it
+	      if(response.isOk() && httpResponse.getFirstHeader("Content-Type")!=null && httpResponse.getFirstHeader("Content-Type").getValue().contains("application/java-archive")){
+	        String fileName = "";
+	        Header disposition = httpResponse.getFirstHeader("Content-Disposition");
+	        if (disposition != null) {
+	          String dispositionValue = disposition.getValue();
+	          // Extracts file name from header field
+	          int index = dispositionValue.indexOf("filename=");
+	          if (index > 0) {
+	            fileName = dispositionValue.substring(index + 9, dispositionValue.length() );
+	          }
+	        } else {
+	          // Extracts file name from URL
+	          fileName = this.path.substring(this.path.lastIndexOf("/") + 1, this.path.length());
+	        }
+
+	        String saveFilePath = null;
+	        if (this.dir!=null){
+	          //create directories if not existing
+	          if(!Files.exists(Paths.get(dir))){
+	            Files.createDirectories(Paths.get(dir));
+	          }
+	          saveFilePath= dir + File.separator + fileName;
+	        }else {
+	          saveFilePath= Paths.get(this.getVulasConfiguration().getTmpDir().toString()).toString()+ File.separator + fileName;
+	        }
+
+	        try(
+	            // Opens input stream from the HTTP connection
+	            InputStream inputStream = httpResponse.getEntity().getContent();
+	            // Opens an output stream to save into file
+	            FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+	            ){
+	          int bytesRead = -1;
+	          byte[] buffer = new byte[inputStream.available()];
+	          while ((bytesRead = inputStream.read(buffer)) != -1) {
+	            outputStream.write(buffer, 0, bytesRead);
+	          }
+
+	          response.setBody(saveFilePath);
+	        }
+	      }else if(response.isOk() || response.isCreated()) {
+	        final String body = this.readResponse(httpResponse);
+	        if(StringUtils.isNotBlank(body)) response.setBody(body);
+	      }
+
+	      // Stats
+	      final long end_nano = System.nanoTime();
+	      BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " completed with response code [" + response_code + "] in " + StringUtil.nanoToFlexDurationString(end_nano-start_nano) + " (proxy=" + isProxySet() + ")") ;
+
+	      // 503: Retry
+	      if(response.isServiceUnavailable()) {
+	        is_503 = true;
+	      }
+	      // 5xx: Throw exception
+	      else if(response.isServerError() || response.getStatus()==400) {
+	        final BackendConnectionException bce = new BackendConnectionException(this.method, uri, response_code, null);
+	        throwBceException(httpResponse, bce);
+	      }
+	    }
+	    while(repeater.repeat(is_503));
+	    if(is_503)
+	      throw new BackendConnectionException(this.method, uri, 503, null);
+	  } catch(BackendConnectionException bce) {
+	    this.logHeaderFields("    Request-header", httpUriRequest.getAllHeaders());
+	    this.logHeaderFields("    Response-header", httpResponse.getAllHeaders());
+	    if(bce.getHttpResponseBody()!=null)
+	      BasicHttpRequest.log.error("    Response-body: [" + bce.getHttpResponseBody().replaceAll("[\\t\\n\\x0B\\f\\r]*", "") + "]");
+	    BasicHttpRequest.log.error("    Exception message: [" + bce.getMessage() + "]");
+	    if(this.hasPayload())
+	      BasicHttpRequest.log.error("    HTTP Request body: [" + this.payload.toString() + "]");
+	  } catch(Exception e) {
+	    final BackendConnectionException bce = new BackendConnectionException(this.method, uri, response_code, e);
+	    throwBceException(httpResponse, bce);
+	  }
+	  return response;
 	}
-	
-	private void logHeaderFields(String _prefix, Map<String,List<String>> _fields) {
-		for(Map.Entry<String, List<String>> entry: _fields.entrySet())
-			BasicHttpRequest.log.error(_prefix + " " + (entry.getKey()==null?"":"["+entry.getKey()+"]" + " = ") + entry.getValue());
+
+	private boolean isProxySet() {
+	  return StringUtils.isNotBlank(System.getProperty("http.proxyHost")) ? true
+	      : false || StringUtils.isNotBlank(System.getProperty("https.proxyHost")) ? true : false;
+	}
+
+	/**
+	 * @param _httpResponse
+	 * @param _bce
+	 * @throws BackendConnectionException
+	 */
+	private void throwBceException(org.apache.http.HttpResponse _httpResponse,
+	    final BackendConnectionException _bce) throws BackendConnectionException {
+	  try {
+	    final String body = this.readResponse(_httpResponse);
+	    if(StringUtils.isNotBlank(body)) _bce.setHttpResponseBody(body);
+	  } catch (IOException e) {
+	    //BasicHttpRequest.log.error("Cannot read input stream: " + e1.getMessage());
+	  }
+	  throw _bce;
+	}
+
+	/**
+	 * @param _prefix
+	 * @param _fields
+	 */
+	private void logHeaderFields(String _prefix, Header[] _fields) {
+	  if(_fields==null) {
+	    return;
+	  }
+
+	  for(Header header: _fields)
+	    BasicHttpRequest.log.error(_prefix + " " + "["+header.getName()+"]" + " = " + header.getValue());
 	}
 
 	/**
 	 * @param _c
+	 * @throws IOException
 	 */
-	private String readErrorStream(HttpURLConnection _c) throws IOException {
-		String error = null;
-		if(_c!=null) {
-			InputStream is = _c.getErrorStream();
-			if(is==null)
-				is = _c.getInputStream();
-			if(is!=null) {
-				error = FileUtil.readInputStream(is, FileUtil.getCharset());
-			}
-		}
-		return error;
+	private String readResponse(org.apache.http.HttpResponse _c) throws IOException  {
+	  String response = null;
+	  if(_c!=null) {
+	    InputStream is = _c.getEntity().getContent();
+	    if(is!=null) {
+	      response = FileUtil.readInputStream(is, FileUtil.getCharset());
+	    }
+	  }
+	  return response;
 	}
 
 	private URI getUri() {

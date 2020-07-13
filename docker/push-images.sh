@@ -56,7 +56,7 @@ if [[ ! $VULAS_RELEASE =~ $RELEASE_PATTERN ]]; then
     exit 1
 fi
 
-SERVICES='frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils patch-analyzer'
+SERVICES='frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils patch-analyzer rest-nvd'
 
 VULAS_RELEASE=${VULAS_RELEASE} docker-compose -f docker-compose.build.yml build
 

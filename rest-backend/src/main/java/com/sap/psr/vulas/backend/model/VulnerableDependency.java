@@ -30,6 +30,7 @@ import com.sap.psr.vulas.backend.model.view.Views;
 import com.sap.psr.vulas.backend.repo.ApplicationRepositoryCustom;
 import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 import com.sap.psr.vulas.shared.enums.VulnDepOrigin;
+import com.sap.psr.vulas.shared.json.model.IExemption;
 
 /**
  * <p>VulnerableDependency class.</p>
@@ -64,8 +65,8 @@ public class VulnerableDependency  implements Serializable, Comparable<Vulnerabl
 	
 	VulnDepOrigin origin; 
 	
-	private Excemption excemption = null;
-
+	IExemption exemption = null;
+	
 	/**
 	 * <p>Constructor for VulnerableDependency.</p>
 	 */
@@ -329,22 +330,25 @@ public class VulnerableDependency  implements Serializable, Comparable<Vulnerabl
 	public int getTracedConfirmed() { return this.dep.getTraced()!=null && this.dep.getTraced() ? 1 : 0; }
 	
 	/**
-	 * <p>Getter for the field <code>excemption</code>.</p>
+	 * <p>Getter for the field <code>exemption</code>.</p>
 	 *
-	 * @return a {@link com.sap.psr.vulas.backend.model.Excemption} object.
+	 * @return a {@link Exemption} object.
 	 */
-	public Excemption getExcemption() {
-		return excemption;
-	}
-
+	public IExemption getExemption() { return this.exemption; }
+	
 	/**
-	 * <p>Setter for the field <code>excemption</code>.</p>
+	 * <p>Setter for the field <code>exemption</code>.</p>
 	 *
-	 * @param excemption a {@link com.sap.psr.vulas.backend.model.Excemption} object.
+	 * @param _e a {@link Exemption} object.
 	 */
-	public void setExcemption(Excemption excemption) {
-		this.excemption = excemption;
-	}
+	public void setExemption(IExemption _e) { this.exemption = _e; }
+	
+	/**
+	 * Returns true if the an exemption has been set before, false otherwise.
+	 * 
+	 * @return
+	 */
+	public Boolean isExempted() { return this.exemption!=null; }
 	
 	/**
 	 * <p>Getter for the field <code>bundledLibId</code>.</p>

@@ -29,10 +29,10 @@
 		"configuration": [
 			{ "name": "exceptionThreshold",
 			  "value": "$exceptionThreshold" },
-			{ "name": "exceptionScopeBlacklist",
-			  "value": "$exceptionScopeBlacklist" },
-			{ "name": "exceptionExcludedBugs",
-			  "value": "$exceptionExcludedBugs" }
+			{ "name": "exemptScopes",
+			  "value": "$exemptScopes" },
+			{ "name": "exemptBugs",
+			  "value": "$exemptBugs" }
 		],
 	
 		"vulnerabilities": [

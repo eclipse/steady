@@ -49,3 +49,12 @@ services:
         - VULAS_RELEASE=${VULAS_RELEASE}
     image: vulnerability-assessment-tool-patch-analyzer:${VULAS_RELEASE}
     entrypoint: /bin/sleep 1
+
+  rest-nvd:
+    extends:
+      file: ../rest-nvd/docker-compose.yml
+      service: rest-nvd
+    build:
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+    image: vulnerability-assessment-tool-rest-nvd:${VULAS_RELEASE}

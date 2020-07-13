@@ -18,6 +18,8 @@ matrix:
     - curl -Lo .travis/skaffold https://storage.googleapis.com/skaffold/releases/v0.40.0/skaffold-linux-amd64
     - chmod +x .travis/skaffold
     - export JIB=true
+    - chmod +x .travis/package_steady_cli.sh
+    - bash .travis/package_steady_cli.sh ${VULAS_RELEASE}
     deploy:
     - provider: script
       skip_cleanup: true
@@ -29,8 +31,15 @@ matrix:
       skip_cleanup: true
       script: bash .travis/docker_hub_push_release.sh
       on:
-        all_branches: true
-        condition: tag =~ /^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$/
+        tags: true
+        condition: $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$
+    - provider: releases
+      api_key: "$GIT_TOKEN"
+      file: "/tmp/cli/steady-cli-${VULAS_RELEASE}.zip"
+      skip_cleanup: true
+      on:
+        tags: true
+        condition: "$TRAVIS_TAG =~ ^[0-9]+\\.[0-9]+\\.[0-9]+(\\..+)?$"
 
   - name: OpenJDK8 - Create Maven artifacts for JavaDoc and sources
     language: java
@@ -72,8 +81,8 @@ matrix:
       skip_cleanup: true
       script: bash .travis/docker_hub_push_release.sh
       on:
-        all_branches: true
-        condition: tag =~ /^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$/
+        tags: true
+        condition: $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(\..+)?$
 
   # According to the ECCN team re Docker images on DockerHub: “…if you posted the source code on the Internet,
   # you must notify BIS and the ENC Encryption Request Coordinator each time the Internet location is changed,
@@ -95,11 +104,26 @@ matrix:
     install:
     - docker build --tag docs ./docs
     - docker network create docs
+    addons:
+      apt:
+        packages:
+          - python3.4
+          - python3-pip
+          - python3-setuptools
     script:
     - docker run --rm --network=docs -d --name docs --hostname docs -p 8000:8000 docs
     - sleep 10
     - docker run --entrypoint=/tmp/checklinks.sh -e URL=docs:8000 -v ${PWD}/docs/:/tmp/ --rm --network=docs --name checklinks raviqqe/muffet:1.3.1
-
+    before_deploy:
+    - git remote set-url origin https://"$GIT_USER":"$GIT_TOKEN"@github.com/eclipse/steady.git
+    - git config --local user.email "$GIT_MAIL"
+    deploy:
+    - provider: script
+      skip_cleanup: true
+      script: cd docs && pip3 install wheel --user && pip3 install -r requirements.txt --user && sed -i.bak '/dev_addr/d' mkdocs.yml && python3 docs.py public --mkghdeploy
+      on:
+        tags: true
+        condition: "$TRAVIS_TAG =~ ^[0-9]+\\.[0-9]+\\.[0-9]+(\\..+)?$"
     after_failure:
     - docker images
     - docker ps -as
@@ -110,3 +134,6 @@ env:
   global:
   - secure: OTJydEG1v1bfteaiSYCz015XntC9VpciEgIiPpDB9RbNf1TfQc1xtmpBaKNJpWQ+zDgFUfnkAtgBnisJfXDDcjoHZzyF5vQpvU/4dmKfRCNbzCV889jMNhAqnrUoviGhfFszZEkkClnkkjDvM0QaFa4oX3lQlZZgr3QPiVl09dmUsPjZSG1pprGmkOlgz7qCIwJL1TFpht3IlQLQicSsjwSdaWJN17oxgBUO8VaSiYmOK4rrOrdQAsMO1KusarQFEbyIUaZfYOJK9a7ZbkK8/q4sYW9+Mo4HAbR/d5Cq752SFOSxUpeSEiCKOeyK1S+um40uCxIFgHTvYKpXPdA4n+H0GaHynt6fo6Itze7xzzEV3u2bWe0xyQGspEultI265vVLCqEIicyCMaAhAGh7+qxUJC9NYflIEQspAqWEfOqRTBmejCzxCx27bgDbhqA/U4smBgt4Kar1MRXfeGhobKZrl+ck5EWNAqcq4+2z7hEdH2VnOqyevj1o7RejQWbmWwlTUpDxn8tpC3jj12Y0y7gAzLEPL01fC63ZeXwULyT9SlR/MUOwYfG7Q0Wvl7sdVk9+A/MDA00YUvNaqsQat5Hr9KqiR72ZIXkiDv2v+9i8ULtLlhtd5qNVTr0RIIOx61UTEbWu3ZREEXu6ab8JOt3tmcccQXepB0CR9bzDpLs=
   - secure: vcLLHmyg9EdWWZexfOq+tqGNOij4EYvm/0c1fyTVpIqPSN/I4hIQfuraFgyuBjo5VDkZ0Ty6DN+7vMXI9zGFAVJ4qYEWet4qrRG1TPDXFAmtx/HwSqPj1twoxZ9H1uNg4ot90VJ13OPQXAplH+hO7mlT/ZHDWvv3ddEGNv9wglQC9zQooVy0Cyw6xyoJEStV7m3g1kCfmCD1XnSEcpIPSIcnVBe7y5fwK+whJa91oJjYXB4BEmC1sDyZfMIOQWfuQMP5efAWKAanYCPtIg0wa2jua2OB+77REzrvvgVa7DJOP6SzkBD/znBrh631AtHIRvT4XjhVKTIT+pAny6fZEy0WcM3wbRE3Dxe88yEzX+al+INUpF7VSSXWQkidkbk10Uoxp2t72OFMKwtRKAq5NH5TpO+ViCbgCa24HU7GqvBmu63XF2fu4AL5Jc77MAH1asNN3Ik3xekUZ1/OAzkNpORJB4NBt9qCCUhR5D6zh5k2vdFwvvmZF0AT/CNShDl+iNfXLD8fGKoGgTIFcgnJl+FGTmokWnfTbm3fHz4v8C8Wu/hEBmn4Nu8WHpiHUNEoilmQ57m5tUEGQ9z2hokFrsMKz5hPcpy0+pfFadYzbKYlamdbxOpBde0Z/6sJ0exhR9QX6bIgeB4moF1wZaLh4Kvm/uomEEWOTd1Jydx3qn4=
+  - secure: eew3c6WkkNenE03DR8aE/pu4XD4RB7ve+ghjGSwiAoAGP6jwoPO5MSEBOyQjXknOpy8g4linFGrtSB6Q1dKjejTJcH3+bnTUGWa/4or2t8D857u1inLoGDSrLm0pVn7BYBT/e2qViBaVMM2jgQQ8F00y1qAewFULmP5dnRjJvIecqIOYIfvDENcWRN0PjBM6+IbY8ZGxBwosBU1fvVWHrmSPdJ0v4DDC2D/Ni5fKTLrigU82HXeQa0w17KFkZ6nhAyDUK4Eq14eIgQcrGgPZrTM2QDOl49jiQsZr0AXU5a4M5QxkCglEz4t0Gj+kSVfaOeOKh4ijTr9Jk0wROY5ov8RccxeMCYkmepidh2Jx/+dK64PFn/3AhUH6OfpmDuP4E2DjURE6nntDBiIAIHbOZOdzxGZK5QPSNtG3oZpqf9SUlrie9WF9DmFAhBzlhQ01Jq2cuw+GIZR2v0l8Ie+Q1EvB9Q/pjm8aq2P7sen7C+JyBpUaqXaF7lB94ab1NJRJ4jQmg+V5V20KskMrIPNLH6wYXp8rKyTJgcvQjJcVSOvyi4UNw0rxWzCmbv4D970QxhR1tHO4rzymsTlZghYhm3l7gvg2OVErJZIEB8eB2oEem/fAfWaQf4eoTdSuXwdUmf4uRiNGIDr6wQy3dhnXlD7Hs/l+ZnGUBTeKC3qN/E4=
+  - secure: j9ii+abfyBsHRBlVMebnDK0fJ8vjf7gWjdBBuOs6Cghp+MrnNHjojeGp1ylNQGGQB4/fcEjOr9HpbB0CRg8u/MC1AFydntIGcNwDWPCPEGlZtsolELRyhSr16N9KRfbGC7zOzI8H1jCPs8jtDeK3Fyn+XVrVWAJTNeAVlfyE74840YFZagl3WCooDjrTkcpxgSqjNRsKT722os3hRQ7CKWMeOptHxfWtMmIELvQNnYIk+6aY562sjLZ5ObfsdUddnrpxO94wpZn/O6nqxJx0qSKYnY/suVn7vDq9nzjqaPefRJUZL7r0AarAFYNH6z5mcSD9UpusckZXuV85SgRH1MbgjoqxIjsEdVWZXs0vvs5WdeVlEbTBceeF78bmjgk7dZSkQhGiakxwenPtVEygmsevqLyyHyk8QPD/r+NjV+PonfHmzVpeKfgc7L2mJqHFvf//+Ko4fZYvwsN4127ZQCSv88MP5eauJcDNDPKJObX3xItaGSACAsnvHlYfZqS2Iqo0/0p5dKcFy5lEcU8aecgiSwpSbPesCvDCZtldFXSU4f7JYn5RF/TWWfKQDrVsVZ+aN1T4Tup8V6zlj8kMCLxJKI44C+hsBrO+MNC5UeG/3lQw30UibMQmUt8S47GEGc39NlQaKo+JhhYfr6XrQuZQVV2zmaxD4S23W42gpx4=
+  - secure: If96mZyElKZkdkzT3DoiTUgn99tuGicwpHu+M+hyYYgUOvqV0ngSNtYQry56kJjKd99SSOWyDmtOpw4YgyFltD7DdX5hHcMg1hDGQQne0doP7A04KhY7l98qoXEjLzVID4D01LnNstVaqpAX7PS4yxYocapFTpc1UxqbH248toPutiXY6kupcSTveL29ImTCBW4B9J0Dq4I6M3ouDjSUTVaP12I1bslN/sui7lL2t06QYE3D4KGq1T0JdOk7Jhmk/EcdMPisM1+qaDwycXFL1bK837HVbwLNTgyDpjAHdQeoibZunRqiY3u2N6OqlRgwG8FBsxvjqneD5wTqi2GGvm/utY/iq0/TnUqIsSKlboDd/Zb/WknRNihWEogiVPA9+yw7B6Q/wxTg4bKqsP9aq++6Av/vO6VGjy+Rg1Wr08e19A3JEhf/XuZlkThCtHWnudMEKzlZ+ZhKsI9tKimmy9p9mlSUeojoyYmEVa+lfhdSXdqT/unIhqZtYn20+HZQe8mGgAqJbTYDkHIeYfzL1QtoSHdBykOryxvxY8hMldMqHRrUGRIxIk6JCjzLtKTyotBJ+blIcBfJJfsF49rX8rnVlOgSWDONHnAitxDgflVvI6uHUwxlYEcnY5Jqq4cYKgv6vTm2hjEsWC54TGUq6ouo6vtOwxHUkB72bn7KMiQ=

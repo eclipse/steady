@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.cia.model.mavenCentral;
+package com.sap.psr.vulas.shared.json.model.mavenCentral;
 
 import java.util.Collection;
 import java.util.TreeSet;
@@ -32,6 +32,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class MavenSearchResponse {
 
 	private long numFound;
+	
+	private long start;
 	
 	private Collection<ResponseDoc> docs;
 	
@@ -52,6 +54,24 @@ public class MavenSearchResponse {
 	 * @param numFound a long.
 	 */
 	public void setNumFound(long numFound) { this.numFound = numFound; }
+
+	
+	/**
+	 * <p>Getter for the field <code>start</code>.</p>
+	 *
+	 * @return a long.
+	 */
+	public long getStart() {
+		return start;
+	}
+	/**
+	 * <p>Setter for the field <code>start</code>.</p>
+	 *
+	 * @param start a long.
+	 */
+	public void setStart(long start) {
+		this.start = start;
+	}
 
 	/**
 	 * <p>Getter for the field <code>docs</code>.</p>

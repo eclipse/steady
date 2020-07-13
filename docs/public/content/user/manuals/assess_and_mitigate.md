@@ -10,7 +10,8 @@ A finding (table row) in the _Vulnerabilities_ tab represents a tuple (library, 
 
 - **Green exclamation mark**: The library version in use contains the fixed code for the respective vulnerability, hence, is not affected. Such _historical vulnerabilities_ do not need to be assessed and mitigated.
 - **Red exclamation mark**: The library version in use contains the vulnerable code, hence, is affected by the respective vulnerability, and the finding requires assessment. A findings should be mitigated if considered exploitable (see below). A finding can be [exempted](#exempt) if it is not considered exploitable.
-- **Orange Hourglass**: It is unclear whether the library version in use contains the vulnerable or the fixed code. Hourglasses are resolved by the @@PROJECT_NAME@@ operations team (automatically or manually) by comparing the source or byte code of the library in question with the vulnerable and fixed code. Depending on whether the source or byte code of the library is available, e.g., in Maven Central or PyPi, this can take more or less time.
+- **Orange Hourglass**: It is unclear whether the library version in use contains the vulnerable or the fixed code. Hourglasses may be resolved with the [`checkcode` goal](../analysis/#analyze-unconfirmed-vulnerabilities-checkcode). Otherwise they are resolved by the @@PROJECT_NAME@@ operations team (automatically or manually) by comparing the source or byte code of the library in question with the vulnerable and fixed code. Depending on whether the source or byte code of the library is available, e.g., in Maven Central or PyPi, this can take more or less time.
+
 
 ### Static and Dynamic Analysis
 
@@ -87,7 +88,7 @@ If you take that road, make sure to create a pull request so that the original o
     Example: The Java component [`org.springframework.cloud:spring-cloud-cloudfoundry-connector`](https://search.maven.org/artifact/org.springframework.cloud/spring-cloud-cloudfoundry-connector/2.0.6.RELEASE/jar) rebundles `jackson-databind`. In case the latest version of `spring-cloud-cloudfoundry-connector` contains a vulnerable version of `jackson-databind`, one has to clone `https://github.com/spring-cloud/spring-cloud-connectors/tree/master/spring-cloud-cloudfoundry-connector`, edit `build.gradle` in order to update the version of `jackson-databind`, and build a fixed Uber JAR to be used by the application.
 
     **Important**:
-    
+
     - If you create a fix yourself, make sure to contribute such fixes to the original open source project.
 
 ### Fixing the application (exceptional)
@@ -97,6 +98,6 @@ If you take that road, make sure to create a pull request so that the original o
 
 Fixing the applications means to introduce a security control in the application that mitigates a problem in a vulnerable library, which requires a deep understanding of the respective vulnerability.
 
-Example: Suppose the library in question is vulnerable to [XXE processing](https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing). If the developers of the respective library do not (cannot) provide a fix, you could introduce a corresponding sanity check in your application, just before XML documents are handed-over to the library.
+Example: Suppose the library in question is vulnerable to [XXE processing](https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing). If the developers of the respective library do not (cannot) provide a fix, you could introduce a corresponding sanity check in your application, just before XML documents are handed-over to the library.
 
 The analysis goals `a2c`, `test` and `t2c` can support you in identifying the application methods that require a safeguard. Ideally, you can see (a subset of) the execution paths that lead from application code to vulnerable library code. See here to learn about the configuration options of the reachability analyses `a2c` and `t2c`.

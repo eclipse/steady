@@ -94,10 +94,12 @@ import com.sap.psr.vulas.backend.repo.BugRepository;
 import com.sap.psr.vulas.backend.repo.ConstructIdRepository;
 import com.sap.psr.vulas.backend.repo.DependencyRepository;
 import com.sap.psr.vulas.backend.repo.GoalExecutionRepository;
+import com.sap.psr.vulas.backend.repo.LibraryIdRepository;
 import com.sap.psr.vulas.backend.repo.LibraryRepository;
 import com.sap.psr.vulas.backend.repo.SpaceRepository;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
 import com.sap.psr.vulas.shared.categories.RequiresNetwork;
+import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 import com.sap.psr.vulas.shared.enums.BugOrigin;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.ContentMaturityLevel;
@@ -117,6 +119,7 @@ import com.sap.psr.vulas.shared.util.StringList;
 import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
 import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
+import com.sap.psr.vulas.shared.json.model.ExemptionBug;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MainController.class,webEnvironment= SpringBootTest.WebEnvironment.MOCK)
@@ -152,6 +155,9 @@ public class ApplicationControllerTest {
     
     @Autowired
     private LibraryRepository libRepository;
+    
+    @Autowired
+    private LibraryIdRepository lidRepository;
     
     @Autowired
     private ConstructIdRepository cidRepository;
@@ -462,6 +468,13 @@ public class ApplicationControllerTest {
     	// Repo must contain 1
     	assertEquals(1, this.appRepository.count());
     	
+
+       	final MockHttpServletRequestBuilder get_builder = get(getAppUri(app)+"/deps");
+    	mockMvc.perform(get_builder)	
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentTypeJson))
+                .andExpect(jsonPath("$[1].parent.lib.digest", is("16CF5A6B78951F50713D29BFAE3230A611DC01F0")));
+ 
     }
     
     @Test
@@ -701,16 +714,37 @@ public class ApplicationControllerTest {
 		app.setDependencies(app_dependency);
     	this.appRepository.customSave(app);
     	
-    	// Repo must not contain vulnerableDependencies
+    	// Repo must contain vulnerableDependency
     	final StopWatch sw = new StopWatch("Query vulnerable dependencies " + app).start();
-   // 	Application app_1 = ApplicationRepository.FILTER.findOne(appRepository.findByGAV(APP_GROUP, APP_ARTIFACT,APP_VERSION));
     	TreeSet<VulnerableDependency> vd = this.appRepository.findJPQLVulnerableDependenciesByGAV(app.getMvnGroup(), app.getArtifact(), app.getVersion(), app.getSpace());
-    //	List<VulnerableDependency> vd = this.appRepository.findVulnerableDependenciesByApp(app_1);
     	sw.stop();
-    	System.out.println("====================================");
-    	System.out.println("Vulnerable Dependency list size: "+vd.size());
-       	System.out.println("====================================");
-    	assertEquals(0, vd.size());
+    	assertEquals(1, vd.size());
+    	
+    	//create affected library
+    	LibraryId lid = new LibraryId("org.apache.httpcomponents", "httpclient", "4.1.3");
+    	AffectedLibrary afflib = new AffectedLibrary(bug, lid, true, null, null, null);
+    	afflib.setSource(AffectedVersionSource.MANUAL);
+    	AffectedLibrary[] afflibs = new AffectedLibrary[1];
+    	afflibs[0]=afflib;
+    	affLibRepository.customSave(bug, afflibs);
+    	
+    	// Exempt bug
+		GoalExecution gexe = this.createExampleGoalExecution(app, GoalType.APP);
+		final Collection<Property> props = this.createExampleProperties(PropertySource.GOAL_CONFIG, ExemptionBug.CFG_PREFIX + ".CVE-2015-5262.reason", "Lorem ipsum");
+		props.add(new Property(PropertySource.GOAL_CONFIG, ExemptionBug.CFG_PREFIX + ".CVE-2015-5262.libraries", "16CF5A6B78951F50713D29BFAE3230A611DC01F0, abc"));
+		gexe.setConfiguration(props);
+		this.gexeRepository.customSave(app, gexe);
+    	//Get app vulnerabilies via http request
+		mockMvc.perform(get("/apps/" + APP_GROUP + "/" + APP_ARTIFACT + "/" + "0.0." + APP_VERSION + "/vulndeps?addExcemptionInfo=true")
+		    	.header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
+		    	.header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
+		        .andExpect(status().isOk())
+		        .andExpect(content().contentType(contentTypeJson))
+		        .andExpect(jsonPath("$[0].exempted", is(true)))
+		        .andExpect(jsonPath("$[0].exemption.bugId", is("CVE-2015-5262")))
+		        .andExpect(jsonPath("$[0].exemption.library", is("16CF5A6B78951F50713D29BFAE3230A611DC01F0")))
+		        .andExpect(jsonPath("$[0].exemption.reason", is("Lorem ipsum")))
+		        .andExpect(jsonPath("$[0].vulnDepOrigin", is("CC")));
     }
     
     @Test

@@ -1,11 +1,11 @@
 #!/bin/bash
 
-SERVICES='frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils'
+SERVICES='frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils rest-nvd'
 ERROR=false
 FAILED=""
 
 for service in $SERVICES ; do
-    if ! [ -f "./docker/$service/Dockerfile" ]; then
+    if ! { [ -f "./docker/$service/Dockerfile" ] || [ -f "./$service/Dockerfile" ]; }; then
         ERROR=true
         FAILED="$FAILED$service "
     fi

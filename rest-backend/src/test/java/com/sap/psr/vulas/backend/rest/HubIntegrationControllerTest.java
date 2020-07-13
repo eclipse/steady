@@ -206,14 +206,17 @@ public class HubIntegrationControllerTest {
     
     @Test
     public void testGetHubAppVulnerabilities() throws Exception {
-    	final Library lib_foo = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/dummy_app/lib.json")), Library.class);
+    	final Library lib_foo = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_commons-fileupload-1.2.2.json")), Library.class);
     	this.libRepository.customSave(lib_foo);
     	
     	final Library lib_bar = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/dummy_app/lib_bar.json")), Library.class);
     	this.libRepository.customSave(lib_bar);
     	    	
-    	final Bug bug = (Bug)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/dummy_app/bug_foo.json")), Bug.class);
-    	this.bugRepository.customSave(bug,true);    	
+    	final Bug bug_foo = (Bug)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/dummy_app/bug_foo.json")), Bug.class);
+    	this.bugRepository.customSave(bug_foo,true);    	
+    	
+    	final Bug bug = (Bug)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/bug_CVE-2014-0050.json")), Bug.class);
+    	this.bugRepository.customSave(bug,true);    
     	
     	// App with dependencies on foo and bar
     	final Application app = new Application(APP_GROUP, APP_ARTIFACT, "0.0." + APP_VERSION);

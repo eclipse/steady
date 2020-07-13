@@ -377,14 +377,34 @@ public class BugController {
 	 */
 	@RequestMapping(value = "/{bugid}/affectedLibIds", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.BugAffLibs.class)
-	public ResponseEntity<List<AffectedLibrary>> getAllAffectedLibraries(@PathVariable String bugid, @RequestParam(value="source", required=false) AffectedVersionSource source) {
+	public ResponseEntity<List<AffectedLibrary>> getAllAffectedLibraries(@PathVariable String bugid, 
+			@RequestParam(value="source", required=false) AffectedVersionSource source,
+			@RequestParam(value="onlyWellKnown", required=false, defaultValue="false") Boolean onlyWellknown) {
+		Bug bug = null;
+		try { bug = BugRepository.FILTER.findOne(this.bugRepository.findByBugId(bugid)); }
+		catch (EntityNotFoundException e) { return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.NOT_FOUND); }
+		return new ResponseEntity<List<AffectedLibrary>>(this.afflibRepository.getAffectedLibraries(bug, source, onlyWellknown), HttpStatus.OK);
+	}
+
+	/**
+	 * <p>getAffectedLibrariesByGA.</p>
+	 *
+	 * @param bugid a {@link java.lang.String} object.
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
+	@RequestMapping(value = "/{bugid}/affectedLibIds/{mvnGroup:.+}/{artifact:.+}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
+	@JsonView(Views.BugAffLibsDetails.class)
+	public ResponseEntity<List<AffectedLibrary>> getAffectedLibrariesByGA(@PathVariable String bugid, @PathVariable String mvnGroup, @PathVariable String artifact, @RequestParam(value="source", required=false) AffectedVersionSource source) {
 		Bug bug = null;
 		try { bug = BugRepository.FILTER.findOne(this.bugRepository.findByBugId(bugid)); }
 		catch (EntityNotFoundException e) { return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.NOT_FOUND); }
 		if(source==null)
-			return new ResponseEntity<List<AffectedLibrary>>(this.afflibRepository.findByBug(bug), HttpStatus.OK);
+			return new ResponseEntity<List<AffectedLibrary>>(this.afflibRepository.findByBugAndGA(bug, mvnGroup, artifact), HttpStatus.OK);
 		else
-			return new ResponseEntity<List<AffectedLibrary>>(this.afflibRepository.findByBugAndSource(bug, source), HttpStatus.OK);
+			return new ResponseEntity<List<AffectedLibrary>>(this.afflibRepository.findByBugAndGAAndSource(bug, mvnGroup, artifact, source), HttpStatus.OK);
 	}
 	
 	/**
