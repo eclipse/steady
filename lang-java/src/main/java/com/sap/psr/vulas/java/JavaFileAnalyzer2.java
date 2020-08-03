@@ -66,7 +66,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  */
 public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAnalyzer {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JavaFileAnalyzer2.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * All Java constructs found in the given Java file, created through visiting relevant nodes of the ANTLR parse tree.

@@ -41,7 +41,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class Main {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(Main.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 
 	/**

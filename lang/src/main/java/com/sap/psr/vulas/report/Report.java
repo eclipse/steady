@@ -69,7 +69,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class Report {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(Report.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH:mm Z");
 

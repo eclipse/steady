@@ -70,7 +70,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  * Given a bug, this class analyzes all versions (retrieved from Maven central) of JARs containing vulnerable code produces a csv file.
  */
 public class BugLibAnalyzer {
-    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(BugLibAnalyzer.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
     
     private Bug bug;
     private ExecutorService executorService = null ;

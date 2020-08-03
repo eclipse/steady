@@ -34,7 +34,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  */
 public class JsonReader<T> {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JsonReader.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private Class<T> clazz;
 	

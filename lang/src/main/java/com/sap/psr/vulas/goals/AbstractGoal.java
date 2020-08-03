@@ -61,7 +61,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public abstract class AbstractGoal implements Runnable {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(AbstractGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/** Constant <code>CLASS_EXT</code> */
 	protected static final String[] CLASS_EXT   = new String[] {"CLASS"};

@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class UploadScheduler extends Observable implements Runnable, Observer {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(UploadScheduler.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private long millis = -1;
 	private int batchSize = -1;

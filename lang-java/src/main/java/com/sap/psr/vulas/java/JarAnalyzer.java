@@ -75,7 +75,7 @@ import javassist.NotFoundException;
  */
 public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, FileAnalyzer {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JarAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static final ClassPool CLASSPOOL = ClassPool.getDefault();
 

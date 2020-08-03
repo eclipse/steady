@@ -43,7 +43,7 @@ import com.sap.psr.vulas.sign.SignatureFactory;
 
 public class BytecodeComparator  {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(BytecodeComparator.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private GoalContext context;
 	private Map<Class<?>,StdDeserializer<?>> custom_deserializers = new HashMap<Class<?>,StdDeserializer<?>>();

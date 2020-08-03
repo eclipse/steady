@@ -41,7 +41,7 @@ import com.sap.psr.vulas.vcs.FileChange;
  */
 public class FileComparator {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(FileComparator.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	private File def, fix = null;
 
 	private FileAnalyzer defAnalyzer, fixAnalyzer = null;

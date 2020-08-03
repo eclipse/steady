@@ -56,7 +56,7 @@ import org.apache.logging.log4j.Logger;
  * Thread to analyze for the set of received libraries using CIA service.
  */
 public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibResult2>>{
-    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(LibraryAnalyzerThread2.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
     private int tid;
     
     Map<Class<?>,StdDeserializer<?>> custom_deserializers = new HashMap<Class<?>,StdDeserializer<?>>();

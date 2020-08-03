@@ -46,7 +46,7 @@ public class CallgraphConstructorFactory {
     /** Constant <code>classLoaderToFindPlugins</code> */
     public static ClassLoader classLoaderToFindPlugins = Thread.currentThread().getContextClassLoader();
 
-    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CallgraphConstructorFactory.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
     /**
      * Build a call graph constructor, searching the service registry for a service implementation that registers itself using the given string

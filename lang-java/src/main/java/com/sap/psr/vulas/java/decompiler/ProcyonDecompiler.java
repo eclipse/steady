@@ -38,7 +38,7 @@ import com.strobel.decompiler.PlainTextOutput;
  */
 public class ProcyonDecompiler implements IDecompiler {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ProcyonDecompiler.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	/** {@inheritDoc} */
 	@Override

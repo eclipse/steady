@@ -81,7 +81,7 @@ public class BugLibManager {
 	
 
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(BugLibManager.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	// used to serialize cc
 	Bug bugChangeList = null; 

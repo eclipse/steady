@@ -53,7 +53,7 @@ import com.sap.psr.vulas.shared.util.StringList;
  */
 public class PipInstalledPackage implements Comparable {
 
-	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger(PipInstalledPackage.class);
+	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static final String LOCATION = "Location";
 	private static final String REQUIRES = "Requires";

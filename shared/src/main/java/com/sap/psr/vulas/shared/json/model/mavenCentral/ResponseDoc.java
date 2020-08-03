@@ -42,7 +42,7 @@ public class ResponseDoc implements Comparable {
 	
 	final static Pattern VERSION_PATTERN = Pattern.compile("([\\d\\.]*)(.*)", Pattern.DOTALL);
 	
-	private static Logger log = org.apache.logging.log4j.LogManager.getLogger(ResponseDoc.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private String id;
 	

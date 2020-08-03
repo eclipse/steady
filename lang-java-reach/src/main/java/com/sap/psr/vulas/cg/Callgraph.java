@@ -58,7 +58,7 @@ import javassist.NotFoundException;
  */
 public class Callgraph {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(Callgraph.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private int nodeCount = 0;
 	private int edgeCount = 0;

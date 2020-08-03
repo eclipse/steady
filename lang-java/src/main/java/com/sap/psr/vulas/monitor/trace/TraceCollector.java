@@ -162,7 +162,7 @@ public class TraceCollector {
 
 	private static final Logger getLog() {
 		if(TraceCollector.log==null)
-			TraceCollector.log = org.apache.logging.log4j.LogManager.getLogger(TraceCollector.class);
+			TraceCollector.log = org.apache.logging.log4j.LogManager.getLogger();
 		return TraceCollector.log;
 	}
 

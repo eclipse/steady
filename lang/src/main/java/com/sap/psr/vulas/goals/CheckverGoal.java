@@ -40,7 +40,7 @@ import com.sap.psr.vulas.sign.SignatureAnalysis;
  */
 public class CheckverGoal extends AbstractAppGoal {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CheckverGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private StringList bugsWhitelist = new StringList();
 

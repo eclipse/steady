@@ -38,7 +38,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public abstract class AbstractTask implements Task {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(AbstractTask.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private GoalClient client = null;
 	

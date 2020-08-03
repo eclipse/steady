@@ -46,7 +46,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class VulasProxySelector extends ProxySelector {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(VulasProxySelector.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static ProxySelector instance = new VulasProxySelector();
 

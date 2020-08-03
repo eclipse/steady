@@ -104,7 +104,7 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.Update;
  */
 public class ASTSignatureChangeDeserializer extends StdDeserializer<SignatureChange> {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ASTSignatureChangeDeserializer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	// Values for JsonElement Names, used as a member name during deserialization
 	// We need only to change these value if the name/value pair of a JsonElement

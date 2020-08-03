@@ -44,7 +44,7 @@ public class ConstructIdUtil {
 	private static Logger log = null;
 	private static final Logger getLog() {
 		if(ConstructIdUtil.log==null)
-			ConstructIdUtil.log = org.apache.logging.log4j.LogManager.getLogger(ConstructIdUtil.class);
+			ConstructIdUtil.log = org.apache.logging.log4j.LogManager.getLogger();
 		return ConstructIdUtil.log;
 	}
 	

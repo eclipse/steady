@@ -106,7 +106,7 @@ public class ExecutionMonitor {
 	
 	private static final Logger getLog() {
 		if(ExecutionMonitor.log==null)
-			ExecutionMonitor.log = org.apache.logging.log4j.LogManager.getLogger(ExecutionMonitor.class);
+			ExecutionMonitor.log = org.apache.logging.log4j.LogManager.getLogger();
 		return ExecutionMonitor.log;
 	}
 	

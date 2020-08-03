@@ -77,7 +77,7 @@ import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
  */
 public class BackendConnector {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(BackendConnector.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/* Singleton instance. */
 	private static BackendConnector instance = null;

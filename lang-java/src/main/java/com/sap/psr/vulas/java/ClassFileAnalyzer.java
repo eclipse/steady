@@ -46,7 +46,7 @@ import javassist.CtClass;
  */
 public class ClassFileAnalyzer implements FileAnalyzer {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ClassFileAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/** The file to be analyzed. */
 	private File file = null;

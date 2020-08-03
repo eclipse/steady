@@ -69,7 +69,7 @@ public class ClassVisitor {
 	private static Logger log = null;
 	private static final Logger getLog() {
 		if(ClassVisitor.log==null)
-			ClassVisitor.log = org.apache.logging.log4j.LogManager.getLogger(ClassVisitor.class);
+			ClassVisitor.log = org.apache.logging.log4j.LogManager.getLogger();
 		return ClassVisitor.log;
 	}
 

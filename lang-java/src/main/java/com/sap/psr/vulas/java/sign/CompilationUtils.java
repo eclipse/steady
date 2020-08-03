@@ -51,7 +51,7 @@ import ch.uzh.ifi.seal.changedistiller.ast.java.JavaCompilation;
  */
 public final class CompilationUtils {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CompilationUtils.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private CompilationUtils() {}
 

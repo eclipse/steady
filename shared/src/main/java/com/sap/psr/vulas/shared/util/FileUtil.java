@@ -55,7 +55,7 @@ import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
  */
 public class FileUtil {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(FileUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * Returns the file extension of the given {@link File} or null if the file does not have an extension.

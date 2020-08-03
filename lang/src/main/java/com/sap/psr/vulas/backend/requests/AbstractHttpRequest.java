@@ -40,7 +40,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public abstract class AbstractHttpRequest implements HttpRequest {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(AbstractHttpRequest.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	protected long ms = -1;
 

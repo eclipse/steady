@@ -46,7 +46,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public abstract class AbstractReachGoal extends AbstractAppGoal {
 
-    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(AbstractReachGoal.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
     private Set<Path> preparedDepClasspath = new HashSet<Path>();
 

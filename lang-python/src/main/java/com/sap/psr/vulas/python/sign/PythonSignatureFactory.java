@@ -44,7 +44,7 @@ import com.sap.psr.vulas.sign.SignatureFactory;
  */
 public class PythonSignatureFactory implements SignatureFactory {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(PythonSignatureFactory.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * {@inheritDoc}

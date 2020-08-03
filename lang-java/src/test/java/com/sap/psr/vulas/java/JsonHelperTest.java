@@ -35,7 +35,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
 
 public class JsonHelperTest {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JsonHelperTest.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * Analyzes a given JAR twice and checks whether the produced JSON is equal.

@@ -59,7 +59,7 @@ import javassist.NotFoundException;
  */
 public class WarAnalyzer extends JarAnalyzer {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(WarAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static final String INCL_SPACE = "vulas.core.instr.static.inclSpace";
 	private static final String INCL_BACKEND_URL = "vulas.core.instr.static.inclBackendUrl";

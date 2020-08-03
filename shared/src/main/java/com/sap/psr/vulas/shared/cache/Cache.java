@@ -35,7 +35,7 @@ import com.sap.psr.vulas.shared.util.StopWatch;
  */
 public class Cache<S, T> {
 	
-	private static Logger log = org.apache.logging.log4j.LogManager.getLogger(Cache.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private long refreshMilli = -1;
 	private int maxSize = -1;

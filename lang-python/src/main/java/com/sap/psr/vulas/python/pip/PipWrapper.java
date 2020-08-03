@@ -60,7 +60,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class PipWrapper {
 
-	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger(PipWrapper.class);
+	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	static final Pattern DOWNLOAD_PATTERN = Pattern.compile("^\\s*Downloading\\s*(http\\S*).*$");
 

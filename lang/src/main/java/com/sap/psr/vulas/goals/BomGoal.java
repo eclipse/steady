@@ -48,7 +48,7 @@ import com.sap.psr.vulas.tasks.BomTask;
  */
 public class BomGoal extends AbstractAppGoal {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(BomGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * <p>Constructor for BomGoal.</p>

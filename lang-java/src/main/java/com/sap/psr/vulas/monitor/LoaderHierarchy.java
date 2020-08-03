@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class LoaderHierarchy {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(LoaderHierarchy.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private Map<ClassLoader, Loader> loaderMap = new HashMap<ClassLoader, Loader>();
 	

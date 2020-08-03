@@ -32,7 +32,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class ReleaseTree {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ReleaseTree.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	ReleaseTree maintenance;
 	ReleaseTree build;

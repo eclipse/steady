@@ -34,7 +34,7 @@ public enum Scope {
 	COMPILE, PROVIDED, RUNTIME, TEST, SYSTEM, IMPORT;
 
 	/** Constant <code>log</code> */
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(Scope.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	/**
 	 * <p>fromStringArray.</p>

@@ -68,7 +68,7 @@ import com.sap.psr.vulas.vcs.RepoMismatchException;
  */
 public class PatchAnalyzer {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(PatchAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private String id = Double.toString(Math.random());
 	private String bugid = null;

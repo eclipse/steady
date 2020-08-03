@@ -63,7 +63,7 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  */
 public class BasicHttpRequest extends AbstractHttpRequest {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(BasicHttpRequest.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static final long serialVersionUID = 1L;
 

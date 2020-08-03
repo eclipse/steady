@@ -64,7 +64,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class WalaCallgraphConstructor implements ICallgraphConstructor {
 
-    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(WalaCallgraphConstructor.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
     /** Constant <code>FRAMEWORK="wala"</code> */
     public static final String FRAMEWORK = "wala";
 

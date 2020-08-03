@@ -37,7 +37,7 @@ import com.sap.psr.vulas.shared.json.model.Space;
  */
 public class SpaceNewGoal extends AbstractSpaceGoal {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(SpaceNewGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private Space createdSpace = null;
 

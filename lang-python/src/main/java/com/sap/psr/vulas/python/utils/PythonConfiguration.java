@@ -52,7 +52,7 @@ import com.sap.psr.vulas.sign.SignatureFactory;
  */
 public class PythonConfiguration {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(PythonConfiguration.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/** Constant <code>PY_BOM_IGNORE_PACKS="vulas.core.bom.python.ignorePacks"</code> */
 	public final static String PY_BOM_IGNORE_PACKS = "vulas.core.bom.python.ignorePacks";

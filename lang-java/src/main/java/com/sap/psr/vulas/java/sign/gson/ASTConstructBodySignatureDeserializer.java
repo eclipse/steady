@@ -45,7 +45,7 @@ import org.apache.logging.log4j.Logger;
  *
  */
 public class ASTConstructBodySignatureDeserializer extends StdDeserializer<ASTConstructBodySignature> {
-private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ASTConstructBodySignatureDeserializer.class);
+private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	/**
 	 * <p>Constructor for ASTConstructBodySignatureDeserializer.</p>
 	 */

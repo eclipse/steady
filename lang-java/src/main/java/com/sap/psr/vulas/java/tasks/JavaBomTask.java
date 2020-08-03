@@ -59,7 +59,7 @@ import com.sap.psr.vulas.tasks.AbstractBomTask;
  */
 public class JavaBomTask extends AbstractBomTask {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JavaBomTask.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static final String[] EXT_FILTER = new String[] { "jar", "war", "class", "java", "aar" };
 

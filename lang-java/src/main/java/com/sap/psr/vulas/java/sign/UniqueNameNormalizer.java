@@ -45,7 +45,7 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
  */
 public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(UniqueNameNormalizer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static final Pattern CONSTANT_PATTERN = Pattern.compile("([0-9a-zA-Z_\\.]+)\\.([0-9A-Z_]+)");
 

@@ -65,7 +65,7 @@ import com.sap.psr.vulas.vcs.RepoMismatchException;
 
 public class SvnClient implements IVCSClient {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(SvnClient.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static final String TYPE = "SVN";
 

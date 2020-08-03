@@ -50,7 +50,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  */
 public class CheckBytecodeGoal extends AbstractAppGoal {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CheckBytecodeGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * <p>

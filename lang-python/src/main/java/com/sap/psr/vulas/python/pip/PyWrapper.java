@@ -38,7 +38,7 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  */
 public class PyWrapper {
 	
-	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger(PyWrapper.class);
+	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private Path pathToPython = null;
 	

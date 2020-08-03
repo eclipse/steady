@@ -50,7 +50,7 @@ import com.sap.psr.vulas.shared.json.JsonBuilder;
  */
 public abstract class JavaId extends ConstructId {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JavaId.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/** Supported Java programming constructs. */
 	public static enum Type { PACKAGE, CLASS, ENUM, INTERFACE, NESTED_CLASS, CONSTRUCTOR, METHOD, CLASSINIT };

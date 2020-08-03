@@ -54,7 +54,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class BytecodeAnalyzer {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(BytecodeAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	String digest;
 

@@ -39,7 +39,7 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  */
 public class ProcessWrapper implements Runnable {
 	
-	private static Logger log = org.apache.logging.log4j.LogManager.getLogger(ProcessWrapper.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static final Pattern ALLOWED = Pattern.compile("[\\.\\-\\w=]+");
 	

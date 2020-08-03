@@ -34,7 +34,7 @@ public enum VulnDepOrigin {
 	CC, BUNDLEDCC, AFFLIBID, BUNDLEDAFFLIBID;
 
 	/** Constant <code>log</code> */
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(VulnDepOrigin.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	/**
 	 * <p>fromStringArray.</p>

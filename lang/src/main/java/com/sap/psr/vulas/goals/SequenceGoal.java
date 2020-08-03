@@ -37,7 +37,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class SequenceGoal extends AbstractAppGoal {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(SequenceGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private List<AbstractGoal> sequence = new ArrayList<AbstractGoal>();
 	

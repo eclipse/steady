@@ -47,7 +47,7 @@ import java.util.*;
  */
 public class SootCallgraphConstructor implements ICallgraphConstructor {
 
-    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(SootCallgraphConstructor.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
     /** Constant <code>FRAMEWORK="soot"</code> */
     public static final String FRAMEWORK = "soot";

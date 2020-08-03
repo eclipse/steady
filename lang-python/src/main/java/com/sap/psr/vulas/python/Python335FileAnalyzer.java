@@ -59,7 +59,7 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  */
 public class Python335FileAnalyzer extends Python335BaseListener implements FileAnalyzer {  
 
-	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger(Python335FileAnalyzer.class);
+	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	protected Map<ConstructId, Construct> constructs = null;
 

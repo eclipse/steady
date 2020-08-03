@@ -44,7 +44,7 @@ import com.sap.psr.vulas.sign.SignatureChange;
 
 public class ASTDeserializeSignComparatorTest {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ASTDeserializeSignComparatorTest.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	final Gson gson = GsonHelper.getCustomGsonBuilder().create();
 

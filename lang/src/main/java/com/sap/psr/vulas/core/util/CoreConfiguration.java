@@ -41,7 +41,7 @@ import com.sap.psr.vulas.sign.SignatureFactory;
  */
 public class CoreConfiguration {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CoreConfiguration.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	// Goal context
 	/** Constant <code>TENANT_TOKEN="vulas.core.tenant.token"</code> */

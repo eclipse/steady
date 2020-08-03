@@ -34,7 +34,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  */
 public class JsonWriter<T> {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JsonWriter.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	/**
 	 * <p>write.</p>

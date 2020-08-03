@@ -31,7 +31,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class GoalExecutor {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(GoalExecutor.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static GoalExecutor instance = null;
 	

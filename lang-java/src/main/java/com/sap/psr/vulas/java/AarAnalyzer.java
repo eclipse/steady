@@ -36,7 +36,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  */
 public class AarAnalyzer extends JarAnalyzer {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(AarAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static final String CLASSES_JAR = "classes.jar";
 	

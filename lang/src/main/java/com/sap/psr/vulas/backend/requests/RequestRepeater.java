@@ -30,7 +30,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class RequestRepeater {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(RequestRepeater.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private long failCount = 0;
 	private long max = 50;

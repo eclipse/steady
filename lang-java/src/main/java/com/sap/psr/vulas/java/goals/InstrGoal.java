@@ -45,7 +45,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class InstrGoal extends AbstractAppGoal {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(InstrGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private Path libPath = null;
 

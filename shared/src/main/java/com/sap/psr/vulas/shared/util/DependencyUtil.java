@@ -38,7 +38,7 @@ import com.sap.psr.vulas.shared.json.model.Library;
  */
 public class DependencyUtil {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(DependencyUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	/**
 	 * Returns a set of dependencies such that every {@link Dependency} points to a different {@link Library}.

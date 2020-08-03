@@ -49,7 +49,7 @@ import com.sap.psr.vulas.java.sign.ASTSignatureChange;
  */
 public class ByteCodeComparator implements Runnable{ 
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ByteCodeComparator.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	
 	private final ArtifactResult2 ar;

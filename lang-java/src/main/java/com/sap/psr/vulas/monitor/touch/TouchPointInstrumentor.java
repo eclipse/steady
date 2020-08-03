@@ -41,7 +41,7 @@ import javassist.CtBehavior;
  */
 public class TouchPointInstrumentor extends AbstractInstrumentor {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(TouchPointInstrumentor.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/** {@inheritDoc} */
 	public void instrument(StringBuffer _code, JavaId _jid, CtBehavior _behavior, ClassVisitor _cv) throws CannotCompileException {

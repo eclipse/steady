@@ -33,7 +33,7 @@ import com.sap.psr.vulas.shared.json.model.Application;
  */
 public class CleanGoal extends AbstractAppGoal {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CleanGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * <p>Constructor for CleanGoal.</p>

@@ -39,7 +39,7 @@ import com.sap.psr.vulas.shared.util.StopWatch;
  */
 public class CallgraphReachableSearch implements Runnable {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CallgraphReachableSearch.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private Callgraph graph = null;
 

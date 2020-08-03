@@ -39,7 +39,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Artifact implements Serializable,Comparable<Object> {
 	
-	private static Logger log = org.apache.logging.log4j.LogManager.getLogger(Artifact.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	final static Pattern VERSION_PATTERN = Pattern.compile("([\\d\\.]*)(.*)", Pattern.DOTALL);
 	

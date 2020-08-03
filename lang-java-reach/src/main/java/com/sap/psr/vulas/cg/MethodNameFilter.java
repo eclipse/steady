@@ -41,7 +41,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class MethodNameFilter {
 
-	private static Logger log = org.apache.logging.log4j.LogManager.getLogger(MethodNameFilter.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static MethodNameFilter instance = null;
 	

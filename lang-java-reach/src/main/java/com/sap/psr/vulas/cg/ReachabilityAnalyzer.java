@@ -67,7 +67,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class ReachabilityAnalyzer implements Runnable {
 
-    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ReachabilityAnalyzer.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
     private static int THREAD_COUNT = 0;
 

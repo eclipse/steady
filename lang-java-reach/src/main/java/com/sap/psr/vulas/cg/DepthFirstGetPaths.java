@@ -36,7 +36,7 @@ import com.sap.psr.vulas.shared.json.model.ConstructId;
  */
 public class DepthFirstGetPaths extends AbstractGetPaths {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(DepthFirstGetPaths.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 			
 	private long start_millis = System.currentTimeMillis(), end_millis = System.currentTimeMillis();	
 	

@@ -35,7 +35,7 @@ import com.sap.psr.vulas.shared.json.model.ConstructId;
  */
 public class ConstructIdUtil {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ConstructIdUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	/**
 	 * <p>filterWithRegex.</p>

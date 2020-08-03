@@ -47,7 +47,7 @@ import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
  */
 public class DirUtil {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(DirUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * Returns true if the given directory contains a file with the given name, false otherwise.

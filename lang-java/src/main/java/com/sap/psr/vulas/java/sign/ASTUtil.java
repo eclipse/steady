@@ -40,7 +40,7 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
  */
 public class ASTUtil {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ASTUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	public static enum NODE_COMPARE_MODE { ENTITY_TYPE, VALUE };
 

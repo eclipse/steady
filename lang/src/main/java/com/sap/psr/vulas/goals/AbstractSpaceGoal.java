@@ -37,7 +37,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public abstract class AbstractSpaceGoal extends AbstractGoal {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(AbstractSpaceGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * <p>Constructor for AbstractSpaceGoal.</p>

@@ -41,7 +41,7 @@ public class LibraryId implements Serializable, Comparable<LibraryId> {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Logger log = org.apache.logging.log4j.LogManager.getLogger(LibraryId.class);	
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();	
 
 	@JsonIgnore
 	private Long id;

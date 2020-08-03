@@ -90,7 +90,7 @@ public class VulasConfiguration {
 	private static Logger log = null;
 	private static final synchronized Logger getLog() {
 		if(VulasConfiguration.log==null)
-			VulasConfiguration.log = org.apache.logging.log4j.LogManager.getLogger(VulasConfiguration.class);
+			VulasConfiguration.log = org.apache.logging.log4j.LogManager.getLogger();
 		return VulasConfiguration.log;
 	}
 

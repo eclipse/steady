@@ -36,7 +36,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  */
 public class FileAnalyzerFactory {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(FileAnalyzerFactory.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static String[] supportedFileExtensions = null;
 

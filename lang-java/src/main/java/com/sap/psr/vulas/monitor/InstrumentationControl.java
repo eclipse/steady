@@ -62,7 +62,7 @@ public class InstrumentationControl {
 
 	public static enum InstrumentationMetrics { classesTotal, classesInstrumentedSuccess, classesInstrumentedFailure, classesAlreadyInstrumented };
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(InstrumentationControl.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * All instances of the class, used to produce overall instrumentation statistics.

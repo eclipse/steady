@@ -47,7 +47,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class PE_Run implements Runnable {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(PE_Run.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * <p>run.</p>

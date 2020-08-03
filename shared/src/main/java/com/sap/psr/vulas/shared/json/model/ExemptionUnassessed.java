@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
 
 public class ExemptionUnassessed implements IExemption {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ExemptionUnassessed.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * Configuration setting <code>REP_EXCL_UNASS="vulas.report.exceptionExcludeUnassessed"</code>.

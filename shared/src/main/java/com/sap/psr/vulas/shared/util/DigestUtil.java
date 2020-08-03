@@ -34,7 +34,7 @@ import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
  */
 public class DigestUtil {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(DigestUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 	

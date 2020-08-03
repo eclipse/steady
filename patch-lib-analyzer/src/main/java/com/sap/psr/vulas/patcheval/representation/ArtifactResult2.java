@@ -35,7 +35,7 @@ import com.sap.psr.vulas.shared.json.model.Version;
      * class containing the results on a single archive.
      */
     public class ArtifactResult2 implements Comparable<ArtifactResult2> {
-    	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ArtifactResult2.class);
+    	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
     
     String group, artifact;
     

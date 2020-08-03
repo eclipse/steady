@@ -59,7 +59,7 @@ import com.sap.psr.vulas.tasks.AbstractBomTask;
  */
 public class PythonBomTask extends AbstractBomTask {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(PythonBomTask.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static final String[] EXT_FILTER = new String[] { "whl", "egg", "py" };
 

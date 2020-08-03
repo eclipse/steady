@@ -61,7 +61,7 @@ import javassist.bytecode.ClassFile;
  */
 public class JavaSignatureFactory implements SignatureFactory {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JavaSignatureFactory.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * Cache of contructs, so that the decompilation and parsing must not be done over and over again.

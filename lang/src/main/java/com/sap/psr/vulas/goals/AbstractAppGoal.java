@@ -43,7 +43,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  */
 public abstract class AbstractAppGoal extends AbstractGoal {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(AbstractAppGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	/**
 	 * Maps file system paths to {@link Dependency}s.

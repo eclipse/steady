@@ -41,7 +41,7 @@ public class AbstractFileSearch extends SimpleFileVisitor<Path> {
 	private static Logger log = null;
 	private static final Logger getLog() {
 		if(AbstractFileSearch.log==null)
-			AbstractFileSearch.log = org.apache.logging.log4j.LogManager.getLogger(AbstractFileSearch.class);
+			AbstractFileSearch.log = org.apache.logging.log4j.LogManager.getLogger();
 		return AbstractFileSearch.log;
 	}
 	

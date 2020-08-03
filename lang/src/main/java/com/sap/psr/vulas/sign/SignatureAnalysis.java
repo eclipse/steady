@@ -35,7 +35,7 @@ import com.sap.psr.vulas.shared.util.StringList;
  * <p>SignatureAnalysis class.</p>
  */
 public class SignatureAnalysis {
-    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(SignatureAnalysis.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
     private Application app;
     
     private StringList bugs;

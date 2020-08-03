@@ -34,7 +34,7 @@ import com.sap.psr.vulas.shared.util.DigestUtil;
  */
 public class Construct {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(Construct.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	private ConstructId id = null;
 	private String content, contentDigest = null;
 	

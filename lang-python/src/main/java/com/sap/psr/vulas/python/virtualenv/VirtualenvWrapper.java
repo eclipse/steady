@@ -52,7 +52,7 @@ public class VirtualenvWrapper {
 	
 	private static final boolean IS_WIN = System.getProperty("os.name").contains("Windows");
 
-	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger(VirtualenvWrapper.class);
+	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private Path pathToVirtualenvExecutable = null;
 
@@ -223,7 +223,7 @@ public class VirtualenvWrapper {
 	
 	private static class CopyFileVisitor extends SimpleFileVisitor<Path> {
 		
-		private final static Logger log = org.apache.logging.log4j.LogManager.getLogger(CopyFileVisitor.class);
+		private final static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 		
 		private Path src = null;
 		private Path tgt = null;

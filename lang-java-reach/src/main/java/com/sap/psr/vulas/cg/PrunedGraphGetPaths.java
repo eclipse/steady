@@ -38,7 +38,7 @@ import com.sap.psr.vulas.shared.json.model.ConstructId;
  */
 public class PrunedGraphGetPaths extends AbstractGetPaths {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(PrunedGraphGetPaths.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private long start_millis = System.currentTimeMillis(), end_millis = System.currentTimeMillis();	
 

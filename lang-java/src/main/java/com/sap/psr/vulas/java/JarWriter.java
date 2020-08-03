@@ -60,7 +60,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class JarWriter {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JarWriter.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	public final SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM yyyy HH:mm:ss");
 

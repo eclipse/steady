@@ -63,7 +63,7 @@ public class TouchPointCollector {
 	private static Logger log = null;
 	private static final Logger getLog() {
 		if(TouchPointCollector.log==null)
-			TouchPointCollector.log = org.apache.logging.log4j.LogManager.getLogger(TouchPointCollector.class);
+			TouchPointCollector.log = org.apache.logging.log4j.LogManager.getLogger();
 		return TouchPointCollector.log;
 	}
 

@@ -54,7 +54,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class ArchiveAnalysisManager {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ArchiveAnalysisManager.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private ExecutorService pool;
 	

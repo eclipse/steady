@@ -61,7 +61,7 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  */
 public class PythonArchiveAnalyzer implements FileAnalyzer {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(PythonArchiveAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	Map<ConstructId, Construct> constructs = new TreeMap<ConstructId, Construct>();
 

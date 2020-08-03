@@ -41,7 +41,7 @@ import com.sap.psr.vulas.goals.GoalContext;
  */
 public class ConditionalHttpRequest extends BasicHttpRequest {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ConditionalHttpRequest.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private List<ResponseCondition> conditions = new LinkedList<ResponseCondition>();
 

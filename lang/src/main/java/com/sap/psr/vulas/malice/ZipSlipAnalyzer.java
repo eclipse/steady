@@ -50,7 +50,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class ZipSlipAnalyzer implements MaliciousnessAnalyzer {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ZipSlipAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private Path destinationPath = VulasConfiguration.getGlobal().getTmpDir().toAbsolutePath().resolve(StringUtil.getRandonString(10));
 

@@ -56,7 +56,7 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.TokenBa
 public class ASTSignatureComparator implements SignatureComparator {
 
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ASTSignatureComparator.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	//If a construct under test contains 50% of the fixes, it is said to contain the Security Fixes
 	// TODO : (A more robust scheme than a simple percentage might be better)

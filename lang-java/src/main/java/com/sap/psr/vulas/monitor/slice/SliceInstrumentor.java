@@ -53,7 +53,7 @@ public class SliceInstrumentor extends AbstractInstrumentor {
 
 	// ====================================== STATIC MEMBERS
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(SliceInstrumentor.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	// ====================================== INSTANCE MEMBERS
 

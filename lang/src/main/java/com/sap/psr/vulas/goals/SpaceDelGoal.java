@@ -32,7 +32,7 @@ import com.sap.psr.vulas.shared.json.model.Space;
  */
 public class SpaceDelGoal extends AbstractSpaceGoal {
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(SpaceDelGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * <p>Constructor for SpaceDelGoal.</p>

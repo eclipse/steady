@@ -44,7 +44,7 @@ import com.sap.psr.vulas.shared.json.model.Space;
  */
 public class VulasCli {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(VulasCli.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static GoalType goalType = null;
 

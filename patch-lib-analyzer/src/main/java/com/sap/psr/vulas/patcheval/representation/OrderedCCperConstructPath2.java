@@ -40,7 +40,7 @@ import com.sap.psr.vulas.shared.json.model.ConstructId;
  */
 public class OrderedCCperConstructPath2{
 	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(OrderedCCperConstructPath2.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
     private ConstructId constructId;
     private String repoPath;

@@ -65,7 +65,7 @@ import com.sap.psr.vulas.sign.SignatureFactory;
  */
 public class ASTSignatureComparatorTest {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ASTSignatureComparatorTest.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	Map<Class<?>,StdDeserializer<?>> custom_deserializers = new HashMap<Class<?>,StdDeserializer<?>>();
 

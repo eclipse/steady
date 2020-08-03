@@ -50,7 +50,7 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  */
 public class PythonFileAnalyzer implements FileAnalyzer {
 
-	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger(PythonFileAnalyzer.class);
+	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private FileAnalyzer analyzer = null;
 
