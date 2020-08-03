@@ -30,8 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.cg.ReachabilityConfiguration;
 import com.sap.psr.vulas.shared.json.model.Application;
@@ -46,7 +46,7 @@ public class CallgraphConstructorFactory {
     /** Constant <code>classLoaderToFindPlugins</code> */
     public static ClassLoader classLoaderToFindPlugins = Thread.currentThread().getContextClassLoader();
 
-    private static final Log log = LogFactory.getLog(CallgraphConstructorFactory.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CallgraphConstructorFactory.class);
 
     /**
      * Build a call graph constructor, searching the service registry for a service implementation that registers itself using the given string

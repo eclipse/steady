@@ -25,8 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Dependency;
@@ -38,7 +38,7 @@ import com.sap.psr.vulas.shared.json.model.Library;
  */
 public class DependencyUtil {
 
-	private static final Log log = LogFactory.getLog(DependencyUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(DependencyUtil.class);
 	
 	/**
 	 * Returns a set of dependencies such that every {@link Dependency} points to a different {@link Library}.

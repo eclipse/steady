@@ -24,8 +24,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.util.FileSearch;
@@ -35,7 +35,7 @@ import com.sap.psr.vulas.shared.util.StringList;
  * <p>SignatureAnalysis class.</p>
  */
 public class SignatureAnalysis {
-    private static final Log log = LogFactory.getLog(SignatureAnalysis.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(SignatureAnalysis.class);
     private Application app;
     
     private StringList bugs;

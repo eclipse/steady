@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.shared.enums.GoalType;
@@ -37,7 +37,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class SequenceGoal extends AbstractAppGoal {
 
-	private static final Log log = LogFactory.getLog(SequenceGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(SequenceGoal.class);
 
 	private List<AbstractGoal> sequence = new ArrayList<AbstractGoal>();
 	

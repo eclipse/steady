@@ -22,8 +22,8 @@ package com.sap.psr.vulas.patcheval.representation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.enums.ConstructChangeType;
 import com.sap.psr.vulas.shared.json.model.AffectedConstructChange;
@@ -35,7 +35,7 @@ import com.sap.psr.vulas.shared.json.model.Version;
      * class containing the results on a single archive.
      */
     public class ArtifactResult2 implements Comparable<ArtifactResult2> {
-    	private static final Log log = LogFactory.getLog(ArtifactResult2.class);
+    	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ArtifactResult2.class);
     
     String group, artifact;
     

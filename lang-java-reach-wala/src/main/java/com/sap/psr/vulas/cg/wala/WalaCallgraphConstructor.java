@@ -26,8 +26,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -64,7 +64,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class WalaCallgraphConstructor implements ICallgraphConstructor {
 
-    private static final Log log = LogFactory.getLog(WalaCallgraphConstructor.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(WalaCallgraphConstructor.class);
     /** Constant <code>FRAMEWORK="wala"</code> */
     public static final String FRAMEWORK = "wala";
 

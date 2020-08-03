@@ -46,8 +46,8 @@ import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.shared.util.DigestUtil;
@@ -60,7 +60,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class JarWriter {
 
-	private static final Log log = LogFactory.getLog(JarWriter.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JarWriter.class);
 
 	public final SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM yyyy HH:mm:ss");
 

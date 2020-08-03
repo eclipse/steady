@@ -56,8 +56,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
 import com.sap.psr.vulas.shared.connectivity.Service;
 import com.sap.psr.vulas.shared.connectivity.ServiceConnectionException;
@@ -88,10 +87,10 @@ import com.sap.psr.vulas.shared.connectivity.ServiceConnectionException;
  */
 public class VulasConfiguration {
 
-	private static Log log = null;
-	private static final synchronized Log getLog() {
+	private static Logger log = null;
+	private static final synchronized Logger getLog() {
 		if(VulasConfiguration.log==null)
-			VulasConfiguration.log = LogFactory.getLog(VulasConfiguration.class);
+			VulasConfiguration.log = org.apache.logging.log4j.LogManager.getLogger(VulasConfiguration.class);
 		return VulasConfiguration.log;
 	}
 

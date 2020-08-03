@@ -30,8 +30,7 @@ import java.util.TreeSet;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <p>AbstractFileSearch class.</p>
@@ -39,10 +38,10 @@ import org.apache.commons.logging.LogFactory;
  */
 public class AbstractFileSearch extends SimpleFileVisitor<Path> {
 	
-	private static Log log = null;
-	private static final Log getLog() {
+	private static Logger log = null;
+	private static final Logger getLog() {
 		if(AbstractFileSearch.log==null)
-			AbstractFileSearch.log = LogFactory.getLog(AbstractFileSearch.class);
+			AbstractFileSearch.log = org.apache.logging.log4j.LogManager.getLogger(AbstractFileSearch.class);
 		return AbstractFileSearch.log;
 	}
 	

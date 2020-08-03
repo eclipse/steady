@@ -23,8 +23,8 @@ import java.util.ServiceLoader;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
@@ -41,7 +41,7 @@ import com.sap.psr.vulas.sign.SignatureFactory;
  */
 public class CoreConfiguration {
 
-	private static final Log log = LogFactory.getLog(CoreConfiguration.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CoreConfiguration.class);
 
 	// Goal context
 	/** Constant <code>TENANT_TOKEN="vulas.core.tenant.token"</code> */

@@ -24,8 +24,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.jar.JarFile;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.shared.util.FileUtil;
@@ -36,7 +36,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  */
 public class AarAnalyzer extends JarAnalyzer {
 
-	private static final Log log = LogFactory.getLog(AarAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(AarAnalyzer.class);
 	
 	private static final String CLASSES_JAR = "classes.jar";
 	

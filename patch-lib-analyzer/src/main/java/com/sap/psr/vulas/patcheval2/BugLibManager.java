@@ -42,8 +42,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -81,7 +81,7 @@ public class BugLibManager {
 	
 
 	
-	private static final Log log = LogFactory.getLog(BugLibManager.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(BugLibManager.class);
 
 	// used to serialize cc
 	Bug bugChangeList = null; 

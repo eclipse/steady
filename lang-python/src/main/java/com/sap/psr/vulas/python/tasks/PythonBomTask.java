@@ -26,8 +26,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalysisException;
@@ -59,7 +59,7 @@ import com.sap.psr.vulas.tasks.AbstractBomTask;
  */
 public class PythonBomTask extends AbstractBomTask {
 
-	private static final Log log = LogFactory.getLog(PythonBomTask.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(PythonBomTask.class);
 
 	private static final String[] EXT_FILTER = new String[] { "whl", "egg", "py" };
 

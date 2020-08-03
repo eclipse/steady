@@ -21,8 +21,8 @@ package com.sap.psr.vulas.shared.enums;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.json.model.Application;
 
@@ -34,7 +34,7 @@ public enum ExportFormat {
 	CSV, JSON;
 
 	/** Constant <code>log</code> */
-	private static Log log = LogFactory.getLog(ExportFormat.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger(ExportFormat.class);
 	
 	/** Constant <code>TXT_CSV="text/csv;charset=UTF-8"</code> */
 	public static final String TXT_CSV   = "text/csv;charset=UTF-8";

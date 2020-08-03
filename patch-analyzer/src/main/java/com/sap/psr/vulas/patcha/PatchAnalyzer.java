@@ -38,8 +38,8 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.ConstructChange;
@@ -68,7 +68,7 @@ import com.sap.psr.vulas.vcs.RepoMismatchException;
  */
 public class PatchAnalyzer {
 
-	private static final Log log = LogFactory.getLog(PatchAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(PatchAnalyzer.class);
 
 	private String id = Double.toString(Math.random());
 	private String bugid = null;

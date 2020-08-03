@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * This class holds all artifact results for the same minor release, e.g., possible roots are 1.0.0, 1.1.0,.. ,2.3.0,..
@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ReleaseTree {
 	
-	private static final Log log = LogFactory.getLog(ReleaseTree.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ReleaseTree.class);
 	
 	ReleaseTree maintenance;
 	ReleaseTree build;

@@ -35,8 +35,8 @@ import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNDirEntry;
 import org.tmatesoft.svn.core.SVNException;
@@ -65,7 +65,7 @@ import com.sap.psr.vulas.vcs.RepoMismatchException;
 
 public class SvnClient implements IVCSClient {
 
-	private static final Log log = LogFactory.getLog(SvnClient.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(SvnClient.class);
 
 	private static final String TYPE = "SVN";
 

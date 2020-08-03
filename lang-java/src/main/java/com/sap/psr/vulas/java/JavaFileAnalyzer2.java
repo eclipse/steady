@@ -46,8 +46,8 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.ConstructId;
@@ -66,7 +66,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  */
 public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAnalyzer {
 
-	private static final Log log = LogFactory.getLog(JavaFileAnalyzer2.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JavaFileAnalyzer2.class);
 
 	/**
 	 * All Java constructs found in the given Java file, created through visiting relevant nodes of the ANTLR parse tree.

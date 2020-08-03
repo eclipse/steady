@@ -21,8 +21,8 @@ package com.sap.psr.vulas.python.sign;
 
 import java.io.File;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.FileAnalysisException;
@@ -44,7 +44,7 @@ import com.sap.psr.vulas.sign.SignatureFactory;
  */
 public class PythonSignatureFactory implements SignatureFactory {
 
-	private static final Log log = LogFactory.getLog(PythonSignatureFactory.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(PythonSignatureFactory.class);
 
 	/**
 	 * {@inheritDoc}

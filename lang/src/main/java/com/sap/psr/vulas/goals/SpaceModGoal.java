@@ -19,8 +19,8 @@
  */
 package com.sap.psr.vulas.goals;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.shared.enums.GoalType;
@@ -32,7 +32,7 @@ import com.sap.psr.vulas.shared.json.model.Space;
  */
 public class SpaceModGoal extends AbstractSpaceGoal {
 
-	private static final Log log = LogFactory.getLog(SpaceModGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(SpaceModGoal.class);
 
 	/**
 	 * <p>Constructor for SpaceModGoal.</p>

@@ -36,8 +36,8 @@ import java.util.TreeSet;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -69,7 +69,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class Report {
 
-	private static final Log log = LogFactory.getLog(Report.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(Report.class);
 
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH:mm Z");
 

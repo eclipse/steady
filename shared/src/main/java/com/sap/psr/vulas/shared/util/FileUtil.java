@@ -44,8 +44,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.zip.ZipInputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 
@@ -55,7 +55,7 @@ import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
  */
 public class FileUtil {
 
-	private static final Log log = LogFactory.getLog(FileUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(FileUtil.class);
 
 	/**
 	 * Returns the file extension of the given {@link File} or null if the file does not have an extension.

@@ -29,8 +29,8 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
@@ -41,7 +41,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class Main {
 
-	private static final Log log = LogFactory.getLog(Main.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(Main.class);
 
 
 	/**

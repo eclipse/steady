@@ -27,8 +27,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.ConstructId;
@@ -46,7 +46,7 @@ import javassist.CtClass;
  */
 public class ClassFileAnalyzer implements FileAnalyzer {
 
-	private static final Log log = LogFactory.getLog(ClassFileAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ClassFileAnalyzer.class);
 
 	/** The file to be analyzed. */
 	private File file = null;

@@ -22,12 +22,12 @@ package com.sap.psr.vulas.shared.json.model;
 import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 public class ExemptionUnassessed implements IExemption {
 
-	private static final Log log = LogFactory.getLog(ExemptionUnassessed.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ExemptionUnassessed.class);
 
 	/**
 	 * Configuration setting <code>REP_EXCL_UNASS="vulas.report.exceptionExcludeUnassessed"</code>.

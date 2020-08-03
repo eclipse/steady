@@ -24,8 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.google.gson.Gson;
@@ -49,7 +49,7 @@ import com.sap.psr.vulas.java.sign.ASTSignatureChange;
  */
 public class ByteCodeComparator implements Runnable{ 
 
-	private static final Log log = LogFactory.getLog(ByteCodeComparator.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ByteCodeComparator.class);
 	
 	
 	private final ArtifactResult2 ar;

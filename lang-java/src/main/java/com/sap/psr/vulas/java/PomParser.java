@@ -22,8 +22,8 @@ package com.sap.psr.vulas.java;
 import java.util.Arrays;
 import java.util.Stack;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -35,7 +35,7 @@ import com.sap.psr.vulas.shared.json.model.LibraryId;
  */
 public class PomParser extends DefaultHandler {
 
-	private static final Log log = LogFactory.getLog(PomParser.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(PomParser.class);
 	
 	private static final String[] pg = new String[] {"project", "parent", "groupId"};
 	private static final String[] pa = new String[] {"project", "parent", "artifactId"};

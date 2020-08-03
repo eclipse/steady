@@ -22,8 +22,8 @@ package com.sap.psr.vulas.goals;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * <p>GoalExecutor class.</p>
@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class GoalExecutor {
 
-	private static final Log log = LogFactory.getLog(GoalExecutor.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(GoalExecutor.class);
 	
 	private static GoalExecutor instance = null;
 	

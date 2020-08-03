@@ -19,8 +19,8 @@
  */
 package com.sap.psr.vulas.shared.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * <p>ThreadUtil class.</p>
@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ThreadUtil {
 	
-	private static final Log log = LogFactory.getLog(ThreadUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ThreadUtil.class);
 
 	/** Constant <code>NO_OF_THREADS="vulas.core.noThreads"</code> */
 	public final static String NO_OF_THREADS = "vulas.core.noThreads";

@@ -31,15 +31,15 @@ import java.util.TreeSet;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * Searches for all files having a given extension below one or multiple directories.
  */
 public class FileSearch extends AbstractFileSearch {
 
-	private static final Log log = LogFactory.getLog(FileSearch.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(FileSearch.class);
 
 	private String[] suffixes = null;
 

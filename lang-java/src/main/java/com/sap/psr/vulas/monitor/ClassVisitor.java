@@ -33,8 +33,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
@@ -67,10 +66,10 @@ public class ClassVisitor {
 
 	// ====================================== STATIC MEMBERS
 
-	private static Log log = null;
-	private static final Log getLog() {
+	private static Logger log = null;
+	private static final Logger getLog() {
 		if(ClassVisitor.log==null)
-			ClassVisitor.log = LogFactory.getLog(ClassVisitor.class);
+			ClassVisitor.log = org.apache.logging.log4j.LogManager.getLogger(ClassVisitor.class);
 		return ClassVisitor.log;
 	}
 

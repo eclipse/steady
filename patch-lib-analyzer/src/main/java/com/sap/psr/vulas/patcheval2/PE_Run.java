@@ -26,8 +26,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.google.gson.Gson;
 import com.sap.psr.vulas.backend.BackendConnectionException;
@@ -47,7 +47,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class PE_Run implements Runnable {
 
-	private static final Log log = LogFactory.getLog(PE_Run.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(PE_Run.class);
 
 	/**
 	 * <p>run.</p>

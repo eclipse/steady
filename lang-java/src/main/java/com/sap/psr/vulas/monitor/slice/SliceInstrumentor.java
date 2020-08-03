@@ -28,8 +28,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.backend.BackendConnectionException;
@@ -53,7 +53,7 @@ public class SliceInstrumentor extends AbstractInstrumentor {
 
 	// ====================================== STATIC MEMBERS
 
-	private static final Log log = LogFactory.getLog(SliceInstrumentor.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(SliceInstrumentor.class);
 
 	// ====================================== INSTANCE MEMBERS
 

@@ -33,8 +33,8 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
@@ -54,7 +54,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class BytecodeAnalyzer {
 	
-	private static final Log log = LogFactory.getLog(BytecodeAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(BytecodeAnalyzer.class);
 	
 	String digest;
 

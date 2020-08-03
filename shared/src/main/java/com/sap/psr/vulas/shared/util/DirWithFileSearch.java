@@ -35,15 +35,15 @@ import java.util.regex.Pattern;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * Searches for all directories containing a file with a given name.
  */
 public class DirWithFileSearch extends AbstractFileSearch {
 
-	private static final Log log = LogFactory.getLog(DirWithFileSearch.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(DirWithFileSearch.class);
 
 	private String filename = null;
 

@@ -23,8 +23,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.github.packageurl.MalformedPackageURLException;
 import com.github.packageurl.PackageURL;
@@ -43,7 +43,7 @@ import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
  */
 public class ExemptionBug implements IExemption {
 	
-	private static final Log log = LogFactory.getLog(ExemptionBug.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ExemptionBug.class);
 	
 	private static final String ALL = "*";
 	

@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.util.StopWatch;
 
@@ -37,7 +37,7 @@ import com.sap.psr.vulas.shared.util.StopWatch;
  */
 public class CallgraphPathSearch implements Runnable {
 	
-	private static final Log log = LogFactory.getLog(CallgraphPathSearch.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CallgraphPathSearch.class);
 
 	private Callgraph graph = null;
 	

@@ -19,8 +19,8 @@
  */
 package com.sap.psr.vulas.goals;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
@@ -33,7 +33,7 @@ import com.sap.psr.vulas.shared.json.model.Application;
  */
 public class CleanGoal extends AbstractAppGoal {
 
-	private static final Log log = LogFactory.getLog(CleanGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CleanGoal.class);
 
 	/**
 	 * <p>Constructor for CleanGoal.</p>

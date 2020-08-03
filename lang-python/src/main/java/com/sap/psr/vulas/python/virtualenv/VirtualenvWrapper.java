@@ -30,8 +30,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.python.ProcessWrapperException;
 import com.sap.psr.vulas.python.pip.PipInstalledPackage;
@@ -52,7 +52,7 @@ public class VirtualenvWrapper {
 	
 	private static final boolean IS_WIN = System.getProperty("os.name").contains("Windows");
 
-	private final static Log log = LogFactory.getLog(VirtualenvWrapper.class);
+	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger(VirtualenvWrapper.class);
 
 	private Path pathToVirtualenvExecutable = null;
 
@@ -223,7 +223,7 @@ public class VirtualenvWrapper {
 	
 	private static class CopyFileVisitor extends SimpleFileVisitor<Path> {
 		
-		private final static Log log = LogFactory.getLog(CopyFileVisitor.class);
+		private final static Logger log = org.apache.logging.log4j.LogManager.getLogger(CopyFileVisitor.class);
 		
 		private Path src = null;
 		private Path tgt = null;

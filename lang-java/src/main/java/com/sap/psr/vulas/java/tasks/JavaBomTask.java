@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.DirAnalyzer;
@@ -59,7 +59,7 @@ import com.sap.psr.vulas.tasks.AbstractBomTask;
  */
 public class JavaBomTask extends AbstractBomTask {
 
-	private static final Log log = LogFactory.getLog(JavaBomTask.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JavaBomTask.class);
 	
 	private static final String[] EXT_FILTER = new String[] { "jar", "war", "class", "java", "aar" };
 

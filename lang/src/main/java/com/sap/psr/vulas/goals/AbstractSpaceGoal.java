@@ -23,8 +23,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.shared.enums.ExportConfiguration;
@@ -37,7 +37,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public abstract class AbstractSpaceGoal extends AbstractGoal {
 
-	private static final Log log = LogFactory.getLog(AbstractSpaceGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(AbstractSpaceGoal.class);
 
 	/**
 	 * <p>Constructor for AbstractSpaceGoal.</p>

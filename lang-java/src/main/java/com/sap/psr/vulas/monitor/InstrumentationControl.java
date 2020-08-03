@@ -30,8 +30,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
@@ -62,7 +62,7 @@ public class InstrumentationControl {
 
 	public static enum InstrumentationMetrics { classesTotal, classesInstrumentedSuccess, classesInstrumentedFailure, classesAlreadyInstrumented };
 
-	private static final Log log = LogFactory.getLog(InstrumentationControl.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(InstrumentationControl.class);
 
 	/**
 	 * All instances of the class, used to produce overall instrumentation statistics.

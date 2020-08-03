@@ -28,8 +28,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -44,7 +44,7 @@ import com.sap.psr.vulas.sign.SignatureChange;
 
 public class ASTDeserializeSignComparatorTest {
 
-	private static final Log log = LogFactory.getLog(ASTDeserializeSignComparatorTest.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ASTDeserializeSignComparatorTest.class);
 	
 	final Gson gson = GsonHelper.getCustomGsonBuilder().create();
 

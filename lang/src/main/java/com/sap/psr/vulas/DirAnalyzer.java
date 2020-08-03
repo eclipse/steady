@@ -31,8 +31,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.util.DirUtil;
 import com.sap.psr.vulas.shared.util.FileSearch;
@@ -45,7 +45,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class DirAnalyzer implements FileAnalyzer {
 
-	private static final Log log = LogFactory.getLog(DirAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(DirAnalyzer.class);
 
 	/** The dir to be analyzed. */
 	private File dir = null;

@@ -22,8 +22,8 @@ package com.sap.psr.vulas.shared.json.model;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 
 
@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Version implements Comparable<Version>{
 
-	private static Log log = LogFactory.getLog(Version.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger(Version.class);
 
 	final static Pattern VERSION_PATTERN = Pattern.compile("([\\d\\.]*)(.*)", Pattern.DOTALL);
 

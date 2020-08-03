@@ -25,8 +25,8 @@ import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
@@ -61,7 +61,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public abstract class AbstractGoal implements Runnable {
 
-	private static final Log log = LogFactory.getLog(AbstractGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(AbstractGoal.class);
 
 	/** Constant <code>CLASS_EXT</code> */
 	protected static final String[] CLASS_EXT   = new String[] {"CLASS"};

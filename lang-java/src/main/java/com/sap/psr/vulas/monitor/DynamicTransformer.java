@@ -28,8 +28,8 @@ import java.security.ProtectionDomain;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.java.JarAnalyzer;
@@ -56,7 +56,7 @@ public class DynamicTransformer implements ClassFileTransformer {
 
 	// ====================================== STATIC MEMBERS
 
-	private static final Log log = LogFactory.getLog(DynamicTransformer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(DynamicTransformer.class);
 
 	private static DynamicTransformer instance = null;
 

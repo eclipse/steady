@@ -24,8 +24,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.sap.psr.vulas.shared.enums.GoalClient;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
@@ -46,7 +46,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public abstract class AbstractReachGoal extends AbstractAppGoal {
 
-    private static final Log log = LogFactory.getLog(AbstractReachGoal.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(AbstractReachGoal.class);
 
     private Set<Path> preparedDepClasspath = new HashSet<Path>();
 

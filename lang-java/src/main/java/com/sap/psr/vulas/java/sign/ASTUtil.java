@@ -26,8 +26,8 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import ch.uzh.ifi.seal.changedistiller.model.classifiers.ChangeType;
 import ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType;
@@ -40,7 +40,7 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
  */
 public class ASTUtil {
 
-	private static final Log log = LogFactory.getLog(ASTUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ASTUtil.class);
 
 	public static enum NODE_COMPARE_MODE { ENTITY_TYPE, VALUE };
 

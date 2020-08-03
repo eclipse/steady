@@ -23,8 +23,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.eclipse.jdt.internal.compiler.CompilationResult;
 import org.eclipse.jdt.internal.compiler.DefaultErrorHandlingPolicies;
 import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
@@ -51,7 +51,7 @@ import ch.uzh.ifi.seal.changedistiller.ast.java.JavaCompilation;
  */
 public final class CompilationUtils {
 	
-	private static final Log log = LogFactory.getLog(CompilationUtils.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CompilationUtils.class);
 
 	private CompilationUtils() {}
 

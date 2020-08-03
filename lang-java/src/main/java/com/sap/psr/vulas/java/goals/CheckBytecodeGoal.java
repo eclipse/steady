@@ -25,8 +25,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.bytecode.BytecodeComparator;
@@ -50,7 +50,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  */
 public class CheckBytecodeGoal extends AbstractAppGoal {
 
-	private static final Log log = LogFactory.getLog(CheckBytecodeGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CheckBytecodeGoal.class);
 
 	/**
 	 * <p>

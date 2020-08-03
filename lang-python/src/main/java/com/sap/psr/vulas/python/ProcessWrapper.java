@@ -27,8 +27,8 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringUtil;
@@ -39,7 +39,7 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  */
 public class ProcessWrapper implements Runnable {
 	
-	private static Log log = LogFactory.getLog(ProcessWrapper.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger(ProcessWrapper.class);
 	
 	private static final Pattern ALLOWED = Pattern.compile("[\\.\\-\\w=]+");
 	

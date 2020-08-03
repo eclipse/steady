@@ -33,8 +33,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -65,7 +65,7 @@ import com.sap.psr.vulas.sign.SignatureFactory;
  */
 public class ASTSignatureComparatorTest {
 
-	private static final Log log = LogFactory.getLog(ASTSignatureComparatorTest.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ASTSignatureComparatorTest.class);
 
 	Map<Class<?>,StdDeserializer<?>> custom_deserializers = new HashMap<Class<?>,StdDeserializer<?>>();
 

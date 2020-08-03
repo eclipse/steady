@@ -30,8 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.FileAnalysisException;
@@ -61,7 +61,7 @@ import javassist.bytecode.ClassFile;
  */
 public class JavaSignatureFactory implements SignatureFactory {
 
-	private static final Log log = LogFactory.getLog(JavaSignatureFactory.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JavaSignatureFactory.class);
 
 	/**
 	 * Cache of contructs, so that the decompilation and parsing must not be done over and over again.

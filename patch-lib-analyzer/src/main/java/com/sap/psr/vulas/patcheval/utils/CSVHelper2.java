@@ -43,14 +43,14 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * Helper class for writing results to file.
  */
 public class CSVHelper2 {
-    private static final Log log = LogFactory.getLog(CSVHelper2.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CSVHelper2.class);
 
     static String COMMA_DELIMITER = ";";
     static String NEW_LINE_SEPARATOR = "\n";

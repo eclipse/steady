@@ -21,8 +21,8 @@ package com.sap.psr.vulas.cg;
 
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.enums.PathSource;
@@ -35,7 +35,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class A2CGoal extends AbstractReachGoal {
 	
-	private static final Log log = LogFactory.getLog(A2CGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(A2CGoal.class);
 
 	private Set<com.sap.psr.vulas.shared.json.model.ConstructId> entryPoints = null;
 	

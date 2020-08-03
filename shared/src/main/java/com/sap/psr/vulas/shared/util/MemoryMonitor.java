@@ -19,8 +19,8 @@
  */
 package com.sap.psr.vulas.shared.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * <p>MemoryMonitor class.</p>
@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MemoryMonitor implements Runnable {
 	
-	private static final Log log = LogFactory.getLog(MemoryMonitor.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(MemoryMonitor.class);
 	
 	private long memoSleepTimeMs = 2000;  // Every  2 seconds
 	private long memoPrintTimeMs = 60000; // Every 60 seconds

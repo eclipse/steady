@@ -37,8 +37,8 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.ConstructId;
@@ -58,7 +58,7 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  */
 public class Python3FileAnalyzer extends Python3BaseListener implements FileAnalyzer {  
 
-	private final static Log log = LogFactory.getLog(Python3FileAnalyzer.class);
+	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger(Python3FileAnalyzer.class);
 
 	protected Map<ConstructId, Construct> constructs = null;
 

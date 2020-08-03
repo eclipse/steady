@@ -22,8 +22,8 @@ package com.sap.psr.vulas.monitor.touch;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.goals.AbstractGoal;
 import com.sap.psr.vulas.java.JavaId;
@@ -41,7 +41,7 @@ import javassist.CtBehavior;
  */
 public class TouchPointInstrumentor extends AbstractInstrumentor {
 
-	private static final Log log = LogFactory.getLog(TouchPointInstrumentor.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(TouchPointInstrumentor.class);
 
 	/** {@inheritDoc} */
 	public void instrument(StringBuffer _code, JavaId _jid, CtBehavior _behavior, ClassVisitor _cv) throws CannotCompileException {

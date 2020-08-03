@@ -24,8 +24,7 @@ import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.AbstractGoal;
@@ -47,7 +46,7 @@ public class ExecutionMonitor {
 
 	private static ExecutionMonitor instance = null;
 
-	private static Log log = null;
+	private static Logger log = null;
 	
 	private static boolean PAUSE_COLLECTION = false;
 
@@ -105,9 +104,9 @@ public class ExecutionMonitor {
 		return ExecutionMonitor.instance;
 	}
 	
-	private static final Log getLog() {
+	private static final Logger getLog() {
 		if(ExecutionMonitor.log==null)
-			ExecutionMonitor.log = LogFactory.getLog(ExecutionMonitor.class);
+			ExecutionMonitor.log = org.apache.logging.log4j.LogManager.getLogger(ExecutionMonitor.class);
 		return ExecutionMonitor.log;
 	}
 	

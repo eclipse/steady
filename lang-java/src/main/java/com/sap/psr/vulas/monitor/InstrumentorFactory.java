@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
@@ -36,7 +36,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class InstrumentorFactory {
 
-	private static final Log log = LogFactory.getLog(InstrumentorFactory.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(InstrumentorFactory.class);
 
 	private static List<IInstrumentor> instrumentors = null;
 

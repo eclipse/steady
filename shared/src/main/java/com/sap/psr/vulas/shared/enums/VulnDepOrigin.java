@@ -22,8 +22,8 @@ package com.sap.psr.vulas.shared.enums;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 
 
@@ -34,7 +34,7 @@ public enum VulnDepOrigin {
 	CC, BUNDLEDCC, AFFLIBID, BUNDLEDAFFLIBID;
 
 	/** Constant <code>log</code> */
-	private static final Log log = LogFactory.getLog(VulnDepOrigin.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(VulnDepOrigin.class);
 	
 	/**
 	 * <p>fromStringArray.</p>
