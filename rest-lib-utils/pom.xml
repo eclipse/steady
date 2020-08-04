@@ -206,9 +206,9 @@
 			<version>1.2.17</version>
 		</dependency-->
 		<dependency>
-			<groupId>ant</groupId>
+			<groupId>org.apache.ant</groupId>
 			<artifactId>ant</artifactId>
-			<version>1.6.5</version>
+			<version>1.10.8</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
