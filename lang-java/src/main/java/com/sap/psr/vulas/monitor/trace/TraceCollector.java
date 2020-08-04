@@ -37,8 +37,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalysisException;
@@ -73,7 +73,7 @@ public class TraceCollector {
 
 	//private static boolean PAUSE_COLLECTION = false;
 
-	private static Log log = null;
+	private static Logger log = null;
 
 	// INSTANCE MEMBERS
 
@@ -160,9 +160,9 @@ public class TraceCollector {
 		return TraceCollector.instance;
 	}
 
-	private static final Log getLog() {
+	private static final Logger getLog() {
 		if(TraceCollector.log==null)
-			TraceCollector.log = LogFactory.getLog(TraceCollector.class);
+			TraceCollector.log = org.apache.logging.log4j.LogManager.getLogger();
 		return TraceCollector.log;
 	}
 

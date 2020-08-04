@@ -33,8 +33,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
@@ -58,7 +58,7 @@ import javassist.NotFoundException;
  */
 public class Callgraph {
 
-	private static final Log log = LogFactory.getLog(Callgraph.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private int nodeCount = 0;
 	private int edgeCount = 0;

@@ -27,8 +27,8 @@ package com.sap.psr.vulas.cg;
 import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.backend.BackendConnector;
@@ -41,7 +41,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class MethodNameFilter {
 
-	private static Log log = LogFactory.getLog(MethodNameFilter.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static MethodNameFilter instance = null;
 	

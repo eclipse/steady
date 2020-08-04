@@ -24,8 +24,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -39,7 +39,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Artifact implements Serializable,Comparable<Object> {
 	
-	private static Log log = LogFactory.getLog(Artifact.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	final static Pattern VERSION_PATTERN = Pattern.compile("([\\d\\.]*)(.*)", Pattern.DOTALL);
 	

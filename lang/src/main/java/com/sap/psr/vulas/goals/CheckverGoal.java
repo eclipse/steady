@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.util.StringList;
@@ -40,7 +40,7 @@ import com.sap.psr.vulas.sign.SignatureAnalysis;
  */
 public class CheckverGoal extends AbstractAppGoal {
 	
-	private static final Log log = LogFactory.getLog(CheckverGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private StringList bugsWhitelist = new StringList();
 

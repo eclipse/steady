@@ -43,8 +43,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
@@ -70,7 +70,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  * Given a bug, this class analyzes all versions (retrieved from Maven central) of JARs containing vulnerable code produces a csv file.
  */
 public class BugLibAnalyzer {
-    private static final Log log = LogFactory.getLog(BugLibAnalyzer.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
     
     private Bug bug;
     private ExecutorService executorService = null ;

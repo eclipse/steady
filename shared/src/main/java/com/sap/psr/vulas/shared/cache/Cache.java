@@ -23,8 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
 import com.sap.psr.vulas.shared.util.StopWatch;
 
@@ -36,7 +35,7 @@ import com.sap.psr.vulas.shared.util.StopWatch;
  */
 public class Cache<S, T> {
 	
-	private static final Log log = LogFactory.getLog(Cache.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private long refreshMilli = -1;
 	private int maxSize = -1;
@@ -89,6 +88,7 @@ public class Cache<S, T> {
 		this.reader = _reader;
 		this.refreshMilli = _refresh_min * MILLI_IN_MIN;
 		this.maxSize = _max_size;
+		
 	}
 	
 	/**

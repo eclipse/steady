@@ -25,8 +25,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.junit.Test;
 
 import com.sap.psr.vulas.FileAnalysisException;
@@ -35,7 +35,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
 
 public class JsonHelperTest {
 
-	private static final Log log = LogFactory.getLog(JsonHelperTest.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * Analyzes a given JAR twice and checks whether the produced JSON is equal.

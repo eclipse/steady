@@ -36,8 +36,8 @@ import java.util.regex.Pattern;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.apache.http.HttpStatus;
 
 import com.sap.psr.vulas.backend.requests.BasicHttpRequest;
@@ -77,7 +77,7 @@ import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
  */
 public class BackendConnector {
 
-	private static final Log log = LogFactory.getLog(BackendConnector.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/* Singleton instance. */
 	private static BackendConnector instance = null;

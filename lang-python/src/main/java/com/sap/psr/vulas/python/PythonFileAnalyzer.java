@@ -33,8 +33,8 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.ConstructId;
@@ -50,7 +50,7 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  */
 public class PythonFileAnalyzer implements FileAnalyzer {
 
-	private final static Log log = LogFactory.getLog(PythonFileAnalyzer.class);
+	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private FileAnalyzer analyzer = null;
 

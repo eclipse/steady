@@ -23,8 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.backend.BackendConnectionException;
@@ -42,10 +41,10 @@ import com.sap.psr.vulas.monitor.ClassVisitor;
  */
 public class ConstructIdUtil {
 
-	private static Log log = null;
-	private static final Log getLog() {
+	private static Logger log = null;
+	private static final Logger getLog() {
 		if(ConstructIdUtil.log==null)
-			ConstructIdUtil.log = LogFactory.getLog(ConstructIdUtil.class);
+			ConstructIdUtil.log = org.apache.logging.log4j.LogManager.getLogger();
 		return ConstructIdUtil.log;
 	}
 	

@@ -27,8 +27,8 @@ package com.sap.psr.vulas.patcheval.representation;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.enums.ConstructChangeType;
 import com.sap.psr.vulas.shared.json.model.ConstructChange;
@@ -40,7 +40,7 @@ import com.sap.psr.vulas.shared.json.model.ConstructId;
  */
 public class OrderedCCperConstructPath2{
 	
-	private static final Log log = LogFactory.getLog(OrderedCCperConstructPath2.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
     private ConstructId constructId;
     private String repoPath;

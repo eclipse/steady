@@ -35,8 +35,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -63,7 +63,7 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  */
 public class BasicHttpRequest extends AbstractHttpRequest {
 
-	private static final Log log = LogFactory.getLog(BasicHttpRequest.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static final long serialVersionUID = 1L;
 

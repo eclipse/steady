@@ -33,8 +33,8 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.util.DirUtil;
 import com.sap.psr.vulas.shared.util.StringUtil;
@@ -50,7 +50,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class ZipSlipAnalyzer implements MaliciousnessAnalyzer {
 
-	private static final Log log = LogFactory.getLog(ZipSlipAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private Path destinationPath = VulasConfiguration.getGlobal().getTmpDir().toAbsolutePath().resolve(StringUtil.getRandonString(10));
 

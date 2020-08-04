@@ -34,8 +34,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.java.JavaClassId;
@@ -66,10 +65,10 @@ import javassist.NotFoundException;
  */
 public class StackTraceUtil {
 
-	private static Log log = null;
-	private static final Log getLog() {
+	private static Logger log = null;
+	private static final Logger getLog() {
 		if(StackTraceUtil.log==null)
-			StackTraceUtil.log =  LogFactory.getLog(StackTraceUtil.class);
+			StackTraceUtil.log =  org.apache.logging.log4j.LogManager.getLogger();
 		return StackTraceUtil.log;
 	}
 	

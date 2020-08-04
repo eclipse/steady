@@ -32,8 +32,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -61,10 +60,10 @@ public class TouchPointCollector {
 
 	// STATIC MEMBERS
 
-	private static Log log = null;
-	private static final Log getLog() {
+	private static Logger log = null;
+	private static final Logger getLog() {
 		if(TouchPointCollector.log==null)
-			TouchPointCollector.log = LogFactory.getLog(TouchPointCollector.class);
+			TouchPointCollector.log = org.apache.logging.log4j.LogManager.getLogger();
 		return TouchPointCollector.log;
 	}
 

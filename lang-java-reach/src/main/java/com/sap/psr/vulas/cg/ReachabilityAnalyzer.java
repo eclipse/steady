@@ -39,8 +39,8 @@ import java.util.concurrent.TimeUnit;
 import com.sap.psr.vulas.cg.spi.CallgraphConstructorFactory;
 import com.sap.psr.vulas.cg.spi.ICallgraphConstructor;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -67,7 +67,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class ReachabilityAnalyzer implements Runnable {
 
-    private static final Log log = LogFactory.getLog(ReachabilityAnalyzer.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
     private static int THREAD_COUNT = 0;
 

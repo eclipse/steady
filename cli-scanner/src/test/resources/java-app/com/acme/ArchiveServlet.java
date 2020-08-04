@@ -23,7 +23,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 public class ArchiveServlet extends HttpServlet {
 
-	//private static final Log log = LogFactory.getLog(ArchiveServlet.class);
+	//private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	// Just to have a static initializer as part of the test app
 	static String nonsense = null;

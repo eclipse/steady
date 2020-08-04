@@ -36,8 +36,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
@@ -75,7 +75,7 @@ import com.sap.psr.vulas.vcs.RepoMismatchException;
 public class GitClient implements IVCSClient {
 
 	private static final int RANDOM_ID_LENGTH = 8;
-	private static final Log log = LogFactory.getLog( GitClient.class );
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger( GitClient.class );
 	private static final String TYPE = "GIT";
 
 	private String id;

@@ -36,8 +36,8 @@ import java.util.jar.JarEntry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 
@@ -47,7 +47,7 @@ import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
  */
 public class DirUtil {
 
-	private static final Log log = LogFactory.getLog(DirUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * Returns true if the given directory contains a file with the given name, false otherwise.
