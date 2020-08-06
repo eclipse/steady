@@ -62,11 +62,6 @@
 			<name>releases</name>
 			<url>${releases.repo}</url>
 		</repository>
-		<site>
-			<id>vulas.website</id>
-			<name>Vulas Documentation</name>
-			<url>file:${project.basedir}/docs/site</url>
-		</site>
 	</distributionManagement>
 
 	<dependencies>
@@ -163,12 +158,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-all</artifactId>
-			<version>1.3</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -347,9 +336,12 @@
 			</dependencies>
 			<build>
 				<plugins>
-					<!-- Maintain admin credentials for vulas-tomcat-server @ {host:port}
-						in settings.xml. Build WAR Run "mvn -Dmaven.tomcat.url={host:port}/manager/text
-						-P container package tomcat7:deploy-only". Point browser to {host:port}/apps -->
+					<!--
+						Maintain admin credentials for vulas-tomcat-server @ {host:port} in settings.xml
+						Build WAR
+						Run "mvn -Dmaven.tomcat.url={host:port}/manager/text tomcat7:deploy-only"
+						Point browser to {host:port}/apps
+					-->
 					<plugin>
 						<groupId>org.apache.tomcat.maven</groupId>
 						<artifactId>tomcat7-maven-plugin</artifactId>
@@ -518,18 +510,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<!-- Run with 'mvn clean site site:deploy' -->
-	<!--reporting> <plugins> <plugin> <groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-project-info-reports-plugin</artifactId> <version>2.9</version>
-		</plugin> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId>
-		<version>3.0.0</version> <configuration> <failOnError>false</failOnError>
-		<noindex>false</noindex> <links> <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
-		</links> </configuration> <reportSets> <reportSet> <id>aggregate</id> <configuration>
-		</configuration> <reports> <report>aggregate</report> </reports> </reportSet>
-		</reportSets> </plugin> <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>findbugs-maven-plugin</artifactId>
-		<version>3.0.5</version> </plugin> <plugin> <groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-checkstyle-plugin</artifactId> <version>3.0.0</version>
-		<reportSets> <reportSet> <reports> <report>checkstyle</report> </reports>
-		</reportSet> </reportSets> </plugin> </plugins> </reporting -->
 </project>
