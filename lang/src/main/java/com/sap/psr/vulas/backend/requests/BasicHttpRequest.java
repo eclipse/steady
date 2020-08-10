@@ -75,7 +75,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	/** Will not be serialized as part of the class, but is written to dedicated file. */
 	private transient String payload = null;
 
-	/** Will not be serialized as part of the class, but is written to dedicated file. */
+	/** Will not be serialized as part of the class. */
 	private transient FileInputStream binPayload = null;
 
 	private String contentType = null;
@@ -263,6 +263,18 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		prefix = prefix.replace("?", "__");
 		prefix = this.ms + "-" + prefix;
 		return prefix;
+	}
+	
+	/**
+	 * Returns the payload size (or -1 if there's no payload).
+	 */
+	public long getPayloadSize() {
+		if(this.payload!=null)
+			return this.payload.getBytes().length;
+		else if(this.payloadPath!=null)
+			return Paths.get(this.payloadPath).toFile().length();
+		else
+			return -1;
 	}
 	
 	/**
