@@ -1040,7 +1040,7 @@ public class BackendConnector {
 	 * @param _ctx a {@link com.sap.psr.vulas.goals.GoalContext} object.
 	 */
 	public void batchUpload(GoalContext _ctx) {
-		final FileSearch fs = new FileSearch(new String[] { "obj" }, _ctx.getVulasConfiguration().getConfiguration().getInt(CoreConfiguration.UPLOAD_MAX_SIZE, 5000000));		
+		final FileSearch fs = new FileSearch(new String[] { "obj" }, _ctx.getVulasConfiguration().getConfiguration().getInt(CoreConfiguration.UPLOAD_MAX_SIZE, -1));		
 		final Set<Path> objs = fs.search(_ctx.getVulasConfiguration().getDir(CoreConfiguration.UPLOAD_DIR));
 		for(Path obj: objs) {
 			HttpRequest ur = null;
