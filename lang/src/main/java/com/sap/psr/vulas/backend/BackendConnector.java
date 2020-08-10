@@ -1035,20 +1035,27 @@ public class BackendConnector {
 	}
 
 	/**
-	 * Loads all upload requests (smaller than {@link CoreConfiguration#UPLOAD_MAX_SIZE} bytes) form the upload folder and sends them to the backend.
+	 * Loads all upload requests form the upload folder and sends them to the backend
+	 * (as long as they do not have a payload, or the payload does not exceed the maximum length {@link CoreConfiguration#UPLOAD_MAX_SIZE}). 
 	 *
 	 * @param _ctx a {@link com.sap.psr.vulas.goals.GoalContext} object.
 	 */
 	public void batchUpload(GoalContext _ctx) {
-		final FileSearch fs = new FileSearch(new String[] { "obj" }, _ctx.getVulasConfiguration().getConfiguration().getInt(CoreConfiguration.UPLOAD_MAX_SIZE, -1));		
+		final long max_size = _ctx.getVulasConfiguration().getConfiguration().getLong(CoreConfiguration.UPLOAD_MAX_SIZE, -1); // -1 means no size limit
+		final FileSearch fs = new FileSearch(new String[] { "obj" }); // size limit not used here, as it would only cover obj files (but not the payload)
 		final Set<Path> objs = fs.search(_ctx.getVulasConfiguration().getDir(CoreConfiguration.UPLOAD_DIR));
 		for(Path obj: objs) {
 			HttpRequest ur = null;
-			try {
-				final ObjectInputStream ois = new ObjectInputStream(new FileInputStream(obj.toFile()));
+			try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(obj.toFile()))) {
 				ur = (HttpRequest)ois.readObject();
-				ois.close();
-				ur.setGoalContext(_ctx); // The Vulas configuration is not serialized to disk (cf. GoalContext), hence, has to be set again
+				ur.setGoalContext(_ctx); // configuration is not serialized to disk (cf. GoalContext), hence, has to be set again
+				if(max_size > 0 && ur instanceof BasicHttpRequest) {
+					final long payload_size = ((BasicHttpRequest)ur).getPayloadSize();
+					if(payload_size > max_size) {
+						log.warn("File [" + obj + "] ignored because it exceeds the maximum accepted size [" + payload_size + " > " + max_size + "] bytes");
+						continue;
+					}
+				}
 				ur.send();
 			} catch (Exception e) {
 				BackendConnector.log.error("Exception during batch upload of [" + obj + "] to [" + ur + "]: " + e.getMessage());
