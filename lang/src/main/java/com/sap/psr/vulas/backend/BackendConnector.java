@@ -1202,7 +1202,7 @@ public class BackendConnector {
                         new String[] {
                             "obj"
                         }); // size limit not used here, as it would only cover obj files (but not
-                            // the payload)
+        // the payload)
         final Set<Path> objs =
                 fs.search(_ctx.getVulasConfiguration().getDir(CoreConfiguration.UPLOAD_DIR));
         for (Path obj : objs) {
@@ -1211,7 +1211,7 @@ public class BackendConnector {
                 ur = (HttpRequest) ois.readObject();
                 ur.setGoalContext(
                         _ctx); // configuration is not serialized to disk (cf. GoalContext), hence,
-                               // has to be set again
+                // has to be set again
                 if (max_size > 0 && ur instanceof BasicHttpRequest) {
                     final long payload_size = ((BasicHttpRequest) ur).getPayloadSize();
                     if (payload_size > max_size) {

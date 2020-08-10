@@ -75,7 +75,7 @@ public interface TracesRepository extends CrudRepository<Trace, Long>, TracesRep
      */
     @Query(
             "SELECT t FROM Trace t WHERE t.app = :app AND t.lib IS NULL AND t.constructId ="
-                + " :constructId")
+                    + " :constructId")
     List<Trace> findTracesOfAppConstruct(
             @Param("app") Application app, @Param("constructId") ConstructId constructId);
 
@@ -89,7 +89,7 @@ public interface TracesRepository extends CrudRepository<Trace, Long>, TracesRep
      */
     @Query(
             "SELECT t FROM Trace t WHERE t.app = :app AND t.lib = :lib AND t.constructId ="
-                + " :constructId")
+                    + " :constructId")
     List<Trace> findTracesOfLibraryConstruct(
             @Param("app") Application app,
             @Param("lib") Library lib,

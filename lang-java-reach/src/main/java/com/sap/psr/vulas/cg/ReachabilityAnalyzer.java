@@ -457,7 +457,7 @@ public class ReachabilityAnalyzer implements Runnable {
             if (this.targetConstructs == null || this.targetConstructs.isEmpty()) {
                 ReachabilityAnalyzer.log.info(
                         "No target points defined, i.e., no vulnerability to check reachability"
-                            + " for");
+                                + " for");
             }
             // Target constructs do exist: Compute paths from entry points to change list elements
             // of the bugs
@@ -581,7 +581,7 @@ public class ReachabilityAnalyzer implements Runnable {
         } catch (CallgraphConstructException e) {
             ReachabilityAnalyzer.log.info(
                     "Call graph cannot be constructed or analyzed, reachability analysis will be"
-                        + " interrupted: "
+                            + " interrupted: "
                             + e.getMessage());
             Thread.currentThread().interrupt();
         }

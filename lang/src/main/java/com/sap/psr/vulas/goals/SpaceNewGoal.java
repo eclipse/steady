@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.goals;
 
-
 import org.apache.logging.log4j.Logger;
 
 import com.sap.psr.vulas.backend.BackendConnector;
@@ -62,7 +61,7 @@ public class SpaceNewGoal extends AbstractSpaceGoal {
             this.skipGoalUpload();
             throw new GoalExecutionException(
                     "Space creation requires name and description, adjust the configuration"
-                        + " accordingly",
+                            + " accordingly",
                     null);
         }
 

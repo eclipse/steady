@@ -71,7 +71,7 @@ public interface DependencyRepository
      */
     @Query(
             "SELECT dep FROM Dependency dep JOIN FETCH dep.lib l WHERE dep.app = :app AND"
-                + " dep.lib.digest = :digest")
+                    + " dep.lib.digest = :digest")
     List<Dependency> findByAppAndLib(@Param("app") Application app, @Param("digest") String digest);
 
     /**
@@ -167,7 +167,7 @@ public interface DependencyRepository
      */
     @Query(
             "SELECT distinct dep FROM Dependency dep JOIN FETCH dep.lib l JOIN FETCH"
-                + " l.bundledLibraryIds  lb WHERE dep.app = :app AND lb IS NOT NULL ")
+                    + " l.bundledLibraryIds  lb WHERE dep.app = :app AND lb IS NOT NULL ")
     List<Dependency> findWithBundledByApp(@Param("app") Application app);
 
     /**

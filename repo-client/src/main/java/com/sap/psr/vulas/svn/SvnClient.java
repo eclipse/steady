@@ -143,9 +143,8 @@ public class SvnClient implements IVCSClient {
         } catch (SVNException e) {
             e.printStackTrace();
             throw new RepoMismatchException(
-                    this, tmp,
-                    e); // "Cannot create SVN repository from URL '" + tmp + "': " +
-                        // e.getMessage());
+                    this, tmp, e); // "Cannot create SVN repository from URL '" + tmp + "': " +
+            // e.getMessage());
         }
         return repo;
     }
@@ -230,7 +229,7 @@ public class SvnClient implements IVCSClient {
         if (_rev.contains(":")) {
             throw new Exception(
                     "The SVN client does not support manually specified branches. Please remove"
-                        + " the branch from the commit definition in -e");
+                            + " the branch from the commit definition in -e");
         }
         final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
         Path rev_dir = null;

@@ -135,7 +135,7 @@ public class ClassPoolUpdater {
                                 0,
                                 p.getNameCount()
                                         - 1); // Root is lost, as subpath always returns relative
-                                              // paths
+                // paths
                 dir = p.getRoot().resolve(dir);
             } else {
                 dir = p.subpath(0, p.getNameCount() - 1);

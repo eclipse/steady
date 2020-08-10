@@ -49,7 +49,7 @@ public abstract class AbstractInstrumentor implements IInstrumentor {
         final StringBuffer buffer = new StringBuffer();
         buffer.append(
                 "Class vul_cls = null;"); // Different techniques will be used to determine the
-                                          // current method's class
+        // current method's class
         buffer.append("ClassLoader vul_cls_ldr = null;");
         buffer.append("java.net.URL vul_cls_res = null;");
         if (_buffer.length() == 0 || _buffer.indexOf(buffer.toString()) == -1)
@@ -65,8 +65,8 @@ public abstract class AbstractInstrumentor implements IInstrumentor {
             // Use MethodHandles.lookup().lookupClass()
             _buffer.append(
                     "if(vul_cls==null) { try {"
-                        + " vul_cls=java.lang.invoke.MethodHandles.lookup().lookupClass(); }"
-                        + " catch(Exception e) {} }");
+                            + " vul_cls=java.lang.invoke.MethodHandles.lookup().lookupClass(); }"
+                            + " catch(Exception e) {} }");
 
             // Option 3) Use fully-qualified class name --> fails for static methods in anonymous
             // classes
@@ -93,13 +93,13 @@ public abstract class AbstractInstrumentor implements IInstrumentor {
             if (this.hasGetClassMethod(_behavior.getDeclaringClass()))
                 _buffer.append(
                         "if(vul_cls==null) { try { vul_cls=$0.getClass(); } catch(Exception e)"
-                            + " {} }");
+                                + " {} }");
 
             // Use MethodHandles.lookup().lookupClass()
             _buffer.append(
                     "if(vul_cls==null) { try {"
-                        + " vul_cls=java.lang.invoke.MethodHandles.lookup().lookupClass(); }"
-                        + " catch(Exception e) {} }");
+                            + " vul_cls=java.lang.invoke.MethodHandles.lookup().lookupClass(); }"
+                            + " catch(Exception e) {} }");
 
             // Results in the runtime call of "javassist.runtime.Desc.getClazz(String)"
             _buffer.append("if(vul_cls==null) { try { vul_cls=$class; } catch(Exception e) {} }");
@@ -110,7 +110,7 @@ public abstract class AbstractInstrumentor implements IInstrumentor {
         _buffer.append("  if(vul_cls_ldr!=null)");
         _buffer.append(
                 "    vul_cls_res = vul_cls_ldr.getResource(vul_cls.getName().replace('.', '/') +"
-                    + " \".class\");");
+                        + " \".class\");");
         _buffer.append("}");
     }
 

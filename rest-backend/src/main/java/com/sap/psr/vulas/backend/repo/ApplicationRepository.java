@@ -76,7 +76,7 @@ public interface ApplicationRepository
      */
     @Query(
             "SELECT app FROM Application AS app JOIN FETCH app.space s WHERE app.mvnGroup ="
-                + " :mvnGroup AND app.artifact = :artifact AND app.space = :space")
+                    + " :mvnGroup AND app.artifact = :artifact AND app.space = :space")
     List<Application> findByGA(
             @Param("mvnGroup") String group,
             @Param("artifact") String artifact,
@@ -93,8 +93,8 @@ public interface ApplicationRepository
      */
     @Query(
             "SELECT app FROM Application AS app JOIN FETCH app.space s WHERE app.mvnGroup ="
-                + " :mvnGroup AND app.artifact = :artifact AND app.version = :version AND"
-                + " app.space = :space")
+                    + " :mvnGroup AND app.artifact = :artifact AND app.version = :version AND"
+                    + " app.space = :space")
     List<Application> findByGAV(
             @Param("mvnGroup") String group,
             @Param("artifact") String artifact,
@@ -133,7 +133,7 @@ public interface ApplicationRepository
     // :tenant ORDER BY app.mvnGroup, app.artifact, app.version")
     @Query(
             "SELECT app FROM Application AS app JOIN FETCH app.space s WHERE s.tenant = :tenant"
-                + " ORDER BY app.mvnGroup, app.artifact, app.version")
+                    + " ORDER BY app.mvnGroup, app.artifact, app.version")
     ArrayList<Application> findAllApps(@Param("tenant") Tenant tenant);
 
     /**
@@ -146,8 +146,8 @@ public interface ApplicationRepository
      */
     @Query(
             "SELECT app FROM Application AS app JOIN FETCH app.space s WHERE s.tenant = :tenant"
-                + " AND s.spaceToken = :spaceToken ORDER BY app.mvnGroup, app.artifact,"
-                + " app.version")
+                    + " AND s.spaceToken = :spaceToken ORDER BY app.mvnGroup, app.artifact,"
+                    + " app.version")
     ArrayList<Application> findAllApps(
             @Param("tenant") Tenant tenant, @Param("spaceToken") String spaceToken);
 
@@ -161,7 +161,7 @@ public interface ApplicationRepository
      */
     @Query(
             "SELECT app FROM Application AS app JOIN FETCH app.space s WHERE app.mvnGroup LIKE"
-                + " :mvnGroup AND app.artifact LIKE :artifact AND app.version LIKE :version")
+                    + " :mvnGroup AND app.artifact LIKE :artifact AND app.version LIKE :version")
     Collection<Application> searchByGAV(
             @Param("mvnGroup") String group,
             @Param("artifact") String artifact,
@@ -212,7 +212,7 @@ public interface ApplicationRepository
      */
     @Query(
             "SELECT DISTINCT app FROM Application AS app JOIN FETCH app.dependencies d where"
-                + " d.lib.digest=:digest")
+                    + " d.lib.digest=:digest")
     List<Application> findAppsWithDigest(@Param("digest") String digest);
 
     /*@Query("SELECT"
@@ -303,7 +303,8 @@ public interface ApplicationRepository
                 + "  Dependency d    JOIN    d.app a 	  JOIN    d.lib l   JOIN    l.constructs lc,"
                 + "	  Bug b   JOIN    b.constructChanges cc 	  WHERE a.mvnGroup = :mvnGroup    AND"
                 + " a.artifact = :artifact    AND a.version = :version   AND a.space = :space  "
-                + " AND lc = cc.constructId   AND (NOT lc.type='PACK' " // Java + Python exception
+                + " AND lc = cc.constructId   AND (NOT lc.type='PACK' " // Java + Python
+                    // exception
                     + "   OR NOT EXISTS (SELECT 1 FROM ConstructChange cc1 JOIN cc1.constructId c1"
                     + " WHERE cc1.bug=cc.bug AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%'"
                     + " AND NOT"
@@ -312,10 +313,13 @@ public interface ApplicationRepository
                     + " '%Test%'"
                     + " and NOT"
                     + " cc1.constructChangeType='ADD')"
-                    + " ) " // select bug if all other cc of the same bug are PACK, ADD or Test changes
+                    + " ) " // select bug if all other cc of the same bug are PACK, ADD or Test
+                    // changes
                     + "   AND NOT (lc.type='MODU' AND (lc.qname='setup' OR lc.qname='tests' OR"
                     + " lc.qname='test.__init__'))"
-                    + " " // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs. Similarly tests.py originates such a generic module that would bring up too many FPs
+                    + " " // Python-specific exception: setup.py is virtually everywhere,
+    // considering it would bring far too many FPs. Similarly tests.py
+    // originates such a generic module that would bring up too many FPs
     )
     TreeSet<VulnerableDependency> findJPQLVulnerableDependenciesByGAV(
             @Param("mvnGroup") String group,
@@ -518,7 +522,9 @@ public interface ApplicationRepository
                     + " (lc.qname='setup'"
                     + " OR lc.qname='tests'"
                     + " OR lc.qname='test.__init__'))"
-                    + " )" // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs. Similarly tests.py originates such a generic module that would bring up too many FPs
+                    + " )" // Python-specific exception: setup.py is virtually everywhere,
+                           // considering it would bring far too many FPs. Similarly tests.py
+                           // originates such a generic module that would bring up too many FPs
     )
     List<Application> findAppsByCC(@Param("listOfConstructs") List<ConstructId> listOfConstructs);
 
@@ -550,6 +556,6 @@ public interface ApplicationRepository
     @Query(
             value =
                     "UPDATE Application app SET last_vuln_change=CURRENT_TIMESTAMP where app in"
-                        + " :listOfApp ")
+                            + " :listOfApp ")
     void updateAppLastVulnChange(@Param("listOfApp") List<Application> listOfApp);
 }

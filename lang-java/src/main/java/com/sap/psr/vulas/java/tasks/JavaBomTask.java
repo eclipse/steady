@@ -183,13 +183,13 @@ public class JavaBomTask extends AbstractBomTask {
                     if (this.useAppPrefixes()) {
                         log.info(
                                 "Looping over Java archive analyzers to separate application and"
-                                    + " dependency code using package prefix(es) ["
+                                        + " dependency code using package prefix(es) ["
                                         + StringUtil.join(this.appPrefixes, ", ")
                                         + "] ...");
                     } else if (this.useAppJarNames()) {
                         log.info(
                                 "Looping over Java archive analyzers to separate application and"
-                                    + " dependency code using filename pattern(s) ["
+                                        + " dependency code using filename pattern(s) ["
                                         + this.appJarNames.toString(", ")
                                         + "] ...");
                     }

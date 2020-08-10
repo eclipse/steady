@@ -114,7 +114,7 @@ public class CallgraphConstructorFactory {
         } catch (IOException ex) {
             log.warn(
                     "Cannot load plugin JARs (with additional call graph constructors) from"
-                        + " directory ["
+                            + " directory ["
                             + loc.toAbsolutePath()
                             + "]");
         }

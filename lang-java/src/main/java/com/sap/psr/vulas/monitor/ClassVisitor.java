@@ -336,7 +336,7 @@ public class ClassVisitor {
         source_code.append("catch(IllegalStateException ise) { throw ise; }");
         source_code.append(
                 "catch(Throwable e) { System.err.println(e.getClass().getName() + \" occurred"
-                    + " during execution of instrumentation code in "
+                        + " during execution of instrumentation code in "
                         + _jid.toString()
                         + ": \" + e.getMessage()); }");
 

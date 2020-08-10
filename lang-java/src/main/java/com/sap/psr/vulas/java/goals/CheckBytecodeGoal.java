@@ -73,7 +73,7 @@ public class CheckBytecodeGoal extends AbstractAppGoal {
         for (VulnerableDependency vulndep : vulndeps) {
             if (vulndep.getAffectedVersionConfirmed()
                     == 0) { // Redundant check due to the flags used in the GET request of
-                            // getAppVulnDeps
+                // getAppVulnDeps
 
                 Path p = null;
 

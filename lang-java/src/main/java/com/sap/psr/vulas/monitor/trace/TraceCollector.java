@@ -499,7 +499,7 @@ public class TraceCollector {
                 this.getLog()
                         .error(
                                 "Got interruped while waiting for the completion of archive"
-                                    + " analysis threads: "
+                                        + " analysis threads: "
                                         + e.getMessage());
             }
         }

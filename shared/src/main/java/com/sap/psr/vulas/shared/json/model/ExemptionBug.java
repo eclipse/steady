@@ -116,13 +116,10 @@ public class ExemptionBug implements IExemption {
                                     && // No purl.namespace || purl.namespace==libid.mvnGroup
                                     libid.getArtifact().equals(purl.getName())
                                     && (purl.getVersion() == null
-                                            || libid.getVersion()
-                                                    .equals(
-                                                            purl
-                                                                    .getVersion())); // No
-                                                                                     // purl.version
-                                                                                     // ||
-                                                                                     // purl.version==libid.version
+                                            || libid.getVersion().equals(purl.getVersion())); // No
+                    // purl.version
+                    // ||
+                    // purl.version==libid.version
                 } catch (MalformedPackageURLException e) {
                     log.error(e.getMessage());
                     is_exempted = false;
@@ -162,7 +159,7 @@ public class ExemptionBug implements IExemption {
                 if (purl.getVersion() == null) {
                     log.warn(
                             "Cannot create affected library for Package URL exemptions without"
-                                + " version identifier: ["
+                                    + " version identifier: ["
                                     + this.toShortString()
                                     + "]");
                 } else {

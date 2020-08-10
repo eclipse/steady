@@ -194,7 +194,7 @@ public class NexusWrapper implements RepositoryWrapper {
             if (this.timestampUrl == null) {
                 log.warn(
                         "No url configured for retriving artifact timestamp in Nexus, skip"
-                            + " NexusWrapper");
+                                + " NexusWrapper");
             } else {
                 final Map<String, String> params1 = new HashMap<String, String>();
                 params1.put("artifact", response.getRepositoryPath());

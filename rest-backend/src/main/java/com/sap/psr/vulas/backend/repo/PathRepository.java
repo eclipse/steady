@@ -123,8 +123,8 @@ public interface PathRepository extends CrudRepository<Path, Long>, PathReposito
      */
     @Query(
             "SELECT p FROM Path AS p WHERE p.app = :app AND p.bug = :bug AND p.source = :source"
-                + " AND p.startConstructId = :startConstructId AND p.endConstructId ="
-                + " :endConstructId")
+                    + " AND p.startConstructId = :startConstructId AND p.endConstructId ="
+                    + " :endConstructId")
     List<Path> findPath(
             @Param("app") Application app,
             @Param("bug") Bug bug,

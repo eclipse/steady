@@ -475,9 +475,8 @@ public class JarDiffResult {
             int idx = _cid.getQname().lastIndexOf(".");
             // final String ctx = _cid.getQname().substring(0, idx);
             if (idx == -1)
-                ccid =
-                        null; // throw new IllegalArgumentException("Cannot determine . in qname ["
-                              // + _cid.getQname() + "]");
+                ccid = null; // throw new IllegalArgumentException("Cannot determine . in qname ["
+            // + _cid.getQname() + "]");
             else
                 ccid =
                         new ConstructId(

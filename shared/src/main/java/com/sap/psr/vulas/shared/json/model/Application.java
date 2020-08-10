@@ -112,7 +112,7 @@ public class Application implements Serializable, Comparable<Application> {
         } catch (IllegalArgumentException iae) {
             throw new IllegalArgumentException(
                     "Arguments provided cannot be used to create an application identifier. Group"
-                        + " and artifact must be specified and cannot exceed "
+                            + " and artifact must be specified and cannot exceed "
                             + Constants.MAX_LENGTH_GROUP
                             + " characters, version must be specified and cannot exceed "
                             + Constants.MAX_LENGTH_VERSION

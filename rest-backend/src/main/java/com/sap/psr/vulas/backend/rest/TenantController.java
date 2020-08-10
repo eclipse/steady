@@ -279,7 +279,7 @@ public class TenantController {
                 if (old_tenant.isDefault()) {
                     log.error(
                             "The default tenant cannot be deleted until we stop supporting vulas"
-                                + " 2.x.");
+                                    + " 2.x.");
                     return new ResponseEntity<Tenant>(HttpStatus.BAD_REQUEST);
                 }
                 // TODO: Implement deletion

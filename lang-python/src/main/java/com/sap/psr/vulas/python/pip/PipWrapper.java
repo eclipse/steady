@@ -510,9 +510,8 @@ public class PipWrapper {
         regex = regex.replace("<version>", _p.getVersion().toLowerCase());
         regex =
                 regex.replace(
-                        "-",
-                        "[_-]{1,1}"); // For some reason, the file names of some packages use _
-                                      // instead of -
+                        "-", "[_-]{1,1}"); // For some reason, the file names of some packages use _
+        // instead of -
 
         final Pattern p = Pattern.compile(regex);
         for (String url : urls) {

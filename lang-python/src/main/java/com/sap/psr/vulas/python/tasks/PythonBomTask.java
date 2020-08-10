@@ -90,7 +90,7 @@ public class PythonBomTask extends AbstractBomTask {
         if (this.vulasConfiguration.isEmpty(PythonConfiguration.PY_PIP_PATH)) {
             log.info(
                     "Determine app dependencies by finding setup.py files below the search"
-                        + " path(s), and installing them in virtual environments");
+                            + " path(s), and installing them in virtual environments");
 
             // Find all dirs with setup.py
             final Set<Path> prj_paths = new HashSet<Path>();

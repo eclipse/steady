@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.cia.model.pypi;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**

@@ -486,12 +486,12 @@ public abstract class JavaId extends ConstructId {
         if (i == -1 || !_s.endsWith(")"))
             throw new IllegalArgumentException(
                     "String does not contain brackets (), as required for qualified names for Java"
-                        + " methods");
+                            + " methods");
         final int j = _s.lastIndexOf('.', i);
         if (j == -1)
             throw new IllegalArgumentException(
                     "String does not contain dot (.), as required for qualified names for Java"
-                        + " methods (as to separate class and method name)");
+                            + " methods (as to separate class and method name)");
 
         JavaId def_ctx = null;
         JavaMethodId mid = null;
@@ -548,7 +548,7 @@ public abstract class JavaId extends ConstructId {
         if (i == -1 || !_s.endsWith(")"))
             throw new IllegalArgumentException(
                     "String does not contain brackets (), as required for qualified names for Java"
-                        + " constructors");
+                            + " constructors");
 
         JavaId def_ctx = null;
         JavaConstructorId coid = null;

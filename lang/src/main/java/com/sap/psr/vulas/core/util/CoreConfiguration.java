@@ -419,7 +419,7 @@ public class CoreConfiguration {
             if (vulasRelease == null || vulasRelease.equals("")) {
                 CoreConfiguration.log.warn(
                         "Cannot determine Vulas version from manifest entry"
-                            + " [Implementation-Version], check Vulas JAR");
+                                + " [Implementation-Version], check Vulas JAR");
                 vulasRelease = "unknown";
             }
 

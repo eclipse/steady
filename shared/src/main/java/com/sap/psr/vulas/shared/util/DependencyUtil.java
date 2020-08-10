@@ -150,7 +150,7 @@ public class DependencyUtil {
         if (!errs.isEmpty()) {
             log.error(
                     "The parent-child relationships of application dependencies have"
-                        + " inconsistencies:");
+                            + " inconsistencies:");
             for (String err : errs) log.error("    " + err);
         }
         return errs.isEmpty();

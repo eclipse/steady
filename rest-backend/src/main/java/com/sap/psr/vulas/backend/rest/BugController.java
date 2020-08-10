@@ -341,8 +341,8 @@ public class BugController {
         if (aff_libs != null
                 && aff_libs.size()
                         > 0) // Return CONFLICT to indicate that resource with this bug ID already
-                             // exists
-        return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.CONFLICT);
+            // exists
+            return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.CONFLICT);
 
         // Ensure consistency of path variable and JSON content
         // Ensure that a manual affected Lib per digest is saved only if the SHA1 is not verified
@@ -539,8 +539,8 @@ public class BugController {
         if (aff_libs != null
                 && aff_libs.size()
                         > 0) // Return CONFLICT to indicate that resource with this bug ID already
-                             // exists
-        return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.OK);
+            // exists
+            return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.OK);
         else return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.NOT_FOUND);
     }
 

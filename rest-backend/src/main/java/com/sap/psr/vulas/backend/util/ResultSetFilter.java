@@ -26,7 +26,6 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.data.repository.CrudRepository;
 
-
 /**
  * {@link CrudRepository#findOne(java.io.Serializable)} only works for the primary key of the respective {@link Entity}.
  * All other "find" methods that can be specified in the extended interface only return {@link Collection}s of objects

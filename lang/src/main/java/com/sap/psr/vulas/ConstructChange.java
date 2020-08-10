@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas;
 
-
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 // import com.sap.psr.vulas.java.JavaConstructorId;
 // import com.sap.psr.vulas.java.JavaMethodId;

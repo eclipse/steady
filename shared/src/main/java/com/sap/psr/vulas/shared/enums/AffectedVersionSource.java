@@ -31,10 +31,10 @@ public enum AffectedVersionSource {
     MINOR_EQUALITY, // created by patch-lib-analyzer
     INTERSECTION, // created by patch-lib-analyzer
     GREATER_RELEASE, // created by patch-lib-analyzer when a release root (X.0) has been created
-                     // temporally after the latest first fixed version
+    // temporally after the latest first fixed version
     TO_REVIEW, // created by patch-lib-analyzer
     PROPAGATE_MANUAL, // created by patch-lib-analyzer when propagating manual assessments to
-                      // greater versions for cases where no other sources concluded (i.e. all
-                      // existing assessments are MANUAL)
+    // greater versions for cases where no other sources concluded (i.e. all
+    // existing assessments are MANUAL)
     CHECK_CODE; // created by CHECKCODE goal and digestAnalyzer
 }

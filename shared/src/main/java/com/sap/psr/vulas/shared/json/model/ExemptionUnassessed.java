@@ -66,7 +66,7 @@ public class ExemptionUnassessed implements IExemption {
                     + "]";
         else if (this.value.equals(Value.KNOWN))
             return "Unassessed findings in libraries known to artifact repositories such as Maven"
-                       + " Central are exempted according to configuration setting ["
+                    + " Central are exempted according to configuration setting ["
                     + CFG
                     + "]";
         else return "Illegal State, check configuration setting [" + CFG + "]";
@@ -89,7 +89,7 @@ public class ExemptionUnassessed implements IExemption {
                 exempts.add(new ExemptionUnassessed(Value.KNOWN));
                 ExemptionUnassessed.log.warn(
                         "All unassessed vulnerabilities in archives with known digests will be"
-                            + " ignored");
+                                + " ignored");
             }
         }
         return exempts;
@@ -112,7 +112,7 @@ public class ExemptionUnassessed implements IExemption {
                 exempts.add(new ExemptionUnassessed(Value.KNOWN));
                 ExemptionUnassessed.log.warn(
                         "All unassessed vulnerabilities in archives with known digests will be"
-                            + " ignored");
+                                + " ignored");
             }
         } else {
             final String deprecated_key_setting = _map.get(DEPRECATED_KEY_BACKEND);
@@ -124,7 +124,7 @@ public class ExemptionUnassessed implements IExemption {
                     exempts.add(new ExemptionUnassessed(Value.KNOWN));
                     ExemptionUnassessed.log.warn(
                             "All unassessed vulnerabilities in archives with known digests will be"
-                                + " ignored");
+                                    + " ignored");
                 }
             }
         }

@@ -1592,7 +1592,7 @@ public class BugLibManager {
                                     && splitLine[12].contains("_vulnAst_")) {
                                 BugLibManager.log.error(
                                         "Tested-AST affected by previous bug: vuln AST was saved"
-                                            + " as tested one for bug["
+                                                + " as tested one for bug["
                                                 + bugChangeList.getBugId()
                                                 + "]");
                             }

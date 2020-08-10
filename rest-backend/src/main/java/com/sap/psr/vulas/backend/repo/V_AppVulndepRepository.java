@@ -87,7 +87,7 @@ public interface V_AppVulndepRepository
     @Query(
             value =
                     "SELECT count(*) from (select distinct app_group FROM v_app_vulndep WHERE"
-                        + " affected=true OR affected is NULL) as a",
+                            + " affected=true OR affected is NULL) as a",
             nativeQuery = true)
     Integer countVulnerableGroups();
 
@@ -99,7 +99,7 @@ public interface V_AppVulndepRepository
     @Query(
             value =
                     "SELECT count(*) from (select distinct app_group FROM v_app_vulndep WHERE"
-                        + " affected=true and NOT (scope='TEST' or scope='PROVIDED')) as a",
+                            + " affected=true and NOT (scope='TEST' or scope='PROVIDED')) as a",
             nativeQuery = true)
     Integer countConfirmedVulnerableGroups();
 
@@ -121,7 +121,7 @@ public interface V_AppVulndepRepository
     @Query(
             value =
                     "SELECT count(*) from (select distinct app_group,app_artifact FROM"
-                        + " v_app_vulndep WHERE affected=true OR affected is NULL) as a",
+                            + " v_app_vulndep WHERE affected=true OR affected is NULL) as a",
             nativeQuery = true)
     Integer countVulnerableGroupArtifacts();
 
@@ -133,7 +133,7 @@ public interface V_AppVulndepRepository
     @Query(
             value =
                     "SELECT count(*) from (select distinct mvn_group,artifact,version FROM app )"
-                        + " as a",
+                            + " as a",
             nativeQuery = true)
     Integer countGAVs();
 
@@ -165,7 +165,7 @@ public interface V_AppVulndepRepository
     @Query(
             value =
                     "SELECT count(*) from (select distinct app_group,app_artifact,app_version FROM"
-                        + " v_app_vulndep WHERE affected=true OR affected is NULL ) as a",
+                            + " v_app_vulndep WHERE affected=true OR affected is NULL ) as a",
             nativeQuery = true)
     Integer countVulnerableGAVs();
 
@@ -399,7 +399,7 @@ public interface V_AppVulndepRepository
     @Query(
             value =
                     "SELECT DISTINCT app_id, bug, affected FROM v_app_vulndep WHERE bug IN :bugIds"
-                        + " AND NOT affected='false'",
+                            + " AND NOT affected='false'",
             nativeQuery = true)
     List<Object[]> findAffectedApps(@Param("bugIds") String[] bugIds);
 }

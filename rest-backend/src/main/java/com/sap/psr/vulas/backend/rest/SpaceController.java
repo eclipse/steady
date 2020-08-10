@@ -346,7 +346,7 @@ public class SpaceController {
             if (space.isDefault() && this.spaceRepository.findDefault(t.getTenantToken()) != null) {
                 log.error(
                         "A default space for the given tenant already exists, adjust the"
-                            + " configuration accordingly");
+                                + " configuration accordingly");
                 return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
             }
 
@@ -392,7 +392,7 @@ public class SpaceController {
             } else if (!new_space.hasNameAndDescription()) {
                 log.error(
                         "Space modification requires name and description, adjust the"
-                            + " configuration accordingly");
+                                + " configuration accordingly");
                 return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
             }
 
@@ -431,7 +431,7 @@ public class SpaceController {
                     token, ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE)) {
                 log.error(
                         "The following spaces cannot be modified according to configuration"
-                            + " setting ["
+                                + " setting ["
                                 + SPACE_DO_NOT_MODIFY
                                 + "]: "
                                 + do_not_modify);
@@ -444,7 +444,7 @@ public class SpaceController {
                 if (default_space != null && !default_space.getSpaceToken().equals(token)) {
                     log.error(
                             "A default space for the given tenant already exists, adjust the"
-                                + " configuration accordingly");
+                                    + " configuration accordingly");
                     return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
                 }
             }
@@ -506,7 +506,7 @@ public class SpaceController {
                 if (space.isDefault() && t.isDefault()) {
                     log.error(
                             "The default space of the default tenant cannot be cleaned as long as"
-                                + " we want to support Vulas 2.x");
+                                    + " we want to support Vulas 2.x");
                     return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
                 }
 
@@ -519,7 +519,7 @@ public class SpaceController {
                         token, ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE)) {
                     log.error(
                             "The following spaces cannot be cleaned according to configuration"
-                                + " setting ["
+                                    + " setting ["
                                     + SPACE_DO_NOT_CLEAN
                                     + "]: "
                                     + do_not_clean);
@@ -610,7 +610,7 @@ public class SpaceController {
                 if (space.isDefault() && t.isDefault()) {
                     log.error(
                             "The default space of the default tenant cannot be deleted as long as"
-                                + " we want to support Vulas 2.x");
+                                    + " we want to support Vulas 2.x");
                     return new ResponseEntity<Space>(HttpStatus.BAD_REQUEST);
                 }
 
@@ -623,7 +623,7 @@ public class SpaceController {
                         token, ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE)) {
                     log.error(
                             "The following spaces cannot be deleted according to configuration"
-                                + " setting ["
+                                    + " setting ["
                                     + SPACE_DO_NOT_DELETE
                                     + "]: "
                                     + do_not_delete);

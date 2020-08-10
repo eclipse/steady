@@ -86,7 +86,7 @@ public class PE_Run implements Runnable {
                 if (e.getHttpResponseStatus() == 503)
                     log.error(
                             "Vulas backend still unavailable (503) after 1h, could not get list of"
-                                + " bugs to analyze");
+                                    + " bugs to analyze");
             }
         } else {
             for (String bugId : bugs) {
@@ -113,7 +113,7 @@ public class PE_Run implements Runnable {
                     if (e.getHttpResponseStatus() == 503)
                         log.error(
                                 "Vulas backend still unavailable (503) after 1h, could not get bug"
-                                    + "  ["
+                                        + "  ["
                                         + bugId
                                         + "] to analyze");
                     PE_Run.log.error(

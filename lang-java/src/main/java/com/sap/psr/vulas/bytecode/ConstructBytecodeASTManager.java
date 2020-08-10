@@ -116,7 +116,7 @@ public class ConstructBytecodeASTManager {
             if (ast_lid != null) {
                 this.lidVulnBytecodeAST.put(l, ast_lid);
             } else { // the file is not found and cannot be used as a comparison basis, we set it to
-                     // BytecodeNotFound to avoid further requests
+                // BytecodeNotFound to avoid further requests
                 this.lidVulnBytecodeAST.put(l, BYTECODE_NOT_FOUND);
             }
         }
@@ -164,7 +164,7 @@ public class ConstructBytecodeASTManager {
             if (ast_lid != null) {
                 this.lidFixedBytecodeAST.put(l, ast_lid);
             } else { // the file is not found and cannot be used as a comparison basis, we set it to
-                     // BytecodeNotFound to avoid furthur requests
+                // BytecodeNotFound to avoid furthur requests
                 this.lidFixedBytecodeAST.put(l, BYTECODE_NOT_FOUND);
             }
         }

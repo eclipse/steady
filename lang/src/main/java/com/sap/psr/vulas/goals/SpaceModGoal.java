@@ -52,7 +52,7 @@ public class SpaceModGoal extends AbstractSpaceGoal {
         if (!s.hasNameAndDescription())
             throw new GoalExecutionException(
                     "Space modification requires a name and description, adjust the configuration"
-                        + " accordingly",
+                            + " accordingly",
                     null);
 
         // Check that space exists

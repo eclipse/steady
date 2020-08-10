@@ -69,7 +69,7 @@ public class Main {
                 "overrideResults",
                 false,
                 "Delete all existing results before upload; otherwise only upload results for"
-                    + " AffectedLibraries not already existing in the backend");
+                        + " AffectedLibraries not already existing in the backend");
 
         // the list of bug to analyze, upload flag, backend and cia to use can also be configured in
         // a property file

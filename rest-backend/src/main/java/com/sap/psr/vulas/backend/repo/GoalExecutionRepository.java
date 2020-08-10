@@ -61,7 +61,7 @@ public interface GoalExecutionRepository
      */
     @Query(
             "SELECT goal FROM GoalExecution AS goal WHERE goal.app = :app ORDER BY"
-                + " goal.startedAtClient DESC")
+                    + " goal.startedAtClient DESC")
     List<GoalExecution> findByApp(@Param("app") Application app);
 
     /**
@@ -82,7 +82,7 @@ public interface GoalExecutionRepository
     @Query(
             value =
                     "SELECT id FROM app_goal_exe WHERE app = :app ORDER BY started_at_client DESC"
-                        + " LIMIT 1",
+                            + " LIMIT 1",
             nativeQuery = true)
     Long findLatestForApp(@Param("app") Long app);
 
@@ -96,7 +96,7 @@ public interface GoalExecutionRepository
     @Query(
             value =
                     "SELECT id FROM app_goal_exe WHERE app = :app AND goal = :type ORDER BY"
-                        + " started_at_client DESC LIMIT 1",
+                            + " started_at_client DESC LIMIT 1",
             nativeQuery = true)
     Long findLatestForApp(@Param("app") Long app, @Param("type") String type);
 
@@ -110,8 +110,8 @@ public interface GoalExecutionRepository
      */
     @Query(
             "SELECT goal FROM GoalExecution AS goal WHERE goal.app = :app AND goal.goal = :goal"
-                + " AND goal.startedAtClient = :startedAtClient ORDER BY goal.startedAtClient"
-                + " DESC")
+                    + " AND goal.startedAtClient = :startedAtClient ORDER BY goal.startedAtClient"
+                    + " DESC")
     List<GoalExecution> findByAppGoalStartedAtClient(
             @Param("app") Application app,
             @Param("goal") GoalType goal,

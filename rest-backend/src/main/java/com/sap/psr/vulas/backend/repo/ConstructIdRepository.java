@@ -64,7 +64,7 @@ public interface ConstructIdRepository extends PagingAndSortingRepository<Constr
      */
     @Query(
             "SELECT cid FROM ConstructId AS cid WHERE cid.lang = :lang AND cid.type = :type AND"
-                + " cid.qname = :qname")
+                    + " cid.qname = :qname")
     List<ConstructId> findConstructId(
             @Param("lang") ProgrammingLanguage lang,
             @Param("type") ConstructType type,

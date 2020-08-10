@@ -144,8 +144,8 @@ public class LibraryIdController {
                     if (s.getCvssScore() == null
                             || s.getCvssScore()
                                     < geCvss) // Bugs having cvssScore==null will not be added to
-                                              // the list
-                    continue;
+                        // the list
+                        continue;
                 }
 
                 // The bug passed all filters, add it to the result set

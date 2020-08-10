@@ -98,7 +98,7 @@ public class GradlePluginReport extends AbstractVulasTask {
             getLogger()
                     .quiet(
                             "Skipping report generation as neither the project or none of its"
-                                + " subprojects are eligible.");
+                                    + " subprojects are eligible.");
         }
     }
 }

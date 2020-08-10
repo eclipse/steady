@@ -164,7 +164,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
                 if (cids_array == null) {
                     log.warn(
                             "The intersection returned null (thus something went wrong in cia);"
-                                + " the Jar for library Id ["
+                                    + " the Jar for library Id ["
                                     + l.toString()
                                     + "] will not be included in the csv for MOD constructs");
                 } else {
@@ -420,7 +420,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
                 if (adcids_array == null) {
                     log.warn(
                             "The intersection returned null (thus something went wrong in cia);"
-                                + " the artifact for library Id ["
+                                    + " the artifact for library Id ["
                                     + l.toString()
                                     + "] will not be included in the csv for ADD/DEL constructs");
                 } else {

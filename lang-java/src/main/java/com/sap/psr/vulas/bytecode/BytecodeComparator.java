@@ -198,7 +198,7 @@ public class BytecodeComparator {
 
                                     log.info(
                                             "Library ID equal to vuln based on AST bytecode"
-                                                + " comparison with "
+                                                    + " comparison with "
                                                     + v.toString());
                                     vuln = true;
                                     list.add(v);
@@ -236,7 +236,7 @@ public class BytecodeComparator {
 
                                     log.info(
                                             "Library ID equal to fix based on AST bytecode"
-                                                + " comparison with "
+                                                    + " comparison with "
                                                     + f.toString());
                                     // cpa2.addLibsSameBytecode(l);
                                     fixed = true;

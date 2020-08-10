@@ -161,7 +161,7 @@ public class ZipSlipAnalyzer implements MaliciousnessAnalyzer {
         if (mal.isMalicious()) {
             mal.setReason(
                     "Archive is subject to ZipSlip vulnerability, the following file(s) would be"
-                        + " extracted outside of an intended target folder:");
+                            + " extracted outside of an intended target folder:");
             mal.appendReason(buffer.toString(), " ");
             if (_log) log.warn(mal.getReason());
         } else {

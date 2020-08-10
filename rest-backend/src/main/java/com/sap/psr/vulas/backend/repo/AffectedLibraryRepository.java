@@ -98,7 +98,7 @@ public interface AffectedLibraryRepository
      */
     @Query(
             "SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.bugId = :bug AND"
-                + " afflib.source = :source")
+                    + " afflib.source = :source")
     List<AffectedLibrary> findByBugAndSource(
             @Param("bug") Bug bug, @Param("source") AffectedVersionSource source);
 
@@ -147,7 +147,7 @@ public interface AffectedLibraryRepository
     @Transactional
     @Query(
             "DELETE FROM AffectedLibrary AS afflib WHERE afflib.bugId = :bug AND afflib.source ="
-                + " :source")
+                    + " :source")
     void deleteByBugAndSource(@Param("bug") Bug bug, @Param("source") AffectedVersionSource source);
 
     /**
@@ -230,7 +230,7 @@ public interface AffectedLibraryRepository
      */
     @Query(
             "SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.bugId = :bug AND"
-                + " afflib.source = :source AND afflib.lib = :digest")
+                    + " afflib.source = :source AND afflib.lib = :digest")
     List<AffectedLibrary> findByBugAndLibAndSource(
             @Param("bug") Bug bug,
             @Param("digest") Library digest,
@@ -255,7 +255,7 @@ public interface AffectedLibraryRepository
      */
     @Query(
             "SELECT affcc FROM AffectedConstructChange AS affcc JOIN affcc.affectedLib afflib"
-                + " WHERE afflib.bugId = :bug AND afflib.lib = :digest")
+                    + " WHERE afflib.bugId = :bug AND afflib.lib = :digest")
     List<AffectedConstructChange> findByBugAndLib(
             @Param("bug") Bug bug, @Param("digest") Library digest);
 
@@ -311,8 +311,8 @@ public interface AffectedLibraryRepository
      */
     @Query(
             "SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.libraryId.mvnGroup = :group"
-                + " AND afflib.libraryId.artifact = :artifact  AND afflib.libraryId.version ="
-                + " :version")
+                    + " AND afflib.libraryId.artifact = :artifact  AND afflib.libraryId.version ="
+                    + " :version")
     List<AffectedLibrary> findByLibraryId(
             @Param("group") String group,
             @Param("artifact") String artifact,
@@ -327,7 +327,7 @@ public interface AffectedLibraryRepository
      */
     @Query(
             "SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.libraryId.mvnGroup = :group"
-                + " AND afflib.libraryId.artifact = :artifact ")
+                    + " AND afflib.libraryId.artifact = :artifact ")
     List<AffectedLibrary> findByLibraryIdGA(
             @Param("group") String group, @Param("artifact") String artifact);
 

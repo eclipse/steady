@@ -179,7 +179,7 @@ public class CallgraphReachableSearch implements Runnable {
                     sw =
                             new StopWatch(
                                             "Collect touch points and reachable constructs per"
-                                                + " library, nodes ["
+                                                    + " library, nodes ["
                                                     + this.min
                                                     + " - "
                                                     + this.max

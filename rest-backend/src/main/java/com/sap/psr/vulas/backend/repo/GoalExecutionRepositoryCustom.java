@@ -19,9 +19,6 @@
  */
 package com.sap.psr.vulas.backend.repo;
 
-
-
-
 import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.GoalExecution;
 import com.sap.psr.vulas.shared.enums.GoalType;

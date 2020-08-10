@@ -83,7 +83,7 @@ public class FileComparator {
         if (_def == null && _fix == null)
             throw new IllegalArgumentException(
                     "The comparator requires at least one file as input, either the defective"
-                        + " file, the fixed file or both");
+                            + " file, the fixed file or both");
         this.revision = _rev;
         this.repo = _repo;
         this.repoPath = _repo_path;

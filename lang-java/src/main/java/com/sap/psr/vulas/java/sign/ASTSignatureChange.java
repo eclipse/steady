@@ -360,7 +360,7 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
                 List<SourceCodeChange> change =
                         structureEntity
                                 .getSourceCodeChanges(); // Extract the set of sourceCodeChanges
-                                                         // from the StructureEntityVersion
+                // from the StructureEntityVersion
 
                 // Debug
                 if (change != null) this.listOfChanges = new HashSet<SourceCodeChange>(change);

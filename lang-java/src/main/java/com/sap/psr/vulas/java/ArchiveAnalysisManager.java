@@ -315,9 +315,8 @@ public class ArchiveAnalysisManager {
 
                 ja.analyze(p.toFile());
                 ja.setInstrument(
-                        this
-                                .instrument); // To be called after analyze, since instrument uses
-                                              // the URL member
+                        this.instrument); // To be called after analyze, since instrument uses
+                // the URL member
 
                 this.analyzers.put(p, ja);
 

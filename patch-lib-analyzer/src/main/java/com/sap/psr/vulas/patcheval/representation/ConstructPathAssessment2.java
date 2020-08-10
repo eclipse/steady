@@ -22,7 +22,6 @@ package com.sap.psr.vulas.patcheval.representation;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 

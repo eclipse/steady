@@ -53,7 +53,7 @@ public interface LibraryIdRepository extends CrudRepository<LibraryId, Long> {
      */
     @Query(
             "SELECT libid FROM LibraryId AS libid WHERE libid.mvnGroup = :mvnGroup AND"
-                + " libid.artifact = :artifact AND libid.version = :version")
+                    + " libid.artifact = :artifact AND libid.version = :version")
     List<LibraryId> findBySecondaryKey(
             @Param("mvnGroup") String mvnGroup,
             @Param("artifact") String artifact,
@@ -68,7 +68,7 @@ public interface LibraryIdRepository extends CrudRepository<LibraryId, Long> {
      */
     @Query(
             "SELECT distinct libid FROM LibraryId AS libid JOIN FETCH libid.affLibraries  WHERE"
-                + " libid.mvnGroup = :mvnGroup AND libid.artifact = :artifact")
+                    + " libid.mvnGroup = :mvnGroup AND libid.artifact = :artifact")
     List<LibraryId> findLibIds(
             @Param("mvnGroup") String mvnGroup, @Param("artifact") String artifact);
 
@@ -79,7 +79,7 @@ public interface LibraryIdRepository extends CrudRepository<LibraryId, Long> {
      */
     @Query(
             "SELECT distinct libid.artifact FROM LibraryId AS libid where not libid.mvnGroup LIKE"
-                + " 'com.sap%' and not libid.artifact LIKE 'com.sap%'")
+                    + " 'com.sap%' and not libid.artifact LIKE 'com.sap%'")
     List<String> findArtifactIdsOSSI();
 
     /**

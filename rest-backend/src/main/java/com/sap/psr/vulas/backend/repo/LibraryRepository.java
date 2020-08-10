@@ -104,8 +104,8 @@ public interface LibraryRepository extends CrudRepository<Library, Long>, Librar
     @Query(
             value =
                     "select t.lib from (SELECT COUNT(distinct app) as c,lib  FROM    "
-                        + " app_dependency      WHERE  transitive=false group by lib order by c"
-                        + " desc) as t limit :num",
+                            + " app_dependency      WHERE  transitive=false group by lib order by c"
+                            + " desc) as t limit :num",
             nativeQuery = true)
     List<String> findMostUsed(@Param("num") Integer num);
 
@@ -118,8 +118,8 @@ public interface LibraryRepository extends CrudRepository<Library, Long>, Librar
     @Query(
             value =
                     " SELECT d.lib.digest,COUNT(distinct d.app)  FROM    Dependency d     WHERE "
-                        + " transitive=false    AND d.scope NOT IN :exclScopes group by"
-                        + " d.lib.digest order by COUNT(distinct d.app) desc")
+                            + " transitive=false    AND d.scope NOT IN :exclScopes group by"
+                            + " d.lib.digest order by COUNT(distinct d.app) desc")
     List<Object[]> findMostUsed(@Param("exclScopes") Scope[] exclScopes);
 
     /**
@@ -261,7 +261,11 @@ public interface LibraryRepository extends CrudRepository<Library, Long>, Librar
                     + " WHERE cc1.bug=cc.bug AND NOT c1.type='PACK' AND NOT c1.qname LIKE '%test%'"
                     + " AND NOT c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') )   "
                     + " AND NOT (lc.type='MODU' AND (lc.qname='setup' OR lc.qname='tests' OR"
-                    + " lc.qname='test.__init__'))" // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs. Similarly tests.py originates such a generic module that would bring up too many FPs
+                    + " lc.qname='test.__init__'))" // Python-specific exception: setup.py is
+                                                    // virtually everywhere, considering it would
+                                                    // bring far too many FPs. Similarly tests.py
+                                                    // originates such a generic module that would
+                                                    // bring up too many FPs
     )
     List<Library> findJPQLVulnerableLibrariesByBug(@Param("bugId") String bugId);
 

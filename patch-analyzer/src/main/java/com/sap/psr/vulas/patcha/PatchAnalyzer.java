@@ -391,7 +391,7 @@ public class PatchAnalyzer {
                 "search string",
                 true,
                 "Search string (optional, if not provided, the bugid will be used for searching"
-                    + " the commit log)");
+                        + " the commit log)");
         options.addOption("b", "bug", true, "Bug identifier");
         options.addOption(
                 "e",
@@ -405,7 +405,7 @@ public class PatchAnalyzer {
                 "links",
                 true,
                 "Comma-separated list of links to comprehensive bug information (optional, only"
-                    + " required for non-NVD vulnerabilities)");
+                        + " required for non-NVD vulnerabilities)");
         options.addOption(
                 "descr",
                 "description",
@@ -458,7 +458,7 @@ public class PatchAnalyzer {
                 } else {
                     PatchAnalyzer.log.error(
                             "-f is required to refer to an accessible JSON file or directory (with"
-                                + " JSON files): "
+                                    + " JSON files): "
                                     + file);
                 }
             }

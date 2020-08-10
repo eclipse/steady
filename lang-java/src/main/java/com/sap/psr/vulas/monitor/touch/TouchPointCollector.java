@@ -222,7 +222,7 @@ public class TouchPointCollector {
                         TouchPointCollector.getLog()
                                 .warn(
                                         "Expected <CLINIT>, method or constructor for caller and"
-                                            + " callee, but got "
+                                                + " callee, but got "
                                                 + caller
                                                 + " and "
                                                 + callee);

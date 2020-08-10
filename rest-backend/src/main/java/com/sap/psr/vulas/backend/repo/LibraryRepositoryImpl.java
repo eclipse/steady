@@ -73,7 +73,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
         if (_lib.getDigestAlgorithm() == null) {
             log.warn(
                     "Library uploaded with vulas 2.x (digestAlgoritm field missing), defaulting to"
-                        + " SHA1 for backward compatibility");
+                            + " SHA1 for backward compatibility");
             _lib.setDigestAlgorithm(DigestAlgorithm.SHA1);
         }
 

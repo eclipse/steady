@@ -325,14 +325,14 @@ public class ServiceWrapper {
                                 == null)) {
                     log.error(
                             "Missing Jira credentials, please provide the arguments"
-                                + " -Dvulas.jira.usr and -Dvulas.jira.pwd at startup");
+                                    + " -Dvulas.jira.usr and -Dvulas.jira.pwd at startup");
 
                     throw new ServiceConnectionException(
                             "Missing Jira credentials, please provide the arguments"
-                                + " -Dvulas.jira.usr and -Dvulas.jira.pwd at startup",
+                                    + " -Dvulas.jira.usr and -Dvulas.jira.pwd at startup",
                             new Throwable(
                                     "Missing Jira credentials, please provide the arguments"
-                                        + " -Dvulas.jira.usr and -Dvulas.jira.pwd at startup"));
+                                            + " -Dvulas.jira.usr and -Dvulas.jira.pwd at startup"));
                 }
 
                 final ResponseEntity<JiraSearchResponse> re =

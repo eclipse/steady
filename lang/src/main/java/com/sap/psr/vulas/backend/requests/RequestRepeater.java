@@ -21,7 +21,6 @@ package com.sap.psr.vulas.backend.requests;
 
 import org.apache.logging.log4j.Logger;
 
-
 /**
  * Used to repeat HTTP requests for a certain number of times.
  */

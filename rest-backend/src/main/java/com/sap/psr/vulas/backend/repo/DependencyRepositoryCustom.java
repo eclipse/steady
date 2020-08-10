@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.backend.repo;
 
-
 import com.sap.psr.vulas.backend.model.ConstructId;
 import com.sap.psr.vulas.backend.model.Dependency;
 import com.sap.psr.vulas.backend.model.TouchPoint;

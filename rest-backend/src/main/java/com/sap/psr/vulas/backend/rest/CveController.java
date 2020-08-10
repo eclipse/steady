@@ -105,7 +105,7 @@ public class CveController {
                                             } catch (InterruptedException e) {
                                                 CveController.log.error(
                                                         "Interrupted exception while refreshing"
-                                                            + " cached CVE data of bug ["
+                                                                + " cached CVE data of bug ["
                                                                 + b.getBugId()
                                                                 + "]: "
                                                                 + e.getMessage());
@@ -125,7 +125,7 @@ public class CveController {
                                         } catch (InterruptedException e) {
                                             CveController.log.error(
                                                     "Interrupted exception while refreshing cached"
-                                                        + " CVE data: "
+                                                            + " CVE data: "
                                                             + e.getMessage());
                                         }
 

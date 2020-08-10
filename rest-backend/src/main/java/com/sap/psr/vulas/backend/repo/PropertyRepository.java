@@ -50,7 +50,7 @@ public interface PropertyRepository extends CrudRepository<Property, Long> {
      */
     @Query(
             "SELECT prop FROM Property AS prop WHERE prop.source = :source AND prop.name = :name"
-                + " AND prop.propertyValue = :value")
+                    + " AND prop.propertyValue = :value")
     List<Property> findBySecondaryKey(
             @Param("source") PropertySource source,
             @Param("name") String name,

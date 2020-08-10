@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.backend.model.view;
 
-
 /**
  * Json Views used to filter the entity fields to be serialized based on the API used.
  *

@@ -442,7 +442,7 @@ public class GitClient implements IVCSClient {
             if (commit.getParentCount() > 1) {
                 GitClient.log.info(
                         "[WARNING] Found multiple parents, I will only consider one (the first I"
-                            + " can get...).");
+                                + " can get...).");
             }
 
             RevCommit parent = null;

@@ -204,12 +204,12 @@ public class InstrumentationControl {
             } catch (ConfigurationException e) {
                 InstrumentationControl.log.error(
                         "Configuration error when adding JARs with blacklisted scopes to JAR"
-                            + " blacklist: "
+                                + " blacklist: "
                                 + e.getMessage());
             } catch (BackendConnectionException e) {
                 InstrumentationControl.log.error(
                         "Connection error when adding JARs with blacklisted scopes to JAR"
-                            + " blacklist: "
+                                + " blacklist: "
                                 + e.getMessage());
             }
         }

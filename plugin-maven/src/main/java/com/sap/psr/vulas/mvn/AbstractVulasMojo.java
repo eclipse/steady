@@ -339,11 +339,10 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
             // Dependencies (direct and transitive), including Maven ID and file system path
             @SuppressWarnings("deprecation")
             final Set<Artifact> direct_artifacts =
-                    project
-                            .getDependencyArtifacts(); // The artifact class does not seem to tell
-                                                       // whether it is a direct or transitive
-                                                       // dependency (hence we keep the call and
-                                                       // suppress the warning)
+                    project.getDependencyArtifacts(); // The artifact class does not seem to tell
+            // whether it is a direct or transitive
+            // dependency (hence we keep the call and
+            // suppress the warning)
             final Set<Artifact> artifacts = project.getArtifacts();
             int count = 0;
             Dependency dep = null;

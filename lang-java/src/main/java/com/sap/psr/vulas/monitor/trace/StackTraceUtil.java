@@ -259,7 +259,7 @@ public class StackTraceUtil {
                         StackTraceUtil.getLog()
                                 .warn(
                                         "Stack trace element w/o line number info, cannot use"
-                                            + " Javassist: "
+                                                + " Javassist: "
                                                 + _e);
                     else {
                         try {
@@ -271,7 +271,7 @@ public class StackTraceUtil {
                                 StackTraceUtil.getLog()
                                         .error(
                                                 "Could not determine constructor despite line"
-                                                    + " information: ["
+                                                        + " information: ["
                                                         + _e.toString()
                                                         + "]");
                             }
@@ -325,7 +325,7 @@ public class StackTraceUtil {
                         StackTraceUtil.getLog()
                                 .warn(
                                         "Stack trace element w/o line number info, cannot use"
-                                            + " Javassist: "
+                                                + " Javassist: "
                                                 + _e);
                     else {
                         try {
@@ -337,7 +337,7 @@ public class StackTraceUtil {
                                 StackTraceUtil.getLog()
                                         .error(
                                                 "Could not determine method despite line"
-                                                    + " information: ["
+                                                        + " information: ["
                                                         + _e.toString()
                                                         + "]");
                             }

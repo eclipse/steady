@@ -98,7 +98,7 @@ public class MainController extends SpringBootServletInitializer {
                         new springfox.documentation.service.ApiInfo(
                                 "Vulas CIA",
                                 "RESTful API for discovering and analyzing alternative Maven"
-                                    + " artifacts",
+                                        + " artifacts",
                                 "1.1.0-SNAPSHOT",
                                 "SAP",
                                 null,

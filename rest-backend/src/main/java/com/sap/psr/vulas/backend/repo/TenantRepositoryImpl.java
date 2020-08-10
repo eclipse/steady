@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.backend.repo;
 
-
 import javax.persistence.EntityNotFoundException;
 
 import org.slf4j.Logger;
@@ -49,7 +48,7 @@ public class TenantRepositoryImpl implements TenantRepositoryCustom {
         } else if (!_tenant.hasTenantName()) {
             log.error(
                     "Tenant creation/modification requires name, adjust the configuration"
-                        + " accordingly");
+                            + " accordingly");
             return false;
         }
         return true;

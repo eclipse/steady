@@ -170,7 +170,7 @@ public class CoverageController {
                         response.setActionUrl(create_issue + bugid_uc);
                         response.setActionText(
                                 "Create a Jira ticket if this CVE affects an open-source software"
-                                    + " component developed in Java or Python.");
+                                        + " component developed in Java or Python.");
                     }
                 }
 
