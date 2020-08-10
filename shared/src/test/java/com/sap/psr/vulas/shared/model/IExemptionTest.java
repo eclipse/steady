@@ -61,7 +61,7 @@ public class IExemptionTest {
                 ExemptionBug.CFG_PREFIX + ".CVE-2014-0053.libraries",
                 "*, 6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10,"
                         + " pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1"); // Will result in 3
-                                                                                 // exemptions
+        // exemptions
 
         c1.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0054.reason", "Lorem ipsum");
         c1.setProperty(
@@ -99,7 +99,7 @@ public class IExemptionTest {
                 ExemptionBug.CFG_PREFIX + ".CVE-2014-0053.libraries",
                 "*, 6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10,"
                         + " pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1"); // Will result in 3
-                                                                                 // exemptions
+        // exemptions
 
         map.put(ExemptionBug.CFG_PREFIX + ".CVE-2014-0054.reason", "Lorem ipsum");
         map.put(
