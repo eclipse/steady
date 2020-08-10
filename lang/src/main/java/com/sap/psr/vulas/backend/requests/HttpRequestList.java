@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.HttpResponse;
@@ -37,7 +37,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class HttpRequestList extends AbstractHttpRequest {
 	
-	private static final Log log = LogFactory.getLog(HttpRequestList.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * When set to true, the sending of requests will be stopped upon success, i.e., once a Http response code 2xx will be received.

@@ -21,7 +21,6 @@ package com.sap.psr.vulas.shared.json;
 
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -62,7 +61,7 @@ public class JacksonUtil {
 	 * @return a {@link java.lang.String} object.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static String asJsonString(final Object _object, final Map<Class<?>, StdSerializer<?>> _custom_serializers, Class _view) {
+	public static String asJsonString(final Object _object, final Map<Class<?>, StdSerializer<?>> _custom_serializers, final Class _view) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
             
@@ -103,4 +102,47 @@ public class JacksonUtil {
             throw new RuntimeException(e);
         }
     }
+	
+	/**
+	 * Deserializes the given JSON, using the given custom {@link StdDeserializer}s.
+	 *
+	 * @param _json a {@link java.lang.String} object.
+	 * @param _clazz a {@link java.lang.Class} object.
+	 * @param _custom_deserializers a {@link java.util.Map} object.
+	 * @return a {@link java.lang.Object} object.
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static Object asObject(final String _json, final Map<Class<?>, StdDeserializer<?>> _custom_deserializers, final Class<?> _clazz) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            
+            // Register custom deserializers
+    		final SimpleModule module = new SimpleModule();
+            if(_custom_deserializers!=null && !_custom_deserializers.isEmpty()) {
+    			for(Class clazz: _custom_deserializers.keySet()) {
+    				module.addDeserializer(clazz, _custom_deserializers.get(clazz));
+    			}
+    		}
+    		mapper.registerModule(module);
+            
+            return mapper.readValue(_json, _clazz);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+	
+	/**
+	 * Transforms the given {@link Object} into an instance of the given {@link Class}.
+	 * 
+	 * This is done by serialiazing the object into JSON with {@link #asJsonString(Object, Map, Class)},
+	 * followed by deserializing with {@link #asObject(String, Class).
+	 *  
+	 * @param _from
+	 * @param _to
+	 * @return
+	 */
+	public static Object fromTo(final Object _from, final Map<Class<?>, StdSerializer<?>> _custom_serializers, final Class _view, final Class<?> _to) {
+		final String json = JacksonUtil.asJsonString(_from, _custom_serializers, _view);
+		return JacksonUtil.asObject(json, _to);
+	}
 }

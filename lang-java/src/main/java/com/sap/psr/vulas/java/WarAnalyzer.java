@@ -36,8 +36,8 @@ import java.util.jar.JarEntry;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalysisException;
@@ -59,7 +59,7 @@ import javassist.NotFoundException;
  */
 public class WarAnalyzer extends JarAnalyzer {
 
-	private static final Log log = LogFactory.getLog(WarAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static final String INCL_SPACE = "vulas.core.instr.static.inclSpace";
 	private static final String INCL_BACKEND_URL = "vulas.core.instr.static.inclBackendUrl";

@@ -22,8 +22,8 @@ package com.sap.psr.vulas.goals;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
@@ -37,7 +37,7 @@ import com.sap.psr.vulas.shared.json.model.Space;
  */
 public class SpaceNewGoal extends AbstractSpaceGoal {
 	
-	private static final Log log = LogFactory.getLog(SpaceNewGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private Space createdSpace = null;
 

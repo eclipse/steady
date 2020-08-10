@@ -54,6 +54,10 @@ import com.sap.psr.vulas.goals.GoalExecutionException;
 import com.sap.psr.vulas.shared.connectivity.PathBuilder;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.Application;
+import com.sap.psr.vulas.shared.json.model.ExemptionBug;
+import com.sap.psr.vulas.shared.json.model.ExemptionScope;
+import com.sap.psr.vulas.shared.json.model.ExemptionSet;
+import com.sap.psr.vulas.shared.json.model.ExemptionUnassessed;
 import com.sap.psr.vulas.shared.util.FileUtil;
 
 
@@ -113,6 +117,18 @@ public class ReportTest extends AbstractGoalTest {
 			this.configureBackendServiceUrl(server);
 			this.setupMockServices(this.testApp);
 
+			// Exemptions
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.reason", "The vulnerable library with digest 6F1EBC is no problem because ...");
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.libraries", "6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10");
+			
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2013-2186.reason", "Vulnerability CVE-2013-2186 is no problem because ...");
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2013-2186.libraries", "*");
+			
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2019-1234.reason", "Vulnerability CVE-2019-1234 is no problem because ...");
+			
+			vulasConfiguration.setProperty(ExemptionScope.CFG, "teST, provIDED");
+			vulasConfiguration.setProperty(ExemptionUnassessed.CFG, "knOWN");
+			
 			final Configuration cfg = vulasConfiguration.getConfiguration();
 
 			final GoalContext goal_context = new GoalContext();
@@ -126,14 +142,8 @@ public class ReportTest extends AbstractGoalTest {
 			// Set all kinds of exceptions
 			report.setExceptionThreshold(cfg.getString(CoreConfiguration.REP_EXC_THRESHOLD, Report.THRESHOLD_ACT_EXE));
 
-			// Excluded bugs
-			report.addExcludedBugs(cfg.getStringArray(CoreConfiguration.REP_EXCL_BUGS));
-
-			// Excluded scopes
-			report.addExcludedScopes(cfg.getStringArray(CoreConfiguration.REP_EXC_SCOPE_BL));
-
-			// Exclude non-assessed vuln deps
-			report.setIgnoreUnassessed(cfg.getString(CoreConfiguration.REP_EXCL_UNASS, Report.IGN_UNASS_KNOWN));
+			// Exemptions
+			report.setExemptions(ExemptionSet.createFromConfiguration(cfg));
 
 			// Fetch the vulns
 			report.fetchAppVulnerabilities();
@@ -148,12 +158,12 @@ public class ReportTest extends AbstractGoalTest {
 			report.writeResult(report_dir);
 			
 			// Check that files exist
-			assertTrue(FileUtil.isAccessibleFile("./target/vulas/report/" + Report.REPORT_FILE_HTML));
-			assertTrue(FileUtil.isAccessibleFile("./target/vulas/report/" + Report.REPORT_FILE_XML));
-			assertTrue(FileUtil.isAccessibleFile("./target/vulas/report/" + Report.REPORT_FILE_JSON));
+			assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_HTML)));
+			assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_XML)));
+			assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_JSON)));
 			
 			// Validate Html
-			Tidy tidy = new Tidy();
+			final Tidy tidy = new Tidy();
 			tidy.parse(new ByteArrayInputStream(FileUtil.readInputStream(new FileInputStream(new File("./target/vulas/report/" + Report.REPORT_FILE_HTML)))), new FileOutputStream(new File("./target/jtidy-html.txt")));
 			
 			// Allow no errors

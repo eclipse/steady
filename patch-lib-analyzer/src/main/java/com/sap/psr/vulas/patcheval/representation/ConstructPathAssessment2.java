@@ -22,8 +22,8 @@ package com.sap.psr.vulas.patcheval.representation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.patcheval2.BugLibManager;
 import com.sap.psr.vulas.shared.enums.ConstructType;

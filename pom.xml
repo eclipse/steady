@@ -26,7 +26,7 @@
 
 	<groupId>com.sap.research.security.vulas</groupId>
 	<artifactId>root</artifactId>
-	<version>3.1.11-SNAPSHOT</version>
+	<version>3.1.14-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Eclipse Steady</name>
@@ -252,15 +252,16 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.2</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.13.3</version>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.13.3</version>
 		</dependency>
+		
 	</dependencies>
 
 	<!-- Use the same versions across all child projects -->
@@ -326,7 +327,7 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>2.9.10.3</version>
+				<version>2.9.10.5</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
@@ -449,11 +450,11 @@
 			</plugin>
 
 			<!-- Successor of Findbugs, run fully-qualified with 'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml
-				-Dspotbugs.failOnError=false -P soot,gradle com.github.spotbugs:spotbugs-maven-plugin:3.1.11:check' -->
+				-Dspotbugs.failOnError=false -P soot,gradle com.github.spotbugs:spotbugs-maven-plugin:3.1.12.2:check' -->
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.11</version>
+				<version>3.1.12.2</version>
 				<configuration>
 					<failOnError>false</failOnError>
 					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
@@ -641,7 +642,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.11</version>
+				<version>3.1.12.2</version>
 				<configuration>
 					<failOnError>false</failOnError>
 					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>

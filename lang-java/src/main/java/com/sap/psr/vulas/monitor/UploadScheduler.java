@@ -22,8 +22,8 @@ package com.sap.psr.vulas.monitor;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 
 /**
@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class UploadScheduler extends Observable implements Runnable, Observer {
 	
-	private static final Log log = LogFactory.getLog(UploadScheduler.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private long millis = -1;
 	private int batchSize = -1;

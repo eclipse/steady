@@ -32,8 +32,8 @@ import java.util.jar.Manifest;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
@@ -52,7 +52,7 @@ import com.sap.psr.vulas.sign.SignatureFactory;
  */
 public class PythonConfiguration {
 
-	private static final Log log = LogFactory.getLog(PythonConfiguration.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/** Constant <code>PY_BOM_IGNORE_PACKS="vulas.core.bom.python.ignorePacks"</code> */
 	public final static String PY_BOM_IGNORE_PACKS = "vulas.core.bom.python.ignorePacks";

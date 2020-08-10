@@ -33,12 +33,13 @@ import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VulnerableDependency  implements Serializable, Comparable {
+public class VulnerableDependency  implements Serializable, Comparable<VulnerableDependency> {
+
+	private static final long serialVersionUID = 1L;
 
 	private Dependency dep;
 
 	private Bug bug;
-
 	
 	private List<ConstructChangeInDependency> constructList;
 
@@ -56,6 +57,8 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	int reachableConfirmed;
 
 	int traced;
+	
+	IExemption exemption = null;
 
 	/**
 	 * <p>Constructor for VulnerableDependency.</p>
@@ -81,6 +84,7 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 * @return a {@link com.sap.psr.vulas.shared.json.model.Dependency} object.
 	 */
 	public Dependency getDep() { return dep; }
+	
 	/**
 	 * <p>Setter for the field <code>dep</code>.</p>
 	 *
@@ -88,19 +92,20 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 */
 	public void setDep(Dependency dep) { this.dep = dep; }
 
-	
 	/**
 	 * <p>getBugId.</p>
 	 *
 	 * @return a {@link java.lang.Long} object.
 	 */
 	public Long getBugId() { return bug.getId(); }
+	
 	/**
 	 * <p>Getter for the field <code>bug</code>.</p>
 	 *
 	 * @return a {@link com.sap.psr.vulas.shared.json.model.Bug} object.
 	 */
 	public Bug getBug() { return bug; }
+	
 	/**
 	 * <p>Setter for the field <code>bug</code>.</p>
 	 *
@@ -108,13 +113,13 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 */
 	public void setBug(Bug bug) { this.bug = bug; }
 
-
 	/**
 	 * <p>Getter for the field <code>constructList</code>.</p>
 	 *
 	 * @return a {@link java.util.List} object.
 	 */
 	public List<ConstructChangeInDependency> getConstructList() { return constructList; }
+	
 	/**
 	 * <p>Setter for the field <code>constructList</code>.</p>
 	 *
@@ -133,7 +138,7 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 * <p>evalAffectedVersion.</p>
 	 */
 	public void evalAffectedVersion() { 
-		Boolean pre_commit_pom=null, line_add = null, check_version=null, manual_libId=null, equal=null;
+		Boolean check_code=null, check_version=null, manual_libId=null, equal=null;
 		AffectedVersionSource source=null;
 		if(bug.getAffectedVersions()!=null) {
 			for( AffectedLibrary a : bug.getAffectedVersions()) {
@@ -149,10 +154,8 @@ public class VulnerableDependency  implements Serializable, Comparable {
 							equal = a.getAffected();
 							source = a.getSource();
 						}
-						else if(a.getSource() == AffectedVersionSource.PRE_COMMIT_POM)
-							pre_commit_pom = a.getAffected();
-						else if(a.getSource() == AffectedVersionSource.LINE_ADD)
-							line_add = a.getAffected();
+						else if(a.getSource() == AffectedVersionSource.CHECK_CODE)
+							check_code = a.getAffected();
 					}
 				}
 				else if(a.getLib()!=null && a.getLib()==dep.getLib()){
@@ -187,16 +190,10 @@ public class VulnerableDependency  implements Serializable, Comparable {
 					this.setAffectedVersionSource(AffectedVersionSource.CHECK_VERSION);
 					return;
 				}
-			if(pre_commit_pom != null){
-				this.setAffectedVersion(pre_commit_pom?1:0);
+			if(check_code != null){
+				this.setAffectedVersion((check_code)?1:0);
 				this.setAffectedVersionConfirmed(1);
-				this.setAffectedVersionSource(AffectedVersionSource.PRE_COMMIT_POM);
-				return;
-			}
-			else if (line_add != null){
-				this.setAffectedVersion(line_add?1:0);
-				this.setAffectedVersionConfirmed(1);
-				this.setAffectedVersionSource(AffectedVersionSource.LINE_ADD);
+				this.setAffectedVersionSource(AffectedVersionSource.CHECK_CODE);
 				return;
 			}
 		}
@@ -210,12 +207,14 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 * @return a boolean.
 	 */
 	public boolean isAffectedVersionConfirmed() { return this.getAffectedVersionConfirmed()==1; }
+	
 	/**
 	 * <p>Getter for the field <code>affectedVersionConfirmed</code>.</p>
 	 *
 	 * @return a int.
 	 */
 	public int getAffectedVersionConfirmed() { return this.affectedVersionConfirmed; }
+	
 	/**
 	 * <p>Setter for the field <code>affectedVersionConfirmed</code>.</p>
 	 *
@@ -229,6 +228,7 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 * @return a int.
 	 */
 	public int getAffectedVersion() { return this.affectedVersion; }
+	
 	/**
 	 * <p>Setter for the field <code>affectedVersion</code>.</p>
 	 *
@@ -242,6 +242,7 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 * @return a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
 	 */
 	public AffectedVersionSource getAffectedVersionSource() { return this.affectedVersionSource; }
+	
 	/**
 	 * <p>Setter for the field <code>affectedVersionSource</code>.</p>
 	 *
@@ -255,12 +256,14 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 * @return a boolean.
 	 */
 	public boolean isReachable() { return this.getReachable()==1; }
+	
 	/**
 	 * <p>Getter for the field <code>reachable</code>.</p>
 	 *
 	 * @return a int.
 	 */
 	public int getReachable() { return this.reachable; }
+	
 	/**
 	 * <p>Setter for the field <code>reachable</code>.</p>
 	 *
@@ -274,6 +277,7 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 * @return a boolean.
 	 */
 	public boolean isReachableConfirmed() { return this.getReachableConfirmed() == 1; }
+	
 	/**
 	 * <p>Getter for the field <code>reachableConfirmed</code>.</p>
 	 *
@@ -284,6 +288,7 @@ public class VulnerableDependency  implements Serializable, Comparable {
 		//return (this.dep.getReachableConstructIds()==null || this.dep.getReachableConstructIds().size()==0) ? 0 : 1;
 		return this.reachableConfirmed;
 	}
+	
 	/**
 	 * <p>Setter for the field <code>reachableConfirmed</code>.</p>
 	 *
@@ -297,12 +302,14 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 * @return a boolean.
 	 */
 	public boolean isTraced() { return this.getTraced()==1; }
+	
 	/**
 	 * <p>Getter for the field <code>traced</code>.</p>
 	 *
 	 * @return a int.
 	 */
 	public int getTraced() { return this.traced; }
+	
 	/**
 	 * <p>Setter for the field <code>traced</code>.</p>
 	 *
@@ -316,6 +323,7 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 * @return a boolean.
 	 */
 	public boolean isTracedConfirmed() { return this.getTracedConfirmed() == 1; }
+	
 	/**
 	 * <p>getTracedConfirmed.</p>
 	 *
@@ -323,6 +331,27 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 */
 	@JsonProperty(value = "traced_confirmed")
 	public int getTracedConfirmed() { return this.dep.getTraced()!=null && this.dep.getTraced() ? 1 : 0; }
+	
+	/**
+	 * <p>Getter for the field <code>exemption</code>.</p>
+	 *
+	 * @return a {@link Exemption} object.
+	 */
+	public IExemption getExemption() { return this.exemption; }
+	
+	/**
+	 * <p>Setter for the field <code>exemption</code>.</p>
+	 *
+	 * @param _e a {@link Exemption} object.
+	 */
+	public void setExemption(IExemption _e) { this.exemption = _e; }
+	
+	/**
+	 * Returns true if the an exemption has been set before, false otherwise.
+	 * 
+	 * @return
+	 */
+	public Boolean isExempted() { return this.exemption!=null; }
 
 	// =================== Added on top of the original class from vulas-backend
 
@@ -332,26 +361,13 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 * @return a boolean.
 	 */
 	public boolean isNotReachable() { return !isReachable() && isReachableConfirmed(); }
+	
 	/**
 	 * <p>isNotTraced.</p>
 	 *
 	 * @return a boolean.
 	 */
 	public boolean isNotTraced() { return !isTraced() && isTracedConfirmed(); }
-
-	private Boolean is_blacklisted;
-	/**
-	 * <p>setBlacklisted.</p>
-	 *
-	 * @param _b a boolean.
-	 */
-	public void setBlacklisted(boolean _b) { this.is_blacklisted = Boolean.valueOf(_b); }
-	/**
-	 * <p>isBlacklisted.</p>
-	 *
-	 * @return a {@link java.lang.Boolean} object.
-	 */
-	public Boolean isBlacklisted() { return is_blacklisted; }
 
 	/**
 	 * <p>isNoneAffectedVersion.</p>
@@ -361,12 +377,14 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	public boolean isNoneAffectedVersion() { return this.getAffectedVersion()==0 && this.getAffectedVersionConfirmed()==1; }
 
 	private Boolean above_threshold;
+	
 	/**
 	 * <p>setAboveThreshold.</p>
 	 *
 	 * @param _b a boolean.
 	 */
 	public void setAboveThreshold(boolean _b) { this.above_threshold = Boolean.valueOf(_b); }
+	
 	/**
 	 * <p>isAboveThreshold.</p>
 	 *
@@ -379,21 +397,24 @@ public class VulnerableDependency  implements Serializable, Comparable {
 	 *
 	 * @return a {@link java.lang.Boolean} object.
 	 */
-	public Boolean isThrowsException() { return this.isAboveThreshold() && !this.isBlacklisted(); }
+	public Boolean isThrowsException() { return this.isAboveThreshold() && !this.isExempted(); }
+	
 	/**
 	 * <p>isThrowsExceptionExcluded.</p>
 	 *
 	 * @return a {@link java.lang.Boolean} object.
 	 */
-	public Boolean isThrowsExceptionExcluded() { return this.isAboveThreshold() && this.isBlacklisted(); }
+	public Boolean isThrowsExceptionExcluded() { return this.isAboveThreshold() && this.isExempted(); }
 
 	public Application app = null;
+	
 	/**
 	 * <p>Getter for the field <code>app</code>.</p>
 	 *
 	 * @return a {@link com.sap.psr.vulas.shared.json.model.Application} object.
 	 */
 	public Application getApp() { return this.app; }
+	
 	/**
 	 * <p>Setter for the field <code>app</code>.</p>
 	 *
@@ -411,8 +432,8 @@ public class VulnerableDependency  implements Serializable, Comparable {
 			return "";
 		else if(AffectedVersionSource.MANUAL.equals(this.affectedVersionSource))
 			return "M";
-		else if(AffectedVersionSource.PRE_COMMIT_POM.equals(this.affectedVersionSource))
-			return "P";
+		else if(AffectedVersionSource.CHECK_CODE.equals(this.affectedVersionSource))
+			return "BC";
 		else if(AffectedVersionSource.CHECK_VERSION.equals(this.affectedVersionSource))
 			return "C";
 		else if(AffectedVersionSource.AST_EQUALITY.equals(this.affectedVersionSource))
@@ -431,7 +452,7 @@ public class VulnerableDependency  implements Serializable, Comparable {
 
 	/** {@inheritDoc} */
 	@Override
-	public int compareTo(Object _o) {
+	public int compareTo(VulnerableDependency _o) {
 		VulnerableDependency other = null;
 		if(_o instanceof VulnerableDependency)
 			other = (VulnerableDependency)_o;

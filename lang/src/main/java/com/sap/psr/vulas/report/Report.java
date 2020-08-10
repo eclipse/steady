@@ -36,8 +36,8 @@ import java.util.TreeSet;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -47,15 +47,19 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.goals.GoalContext;
+import com.sap.psr.vulas.shared.connectivity.PathBuilder;
 import com.sap.psr.vulas.shared.connectivity.Service;
+import com.sap.psr.vulas.shared.json.JacksonUtil;
+import com.sap.psr.vulas.shared.json.model.AffectedLibrary;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Bug;
+import com.sap.psr.vulas.shared.json.model.ExemptionBug;
+import com.sap.psr.vulas.shared.json.model.ExemptionScope;
+import com.sap.psr.vulas.shared.json.model.ExemptionSet;
+import com.sap.psr.vulas.shared.json.model.IExemption;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.json.model.VulnerableDependency;
 import com.sap.psr.vulas.shared.util.FileUtil;
-import com.sap.psr.vulas.shared.util.StringList;
-import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
-import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
@@ -65,24 +69,9 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class Report {
 
-	private static final Log log = LogFactory.getLog(Report.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH:mm:ss");
-	
-	/**
-	 * Whether or not archives with question marks will be ignored.
-	 */
-	public static final String IGN_UNASS_ALL = "all";
-	/** Constant <code>IGN_UNASS_KNOWN="known"</code> */
-	public static final String IGN_UNASS_KNOWN = "known";
-	/** Constant <code>IGN_UNASS_OFF="off"</code> */
-	public static final String IGN_UNASS_OFF = "off";
-	
-	/**
-	 * If IGN_UNASS_KNOWN, archives that are well-known to Maven Central and which contain change list constructs, 
-	 * but which have not been assessed yet will not raise a build exception.
-	 */
-	private String ignoreUnassessed = IGN_UNASS_KNOWN; 
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH:mm Z");
 
 	/** Constant <code>THRESHOLD_NONE="noException"</code> */
 	public static final String THRESHOLD_NONE    = "noException";
@@ -93,29 +82,24 @@ public class Report {
 	/** Constant <code>THRESHOLD_ACT_EXE="actuallyExecutes"</code> */
 	public static final String THRESHOLD_ACT_EXE = "actuallyExecutes";
 
+	// Templates and report names for HTML, XML and JSON
 	private static final String TEMPLATE_FILE_HTML = "velocity_template.html";
 	static final String REPORT_FILE_HTML = "vulas-report.html";
-	
 	private static final String TEMPLATE_FILE_XML = "velocity_template.xml";
 	static final String REPORT_FILE_XML = "vulas-report.xml";
-
 	private static final String TEMPLATE_FILE_JSON = "velocity_template.json";
 	static final String REPORT_FILE_JSON = "vulas-report.json";
-	
+
 	private Map<String,Long> stats = new HashMap<String,Long>();
 
 	private String exceptionThreshold = THRESHOLD_POT_EXE;
-
-	/**
-	 * A vulnerability in blacklisted scopes will not cause an exception (multiple scopes to be separated by comma, default: test)
-	 */
-	private StringList excludedScopes = new StringList();
-
-	/**
-	 * Vulnerabilities explicitly mentioned will not cause an exception (multiple bugs to be separated by comma)
-	 */
-	private StringList excludedBugs = new StringList();
 	
+	private boolean createAffectedLibraries = false;
+	
+	private Set<AffectedLibrary> affectedLibraries = new HashSet<AffectedLibrary>();
+
+	private ExemptionSet exemptions = new ExemptionSet();
+
 	private Application app = null;
 
 	private Set<Application> modules = null;
@@ -124,23 +108,23 @@ public class Report {
 	 *  All vulnerabilities of all application modules, collected in {@link Report#fetchAppVulnerabilities()}.
 	 */
 	private Set<AggregatedVuln> vulns = new TreeSet<AggregatedVuln>();
-	
+
 	/**
 	 *  Vulnerabilities that cause a build exception, determined in {@link Report#processVulnerabilities()}.
 	 */
 	private Set<AggregatedVuln> vulnsAboveThreshold = new TreeSet<AggregatedVuln>();
-		
+
 	/**
 	 *  Vulnerabilities that do not cause a build exception, determined in {@link Report#processVulnerabilities()}.
 	 */
 	private Set<AggregatedVuln> vulnsBelowThreshold = new TreeSet<AggregatedVuln>();
-	
+
 	// The following are used to inform about obsolete exemptions
 	private Set<String> historicalVulns = new HashSet<String>();
 	private Set<String> relevantVulns = new HashSet<String>();
 
 	final VelocityContext context = new VelocityContext();
-	
+
 	private GoalContext goalContext = null;
 
 	/**
@@ -160,7 +144,7 @@ public class Report {
 		}
 		else
 			this.modules = _modules;
-				
+
 		Report.log.info("Report to be done for " + this.app + ", [" + this.modules.size() + "] modules in total: " + this.modules);
 	}
 
@@ -170,6 +154,7 @@ public class Report {
 	 * @return a {@link java.lang.String} object.
 	 */
 	public String getExceptionThreshold() { return exceptionThreshold; }
+
 	/**
 	 * <p>Setter for the field <code>exceptionThreshold</code>.</p>
 	 *
@@ -180,95 +165,49 @@ public class Report {
 			this.exceptionThreshold = _threshold;
 		Report.log.info("Exception threshold: " + this.exceptionThreshold);
 	}
-
-	/**
-	 * <p>addExcludedBugs.</p>
-	 *
-	 * @param _items a {@link java.lang.String} object.
-	 */
-	public void addExcludedBugs(String _items) {
-		if(_items!=null && !_items.equals("")) {
-			this.excludedBugs.addAll(_items, ",", true);
-			Report.log.warn("Excluded bugs: " + this.excludedBugs);
-		}
-	}
 	
-	/**
-	 * <p>addExcludedBugs.</p>
-	 *
-	 * @param _items an array of {@link java.lang.String} objects.
-	 */
-	public void addExcludedBugs(String[] _items) {
-		if(_items!=null) {
-			this.excludedBugs.addAll(_items, true);
-			Report.log.warn("Excluded bugs: " + this.excludedBugs);
-		}
+	public boolean isCreateAffectedLibraries() {
+		return createAffectedLibraries;
 	}
 
-	/**
-	 * <p>addExcludedScopes.</p>
-	 *
-	 * @param _items a {@link java.lang.String} object.
-	 */
-	public void addExcludedScopes(String _items) {
-		if(_items!=null && !_items.equals("")) {
-			this.excludedScopes.addAll(_items, ",", true);
-			Report.log.warn("Excluded scopes: " + this.excludedScopes);
-		}
+	public void setCreateAffectedLibraries(boolean createAffectedLibraries) {
+		this.createAffectedLibraries = createAffectedLibraries;
 	}
 	
-	/**
-	 * <p>addExcludedScopes.</p>
-	 *
-	 * @param _items an array of {@link java.lang.String} objects.
-	 */
-	public void addExcludedScopes(String[] _items) {
-		if(_items!=null) {
-			this.excludedScopes.addAll(_items, true);
-			Report.log.warn("Excluded scopes: " + this.excludedScopes);
-		}
-	}
-	
-	/**
-	 * <p>Setter for the field <code>ignoreUnassessed</code>.</p>
-	 *
-	 * @param _ignore a {@link java.lang.String} object.
-	 */
-	public void setIgnoreUnassessed(String _ignore) {
-		if(_ignore!=null) {
-			if(_ignore.equalsIgnoreCase(IGN_UNASS_ALL)) {
-				this.ignoreUnassessed = IGN_UNASS_ALL;
-				Report.log.warn("All unassessed vulnerabilities will be ignored");
-			}
-			else if(_ignore.equalsIgnoreCase(IGN_UNASS_OFF)) {
-				this.ignoreUnassessed = IGN_UNASS_OFF;
-			}
-			else {
-				this.ignoreUnassessed = IGN_UNASS_KNOWN;
-				Report.log.warn("All unassessed vulnerabilities in archives with known digests will be ignored");
+	private void writeAffectedLibraries(@NotNull Path _dir) {
+		for(AffectedLibrary aff_lib: this.affectedLibraries) {
+			Path p = null;
+			try {
+				p = _dir.resolve(aff_lib.getBugId().getBugId() + "-" + Math.abs(Math.random()*100000) + ".json");
+				final AffectedLibrary[] aff_libs = new AffectedLibrary[1];
+				aff_libs[0] = aff_lib;
+				FileUtil.writeToFile(p.toFile(), JacksonUtil.asJsonString(aff_libs));
+				log.info("Created affected library at [" + p.getFileName() + "], upload with [curl -X PUT " + this.goalContext.getVulasConfiguration().getServiceUrl(Service.BACKEND) + PathBuilder.bugAffectedLibs(aff_lib.getBugId().getBugId()) + "?source=MANUAL -H \"Content-Type: application/json\" -H \"X-Vulas-Client-Token: <token>\" --upload-file " + p + "]");
+			} catch (Exception e) {
+				log.error("Cannot write affected library to [" + p + "]");
 			}
 		}
 	}
-	
-	private boolean ignoreUnassessed(VulnerableDependency _a) {
-		if(this.ignoreUnassessed.equalsIgnoreCase(IGN_UNASS_OFF))
-			return false;
-		else if(this.ignoreUnassessed.equalsIgnoreCase(IGN_UNASS_ALL))
-			return !_a.isAffectedVersionConfirmed();
-		else
-			return !_a.isAffectedVersionConfirmed() && _a.getDep().getLib().isWellknownDigest();
+
+	/**
+	 * <p>Setter for the field <code>excemptions</code>.</p>
+	 *
+	 * @param _exemptions a {@link Set} of {@link ExemptionBug}s.
+	 */
+	public void setExemptions(ExemptionSet _exemptions) {
+		this.exemptions = _exemptions;
 	}
-	
+
 	private boolean isAmongAggregatedModules(LibraryId _libid) {
 		for(Application prj: this.modules) {
 			if(prj.getMvnGroup().equals(_libid.getMvnGroup()) &&
-				prj.getArtifact().equals(_libid.getArtifact()) &&
-				prj.getVersion().equals(_libid.getVersion()))
+					prj.getArtifact().equals(_libid.getArtifact()) &&
+					prj.getVersion().equals(_libid.getVersion()))
 				return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Downloads vulnerable dependencies for all {@link Application}s in member variable {@link #modules}.
 	 * 
@@ -287,16 +226,16 @@ public class Report {
 				for(VulnerableDependency v: historical_vuln_deps) {
 					this.historicalVulns.add(v.getBug().getBugId());
 				}
-			
+
 				// Fetch and prepare relevant vulns
 				final Set<VulnerableDependency> vuln_deps = BackendConnector.getInstance().getAppVulnDeps(this.goalContext, prj, false, true, true);
 				for(VulnerableDependency v: vuln_deps) {
 					this.relevantVulns.add(v.getBug().getBugId());					
-					
+
 					v.setApp(prj);
 					final AggregatedVuln new_av   = new AggregatedVuln(v.getDep().getLib().getDigest(), v.getDep().getFilename(), v.getBug());
 					final AggregatedVuln added_av = this.update(this.vulns, new_av);
-					
+
 					//HP(19.12.2017): Only add if the vulnerability is not in on the of the other modules (which happens if you start scans for OSS projects)
 					if(v.getDep().getLib().getLibraryId()!=null && this.isAmongAggregatedModules(v.getDep().getLib().getLibraryId()))
 						log.warn("Skipping [" + v.getBug().getBugId() + "] for dependency of " + prj + " on " + v.getDep().getLib().getLibraryId() + ", the latter is one of the aggregated modules");
@@ -319,7 +258,7 @@ public class Report {
 		_set.add(_av);
 		return _av;
 	}
-
+	
 	/**
 	 * Processes all the vulnerabilities of all application modules as obtained from the backend.
 	 * Populates the Velocity {@link #context} required for rendering the templates in {@link #writeResult(Path)}. 
@@ -331,29 +270,40 @@ public class Report {
 		// Stats to be added to the goal execution
 		long vulns_incl = 0, vulns_reach = 0, vulns_traced = 0;
 		long vulns_traced_not_reach = 0; // A particularly interesting case: Static analysis says it is not reachable, however, we collected a trace
-		
+
 		// Collect obsolete exemptions
 		final Set<String> obsolHistorical = new HashSet<String>();
 		final Set<String> obsolSignNotPresent = new HashSet<String>();
-		for(String v: this.excludedBugs) {
-			if(this.historicalVulns.contains(v) && !relevantVulns.contains(v)) {
-				obsolHistorical.add(v);
-			}
-			else if(!this.historicalVulns.contains(v) && !relevantVulns.contains(v)) {
-				obsolSignNotPresent.add(v);
+		for(IExemption e: this.exemptions) {
+			if(e instanceof ExemptionBug) {
+				if(this.historicalVulns.contains(((ExemptionBug)e).getBugId()) && !relevantVulns.contains(((ExemptionBug)e).getBugId())) {
+					obsolHistorical.add(((ExemptionBug)e).getBugId());
+				}
+				else if(!this.historicalVulns.contains(((ExemptionBug)e).getBugId()) && !relevantVulns.contains(((ExemptionBug)e).getBugId())) {
+					obsolSignNotPresent.add(((ExemptionBug)e).getBugId());
+				}
 			}
 		}
 		if(!obsolHistorical.isEmpty())
 			log.warn("Exemptions for the following vulnerabilities are obsolete, because they concern previous version(s) of the respective application dependency(ies) (historical vulnerability): [" + StringUtil.join(obsolHistorical, ", ") + "]");
 		if(!obsolSignNotPresent.isEmpty())
 			log.warn("Exemptions for the following vulnerabilities are obsolete, because none of the application dependencies contain potentially affected code signatures: [" + StringUtil.join(obsolSignNotPresent, ", ") + "]");
-
+		
 		// Process all vulnerable dependencies obtained from the backend
 		for(AggregatedVuln v: this.vulns) {
 			for(VulnerableDependency analysis: v.getAnalyses()) {
-				
+
 				// Is the vulnerability exempted?
-				analysis.setBlacklisted(this.isIgnoredForBuildException(analysis, v.getBug().getBugId()));				
+				// Important: The vuln dependency downloaded may have an exemption already.
+				// If any, it will be overriden using the current configuration of the report goal
+				final IExemption exemption = this.exemptions.getApplicableExemption(analysis); 
+				analysis.setExemption(exemption);
+				if(exemption!=null && exemption instanceof ExemptionBug && this.isCreateAffectedLibraries()) {
+					final AffectedLibrary aff_lib = ((ExemptionBug)exemption).createAffectedLibrary(analysis);
+					if(aff_lib!=null) {
+						affectedLibraries.add(aff_lib);
+					}
+				}
 
 				// Only report if there is a confirmed problem or a manual check/activity is required (orange hourglass)
 				// In other words: ignore historical vulnerabilities, i.e., cases where a non-vulnerable archive is used
@@ -361,14 +311,14 @@ public class Report {
 					vulnsToReport.add(v);
 					vulns_incl++;
 				}
-				
+
 				// Counters
 				if(!analysis.isNoneAffectedVersion() && ( analysis.isReachable() || !analysis.isReachableConfirmed() )) { vulns_reach++; }
 				if(!analysis.isNoneAffectedVersion() && ( analysis.isTraced() || !analysis.isTracedConfirmed() )) { vulns_traced++; }
-				
+
 				// Interesting case: Traced but not reachable
 				if(analysis.isTraced() && analysis.isReachable() && analysis.isReachableConfirmed()) { vulns_traced_not_reach++; }
-				
+
 				// Is analysis above the configured exception threshold?
 				if( (exceptionThreshold.equalsIgnoreCase(THRESHOLD_DEP_ON)  && ( analysis.isAffectedVersion() || !analysis.isAffectedVersionConfirmed() ) ) ||
 						(exceptionThreshold.equalsIgnoreCase(THRESHOLD_POT_EXE) && ( !analysis.isNoneAffectedVersion() && ( analysis.isReachable() || !analysis.isReachableConfirmed() ) ) ) ||
@@ -382,7 +332,7 @@ public class Report {
 				if(analysis.isThrowsException()) { v.aboveThreshold = true; }
 			}
 		}
-		
+
 		// Split vulnerabilities to be reported into 2 sets
 		for(AggregatedVuln v: vulnsToReport) {
 			if(v.aboveThreshold)
@@ -398,10 +348,10 @@ public class Report {
 		this.stats.put("report.vulnsTracedNotReachable", vulns_traced_not_reach); //
 
 		this.stats.put("report.buildFailure", Long.valueOf(this.isThrowBuildException()?1:0) );
-		
+
 		this.stats.put("report.vulnsAboveThreshold", Long.valueOf(vulnsAboveThreshold.size()));
 		this.stats.put("report.vulnsBelowThreshold", Long.valueOf(vulnsBelowThreshold.size()));
-		
+
 		this.stats.put("report.isAggregated", Long.valueOf((this.isAggregated() ? 1 : 0)));
 		this.stats.put("report.projectsReportedOn", Long.valueOf(modules.size()));
 
@@ -409,7 +359,7 @@ public class Report {
 		this.context.put("vulnsToReport", vulnsToReport);
 		this.context.put("vulnsAboveThreshold", vulnsAboveThreshold);
 		this.context.put("vulnsBelowThreshold", vulnsBelowThreshold);
-		
+
 		this.context.put("obsoleteExemptionsHistorical", StringUtil.join(obsolHistorical, ", "));
 		this.context.put("obsoleteExemptionsSignatureNotPresent", StringUtil.join(obsolSignNotPresent, ", "));
 
@@ -420,15 +370,15 @@ public class Report {
 		this.context.put("projects", modules);
 		this.context.put("generatedAt", dateFormat.format(new Date()));
 		this.context.put("vulas-shared-homepage", this.goalContext.getVulasConfiguration().getConfiguration().getString(VulasConfiguration.HOMEPAGE, "undefined"));
-		
+
 		// Configuration
 		this.context.put("exceptionThreshold", this.exceptionThreshold);
-		this.context.put("exceptionScopeBlacklist", this.excludedScopes.toString(", "));
-		this.context.put("exceptionExcludedBugs", this.excludedBugs.toString(", "));
+		this.context.put("exemptScopes", this.exemptions.subset(ExemptionScope.class).toString());
+		this.context.put("exemptBugs", this.exemptions.subset(ExemptionBug.class).toString());
 		this.context.put("isAggregated", Boolean.valueOf(this.isAggregated()));
 		this.context.put("thresholdMet", vulnsAboveThreshold.isEmpty());
 	}
-
+	
 	/**
 	 * Returns true if there are any application modules, false otherwise.
 	 * @return
@@ -438,12 +388,13 @@ public class Report {
 	}
 
 	/**
-	 * Returns true if a build exception shall be thrown, which is the case if a threshold other than NONE is defined and vulnerabilities exist above this threshold.
+	 * Returns true if a build exception shall be thrown, which is the case if a threshold other than
+	 * {@link Report#THRESHOLD_NONE} is defined and vulnerabilities exist above this threshold.
 	 *
 	 * @return a boolean.
 	 */
 	public boolean isThrowBuildException() {
-		return !this.exceptionThreshold.equalsIgnoreCase("none") && !this.vulnsAboveThreshold.isEmpty();
+		return !this.exceptionThreshold.equalsIgnoreCase(THRESHOLD_NONE) && !this.vulnsAboveThreshold.isEmpty();
 	}
 
 	/**
@@ -454,8 +405,7 @@ public class Report {
 	public Map<String,String> getConfiguration() {
 		final Map<String,String> cfg = new HashMap<String,String>();
 		cfg.put("report.exceptionThreshold", this.exceptionThreshold);
-		cfg.put("report.exceptionScopeBlacklist", this.excludedScopes.toString(", "));
-		cfg.put("report.exceptionExcludedBugs", this.excludedBugs.toString(", "));
+		cfg.put("report.exemptions", StringUtil.join(this.exemptions, ", "));
 		cfg.put("report.aggregated", Boolean.toString(this.isAggregated()));
 		return cfg;
 	}
@@ -466,7 +416,7 @@ public class Report {
 	 * @return a {@link java.util.Map} object.
 	 */
 	public Map<String,Long> getStats() { return this.stats; }
-	
+
 	/**
 	 * <p>getExceptionMessage.</p>
 	 *
@@ -482,7 +432,7 @@ public class Report {
 			builder.append("Application potentially executes vulnerable code");
 		else if(exceptionThreshold.equalsIgnoreCase(THRESHOLD_ACT_EXE))
 			builder.append("Application actually executes vulnerable code");
-		
+
 		return builder.toString();
 	}
 
@@ -509,6 +459,7 @@ public class Report {
 				if(analysis.isThrowsException()) {
 					builder.append(System.getProperty("line.separator")).append("      ").append(++i).append(": ");
 					builder.append("[filename=").append(v.filename);
+					builder.append(", digest=").append(analysis.getDep().getLib().getDigest());
 					builder.append(", scope=").append(analysis.getDep().getScope());
 					builder.append(", transitive=").append(analysis.getDep().getTransitive());
 					builder.append(", wellknownSha1=").append(analysis.getDep().getLib().isWellknownDigest());
@@ -520,7 +471,7 @@ public class Report {
 
 		return builder.toString();
 	}
-	
+
 	/**
 	 * Creates result reports in HTML, XML and JSON.
 	 *
@@ -530,8 +481,9 @@ public class Report {
 		this.writeResultAsHtml(_dir);
 		this.writeResultAsXml(_dir);
 		this.writeResultAsJson(_dir);
+		this.writeAffectedLibraries(_dir);
 	}
-	
+
 	/**
 	 * <p>writeResult.</p>
 	 *
@@ -559,7 +511,7 @@ public class Report {
 			// Create dir if required
 			if(!FileUtil.isAccessibleDirectory(_dir))
 				Files.createDirectories(_dir);
-			
+
 			// Write report
 			file = Paths.get(_dir.toString(), _report).toFile();
 			pw = new PrintWriter(file, FileUtil.getCharsetName());
@@ -588,7 +540,7 @@ public class Report {
 	public Path writeResultAsHtml(@NotNull Path _dir) {
 		return this.writeResult(_dir, TEMPLATE_FILE_HTML, REPORT_FILE_HTML);
 	}
-	
+
 	/**
 	 * <p>writeResultAsXml.</p>
 	 *
@@ -598,7 +550,7 @@ public class Report {
 	public Path writeResultAsXml(@NotNull Path _dir) {
 		return this.writeResult(_dir, TEMPLATE_FILE_XML, REPORT_FILE_XML);
 	}
-	
+
 	/**
 	 * <p>writeResultAsJson.</p>
 	 *
@@ -609,20 +561,6 @@ public class Report {
 		return this.writeResult(_dir, TEMPLATE_FILE_JSON, REPORT_FILE_JSON);
 	}
 
-	/**
-	 * Returns true if the given analysis will not lead to a build exception according to the
-	 * configured scope blacklists and excluded bugs.
-	 * @param _a
-	 * @param _excl_scopes
-	 * @param _excl_bugs
-	 * @return
-	 */
-	private boolean isIgnoredForBuildException(VulnerableDependency _a, String _bugid) {
-		return (this.excludedScopes!=null && _a.getDep().getScope()!=null && this.excludedScopes.contains(_a.getDep().getScope().toString(), ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE)) ||
-				(this.excludedBugs!=null && this.excludedBugs.contains(_bugid, ComparisonMode.EQUALS, CaseSensitivity.CASE_INSENSITIVE))  ||
-				(this.ignoreUnassessed(_a));
-	}
-
 	public static class AggregatedVuln implements Comparable {
 
 		public String archiveid; // Digest
@@ -630,7 +568,7 @@ public class Report {
 
 		public String filename;
 		public String getFilename() { return filename; }
-				
+
 		public Bug bug = null;
 		public Bug getBug() { return this.bug; }
 
@@ -648,7 +586,7 @@ public class Report {
 
 		public boolean aboveThreshold = false;
 		public boolean hasFindingsAboveThreshold() { return aboveThreshold; }
-		
+
 		public String toString() {
 			return "[" + this.filename + ", " + this.bug.getBugId() + ", #analyses=" + this.analyses.size() + "]";
 		}
@@ -674,7 +612,7 @@ public class Report {
 				return false;
 			if (getClass() != obj.getClass())
 				return false;
-			
+
 			AggregatedVuln other = (AggregatedVuln) obj;
 			if (archiveid == null) {
 				if (other.archiveid != null)

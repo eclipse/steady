@@ -25,8 +25,8 @@ import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
@@ -61,7 +61,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public abstract class AbstractGoal implements Runnable {
 
-	private static final Log log = LogFactory.getLog(AbstractGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/** Constant <code>CLASS_EXT</code> */
 	protected static final String[] CLASS_EXT   = new String[] {"CLASS"};
@@ -543,10 +543,10 @@ public abstract class AbstractGoal implements Runnable {
 		// Goal configuration
 		b.append(",\"configuration\":[");
 		int c = 0;
-		final Iterator<String> iter = this.getConfiguration().getConfiguration().subset("vulas").getKeys();
+		final Iterator<String> iter = this.getConfiguration().getConfiguration().getKeys("vulas");
 		while(iter.hasNext()) {
 			final String key = iter.next();
-			final String[] value = this.getConfiguration().getConfiguration().getStringArray("vulas." + key);
+			final String[] value = this.getConfiguration().getConfiguration().getStringArray(key);
 			if(c++>0) b.append(",");
 			b.append("{\"source\":\"GOAL_CONFIG\",\"name\":").append(JsonBuilder.escape(key)).append(",\"value\":").append(JsonBuilder.escape(StringUtil.join(value, ","))).append("}");
 		}

@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.nio.file.Files;
@@ -57,8 +56,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
 import com.sap.psr.vulas.shared.connectivity.Service;
 import com.sap.psr.vulas.shared.connectivity.ServiceConnectionException;
@@ -89,10 +87,10 @@ import com.sap.psr.vulas.shared.connectivity.ServiceConnectionException;
  */
 public class VulasConfiguration {
 
-	private static Log log = null;
-	private static final synchronized Log getLog() {
+	private static Logger log = null;
+	private static final synchronized Logger getLog() {
 		if(VulasConfiguration.log==null)
-			VulasConfiguration.log = LogFactory.getLog(VulasConfiguration.class);
+			VulasConfiguration.log = org.apache.logging.log4j.LogManager.getLogger();
 		return VulasConfiguration.log;
 	}
 
@@ -785,6 +783,30 @@ public class VulasConfiguration {
 				value = value.substring(0, value.length()-1);
 		}
 		return value;
+	}
+
+	/**
+	 * Returns key-value pairs to be added as HTTP headers in calls to the given {@link Service}.
+	 * 
+	 * All configuration settings of the following form will be included in the map:
+	 * vulas.shared.&lt;service&gt;.header.&lt;key&gt; = &lt;value&gt;
+	 *
+	 * Note: Does not work for comma-separated enumerations
+	 * 
+	 * @param _service a {@link com.sap.psr.vulas.shared.connectivity.Service} object.
+	 * @return a boolean.
+	 */
+	public Map<String, String> getServiceHeaders(Service _service) {
+		final String key_prefix = "vulas.shared." + _service.toString().toLowerCase() + ".header";
+		final Configuration subset = getConfiguration().subset(key_prefix);
+		final Iterator<String> iter = subset.getKeys();
+		final Map<String, String> headers = new HashMap<String, String>();
+		while(iter.hasNext()) {
+			final String key = iter.next();
+			final String val = subset.getProperty(key).toString();
+			headers.put(key, val);
+		}
+		return headers;
 	}
 
 	/**

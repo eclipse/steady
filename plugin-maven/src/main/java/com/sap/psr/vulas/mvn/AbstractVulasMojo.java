@@ -43,6 +43,7 @@ import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.AbstractAppGoal;
 import com.sap.psr.vulas.goals.GoalExecutionException;
 import com.sap.psr.vulas.java.ArchiveAnalysisManager;
+import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.GoalClient;
 import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.json.model.Application;
@@ -282,6 +283,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
                 // Create lib w/o SHA1
                 lib = new Library();
                 lib.setLibraryId(new LibraryId(a.getGroupId(), a.getArtifactId(), a.getVersion()));
+                lib.setDigest(FileUtil.getDigest(a.getFile(),DigestAlgorithm.SHA1));
                 
                 // Create dependency and put into map
                 dep = new Dependency(this.goal.getGoalContext().getApplication(), lib, Scope.fromString(a.getScope().toUpperCase(), Scope.RUNTIME), !direct_artifacts.contains(a), null, a.getFile().toPath().toString());

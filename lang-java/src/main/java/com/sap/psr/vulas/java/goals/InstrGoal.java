@@ -24,8 +24,8 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.AbstractAppGoal;
@@ -45,7 +45,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class InstrGoal extends AbstractAppGoal {
 
-	private static final Log log = LogFactory.getLog(InstrGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private Path libPath = null;
 

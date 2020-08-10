@@ -105,7 +105,20 @@ public class GoalFactory {
 		}
 		else if(_type.equals(GoalType.SPACEDEL)) {
 			goal = new SpaceDelGoal();
-		}else {
+		}else if(_type.equals(GoalType.CHECKCODE)) {
+			final String clazzname = "com.sap.psr.vulas.java.goals.CheckBytecodeGoal";
+			try {
+				final Class clazz = Class.forName(clazzname);
+				goal = (AbstractGoal)clazz.newInstance();
+			} catch (ClassNotFoundException e) {
+				throw new IllegalStateException("Cannot create instance of class [" + clazzname + "]: " + e.getMessage());
+			} catch (InstantiationException e) {
+				throw new IllegalStateException("Cannot create instance of class [" + clazzname + "]: " + e.getMessage());
+			} catch (IllegalAccessException e) {
+				throw new IllegalStateException("Cannot create instance of class [" + clazzname + "]: " + e.getMessage());
+			}
+		}
+		else {
 			throw new IllegalArgumentException ("Goal [" + _type + "] is not supported");
 		}
 		return goal;

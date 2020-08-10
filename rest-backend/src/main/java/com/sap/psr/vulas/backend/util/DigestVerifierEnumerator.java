@@ -20,6 +20,7 @@
 package com.sap.psr.vulas.backend.util;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -27,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sap.psr.vulas.backend.model.Library;
+import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.util.CollectionUtil;
@@ -78,12 +80,12 @@ public class DigestVerifierEnumerator implements DigestVerifier {
 	 *
 	 * Loops over available implementations of {@link DigestVerifier} in order to verify the digest of a given {@link Library}.
 	 */
-	public Boolean verify(Library _lib) throws VerificationException {
+	public List<LibraryId> verify(Library _lib) throws VerificationException {
 		if(_lib==null || _lib.getDigest()==null)
 			throw new IllegalArgumentException("No library or digest provided: [" + _lib + "]");
 
-		// Will only have a true or false value if either one verifier returns true, or all returned false (thus, no exception happened)
-		Boolean verified = null;
+		// Will only have a list of LibraryIds or an empty list if either one verifier returns (thus, no exception happened)
+		List<LibraryId> verified = null;
 		int exception_count = 0;
 
 		// Perform the loop
@@ -96,7 +98,7 @@ public class DigestVerifierEnumerator implements DigestVerifier {
 					l.getSupportedDigestAlgorithms().contains(_lib.getDigestAlgorithm())) {
 				try {
 					verified = l.verify(_lib);
-					if(verified!=null && verified) {
+					if(verified!=null && verified.size()>0) {
 						this.url = l.getVerificationUrl();
 						this.timestamp = l.getReleaseTimestamp();
 						break;

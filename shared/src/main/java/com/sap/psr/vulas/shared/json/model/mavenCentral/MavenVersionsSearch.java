@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.cia.model.mavenCentral;
+package com.sap.psr.vulas.shared.json.model.mavenCentral;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -37,13 +37,13 @@ public class MavenVersionsSearch {
 	/**
 	 * <p>Getter for the field <code>response</code>.</p>
 	 *
-	 * @return a {@link com.sap.psr.vulas.cia.model.mavenCentral.MavenSearchResponse} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.mavenCentral.MavenSearchResponse} object.
 	 */
 	public MavenSearchResponse getResponse() { return response; }
 	/**
 	 * <p>Setter for the field <code>response</code>.</p>
 	 *
-	 * @param response a {@link com.sap.psr.vulas.cia.model.mavenCentral.MavenSearchResponse} object.
+	 * @param response a {@link com.sap.psr.vulas.shared.json.model.mavenCentral.MavenSearchResponse} object.
 	 */
 	public void setResponse(MavenSearchResponse response) { this.response = response; }	
 }

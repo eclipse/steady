@@ -28,8 +28,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.core.util.SignatureConfiguration;
@@ -45,7 +45,7 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
  */
 public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 
-	private static final Log log = LogFactory.getLog(UniqueNameNormalizer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static final Pattern CONSTANT_PATTERN = Pattern.compile("([0-9a-zA-Z_\\.]+)\\.([0-9A-Z_]+)");
 

@@ -278,7 +278,7 @@ sap.ui.controller(
 											var aNaUrl = model.Config.getAffectedMavenArtifacts(gas[ga] );
 											$.ajax({  type: "GET",
 											        url: aNaUrl,
-											        headers : {'content-type': "application/json",'cache-control': "no-cache" ,'X-Vulas-Version':model.Version.version,'X-Vulas-Component':'appfrontend'},
+											        headers : {'content-type': "application/json",'cache-control': "no-cache" ,'X-Vulas-Version':model.Version.version,'X-Vulas-Component':'bugfrontend'},
 											        success: function(response) {
 												allversions.setData(response);
 												var oAffectedMavenVersions = allversions.getObject("/");

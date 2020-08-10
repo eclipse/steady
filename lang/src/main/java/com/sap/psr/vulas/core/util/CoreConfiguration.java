@@ -23,8 +23,8 @@ import java.util.ServiceLoader;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
@@ -41,7 +41,7 @@ import com.sap.psr.vulas.sign.SignatureFactory;
  */
 public class CoreConfiguration {
 
-	private static final Log log = LogFactory.getLog(CoreConfiguration.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	// Goal context
 	/** Constant <code>TENANT_TOKEN="vulas.core.tenant.token"</code> */
@@ -116,16 +116,12 @@ public class CoreConfiguration {
 	public final static String REP_AGGR_MODULES  = "vulas.report.aggregateModules";
 	/** Constant <code>REP_EXC_THRESHOLD="vulas.report.exceptionThreshold"</code> */
 	public final static String REP_EXC_THRESHOLD = "vulas.report.exceptionThreshold";
-	/** Constant <code>REP_EXC_SCOPE_BL="vulas.report.exceptionScopeBlacklist"</code> */
-	public final static String REP_EXC_SCOPE_BL  = "vulas.report.exceptionScopeBlacklist";
-	/** Constant <code>REP_EXCL_UNASS="vulas.report.exceptionExcludeUnassessed"</code> */
-	public final static String REP_EXCL_UNASS    = "vulas.report.exceptionExcludeUnassessed";
-	/** Constant <code>REP_EXCL_BUGS="vulas.report.exceptionExcludeBugs"</code> */
-	public final static String REP_EXCL_BUGS     = "vulas.report.exceptionExcludeBugs";
 	/** Constant <code>REP_DIR="vulas.report.reportDir"</code> */
 	public final static String REP_DIR           = "vulas.report.reportDir";
 	/** Constant <code>REP_OVERRIDE_VER="vulas.report.overridePomVersion"</code> */
 	public final static String REP_OVERRIDE_VER  = "vulas.report.overridePomVersion";
+	/** Constant <code>REP_LIB_ASSESS="vulas.report.createLibraryAssessments"</code> */
+	public final static String REP_CREATE_AFF_LIB = "vulas.report.createLibraryAssessments";
 
 	/** Constant <code>SEQ_DEFAULT="vulas.core.sequence.defaultGoals"</code> */
 	public final static String SEQ_DEFAULT       = "vulas.core.sequence.defaultGoals";

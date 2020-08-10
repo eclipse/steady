@@ -24,8 +24,8 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.ConstructChange;
 import com.sap.psr.vulas.ConstructId;
@@ -41,7 +41,7 @@ import com.sap.psr.vulas.vcs.FileChange;
  */
 public class FileComparator {
 
-	private static final Log log = LogFactory.getLog(FileComparator.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	private File def, fix = null;
 
 	private FileAnalyzer defAnalyzer, fixAnalyzer = null;

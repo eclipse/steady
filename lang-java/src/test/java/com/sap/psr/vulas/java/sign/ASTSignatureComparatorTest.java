@@ -29,14 +29,17 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.sap.psr.vulas.Construct;
@@ -47,7 +50,10 @@ import com.sap.psr.vulas.FileAnalyzerFactory;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.java.JavaConstructorId;
 import com.sap.psr.vulas.java.JavaId;
+import com.sap.psr.vulas.java.sign.gson.ASTConstructBodySignatureDeserializer;
+import com.sap.psr.vulas.java.sign.gson.ASTSignatureChangeDeserializer;
 import com.sap.psr.vulas.java.sign.gson.GsonHelper;
+import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.sign.Signature;
 import com.sap.psr.vulas.sign.SignatureChange;
@@ -59,9 +65,9 @@ import com.sap.psr.vulas.sign.SignatureFactory;
  */
 public class ASTSignatureComparatorTest {
 
-	private static final Log log = LogFactory.getLog(ASTSignatureComparatorTest.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
-	final Gson gson = GsonHelper.getCustomGsonBuilder().create();
+	Map<Class<?>,StdDeserializer<?>> custom_deserializers = new HashMap<Class<?>,StdDeserializer<?>>();
 
 	private static final String TEST_DATA = "./src/test/resources/methodBody/";
 
@@ -126,6 +132,8 @@ public class ASTSignatureComparatorTest {
 		this.setupFixedConstruct();
 		this.setupDefectiveConstruct();
 		this.setupConstructUnderTest();
+		custom_deserializers.put(ASTSignatureChange.class, new ASTSignatureChangeDeserializer());
+		custom_deserializers.put(ASTConstructBodySignature.class, new ASTConstructBodySignatureDeserializer());
 	}
 
 	@Test
@@ -133,7 +141,7 @@ public class ASTSignatureComparatorTest {
 
 		// Read previous change from disk and check equality
 		final String sig_chg_json = FileUtil.readFile(Paths.get("./src/test/resources/methodBody/deserialize/signatureChange.json"));
-		final SignatureChange ddf = this.gson.fromJson(sig_chg_json, ASTSignatureChange.class);
+		final SignatureChange ddf = (ASTSignatureChange) JacksonUtil.asObject(sig_chg_json, custom_deserializers, ASTSignatureChange.class);
 
 		SignatureComparator signComparator = new ASTSignatureComparator();
 		SignatureChange ddt = signComparator.computeChange(signatureDef, signatureUnderTest);
@@ -234,9 +242,9 @@ public class ASTSignatureComparatorTest {
 			assertEquals(fix_sig_json, fixSigJson);
 
 			// Deserialize
-			final Signature vul_sig = this.gson.fromJson(vul_sig_json, ASTConstructBodySignature.class);
-			final Signature fix_sig = this.gson.fromJson(fix_sig_json, ASTConstructBodySignature.class);
-
+			final Signature vul_sig = (Signature) JacksonUtil.asObject(vul_sig_json, custom_deserializers, ASTConstructBodySignature.class);
+			final Signature fix_sig = (Signature) JacksonUtil.asObject(fix_sig_json, custom_deserializers, ASTConstructBodySignature.class);
+		
 			// Create signature change
 			final SignatureComparator comparator = new ASTSignatureComparator();
 			SignatureChange chg = comparator.computeChange(vul_sig, fix_sig);
@@ -244,7 +252,7 @@ public class ASTSignatureComparatorTest {
 			// Read previous change from disk and check equality
 			final String sig_chg_json = FileUtil.readFile(Paths.get("./src/test/resources/methodBody/deserialize/signatureChange.json"));
 			assertEquals(sig_chg_json, sigChange);
-			final SignatureChange sig_chg = this.gson.fromJson(sig_chg_json, ASTSignatureChange.class);
+			final SignatureChange sig_chg = (ASTSignatureChange) JacksonUtil.asObject(sig_chg_json, custom_deserializers, ASTSignatureChange.class);
 			assertEquals(chg, sig_chg);
 
 		} catch (JsonSyntaxException e) {

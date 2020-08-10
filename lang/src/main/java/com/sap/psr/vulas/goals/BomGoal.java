@@ -27,8 +27,8 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
@@ -48,7 +48,7 @@ import com.sap.psr.vulas.tasks.BomTask;
  */
 public class BomGoal extends AbstractAppGoal {
 
-	private static final Log log = LogFactory.getLog(BomGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * <p>Constructor for BomGoal.</p>

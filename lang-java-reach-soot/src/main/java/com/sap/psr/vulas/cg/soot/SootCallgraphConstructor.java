@@ -31,8 +31,8 @@ import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import soot.*;
 import soot.jimple.infoflow.entryPointCreators.IEntryPointCreator;
 import soot.jimple.toolkits.callgraph.CallGraph;
@@ -47,7 +47,7 @@ import java.util.*;
  */
 public class SootCallgraphConstructor implements ICallgraphConstructor {
 
-    private static final Log log = LogFactory.getLog(SootCallgraphConstructor.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
     /** Constant <code>FRAMEWORK="soot"</code> */
     public static final String FRAMEWORK = "soot";

@@ -25,8 +25,8 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.goals.AbstractGoal;
 import com.sap.psr.vulas.goals.GoalConfigurationException;
@@ -44,7 +44,7 @@ import com.sap.psr.vulas.shared.json.model.Space;
  */
 public class VulasCli {
 
-	private static final Log log = LogFactory.getLog(VulasCli.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static GoalType goalType = null;
 

@@ -25,8 +25,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * <p>PathSimilarity class.</p>
@@ -34,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class PathSimilarity {
 	
-	private static final Log log = LogFactory.getLog( PathSimilarity.class );
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger( PathSimilarity.class );
 
 	//ArrayList: every path has a unique index
 	ArrayList<LinkedList<String>> paths = null;

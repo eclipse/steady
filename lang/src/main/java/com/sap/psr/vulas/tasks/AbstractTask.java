@@ -23,8 +23,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.goals.GoalConfigurationException;
 import com.sap.psr.vulas.shared.enums.GoalClient;
@@ -38,7 +38,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public abstract class AbstractTask implements Task {
 	
-	private static final Log log = LogFactory.getLog(AbstractTask.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private GoalClient client = null;
 	

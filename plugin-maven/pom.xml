@@ -27,7 +27,7 @@
     <parent>
         <groupId>com.sap.research.security.vulas</groupId>
         <artifactId>root</artifactId>
-        <version>3.1.11-SNAPSHOT</version>
+        <version>3.1.14-SNAPSHOT</version>
     </parent>
      <!-- NOTE: This plugin name violates the Maven naming convention, which results in a warning during build. -->
     <artifactId>plugin-maven</artifactId>
@@ -93,7 +93,7 @@
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
-            <version>1.10.7</version>
+            <version>1.10.8</version>
         </dependency>
 
         <!--instrumentation agent dependency -->

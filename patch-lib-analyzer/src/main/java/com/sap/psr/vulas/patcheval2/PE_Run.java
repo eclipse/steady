@@ -23,19 +23,21 @@ package com.sap.psr.vulas.patcheval2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.google.gson.Gson;
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.java.sign.gson.GsonHelper;
-import com.sap.psr.vulas.patcheval.representation.Bug;
+
 import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
+import com.sap.psr.vulas.shared.json.JacksonUtil;
+import com.sap.psr.vulas.shared.json.model.Bug;
 import com.sap.psr.vulas.shared.json.model.VulnerableDependency;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
@@ -45,7 +47,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class PE_Run implements Runnable {
 
-	private static final Log log = LogFactory.getLog(PE_Run.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * <p>run.</p>
@@ -62,16 +64,11 @@ public class PE_Run implements Runnable {
 			return;
 		}
 		
-
-		final Gson gson = GsonHelper.getCustomGsonBuilder().create();
-
 		List<Bug> bugsToAnalyze = new ArrayList<Bug>();
 
 		if (bugs == null || bugs.length == 0 || (bugs.length == 1 && bugs[0].equals("")) ) {
-			String allbugs;
 			try {
-				allbugs = BackendConnector.getInstance().getBugsList(lang);
-				bugsToAnalyze = Arrays.asList(gson.fromJson(allbugs, Bug[].class));
+				bugsToAnalyze = Arrays.asList((Bug[]) JacksonUtil.asObject(BackendConnector.getInstance().getBugsList(lang), Bug[].class));
 			} catch (BackendConnectionException e) {
 				if(e.getHttpResponseStatus()==503)
 					log.error("Vulas backend still unavailable (503) after 1h, could not get list of bugs to analyze");
@@ -86,7 +83,7 @@ public class PE_Run implements Runnable {
 						for (VulnerableDependency vd : unconfirmedBugs) {
 							if (vd.getDep().getLib().getLibraryId() != null) {
 								if (!contained.contains(vd.getBug().getBugId())) {
-									bugsToAnalyze.add(new Bug(vd.getBug().getBugId(), null));
+									bugsToAnalyze.add(new Bug(vd.getBug().getBugId()));
 									contained.add(vd.getBug().getBugId());
 								}
 							}
@@ -95,7 +92,7 @@ public class PE_Run implements Runnable {
 						// Arrays.asList((Bug[])bugSet.toArray());
 
 					} else if (!bugId.equals("")) {
-						bugsToAnalyze.add(new Bug(bugId, null));
+						bugsToAnalyze.add(new Bug(bugId));
 					}
 				} catch (BackendConnectionException e) {
 					if(e.getHttpResponseStatus()==503)
@@ -104,8 +101,10 @@ public class PE_Run implements Runnable {
 				}
 			}
 		}
-
+		
+		
 		try {
+			Collections.shuffle(bugsToAnalyze);
 			BugLibManager.analyze(bugsToAnalyze);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
