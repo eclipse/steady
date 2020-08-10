@@ -60,13 +60,14 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
      * The context information of the application JAR to be analyzed
      */
     private Application appContext = null;
-    
+
     private VulasConfiguration vulasConfiguration = null;
 
     /**
      * The JAR to be analyzed.
      */
     private String appJar = null;
+
     protected String classpath = null;
     private String appClasspath = null;
     protected final List<SootMethod> entrypoints = new ArrayList<>();
@@ -82,10 +83,10 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
     public void setAppContext(Application _ctx) {
         this.appContext = _ctx;
     }
-    
+
     /** {@inheritDoc} */
     public void setVulasConfiguration(VulasConfiguration _cfg) {
-    	this.vulasConfiguration = _cfg;
+        this.vulasConfiguration = _cfg;
     }
 
     /**
@@ -102,16 +103,18 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String getFramework() { return SootCallgraphConstructor.FRAMEWORK; }
+    public String getFramework() {
+        return SootCallgraphConstructor.FRAMEWORK;
+    }
 
     /** {@inheritDoc} */
     public void setDepClasspath(String _dependenciesClasspath) {
         if (this.classpath != null) {
             this.classpath += System.getProperty("path.separator");
             this.classpath += _dependenciesClasspath;
-        } else
-            this.classpath = _dependenciesClasspath;
-        SootCallgraphConstructor.log.info("Add to soot classpath the dependencies: [" + this.classpath + "]");
+        } else this.classpath = _dependenciesClasspath;
+        SootCallgraphConstructor.log.info(
+                "Add to soot classpath the dependencies: [" + this.classpath + "]");
     }
 
     /** {@inheritDoc} */
@@ -119,11 +122,11 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
         if (this.classpath != null) {
             this.classpath += System.getProperty("path.separator");
             this.classpath += _cp;
-        } else
-            this.classpath = _cp;
+        } else this.classpath = _cp;
         this.appClasspath = _cp;
 
-        SootCallgraphConstructor.log.info("Add to soot classpath the application: [" + this.classpath + "]");
+        SootCallgraphConstructor.log.info(
+                "Add to soot classpath the application: [" + this.classpath + "]");
     }
 
     /**
@@ -141,9 +144,10 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
      * @return a {@link org.apache.commons.configuration.Configuration} object.
      */
     public Configuration getConstructorConfiguration() {
-        return this.vulasConfiguration.getConfiguration().subset(SootConfiguration.SOOT_CONFIGURATION_SETTINGS);
+        return this.vulasConfiguration
+                .getConfiguration()
+                .subset(SootConfiguration.SOOT_CONFIGURATION_SETTINGS);
     }
-
 
     /*
      * First resets and then configures Soot's Options
@@ -158,27 +162,38 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
         G.v().resetSpark();
         G.reset();
 
-        boolean verbose = this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_VERBOSE);
-
+        boolean verbose =
+                this.vulasConfiguration
+                        .getConfiguration()
+                        .getBoolean(SootConfiguration.SOOT_VERBOSE);
 
         // set default excluded list to empty list
         // Options.v().set_include_all(true);
 
-        String excludedPackages = this.vulasConfiguration.getConfiguration().getString(SootConfiguration.SOOT_EXCLUSIONS);
+        String excludedPackages =
+                this.vulasConfiguration
+                        .getConfiguration()
+                        .getString(SootConfiguration.SOOT_EXCLUSIONS);
         List<String> excludedList = Arrays.asList(excludedPackages.split(";"));
         Options.v().set_exclude(excludedList);
 
-
-        //add the rt.jar and jce.jar to the classpath; WALA does this silently in the background
+        // add the rt.jar and jce.jar to the classpath; WALA does this silently in the background
         Options.v().set_prepend_classpath(true);
 
         // Read from soot-cfg.properties
-        Options.v().set_allow_phantom_refs(this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_ALLOW_PHANTOM));
+        Options.v()
+                .set_allow_phantom_refs(
+                        this.vulasConfiguration
+                                .getConfiguration()
+                                .getBoolean(SootConfiguration.SOOT_ALLOW_PHANTOM));
         Options.v().set_verbose(verbose);
-        Options.v().set_app(this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_APP_MODE));
+        Options.v()
+                .set_app(
+                        this.vulasConfiguration
+                                .getConfiguration()
+                                .getBoolean(SootConfiguration.SOOT_APP_MODE));
         Options.v().set_whole_program(true);
         Options.v().setPhaseOption("cg", "safe-forname:" + false);
-
 
         // additional options for easy debugging
         Options.v().set_keep_line_number(true);
@@ -191,31 +206,35 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
         Options.v().set_output_format(Options.output_format_none);
 
         // with this option we get only method signatures but not their bodies
-        Options.v().set_no_bodies_for_excluded(this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_NOBODY_FOR_X));
+        Options.v()
+                .set_no_bodies_for_excluded(
+                        this.vulasConfiguration
+                                .getConfiguration()
+                                .getBoolean(SootConfiguration.SOOT_NOBODY_FOR_X));
 
         if (this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_SPARK)) {
             String s = "on";
-            if (this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_SPARK_OTF))
-                s += ",on-fly-cg:true";
+            if (this.vulasConfiguration
+                    .getConfiguration()
+                    .getBoolean(SootConfiguration.SOOT_SPARK_OTF)) s += ",on-fly-cg:true";
             else s += ",on-fly-cg:false";
-            if (this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_SPARK_VTA))
-                s += ",vta:true";
+            if (this.vulasConfiguration
+                    .getConfiguration()
+                    .getBoolean(SootConfiguration.SOOT_SPARK_VTA)) s += ",vta:true";
             else s += ",vta:false";
-            if (this.vulasConfiguration.getConfiguration().getBoolean(SootConfiguration.SOOT_SPARK_RTA))
-                s += ",rta:true";
+            if (this.vulasConfiguration
+                    .getConfiguration()
+                    .getBoolean(SootConfiguration.SOOT_SPARK_RTA)) s += ",rta:true";
             else s += ",rta:false";
             SootCallgraphConstructor.log.info("Enabled cg.spark with settings [" + s + "]");
             Options.v().setPhaseOption("cg.spark", s);
         }
-
 
         ArrayList<String> processDirs = new ArrayList<>();
         processDirs.add(this.appClasspath);
         Options.v().set_process_dir(processDirs);
 
         Options.v().set_soot_classpath(this.classpath);
-
-
     }
 
     /**
@@ -224,14 +243,16 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
      * @param _constructs a {@link java.util.Set} object.
      * @throws com.sap.psr.vulas.cg.CallgraphConstructException
      */
-    protected void sootMethods4entrypoints(Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs) throws CallgraphConstructException {
-
+    protected void sootMethods4entrypoints(
+            Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs)
+            throws CallgraphConstructException {
 
         SootMethod method = null;
         SootClass ep = null;
         // No entrypoints set, search for a main (if existing)
         if (_constructs.isEmpty()) {
-            SootCallgraphConstructor.log.info("No customized entrypoints set; search for main as default entry point");
+            SootCallgraphConstructor.log.info(
+                    "No customized entrypoints set; search for main as default entry point");
             Iterator<SootClass> classes = Scene.v().getApplicationClasses().iterator();
             try {
                 while (classes.hasNext()) {
@@ -244,10 +265,15 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
                     }
                 }
             } catch (Exception e) {
-                SootCallgraphConstructor.log.error("Error while searching for main method in class [" + ep + "]: " + e.getMessage());
+                SootCallgraphConstructor.log.error(
+                        "Error while searching for main method in class ["
+                                + ep
+                                + "]: "
+                                + e.getMessage());
             }
             if (this.entrypoints.isEmpty())
-                throw new CallgraphConstructException("No main method found that can be used as entry point", null);
+                throw new CallgraphConstructException(
+                        "No main method found that can be used as entry point", null);
         }
 
         // Use entrypoints passed as arg
@@ -278,14 +304,21 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
                             }
                         }
                     } catch (Exception e) {
-                        SootCallgraphConstructor.log.error("Error while searching for method " + mid.toString() + ": " + e.getMessage());
+                        SootCallgraphConstructor.log.error(
+                                "Error while searching for method "
+                                        + mid.toString()
+                                        + ": "
+                                        + e.getMessage());
                     }
                 }
                 // when it's a java object constructor
                 else if (jcid instanceof com.sap.psr.vulas.java.JavaConstructorId) {
                     JavaConstructorId jconsid = (JavaConstructorId) jcid;
                     try {
-                        ep = Scene.v().getSootClass(jconsid.getDefinitionContext().getQualifiedName());
+                        ep =
+                                Scene.v()
+                                        .getSootClass(
+                                                jconsid.getDefinitionContext().getQualifiedName());
                         // Loop over constructors to find the one :/
                         iter = ep.methodIterator();
                         while (iter.hasNext()) {
@@ -300,7 +333,11 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
                             }
                         }
                     } catch (Exception e) {
-                        SootCallgraphConstructor.log.error("Error while searching for method " + jcid.toString() + ": " + e.getMessage());
+                        SootCallgraphConstructor.log.error(
+                                "Error while searching for method "
+                                        + jcid.toString()
+                                        + ": "
+                                        + e.getMessage());
                     }
                 }
             }
@@ -312,7 +349,8 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
      *
      * Filter and find all entrypoints in Scene
      */
-    public void setEntrypoints(Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs) throws CallgraphConstructException {
+    public void setEntrypoints(Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs)
+            throws CallgraphConstructException {
 
         start_nanos = System.nanoTime();
 
@@ -330,15 +368,18 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
 
             SootCallgraphConstructor.log.info("[" + this.entrypoints.size() + "] entry points set");
         } else {
-            throw new CallgraphConstructException("No entry points could be set, which will not allow to build the callgraph", null);
+            throw new CallgraphConstructException(
+                    "No entry points could be set, which will not allow to build the callgraph",
+                    null);
         }
-
     }
 
-
-    private ArrayList<SootMethod> createEntryPoint4Soot(Collection<SootMethod> selectedEntrypoints) {
-        String slcEntrypointGenerator = this.vulasConfiguration.getConfiguration().getString(SootConfiguration.SOOT_ENTRYPOINT_GENERATOR);
-
+    private ArrayList<SootMethod> createEntryPoint4Soot(
+            Collection<SootMethod> selectedEntrypoints) {
+        String slcEntrypointGenerator =
+                this.vulasConfiguration
+                        .getConfiguration()
+                        .getString(SootConfiguration.SOOT_ENTRYPOINT_GENERATOR);
 
         if (slcEntrypointGenerator.toLowerCase().equals("none")) {
             return new ArrayList<>(selectedEntrypoints);
@@ -349,26 +390,27 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
             methodsToCall.add(sm.getSignature());
         }
 
-
         try {
             final Class cls = Class.forName(slcEntrypointGenerator);
             Constructor constructor = cls.getDeclaredConstructor(Collection.class);
-            IEntryPointCreator entryPointCreator = (IEntryPointCreator) constructor.newInstance(methodsToCall);
+            IEntryPointCreator entryPointCreator =
+                    (IEntryPointCreator) constructor.newInstance(methodsToCall);
             SootMethod dummyMain = entryPointCreator.createDummyMain();
             ArrayList<SootMethod> generatedEntrypoint = new ArrayList<>();
             generatedEntrypoint.add(dummyMain);
             return generatedEntrypoint;
 
-
         } catch (Throwable e) {
-            SootCallgraphConstructor.log.error("Error while creating entrypoint generator of class [" + slcEntrypointGenerator + "]: " + e.getMessage(), e);
+            SootCallgraphConstructor.log.error(
+                    "Error while creating entrypoint generator of class ["
+                            + slcEntrypointGenerator
+                            + "]: "
+                            + e.getMessage(),
+                    e);
         }
 
-
         return new ArrayList<>();
-
     }
-
 
     /**
      * {@inheritDoc}
@@ -376,14 +418,20 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
      * Read all configurations and parse command line options, and then build callgraph based on these properties
      */
     public void buildCallgraph(boolean _policy) throws CallgraphConstructException {
-        SootCallgraphConstructor.log.info("Starting call graph construction for " + this.appContext.toString(false));
+        SootCallgraphConstructor.log.info(
+                "Starting call graph construction for " + this.appContext.toString(false));
 
         try {
             PackManager.v().runPacks();
 
             this.callgraph = Scene.v().getCallGraph();
             this.buildTimeNano = System.nanoTime() - start_nanos;
-            SootCallgraphConstructor.log.info("Construction completed in " + StringUtil.nanoToMinString(this.buildTimeNano) + ", call graph has [" + callgraph.size() + "] edges]");
+            SootCallgraphConstructor.log.info(
+                    "Construction completed in "
+                            + StringUtil.nanoToMinString(this.buildTimeNano)
+                            + ", call graph has ["
+                            + callgraph.size()
+                            + "] edges]");
             checkEntrypoints(_policy);
         } catch (CallgraphConstructException e) {
             SootCallgraphConstructor.log.error("Error building call graph: " + e.getMessage());
@@ -419,20 +467,32 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
         if (_policy && diff != 0) {
             for (SootMethod m : check_ep)
                 SootCallgraphConstructor.log.warn("[ " + m.getSignature() + " ] is missing");
-            throw new CallgraphConstructException("Strict policy applied; terminating as there are [" + diff + "] entry points missing in call graph", null);
+            throw new CallgraphConstructException(
+                    "Strict policy applied; terminating as there are ["
+                            + diff
+                            + "] entry points missing in call graph",
+                    null);
         }
         // Throw exception if number of missing EPs exceeds threshold
         if (this.entrypoints.size() - diff == 0)
-            throw new CallgraphConstructException("[0/" + this.entrypoints.size() + "] entry points found in call graph", null);
+            throw new CallgraphConstructException(
+                    "[0/" + this.entrypoints.size() + "] entry points found in call graph", null);
 
         // Print warning for missing entry points
         if (diff > 0) {
-            SootCallgraphConstructor.log.warn("There should be " + this.entrypoints.size() + " entrypoints set; but " +
-                    diff + " entrypoints missing in the call graph");
+            SootCallgraphConstructor.log.warn(
+                    "There should be "
+                            + this.entrypoints.size()
+                            + " entrypoints set; but "
+                            + diff
+                            + " entrypoints missing in the call graph");
             for (SootMethod m : check_ep)
                 SootCallgraphConstructor.log.warn("[ " + m.getSignature() + " ] is missing");
         } else {
-            SootCallgraphConstructor.log.info("All [" + this.entrypoints.size() + "] entry points existing in the call graph");
+            SootCallgraphConstructor.log.info(
+                    "All ["
+                            + this.entrypoints.size()
+                            + "] entry points existing in the call graph");
         }
     }
 
@@ -455,12 +515,12 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
             signature = _method.getSubSignature();
             qname += signature.substring(signature.indexOf("("), signature.indexOf(")") + 1);
             qname = ClassVisitor.removeParameterQualification(qname);
-            if (_method.isConstructor()) cid = JavaId.toSharedType(JavaId.parseConstructorQName(qname));
+            if (_method.isConstructor())
+                cid = JavaId.toSharedType(JavaId.parseConstructorQName(qname));
             else cid = JavaId.toSharedType(JavaId.parseMethodQName(qname));
         }
         return cid;
     }
-
 
     /**
      * Normalizing a soot callgraph to a general graph represented by ConstructId
@@ -468,7 +528,8 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
      * @return a {@link com.ibm.wala.util.graph.Graph} object.
      */
     public Graph<com.sap.psr.vulas.shared.json.model.ConstructId> getCallgraph() {
-        final Graph<com.sap.psr.vulas.shared.json.model.ConstructId> graph = SlowSparseNumberedGraph.make();
+        final Graph<com.sap.psr.vulas.shared.json.model.ConstructId> graph =
+                SlowSparseNumberedGraph.make();
 
         if (this.callgraph != null) {
             int edges_no = 0;
@@ -482,7 +543,7 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
                 src_cid = getCid(src_node.method());
                 graph.addNode(src_cid);
 
-                //add edges
+                // add edges
                 edges = this.callgraph.edgesOutOf(src_node);
                 while (edges.hasNext()) {
                     tgt_cid = getCid(edges.next().tgt());
@@ -494,7 +555,12 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
                 }
             }
 
-            SootCallgraphConstructor.log.info("Normalized call graph has [" + graph.getNumberOfNodes() + " nodes] (with distinct ConstructId) and [" + edges_no + "] edges");
+            SootCallgraphConstructor.log.info(
+                    "Normalized call graph has ["
+                            + graph.getNumberOfNodes()
+                            + " nodes] (with distinct ConstructId) and ["
+                            + edges_no
+                            + "] edges");
         }
         // No callgraph exists
         else {
@@ -517,7 +583,11 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
         // Overwrite configuration (if requested)
         if (_packages != null && !_packages.equals(""))
             this.vulasConfiguration.setProperty(SootConfiguration.SOOT_EXCLUSIONS, _packages);
-        SootCallgraphConstructor.log.info("Set packages to be excluded [ " + this.vulasConfiguration.getConfiguration().getString(SootConfiguration.SOOT_EXCLUSIONS) + " ]");
+        SootCallgraphConstructor.log.info(
+                "Set packages to be excluded [ "
+                        + this.vulasConfiguration
+                                .getConfiguration()
+                                .getString(SootConfiguration.SOOT_EXCLUSIONS)
+                        + " ]");
     }
 }
-

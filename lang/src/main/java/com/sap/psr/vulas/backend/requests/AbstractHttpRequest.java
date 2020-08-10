@@ -29,7 +29,6 @@ import java.nio.file.Paths;
 
 import org.apache.logging.log4j.Logger;
 
-
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.GoalContext;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
@@ -40,126 +39,128 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public abstract class AbstractHttpRequest implements HttpRequest {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
-	protected long ms = -1;
+    protected long ms = -1;
 
-	/** Null in case the request does not exist on disk. */
-	private String objFile = null;
+    /** Null in case the request does not exist on disk. */
+    private String objFile = null;
 
-	/** Goal context, required to set the Http headers. */
-	protected transient GoalContext context = null;
-	
-	/**
-	 * <p>Constructor for AbstractHttpRequest.</p>
-	 */
-	protected AbstractHttpRequest() {
-		this.ms = System.nanoTime();
-	}
+    /** Goal context, required to set the Http headers. */
+    protected transient GoalContext context = null;
 
-	/**
-	 * <p>getObjectFilename.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getObjectFilename() {
-		return this.getFilename() + ".obj";
-	}
+    /**
+     * <p>Constructor for AbstractHttpRequest.</p>
+     */
+    protected AbstractHttpRequest() {
+        this.ms = System.nanoTime();
+    }
 
-	/**
-	 * <p>getObjectPath.</p>
-	 *
-	 * @return a {@link java.nio.file.Path} object.
-	 */
-	public Path getObjectPath() {
-		return Paths.get(this.getVulasConfiguration().getDir(CoreConfiguration.UPLOAD_DIR).toString(), this.getObjectFilename());
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public HttpRequest setGoalContext(GoalContext _ctx) {
-		this.context = _ctx;
-		return this;
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public GoalContext getGoalContext() {
-		return this.context;
-	}
-	
-	/**
-	 * <p>getVulasConfiguration.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.shared.util.VulasConfiguration} object.
-	 */
-	protected VulasConfiguration getVulasConfiguration() {
-		if(this.context!=null && this.context.getVulasConfiguration()!=null)
-			return this.context.getVulasConfiguration();
-		else
-			return VulasConfiguration.getGlobal();
-	}
+    /**
+     * <p>getObjectFilename.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getObjectFilename() {
+        return this.getFilename() + ".obj";
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * First calls {@link HttpRequest#savePayloadToDisk()}, then serializes the request and writes it to disk.
-	 */
-	@Override
-	public final void saveToDisk() throws IOException {
+    /**
+     * <p>getObjectPath.</p>
+     *
+     * @return a {@link java.nio.file.Path} object.
+     */
+    public Path getObjectPath() {
+        return Paths.get(
+                this.getVulasConfiguration().getDir(CoreConfiguration.UPLOAD_DIR).toString(),
+                this.getObjectFilename());
+    }
 
-		// Subclasses can write additional stuff to disk (e.g., payloads)
-		this.savePayloadToDisk();
+    /** {@inheritDoc} */
+    @Override
+    public HttpRequest setGoalContext(GoalContext _ctx) {
+        this.context = _ctx;
+        return this;
+    }
 
-		// Then save the request itself
-		final File obj_file  = this.getObjectPath().toFile();
-		this.objFile = getObjectFilename();
-		final ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(obj_file));
-		oos.writeObject(this);
-		oos.close();
-		AbstractHttpRequest.log.info("Request object written to [" + obj_file + "]");
-	}
+    /** {@inheritDoc} */
+    @Override
+    public GoalContext getGoalContext() {
+        return this.context;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * Calls {@link HttpRequest#loadPayloadFromDisk()}.
-	 */
-	@Override
-	public final void loadFromDisk() throws IOException {
-		this.loadPayloadFromDisk();
-	}
+    /**
+     * <p>getVulasConfiguration.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.shared.util.VulasConfiguration} object.
+     */
+    protected VulasConfiguration getVulasConfiguration() {
+        if (this.context != null && this.context.getVulasConfiguration() != null)
+            return this.context.getVulasConfiguration();
+        else return VulasConfiguration.getGlobal();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * First calls {@link HttpRequest#deletePayloadFromDisk()}, then deletes the saved request itself.
-	 */
-	@Override
-	public final void deleteFromDisk() throws IOException {
-		if(this.getVulasConfiguration().getConfiguration().getBoolean(CoreConfiguration.UPLOAD_DEL_AFTER, true)) {
-			this.deletePayloadFromDisk();
-			if(this.objFile!=null)
-				this.getObjectPath().toFile().deleteOnExit();
-		}
-	}
+    /**
+     * {@inheritDoc}
+     *
+     * First calls {@link HttpRequest#savePayloadToDisk()}, then serializes the request and writes it to disk.
+     */
+    @Override
+    public final void saveToDisk() throws IOException {
 
-	/**
-	 * Just calls the default method {@link ObjectOutputStream#defaultWriteObject()}.
-	 * @param out
-	 * @throws IOException
-	 */
-	private void writeObject(ObjectOutputStream out) throws IOException {
-		out.defaultWriteObject(); 
-	}
+        // Subclasses can write additional stuff to disk (e.g., payloads)
+        this.savePayloadToDisk();
 
-	/**
-	 * Calls the default method {@link ObjectInputStream#defaultReadObject()}.
-	 * @param in
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-		in.defaultReadObject();
-	}
+        // Then save the request itself
+        final File obj_file = this.getObjectPath().toFile();
+        this.objFile = getObjectFilename();
+        final ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(obj_file));
+        oos.writeObject(this);
+        oos.close();
+        AbstractHttpRequest.log.info("Request object written to [" + obj_file + "]");
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Calls {@link HttpRequest#loadPayloadFromDisk()}.
+     */
+    @Override
+    public final void loadFromDisk() throws IOException {
+        this.loadPayloadFromDisk();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * First calls {@link HttpRequest#deletePayloadFromDisk()}, then deletes the saved request itself.
+     */
+    @Override
+    public final void deleteFromDisk() throws IOException {
+        if (this.getVulasConfiguration()
+                .getConfiguration()
+                .getBoolean(CoreConfiguration.UPLOAD_DEL_AFTER, true)) {
+            this.deletePayloadFromDisk();
+            if (this.objFile != null) this.getObjectPath().toFile().deleteOnExit();
+        }
+    }
+
+    /**
+     * Just calls the default method {@link ObjectOutputStream#defaultWriteObject()}.
+     * @param out
+     * @throws IOException
+     */
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+    }
+
+    /**
+     * Calls the default method {@link ObjectInputStream#defaultReadObject()}.
+     * @param in
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+    }
 }

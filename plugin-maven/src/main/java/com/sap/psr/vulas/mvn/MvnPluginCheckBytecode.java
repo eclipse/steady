@@ -29,12 +29,16 @@ import com.sap.psr.vulas.java.goals.CheckBytecodeGoal;
  * <p>MvnPluginCheckBytecode class.</p>
  *
  */
-@Mojo( name = "checkcode", defaultPhase = LifecyclePhase.VERIFY, requiresDependencyResolution = ResolutionScope.TEST, requiresOnline = true )
+@Mojo(
+        name = "checkcode",
+        defaultPhase = LifecyclePhase.VERIFY,
+        requiresDependencyResolution = ResolutionScope.TEST,
+        requiresOnline = true)
 public class MvnPluginCheckBytecode extends AbstractVulasMojo {
-	
-	/** {@inheritDoc} */
-	@Override
-	protected void createGoal() {
-		this.goal = new CheckBytecodeGoal();
-	}
+
+    /** {@inheritDoc} */
+    @Override
+    protected void createGoal() {
+        this.goal = new CheckBytecodeGoal();
+    }
 }

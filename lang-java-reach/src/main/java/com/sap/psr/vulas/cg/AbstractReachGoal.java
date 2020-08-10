@@ -26,7 +26,6 @@ import java.util.Set;
 import com.sap.psr.vulas.shared.enums.GoalClient;
 import org.apache.logging.log4j.Logger;
 
-
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.goals.AbstractAppGoal;
@@ -38,7 +37,6 @@ import com.sap.psr.vulas.shared.util.FileSearch;
 import com.sap.psr.vulas.shared.util.StringList;
 import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
 import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 /**
  * <p>Abstract AbstractReachGoal class.</p>
@@ -51,7 +49,7 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
     private Set<Path> preparedDepClasspath = new HashSet<Path>();
 
     private Set<Path> preparedAppClasspath = new HashSet<Path>();
-    
+
     /** Rewritten Java archives to be deleted after goal execution. */
     private Set<Path> rewrittenJars = new HashSet<Path>();
 
@@ -74,7 +72,10 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
     protected final Set<com.sap.psr.vulas.shared.json.model.ConstructId> getAppConstructs() {
         if (this.appConstructs == null) {
             try {
-                this.appConstructs = BackendConnector.getInstance().getAppConstructIds(this.getGoalContext(), this.getApplicationContext());
+                this.appConstructs =
+                        BackendConnector.getInstance()
+                                .getAppConstructIds(
+                                        this.getGoalContext(), this.getApplicationContext());
             } catch (BackendConnectionException e) {
                 throw new IllegalStateException(e.getMessage());
             }
@@ -87,28 +88,40 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
      */
     private final void prepareClasspath() {
 
-        // The problems described in Jira ticket VULAS-1429 look as if the caches survive A2C executions on different modules. Check and clear explicitly.
+        // The problems described in Jira ticket VULAS-1429 look as if the caches survive A2C
+        // executions on different modules. Check and clear explicitly.
         ClassPoolUpdater.getInstance().reset();
 
         final FileSearch jar_search = new FileSearch(JAR_EXT);
         final FileSearch class_search = new FileSearch(CLASS_EXT);
 
-        final boolean preprocess = this.getConfiguration().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_PREPROCESS, true);
+        final boolean preprocess =
+                this.getConfiguration()
+                        .getConfiguration()
+                        .getBoolean(ReachabilityConfiguration.REACH_PREPROCESS, true);
 
-        final StringList exclude_jars = new StringList(this.getConfiguration().getConfiguration().getStringArray(ReachabilityConfiguration.REACH_EXCL_JARS));
+        final StringList exclude_jars =
+                new StringList(
+                        this.getConfiguration()
+                                .getConfiguration()
+                                .getStringArray(ReachabilityConfiguration.REACH_EXCL_JARS));
 
         // Append known dependencies to classpath (can be none in case of CLI)
         for (Path p : this.getKnownDependencies().keySet()) {
-        	Path appended_path = null;
+            Path appended_path = null;
             if (exclude_jars.isEmpty())
-            	appended_path = JarWriter.appendToClasspath(this.preparedDepClasspath, p, preprocess);
-            else if (!exclude_jars.contains(p.getFileName().toString(), ComparisonMode.PATTERN, CaseSensitivity.CASE_INSENSITIVE))
-            	appended_path = JarWriter.appendToClasspath(this.preparedDepClasspath, p, preprocess);
-            else
-                log.info("[" + p + "] excluded from reachability analysis");
-            
-            if(appended_path!=null && !appended_path.equals(p))
-            	this.rewrittenJars.add(appended_path);
+                appended_path =
+                        JarWriter.appendToClasspath(this.preparedDepClasspath, p, preprocess);
+            else if (!exclude_jars.contains(
+                    p.getFileName().toString(),
+                    ComparisonMode.PATTERN,
+                    CaseSensitivity.CASE_INSENSITIVE))
+                appended_path =
+                        JarWriter.appendToClasspath(this.preparedDepClasspath, p, preprocess);
+            else log.info("[" + p + "] excluded from reachability analysis");
+
+            if (appended_path != null && !appended_path.equals(p))
+                this.rewrittenJars.add(appended_path);
         }
 
         ClassPoolUpdater.getInstance().appendToClasspath(this.preparedDepClasspath);
@@ -121,16 +134,20 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
             // Add them one by one to the classpath (except those excluded through configuration)
             final Set<Path> paths = jar_search.search(app_dir);
             for (Path p : paths) {
-            	Path appended_path = null;
-            	if (exclude_jars.isEmpty())
-            		appended_path = JarWriter.appendToClasspath(this.preparedAppClasspath, p, preprocess);
-                else if (!exclude_jars.contains(p.getFileName().toString(), ComparisonMode.PATTERN, CaseSensitivity.CASE_INSENSITIVE))
-                	appended_path = JarWriter.appendToClasspath(this.preparedAppClasspath, p, preprocess);
-                else
-                    log.info("[" + p + "] excluded from reachability analysis");
-            	
-            	if(appended_path!=null && !appended_path.equals(p))
-                	this.rewrittenJars.add(appended_path);
+                Path appended_path = null;
+                if (exclude_jars.isEmpty())
+                    appended_path =
+                            JarWriter.appendToClasspath(this.preparedAppClasspath, p, preprocess);
+                else if (!exclude_jars.contains(
+                        p.getFileName().toString(),
+                        ComparisonMode.PATTERN,
+                        CaseSensitivity.CASE_INSENSITIVE))
+                    appended_path =
+                            JarWriter.appendToClasspath(this.preparedAppClasspath, p, preprocess);
+                else log.info("[" + p + "] excluded from reachability analysis");
+
+                if (appended_path != null && !appended_path.equals(p))
+                    this.rewrittenJars.add(appended_path);
             }
 
             // Search for class files
@@ -141,7 +158,7 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
         }
 
         ClassPoolUpdater.getInstance().appendToClasspath(preparedAppClasspath);
-        
+
         log.info("Rewrote [" + this.rewrittenJars.size() + "] dependencies");
     }
 
@@ -193,23 +210,45 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
         // Set the entry points in the resp. subclass
         this.setEntryPoints(ra);
 
-        //set the call graph constructor, based on the configured framework
-        ra.setCallgraphConstructor(this.getConfiguration().getConfiguration().getString(ReachabilityConfiguration.REACH_FWK, "wala"), this.getGoalClient() == GoalClient.CLI);
+        // set the call graph constructor, based on the configured framework
+        ra.setCallgraphConstructor(
+                this.getConfiguration()
+                        .getConfiguration()
+                        .getString(ReachabilityConfiguration.REACH_FWK, "wala"),
+                this.getGoalClient() == GoalClient.CLI);
 
-        ra.setTargetConstructs(this.getConfiguration().getConfiguration().getString(ReachabilityConfiguration.REACH_BUGS, null));
-        ra.setExcludePackages(this.getConfiguration().getConfiguration().getString(ReachabilityConfiguration.REACH_EXCL_PACK, null));
+        ra.setTargetConstructs(
+                this.getConfiguration()
+                        .getConfiguration()
+                        .getString(ReachabilityConfiguration.REACH_BUGS, null));
+        ra.setExcludePackages(
+                this.getConfiguration()
+                        .getConfiguration()
+                        .getString(ReachabilityConfiguration.REACH_EXCL_PACK, null));
 
         // Trigger the analysis
-        final boolean success = ReachabilityAnalyzer.startAnalysis(ra, this.getConfiguration().getConfiguration().getInt(ReachabilityConfiguration.REACH_TIMEOUT, 15) * 60L * 1000L);
+        final boolean success =
+                ReachabilityAnalyzer.startAnalysis(
+                        ra,
+                        this.getConfiguration()
+                                        .getConfiguration()
+                                        .getInt(ReachabilityConfiguration.REACH_TIMEOUT, 15)
+                                * 60L
+                                * 1000L);
 
         // Upload
-        if (success)
-            ra.upload();
+        if (success) ra.upload();
 
         // Add goal stats
         this.addGoalStats(this.getGoalType().toString() + ".analysisTerminated", (success ? 1 : 0));
-        this.addGoalStats(this.getGoalType().toString() + ".entryPoints", this.getEntryPoints().size());
-        this.addGoalStats(this.getGoalType().toString() + ".classpathLength", ra.getAppClasspath().split(System.getProperty("path.separator")).length + ra.getDependencyClasspath().split(System.getProperty("path.separator")).length);
+        this.addGoalStats(
+                this.getGoalType().toString() + ".entryPoints", this.getEntryPoints().size());
+        this.addGoalStats(
+                this.getGoalType().toString() + ".classpathLength",
+                ra.getAppClasspath().split(System.getProperty("path.separator")).length
+                        + ra.getDependencyClasspath()
+                                .split(System.getProperty("path.separator"))
+                                .length);
         this.addGoalStats(this.getGoalType().toString() + ".callgraphNodes", ra.getNodeCount());
         this.addGoalStats(this.getGoalType().toString() + ".callgraphEdges", ra.getEdgeCount());
         this.addGoalStats(this.getGoalType().toString(), ra.getStatistics());
@@ -222,17 +261,29 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
      */
     @Override
     protected final void cleanAfterExecution() {
-        if (this.getConfiguration().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_PREPROCESS, true)) {
-        	log.info("Deleting [" + this.rewrittenJars.size() + "] temporary (pre-processed) dependencies...");
+        if (this.getConfiguration()
+                .getConfiguration()
+                .getBoolean(ReachabilityConfiguration.REACH_PREPROCESS, true)) {
+            log.info(
+                    "Deleting ["
+                            + this.rewrittenJars.size()
+                            + "] temporary (pre-processed) dependencies...");
             for (Path p : this.rewrittenJars) {
                 try {
                     boolean ret = p.toFile().delete();
-                    if(ret)
+                    if (ret)
                         log.info("    Deleted temporary (pre-processed) dependency [" + p + "] ");
                     else
-                        log.warn("    Cannot delete temporary (pre-processed) dependency [" + p + "]");
+                        log.warn(
+                                "    Cannot delete temporary (pre-processed) dependency ["
+                                        + p
+                                        + "]");
                 } catch (Exception ioe) {
-                    log.error("    Cannot delete temporary (pre-processed) dependency [" + p + "]: " + ioe.getMessage());
+                    log.error(
+                            "    Cannot delete temporary (pre-processed) dependency ["
+                                    + p
+                                    + "]: "
+                                    + ioe.getMessage());
                 }
             }
         }

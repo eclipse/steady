@@ -103,16 +103,17 @@ import com.sap.psr.vulas.shared.json.model.diff.ClassModification;
  */
 public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.classreader.Visitor {
 
-	private ClassDiffResult classDiffResult;
+    private ClassDiffResult classDiffResult;
 
-	private ClassDifferences differences;
-	
-	private Collection<FeatureDifferences> removedFields = new TreeSet<FeatureDifferences>();
+    private ClassDifferences differences;
+
+    private Collection<FeatureDifferences> removedFields = new TreeSet<FeatureDifferences>();
     private Collection<FeatureDifferences> removedConstructors = new TreeSet<FeatureDifferences>();
     private Collection<FeatureDifferences> removedMethods = new TreeSet<FeatureDifferences>();
 
     private Collection<FeatureDifferences> deprecatedFields = new TreeSet<FeatureDifferences>();
-    private Collection<FeatureDifferences> deprecatedConstructors = new TreeSet<FeatureDifferences>();
+    private Collection<FeatureDifferences> deprecatedConstructors =
+            new TreeSet<FeatureDifferences>();
     private Collection<FeatureDifferences> deprecatedMethods = new TreeSet<FeatureDifferences>();
 
     private Collection<FieldDifferences> modifiedFields = new TreeSet<FieldDifferences>();
@@ -120,98 +121,107 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
     private Collection<CodeDifferences> modifiedMethods = new TreeSet<CodeDifferences>();
 
     private Collection<FeatureDifferences> undeprecatedFields = new TreeSet<FeatureDifferences>();
-    private Collection<FeatureDifferences> undeprecatedConstructors = new TreeSet<FeatureDifferences>();
+    private Collection<FeatureDifferences> undeprecatedConstructors =
+            new TreeSet<FeatureDifferences>();
     private Collection<FeatureDifferences> undeprecatedMethods = new TreeSet<FeatureDifferences>();
 
     private Collection<FeatureDifferences> newFields = new TreeSet<FeatureDifferences>();
     private Collection<FeatureDifferences> newConstructors = new TreeSet<FeatureDifferences>();
     private Collection<FeatureDifferences> newMethods = new TreeSet<FeatureDifferences>();
-	
-	/**
-	 * <p>Constructor for ClassDiffVisitor.</p>
-	 *
-	 * @param _c a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
-	 */
-	public ClassDiffVisitor(com.sap.psr.vulas.shared.json.model.ConstructId _c) {
-		this.classDiffResult = new ClassDiffResult();
-		this.classDiffResult.setClazz(_c);
-	}
 
-	private com.sap.psr.vulas.shared.json.model.ConstructId getMethod(Method_info _mi) {
-		com.sap.psr.vulas.shared.json.model.ConstructId m = new com.sap.psr.vulas.shared.json.model.ConstructId();
+    /**
+     * <p>Constructor for ClassDiffVisitor.</p>
+     *
+     * @param _c a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+     */
+    public ClassDiffVisitor(com.sap.psr.vulas.shared.json.model.ConstructId _c) {
+        this.classDiffResult = new ClassDiffResult();
+        this.classDiffResult.setClazz(_c);
+    }
 
-		m.setQname(_mi.getFullSignature());
-		
-		if(_mi.isPublic()) m.addAttribute("visibility", "public");
-		else if(_mi.isProtected()) m.addAttribute("visibility", "protected");
-		else if(_mi.isPackage()) m.addAttribute("visibility", "package");
-		else if(_mi.isPrivate()) m.addAttribute("visibility", "private");
+    private com.sap.psr.vulas.shared.json.model.ConstructId getMethod(Method_info _mi) {
+        com.sap.psr.vulas.shared.json.model.ConstructId m =
+                new com.sap.psr.vulas.shared.json.model.ConstructId();
 
-		m.addAttribute("static", _mi.isStatic());
-		m.addAttribute("final", _mi.isFinal());
-		m.addAttribute("synchronized", _mi.isSynchronized());
-		m.addAttribute("native", _mi.isNative());
-		m.addAttribute("abstract", _mi.isAbstract());
-		m.addAttribute("strict", _mi.isStrict());
-		m.addAttribute("synthetic", _mi.isSynthetic());
-		
-		if(_mi.isDeprecated())
-    		m.addRelates("annotation", new ConstructId(ProgrammingLanguage.JAVA, ConstructType.INTF, "java.lang.Deprecated"));
+        m.setQname(_mi.getFullSignature());
 
-		if (_mi.getName().equals("<init>")) {
-			m.setType(ConstructType.CONS);
-		}
-		else if(_mi.getName().equals("<clinit>")) {
-			m.setType(ConstructType.INIT);
-		}
-		else {
-			m.setType(ConstructType.METH);
-			//TODO: Can be of type CLAS or INTF
-			m.addRelates("returns", new ConstructId(ProgrammingLanguage.JAVA, ConstructType.CLAS, _mi.getReturnType()));
-		}
+        if (_mi.isPublic()) m.addAttribute("visibility", "public");
+        else if (_mi.isProtected()) m.addAttribute("visibility", "protected");
+        else if (_mi.isPackage()) m.addAttribute("visibility", "package");
+        else if (_mi.isPrivate()) m.addAttribute("visibility", "private");
 
-		Iterator i = _mi.getExceptions().iterator();
-		while (i.hasNext()) {
-			//TODO: Can be of type CLAS or INTF
-			m.addRelates("throws", new ConstructId(ProgrammingLanguage.JAVA, ConstructType.CLAS, i.next().toString()));
-		}
+        m.addAttribute("static", _mi.isStatic());
+        m.addAttribute("final", _mi.isFinal());
+        m.addAttribute("synchronized", _mi.isSynchronized());
+        m.addAttribute("native", _mi.isNative());
+        m.addAttribute("abstract", _mi.isAbstract());
+        m.addAttribute("strict", _mi.isStrict());
+        m.addAttribute("synthetic", _mi.isSynthetic());
 
-		return m;
-	}
-			
-	/** {@inheritDoc} */
-	public void visitClassDifferences(ClassDifferences differences) {
-		this.differences = differences;
+        if (_mi.isDeprecated())
+            m.addRelates(
+                    "annotation",
+                    new ConstructId(
+                            ProgrammingLanguage.JAVA, ConstructType.INTF, "java.lang.Deprecated"));
 
-		for (Differences featureDifference : differences.getFeatureDifferences()) {
-			featureDifference.accept(this);
-		}
-	}
+        if (_mi.getName().equals("<init>")) {
+            m.setType(ConstructType.CONS);
+        } else if (_mi.getName().equals("<clinit>")) {
+            m.setType(ConstructType.INIT);
+        } else {
+            m.setType(ConstructType.METH);
+            // TODO: Can be of type CLAS or INTF
+            m.addRelates(
+                    "returns",
+                    new ConstructId(
+                            ProgrammingLanguage.JAVA, ConstructType.CLAS, _mi.getReturnType()));
+        }
 
-	/** {@inheritDoc} */
-	public void visitInterfaceDifferences(InterfaceDifferences differences) {
-		this.differences = differences;
+        Iterator i = _mi.getExceptions().iterator();
+        while (i.hasNext()) {
+            // TODO: Can be of type CLAS or INTF
+            m.addRelates(
+                    "throws",
+                    new ConstructId(
+                            ProgrammingLanguage.JAVA, ConstructType.CLAS, i.next().toString()));
+        }
 
-		for (Differences featureDifference : differences.getFeatureDifferences()) {
-			featureDifference.accept(this);
-		}
-	}
+        return m;
+    }
 
-	/** {@inheritDoc} */
-	public void visitFieldDifferences(FieldDifferences differences) {
-		// Do nothing
-	}
-	
-	/** {@inheritDoc} */
-	public void visitConstructorDifferences(ConstructorDifferences differences) {
+    /** {@inheritDoc} */
+    public void visitClassDifferences(ClassDifferences differences) {
+        this.differences = differences;
+
+        for (Differences featureDifference : differences.getFeatureDifferences()) {
+            featureDifference.accept(this);
+        }
+    }
+
+    /** {@inheritDoc} */
+    public void visitInterfaceDifferences(InterfaceDifferences differences) {
+        this.differences = differences;
+
+        for (Differences featureDifference : differences.getFeatureDifferences()) {
+            featureDifference.accept(this);
+        }
+    }
+
+    /** {@inheritDoc} */
+    public void visitFieldDifferences(FieldDifferences differences) {
+        // Do nothing
+    }
+
+    /** {@inheritDoc} */
+    public void visitConstructorDifferences(ConstructorDifferences differences) {
         if (differences.isRemoved()) {
             removedConstructors.add(differences);
         }
-    
+
         if (differences.isModified()) {
             modifiedConstructors.add(differences);
         }
-    
+
         if (differences.isNew()) {
             newConstructors.add(differences);
         }
@@ -230,11 +240,11 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
         if (differences.isRemoved()) {
             removedMethods.add(differences);
         }
-    
+
         if (differences.isModified()) {
             modifiedMethods.add(differences);
         }
-    
+
         if (differences.isNew()) {
             newMethods.add(differences);
         }
@@ -248,354 +258,371 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
         }
     }
 
-	/** {@inheritDoc} */
-	public void visitClassfiles(Collection<Classfile> classfiles) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitClassfiles(Collection<Classfile> classfiles) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitClassfile(Classfile classfile) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitClassfile(Classfile classfile) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitConstantPool(ConstantPool constantPool) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitConstantPool(ConstantPool constantPool) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitClass_info(Class_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitClass_info(Class_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitFieldRef_info(FieldRef_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitFieldRef_info(FieldRef_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitMethodRef_info(MethodRef_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitMethodRef_info(MethodRef_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitInterfaceMethodRef_info(InterfaceMethodRef_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitInterfaceMethodRef_info(InterfaceMethodRef_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitString_info(String_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitString_info(String_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitInteger_info(Integer_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitInteger_info(Integer_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitFloat_info(Float_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitFloat_info(Float_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitLong_info(Long_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitLong_info(Long_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitDouble_info(Double_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitDouble_info(Double_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitNameAndType_info(NameAndType_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitNameAndType_info(NameAndType_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitUTF8_info(UTF8_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitUTF8_info(UTF8_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitMethodHandle_info(MethodHandle_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitMethodHandle_info(MethodHandle_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitMethodType_info(MethodType_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitMethodType_info(MethodType_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitInvokeDynamic_info(InvokeDynamic_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitInvokeDynamic_info(InvokeDynamic_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitField_info(Field_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitField_info(Field_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitMethod_info(Method_info entry) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitMethod_info(Method_info entry) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitConstantValue_attribute(ConstantValue_attribute attribute) {
-		attribute.getRawValue().accept(this);
-	}
+    /** {@inheritDoc} */
+    public void visitConstantValue_attribute(ConstantValue_attribute attribute) {
+        attribute.getRawValue().accept(this);
+    }
 
-	/** {@inheritDoc} */
-	public void visitCode_attribute(Code_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitCode_attribute(Code_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitExceptions_attribute(Exceptions_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitExceptions_attribute(Exceptions_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitInnerClasses_attribute(InnerClasses_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitInnerClasses_attribute(InnerClasses_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitEnclosingMethod_attribute(EnclosingMethod_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitEnclosingMethod_attribute(EnclosingMethod_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitSynthetic_attribute(Synthetic_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitSynthetic_attribute(Synthetic_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitSignature_attribute(Signature_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitSignature_attribute(Signature_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitSourceFile_attribute(SourceFile_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitSourceFile_attribute(SourceFile_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitSourceDebugExtension_attribute(SourceDebugExtension_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitSourceDebugExtension_attribute(SourceDebugExtension_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitLineNumberTable_attribute(LineNumberTable_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitLineNumberTable_attribute(LineNumberTable_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitLocalVariableTable_attribute(LocalVariableTable_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitLocalVariableTable_attribute(LocalVariableTable_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitLocalVariableTypeTable_attribute(LocalVariableTypeTable_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitLocalVariableTypeTable_attribute(LocalVariableTypeTable_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitDeprecated_attribute(Deprecated_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitDeprecated_attribute(Deprecated_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitRuntimeVisibleAnnotations_attribute(RuntimeVisibleAnnotations_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitRuntimeVisibleAnnotations_attribute(
+            RuntimeVisibleAnnotations_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitRuntimeInvisibleAnnotations_attribute(RuntimeInvisibleAnnotations_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitRuntimeInvisibleAnnotations_attribute(
+            RuntimeInvisibleAnnotations_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitRuntimeVisibleParameterAnnotations_attribute(RuntimeVisibleParameterAnnotations_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitRuntimeVisibleParameterAnnotations_attribute(
+            RuntimeVisibleParameterAnnotations_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitRuntimeInvisibleParameterAnnotations_attribute(RuntimeInvisibleParameterAnnotations_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitRuntimeInvisibleParameterAnnotations_attribute(
+            RuntimeInvisibleParameterAnnotations_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitAnnotationDefault_attribute(AnnotationDefault_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitAnnotationDefault_attribute(AnnotationDefault_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitCustom_attribute(Custom_attribute attribute) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitCustom_attribute(Custom_attribute attribute) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitInstruction(Instruction instruction) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitInstruction(Instruction instruction) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitExceptionHandler(ExceptionHandler helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitExceptionHandler(ExceptionHandler helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitInnerClass(InnerClass helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitInnerClass(InnerClass helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitLineNumber(LineNumber helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitLineNumber(LineNumber helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitLocalVariable(LocalVariable helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitLocalVariable(LocalVariable helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitLocalVariableType(LocalVariableType helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitLocalVariableType(LocalVariableType helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitParameter(Parameter helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitParameter(Parameter helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitAnnotation(Annotation helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitAnnotation(Annotation helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitElementValuePair(ElementValuePair helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitElementValuePair(ElementValuePair helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitByteConstantElementValue(ByteConstantElementValue helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitByteConstantElementValue(ByteConstantElementValue helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitCharConstantElementValue(CharConstantElementValue helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitCharConstantElementValue(CharConstantElementValue helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitDoubleConstantElementValue(DoubleConstantElementValue helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitDoubleConstantElementValue(DoubleConstantElementValue helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitFloatConstantElementValue(FloatConstantElementValue helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitFloatConstantElementValue(FloatConstantElementValue helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitIntegerConstantElementValue(IntegerConstantElementValue helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitIntegerConstantElementValue(IntegerConstantElementValue helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitLongConstantElementValue(LongConstantElementValue helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitLongConstantElementValue(LongConstantElementValue helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitShortConstantElementValue(ShortConstantElementValue helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitShortConstantElementValue(ShortConstantElementValue helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitBooleanConstantElementValue(BooleanConstantElementValue helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitBooleanConstantElementValue(BooleanConstantElementValue helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitStringConstantElementValue(StringConstantElementValue helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitStringConstantElementValue(StringConstantElementValue helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitEnumElementValue(EnumElementValue helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitEnumElementValue(EnumElementValue helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitClassElementValue(ClassElementValue helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitClassElementValue(ClassElementValue helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitAnnotationElementValue(AnnotationElementValue helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitAnnotationElementValue(AnnotationElementValue helper) {
+        // Do nothing
+    }
 
-	/** {@inheritDoc} */
-	public void visitArrayElementValue(ArrayElementValue helper) {
-		// Do nothing
-	}
+    /** {@inheritDoc} */
+    public void visitArrayElementValue(ArrayElementValue helper) {
+        // Do nothing
+    }
 
-	/**
-	 * <p>Getter for the field <code>classDiffResult</code>.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.shared.json.model.diff.ClassDiffResult} object.
-	 */
-	public ClassDiffResult getClassDiffResult() {
-		
-		if (removedConstructors.size() != 0) {
+    /**
+     * <p>Getter for the field <code>classDiffResult</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.shared.json.model.diff.ClassDiffResult} object.
+     */
+    public ClassDiffResult getClassDiffResult() {
+
+        if (removedConstructors.size() != 0) {
             for (FeatureDifferences fd : removedConstructors) {
-                //indent().append("<declaration").append(breakdownDeclaration((Method_info) fd.getOldFeature())).append(fd.isInherited() ? " inherited=\"yes\"" : "").append(">").append(fd.getOldDeclaration()).append("</declaration>").eol();
-                this.classDiffResult.addRemovedContructor(this.getMethod((Method_info)fd.getOldFeature()));
+                // indent().append("<declaration").append(breakdownDeclaration((Method_info)
+                // fd.getOldFeature())).append(fd.isInherited() ? " inherited=\"yes\"" :
+                // "").append(">").append(fd.getOldDeclaration()).append("</declaration>").eol();
+                this.classDiffResult.addRemovedContructor(
+                        this.getMethod((Method_info) fd.getOldFeature()));
             }
         }
 
         if (removedMethods.size() != 0) {
             for (FeatureDifferences fd : removedMethods) {
-                //indent().append("<declaration").append(breakdownDeclaration((Method_info) fd.getOldFeature())).append(fd.isInherited() ? " inherited=\"yes\"" : "").append(">").append(fd.getOldDeclaration()).append("</declaration>").eol();
-            	this.classDiffResult.addRemovedMethod(this.getMethod((Method_info)fd.getOldFeature()));
+                // indent().append("<declaration").append(breakdownDeclaration((Method_info)
+                // fd.getOldFeature())).append(fd.isInherited() ? " inherited=\"yes\"" :
+                // "").append(">").append(fd.getOldDeclaration()).append("</declaration>").eol();
+                this.classDiffResult.addRemovedMethod(
+                        this.getMethod((Method_info) fd.getOldFeature()));
             }
         }
 
         if (deprecatedConstructors.size() != 0) {
             for (FeatureDifferences fd : deprecatedConstructors) {
-                //indent().append("<declaration").append(breakdownDeclaration((Method_info) fd.getNewFeature())).append(">").append(fd.getOldDeclaration()).append("</declaration>").eol();
-            	this.classDiffResult.addDeprecatedContructor(this.getMethod((Method_info)fd.getNewFeature()));
+                // indent().append("<declaration").append(breakdownDeclaration((Method_info)
+                // fd.getNewFeature())).append(">").append(fd.getOldDeclaration()).append("</declaration>").eol();
+                this.classDiffResult.addDeprecatedContructor(
+                        this.getMethod((Method_info) fd.getNewFeature()));
             }
         }
 
         if (deprecatedMethods.size() != 0) {
             for (FeatureDifferences fd : deprecatedMethods) {
-                //indent().append("<declaration").append(breakdownDeclaration((Method_info) fd.getNewFeature())).append(">").append(fd.getOldDeclaration()).append("</declaration>").eol();
-            	this.classDiffResult.addDeprecatedMethod(this.getMethod((Method_info)fd.getNewFeature()));
+                // indent().append("<declaration").append(breakdownDeclaration((Method_info)
+                // fd.getNewFeature())).append(">").append(fd.getOldDeclaration()).append("</declaration>").eol();
+                this.classDiffResult.addDeprecatedMethod(
+                        this.getMethod((Method_info) fd.getNewFeature()));
             }
         }
 
         if (modifiedConstructors.size() != 0) {
             for (CodeDifferences cd : modifiedConstructors) {
-            	ClassModification mod = new ClassModification();
-            	mod.setNewConstruct(this.getMethod((Method_info)cd.getNewFeature()));
+                ClassModification mod = new ClassModification();
+                mod.setNewConstruct(this.getMethod((Method_info) cd.getNewFeature()));
                 if (!cd.getOldDeclaration().equals(cd.getNewDeclaration())) {
-                    //indent().append("<old-declaration").append(breakdownDeclaration((Method_info) cd.getOldFeature())).append(">").append(cd.getOldDeclaration()).append("</old-declaration>").eol();
-                    //indent().append("<new-declaration").append(breakdownDeclaration((Method_info) cd.getNewFeature())).append(">").append(cd.getNewDeclaration()).append("</new-declaration>").eol();
-                	mod.setDeclarationChanged(true);
-    				mod.setOldConstruct(this.getMethod((Method_info)cd.getOldFeature()));
+                    // indent().append("<old-declaration").append(breakdownDeclaration((Method_info)
+                    // cd.getOldFeature())).append(">").append(cd.getOldDeclaration()).append("</old-declaration>").eol();
+                    // indent().append("<new-declaration").append(breakdownDeclaration((Method_info)
+                    // cd.getNewFeature())).append(">").append(cd.getNewDeclaration()).append("</new-declaration>").eol();
+                    mod.setDeclarationChanged(true);
+                    mod.setOldConstruct(this.getMethod((Method_info) cd.getOldFeature()));
                 }
                 if (cd.isCodeDifference()) {
-                    //indent().append("<modified-code").append(breakdownDeclaration((Method_info) cd.getNewFeature())).append(">").append(cd.getNewDeclaration()).append("</modified-code>").eol();
-                	mod.setBodyChanged(cd.isCodeDifference());
+                    // indent().append("<modified-code").append(breakdownDeclaration((Method_info)
+                    // cd.getNewFeature())).append(">").append(cd.getNewDeclaration()).append("</modified-code>").eol();
+                    mod.setBodyChanged(cd.isCodeDifference());
                 }
                 this.classDiffResult.addModifiedContructor(mod);
             }
@@ -603,17 +630,20 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 
         if (modifiedMethods.size() != 0) {
             for (CodeDifferences md : modifiedMethods) {
-            	ClassModification mod = new ClassModification();
-            	mod.setNewConstruct(this.getMethod((Method_info)md.getNewFeature()));
+                ClassModification mod = new ClassModification();
+                mod.setNewConstruct(this.getMethod((Method_info) md.getNewFeature()));
                 if (!md.getOldDeclaration().equals(md.getNewDeclaration())) {
-                    //indent().append("<old-declaration").append(breakdownDeclaration((Method_info) md.getOldFeature())).append(">").append(md.getOldDeclaration()).append("</old-declaration>").eol();
-                    //indent().append("<new-declaration").append(breakdownDeclaration((Method_info) md.getNewFeature())).append(">").append(md.getNewDeclaration()).append("</new-declaration>").eol();
-                	mod.setDeclarationChanged(true);
-    				mod.setOldConstruct(this.getMethod((Method_info)md.getOldFeature()));
+                    // indent().append("<old-declaration").append(breakdownDeclaration((Method_info)
+                    // md.getOldFeature())).append(">").append(md.getOldDeclaration()).append("</old-declaration>").eol();
+                    // indent().append("<new-declaration").append(breakdownDeclaration((Method_info)
+                    // md.getNewFeature())).append(">").append(md.getNewDeclaration()).append("</new-declaration>").eol();
+                    mod.setDeclarationChanged(true);
+                    mod.setOldConstruct(this.getMethod((Method_info) md.getOldFeature()));
                 }
                 if (md.isCodeDifference()) {
-                    //indent().append("<modified-code").append(breakdownDeclaration((Method_info) md.getNewFeature())).append(">").append(md.getNewDeclaration()).append("</modified-code>").eol();
-                	mod.setBodyChanged(md.isCodeDifference());
+                    // indent().append("<modified-code").append(breakdownDeclaration((Method_info)
+                    // md.getNewFeature())).append(">").append(md.getNewDeclaration()).append("</modified-code>").eol();
+                    mod.setBodyChanged(md.isCodeDifference());
                 }
                 this.classDiffResult.addModifiedMethod(mod);
             }
@@ -621,32 +651,39 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 
         if (undeprecatedConstructors.size() != 0) {
             for (FeatureDifferences fd : undeprecatedConstructors) {
-                //indent().append("<declaration").append(breakdownDeclaration((Method_info) fd.getNewFeature())).append(">").append(fd.getOldDeclaration()).append("</declaration>").eol();
-            	this.classDiffResult.addUndeprecatedContructor(this.getMethod((Method_info)fd.getNewFeature()));
+                // indent().append("<declaration").append(breakdownDeclaration((Method_info)
+                // fd.getNewFeature())).append(">").append(fd.getOldDeclaration()).append("</declaration>").eol();
+                this.classDiffResult.addUndeprecatedContructor(
+                        this.getMethod((Method_info) fd.getNewFeature()));
             }
         }
 
         if (undeprecatedMethods.size() != 0) {
             for (FeatureDifferences fd : undeprecatedMethods) {
-                //indent().append("<declaration").append(breakdownDeclaration((Method_info) fd.getNewFeature())).append(">").append(fd.getOldDeclaration()).append("</declaration>").eol();
-            	this.classDiffResult.addUndeprecatedMethod(this.getMethod((Method_info)fd.getNewFeature()));
+                // indent().append("<declaration").append(breakdownDeclaration((Method_info)
+                // fd.getNewFeature())).append(">").append(fd.getOldDeclaration()).append("</declaration>").eol();
+                this.classDiffResult.addUndeprecatedMethod(
+                        this.getMethod((Method_info) fd.getNewFeature()));
             }
         }
-        
+
         if (newConstructors.size() != 0) {
             for (FeatureDifferences fd : newConstructors) {
-                //indent().append("<declaration").append(breakdownDeclaration((Method_info) fd.getNewFeature())).append(">").append(fd.getNewDeclaration()).append("</declaration>").eol();
-            	this.classDiffResult.addNewContructor(this.getMethod((Method_info)fd.getNewFeature()));
+                // indent().append("<declaration").append(breakdownDeclaration((Method_info)
+                // fd.getNewFeature())).append(">").append(fd.getNewDeclaration()).append("</declaration>").eol();
+                this.classDiffResult.addNewContructor(
+                        this.getMethod((Method_info) fd.getNewFeature()));
             }
         }
 
         if (newMethods.size() != 0) {
             for (FeatureDifferences fd : newMethods) {
-                //indent().append("<declaration").append(breakdownDeclaration((Method_info) fd.getNewFeature())).append(">").append(fd.getNewDeclaration()).append("</declaration>").eol();
-            	this.classDiffResult.addNewMethod(this.getMethod((Method_info)fd.getNewFeature()));
+                // indent().append("<declaration").append(breakdownDeclaration((Method_info)
+                // fd.getNewFeature())).append(">").append(fd.getNewDeclaration()).append("</declaration>").eol();
+                this.classDiffResult.addNewMethod(this.getMethod((Method_info) fd.getNewFeature()));
             }
         }
-        
-		return classDiffResult;
-	}
+
+        return classDiffResult;
+    }
 }

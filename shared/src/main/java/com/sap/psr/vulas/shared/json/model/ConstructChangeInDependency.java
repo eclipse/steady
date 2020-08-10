@@ -19,8 +19,6 @@
  */
 package com.sap.psr.vulas.shared.json.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -49,72 +47,94 @@ public class ConstructChangeInDependency implements Serializable {
     /**
      * <p>Constructor for ConstructChangeInDependency.</p>
      */
-    public ConstructChangeInDependency(){super();}
+    public ConstructChangeInDependency() {
+        super();
+    }
 
     /**
      * <p>Getter for the field <code>constructChange</code>.</p>
      *
      * @return a {@link com.sap.psr.vulas.shared.json.model.ConstructChange} object.
      */
-    public ConstructChange getConstructChange() { return constructChange; }
+    public ConstructChange getConstructChange() {
+        return constructChange;
+    }
     /**
      * <p>Setter for the field <code>constructChange</code>.</p>
      *
      * @param constructChange a {@link com.sap.psr.vulas.shared.json.model.ConstructChange} object.
      */
-    public void setConstructChange(ConstructChange constructChange) { this.constructChange = constructChange; }
+    public void setConstructChange(ConstructChange constructChange) {
+        this.constructChange = constructChange;
+    }
 
     /**
      * <p>Getter for the field <code>trace</code>.</p>
      *
      * @return a {@link com.sap.psr.vulas.shared.json.model.Trace} object.
      */
-    public Trace getTrace() { return trace; }
+    public Trace getTrace() {
+        return trace;
+    }
     /**
      * <p>Setter for the field <code>trace</code>.</p>
      *
      * @param trace a {@link com.sap.psr.vulas.shared.json.model.Trace} object.
      */
-    public void setTrace(Trace trace) { this.trace = trace; }
+    public void setTrace(Trace trace) {
+        this.trace = trace;
+    }
 
     /**
      * <p>Getter for the field <code>traced</code>.</p>
      *
      * @return a {@link java.lang.Boolean} object.
      */
-    public Boolean getTraced() { return traced; }
+    public Boolean getTraced() {
+        return traced;
+    }
     /**
      * <p>Setter for the field <code>traced</code>.</p>
      *
      * @param traced a {@link java.lang.Boolean} object.
      */
-    public void setTraced(Boolean traced) { this.traced = traced; }
+    public void setTraced(Boolean traced) {
+        this.traced = traced;
+    }
 
     /**
      * <p>Getter for the field <code>inArchive</code>.</p>
      *
      * @return a {@link java.lang.Boolean} object.
      */
-    public Boolean getInArchive() { return inArchive; }
+    public Boolean getInArchive() {
+        return inArchive;
+    }
     /**
      * <p>Setter for the field <code>inArchive</code>.</p>
      *
      * @param inArchive a {@link java.lang.Boolean} object.
      */
-    public void setInArchive(Boolean inArchive) { this.inArchive = inArchive; }
+    public void setInArchive(Boolean inArchive) {
+        this.inArchive = inArchive;
+    }
 
     /**
      * <p>Getter for the field <code>reachable</code>.</p>
      *
      * @return a {@link java.lang.Boolean} object.
      */
-    public Boolean getReachable() { return reachable; }
+    public Boolean getReachable() {
+        return reachable;
+    }
     /**
      * <p>Setter for the field <code>reachable</code>.</p>
      *
      * @param reachable a {@link java.lang.Boolean} object.
      */
-    public void setReachable(Boolean reachable) { this.reachable = reachable; }
+    public void setReachable(Boolean reachable) {
+        this.reachable = reachable;
+    }
 
     /**
      * <p>isAffected.</p>
@@ -187,6 +207,4 @@ public class ConstructChangeInDependency implements Serializable {
     public void setOverall_change(String overall_change) {
         this.overall_change = overall_change;
     }
-
-        
 }

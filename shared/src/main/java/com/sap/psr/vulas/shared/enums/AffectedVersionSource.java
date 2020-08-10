@@ -24,14 +24,17 @@ package com.sap.psr.vulas.shared.enums;
  *
  */
 public enum AffectedVersionSource {
-	MANUAL,				// created by frontend-bugs
-	CHECK_VERSION , 	// deprecated, was used by CHECKVER goal which is now deprecated
-	AST_EQUALITY, 		// created by patch-lib-analyzer
-	MAJOR_EQUALITY, 	// created by patch-lib-analyzer
-	MINOR_EQUALITY, 	// created by patch-lib-analyzer
-	INTERSECTION, 		// created by patch-lib-analyzer
-	GREATER_RELEASE, 	// created by patch-lib-analyzer when a release root (X.0) has been created temporally after the latest first fixed version 
-	TO_REVIEW,			// created by patch-lib-analyzer 
-	PROPAGATE_MANUAL,	// created by patch-lib-analyzer when propagating manual assessments to greater versions for cases where no other sources concluded (i.e. all existing assessments are MANUAL)
-	CHECK_CODE;			// created by CHECKCODE goal and digestAnalyzer
+    MANUAL, // created by frontend-bugs
+    CHECK_VERSION, // deprecated, was used by CHECKVER goal which is now deprecated
+    AST_EQUALITY, // created by patch-lib-analyzer
+    MAJOR_EQUALITY, // created by patch-lib-analyzer
+    MINOR_EQUALITY, // created by patch-lib-analyzer
+    INTERSECTION, // created by patch-lib-analyzer
+    GREATER_RELEASE, // created by patch-lib-analyzer when a release root (X.0) has been created
+                     // temporally after the latest first fixed version
+    TO_REVIEW, // created by patch-lib-analyzer
+    PROPAGATE_MANUAL, // created by patch-lib-analyzer when propagating manual assessments to
+                      // greater versions for cases where no other sources concluded (i.e. all
+                      // existing assessments are MANUAL)
+    CHECK_CODE; // created by CHECKCODE goal and digestAnalyzer
 }

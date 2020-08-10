@@ -27,23 +27,27 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MavenVersionsSearch {
 
-	private MavenSearchResponse response;
-	
-	/**
-	 * <p>Constructor for MavenVersionsSearch.</p>
-	 */
-	public MavenVersionsSearch() {}
+    private MavenSearchResponse response;
 
-	/**
-	 * <p>Getter for the field <code>response</code>.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.shared.json.model.mavenCentral.MavenSearchResponse} object.
-	 */
-	public MavenSearchResponse getResponse() { return response; }
-	/**
-	 * <p>Setter for the field <code>response</code>.</p>
-	 *
-	 * @param response a {@link com.sap.psr.vulas.shared.json.model.mavenCentral.MavenSearchResponse} object.
-	 */
-	public void setResponse(MavenSearchResponse response) { this.response = response; }	
+    /**
+     * <p>Constructor for MavenVersionsSearch.</p>
+     */
+    public MavenVersionsSearch() {}
+
+    /**
+     * <p>Getter for the field <code>response</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.shared.json.model.mavenCentral.MavenSearchResponse} object.
+     */
+    public MavenSearchResponse getResponse() {
+        return response;
+    }
+    /**
+     * <p>Setter for the field <code>response</code>.</p>
+     *
+     * @param response a {@link com.sap.psr.vulas.shared.json.model.mavenCentral.MavenSearchResponse} object.
+     */
+    public void setResponse(MavenSearchResponse response) {
+        this.response = response;
+    }
 }

@@ -35,7 +35,6 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public interface ICallgraphConstructor {
 
-
     /**
      * The name of the analysis framework, used to register this callgraph constructor
      *
@@ -56,7 +55,7 @@ public interface ICallgraphConstructor {
      * @param _cfg a {@link com.sap.psr.vulas.shared.util.VulasConfiguration} object.
      */
     public void setVulasConfiguration(VulasConfiguration _cfg);
-    
+
     /**
      * Sets the class path with directories and/or JAR files for the application. Individual entries must be separated by the system-specific path separator.
      *
@@ -77,7 +76,8 @@ public interface ICallgraphConstructor {
      * @param _constructs a {@link java.util.Set} object.
      * @throws com.sap.psr.vulas.cg.CallgraphConstructException
      */
-    public void setEntrypoints(Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs) throws CallgraphConstructException;
+    public void setEntrypoints(Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs)
+            throws CallgraphConstructException;
 
     /**
      * Excludes certain packages from the analysis, i.e., potential invocations happening in {@link Construct}s of those packages will
@@ -124,6 +124,4 @@ public interface ICallgraphConstructor {
      * @return a {@link com.ibm.wala.util.graph.Graph} object.
      */
     public Graph<com.sap.psr.vulas.shared.json.model.ConstructId> getCallgraph();
-
-
 }

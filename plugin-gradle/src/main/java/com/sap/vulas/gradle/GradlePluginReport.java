@@ -22,7 +22,6 @@ package com.sap.vulas.gradle;
 import com.sap.psr.vulas.goals.ReportException;
 import com.sap.psr.vulas.goals.ReportGoal;
 import com.sap.psr.vulas.shared.json.model.Application;
-import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskExecutionException;
 
@@ -31,7 +30,6 @@ import java.util.Set;
 
 import static com.sap.vulas.gradle.GradleProjectUtilities.*;
 import static com.sap.vulas.gradle.VulasPluginCommon.*;
-
 
 public class GradlePluginReport extends AbstractVulasTask {
     @Override
@@ -57,18 +55,27 @@ public class GradlePluginReport extends AbstractVulasTask {
             for (Project sp : subProjects) {
 
                 if (!sp.getPlugins().hasPlugin(VulasPlugin.class)) {
-                    getLogger().debug("Vulas plugin not applied on subproject {} , skipping it." , sp.getName());
+                    getLogger()
+                            .debug(
+                                    "Vulas plugin not applied on subproject {} , skipping it.",
+                                    sp.getName());
                     continue;
                 }
 
-                if (!hasKnownProjectOutputType (sp, getLogger())){
-                    getLogger().debug("Output type of subproject {} is unknown, skipping it." , sp.getName());
+                if (!hasKnownProjectOutputType(sp, getLogger())) {
+                    getLogger()
+                            .debug(
+                                    "Output type of subproject {} is unknown, skipping it.",
+                                    sp.getName());
                     continue;
                 }
 
-                String groupId = getMandatoryProjectProperty(sp, GradleGavProperty.group, getLogger());
-                String artifactId = getMandatoryProjectProperty(sp, GradleGavProperty.name, getLogger());
-                String version = getMandatoryProjectProperty(sp, GradleGavProperty.version, getLogger());
+                String groupId =
+                        getMandatoryProjectProperty(sp, GradleGavProperty.group, getLogger());
+                String artifactId =
+                        getMandatoryProjectProperty(sp, GradleGavProperty.name, getLogger());
+                String version =
+                        getMandatoryProjectProperty(sp, GradleGavProperty.version, getLogger());
                 Application subProjectMvnId = new Application(groupId, artifactId, version);
                 modules.add(subProjectMvnId);
             }
@@ -76,24 +83,22 @@ public class GradlePluginReport extends AbstractVulasTask {
 
         if (!modules.isEmpty()) {
 
-            ((ReportGoal)this.goal).setApplicationModules(modules);
+            ((ReportGoal) this.goal).setApplicationModules(modules);
 
             try {
                 this.goal.executeSync();
             }
-            // ReportException will be passed on as MojoFailure, i.e., the goal execution terminates normally
+            // ReportException will be passed on as MojoFailure, i.e., the goal execution terminates
+            // normally
             catch (ReportException re) {
                 getLogger().error(re.getLongMessage());
                 throw new TaskExecutionException(this, re);
             }
         } else {
-            getLogger().quiet("Skipping report generation as neither the project or none of its subprojects are eligible.");
+            getLogger()
+                    .quiet(
+                            "Skipping report generation as neither the project or none of its"
+                                + " subprojects are eligible.");
         }
-
-
-
-
-
     }
-
 }

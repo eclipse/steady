@@ -27,18 +27,13 @@ import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
 
-
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.bytecode.BytecodeComparator;
-import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.AbstractAppGoal;
-import com.sap.psr.vulas.goals.GoalConfigurationException;
-import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Dependency;
 import com.sap.psr.vulas.shared.json.model.VulnerableDependency;
-import com.sap.psr.vulas.shared.util.FileUtil;
 
 /**
  * For all non-assessed tuples (library,bug), the code of modified methods and constructors is compared with the
@@ -50,61 +45,83 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  */
 public class CheckBytecodeGoal extends AbstractAppGoal {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
-	/**
-	 * <p>
-	 * Constructor for CheckBytecodeGoal.
-	 * </p>
-	 */
-	public CheckBytecodeGoal() {
-		super(GoalType.CHECKCODE);
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	protected void executeTasks() throws Exception {
-		final Application app = this.getApplicationContext();
+    /**
+     * <p>
+     * Constructor for CheckBytecodeGoal.
+     * </p>
+     */
+    public CheckBytecodeGoal() {
+        super(GoalType.CHECKCODE);
+    }
 
-		final Map<Path,Dependency> deps = this.getKnownDependencies();
-		
-		final BytecodeComparator comparator = new BytecodeComparator(this.getGoalContext());
-		
-		// Loop over all vulnerable dependencies that are NOT assessed (orange hour glasses)
-		final Set<VulnerableDependency> vulndeps = BackendConnector.getInstance().getAppVulnDeps(this.getGoalContext(), app, false, false, true);
-		
-		for (VulnerableDependency vulndep : vulndeps) {
-			if(vulndep.getAffectedVersionConfirmed()==0) { // Redundant check due to the flags used in the GET request of getAppVulnDeps
-				
-				Path p = null;
-				
-				// Find the path of the vulndep among the dependencies or use the path returned
-				// from the backend by default (which is always present). In case the path from
-				// the backend is used, the goal only works when it runs on the same system that
-				// run goal APP. This is currently the only supported working mode for the cli
-				for(Entry<Path,Dependency> e : deps.entrySet()) {
-					
-					// Here we retrieve the library path based solely on the digest even though the
-					// same library may originate multiple dependencies whose uniqueness is given by
-					// the triple library, parent, relativePath. The idea is that if we have the
-					// same digest we have the same code
-					if(e.getValue().getLib().getDigest().equals(vulndep.getDep().getLib().getDigest())) {
-						p = e.getKey();
-						break;
-					}
-				}
-				
-				if(p==null) {
-					p = Paths.get(vulndep.getDep().getPath());
-					if(p==null || !p.toFile().exists()) {
-				       	log.error("Path [" + p +"] for vulnerability [" + vulndep.getBug().getBugId() + "] in dependency [" + vulndep.getDep().getFilename() + "] does not exist");
-				       	continue;
-				    }
-				}
-				
-				log.info("Using path [" + p + "] to analyze vulnerability ["+vulndep.getBug().getBugId() + "] in dependency [" + vulndep.getDep().getFilename() + "]");				
-				comparator.compareLibForBug(vulndep.getDep().getLib(), vulndep.getBug().getBugId(), p);
-			}
-		}
-	}
+    /** {@inheritDoc} */
+    @Override
+    protected void executeTasks() throws Exception {
+        final Application app = this.getApplicationContext();
+
+        final Map<Path, Dependency> deps = this.getKnownDependencies();
+
+        final BytecodeComparator comparator = new BytecodeComparator(this.getGoalContext());
+
+        // Loop over all vulnerable dependencies that are NOT assessed (orange hour glasses)
+        final Set<VulnerableDependency> vulndeps =
+                BackendConnector.getInstance()
+                        .getAppVulnDeps(this.getGoalContext(), app, false, false, true);
+
+        for (VulnerableDependency vulndep : vulndeps) {
+            if (vulndep.getAffectedVersionConfirmed()
+                    == 0) { // Redundant check due to the flags used in the GET request of
+                            // getAppVulnDeps
+
+                Path p = null;
+
+                // Find the path of the vulndep among the dependencies or use the path returned
+                // from the backend by default (which is always present). In case the path from
+                // the backend is used, the goal only works when it runs on the same system that
+                // run goal APP. This is currently the only supported working mode for the cli
+                for (Entry<Path, Dependency> e : deps.entrySet()) {
+
+                    // Here we retrieve the library path based solely on the digest even though the
+                    // same library may originate multiple dependencies whose uniqueness is given by
+                    // the triple library, parent, relativePath. The idea is that if we have the
+                    // same digest we have the same code
+                    if (e.getValue()
+                            .getLib()
+                            .getDigest()
+                            .equals(vulndep.getDep().getLib().getDigest())) {
+                        p = e.getKey();
+                        break;
+                    }
+                }
+
+                if (p == null) {
+                    p = Paths.get(vulndep.getDep().getPath());
+                    if (p == null || !p.toFile().exists()) {
+                        log.error(
+                                "Path ["
+                                        + p
+                                        + "] for vulnerability ["
+                                        + vulndep.getBug().getBugId()
+                                        + "] in dependency ["
+                                        + vulndep.getDep().getFilename()
+                                        + "] does not exist");
+                        continue;
+                    }
+                }
+
+                log.info(
+                        "Using path ["
+                                + p
+                                + "] to analyze vulnerability ["
+                                + vulndep.getBug().getBugId()
+                                + "] in dependency ["
+                                + vulndep.getDep().getFilename()
+                                + "]");
+                comparator.compareLibForBug(
+                        vulndep.getDep().getLib(), vulndep.getBug().getBugId(), p);
+            }
+        }
+    }
 }

@@ -61,431 +61,494 @@ import com.sap.psr.vulas.shared.enums.GoalType;
  *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
-@JsonIgnoreProperties(ignoreUnknown=true, value={ "createdAt"}, allowGetters=true)
+@JsonIgnoreProperties(
+        ignoreUnknown = true,
+        value = {"createdAt"},
+        allowGetters = true)
 @Entity
-@Table( name="AppGoalExe", uniqueConstraints={@UniqueConstraint( columnNames = { "app", "goal", "startedAtClient"} ),@UniqueConstraint( columnNames = { "executionId"})} )
+@Table(
+        name = "AppGoalExe",
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = {"app", "goal", "startedAtClient"}),
+            @UniqueConstraint(columnNames = {"executionId"})
+        })
 public class GoalExecution implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "app", referencedColumnName = "id")
-	@JsonBackReference	 // Required in order to omit the app property when de-serializing JSON
-	private Application app;
-	
-	@Column(nullable = false, length = 9)
-	@Enumerated(EnumType.STRING)
-	private GoalType goal;
-	
-	/**
-	 * When the entry was created in the backend.
-	 */
-	@Temporal(TemporalType.TIMESTAMP)
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
-	private java.util.Calendar createdAt;
-	
-	/**
-	 * When the goal was started on client side.
-	 */
-	@Temporal(TemporalType.TIMESTAMP)
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
-	private java.util.Calendar startedAtClient;
-	
-	@Column
-	private long runtimeNano;
-	
-	/**
-	 * Client-generated ID.
-	 */
-	@Column
-	private String executionId;
-	
-	/**
-	 * Exception that occurred on client side (if any).
-	 */
-	@Column(columnDefinition = "text")
-	@JsonProperty("exception") 
-	private String exception;
-	
-	@Column
-	private long memMax;
-	
-	@Column
-	private long memUsedMax;
-	
-	@Column
-	private long memUsedAvg;
-	
-	@Column
-	private String clientVersion;
-	
-	@ManyToMany(cascade = {}, fetch = FetchType.LAZY)
-	@JsonView(Views.GoalDetails.class)
-	private Collection<Property> configuration;
-	
-	// Cache
-	@Transient
-	private Map<String, String> configurationMap = null;
-	
-	@ManyToMany(cascade = {}, fetch = FetchType.LAZY)
-	@JsonView(Views.GoalDetails.class)
-	private Collection<Property> systemInfo;
-	
-	// Cache
-	@Transient
-	private Map<String, String> systemInfoMap = null;
-	
-	@ElementCollection
-	@CollectionTable(name="AppGoalExeStatistics")
-	@JsonView(Views.GoalDetails.class)
-	private Map<String,Long> statistics;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * <p>Constructor for GoalExecution.</p>
-	 */
-	public GoalExecution() { super(); }
-	
-	/**
-	 * <p>Constructor for GoalExecution.</p>
-	 *
-	 * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
-	 * @param goal a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
-	 * @param startedAtClient a {@link java.util.Calendar} object.
-	 */
-	public GoalExecution(Application app, GoalType goal, Calendar startedAtClient) {
-		super();
-		this.app = app;
-		this.goal = goal;
-		this.startedAtClient = startedAtClient;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-	/**
-	 * <p>Getter for the field <code>id</code>.</p>
-	 *
-	 * @return a {@link java.lang.Long} object.
-	 */
-	public Long getId() { return id; }
-	/**
-	 * <p>Setter for the field <code>id</code>.</p>
-	 *
-	 * @param id a {@link java.lang.Long} object.
-	 */
-	public void setId(Long id) { this.id = id; }
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "app", referencedColumnName = "id")
+    @JsonBackReference // Required in order to omit the app property when de-serializing JSON
+    private Application app;
 
-	/**
-	 * <p>Getter for the field <code>app</code>.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.backend.model.Application} object.
-	 */
-	public Application getApp() { return app; }
-	/**
-	 * <p>Setter for the field <code>app</code>.</p>
-	 *
-	 * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
-	 */
-	public void setApp(Application app) { this.app = app; }
+    @Column(nullable = false, length = 9)
+    @Enumerated(EnumType.STRING)
+    private GoalType goal;
 
-	/**
-	 * <p>Getter for the field <code>goal</code>.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
-	 */
-	public GoalType getGoal() { return goal; }
-	/**
-	 * <p>Setter for the field <code>goal</code>.</p>
-	 *
-	 * @param goal a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
-	 */
-	public void setGoal(GoalType goal) { this.goal = goal; }
+    /**
+     * When the entry was created in the backend.
+     */
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+            timezone = "GMT")
+    private java.util.Calendar createdAt;
 
-	/**
-	 * <p>Getter for the field <code>createdAt</code>.</p>
-	 *
-	 * @return a {@link java.util.Calendar} object.
-	 */
-	public java.util.Calendar getCreatedAt() { return createdAt; }
-	/**
-	 * <p>Setter for the field <code>createdAt</code>.</p>
-	 *
-	 * @param createdAt a {@link java.util.Calendar} object.
-	 */
-	public void setCreatedAt(java.util.Calendar createdAt) { this.createdAt = createdAt; }
+    /**
+     * When the goal was started on client side.
+     */
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+            timezone = "GMT")
+    private java.util.Calendar startedAtClient;
 
-	/**
-	 * <p>Getter for the field <code>startedAtClient</code>.</p>
-	 *
-	 * @return a {@link java.util.Calendar} object.
-	 */
-	public java.util.Calendar getStartedAtClient() { return startedAtClient; }
-	/**
-	 * <p>Setter for the field <code>startedAtClient</code>.</p>
-	 *
-	 * @param startedAtClient a {@link java.util.Calendar} object.
-	 */
-	public void setStartedAtClient(java.util.Calendar startedAtClient) { this.startedAtClient = startedAtClient; }
+    @Column private long runtimeNano;
 
-	/**
-	 * <p>Getter for the field <code>runtimeNano</code>.</p>
-	 *
-	 * @return a long.
-	 */
-	public long getRuntimeNano() { return runtimeNano; }
-	/**
-	 * <p>Setter for the field <code>runtimeNano</code>.</p>
-	 *
-	 * @param runtimeNano a long.
-	 */
-	public void setRuntimeNano(long runtimeNano) { this.runtimeNano = runtimeNano; }
+    /**
+     * Client-generated ID.
+     */
+    @Column private String executionId;
 
-	/**
-	 * <p>Getter for the field <code>executionId</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getExecutionId() { return executionId; }
-	/**
-	 * <p>Setter for the field <code>executionId</code>.</p>
-	 *
-	 * @param _id a {@link java.lang.String} object.
-	 */
-	public void setExecutionId(String _id) { this.executionId = _id; }
+    /**
+     * Exception that occurred on client side (if any).
+     */
+    @Column(columnDefinition = "text")
+    @JsonProperty("exception")
+    private String exception;
 
-	/**
-	 * <p>getExecutionException.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getExecutionException() { return exception; }
-	/**
-	 * <p>setExecutionException.</p>
-	 *
-	 * @param exception a {@link java.lang.String} object.
-	 */
-	public void setExecutionException(String exception) { this.exception = exception; }
+    @Column private long memMax;
 
-	/**
-	 * <p>Getter for the field <code>memMax</code>.</p>
-	 *
-	 * @return a long.
-	 */
-	public long getMemMax() { return memMax; }
-	/**
-	 * <p>Setter for the field <code>memMax</code>.</p>
-	 *
-	 * @param memMax a long.
-	 */
-	public void setMemMax(long memMax) { this.memMax = memMax; }
+    @Column private long memUsedMax;
 
-	/**
-	 * <p>Getter for the field <code>memUsedMax</code>.</p>
-	 *
-	 * @return a long.
-	 */
-	public long getMemUsedMax() { return memUsedMax; }
-	/**
-	 * <p>Setter for the field <code>memUsedMax</code>.</p>
-	 *
-	 * @param memUsedMax a long.
-	 */
-	public void setMemUsedMax(long memUsedMax) { this.memUsedMax = memUsedMax; }
+    @Column private long memUsedAvg;
 
-	/**
-	 * <p>Getter for the field <code>memUsedAvg</code>.</p>
-	 *
-	 * @return a long.
-	 */
-	public long getMemUsedAvg() { return memUsedAvg; }
-	/**
-	 * <p>Setter for the field <code>memUsedAvg</code>.</p>
-	 *
-	 * @param memUsedAvg a long.
-	 */
-	public void setMemUsedAvg(long memUsedAvg) { this.memUsedAvg = memUsedAvg; }
+    @Column private String clientVersion;
 
-	/**
-	 * <p>Getter for the field <code>clientVersion</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getClientVersion() { return clientVersion; }
-	/**
-	 * <p>Setter for the field <code>clientVersion</code>.</p>
-	 *
-	 * @param clientVersion a {@link java.lang.String} object.
-	 */
-	public void setClientVersion(String clientVersion) { this.clientVersion = clientVersion; }
+    @ManyToMany(
+            cascade = {},
+            fetch = FetchType.LAZY)
+    @JsonView(Views.GoalDetails.class)
+    private Collection<Property> configuration;
 
-	/**
-	 * <p>Getter for the field <code>configuration</code>.</p>
-	 *
-	 * @return a {@link java.util.Collection} object.
-	 */
-	public Collection<Property> getConfiguration() { return configuration; }
-	
-	/**
-	 * <p>Setter for the field <code>configuration</code>.</p>
-	 *
-	 * @param configuration a {@link java.util.Collection} object.
-	 */
-	public void setConfiguration(Collection<Property> configuration) { this.configuration = configuration; }
-	
-	/**
-	 * Returns the value of the configuration property with the given name (or null, if no such property exists).
-	 *
-	 * @param _name a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
-	 */
-	@JsonIgnore
-	public String getConfiguration(@NotNull String _name) {
-		if(this.configurationMap==null) {
-			this.configurationMap = new HashMap<String, String>();
-			for(Property p: this.getConfiguration())
-				this.configurationMap.put(p.getName(), p.getPropertyValue());
-		}
-		return this.configurationMap.get(_name);
-	}
-	
-	/**
-	 * Returns all configuration properties.
-	 *
-	 * @return a {@link java.util.HashMap} object.
-	 */
-	@JsonIgnore
-	public Map<String,String> getConfigurationMap() {
-		if(this.configurationMap==null) {
-			this.configurationMap = new HashMap<String, String>();
-			for(Property p: this.getConfiguration())
-				this.configurationMap.put(p.getName(), p.getPropertyValue());
-		}
-		return this.configurationMap;
-	}
-	
-	/**
-	 * <p>Getter for the field <code>systemInfo</code>.</p>
-	 *
-	 * @return a {@link java.util.Collection} object.
-	 */
-	public Collection<Property> getSystemInfo() { return systemInfo; }
-	
-	/**
-	 * <p>Setter for the field <code>systemInfo</code>.</p>
-	 *
-	 * @param systemInfo a {@link java.util.Collection} object.
-	 */
-	public void setSystemInfo(Collection<Property> systemInfo) { this.systemInfo = systemInfo; }
+    // Cache
+    @Transient private Map<String, String> configurationMap = null;
 
-	/**
-	 * Returns the value of the system info with the given name (or null, if no such property exists).
-	 *
-	 * @param _name a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
-	 */
-	@JsonIgnore
-	public String getSystemInfo(@NotNull String _name) {
-		if(this.systemInfoMap==null) {
-			this.systemInfoMap = new HashMap<String, String>();
-			for(Property p: this.getSystemInfo())
-				this.systemInfoMap.put(p.getName(), p.getPropertyValue());
-		}
-		return this.systemInfoMap.get(_name);
-	}
-	
-	/**
-	 * <p>Getter for the field <code>statistics</code>.</p>
-	 *
-	 * @return a {@link java.util.Map} object.
-	 */
-	public Map<String, Long> getStatistics() { return statistics; }
-	/**
-	 * <p>Setter for the field <code>statistics</code>.</p>
-	 *
-	 * @param statistics a {@link java.util.Map} object.
-	 */
-	public void setStatistics(Map<String, Long> statistics) { this.statistics = statistics; }
-	
-	/**
-	 * Sets {@link GoalExecution#createdAt}.
-	 */
-	@PrePersist
-	public void prePersist() {
-		if(this.getCreatedAt()==null) {
-			this.setCreatedAt(Calendar.getInstance());
-		}
-	}
+    @ManyToMany(
+            cascade = {},
+            fetch = FetchType.LAZY)
+    @JsonView(Views.GoalDetails.class)
+    private Collection<Property> systemInfo;
 
-	/** {@inheritDoc} */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((app == null) ? 0 : app.hashCode());
-		result = prime * result + ((executionId == null) ? 0 : executionId.hashCode());
-		result = prime * result + ((goal == null) ? 0 : goal.hashCode());
-		return result;
-	}
+    // Cache
+    @Transient private Map<String, String> systemInfoMap = null;
 
-	/** {@inheritDoc} */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		GoalExecution other = (GoalExecution) obj;
-		if (app == null) {
-			if (other.app != null)
-				return false;
-		} else if (!app.equals(other.app))
-			return false;
-		if (executionId == null) {
-			if (other.executionId != null)
-				return false;
-		} else if (!executionId.equals(other.executionId))
-			return false;
-		if (goal != other.goal)
-			return false;
-		return true;
-	}
+    @ElementCollection
+    @CollectionTable(name = "AppGoalExeStatistics")
+    @JsonView(Views.GoalDetails.class)
+    private Map<String, Long> statistics;
 
-	/*@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((app == null) ? 0 : app.hashCode());
-		result = prime * result + ((goal == null) ? 0 : goal.hashCode());
-		result = prime * result + ((startedAtClient == null) ? 0 : startedAtClient.hashCode());
-		return result;
-	}
+    /**
+     * <p>Constructor for GoalExecution.</p>
+     */
+    public GoalExecution() {
+        super();
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		GoalExecution other = (GoalExecution) obj;
-		if (app == null) {
-			if (other.app != null)
-				return false;
-		} else if (!app.equals(other.app))
-			return false;
-		if (goal != other.goal)
-			return false;
-		if (startedAtClient == null) {
-			if (other.startedAtClient != null)
-				return false;
-		} else if (!startedAtClient.equals(other.startedAtClient))
-			return false;
-		return true;
-	}*/
-	
-	
+    /**
+     * <p>Constructor for GoalExecution.</p>
+     *
+     * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
+     * @param goal a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+     * @param startedAtClient a {@link java.util.Calendar} object.
+     */
+    public GoalExecution(Application app, GoalType goal, Calendar startedAtClient) {
+        super();
+        this.app = app;
+        this.goal = goal;
+        this.startedAtClient = startedAtClient;
+    }
+
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object.
+     */
+    public Long getId() {
+        return id;
+    }
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object.
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /**
+     * <p>Getter for the field <code>app</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.backend.model.Application} object.
+     */
+    public Application getApp() {
+        return app;
+    }
+    /**
+     * <p>Setter for the field <code>app</code>.</p>
+     *
+     * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
+     */
+    public void setApp(Application app) {
+        this.app = app;
+    }
+
+    /**
+     * <p>Getter for the field <code>goal</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+     */
+    public GoalType getGoal() {
+        return goal;
+    }
+    /**
+     * <p>Setter for the field <code>goal</code>.</p>
+     *
+     * @param goal a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+     */
+    public void setGoal(GoalType goal) {
+        this.goal = goal;
+    }
+
+    /**
+     * <p>Getter for the field <code>createdAt</code>.</p>
+     *
+     * @return a {@link java.util.Calendar} object.
+     */
+    public java.util.Calendar getCreatedAt() {
+        return createdAt;
+    }
+    /**
+     * <p>Setter for the field <code>createdAt</code>.</p>
+     *
+     * @param createdAt a {@link java.util.Calendar} object.
+     */
+    public void setCreatedAt(java.util.Calendar createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    /**
+     * <p>Getter for the field <code>startedAtClient</code>.</p>
+     *
+     * @return a {@link java.util.Calendar} object.
+     */
+    public java.util.Calendar getStartedAtClient() {
+        return startedAtClient;
+    }
+    /**
+     * <p>Setter for the field <code>startedAtClient</code>.</p>
+     *
+     * @param startedAtClient a {@link java.util.Calendar} object.
+     */
+    public void setStartedAtClient(java.util.Calendar startedAtClient) {
+        this.startedAtClient = startedAtClient;
+    }
+
+    /**
+     * <p>Getter for the field <code>runtimeNano</code>.</p>
+     *
+     * @return a long.
+     */
+    public long getRuntimeNano() {
+        return runtimeNano;
+    }
+    /**
+     * <p>Setter for the field <code>runtimeNano</code>.</p>
+     *
+     * @param runtimeNano a long.
+     */
+    public void setRuntimeNano(long runtimeNano) {
+        this.runtimeNano = runtimeNano;
+    }
+
+    /**
+     * <p>Getter for the field <code>executionId</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getExecutionId() {
+        return executionId;
+    }
+    /**
+     * <p>Setter for the field <code>executionId</code>.</p>
+     *
+     * @param _id a {@link java.lang.String} object.
+     */
+    public void setExecutionId(String _id) {
+        this.executionId = _id;
+    }
+
+    /**
+     * <p>getExecutionException.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getExecutionException() {
+        return exception;
+    }
+    /**
+     * <p>setExecutionException.</p>
+     *
+     * @param exception a {@link java.lang.String} object.
+     */
+    public void setExecutionException(String exception) {
+        this.exception = exception;
+    }
+
+    /**
+     * <p>Getter for the field <code>memMax</code>.</p>
+     *
+     * @return a long.
+     */
+    public long getMemMax() {
+        return memMax;
+    }
+    /**
+     * <p>Setter for the field <code>memMax</code>.</p>
+     *
+     * @param memMax a long.
+     */
+    public void setMemMax(long memMax) {
+        this.memMax = memMax;
+    }
+
+    /**
+     * <p>Getter for the field <code>memUsedMax</code>.</p>
+     *
+     * @return a long.
+     */
+    public long getMemUsedMax() {
+        return memUsedMax;
+    }
+    /**
+     * <p>Setter for the field <code>memUsedMax</code>.</p>
+     *
+     * @param memUsedMax a long.
+     */
+    public void setMemUsedMax(long memUsedMax) {
+        this.memUsedMax = memUsedMax;
+    }
+
+    /**
+     * <p>Getter for the field <code>memUsedAvg</code>.</p>
+     *
+     * @return a long.
+     */
+    public long getMemUsedAvg() {
+        return memUsedAvg;
+    }
+    /**
+     * <p>Setter for the field <code>memUsedAvg</code>.</p>
+     *
+     * @param memUsedAvg a long.
+     */
+    public void setMemUsedAvg(long memUsedAvg) {
+        this.memUsedAvg = memUsedAvg;
+    }
+
+    /**
+     * <p>Getter for the field <code>clientVersion</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getClientVersion() {
+        return clientVersion;
+    }
+    /**
+     * <p>Setter for the field <code>clientVersion</code>.</p>
+     *
+     * @param clientVersion a {@link java.lang.String} object.
+     */
+    public void setClientVersion(String clientVersion) {
+        this.clientVersion = clientVersion;
+    }
+
+    /**
+     * <p>Getter for the field <code>configuration</code>.</p>
+     *
+     * @return a {@link java.util.Collection} object.
+     */
+    public Collection<Property> getConfiguration() {
+        return configuration;
+    }
+
+    /**
+     * <p>Setter for the field <code>configuration</code>.</p>
+     *
+     * @param configuration a {@link java.util.Collection} object.
+     */
+    public void setConfiguration(Collection<Property> configuration) {
+        this.configuration = configuration;
+    }
+
+    /**
+     * Returns the value of the configuration property with the given name (or null, if no such property exists).
+     *
+     * @param _name a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
+    @JsonIgnore
+    public String getConfiguration(@NotNull String _name) {
+        if (this.configurationMap == null) {
+            this.configurationMap = new HashMap<String, String>();
+            for (Property p : this.getConfiguration())
+                this.configurationMap.put(p.getName(), p.getPropertyValue());
+        }
+        return this.configurationMap.get(_name);
+    }
+
+    /**
+     * Returns all configuration properties.
+     *
+     * @return a {@link java.util.HashMap} object.
+     */
+    @JsonIgnore
+    public Map<String, String> getConfigurationMap() {
+        if (this.configurationMap == null) {
+            this.configurationMap = new HashMap<String, String>();
+            for (Property p : this.getConfiguration())
+                this.configurationMap.put(p.getName(), p.getPropertyValue());
+        }
+        return this.configurationMap;
+    }
+
+    /**
+     * <p>Getter for the field <code>systemInfo</code>.</p>
+     *
+     * @return a {@link java.util.Collection} object.
+     */
+    public Collection<Property> getSystemInfo() {
+        return systemInfo;
+    }
+
+    /**
+     * <p>Setter for the field <code>systemInfo</code>.</p>
+     *
+     * @param systemInfo a {@link java.util.Collection} object.
+     */
+    public void setSystemInfo(Collection<Property> systemInfo) {
+        this.systemInfo = systemInfo;
+    }
+
+    /**
+     * Returns the value of the system info with the given name (or null, if no such property exists).
+     *
+     * @param _name a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
+    @JsonIgnore
+    public String getSystemInfo(@NotNull String _name) {
+        if (this.systemInfoMap == null) {
+            this.systemInfoMap = new HashMap<String, String>();
+            for (Property p : this.getSystemInfo())
+                this.systemInfoMap.put(p.getName(), p.getPropertyValue());
+        }
+        return this.systemInfoMap.get(_name);
+    }
+
+    /**
+     * <p>Getter for the field <code>statistics</code>.</p>
+     *
+     * @return a {@link java.util.Map} object.
+     */
+    public Map<String, Long> getStatistics() {
+        return statistics;
+    }
+    /**
+     * <p>Setter for the field <code>statistics</code>.</p>
+     *
+     * @param statistics a {@link java.util.Map} object.
+     */
+    public void setStatistics(Map<String, Long> statistics) {
+        this.statistics = statistics;
+    }
+
+    /**
+     * Sets {@link GoalExecution#createdAt}.
+     */
+    @PrePersist
+    public void prePersist() {
+        if (this.getCreatedAt() == null) {
+            this.setCreatedAt(Calendar.getInstance());
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((app == null) ? 0 : app.hashCode());
+        result = prime * result + ((executionId == null) ? 0 : executionId.hashCode());
+        result = prime * result + ((goal == null) ? 0 : goal.hashCode());
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        GoalExecution other = (GoalExecution) obj;
+        if (app == null) {
+            if (other.app != null) return false;
+        } else if (!app.equals(other.app)) return false;
+        if (executionId == null) {
+            if (other.executionId != null) return false;
+        } else if (!executionId.equals(other.executionId)) return false;
+        if (goal != other.goal) return false;
+        return true;
+    }
+
+    /*@Override
+    public int hashCode() {
+    	final int prime = 31;
+    	int result = 1;
+    	result = prime * result + ((app == null) ? 0 : app.hashCode());
+    	result = prime * result + ((goal == null) ? 0 : goal.hashCode());
+    	result = prime * result + ((startedAtClient == null) ? 0 : startedAtClient.hashCode());
+    	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+    	if (this == obj)
+    		return true;
+    	if (obj == null)
+    		return false;
+    	if (getClass() != obj.getClass())
+    		return false;
+    	GoalExecution other = (GoalExecution) obj;
+    	if (app == null) {
+    		if (other.app != null)
+    			return false;
+    	} else if (!app.equals(other.app))
+    		return false;
+    	if (goal != other.goal)
+    		return false;
+    	if (startedAtClient == null) {
+    		if (other.startedAtClient != null)
+    			return false;
+    	} else if (!startedAtClient.equals(other.startedAtClient))
+    		return false;
+    	return true;
+    }*/
+
 }

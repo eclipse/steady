@@ -31,7 +31,6 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
-import org.gradle.api.Task;
 import org.gradle.api.plugins.ExtensionContainer;
 import org.gradle.api.plugins.ExtraPropertiesExtension;
 import org.gradle.api.tasks.SourceSet;
@@ -39,28 +38,25 @@ import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.compile.JavaCompile;
 
-
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.sap.vulas.gradle.VulasPluginCommon.*;
 import static com.sap.vulas.gradle.GradleProjectUtilities.*;
 
 public abstract class AbstractVulasTask extends DefaultTask {
 
-	protected Application app = null;
+    protected Application app = null;
 
     protected AbstractAppGoal goal = null;
     protected Project project = this.getProject();
     protected ProjectOutputTypes projectOutputType;
-    
+
     /** The configuration used throughout the execution of the goal. */
-    protected VulasConfiguration vulasConfiguration = new VulasConfiguration();    
+    protected VulasConfiguration vulasConfiguration = new VulasConfiguration();
 
     /**
      * Puts the plugin configuration element <layeredConfiguration> as a new layer into {@link VulasConfiguration}.
@@ -77,14 +73,18 @@ public abstract class AbstractVulasTask extends DefaultTask {
             getLogger().info("Transient configuration settings deleted");
         }
 
-        //Examining extra properties, if a property starts with "vulas" add it to
-        //the configuration as transient property
+        // Examining extra properties, if a property starts with "vulas" add it to
+        // the configuration as transient property
         ExtraPropertiesExtension ext = project.getExtensions().getExtraProperties();
 
         for (Map.Entry<String, Object> extraProp : ext.getProperties().entrySet()) {
             if (extraProp.getKey().startsWith(VULAS_PLUGIN_NAME)) {
-            	this.vulasConfiguration.setProperty(extraProp.getKey(), extraProp.getValue());
-                getLogger().debug("Added property to configuration {}={}", extraProp.getKey(), extraProp.getValue());
+                this.vulasConfiguration.setProperty(extraProp.getKey(), extraProp.getValue());
+                getLogger()
+                        .debug(
+                                "Added property to configuration {}={}",
+                                extraProp.getKey(),
+                                extraProp.getValue());
             }
         }
 
@@ -92,29 +92,45 @@ public abstract class AbstractVulasTask extends DefaultTask {
         try {
             app = CoreConfiguration.getAppContext(this.vulasConfiguration);
         }
-        // In case the plugin is called w/o using the Vulas profile, project-specific settings are not set
+        // In case the plugin is called w/o using the Vulas profile, project-specific settings are
+        // not set
         // Set them using the project member
         catch (ConfigurationException e) {
 
-        	this.vulasConfiguration.setProperty(CoreConfiguration.APP_CTX_GROUP, getMandatoryProjectProperty(project, GradleGavProperty.group, getLogger()));
-        	this.vulasConfiguration.setProperty(CoreConfiguration.APP_CTX_ARTIF, getMandatoryProjectProperty(project, GradleGavProperty.name, getLogger()));
-        	this.vulasConfiguration.setProperty(CoreConfiguration.APP_CTX_VERSI, getMandatoryProjectProperty(project, GradleGavProperty.version, getLogger()));
-            //TODO: packaging is not straightforward with gradle, leave it empty for now
-            //VulasConfiguration.setProperty(CoreConfiguration.APP_CTX_PACKA, "", "", true);
+            this.vulasConfiguration.setProperty(
+                    CoreConfiguration.APP_CTX_GROUP,
+                    getMandatoryProjectProperty(project, GradleGavProperty.group, getLogger()));
+            this.vulasConfiguration.setProperty(
+                    CoreConfiguration.APP_CTX_ARTIF,
+                    getMandatoryProjectProperty(project, GradleGavProperty.name, getLogger()));
+            this.vulasConfiguration.setProperty(
+                    CoreConfiguration.APP_CTX_VERSI,
+                    getMandatoryProjectProperty(project, GradleGavProperty.version, getLogger()));
+            // TODO: packaging is not straightforward with gradle, leave it empty for now
+            // VulasConfiguration.setProperty(CoreConfiguration.APP_CTX_PACKA, "", "", true);
             app = CoreConfiguration.getAppContext(this.vulasConfiguration);
         }
 
         String rootDir = project.getProjectDir().getAbsolutePath();
         String buildDir = project.getBuildDir().getAbsolutePath();
 
-        //Set defaults for all the paths
-        this.vulasConfiguration.setPropertyIfEmpty(VulasConfiguration.TMP_DIR, Paths.get(buildDir, "vulas", "tmp").toString());
-        this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.UPLOAD_DIR, Paths.get(buildDir, "vulas", "upload").toString());
-        this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.INSTR_SRC_DIR, Paths.get(rootDir).toString());
-        this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.INSTR_TARGET_DIR, Paths.get(buildDir, "vulas", "target").toString());
-        this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.INSTR_INCLUDE_DIR, Paths.get(buildDir, "vulas", "include").toString());
-        this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.INSTR_LIB_DIR, Paths.get(buildDir, "vulas", "lib").toString());
-        this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.REP_DIR, Paths.get(buildDir, "vulas", "report").toString());
+        // Set defaults for all the paths
+        this.vulasConfiguration.setPropertyIfEmpty(
+                VulasConfiguration.TMP_DIR, Paths.get(buildDir, "vulas", "tmp").toString());
+        this.vulasConfiguration.setPropertyIfEmpty(
+                CoreConfiguration.UPLOAD_DIR, Paths.get(buildDir, "vulas", "upload").toString());
+        this.vulasConfiguration.setPropertyIfEmpty(
+                CoreConfiguration.INSTR_SRC_DIR, Paths.get(rootDir).toString());
+        this.vulasConfiguration.setPropertyIfEmpty(
+                CoreConfiguration.INSTR_TARGET_DIR,
+                Paths.get(buildDir, "vulas", "target").toString());
+        this.vulasConfiguration.setPropertyIfEmpty(
+                CoreConfiguration.INSTR_INCLUDE_DIR,
+                Paths.get(buildDir, "vulas", "include").toString());
+        this.vulasConfiguration.setPropertyIfEmpty(
+                CoreConfiguration.INSTR_LIB_DIR, Paths.get(buildDir, "vulas", "lib").toString());
+        this.vulasConfiguration.setPropertyIfEmpty(
+                CoreConfiguration.REP_DIR, Paths.get(buildDir, "vulas", "report").toString());
 
         Set<String> appPaths = new HashSet<>();
 
@@ -134,7 +150,8 @@ public abstract class AbstractVulasTask extends DefaultTask {
                 appPaths.add(od.getAbsolutePath());
             }
 
-        } else if (projectOutputType == ProjectOutputTypes.AAR || projectOutputType == ProjectOutputTypes.APK) {
+        } else if (projectOutputType == ProjectOutputTypes.AAR
+                || projectOutputType == ProjectOutputTypes.APK) {
 
             ExtensionContainer e = project.getExtensions();
             BaseExtension ae = (BaseExtension) e.getByName("android");
@@ -147,7 +164,10 @@ public abstract class AbstractVulasTask extends DefaultTask {
                 appPaths.add(srcDir.toString());
             }
 
-            JavaCompile jc = (JavaCompile) project.getTasksByName("compileReleaseJavaWithJavac", true).toArray()[0];
+            JavaCompile jc =
+                    (JavaCompile)
+                            project.getTasksByName("compileReleaseJavaWithJavac", true)
+                                    .toArray()[0];
             appPaths.add(jc.getDestinationDir().toString());
         }
 
@@ -156,10 +176,13 @@ public abstract class AbstractVulasTask extends DefaultTask {
 
         this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.APP_DIRS, strAppPaths);
 
-        getLogger().info("Top level project: " + project.getRootProject().getBuildFile().getAbsolutePath());
+        getLogger()
+                .info(
+                        "Top level project: "
+                                + project.getRootProject().getBuildFile().getAbsolutePath());
         getLogger().info("Execution root dir: " + project.getRootProject().getProjectDir());
 
-        this.vulasConfiguration.log(new String[]{VULAS_PLUGIN_NAME}, "    ");
+        this.vulasConfiguration.log(new String[] {VULAS_PLUGIN_NAME}, "    ");
     }
 
     @TaskAction
@@ -173,10 +196,11 @@ public abstract class AbstractVulasTask extends DefaultTask {
         this.goal.setConfiguration(this.vulasConfiguration);
 
         // Set the application paths
-        this.goal.addAppPaths(FileUtil.getPaths(this.vulasConfiguration.getStringArray(CoreConfiguration.APP_DIRS, null)));
+        this.goal.addAppPaths(
+                FileUtil.getPaths(
+                        this.vulasConfiguration.getStringArray(CoreConfiguration.APP_DIRS, null)));
 
         this.executeGoal();
-
     }
 
     protected abstract void createGoal();
@@ -184,5 +208,4 @@ public abstract class AbstractVulasTask extends DefaultTask {
     protected void executeGoal() throws Exception {
         this.goal.executeSync();
     }
-
 }

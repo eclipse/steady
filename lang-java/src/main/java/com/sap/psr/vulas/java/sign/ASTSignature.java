@@ -39,24 +39,27 @@ import com.sap.psr.vulas.sign.Signature;
  */
 public abstract class ASTSignature extends Node implements Signature {
 
-	/**
-	 * <p>Constructor for ASTSignature.</p>
-	 *
-	 * @param label a {@link ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType} object.
-	 * @param value a {@link java.lang.String} object.
-	 */
-	public ASTSignature(EntityType label, String value) {
-		super(label, value);
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * <p>Constructor for ASTSignature.</p>
+     *
+     * @param label a {@link ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType} object.
+     * @param value a {@link java.lang.String} object.
+     */
+    public ASTSignature(EntityType label, String value) {
+        super(label, value);
+        // TODO Auto-generated constructor stub
+    }
 
-	private static final long serialVersionUID = -3802437501302095999L;
-	/** Constant <code>sDeclarationConverter</code> */
-	protected static JavaDeclarationConverter sDeclarationConverter;
+    private static final long serialVersionUID = -3802437501302095999L;
+    /** Constant <code>sDeclarationConverter</code> */
+    protected static JavaDeclarationConverter sDeclarationConverter;
     /** Constant <code>sMethodBodyConverter</code> */
-    protected static JavaMethodBodyConverter sMethodBodyConverter;   //Visitor for generation of the AST of construct bodies
-	/** Constant <code>sInjector</code> */
-	protected static final Injector sInjector = Guice.createInjector(new JavaChangeDistillerModule());
+    protected static JavaMethodBodyConverter
+            sMethodBodyConverter; // Visitor for generation of the AST of construct bodies
+    /** Constant <code>sInjector</code> */
+    protected static final Injector sInjector =
+            Guice.createInjector(new JavaChangeDistillerModule());
+
     protected JavaCompilation fCompilation;
     protected Node fRoot;
     protected Construct _construct;
@@ -121,8 +124,8 @@ public abstract class ASTSignature extends Node implements Signature {
      *
      * @return a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
      */
-    public Node getRoot(){
-    	return (Node) this.fRoot;
+    public Node getRoot() {
+        return (Node) this.fRoot;
     }
 
     /**
@@ -130,7 +133,7 @@ public abstract class ASTSignature extends Node implements Signature {
      *
      * @param n a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
      */
-    public void setRoot(Node n){
-    	fRoot = n;
+    public void setRoot(Node n) {
+        fRoot = n;
     }
 }

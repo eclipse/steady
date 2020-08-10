@@ -37,105 +37,138 @@ import com.sap.psr.vulas.shared.enums.PathSource;
  */
 @Embeddable
 @JsonInclude(JsonInclude.Include.ALWAYS)
-@JsonIgnoreProperties(ignoreUnknown=true) // On allowGetters: https://github.com/FasterXML/jackson-databind/issues/95
+@JsonIgnoreProperties(
+        ignoreUnknown =
+                true) // On allowGetters: https://github.com/FasterXML/jackson-databind/issues/95
 public class TouchPoint {
-	
-	public enum Direction { A2L, L2A };
 
-	@ManyToOne(optional = false, cascade = { }, fetch = FetchType.EAGER )
-	@JoinColumn(name="fromConstructId") // Required for the unique constraint
-	private ConstructId from;
-	
-	@ManyToOne(optional = false, cascade = { }, fetch = FetchType.EAGER )
-	@JoinColumn(name="toConstructId") // Required for the unique constraint
-	private ConstructId to;
-	
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	private Direction direction;
-	
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	private PathSource source;
-	
-	/**
-	 * <p>Constructor for TouchPoint.</p>
-	 */
-	public TouchPoint() { super(); }
-	
-	/**
-	 * <p>Constructor for TouchPoint.</p>
-	 *
-	 * @param from a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
-	 * @param to a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
-	 * @param direction a {@link com.sap.psr.vulas.backend.model.TouchPoint.Direction} object.
-	 */
-	public TouchPoint(ConstructId from, ConstructId to, Direction direction) {
-		super();
-		this.from = from;
-		this.to = to;
-		this.direction = direction;
-	}
+    public enum Direction {
+        A2L,
+        L2A
+    };
 
-	/**
-	 * <p>Getter for the field <code>from</code>.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
-	 */
-	public ConstructId getFrom() { return from; }
-	/**
-	 * <p>Setter for the field <code>from</code>.</p>
-	 *
-	 * @param from a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
-	 */
-	public void setFrom(ConstructId from) { this.from = from; }
+    @ManyToOne(
+            optional = false,
+            cascade = {},
+            fetch = FetchType.EAGER)
+    @JoinColumn(name = "fromConstructId") // Required for the unique constraint
+    private ConstructId from;
 
-	/**
-	 * <p>Getter for the field <code>to</code>.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
-	 */
-	public ConstructId getTo() { return to; }
-	/**
-	 * <p>Setter for the field <code>to</code>.</p>
-	 *
-	 * @param to a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
-	 */
-	public void setTo(ConstructId to) { this.to = to; }
+    @ManyToOne(
+            optional = false,
+            cascade = {},
+            fetch = FetchType.EAGER)
+    @JoinColumn(name = "toConstructId") // Required for the unique constraint
+    private ConstructId to;
 
-	/**
-	 * <p>Getter for the field <code>direction</code>.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.backend.model.TouchPoint.Direction} object.
-	 */
-	public Direction getDirection() { return direction; }
-	/**
-	 * <p>Setter for the field <code>direction</code>.</p>
-	 *
-	 * @param direction a {@link com.sap.psr.vulas.backend.model.TouchPoint.Direction} object.
-	 */
-	public void setDirection(Direction direction) { this.direction = direction; }
-	
-	/**
-	 * <p>Getter for the field <code>source</code>.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.shared.enums.PathSource} object.
-	 */
-	public PathSource getSource() { return source; }
-	/**
-	 * <p>Setter for the field <code>source</code>.</p>
-	 *
-	 * @param source a {@link com.sap.psr.vulas.shared.enums.PathSource} object.
-	 */
-	public void setSource(PathSource source) { this.source = source; }
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Direction direction;
 
-	/** {@inheritDoc} */
-	@Override
-	public final String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("[from=").append(this.getFrom().getQname()).append(", to=").append(this.getTo().getQname()).append("]");
-		return builder.toString();
-	}
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PathSource source;
+
+    /**
+     * <p>Constructor for TouchPoint.</p>
+     */
+    public TouchPoint() {
+        super();
+    }
+
+    /**
+     * <p>Constructor for TouchPoint.</p>
+     *
+     * @param from a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
+     * @param to a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
+     * @param direction a {@link com.sap.psr.vulas.backend.model.TouchPoint.Direction} object.
+     */
+    public TouchPoint(ConstructId from, ConstructId to, Direction direction) {
+        super();
+        this.from = from;
+        this.to = to;
+        this.direction = direction;
+    }
+
+    /**
+     * <p>Getter for the field <code>from</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
+     */
+    public ConstructId getFrom() {
+        return from;
+    }
+    /**
+     * <p>Setter for the field <code>from</code>.</p>
+     *
+     * @param from a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
+     */
+    public void setFrom(ConstructId from) {
+        this.from = from;
+    }
+
+    /**
+     * <p>Getter for the field <code>to</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
+     */
+    public ConstructId getTo() {
+        return to;
+    }
+    /**
+     * <p>Setter for the field <code>to</code>.</p>
+     *
+     * @param to a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
+     */
+    public void setTo(ConstructId to) {
+        this.to = to;
+    }
+
+    /**
+     * <p>Getter for the field <code>direction</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.backend.model.TouchPoint.Direction} object.
+     */
+    public Direction getDirection() {
+        return direction;
+    }
+    /**
+     * <p>Setter for the field <code>direction</code>.</p>
+     *
+     * @param direction a {@link com.sap.psr.vulas.backend.model.TouchPoint.Direction} object.
+     */
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    /**
+     * <p>Getter for the field <code>source</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.shared.enums.PathSource} object.
+     */
+    public PathSource getSource() {
+        return source;
+    }
+    /**
+     * <p>Setter for the field <code>source</code>.</p>
+     *
+     * @param source a {@link com.sap.psr.vulas.shared.enums.PathSource} object.
+     */
+    public void setSource(PathSource source) {
+        this.source = source;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("[from=")
+                .append(this.getFrom().getQname())
+                .append(", to=")
+                .append(this.getTo().getQname())
+                .append("]");
+        return builder.toString();
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -175,6 +208,4 @@ public class TouchPoint {
         }
         return true;
     }
-        
-        
 }
