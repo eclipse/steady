@@ -27,131 +27,138 @@ import com.sap.psr.vulas.shared.enums.Scope;
 
 public class ExemptionScope implements IExemption {
 
-	/**
-	 * Deprecated configuration setting <code>REP_EXCL_UNASS="vulas.report.exceptionScopeBlacklist"</code>.
-	 */
-	public static final String DEPRECATED_CFG = "vulas.report.exceptionScopeBlacklist";
+    /**
+     * Deprecated configuration setting <code>REP_EXCL_UNASS="vulas.report.exceptionScopeBlacklist"</code>.
+     */
+    public static final String DEPRECATED_CFG = "vulas.report.exceptionScopeBlacklist";
 
-	/** Deprecated configuration key in backend. **/
-	public static final String DEPRECATED_KEY_BACKEND = "report.exceptionScopeBlacklist";
-	
-	/**
-	 * New configuration setting <code>REP_EXCL_UNASS="vulas.report.exemptScope"</code>.
-	 */
-	public static final String CFG = "vulas.report.exemptScope";
+    /** Deprecated configuration key in backend. **/
+    public static final String DEPRECATED_KEY_BACKEND = "report.exceptionScopeBlacklist";
 
-	private Scope scope = null;
+    /**
+     * New configuration setting <code>REP_EXCL_UNASS="vulas.report.exemptScope"</code>.
+     */
+    public static final String CFG = "vulas.report.exemptScope";
 
-	public ExemptionScope(Scope _scope) { this.scope= _scope; }
+    private Scope scope = null;
 
-	@Override
-	public boolean isExempted(VulnerableDependency _vd) {
-		final boolean is_exempted = this.scope.equals(_vd.getDep().getScope()); 
-		return is_exempted;
-	}
+    public ExemptionScope(Scope _scope) {
+        this.scope = _scope;
+    }
 
-	@Override
-	public String getReason() {
-		return "Vulnerable dependencies with scope [" + this.scope + "] are exempted through configuration settings [" + CFG + "] or [" + DEPRECATED_CFG + "] (deprecated)";
-	}
+    @Override
+    public boolean isExempted(VulnerableDependency _vd) {
+        final boolean is_exempted = this.scope.equals(_vd.getDep().getScope());
+        return is_exempted;
+    }
 
-	/**
-	 * Reads the {@link Configuration} setting {@link #CFG} (if any) in order to create one or more {@link ExemptionScope}s.
-	 * Also considers the deprecated setting {@link #DEPRECATED_CFG}.
-	 * 
-	 * @param _map
-	 * @return
-	 */
-	public static ExemptionSet readFromConfiguration(Configuration _map) {
-		final ExemptionSet exempts = new ExemptionSet();
+    @Override
+    public String getReason() {
+        return "Vulnerable dependencies with scope ["
+                + this.scope
+                + "] are exempted through configuration settings ["
+                + CFG
+                + "] or ["
+                + DEPRECATED_CFG
+                + "] (deprecated)";
+    }
 
-		// Deprecated setting
-		String[] scopes = _map.getStringArray(DEPRECATED_CFG);
-		if(scopes!=null && scopes.length>0) {
-			for(Scope s: Scope.fromStringArray(scopes)) {
-				exempts.add(new ExemptionScope(s));
-			}
-		}
+    /**
+     * Reads the {@link Configuration} setting {@link #CFG} (if any) in order to create one or more {@link ExemptionScope}s.
+     * Also considers the deprecated setting {@link #DEPRECATED_CFG}.
+     *
+     * @param _map
+     * @return
+     */
+    public static ExemptionSet readFromConfiguration(Configuration _map) {
+        final ExemptionSet exempts = new ExemptionSet();
 
-		// New setting
-		scopes = _map.getStringArray(CFG);
-		if(scopes!=null && scopes.length>0) {
-			for(Scope s: Scope.fromStringArray(scopes)) {
-				exempts.add(new ExemptionScope(s));
-			}
-		}
-		
-		return exempts;
-	}
-	
-	/**
-	 * Reads the configuration setting {@link #DEPRECATED_CFG} and {@link #CFG} (if any) in order to create one or more {@link ExemptionScope}s.
-	 * 
-	 * @param _cfg
-	 * @return
-	 */
-	public static ExemptionSet readFromConfiguration(Map<String, String> _map) {
-		final ExemptionSet exempts = new ExemptionSet();
+        // Deprecated setting
+        String[] scopes = _map.getStringArray(DEPRECATED_CFG);
+        if (scopes != null && scopes.length > 0) {
+            for (Scope s : Scope.fromStringArray(scopes)) {
+                exempts.add(new ExemptionScope(s));
+            }
+        }
 
-		// Deprecated setting
-		if(_map.containsKey(DEPRECATED_CFG)) {
-			final String[] scopes = _map.get(DEPRECATED_CFG).split(",");
-			if(scopes!=null && scopes.length>0) {
-				for(Scope s: Scope.fromStringArray(scopes)) {
-					exempts.add(new ExemptionScope(s));
-				}
-			}
-		}
-		
-		// Deprecated key value from backend (to support backward compatibility with results already existing in backend for apps that scanned with client versions <3.1.12)
-		if(_map.containsKey(DEPRECATED_KEY_BACKEND)) {
-			final String[] scopes = _map.get(DEPRECATED_KEY_BACKEND).split(",");
-			if(scopes!=null && scopes.length>0) {
-				for(Scope s: Scope.fromStringArray(scopes)) {
-					exempts.add(new ExemptionScope(s));
-				}
-			}
-		}
+        // New setting
+        scopes = _map.getStringArray(CFG);
+        if (scopes != null && scopes.length > 0) {
+            for (Scope s : Scope.fromStringArray(scopes)) {
+                exempts.add(new ExemptionScope(s));
+            }
+        }
 
-		// New setting
-		if(_map.containsKey(CFG)) {
-			final String[] scopes = _map.get(CFG).split(",");
-			if(scopes!=null && scopes.length>0) {
-				for(Scope s: Scope.fromStringArray(scopes)) {
-					exempts.add(new ExemptionScope(s));
-				}
-			}
-		}
-		
-		return exempts;
-	}
+        return exempts;
+    }
 
-	@Override
-	public String toString() { return "Exemption [scope=" + this.scope + "]"; }
-	
-	public String toShortString() {
-		return this.scope.toString();
-	}
+    /**
+     * Reads the configuration setting {@link #DEPRECATED_CFG} and {@link #CFG} (if any) in order to create one or more {@link ExemptionScope}s.
+     *
+     * @param _cfg
+     * @return
+     */
+    public static ExemptionSet readFromConfiguration(Map<String, String> _map) {
+        final ExemptionSet exempts = new ExemptionSet();
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((scope == null) ? 0 : scope.hashCode());
-		return result;
-	}
+        // Deprecated setting
+        if (_map.containsKey(DEPRECATED_CFG)) {
+            final String[] scopes = _map.get(DEPRECATED_CFG).split(",");
+            if (scopes != null && scopes.length > 0) {
+                for (Scope s : Scope.fromStringArray(scopes)) {
+                    exempts.add(new ExemptionScope(s));
+                }
+            }
+        }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ExemptionScope other = (ExemptionScope) obj;
-		if (scope != other.scope)
-			return false;
-		return true;
-	}
+        // Deprecated key value from backend (to support backward compatibility with results already
+        // existing in backend for apps that scanned with client versions <3.1.12)
+        if (_map.containsKey(DEPRECATED_KEY_BACKEND)) {
+            final String[] scopes = _map.get(DEPRECATED_KEY_BACKEND).split(",");
+            if (scopes != null && scopes.length > 0) {
+                for (Scope s : Scope.fromStringArray(scopes)) {
+                    exempts.add(new ExemptionScope(s));
+                }
+            }
+        }
+
+        // New setting
+        if (_map.containsKey(CFG)) {
+            final String[] scopes = _map.get(CFG).split(",");
+            if (scopes != null && scopes.length > 0) {
+                for (Scope s : Scope.fromStringArray(scopes)) {
+                    exempts.add(new ExemptionScope(s));
+                }
+            }
+        }
+
+        return exempts;
+    }
+
+    @Override
+    public String toString() {
+        return "Exemption [scope=" + this.scope + "]";
+    }
+
+    public String toShortString() {
+        return this.scope.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((scope == null) ? 0 : scope.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        ExemptionScope other = (ExemptionScope) obj;
+        if (scope != other.scope) return false;
+        return true;
+    }
 }

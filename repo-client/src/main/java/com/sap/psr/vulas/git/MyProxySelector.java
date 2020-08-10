@@ -40,23 +40,21 @@ public class MyProxySelector extends ProxySelector {
      *
      * @param newProxy a {@link java.net.Proxy} object.
      */
-    public MyProxySelector( Proxy newProxy ) {
+    public MyProxySelector(Proxy newProxy) {
         this.newProxy = newProxy;
     }
 
     /** {@inheritDoc} */
     @Override
-    public List<Proxy> select( URI uri ) {
-        return Arrays.asList( this.newProxy );
+    public List<Proxy> select(URI uri) {
+        return Arrays.asList(this.newProxy);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void connectFailed( URI uri, SocketAddress sa, IOException ioe ) {
-        if ( uri == null || sa == null || ioe == null ) {
-            throw new IllegalArgumentException( "Arguments can not be null." );
+    public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
+        if (uri == null || sa == null || ioe == null) {
+            throw new IllegalArgumentException("Arguments can not be null.");
         }
     }
-
 }
-

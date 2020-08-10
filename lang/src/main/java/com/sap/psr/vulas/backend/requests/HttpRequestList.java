@@ -25,103 +25,104 @@ import java.util.List;
 
 import org.apache.logging.log4j.Logger;
 
-
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.HttpResponse;
 import com.sap.psr.vulas.goals.GoalContext;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 /**
  * <p>HttpRequestList class.</p>
  *
  */
 public class HttpRequestList extends AbstractHttpRequest {
-	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
-	/**
-	 * When set to true, the sending of requests will be stopped upon success, i.e., once a Http response code 2xx will be received.
-	 */
-	private boolean stopOnSuccess = true;
-	
-	private List<HttpRequest> list = new LinkedList<HttpRequest>();
-	
-	/**
-	 * <p>Constructor for HttpRequestList.</p>
-	 */
-	public HttpRequestList() { this(true); }
-	
-	/**
-	 * <p>Constructor for HttpRequestList.</p>
-	 *
-	 * @param _stop_on_success a boolean.
-	 */
-	public HttpRequestList(boolean _stop_on_success) {
-		this.stopOnSuccess = _stop_on_success;
-	}
-	
-	/**
-	 * <p>addRequest.</p>
-	 *
-	 * @param _r a {@link com.sap.psr.vulas.backend.requests.HttpRequest} object.
-	 */
-	public void addRequest(HttpRequest _r) { this.list.add(_r); }
-	
-	/** {@inheritDoc} */
-	@Override
-	public HttpRequest setGoalContext(GoalContext _ctx) {
-		this.context = _ctx;
-		for(HttpRequest r: this.list)
-			r.setGoalContext(_ctx);
-		return this;
-	}
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * Loops over the list of requests and calls {@link HttpRequest#send()}. Depending on
-	 * the boolean {@link HttpRequestList#stopOnSuccess}, the sending stops or does not
-	 * stop in case of a successful call.
-	 */
-	@Override
-	public HttpResponse send() throws BackendConnectionException {
-		HttpResponse response = null;
-		for(HttpRequest r: this.list) {
-			response = r.send();
-			if(this.stopOnSuccess && response!=null && (response.isOk() || response.isCreated()))
-				break;
-		}
-		return response;
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public String getFilename() {
-		String prefix = this.ms + "-hrl";
-		return prefix;
-	}
+    /**
+     * When set to true, the sending of requests will be stopped upon success, i.e., once a Http response code 2xx will be received.
+     */
+    private boolean stopOnSuccess = true;
 
-	/** {@inheritDoc} */
-	@Override
-	public void savePayloadToDisk() throws IOException {
-		for(HttpRequest r: this.list) {
-			r.savePayloadToDisk();
-		}
-	}
+    private List<HttpRequest> list = new LinkedList<HttpRequest>();
 
-	/** {@inheritDoc} */
-	@Override
-	public void loadPayloadFromDisk() throws IOException {
-		for(HttpRequest r: this.list) {
-			r.loadPayloadFromDisk();
-		}
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public void deletePayloadFromDisk() throws IOException {
-		for(HttpRequest r: this.list) {
-			r.deletePayloadFromDisk();
-		}
-	}
+    /**
+     * <p>Constructor for HttpRequestList.</p>
+     */
+    public HttpRequestList() {
+        this(true);
+    }
+
+    /**
+     * <p>Constructor for HttpRequestList.</p>
+     *
+     * @param _stop_on_success a boolean.
+     */
+    public HttpRequestList(boolean _stop_on_success) {
+        this.stopOnSuccess = _stop_on_success;
+    }
+
+    /**
+     * <p>addRequest.</p>
+     *
+     * @param _r a {@link com.sap.psr.vulas.backend.requests.HttpRequest} object.
+     */
+    public void addRequest(HttpRequest _r) {
+        this.list.add(_r);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public HttpRequest setGoalContext(GoalContext _ctx) {
+        this.context = _ctx;
+        for (HttpRequest r : this.list) r.setGoalContext(_ctx);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Loops over the list of requests and calls {@link HttpRequest#send()}. Depending on
+     * the boolean {@link HttpRequestList#stopOnSuccess}, the sending stops or does not
+     * stop in case of a successful call.
+     */
+    @Override
+    public HttpResponse send() throws BackendConnectionException {
+        HttpResponse response = null;
+        for (HttpRequest r : this.list) {
+            response = r.send();
+            if (this.stopOnSuccess && response != null && (response.isOk() || response.isCreated()))
+                break;
+        }
+        return response;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getFilename() {
+        String prefix = this.ms + "-hrl";
+        return prefix;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void savePayloadToDisk() throws IOException {
+        for (HttpRequest r : this.list) {
+            r.savePayloadToDisk();
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void loadPayloadFromDisk() throws IOException {
+        for (HttpRequest r : this.list) {
+            r.loadPayloadFromDisk();
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void deletePayloadFromDisk() throws IOException {
+        for (HttpRequest r : this.list) {
+            r.deletePayloadFromDisk();
+        }
+    }
 }

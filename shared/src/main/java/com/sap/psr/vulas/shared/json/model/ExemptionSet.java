@@ -18,7 +18,7 @@
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
 /**
- * 
+ *
  */
 package com.sap.psr.vulas.shared.json.model;
 
@@ -32,79 +32,77 @@ import org.apache.commons.configuration.Configuration;
  */
 public class ExemptionSet extends HashSet<IExemption> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Loops over the exemptions to find one that exempts the given {@link VulnerableDependency}.
-	 * If such an exemption is found, it is returned. Otherwise, the method returns null.
-	 * 
-	 * @param _s
-	 * @param _vd
-	 * @return
-	 */
-	public IExemption getApplicableExemption(VulnerableDependency _vd) {
-		if(!this.isEmpty()) {
-			for(IExemption e: this) {
-				if(e.isExempted(_vd))
-					return e;
-			}
-		}
-		return null;
-	}
+    /**
+     * Loops over the exemptions to find one that exempts the given {@link VulnerableDependency}.
+     * If such an exemption is found, it is returned. Otherwise, the method returns null.
+     *
+     * @param _s
+     * @param _vd
+     * @return
+     */
+    public IExemption getApplicableExemption(VulnerableDependency _vd) {
+        if (!this.isEmpty()) {
+            for (IExemption e : this) {
+                if (e.isExempted(_vd)) return e;
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Returns the subset of {@link IExemption}s that are of the given {@link Class}(es).
-	 */
-	public ExemptionSet subset(Class<? extends IExemption> _class) {
-		final ExemptionSet subset = new ExemptionSet();
-		for(IExemption e: this) {
-			if(_class.isInstance(e)) {
-				subset.add(e);
-				continue;
-			}
-		}
-		return subset;
-	}
+    /**
+     * Returns the subset of {@link IExemption}s that are of the given {@link Class}(es).
+     */
+    public ExemptionSet subset(Class<? extends IExemption> _class) {
+        final ExemptionSet subset = new ExemptionSet();
+        for (IExemption e : this) {
+            if (_class.isInstance(e)) {
+                subset.add(e);
+                continue;
+            }
+        }
+        return subset;
+    }
 
-	@Override
-	public String toString() {
-		final StringBuffer b = new StringBuffer();
-		for(IExemption e: this) {
-			if(b.length()>0)
-				b.append(", ");
-			b.append(e.toShortString());
-		}
-		return b.toString();
-	}
+    @Override
+    public String toString() {
+        final StringBuffer b = new StringBuffer();
+        for (IExemption e : this) {
+            if (b.length() > 0) b.append(", ");
+            b.append(e.toShortString());
+        }
+        return b.toString();
+    }
 
-	/**
-	 * Creates a set of {@link IExemption}s by reading the settings from the given {@link Configuration}.
-	 * 
-	 * @param _cfg
-	 * @return
-	 */
-	public static ExemptionSet createFromConfiguration(Configuration _cfg) {
-		final ExemptionSet set = new ExemptionSet();
-		set.addAll(ExemptionBug.readFromConfiguration(_cfg));
-		set.addAll(ExemptionScope.readFromConfiguration(_cfg));
-		set.addAll(ExemptionUnassessed.readFromConfiguration(_cfg));
-		return set;
-	}
+    /**
+     * Creates a set of {@link IExemption}s by reading the settings from the given {@link Configuration}.
+     *
+     * @param _cfg
+     * @return
+     */
+    public static ExemptionSet createFromConfiguration(Configuration _cfg) {
+        final ExemptionSet set = new ExemptionSet();
+        set.addAll(ExemptionBug.readFromConfiguration(_cfg));
+        set.addAll(ExemptionScope.readFromConfiguration(_cfg));
+        set.addAll(ExemptionUnassessed.readFromConfiguration(_cfg));
+        return set;
+    }
 
-	/**
-	 * Creates a set of {@link IExemption}s by reading the settings from the given {@link Map<String,String>}.
-	 * 
-	 * @param _cfg
-	 * @return
-	 */
-	public static ExemptionSet createFromMap(Map<String, String> _map) {
-		final ExemptionSet set = new ExemptionSet();
-		set.addAll(ExemptionBug.readFromConfiguration(_map));
-		set.addAll(ExemptionScope.readFromConfiguration(_map));
-		set.addAll(ExemptionUnassessed.readFromConfiguration(_map));
-		return set;
-	}
+    /**
+     * Creates a set of {@link IExemption}s by reading the settings from the given {@link Map<String,String>}.
+     *
+     * @param _cfg
+     * @return
+     */
+    public static ExemptionSet createFromMap(Map<String, String> _map) {
+        final ExemptionSet set = new ExemptionSet();
+        set.addAll(ExemptionBug.readFromConfiguration(_map));
+        set.addAll(ExemptionScope.readFromConfiguration(_map));
+        set.addAll(ExemptionUnassessed.readFromConfiguration(_map));
+        return set;
+    }
 }

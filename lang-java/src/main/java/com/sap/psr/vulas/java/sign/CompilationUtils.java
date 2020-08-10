@@ -50,10 +50,10 @@ import ch.uzh.ifi.seal.changedistiller.ast.java.JavaCompilation;
  * Helper class to create the ASTSignature instances using ChangeDistiller.
  */
 public final class CompilationUtils {
-	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
-	private CompilationUtils() {}
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+
+    private CompilationUtils() {}
 
     /**
      * <p>compileSource.</p>
@@ -63,21 +63,20 @@ public final class CompilationUtils {
      */
     public static JavaCompilation compileSource(String source) {
 
-    	//Compiler Options
+        // Compiler Options
         CompilerOptions options = getDefaultCompilerOptions();
 
-        //CommentRecorder
+        // CommentRecorder
         Parser parser = createCommentRecorderParser(options);
 
-        //Create Compilation Unit from Source
+        // Create Compilation Unit from Source
         ICompilationUnit cu = createCompilationunit(source, "");
 
-        //Compilation Result
+        // Compilation Result
         CompilationResult compilationResult = createDefaultCompilationResult(cu, options);
 
         return new JavaCompilation(parser.parse(cu, compilationResult), parser.scanner);
     }
-
 
     private static CompilerOptions getDefaultCompilerOptions() {
         CompilerOptions options = new CompilerOptions();
@@ -88,14 +87,11 @@ public final class CompilationUtils {
         return options;
     }
 
-
     private static ICompilationUnit createCompilationunit(String _source_code, String filename) {
-    	char[] source_code = _source_code.toCharArray();
+        char[] source_code = _source_code.toCharArray();
         ICompilationUnit cu = new CompilationUnit(source_code, filename, null);
         return cu;
     }
-
-
 
     /**
      * Returns the generated {@link JavaCompilation} from the file identified by the given filename.
@@ -105,18 +101,18 @@ public final class CompilationUtils {
      * @return the compilation of the file
      */
     public static JavaCompilation compileFile(String _filename) {
-    	JavaCompilation jc = null;
-		try {
-			final String src = FileUtil.readFile(_filename);
-			final CompilerOptions options = getDefaultCompilerOptions();
-	        final Parser parser = createCommentRecorderParser(options);
-	        final ICompilationUnit cu = createCompilationunit(src, _filename);
-	        final CompilationResult compilationResult = createDefaultCompilationResult(cu, options);
-	        jc = new JavaCompilation(parser.parse(cu, compilationResult), parser.scanner);
-		} catch (IOException e) {
-			log.error(e);
-		}
-		return jc;
+        JavaCompilation jc = null;
+        try {
+            final String src = FileUtil.readFile(_filename);
+            final CompilerOptions options = getDefaultCompilerOptions();
+            final Parser parser = createCommentRecorderParser(options);
+            final ICompilationUnit cu = createCompilationunit(src, _filename);
+            final CompilationResult compilationResult = createDefaultCompilationResult(cu, options);
+            jc = new JavaCompilation(parser.parse(cu, compilationResult), parser.scanner);
+        } catch (IOException e) {
+            log.error(e);
+        }
+        return jc;
     }
 
     /**
@@ -126,19 +122,21 @@ public final class CompilationUtils {
      */
     private static Parser createCommentRecorderParser(CompilerOptions options) {
         Parser parser =
-                new CommentRecorderParser(new ProblemReporter(
-                        DefaultErrorHandlingPolicies.proceedWithAllProblems(),
-                        options,
-                        new DefaultProblemFactory()), false);
+                new CommentRecorderParser(
+                        new ProblemReporter(
+                                DefaultErrorHandlingPolicies.proceedWithAllProblems(),
+                                options,
+                                new DefaultProblemFactory()),
+                        false);
         return parser;
     }
 
-
-    private static CompilationResult createDefaultCompilationResult(ICompilationUnit cu, CompilerOptions options) {
-        CompilationResult compilationResult = new CompilationResult(cu, 0, 0, options.maxProblemsPerUnit);
+    private static CompilationResult createDefaultCompilationResult(
+            ICompilationUnit cu, CompilerOptions options) {
+        CompilationResult compilationResult =
+                new CompilationResult(cu, 0, 0, options.maxProblemsPerUnit);
         return compilationResult;
     }
-
 
     /**
      * <p>extractComments.</p>
@@ -148,7 +146,8 @@ public final class CompilationUtils {
      */
     public static List<Comment> extractComments(JavaCompilation sCompilationUnit) {
         CommentCollector collector =
-                new CommentCollector(sCompilationUnit.getCompilationUnit(), sCompilationUnit.getSource());
+                new CommentCollector(
+                        sCompilationUnit.getCompilationUnit(), sCompilationUnit.getSource());
         collector.collect();
         return collector.getComments();
     }
@@ -160,7 +159,8 @@ public final class CompilationUtils {
      * @param methodName a {@link java.lang.String} object.
      * @return a {@link org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration} object.
      */
-    public static AbstractMethodDeclaration findMethod(CompilationUnitDeclaration cu, String methodName) {
+    public static AbstractMethodDeclaration findMethod(
+            CompilationUnitDeclaration cu, String methodName) {
         for (TypeDeclaration type : cu.types) {
             for (AbstractMethodDeclaration method : type.methods) {
                 if (String.valueOf(method.selector).equals(methodName)) {
@@ -216,6 +216,4 @@ public final class CompilationUtils {
     public static File getFile(String filename) {
         return new File(filename);
     }
-
-
 }

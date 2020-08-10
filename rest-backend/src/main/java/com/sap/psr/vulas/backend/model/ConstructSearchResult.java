@@ -27,103 +27,96 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * TODO (HP, 7.3.2017): Check whether it is worthwhile to also create a class ConstructSearch. Right now, all of that is handled in the controller method.
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConstructSearchResult implements Comparable {
 
-	private ConstructId constructId = null;
-	
-	private Dependency dependency = null;
-	
-	/**
-	 * <p>Constructor for ConstructSearchResult.</p>
-	 *
-	 * @param _d a {@link com.sap.psr.vulas.backend.model.Dependency} object.
-	 * @param _cid a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
-	 */
-	public ConstructSearchResult(Dependency _d, ConstructId _cid) {
-		this.constructId = _cid;
-		this.dependency = _d;
-	}
+    private ConstructId constructId = null;
 
-	/**
-	 * <p>Getter for the field <code>constructId</code>.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
-	 */
-	public ConstructId getConstructId() {
-		return constructId;
-	}
+    private Dependency dependency = null;
 
-	/**
-	 * <p>Setter for the field <code>constructId</code>.</p>
-	 *
-	 * @param constructId a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
-	 */
-	public void setConstructId(ConstructId constructId) {
-		this.constructId = constructId;
-	}
+    /**
+     * <p>Constructor for ConstructSearchResult.</p>
+     *
+     * @param _d a {@link com.sap.psr.vulas.backend.model.Dependency} object.
+     * @param _cid a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
+     */
+    public ConstructSearchResult(Dependency _d, ConstructId _cid) {
+        this.constructId = _cid;
+        this.dependency = _d;
+    }
 
-	/**
-	 * <p>Getter for the field <code>dependency</code>.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.backend.model.Dependency} object.
-	 */
-	public Dependency getDependency() {
-		return dependency;
-	}
+    /**
+     * <p>Getter for the field <code>constructId</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
+     */
+    public ConstructId getConstructId() {
+        return constructId;
+    }
 
-	/**
-	 * <p>Setter for the field <code>dependency</code>.</p>
-	 *
-	 * @param dependency a {@link com.sap.psr.vulas.backend.model.Dependency} object.
-	 */
-	public void setDependency(Dependency dependency) {
-		this.dependency = dependency;
-	}
+    /**
+     * <p>Setter for the field <code>constructId</code>.</p>
+     *
+     * @param constructId a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
+     */
+    public void setConstructId(ConstructId constructId) {
+        this.constructId = constructId;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((constructId == null) ? 0 : constructId.hashCode());
-		result = prime * result + ((dependency == null) ? 0 : dependency.hashCode());
-		return result;
-	}
+    /**
+     * <p>Getter for the field <code>dependency</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.backend.model.Dependency} object.
+     */
+    public Dependency getDependency() {
+        return dependency;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ConstructSearchResult other = (ConstructSearchResult) obj;
-		if (constructId == null) {
-			if (other.constructId != null)
-				return false;
-		} else if (!constructId.equals(other.constructId))
-			return false;
-		if (dependency == null) {
-			if (other.dependency != null)
-				return false;
-		} else if (!dependency.equals(other.dependency))
-			return false;
-		return true;
-	}
+    /**
+     * <p>Setter for the field <code>dependency</code>.</p>
+     *
+     * @param dependency a {@link com.sap.psr.vulas.backend.model.Dependency} object.
+     */
+    public void setDependency(Dependency dependency) {
+        this.dependency = dependency;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public int compareTo(Object _o) {
-		if(!(_o instanceof ConstructSearchResult))
-			throw new IllegalArgumentException("Wrong argument type: " + _o.getClass().getName());
-		
-		ConstructSearchResult other = (ConstructSearchResult)_o;
-		int c = this.getConstructId().compareTo(other.getConstructId());
-		if(c==0)
-			c = this.getDependency().getFilename().compareTo(other.getDependency().getFilename());
-		return c;
-	}
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((constructId == null) ? 0 : constructId.hashCode());
+        result = prime * result + ((dependency == null) ? 0 : dependency.hashCode());
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        ConstructSearchResult other = (ConstructSearchResult) obj;
+        if (constructId == null) {
+            if (other.constructId != null) return false;
+        } else if (!constructId.equals(other.constructId)) return false;
+        if (dependency == null) {
+            if (other.dependency != null) return false;
+        } else if (!dependency.equals(other.dependency)) return false;
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int compareTo(Object _o) {
+        if (!(_o instanceof ConstructSearchResult))
+            throw new IllegalArgumentException("Wrong argument type: " + _o.getClass().getName());
+
+        ConstructSearchResult other = (ConstructSearchResult) _o;
+        int c = this.getConstructId().compareTo(other.getConstructId());
+        if (c == 0)
+            c = this.getDependency().getFilename().compareTo(other.getDependency().getFilename());
+        return c;
+    }
 }

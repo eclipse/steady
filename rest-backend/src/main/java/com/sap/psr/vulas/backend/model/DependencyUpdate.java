@@ -19,13 +19,10 @@
  */
 package com.sap.psr.vulas.backend.model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.sap.psr.vulas.backend.model.ConstructId;
-import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.shared.json.model.metrics.Metrics;
 
 /**
@@ -37,75 +34,91 @@ import com.sap.psr.vulas.shared.json.model.metrics.Metrics;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DependencyUpdate {
-	
-	LibraryId fromLibraryId;
-	
-	LibraryId toLibraryId;
-	
-	Metrics metrics;
-	
-	Set<TouchPoint> callsToModify ;
 
-	/**
-	 * <p>Constructor for DependencyUpdate.</p>
-	 *
-	 * @param f a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
-	 * @param t a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
-	 */
-	public DependencyUpdate(LibraryId f, LibraryId t){
-		this.fromLibraryId=f;
-		this.toLibraryId=t;
-	}
-	
-	/**
-	 * <p>Getter for the field <code>callsToModify</code>.</p>
-	 *
-	 * @return a {@link java.util.Set} object.
-	 */
-	public Set<TouchPoint> getCallsToModify(){ return callsToModify;}
-	/**
-	 * <p>Setter for the field <code>callsToModify</code>.</p>
-	 *
-	 * @param c a {@link java.util.Set} object.
-	 */
-	public void setCallsToModify(Set<TouchPoint> c){this.callsToModify=c;}
-	
-	/**
-	 * <p>Getter for the field <code>fromLibraryId</code>.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
-	 */
-	public LibraryId getFromLibraryId() { return fromLibraryId; }
-	/**
-	 * <p>Setter for the field <code>fromLibraryId</code>.</p>
-	 *
-	 * @param f a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
-	 */
-	public void setFromLibraryId(LibraryId f) { this.fromLibraryId = f; }
+    LibraryId fromLibraryId;
 
-	/**
-	 * <p>Getter for the field <code>toLibraryId</code>.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
-	 */
-	public LibraryId getToLibraryId() { return toLibraryId; }
-	/**
-	 * <p>Setter for the field <code>toLibraryId</code>.</p>
-	 *
-	 * @param t a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
-	 */
-	public void setToLibraryId(LibraryId t) { this.toLibraryId = t; }
+    LibraryId toLibraryId;
 
-	/**
-	 * <p>Getter for the field <code>metrics</code>.</p>
-	 *
-	 * @return a {@link com.sap.psr.vulas.shared.json.model.metrics.Metrics} object.
-	 */
-	public Metrics getMetrics() { return metrics; }
-	/**
-	 * <p>Setter for the field <code>metrics</code>.</p>
-	 *
-	 * @param m a {@link com.sap.psr.vulas.shared.json.model.metrics.Metrics} object.
-	 */
-	public void setMetrics(Metrics m) { this.metrics = m; }
+    Metrics metrics;
+
+    Set<TouchPoint> callsToModify;
+
+    /**
+     * <p>Constructor for DependencyUpdate.</p>
+     *
+     * @param f a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+     * @param t a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+     */
+    public DependencyUpdate(LibraryId f, LibraryId t) {
+        this.fromLibraryId = f;
+        this.toLibraryId = t;
+    }
+
+    /**
+     * <p>Getter for the field <code>callsToModify</code>.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
+    public Set<TouchPoint> getCallsToModify() {
+        return callsToModify;
+    }
+    /**
+     * <p>Setter for the field <code>callsToModify</code>.</p>
+     *
+     * @param c a {@link java.util.Set} object.
+     */
+    public void setCallsToModify(Set<TouchPoint> c) {
+        this.callsToModify = c;
+    }
+
+    /**
+     * <p>Getter for the field <code>fromLibraryId</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+     */
+    public LibraryId getFromLibraryId() {
+        return fromLibraryId;
+    }
+    /**
+     * <p>Setter for the field <code>fromLibraryId</code>.</p>
+     *
+     * @param f a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+     */
+    public void setFromLibraryId(LibraryId f) {
+        this.fromLibraryId = f;
+    }
+
+    /**
+     * <p>Getter for the field <code>toLibraryId</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+     */
+    public LibraryId getToLibraryId() {
+        return toLibraryId;
+    }
+    /**
+     * <p>Setter for the field <code>toLibraryId</code>.</p>
+     *
+     * @param t a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+     */
+    public void setToLibraryId(LibraryId t) {
+        this.toLibraryId = t;
+    }
+
+    /**
+     * <p>Getter for the field <code>metrics</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.shared.json.model.metrics.Metrics} object.
+     */
+    public Metrics getMetrics() {
+        return metrics;
+    }
+    /**
+     * <p>Setter for the field <code>metrics</code>.</p>
+     *
+     * @param m a {@link com.sap.psr.vulas.shared.json.model.metrics.Metrics} object.
+     */
+    public void setMetrics(Metrics m) {
+        this.metrics = m;
+    }
 }

@@ -28,14 +28,16 @@ import com.sap.psr.vulas.shared.enums.GoalType;
  */
 public class UploadGoal extends AbstractAppGoal {
 
-	/**
-	 * <p>Constructor for UploadGoal.</p>
-	 */
-	public UploadGoal() { super(GoalType.UPLOAD); }
+    /**
+     * <p>Constructor for UploadGoal.</p>
+     */
+    public UploadGoal() {
+        super(GoalType.UPLOAD);
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	protected void executeTasks() throws Exception {
-		BackendConnector.getInstance().batchUpload(this.getGoalContext());
-	}
+    /** {@inheritDoc} */
+    @Override
+    protected void executeTasks() throws Exception {
+        BackendConnector.getInstance().batchUpload(this.getGoalContext());
+    }
 }

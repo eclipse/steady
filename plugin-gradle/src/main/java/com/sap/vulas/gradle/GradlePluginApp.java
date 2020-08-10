@@ -27,7 +27,6 @@ import com.sap.psr.vulas.shared.json.model.Library;
 import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import com.sap.vulas.gradle.VulasPluginCommon.ProjectOutputTypes;
-import org.apache.commons.io.FilenameUtils;
 import org.gradle.api.artifacts.*;
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier;
 import org.gradle.api.artifacts.result.ResolvedArtifactResult;
@@ -71,7 +70,12 @@ public class GradlePluginApp extends AbstractVulasTask {
             return;
         }
 
-        String configurationName=VulasConfiguration.getGlobal().getConfiguration().getString("vulas.gradle.configuration." + projectOutputType.toString().toLowerCase());
+        String configurationName =
+                VulasConfiguration.getGlobal()
+                        .getConfiguration()
+                        .getString(
+                                "vulas.gradle.configuration."
+                                        + projectOutputType.toString().toLowerCase());
 
         if (configurationName == null) {
             configurationName = defaultConfigurations.get(projectOutputType);
@@ -80,30 +84,39 @@ public class GradlePluginApp extends AbstractVulasTask {
         Configuration configToAnalyze = project.getConfigurations().getAt(configurationName);
         getLogger().quiet("Resolving configuration {}", configToAnalyze.getName());
 
-        //DependencyResolver.resolve(configToAnalyze);
+        // DependencyResolver.resolve(configToAnalyze);
 
         Set<ResolvedArtifactResult> artifacts = DependencyResolver.resolve(configToAnalyze);
-        Set<ResolvedArtifactResult> direct_artifacts = DependencyResolver.resolveDirectOnly(configToAnalyze);
+        Set<ResolvedArtifactResult> direct_artifacts =
+                DependencyResolver.resolveDirectOnly(configToAnalyze);
 
         int count = 0;
         Dependency dep = null;
-        //Path to dependency info
-		final Map<Path, Dependency> dep_for_path = new HashMap<Path, Dependency>();
-		Library lib = null;
+        // Path to dependency info
+        final Map<Path, Dependency> dep_for_path = new HashMap<Path, Dependency>();
+        Library lib = null;
         for (ResolvedArtifactResult a : artifacts) {
 
-            ModuleComponentIdentifier ci = ((ModuleComponentArtifactIdentifier)a.getId()).getComponentIdentifier();
-            
-            lib = new Library();
-			lib.setLibraryId(new LibraryId(ci.getGroup(), ci.getModule(), ci.getVersion()));
+            ModuleComponentIdentifier ci =
+                    ((ModuleComponentArtifactIdentifier) a.getId()).getComponentIdentifier();
 
-			// Create dependency and put into map
-            //TODO: hardcoded runtime scope, how to match gradle configs to maven scopes?
-			dep = new Dependency(this.goal.getGoalContext().getApplication(), lib, Scope.RUNTIME, direct_artifacts.contains(a), null, a.getFile().getPath());
-			dep_for_path.put(a.getFile().toPath(), dep);
+            lib = new Library();
+            lib.setLibraryId(new LibraryId(ci.getGroup(), ci.getModule(), ci.getVersion()));
+
+            // Create dependency and put into map
+            // TODO: hardcoded runtime scope, how to match gradle configs to maven scopes?
+            dep =
+                    new Dependency(
+                            this.goal.getGoalContext().getApplication(),
+                            lib,
+                            Scope.RUNTIME,
+                            direct_artifacts.contains(a),
+                            null,
+                            a.getFile().getPath());
+            dep_for_path.put(a.getFile().toPath(), dep);
         }
-					
-		((AbstractAppGoal)this.goal).setKnownDependencies(dep_for_path);
+
+        ((AbstractAppGoal) this.goal).setKnownDependencies(dep_for_path);
 
         goal.executeSync();
 
@@ -118,7 +131,7 @@ public class GradlePluginApp extends AbstractVulasTask {
             tmpPath = Files.createTempDirectory("vulas");
         }
 
-        String classesJarName = aarFile.getName().replaceAll("\\.aar$","-classes.jar");
+        String classesJarName = aarFile.getName().replaceAll("\\.aar$", "-classes.jar");
 
         ZipFile zipfile = new ZipFile(aarFile);
         ZipEntry entry;
@@ -159,20 +172,22 @@ public class GradlePluginApp extends AbstractVulasTask {
             return;
         }
 
-        Files.walkFileTree(tmpPath, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
+        Files.walkFileTree(
+                tmpPath,
+                new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                            throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                    }
 
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
-                return FileVisitResult.CONTINUE;
-            }
-
-        });
+                    @Override
+                    public FileVisitResult postVisitDirectory(Path dir, IOException exc)
+                            throws IOException {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
     }
-
 }

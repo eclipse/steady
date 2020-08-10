@@ -29,18 +29,16 @@ import com.sap.psr.vulas.shared.json.model.LibraryId;
 /**
  * Class containing all the information computed on a library Id during the first phase (correspond to 1 line in the CSV)
  */
-public class LidResult2 implements Comparable<LidResult2>{
+public class LidResult2 implements Comparable<LidResult2> {
     private LibraryId libId;
     private Long timestamp;
     private boolean qnameInJar;
-    private Boolean sourcesAvailable=null;
-   
-    private String ast_lid=null;
-    private Integer changesToV=null;
-    private Integer changesToF=null;
+    private Boolean sourcesAvailable = null;
 
-    
- 
+    private String ast_lid = null;
+    private Integer changesToV = null;
+    private Integer changesToF = null;
+
     /**
      * <p>Constructor for LidResult2.</p>
      *
@@ -52,7 +50,14 @@ public class LidResult2 implements Comparable<LidResult2>{
      * @param changesToF a int.
      * @param _ast_lid a {@link java.lang.String} object.
      */
-    public LidResult2(LibraryId libId, Long t, boolean qnameInJar, boolean sourcesAvailable, int changesToV, int changesToF, String _ast_lid) {
+    public LidResult2(
+            LibraryId libId,
+            Long t,
+            boolean qnameInJar,
+            boolean sourcesAvailable,
+            int changesToV,
+            int changesToF,
+            String _ast_lid) {
         this.libId = libId;
         this.timestamp = t;
         this.qnameInJar = qnameInJar;
@@ -75,7 +80,7 @@ public class LidResult2 implements Comparable<LidResult2>{
         this.timestamp = t;
         this.qnameInJar = qnameInJar;
     }
-    
+
     // only PYTHON bug where we cannot check constructs containment or equality
     /**
      * <p>Constructor for LidResult2.</p>
@@ -87,7 +92,7 @@ public class LidResult2 implements Comparable<LidResult2>{
         this.libId = libId;
         this.timestamp = t;
     }
-    
+
     /**
      * <p>isQnameInJar.</p>
      *
@@ -177,62 +182,62 @@ public class LidResult2 implements Comparable<LidResult2>{
     public void setChangesToF(Integer changesToF) {
         this.changesToF = changesToF;
     }
-    
+
     /** {@inheritDoc} */
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Name: ").append(this.libId.toString()).append(" -> ");
-        sb.append("QnameInJar: ").append(qnameInJar)
-                .append("; sourcesAvailable: ").append(sourcesAvailable);
+        sb.append("QnameInJar: ")
+                .append(qnameInJar)
+                .append("; sourcesAvailable: ")
+                .append(sourcesAvailable);
         return sb.toString();
     }
-    
+
     // "Note: this class has a natural ordering that is inconsistent with equals."
     /** {@inheritDoc} */
     @Override
-    public int compareTo(LidResult2 other){
-        if ( this.getTimestamp().equals(other.getTimestamp()) ){
+    public int compareTo(LidResult2 other) {
+        if (this.getTimestamp().equals(other.getTimestamp())) {
             return 0;
-        } 
-        return this.getTimestamp() - other.getTimestamp() < 0? -1 : 1;
+        }
+        return this.getTimestamp() - other.getTimestamp() < 0 ? -1 : 1;
     }
 
-	
+    /**
+     * <p>Getter for the field <code>timestamp</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object.
+     */
+    public Long getTimestamp() {
+        return timestamp;
+    }
 
-	/**
-	 * <p>Getter for the field <code>timestamp</code>.</p>
-	 *
-	 * @return a {@link java.lang.Long} object.
-	 */
-	public Long getTimestamp() {
-		return timestamp;
-	}
+    /**
+     * <p>Setter for the field <code>timestamp</code>.</p>
+     *
+     * @param timestamp a {@link java.lang.Long} object.
+     */
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
 
-	/**
-	 * <p>Setter for the field <code>timestamp</code>.</p>
-	 *
-	 * @param timestamp a {@link java.lang.Long} object.
-	 */
-	public void setTimestamp(Long timestamp) {
-		this.timestamp = timestamp;
-	}
+    /**
+     * <p>Getter for the field <code>ast_lid</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getAst_lid() {
+        return ast_lid;
+    }
 
-	/**
-	 * <p>Getter for the field <code>ast_lid</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getAst_lid() {
-		return ast_lid;
-	}
-
-	/**
-	 * <p>Setter for the field <code>ast_lid</code>.</p>
-	 *
-	 * @param ast_lid a {@link java.lang.String} object.
-	 */
-	public void setAst_lid(String ast_lid) {
-		this.ast_lid = ast_lid;
-	}
+    /**
+     * <p>Setter for the field <code>ast_lid</code>.</p>
+     *
+     * @param ast_lid a {@link java.lang.String} object.
+     */
+    public void setAst_lid(String ast_lid) {
+        this.ast_lid = ast_lid;
+    }
 }

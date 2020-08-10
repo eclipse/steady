@@ -28,8 +28,6 @@ import com.sap.psr.vulas.shared.enums.ConstructChangeType;
 
 import com.sap.psr.vulas.shared.json.model.ConstructId;
 
-
-
 /**
  * class representing a consolidated change list
  * (no duplicates because of multiple commits on the same construct)
@@ -39,7 +37,7 @@ public class OverallConstructChange {
     ConstructChangeType changetype;
     String repoPath;
     ConstructId constructId;
-    
+
     /**
      * <p>Constructor for OverallConstructChange.</p>
      *
@@ -49,15 +47,18 @@ public class OverallConstructChange {
      * @param repoPath a {@link java.lang.String} object.
      * @param constructId a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
      */
-    public OverallConstructChange(String fixedBody, String buggyBody, ConstructChangeType changetype, String repoPath, ConstructId constructId) {
+    public OverallConstructChange(
+            String fixedBody,
+            String buggyBody,
+            ConstructChangeType changetype,
+            String repoPath,
+            ConstructId constructId) {
         this.fixedBody = fixedBody;
         this.buggyBody = buggyBody;
         this.changetype = changetype;
         this.repoPath = repoPath;
         this.constructId = constructId;
     }
-    
-   
 
     /**
      * <p>Getter for the field <code>fixedBody</code>.</p>
@@ -166,7 +167,4 @@ public class OverallConstructChange {
     public void setChangetype(ConstructChangeType changetype) {
         this.changetype = changetype;
     }
-
-    
-    
 }

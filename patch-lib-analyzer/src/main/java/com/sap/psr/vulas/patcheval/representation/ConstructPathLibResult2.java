@@ -24,7 +24,6 @@
  */
 package com.sap.psr.vulas.patcheval.representation;
 
-
 import com.sap.psr.vulas.shared.enums.ConstructChangeType;
 
 /**
@@ -37,8 +36,7 @@ public class ConstructPathLibResult2 {
     private LidResult2 lidResult;
     private String vulnAst;
     private String fixedAst;
-    
-    
+
     /**
      * <p>Constructor for ConstructPathLibResult2.</p>
      *
@@ -49,12 +47,18 @@ public class ConstructPathLibResult2 {
      * @param _v a {@link java.lang.String} object.
      * @param _f a {@link java.lang.String} object.
      */
-    public ConstructPathLibResult2(String _qname, String _path, ConstructChangeType constructChangeType, LidResult2 _lidres, String _v, String _f) {
+    public ConstructPathLibResult2(
+            String _qname,
+            String _path,
+            ConstructChangeType constructChangeType,
+            LidResult2 _lidres,
+            String _v,
+            String _f) {
         this.qname = _qname;
         this.path = _path;
         this.type = constructChangeType;
         this.lidResult = _lidres;
-        this.vulnAst =_v;
+        this.vulnAst = _v;
         this.fixedAst = _f;
     }
 
@@ -76,50 +80,48 @@ public class ConstructPathLibResult2 {
         this.qname = qname;
     }
 
-    
-    
     /**
      * <p>Getter for the field <code>vulnAst</code>.</p>
      *
      * @return a {@link java.lang.String} object.
      */
     public String getVulnAst() {
-		return vulnAst;
-	}
+        return vulnAst;
+    }
 
-	/**
-	 * <p>Setter for the field <code>vulnAst</code>.</p>
-	 *
-	 * @param vulnAst a {@link java.lang.String} object.
-	 */
-	public void setVulnAst(String vulnAst) {
-		this.vulnAst = vulnAst;
-	}
+    /**
+     * <p>Setter for the field <code>vulnAst</code>.</p>
+     *
+     * @param vulnAst a {@link java.lang.String} object.
+     */
+    public void setVulnAst(String vulnAst) {
+        this.vulnAst = vulnAst;
+    }
 
-	/**
-	 * <p>Getter for the field <code>fixedAst</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getFixedAst() {
-		return fixedAst;
-	}
+    /**
+     * <p>Getter for the field <code>fixedAst</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getFixedAst() {
+        return fixedAst;
+    }
 
-	/**
-	 * <p>Setter for the field <code>fixedAst</code>.</p>
-	 *
-	 * @param fixedAst a {@link java.lang.String} object.
-	 */
-	public void setFixedAst(String fixedAst) {
-		this.fixedAst = fixedAst;
-	}
+    /**
+     * <p>Setter for the field <code>fixedAst</code>.</p>
+     *
+     * @param fixedAst a {@link java.lang.String} object.
+     */
+    public void setFixedAst(String fixedAst) {
+        this.fixedAst = fixedAst;
+    }
 
-	/**
-	 * <p>Getter for the field <code>path</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getPath() {
+    /**
+     * <p>Getter for the field <code>path</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getPath() {
         return path;
     }
 
@@ -150,7 +152,6 @@ public class ConstructPathLibResult2 {
         this.type = t;
     }
 
-    
     /**
      * <p>Getter for the field <code>lidResult</code>.</p>
      *
@@ -169,16 +170,15 @@ public class ConstructPathLibResult2 {
         this.lidResult = lidResult;
     }
 
-
-        
-//    @Override
-//    public String toString(){
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("Qname: ").append(qname).append("; path: ").append(path).append("; lidResults: ");
-//        for ( LidResult lr : lidResults) {
-//            sb.append("\n");
-//            sb.append(lr.toString()).append(" ,");
-//        }
-//        return sb.toString();
-//    }
+    //    @Override
+    //    public String toString(){
+    //        StringBuilder sb = new StringBuilder();
+    //        sb.append("Qname: ").append(qname).append("; path: ").append(path).append(";
+    // lidResults: ");
+    //        for ( LidResult lr : lidResults) {
+    //            sb.append("\n");
+    //            sb.append(lr.toString()).append(" ,");
+    //        }
+    //        return sb.toString();
+    //    }
 }

@@ -28,24 +28,24 @@ import java.util.Set;
  */
 public interface SignatureChange {
 
-	/**
-	 * Returns a set of modifications required to transform one signature into another one.
-	 *
-	 * @return a {@link java.util.Set} object.
-	 */
-	public Set<Object> getModifications();
+    /**
+     * Returns a set of modifications required to transform one signature into another one.
+     *
+     * @return a {@link java.util.Set} object.
+     */
+    public Set<Object> getModifications();
 
-	/**
-	 * <p>toJSON.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String toJSON();
-	
-	/**
-	 * <p>isEmpty.</p>
-	 *
-	 * @return a boolean.
-	 */
-	public boolean isEmpty();
+    /**
+     * <p>toJSON.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String toJSON();
+
+    /**
+     * <p>isEmpty.</p>
+     *
+     * @return a boolean.
+     */
+    public boolean isEmpty();
 }

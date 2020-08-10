@@ -29,104 +29,108 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Ratio extends AbstractMetric {
-	
-	private double count;
-	
-	private double total;
-	
-	/**
-	 * <p>Constructor for Ratio.</p>
-	 */
-	public Ratio() { this(null, 0, 0); }
-	
-	/**
-	 * <p>Constructor for Ratio.</p>
-	 *
-	 * @param _name a {@link java.lang.String} object.
-	 */
-	public Ratio(String _name) { this(_name, 0, 0); }
-	
-	/**
-	 * <p>Constructor for Ratio.</p>
-	 *
-	 * @param _name a {@link java.lang.String} object.
-	 * @param _count a double.
-	 * @param _total a double.
-	 * @throws java.lang.IllegalArgumentException if count GT total
-	 */
-	public Ratio(String _name, double _count, double _total) throws IllegalArgumentException {
-		super(_name);
-		if(_count>_total)
-			throw new IllegalArgumentException("Count [" + _count + "] GT total [" + _total + "]");
-		this.count = _count;
-		this.total = _total;
-	}
 
-	/**
-	 * <p>Getter for the field <code>count</code>.</p>
-	 *
-	 * @return a double.
-	 */
-	public double getCount() {
-		return count;
-	}
-	
-	/**
-	 * <p>incrementCount.</p>
-	 */
-	public void incrementCount() {
-		this.count = this.count + 1d;
-	}
+    private double count;
 
-	/**
-	 * <p>Setter for the field <code>count</code>.</p>
-	 *
-	 * @param count a double.
-	 */
-	public void setCount(double count) {
-		this.count = count;
-	}
+    private double total;
 
-	/**
-	 * <p>Getter for the field <code>total</code>.</p>
-	 *
-	 * @return a double.
-	 */
-	public double getTotal() {
-		return total;
-	}
-	
-	/**
-	 * <p>incrementTotal.</p>
-	 *
-	 * @param _inc a double.
-	 */
-	public void incrementTotal(double _inc) {
-		this.total = this.total + _inc;
-	}
+    /**
+     * <p>Constructor for Ratio.</p>
+     */
+    public Ratio() {
+        this(null, 0, 0);
+    }
 
-	/**
-	 * <p>incrementTotal.</p>
-	 */
-	public void incrementTotal() {
-		this.total = this.total + 1d;
-	}
-	
-	/**
-	 * <p>Setter for the field <code>total</code>.</p>
-	 *
-	 * @param total a double.
-	 */
-	public void setTotal(double total) {
-		this.total = total;
-	}
-	
-	/**
-	 * Returns the ratio as percentage, or -1 if total EQ 0.
-	 *
-	 * @return a double.
-	 */
-	public double getRatio() {
-		return (this.getTotal()==0d ? -1d : this.getCount()/this.getTotal());
-	}
+    /**
+     * <p>Constructor for Ratio.</p>
+     *
+     * @param _name a {@link java.lang.String} object.
+     */
+    public Ratio(String _name) {
+        this(_name, 0, 0);
+    }
+
+    /**
+     * <p>Constructor for Ratio.</p>
+     *
+     * @param _name a {@link java.lang.String} object.
+     * @param _count a double.
+     * @param _total a double.
+     * @throws java.lang.IllegalArgumentException if count GT total
+     */
+    public Ratio(String _name, double _count, double _total) throws IllegalArgumentException {
+        super(_name);
+        if (_count > _total)
+            throw new IllegalArgumentException("Count [" + _count + "] GT total [" + _total + "]");
+        this.count = _count;
+        this.total = _total;
+    }
+
+    /**
+     * <p>Getter for the field <code>count</code>.</p>
+     *
+     * @return a double.
+     */
+    public double getCount() {
+        return count;
+    }
+
+    /**
+     * <p>incrementCount.</p>
+     */
+    public void incrementCount() {
+        this.count = this.count + 1d;
+    }
+
+    /**
+     * <p>Setter for the field <code>count</code>.</p>
+     *
+     * @param count a double.
+     */
+    public void setCount(double count) {
+        this.count = count;
+    }
+
+    /**
+     * <p>Getter for the field <code>total</code>.</p>
+     *
+     * @return a double.
+     */
+    public double getTotal() {
+        return total;
+    }
+
+    /**
+     * <p>incrementTotal.</p>
+     *
+     * @param _inc a double.
+     */
+    public void incrementTotal(double _inc) {
+        this.total = this.total + _inc;
+    }
+
+    /**
+     * <p>incrementTotal.</p>
+     */
+    public void incrementTotal() {
+        this.total = this.total + 1d;
+    }
+
+    /**
+     * <p>Setter for the field <code>total</code>.</p>
+     *
+     * @param total a double.
+     */
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    /**
+     * Returns the ratio as percentage, or -1 if total EQ 0.
+     *
+     * @return a double.
+     */
+    public double getRatio() {
+        return (this.getTotal() == 0d ? -1d : this.getCount() / this.getTotal());
+    }
 }

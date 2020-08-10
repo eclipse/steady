@@ -41,7 +41,6 @@ import com.sap.psr.vulas.cg.spi.ICallgraphConstructor;
 import org.apache.commons.configuration.Configuration;
 import org.apache.logging.log4j.Logger;
 
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -59,8 +58,6 @@ import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.ThreadUtil;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
-
 
 /**
  * Reachability Analyzer
@@ -88,6 +85,7 @@ public class ReachabilityAnalyzer implements Runnable {
      * All the constructs used as entry points and its source description (e.g., 'app' or 'traces').
      */
     private Set<com.sap.psr.vulas.shared.json.model.ConstructId> entrypoints = null;
+
     private PathSource source = null;
     /**
      * Whether apply a strict policy to callgraph construction; that is whether allowing any entrypoint missing in the callgraph
@@ -107,12 +105,12 @@ public class ReachabilityAnalyzer implements Runnable {
     public Callgraph getCallgraph() {
         return this.callgraph;
     }
-
     ;
 
-    //private String bugid = null;
+    // private String bugid = null;
 
-    private Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> targetConstructs = null;
+    private Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> targetConstructs =
+            null;
 
     /**
      * All the packages to be excluded during callgraph construction
@@ -122,7 +120,7 @@ public class ReachabilityAnalyzer implements Runnable {
     private Map<String, Long> stats = new HashMap<String, Long>();
 
     // contains the result of the attacksurface analysis performed during the a2c goal
-    //private  List<NodeMetaInformation> libraryEntryPoints = null;
+    // private  List<NodeMetaInformation> libraryEntryPoints = null;
 
     /**
      * Application constructs (identical to entry points in case of {@link GoalType#A2C}).
@@ -132,12 +130,14 @@ public class ReachabilityAnalyzer implements Runnable {
     /**
      * Library touch points (stored as a set of linked lists with two elements each) per library (SHA1).
      */
-    private Map<String, Set<List<NodeMetaInformation>>> touchPoints = new HashMap<String, Set<List<NodeMetaInformation>>>();
+    private Map<String, Set<List<NodeMetaInformation>>> touchPoints =
+            new HashMap<String, Set<List<NodeMetaInformation>>>();
 
     /**
      * Reachable constructs per library (SHA1).
      */
-    private Map<String, Set<NodeMetaInformation>> reachableConstructs = new HashMap<String, Set<NodeMetaInformation>>();
+    private Map<String, Set<NodeMetaInformation>> reachableConstructs =
+            new HashMap<String, Set<NodeMetaInformation>>();
 
     /**
      * The constructor used to build the call graph (implementations exist for Wala and Soot).
@@ -147,7 +147,8 @@ public class ReachabilityAnalyzer implements Runnable {
     /**
      * All paths for each bugid
      */
-    private HashMap<String, List<List<com.sap.psr.vulas.shared.json.model.ConstructId>>> rcPaths = new HashMap<String, List<List<com.sap.psr.vulas.shared.json.model.ConstructId>>>();
+    private HashMap<String, List<List<com.sap.psr.vulas.shared.json.model.ConstructId>>> rcPaths =
+            new HashMap<String, List<List<com.sap.psr.vulas.shared.json.model.ConstructId>>>();
 
     private static final Runtime runtime = Runtime.getRuntime();
 
@@ -232,30 +233,32 @@ public class ReachabilityAnalyzer implements Runnable {
      * @param _source a {@link com.sap.psr.vulas.shared.enums.PathSource} object.
      * @param _throw_exception a boolean.
      */
-    public void setEntryPoints(Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs, PathSource _source, boolean _throw_exception) {
+    public void setEntryPoints(
+            Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs,
+            PathSource _source,
+            boolean _throw_exception) {
         this.entrypoints = _constructs;
         this.source = _source;
         this.strictPolicy = _throw_exception;
     }
 
-
-	/*public String getClasspath() {
-		final StringBuilder b = new StringBuilder();
-		int i = 0;
-		if(this.app_classpaths!=null) {
-			for(Path p: this.app_classpaths) {
-				if(i++>0) b.append(System.getProperty("path.separator"));
-				b.append(p.toString());
-			}
-		}
-		if(this.dep_classpaths!=null) {
-			for(Path p: this.dep_classpaths) {
-				if(i++>0) b.append(System.getProperty("path.separator"));
-				b.append(p.toString());
-			}
-		}
-		return b.toString();
-	}*/
+    /*public String getClasspath() {
+    	final StringBuilder b = new StringBuilder();
+    	int i = 0;
+    	if(this.app_classpaths!=null) {
+    		for(Path p: this.app_classpaths) {
+    			if(i++>0) b.append(System.getProperty("path.separator"));
+    			b.append(p.toString());
+    		}
+    	}
+    	if(this.dep_classpaths!=null) {
+    		for(Path p: this.dep_classpaths) {
+    			if(i++>0) b.append(System.getProperty("path.separator"));
+    			b.append(p.toString());
+    		}
+    	}
+    	return b.toString();
+    }*/
 
     /**
      * <p>setExcludePackages.</p>
@@ -274,19 +277,29 @@ public class ReachabilityAnalyzer implements Runnable {
      */
     public void setTargetConstructs(String _filter) {
         try {
-            final Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> change_lists = BackendConnector.getInstance().getAppBugs(this.goalContext, this.app_ctx, _filter);
+            final Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> change_lists =
+                    BackendConnector.getInstance()
+                            .getAppBugs(this.goalContext, this.app_ctx, _filter);
             if (change_lists == null || change_lists.size() == 0) {
                 if (_filter == null || _filter.equals("")) {
-                    ReachabilityAnalyzer.log.info("No change list found, i.e., no target points can be set");
+                    ReachabilityAnalyzer.log.info(
+                            "No change list found, i.e., no target points can be set");
                 } else {
-                    ReachabilityAnalyzer.log.info("No change list found for bug(s) [" + _filter + "], i.e., no target points can be set");
+                    ReachabilityAnalyzer.log.info(
+                            "No change list found for bug(s) ["
+                                    + _filter
+                                    + "], i.e., no target points can be set");
                 }
             } else {
-                ReachabilityAnalyzer.log.info("Found change lists for [" + change_lists.size() + "] bugs, their constructs will be used as target points");
+                ReachabilityAnalyzer.log.info(
+                        "Found change lists for ["
+                                + change_lists.size()
+                                + "] bugs, their constructs will be used as target points");
                 this.setTargetConstructs(change_lists);
             }
         } catch (BackendConnectionException e) {
-            ReachabilityAnalyzer.log.error("Error retrieving change lists from the backend: " + e.getMessage());
+            ReachabilityAnalyzer.log.error(
+                    "Error retrieving change lists from the backend: " + e.getMessage());
         }
     }
 
@@ -295,7 +308,8 @@ public class ReachabilityAnalyzer implements Runnable {
      *
      * @param _target_constructs a {@link java.util.Map} object.
      */
-    public void setTargetConstructs(Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> _target_constructs) {
+    public void setTargetConstructs(
+            Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> _target_constructs) {
         this.targetConstructs = _target_constructs;
     }
 
@@ -306,7 +320,9 @@ public class ReachabilityAnalyzer implements Runnable {
      * @param _is_cli a boolean.
      */
     public void setCallgraphConstructor(String analysisFramework, boolean _is_cli) {
-        this.constructor = CallgraphConstructorFactory.buildCallgraphConstructor(analysisFramework, this.app_ctx, _is_cli);
+        this.constructor =
+                CallgraphConstructorFactory.buildCallgraphConstructor(
+                        analysisFramework, this.app_ctx, _is_cli);
         this.constructor.setVulasConfiguration(this.goalContext.getVulasConfiguration());
     }
 
@@ -314,14 +330,26 @@ public class ReachabilityAnalyzer implements Runnable {
         try {
             try (final ObjectInputStream ois = new ObjectInputStream(new FileInputStream(_file))) {
                 final Object object = ois.readObject();
-                @SuppressWarnings("unchecked") final Graph<ConstructId> g = (Graph<ConstructId>) object;
-                log.info("Read call graph with [" + g.getNumberOfNodes() + "] nodes from [" + _file + "]");
+                @SuppressWarnings("unchecked")
+                final Graph<ConstructId> g = (Graph<ConstructId>) object;
+                log.info(
+                        "Read call graph with ["
+                                + g.getNumberOfNodes()
+                                + "] nodes from ["
+                                + _file
+                                + "]");
                 return g;
             }
         } catch (IOException ioe) {
-            log.error("I/O error when reading object from [" + _file + "]: " + ioe.getMessage(), ioe);
+            log.error(
+                    "I/O error when reading object from [" + _file + "]: " + ioe.getMessage(), ioe);
         } catch (ClassNotFoundException cnfe) {
-            log.error("Class not found when reading object from [" + _file + "]: " + cnfe.getMessage(), cnfe);
+            log.error(
+                    "Class not found when reading object from ["
+                            + _file
+                            + "]: "
+                            + cnfe.getMessage(),
+                    cnfe);
         }
         return null;
     }
@@ -336,7 +364,12 @@ public class ReachabilityAnalyzer implements Runnable {
             final File f = new File(_file);
             try (final ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f))) {
                 oos.writeObject(_g);
-                log.info("Wrote call graph with [" + _g.getNumberOfNodes() + "] nodes to [" + _file + "]");
+                log.info(
+                        "Wrote call graph with ["
+                                + _g.getNumberOfNodes()
+                                + "] nodes to ["
+                                + _file
+                                + "]");
             }
         } catch (IOException ioe) {
             log.error("I/O error when writing object to [" + _file + "]: " + ioe.getMessage(), ioe);
@@ -346,12 +379,12 @@ public class ReachabilityAnalyzer implements Runnable {
     /**
      * Given the bugid and callgraph constructor framework, do the reachability analysis from callgraph construction to callgraph computation
      */
-    public void run() { //throws CallgraphConstructException {
+    public void run() { // throws CallgraphConstructException {
         // Entry points should have been set
         if (this.entrypoints == null)
             throw new IllegalStateException("No entry points defined, cannot compute call graph");
 
-            // Factory must be defined
+        // Factory must be defined
         else if (this.constructor == null)
             throw new IllegalStateException("No call graph constructor defined");
 
@@ -360,21 +393,24 @@ public class ReachabilityAnalyzer implements Runnable {
             // ===== Phase 1: Call graph construction
 
             // Get a callgraph constructor (using the factory received earlier as argument)
-            //AbstractConstructorFactory factory = AbstractConstructorFactory.getFactory(_framework);
-            //Create a callgraph constructor, no matter which framework(soot/wala) is used.
-            //this.constructor = this.factory.createConstructor(this.app_ctx, this.app_classes_path);
-            //ICallgraphConstructor constructor = factory.createConstructor(this.app_ctx, p);
+            // AbstractConstructorFactory factory =
+            // AbstractConstructorFactory.getFactory(_framework);
+            // Create a callgraph constructor, no matter which framework(soot/wala) is used.
+            // this.constructor = this.factory.createConstructor(this.app_ctx,
+            // this.app_classes_path);
+            // ICallgraphConstructor constructor = factory.createConstructor(this.app_ctx, p);
 
             Graph<ConstructId> g = null;
 
             // Read the call graph from disk
-			/*final String read_from = VulasConfiguration.getConfiguration().getString(ReachabilityConfiguration.REACH_READ_FROM, null);
-			if(read_from!=null && FileUtil.isAccessibleFile(read_from)) {
-				g = this.readFromDisk(read_from);
-				callgraph_construction_time = 0;
-			}*/
+            /*final String read_from = VulasConfiguration.getConfiguration().getString(ReachabilityConfiguration.REACH_READ_FROM, null);
+            if(read_from!=null && FileUtil.isAccessibleFile(read_from)) {
+            	g = this.readFromDisk(read_from);
+            	callgraph_construction_time = 0;
+            }*/
 
-            // Build the callgraph using the specific fwk (1.set classpath; 2. set entrypoints; 3. build callgraph; 4. get callgraph)
+            // Build the callgraph using the specific fwk (1.set classpath; 2. set entrypoints; 3.
+            // build callgraph; 4. get callgraph)
             if (g == null) {
                 constructor.setDepClasspath(this.getDependencyClasspath());
                 constructor.setAppClasspath(this.getAppClasspath());
@@ -385,14 +421,15 @@ public class ReachabilityAnalyzer implements Runnable {
                 final long callgraph_construction_time = this.getConstructionTime() / 1000000;
 
                 // Stats
-                ReachabilityAnalyzer.log.info("Call graph construction time (ms) : " + callgraph_construction_time);
+                ReachabilityAnalyzer.log.info(
+                        "Call graph construction time (ms) : " + callgraph_construction_time);
                 this.stats.put("cgConstructionTime (ms)", callgraph_construction_time);
 
                 // Write graph to disk
-				/*final String write_to  = VulasConfiguration.getConfiguration().getString(ReachabilityConfiguration.REACH_WRITE_TO, null);
-				if(write_to!=null) {
-					this.writeToDisk(write_to, g);
-				}*/
+                /*final String write_to  = VulasConfiguration.getConfiguration().getString(ReachabilityConfiguration.REACH_WRITE_TO, null);
+                if(write_to!=null) {
+                	this.writeToDisk(write_to, g);
+                }*/
             }
 
             // The call graph we're going to work with, transformed into our representation
@@ -402,7 +439,14 @@ public class ReachabilityAnalyzer implements Runnable {
             int no_jar_url = 0;
             for (ConstructId cid : this.callgraph.getConstructsWithoutJarUrl()) {
                 if (!this.entrypoints.contains(cid)) {
-                    log.warn("[" + StringUtil.padLeft(++no_jar_url, 4) + "] Cannot determine archive for construct [" + cid.getQname() + "]; size of class pool is [" + ClassPoolUpdater.getInstance().countClasspathElements() + "]");
+                    log.warn(
+                            "["
+                                    + StringUtil.padLeft(++no_jar_url, 4)
+                                    + "] Cannot determine archive for construct ["
+                                    + cid.getQname()
+                                    + "]; size of class pool is ["
+                                    + ClassPoolUpdater.getInstance().countClasspathElements()
+                                    + "]");
                 }
             }
             this.stats.put("callgraphNodesWithoutJar", (long) Integer.valueOf(no_jar_url));
@@ -411,16 +455,26 @@ public class ReachabilityAnalyzer implements Runnable {
 
             // Target constructs do not exist: Stop here
             if (this.targetConstructs == null || this.targetConstructs.isEmpty()) {
-                ReachabilityAnalyzer.log.info("No target points defined, i.e., no vulnerability to check reachability for");
+                ReachabilityAnalyzer.log.info(
+                        "No target points defined, i.e., no vulnerability to check reachability"
+                            + " for");
             }
-            // Target constructs do exist: Compute paths from entry points to change list elements of the bugs
+            // Target constructs do exist: Compute paths from entry points to change list elements
+            // of the bugs
             else {
-                // Sources for the reachability analysis (= always the same, independent of the current bug)
-                final Set<com.sap.psr.vulas.shared.json.model.ConstructId> src_ep = constructor.getEntrypoints();
+                // Sources for the reachability analysis (= always the same, independent of the
+                // current bug)
+                final Set<com.sap.psr.vulas.shared.json.model.ConstructId> src_ep =
+                        constructor.getEntrypoints();
 
-                final boolean search_shortest = this.goalContext.getVulasConfiguration().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_SEARCH_SHORTEST, true);
+                final boolean search_shortest =
+                        this.goalContext
+                                .getVulasConfiguration()
+                                .getConfiguration()
+                                .getBoolean(ReachabilityConfiguration.REACH_SEARCH_SHORTEST, true);
 
-                final StopWatch sw = new StopWatch("Check reachability of change list elements").start();
+                final StopWatch sw =
+                        new StopWatch("Check reachability of change list elements").start();
 
                 // Thread pool
                 final int no_threads = ThreadUtil.getNoThreads();
@@ -429,13 +483,14 @@ public class ReachabilityAnalyzer implements Runnable {
                 // Create parallel call graph searches
                 final Set<CallgraphPathSearch> searches = new HashSet<CallgraphPathSearch>();
                 for (String bug : this.targetConstructs.keySet()) {
-                    final CallgraphPathSearch search = new CallgraphPathSearch()
-                            .setEntrypoints(src_ep)
-                            .setTargetpoints(this.targetConstructs.get(bug))
-                            .setLabel(bug)
-                            .setCallback(this)
-                            .setShortestPaths(search_shortest)
-                            .setCallgraph(this.callgraph);
+                    final CallgraphPathSearch search =
+                            new CallgraphPathSearch()
+                                    .setEntrypoints(src_ep)
+                                    .setTargetpoints(this.targetConstructs.get(bug))
+                                    .setLabel(bug)
+                                    .setCallback(this)
+                                    .setShortestPaths(search_shortest)
+                                    .setCallgraph(this.callgraph);
                     searches.add(search);
                     pool.execute(search);
                 }
@@ -453,9 +508,18 @@ public class ReachabilityAnalyzer implements Runnable {
 
                 // Compute stats
                 long time_max = 0;
-                long bugs_count = (this.targetConstructs == null ? 0 : this.targetConstructs.keySet().size()), bugs_reachable = 0;
+                long
+                        bugs_count =
+                                (this.targetConstructs == null
+                                        ? 0
+                                        : this.targetConstructs.keySet().size()),
+                        bugs_reachable = 0;
                 long tp_sum = 0, tp_min = Long.MAX_VALUE, tp_max = 0, tp_avg = 0;
-                long shortest_path_sum = 0, shortest_path_min = Long.MAX_VALUE, shortest_path_max = 0, shortest_path_avg = 0, path_count = 0;
+                long shortest_path_sum = 0,
+                        shortest_path_min = Long.MAX_VALUE,
+                        shortest_path_max = 0,
+                        shortest_path_avg = 0,
+                        path_count = 0;
                 for (CallgraphPathSearch search : searches) {
                     final long dur = search.getStopWatch().getRuntime();
                     time_max = (dur > time_max ? dur : time_max);
@@ -464,19 +528,30 @@ public class ReachabilityAnalyzer implements Runnable {
                         bugs_reachable++;
 
                         // Get the shortest and longest path
-                        for (List<com.sap.psr.vulas.shared.json.model.ConstructId> l : this.rcPaths.get(search.getLabel())) {
+                        for (List<com.sap.psr.vulas.shared.json.model.ConstructId> l :
+                                this.rcPaths.get(search.getLabel())) {
                             path_count++;
                             shortest_path_sum += l.size();
-                            shortest_path_avg = new Double(Math.abs((double) shortest_path_sum / path_count)).intValue();
-                            shortest_path_min = (l.size() < shortest_path_min ? l.size() : shortest_path_min);
-                            shortest_path_max = (l.size() > shortest_path_max ? l.size() : shortest_path_max);
+                            shortest_path_avg =
+                                    new Double(Math.abs((double) shortest_path_sum / path_count))
+                                            .intValue();
+                            shortest_path_min =
+                                    (l.size() < shortest_path_min ? l.size() : shortest_path_min);
+                            shortest_path_max =
+                                    (l.size() > shortest_path_max ? l.size() : shortest_path_max);
                         }
                     }
 
                     tp_sum += this.targetConstructs.get(search.getLabel()).size();
                     tp_avg = new Double(Math.abs((double) tp_sum / bugs_count)).intValue();
-                    tp_min = (this.targetConstructs.get(search.getLabel()).size() < tp_min ? this.targetConstructs.get(search.getLabel()).size() : tp_min);
-                    tp_max = (this.targetConstructs.get(search.getLabel()).size() > tp_max ? this.targetConstructs.get(search.getLabel()).size() : tp_max);
+                    tp_min =
+                            (this.targetConstructs.get(search.getLabel()).size() < tp_min
+                                    ? this.targetConstructs.get(search.getLabel()).size()
+                                    : tp_min);
+                    tp_max =
+                            (this.targetConstructs.get(search.getLabel()).size() > tp_max
+                                    ? this.targetConstructs.get(search.getLabel()).size()
+                                    : tp_max);
                 }
 
                 // Write stats to map
@@ -495,15 +570,19 @@ public class ReachabilityAnalyzer implements Runnable {
             this.identifyTouchPoints();
 
             // Stats
-            this.stats.put("reachableArchives", (long) Integer.valueOf(this.reachableConstructs.size()));
+            this.stats.put(
+                    "reachableArchives", (long) Integer.valueOf(this.reachableConstructs.size()));
             this.stats.put("touchedArchives", (long) Integer.valueOf(this.touchPoints.size()));
             long touch_points = 0;
-            for (Map.Entry<String, Set<List<NodeMetaInformation>>> entry : this.touchPoints.entrySet())
-                touch_points += entry.getValue().size();
+            for (Map.Entry<String, Set<List<NodeMetaInformation>>> entry :
+                    this.touchPoints.entrySet()) touch_points += entry.getValue().size();
             this.stats.put("touchPointsTotal", Long.valueOf(touch_points));
 
         } catch (CallgraphConstructException e) {
-            ReachabilityAnalyzer.log.info("Call graph cannot be constructed or analyzed, reachability analysis will be interrupted: " + e.getMessage());
+            ReachabilityAnalyzer.log.info(
+                    "Call graph cannot be constructed or analyzed, reachability analysis will be"
+                        + " interrupted: "
+                            + e.getMessage());
             Thread.currentThread().interrupt();
         }
     }
@@ -514,30 +593,39 @@ public class ReachabilityAnalyzer implements Runnable {
      * of reachable constructs per library.
      */
     private void identifyTouchPoints() {
-        // Allow to skip the collection of touch points (which is potentially time consuming due to nested looping over app methods and all their edges)
-        final boolean identify_touchpoints = this.goalContext.getVulasConfiguration().getConfiguration().getBoolean(ReachabilityConfiguration.REACH_TOUCHPOINTS, true);
+        // Allow to skip the collection of touch points (which is potentially time consuming due to
+        // nested looping over app methods and all their edges)
+        final boolean identify_touchpoints =
+                this.goalContext
+                        .getVulasConfiguration()
+                        .getConfiguration()
+                        .getBoolean(ReachabilityConfiguration.REACH_TOUCHPOINTS, true);
         if (!identify_touchpoints)
             log.warn("Identification of touch points disabled per configuration");
 
-        final StopWatch sw = new StopWatch("Identify reachable constructs and touch points").start();
+        final StopWatch sw =
+                new StopWatch("Identify reachable constructs and touch points").start();
 
         // Thread pool
         final int no_threads = ThreadUtil.getNoThreads();
         final ExecutorService pool = Executors.newFixedThreadPool(no_threads);
 
         // Partition size
-        final int size = new Double(Math.ceil((double) this.callgraph.getNodeCount() / (double) no_threads)).intValue();
+        final int size =
+                new Double(Math.ceil((double) this.callgraph.getNodeCount() / (double) no_threads))
+                        .intValue();
 
         // Create parallel call graph searches
         final Set<CallgraphReachableSearch> searches = new HashSet<CallgraphReachableSearch>();
         for (int i = 0; i < no_threads; i++) {
             int min = i * size;
             int max = Math.min((i + 1) * size, this.callgraph.getNodeCount());
-            final CallgraphReachableSearch search = new CallgraphReachableSearch()
-                    .setAppConstructs(this.appConstructs)
-                    .setFindTouchPoints(identify_touchpoints)
-                    .setCallgraph(this.callgraph)
-                    .setMinMax(min, max);
+            final CallgraphReachableSearch search =
+                    new CallgraphReachableSearch()
+                            .setAppConstructs(this.appConstructs)
+                            .setFindTouchPoints(identify_touchpoints)
+                            .setCallgraph(this.callgraph)
+                            .setMinMax(min, max);
             searches.add(search);
             pool.execute(search);
         }
@@ -552,7 +640,8 @@ public class ReachabilityAnalyzer implements Runnable {
             for (CallgraphReachableSearch search : searches) {
 
                 // Reachable constructs
-                final Map<String, Set<NodeMetaInformation>> reachable_constructs = search.getReachableConstructs();
+                final Map<String, Set<NodeMetaInformation>> reachable_constructs =
+                        search.getReachableConstructs();
                 for (String key : reachable_constructs.keySet()) {
                     if (!this.reachableConstructs.containsKey(key))
                         this.reachableConstructs.put(key, new HashSet<NodeMetaInformation>());
@@ -560,7 +649,8 @@ public class ReachabilityAnalyzer implements Runnable {
                 }
 
                 // Touch points
-                final Map<String, Set<List<NodeMetaInformation>>> touch_points = search.getTouchPoints();
+                final Map<String, Set<List<NodeMetaInformation>>> touch_points =
+                        search.getTouchPoints();
                 for (String key : touch_points.keySet()) {
                     if (!this.touchPoints.containsKey(key))
                         this.touchPoints.put(key, new HashSet<List<NodeMetaInformation>>());
@@ -629,7 +719,8 @@ public class ReachabilityAnalyzer implements Runnable {
      * @return true if the analysis terminated, false otherwise
      * @throws java.lang.InterruptedException
      */
-    public static boolean startAnalysis(ReachabilityAnalyzer _ra, long _timeout_ms) throws InterruptedException {
+    public static boolean startAnalysis(ReachabilityAnalyzer _ra, long _timeout_ms)
+            throws InterruptedException {
         boolean success = false;
         long start_time = System.currentTimeMillis(), runtime = -1, timeout = -1, wait = -1;
 
@@ -638,10 +729,16 @@ public class ReachabilityAnalyzer implements Runnable {
 
         // Wait time between checks (15 min if no timeout is given, timeout/10 otherwise)
         if (_timeout_ms <= 0) {
-            ReachabilityAnalyzer.log.info("Starting reachability analysis (thread [" + t.getName() + "], no timeout");
+            ReachabilityAnalyzer.log.info(
+                    "Starting reachability analysis (thread [" + t.getName() + "], no timeout");
             wait = 1000 * 60 * 15;
         } else {
-            ReachabilityAnalyzer.log.info("Starting reachability analysis (thread [" + t.getName() + "], timeout after " + StringUtil.formatMinString(_timeout_ms) + ")");
+            ReachabilityAnalyzer.log.info(
+                    "Starting reachability analysis (thread ["
+                            + t.getName()
+                            + "], timeout after "
+                            + StringUtil.formatMinString(_timeout_ms)
+                            + ")");
             wait = (long) Math.abs((double) _timeout_ms / (double) 10);
         }
 
@@ -667,7 +764,8 @@ public class ReachabilityAnalyzer implements Runnable {
             else {
                 // Interrupt if a timeout has been specified and we exceed it
                 if (_timeout_ms > 0 && runtime > _timeout_ms) {
-                    ReachabilityAnalyzer.log.warn("[" + t.getName() + "] reached timeout and will be interrupted");
+                    ReachabilityAnalyzer.log.warn(
+                            "[" + t.getName() + "] reached timeout and will be interrupted");
                     final StackTraceElement[] stack = t.getStackTrace();
                     for (StackTraceElement e : stack) {
                         ReachabilityAnalyzer.log.warn("    " + e.toString());
@@ -675,16 +773,26 @@ public class ReachabilityAnalyzer implements Runnable {
                     t.interrupt();
                     // Shouldn't be long now
                     // -- wait indefinitely
-                    //t.join();
+                    // t.join();
 
                     success = false;
                     break;
                 } else {
                     // Print runtime info
                     if (_timeout_ms <= 0)
-                        ReachabilityAnalyzer.log.info("[" + t.getName() + "] runs for " + StringUtil.formatMinString(runtime));
+                        ReachabilityAnalyzer.log.info(
+                                "["
+                                        + t.getName()
+                                        + "] runs for "
+                                        + StringUtil.formatMinString(runtime));
                     else
-                        ReachabilityAnalyzer.log.info("[" + t.getName() + "] runs for " + StringUtil.formatMinString(runtime) + ", will be interrupted in " + StringUtil.formatMinString(timeout));
+                        ReachabilityAnalyzer.log.info(
+                                "["
+                                        + t.getName()
+                                        + "] runs for "
+                                        + StringUtil.formatMinString(runtime)
+                                        + ", will be interrupted in "
+                                        + StringUtil.formatMinString(timeout));
 
                     // Print mem info
                     ReachabilityAnalyzer.logMemoryConsumption(true);
@@ -693,9 +801,17 @@ public class ReachabilityAnalyzer implements Runnable {
         }
 
         if (success)
-            ReachabilityAnalyzer.log.info("[" + t.getName() + "] terminated successfully after " + StringUtil.formatMinString(runtime));
+            ReachabilityAnalyzer.log.info(
+                    "["
+                            + t.getName()
+                            + "] terminated successfully after "
+                            + StringUtil.formatMinString(runtime));
         else
-            ReachabilityAnalyzer.log.error("[" + t.getName() + "] terminated w/o success after " + StringUtil.formatMinString(runtime));
+            ReachabilityAnalyzer.log.error(
+                    "["
+                            + t.getName()
+                            + "] terminated w/o success after "
+                            + StringUtil.formatMinString(runtime));
 
         return success;
     }
@@ -706,7 +822,16 @@ public class ReachabilityAnalyzer implements Runnable {
         final long mem_total = ReachabilityAnalyzer.runtime.totalMemory();
         final long mem_free = ReachabilityAnalyzer.runtime.freeMemory();
         final long mem_max = ReachabilityAnalyzer.runtime.maxMemory();
-        ReachabilityAnalyzer.log.info("Memory stats (used/free/total/max): [" + StringUtil.byteToMBString(mem_total - mem_free) + "/" + StringUtil.byteToMBString(mem_free) + "/" + StringUtil.byteToMBString(mem_total) + "/" + StringUtil.byteToMBString(mem_max) + "]");
+        ReachabilityAnalyzer.log.info(
+                "Memory stats (used/free/total/max): ["
+                        + StringUtil.byteToMBString(mem_total - mem_free)
+                        + "/"
+                        + StringUtil.byteToMBString(mem_free)
+                        + "/"
+                        + StringUtil.byteToMBString(mem_total)
+                        + "/"
+                        + StringUtil.byteToMBString(mem_max)
+                        + "]");
     }
 
     synchronized void callback(CallgraphPathSearch _search) {
@@ -723,13 +848,20 @@ public class ReachabilityAnalyzer implements Runnable {
      */
     public synchronized void uploadBug(String _bugid, List<List<ConstructId>> _paths) {
 
-        // Used to limit the number of paths (per change list element) that will be uploaded to the backend
-        final int max_path = this.goalContext.getVulasConfiguration().getConfiguration().getInt(ReachabilityConfiguration.REACH_MAX_PATH, 10);
-        final Map<com.sap.psr.vulas.shared.json.model.ConstructId, Integer> counters = new HashMap<com.sap.psr.vulas.shared.json.model.ConstructId, Integer>();
+        // Used to limit the number of paths (per change list element) that will be uploaded to the
+        // backend
+        final int max_path =
+                this.goalContext
+                        .getVulasConfiguration()
+                        .getConfiguration()
+                        .getInt(ReachabilityConfiguration.REACH_MAX_PATH, 10);
+        final Map<com.sap.psr.vulas.shared.json.model.ConstructId, Integer> counters =
+                new HashMap<com.sap.psr.vulas.shared.json.model.ConstructId, Integer>();
         int count = -1;
 
         final JsonParser parser = new JsonParser();
-        final JsonObject json_app = parser.parse(JacksonUtil.asJsonString(this.app_ctx)).getAsJsonObject();
+        final JsonObject json_app =
+                parser.parse(JacksonUtil.asJsonString(this.app_ctx)).getAsJsonObject();
         final JsonArray json_paths = new JsonArray();
 
         JsonObject json_path = null;
@@ -739,11 +871,17 @@ public class ReachabilityAnalyzer implements Runnable {
         counters.clear();
 
         // Prepare each single path
-        for (List<com.sap.psr.vulas.shared.json.model.ConstructId> path : this.rcPaths.get(_bugid)) {
+        for (List<com.sap.psr.vulas.shared.json.model.ConstructId> path :
+                this.rcPaths.get(_bugid)) {
 
             // Do not serialize more than max_path paths
-            com.sap.psr.vulas.shared.json.model.ConstructId target_construct = path.get(path.size() - 1);
-            count = (counters.get(target_construct) == null ? 0 : counters.get(target_construct).intValue()) + 1;
+            com.sap.psr.vulas.shared.json.model.ConstructId target_construct =
+                    path.get(path.size() - 1);
+            count =
+                    (counters.get(target_construct) == null
+                                    ? 0
+                                    : counters.get(target_construct).intValue())
+                            + 1;
             counters.put(target_construct, Integer.valueOf(count));
             if (count > max_path) continue;
 
@@ -772,7 +910,14 @@ public class ReachabilityAnalyzer implements Runnable {
         int uploaded_path_count = 0;
         for (com.sap.psr.vulas.shared.json.model.ConstructId con : counters.keySet()) {
             if (counters.get(con).intValue() > max_path) {
-                ReachabilityAnalyzer.log.warn("[" + counters.get(con).intValue() + "] paths lead to construct [" + con + "], only [" + max_path + "] will be uploaded");
+                ReachabilityAnalyzer.log.warn(
+                        "["
+                                + counters.get(con).intValue()
+                                + "] paths lead to construct ["
+                                + con
+                                + "], only ["
+                                + max_path
+                                + "] will be uploaded");
                 uploaded_path_count += max_path;
             } else {
                 uploaded_path_count += counters.get(con).intValue();
@@ -780,18 +925,27 @@ public class ReachabilityAnalyzer implements Runnable {
         }
 
         // Save JSON
-        ReachabilityAnalyzer.log.info("Upload [" + uploaded_path_count + "] path(s) for bug [" + _bugid + "]: " + (this.rcPaths.get(_bugid).size() == 0 ? "Change list NOT reachable " : "Change list reachable"));
+        ReachabilityAnalyzer.log.info(
+                "Upload ["
+                        + uploaded_path_count
+                        + "] path(s) for bug ["
+                        + _bugid
+                        + "]: "
+                        + (this.rcPaths.get(_bugid).size() == 0
+                                ? "Change list NOT reachable "
+                                : "Change list reachable"));
         try {
-            BackendConnector.getInstance().uploadPaths(this.goalContext, this.app_ctx, json_paths.toString());
+            BackendConnector.getInstance()
+                    .uploadPaths(this.goalContext, this.app_ctx, json_paths.toString());
         } catch (BackendConnectionException e) {
-            ReachabilityAnalyzer.log.error("Error while uploading paths for bug [" + _bugid + "]: " + e.getMessage());
+            ReachabilityAnalyzer.log.error(
+                    "Error while uploading paths for bug [" + _bugid + "]: " + e.getMessage());
         }
     }
 
     private void appendJarName(String _jar_url, StringBuffer _buffer) {
         if (_jar_url != null) {
-            if (_buffer.length() > 0)
-                _buffer.append(", ");
+            if (_buffer.length() > 0) _buffer.append(", ");
             if (_jar_url.indexOf("/") != -1) {
                 _buffer.append(_jar_url.substring(_jar_url.indexOf("/") + 1));
             } else {
@@ -807,7 +961,8 @@ public class ReachabilityAnalyzer implements Runnable {
 
         // 1) Upload reachable constructs (per dependency
         if (!this.reachableConstructs.isEmpty()) {
-            final StringBuffer upload_succeeded = new StringBuffer(), upload_failed = new StringBuffer();
+            final StringBuffer upload_succeeded = new StringBuffer(),
+                    upload_failed = new StringBuffer();
             Set<NodeMetaInformation> nodes = null;
             JsonArray json_constructs = null;
 
@@ -819,32 +974,54 @@ public class ReachabilityAnalyzer implements Runnable {
                 // Loop reachable constructs
                 String jar_url = null;
                 for (NodeMetaInformation nmi : nodes) {
-                    if (jar_url == null)
-                        jar_url = nmi.getJarUrl();
-                    json_constructs.add(new JsonParser().parse(JacksonUtil.asJsonString(nmi.getConstructId())).getAsJsonObject());
+                    if (jar_url == null) jar_url = nmi.getJarUrl();
+                    json_constructs.add(
+                            new JsonParser()
+                                    .parse(JacksonUtil.asJsonString(nmi.getConstructId()))
+                                    .getAsJsonObject());
                 }
 
                 // Upload
                 try {
-                    ReachabilityAnalyzer.log.info("Upload [" + nodes.size() + "] reachable construct IDs for library [sha1=" + sha1 + ", jar URL=" + jar_url + "]");
-                    final boolean success = BackendConnector.getInstance().uploadReachableConstructs(this.goalContext, this.app_ctx, sha1, json_constructs.toString());
-                    if (success)
-                        this.appendJarName(jar_url, upload_succeeded);
-                    else
-                        this.appendJarName(jar_url, upload_failed);
+                    ReachabilityAnalyzer.log.info(
+                            "Upload ["
+                                    + nodes.size()
+                                    + "] reachable construct IDs for library [sha1="
+                                    + sha1
+                                    + ", jar URL="
+                                    + jar_url
+                                    + "]");
+                    final boolean success =
+                            BackendConnector.getInstance()
+                                    .uploadReachableConstructs(
+                                            this.goalContext,
+                                            this.app_ctx,
+                                            sha1,
+                                            json_constructs.toString());
+                    if (success) this.appendJarName(jar_url, upload_succeeded);
+                    else this.appendJarName(jar_url, upload_failed);
                 } catch (BackendConnectionException e) {
-                    ReachabilityAnalyzer.log.error("Error while uploading reachable constructs for library [sha1=" + sha1 + ", jar URL=" + jar_url + "]: " + e.getMessage());
+                    ReachabilityAnalyzer.log.error(
+                            "Error while uploading reachable constructs for library [sha1="
+                                    + sha1
+                                    + ", jar URL="
+                                    + jar_url
+                                    + "]: "
+                                    + e.getMessage());
                     this.appendJarName(jar_url, upload_failed);
                 }
             }
 
-            ReachabilityAnalyzer.log.info("Upload of reachable constructs succeeded for [" + upload_succeeded + "]");
-            ReachabilityAnalyzer.log.warn("Upload of reachable constructs failed    for [" + upload_failed + "]");
+            ReachabilityAnalyzer.log.info(
+                    "Upload of reachable constructs succeeded for [" + upload_succeeded + "]");
+            ReachabilityAnalyzer.log.warn(
+                    "Upload of reachable constructs failed    for [" + upload_failed + "]");
         }
 
         // 2) Upload touch points per dependency
         if (!this.touchPoints.isEmpty()) {
-            final StringBuffer upload_succeeded = new StringBuffer(), upload_failed = new StringBuffer();
+            final StringBuffer upload_succeeded = new StringBuffer(),
+                    upload_failed = new StringBuffer();
             Set<List<NodeMetaInformation>> touch_points = null;
             JsonArray json_tps = null;
             JsonObject json_tp = null;
@@ -862,8 +1039,16 @@ public class ReachabilityAnalyzer implements Runnable {
                     json_tp = new JsonObject();
                     from = touch_point.get(0);
                     to = touch_point.get(1);
-                    json_tp.add("from", new JsonParser().parse(JacksonUtil.asJsonString(from.getConstructId())).getAsJsonObject());
-                    json_tp.add("to", new JsonParser().parse(JacksonUtil.asJsonString(to.getConstructId())).getAsJsonObject());
+                    json_tp.add(
+                            "from",
+                            new JsonParser()
+                                    .parse(JacksonUtil.asJsonString(from.getConstructId()))
+                                    .getAsJsonObject());
+                    json_tp.add(
+                            "to",
+                            new JsonParser()
+                                    .parse(JacksonUtil.asJsonString(to.getConstructId()))
+                                    .getAsJsonObject());
                     json_tp.addProperty("source", this.source.toString());
                     if (sha1.equals(to.getArchiveId())) {
                         json_tp.addProperty("direction", "A2L");
@@ -878,20 +1063,39 @@ public class ReachabilityAnalyzer implements Runnable {
 
                 // Upload
                 try {
-                    ReachabilityAnalyzer.log.info("Upload [" + touch_points.size() + "] touch points for library [sha1=" + sha1 + ", jar URL=" + jar_url + "]");
-                    final boolean success = BackendConnector.getInstance().uploadTouchPoints(this.goalContext, this.app_ctx, sha1, json_tps.toString());
-                    if (success)
-                        this.appendJarName(jar_url, upload_succeeded);
-                    else
-                        this.appendJarName(jar_url, upload_failed);
+                    ReachabilityAnalyzer.log.info(
+                            "Upload ["
+                                    + touch_points.size()
+                                    + "] touch points for library [sha1="
+                                    + sha1
+                                    + ", jar URL="
+                                    + jar_url
+                                    + "]");
+                    final boolean success =
+                            BackendConnector.getInstance()
+                                    .uploadTouchPoints(
+                                            this.goalContext,
+                                            this.app_ctx,
+                                            sha1,
+                                            json_tps.toString());
+                    if (success) this.appendJarName(jar_url, upload_succeeded);
+                    else this.appendJarName(jar_url, upload_failed);
                 } catch (BackendConnectionException e) {
-                    ReachabilityAnalyzer.log.error("Error while uploading touch points for library [sha1=" + sha1 + ", jar URL=" + jar_url + "]: " + e.getMessage());
+                    ReachabilityAnalyzer.log.error(
+                            "Error while uploading touch points for library [sha1="
+                                    + sha1
+                                    + ", jar URL="
+                                    + jar_url
+                                    + "]: "
+                                    + e.getMessage());
                     this.appendJarName(jar_url, upload_failed);
                 }
             }
 
-            ReachabilityAnalyzer.log.info("Upload of touch points succeeded for [" + upload_succeeded + "]");
-            ReachabilityAnalyzer.log.warn("Upload of touch points failed    for [" + upload_failed + "]");
+            ReachabilityAnalyzer.log.info(
+                    "Upload of touch points succeeded for [" + upload_succeeded + "]");
+            ReachabilityAnalyzer.log.warn(
+                    "Upload of touch points failed    for [" + upload_failed + "]");
         }
     }
 }

@@ -31,7 +31,7 @@ public class Intersection2 {
     ArtifactResult2 from, to;
     int occurrences;
     Double confidence;
-    
+
     /**
      * <p>Constructor for Intersection2.</p>
      *
@@ -45,7 +45,6 @@ public class Intersection2 {
         this.to = to;
         this.occurrences = o;
         this.confidence = d;
-        
     }
 
     /**
@@ -101,9 +100,4 @@ public class Intersection2 {
     public void setConfidence(Double confidence) {
         this.confidence = confidence;
     }
-
-    
-
-
-    
 }

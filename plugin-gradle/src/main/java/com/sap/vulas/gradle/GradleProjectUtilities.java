@@ -28,9 +28,7 @@ import java.util.Map;
 
 import static com.sap.vulas.gradle.VulasPluginCommon.*;
 
-
 public class GradleProjectUtilities {
-
 
     private static final Map<String, ProjectOutputTypes> knownPlugins;
 
@@ -41,16 +39,16 @@ public class GradleProjectUtilities {
         knownPlugins.put("com.android.application", ProjectOutputTypes.APK);
     }
 
+    protected static String getMandatoryProjectProperty(
+            Project project, GradleGavProperty property, Logger logger) {
 
-    protected static String getMandatoryProjectProperty(Project project, GradleGavProperty property, Logger logger) {
-
-        final String propertyName=property.name();
+        final String propertyName = property.name();
 
         logger.debug("Looking for property [{}] in project", propertyName);
 
         String propertyValue = null;
 
-        if(project.hasProperty(propertyName)) {
+        if (project.hasProperty(propertyName)) {
             propertyValue = project.getProperties().get(propertyName).toString();
         }
 
@@ -68,7 +66,7 @@ public class GradleProjectUtilities {
 
         ProjectOutputTypes projectOutputType = null;
 
-        for ( String kp: knownPlugins.keySet()) {
+        for (String kp : knownPlugins.keySet()) {
             if (project.getPlugins().hasPlugin(kp)) {
                 logger.quiet("Found plugin: " + kp);
                 projectOutputType = knownPlugins.get(kp);
@@ -86,5 +84,4 @@ public class GradleProjectUtilities {
     protected static boolean hasKnownProjectOutputType(Project project, Logger logger) {
         return determineProjectOutputType(project, logger) != null;
     }
-
 }

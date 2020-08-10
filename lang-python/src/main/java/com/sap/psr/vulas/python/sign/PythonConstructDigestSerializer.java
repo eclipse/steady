@@ -32,32 +32,32 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
  */
 public class PythonConstructDigestSerializer extends StdSerializer<PythonConstructDigest> {
 
-	/**
-	 * <p>Constructor for PythonConstructDigestSerializer.</p>
-	 */
-	public PythonConstructDigestSerializer() {
-		this(null);
-	}
+    /**
+     * <p>Constructor for PythonConstructDigestSerializer.</p>
+     */
+    public PythonConstructDigestSerializer() {
+        this(null);
+    }
 
-	/**
-	 * <p>Constructor for PythonConstructDigestSerializer.</p>
-	 *
-	 * @param t a {@link java.lang.Class} object.
-	 */
-	public PythonConstructDigestSerializer(Class<PythonConstructDigest> t) {
-		super(t);
-	}
-	
+    /**
+     * <p>Constructor for PythonConstructDigestSerializer.</p>
+     *
+     * @param t a {@link java.lang.Class} object.
+     */
+    public PythonConstructDigestSerializer(Class<PythonConstructDigest> t) {
+        super(t);
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public void serialize(PythonConstructDigest value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
-		jgen.writeStartObject();
-		jgen.writeStringField("computedFrom", value.getComputedFrom());
-		jgen.writeStringField("computedFromType", value.getComputedFromType().toString());
-		jgen.writeStringField("digest", value.getDigest());
-		jgen.writeStringField("digestAlgorihtm", value.getDigestAlgorithm().toString());
-		jgen.writeEndObject();
-	}
-
+    /** {@inheritDoc} */
+    @Override
+    public void serialize(
+            PythonConstructDigest value, JsonGenerator jgen, SerializerProvider provider)
+            throws IOException, JsonProcessingException {
+        jgen.writeStartObject();
+        jgen.writeStringField("computedFrom", value.getComputedFrom());
+        jgen.writeStringField("computedFromType", value.getComputedFromType().toString());
+        jgen.writeStringField("digest", value.getDigest());
+        jgen.writeStringField("digestAlgorihtm", value.getDigestAlgorithm().toString());
+        jgen.writeEndObject();
+    }
 }

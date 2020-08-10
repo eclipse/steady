@@ -28,7 +28,7 @@ package com.sap.psr.vulas.patcheval.representation;
  * Helper  class for deserialization of all versions of artifacts returned from CIA, respect to a certain group,artifact.
  */
 public class ArtifactLibrary {
-    String g,a,v;
+    String g, a, v;
     Long timestamp;
 
     /**
@@ -117,8 +117,4 @@ public class ArtifactLibrary {
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
-
-    
-    
-    
 }
