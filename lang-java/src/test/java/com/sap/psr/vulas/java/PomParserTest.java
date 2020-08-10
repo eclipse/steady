@@ -34,21 +34,21 @@ import org.xml.sax.XMLReader;
 
 public class PomParserTest {
 
-	@Test
-	public void testParsePom() {
-		try {
-			final PomParser pp = new PomParser();			
-			final SAXParserFactory spf = SAXParserFactory.newInstance();
-			spf.setNamespaceAware(true);
-			final SAXParser saxParser = spf.newSAXParser();
-			final XMLReader xmlReader = saxParser.getXMLReader();
-			xmlReader.setContentHandler(pp);
-			xmlReader.parse(new InputSource(new FileReader(new File("pom.xml"))));			
-			assertEquals("com.sap.research.security.vulas", pp.getLibraryId().getMvnGroup());
-			assertEquals("lang-java", pp.getLibraryId().getArtifact());
-		} catch(Exception e) {
-			e.printStackTrace();
-			assertTrue(false);
-		}
-	}
+    @Test
+    public void testParsePom() {
+        try {
+            final PomParser pp = new PomParser();
+            final SAXParserFactory spf = SAXParserFactory.newInstance();
+            spf.setNamespaceAware(true);
+            final SAXParser saxParser = spf.newSAXParser();
+            final XMLReader xmlReader = saxParser.getXMLReader();
+            xmlReader.setContentHandler(pp);
+            xmlReader.parse(new InputSource(new FileReader(new File("pom.xml"))));
+            assertEquals("com.sap.research.security.vulas", pp.getLibraryId().getMvnGroup());
+            assertEquals("lang-java", pp.getLibraryId().getArtifact());
+        } catch (Exception e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
 }

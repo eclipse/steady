@@ -42,11 +42,14 @@ import com.sap.psr.vulas.shared.json.model.ConstructId;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 public class SootCallGraphTest {
-	
-	static{
-		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.OFFLINE.toString());
-	}
-	
+
+    static {
+        VulasConfiguration.getGlobal()
+                .setProperty(
+                        CoreConfiguration.BACKEND_CONNECT,
+                        CoreConfiguration.ConnectType.OFFLINE.toString());
+    }
+
     private GoalContext getGoalContext() {
         final GoalContext ctx = new GoalContext();
         ctx.setApplication(new Application("foo", "bar", "0.0"));
@@ -66,17 +69,29 @@ public class SootCallGraphTest {
 
         // Set the EP manually
         final Set<ConstructId> entrypoints = new HashSet<ConstructId>();
-        entrypoints.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Examples.main(String[])")));
+        entrypoints.add(
+                JavaId.toSharedType(
+                        JavaId.parseMethodQName(
+                                "com.sap.psr.vulas.cg.test.Examples.main(String[])")));
         ra.setEntryPoints(entrypoints, PathSource.A2C, false);
         ra.setAppConstructs(entrypoints);
 
         // Set the target constructs (manually, rather than using a bug)
-        final Map<String, Set<ConstructId>> target_constructs = new HashMap<String, Set<ConstructId>>();
+        final Map<String, Set<ConstructId>> target_constructs =
+                new HashMap<String, Set<ConstructId>>();
         final Set<ConstructId> changes = new HashSet<ConstructId>();
-        changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Cat.saySomething()")));
-        changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Fish.saySomething()")));
-        changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Dog.saySomething()")));
-        changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Car.saySomething()")));
+        changes.add(
+                JavaId.toSharedType(
+                        JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Cat.saySomething()")));
+        changes.add(
+                JavaId.toSharedType(
+                        JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Fish.saySomething()")));
+        changes.add(
+                JavaId.toSharedType(
+                        JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Dog.saySomething()")));
+        changes.add(
+                JavaId.toSharedType(
+                        JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Car.saySomething()")));
         target_constructs.put("does-not-exist", changes);
         ra.setTargetConstructs(target_constructs);
 
@@ -90,12 +105,14 @@ public class SootCallGraphTest {
 
     @Test
     public void callgraphServiceRegistered() {
-        ICallgraphConstructor callgraphConstructor = CallgraphConstructorFactory.buildCallgraphConstructor("soot", null, false);
+        ICallgraphConstructor callgraphConstructor =
+                CallgraphConstructorFactory.buildCallgraphConstructor("soot", null, false);
         assertEquals(callgraphConstructor.getFramework(), "soot");
-        assertEquals(callgraphConstructor.getClass().getName(), SootCallgraphConstructor.class.getName());
+        assertEquals(
+                callgraphConstructor.getClass().getName(),
+                SootCallgraphConstructor.class.getName());
         assertTrue(callgraphConstructor instanceof ICallgraphConstructor);
     }
-
 
     @Test
     public void examplesSootTestNoneEntrypointGenerator() {
@@ -105,13 +122,19 @@ public class SootCallGraphTest {
 
     @Test
     public void examplesSootTestDefaultEntryPointGenerator() {
-        VulasConfiguration.getGlobal().setProperty("vulas.reach.soot.entrypointGenerator", "soot.jimple.infoflow.entryPointCreators.DefaultEntryPointCreator");
+        VulasConfiguration.getGlobal()
+                .setProperty(
+                        "vulas.reach.soot.entrypointGenerator",
+                        "soot.jimple.infoflow.entryPointCreators.DefaultEntryPointCreator");
         runSootAnalysis();
     }
 
     @Test
     public void examplesSootTestCustomEntryPointGenerator() {
-        VulasConfiguration.getGlobal().setProperty("vulas.reach.soot.entrypointGenerator", "com.sap.psr.vulas.cg.soot.CustomEntryPointCreator");
+        VulasConfiguration.getGlobal()
+                .setProperty(
+                        "vulas.reach.soot.entrypointGenerator",
+                        "com.sap.psr.vulas.cg.soot.CustomEntryPointCreator");
         runSootAnalysis();
     }
 }

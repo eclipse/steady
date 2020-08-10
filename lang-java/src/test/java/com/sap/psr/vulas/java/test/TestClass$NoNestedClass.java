@@ -19,6 +19,4 @@
  */
 package com.sap.psr.vulas.java.test;
 
-public class TestClass$NoNestedClass {
-
-}
+public class TestClass$NoNestedClass {}

@@ -50,7 +50,10 @@ public class CallgraphTest {
 
     // Disable upload for JUnit tests
     static {
-        VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.OFFLINE.toString());
+        VulasConfiguration.getGlobal()
+                .setProperty(
+                        CoreConfiguration.BACKEND_CONNECT,
+                        CoreConfiguration.ConnectType.OFFLINE.toString());
         VulasConfiguration.getGlobal().setProperty(CoreConfiguration.APP_CTX_GROUP, "examples");
         VulasConfiguration.getGlobal().setProperty(CoreConfiguration.APP_CTX_ARTIF, "examples");
         VulasConfiguration.getGlobal().setProperty(CoreConfiguration.APP_CTX_VERSI, "0.0");
@@ -71,7 +74,8 @@ public class CallgraphTest {
     @Test
     public void callgraphTest() {
         // Manually build a call graph: 10 nodes and 14 edges
-        Graph<com.sap.psr.vulas.shared.json.model.ConstructId> graph = SlowSparseNumberedGraph.make();
+        Graph<com.sap.psr.vulas.shared.json.model.ConstructId> graph =
+                SlowSparseNumberedGraph.make();
         ConstructId a = JavaId.toSharedType(JavaId.parseMethodQName("test.a()"));
         graph.addNode(a);
         ConstructId b = JavaId.toSharedType(JavaId.parseMethodQName("test.b()"));
@@ -109,7 +113,7 @@ public class CallgraphTest {
 
         Callgraph cg = new Callgraph(graph);
 
-        //source = a; target = j;
+        // source = a; target = j;
         // Test 1: compute the distance
         Map<ConstructId, Integer> distance = cg.getDist(j);
         int dist = distance.get(a);
@@ -149,49 +153,49 @@ public class CallgraphTest {
         assertEquals(paths.size(), 7);
     }
 
+    /*@Test
+    public void examplesSootTest () throws CallgraphConstructException {
+    	final ReachabilityAnalyzer ra = new ReachabilityAnalyzer(this.getGoalContext());
+    	ra.setCallGraphConstructor(AbstractConstructorFactory.getFactory("soot"));
 
+    	// Set classpaths
+    	final Set<Path> app_paths = new HashSet<Path>(), dep_paths = new HashSet<Path>();
+    	app_paths.add(Paths.get("./src/test/resources/examples.jar"));
+    	dep_paths.add(Paths.get("./src/test/resources/empty.jar"));
+    	ra.setAppClasspaths(app_paths);
+    	ra.setDependencyClasspaths(dep_paths);
 
-	/*@Test
-	public void examplesSootTest () throws CallgraphConstructException {
-		final ReachabilityAnalyzer ra = new ReachabilityAnalyzer(this.getGoalContext());
-		ra.setCallGraphConstructor(AbstractConstructorFactory.getFactory("soot"));
+    	// Set the EP manually
+    	final Set<ConstructId> entrypoints = new HashSet<ConstructId>();
+    	entrypoints.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Examples.main(String[])")));
+    	ra.setEntryPoints(entrypoints, PathSource.A2C, false);
+    	ra.setAppConstructs(entrypoints);
 
-		// Set classpaths
-		final Set<Path> app_paths = new HashSet<Path>(), dep_paths = new HashSet<Path>();
-		app_paths.add(Paths.get("./src/test/resources/examples.jar"));
-		dep_paths.add(Paths.get("./src/test/resources/empty.jar"));
-		ra.setAppClasspaths(app_paths);
-		ra.setDependencyClasspaths(dep_paths);
+    	// Set the target constructs (manually, rather than using a bug)
+    	final Map<String,Set<ConstructId>> target_constructs = new HashMap<String, Set<ConstructId>>();
+    	final Set<ConstructId> changes = new HashSet<ConstructId>();
+    	changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Cat.saySomething()")));
+    	changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Fish.saySomething()")));
+    	changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Dog.saySomething()")));
+    	changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Car.saySomething()")));
+    	target_constructs.put("does-not-exist", changes);
+    	ra.setTargetConstructs(target_constructs);
 
-		// Set the EP manually
-		final Set<ConstructId> entrypoints = new HashSet<ConstructId>();
-		entrypoints.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Examples.main(String[])")));
-		ra.setEntryPoints(entrypoints, PathSource.A2C, false);
-		ra.setAppConstructs(entrypoints);
-		
-		// Set the target constructs (manually, rather than using a bug)
-		final Map<String,Set<ConstructId>> target_constructs = new HashMap<String, Set<ConstructId>>();
-		final Set<ConstructId> changes = new HashSet<ConstructId>();
-		changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Cat.saySomething()")));
-		changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Fish.saySomething()")));
-		changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Dog.saySomething()")));
-		changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Car.saySomething()")));
-		target_constructs.put("does-not-exist", changes);
-		ra.setTargetConstructs(target_constructs);
-
-		try {
-			ReachabilityAnalyzer.startAnalysis(ra, 600000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
+    	try {
+    		ReachabilityAnalyzer.startAnalysis(ra, 600000);
+    	} catch (InterruptedException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
+    }*/
 
     //	@Test
     //	public void getChangesTest () {
-    //		MavenId app = new MavenId("com.sap.research.security.vulas", "vulas-testapp", "0.0.2-SNAPSHOT");
+    //		MavenId app = new MavenId("com.sap.research.security.vulas", "vulas-testapp",
+    // "0.0.2-SNAPSHOT");
     //		ReachabilityAnalyzer ra = new ReachabilityAnalyzer(app, null);
-    //		Map<String, Set<ConstructId>> changes = Collector.getInstance().getChangeList(app, null, false);
+    //		Map<String, Set<ConstructId>> changes = Collector.getInstance().getChangeList(app, null,
+    // false);
     //		for(Map.Entry<String, Set<ConstructId>> entry : changes.entrySet()) {
     //			System.out.println("\r\nAll changes of bug [ " + entry.getKey() + " ]");
     //			for(ConstructId cid : entry.getValue()) System.out.println("--- " + cid.getQName());
@@ -214,5 +218,4 @@ public class CallgraphTest {
             assertTrue(false);
         }
     }
-
 }

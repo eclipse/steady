@@ -60,135 +60,175 @@ import com.sap.psr.vulas.shared.json.model.ExemptionSet;
 import com.sap.psr.vulas.shared.json.model.ExemptionUnassessed;
 import com.sap.psr.vulas.shared.util.FileUtil;
 
-
 public class ReportTest extends AbstractGoalTest {
 
-	/**
-	 * App creation results in the following two HTTP calls.
-	 * @param _a TODO
-	 */
-	private void setupMockServices(Application _a) throws IOException {
-		final String s_json = JacksonUtil.asJsonString(_a);
-		String path = null;
-		
-		// Options app: 200
-		path = "/backend" + PathBuilder.app(_a);
-		whenHttp(server).
-		match(composite(method(Method.OPTIONS), uri(path))).
-		then(
-				stringContent(s_json),
-				contentType("application/json"),
-				charset("UTF-8"),
-				status(HttpStatus.OK_200));
+    /**
+     * App creation results in the following two HTTP calls.
+     * @param _a TODO
+     */
+    private void setupMockServices(Application _a) throws IOException {
+        final String s_json = JacksonUtil.asJsonString(_a);
+        String path = null;
 
-		// Get historical vuln deps
-		path = "/backend" + PathBuilder.appVulnDeps(_a, true, false, true);
-		path = path.substring(0, path.indexOf('?'));
-		whenHttp(server).
-		match(composite(method(Method.GET), uri(path), parameter("includeHistorical", "true"), parameter("includeAffected", "false"), parameter("includeAffectedUnconfirmed", "true"))).
-		then(
-				stringContent(FileUtil.readFile(Paths.get("./src/test/resources/vuln_deps_hist.json"))),
-				contentType("application/json"),
-				charset("UTF-8"),
-				status(HttpStatus.OK_200));
+        // Options app: 200
+        path = "/backend" + PathBuilder.app(_a);
+        whenHttp(server)
+                .match(composite(method(Method.OPTIONS), uri(path)))
+                .then(
+                        stringContent(s_json),
+                        contentType("application/json"),
+                        charset("UTF-8"),
+                        status(HttpStatus.OK_200));
 
-		// Get actual vuln deps
-		path = "/backend" + PathBuilder.appVulnDeps(_a, false, true, true);
-		path = path.substring(0, path.indexOf('?'));
-		whenHttp(server).
-		match(composite(method(Method.GET), uri(path), parameter("includeHistorical", "false"), parameter("includeAffected", "true"), parameter("includeAffectedUnconfirmed", "true"))).
-		then(
-				stringContent(FileUtil.readFile(Paths.get("./src/test/resources/vuln_deps_actual.json"))),
-				contentType("application/json"),
-				charset("UTF-8"),
-				status(HttpStatus.OK_200));
-	}
+        // Get historical vuln deps
+        path = "/backend" + PathBuilder.appVulnDeps(_a, true, false, true);
+        path = path.substring(0, path.indexOf('?'));
+        whenHttp(server)
+                .match(
+                        composite(
+                                method(Method.GET),
+                                uri(path),
+                                parameter("includeHistorical", "true"),
+                                parameter("includeAffected", "false"),
+                                parameter("includeAffectedUnconfirmed", "true")))
+                .then(
+                        stringContent(
+                                FileUtil.readFile(
+                                        Paths.get("./src/test/resources/vuln_deps_hist.json"))),
+                        contentType("application/json"),
+                        charset("UTF-8"),
+                        status(HttpStatus.OK_200));
 
-	/**
-	 * Two HTTP requests shall be made
-	 * 
-	 * @throws GoalConfigurationException
-	 * @throws GoalExecutionException
-	 */
-	@Test
-	public void testReport() {
-		try {
-			// Mock REST services
-			this.configureBackendServiceUrl(server);
-			this.setupMockServices(this.testApp);
+        // Get actual vuln deps
+        path = "/backend" + PathBuilder.appVulnDeps(_a, false, true, true);
+        path = path.substring(0, path.indexOf('?'));
+        whenHttp(server)
+                .match(
+                        composite(
+                                method(Method.GET),
+                                uri(path),
+                                parameter("includeHistorical", "false"),
+                                parameter("includeAffected", "true"),
+                                parameter("includeAffectedUnconfirmed", "true")))
+                .then(
+                        stringContent(
+                                FileUtil.readFile(
+                                        Paths.get("./src/test/resources/vuln_deps_actual.json"))),
+                        contentType("application/json"),
+                        charset("UTF-8"),
+                        status(HttpStatus.OK_200));
+    }
 
-			// Exemptions
-			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.reason", "The vulnerable library with digest 6F1EBC is no problem because ...");
-			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.libraries", "6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10");
-			
-			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2013-2186.reason", "Vulnerability CVE-2013-2186 is no problem because ...");
-			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2013-2186.libraries", "*");
-			
-			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2019-1234.reason", "Vulnerability CVE-2019-1234 is no problem because ...");
-			
-			vulasConfiguration.setProperty(ExemptionScope.CFG, "teST, provIDED");
-			vulasConfiguration.setProperty(ExemptionUnassessed.CFG, "knOWN");
-			
-			final Configuration cfg = vulasConfiguration.getConfiguration();
+    /**
+     * Two HTTP requests shall be made
+     *
+     * @throws GoalConfigurationException
+     * @throws GoalExecutionException
+     */
+    @Test
+    public void testReport() {
+        try {
+            // Mock REST services
+            this.configureBackendServiceUrl(server);
+            this.setupMockServices(this.testApp);
 
-			final GoalContext goal_context = new GoalContext();
-			goal_context.setVulasConfiguration(vulasConfiguration);
-			goal_context.setTenant(this.testTenant);
-			goal_context.setSpace(this.testSpace);
-			goal_context.setApplication(this.testApp);
+            // Exemptions
+            vulasConfiguration.setProperty(
+                    ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.reason",
+                    "The vulnerable library with digest 6F1EBC is no problem because ...");
+            vulasConfiguration.setProperty(
+                    ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.libraries",
+                    "6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10");
 
-			final Report report = new Report(goal_context, this.testApp, null);
+            vulasConfiguration.setProperty(
+                    ExemptionBug.CFG_PREFIX + ".CVE-2013-2186.reason",
+                    "Vulnerability CVE-2013-2186 is no problem because ...");
+            vulasConfiguration.setProperty(
+                    ExemptionBug.CFG_PREFIX + ".CVE-2013-2186.libraries", "*");
 
-			// Set all kinds of exceptions
-			report.setExceptionThreshold(cfg.getString(CoreConfiguration.REP_EXC_THRESHOLD, Report.THRESHOLD_ACT_EXE));
+            vulasConfiguration.setProperty(
+                    ExemptionBug.CFG_PREFIX + ".CVE-2019-1234.reason",
+                    "Vulnerability CVE-2019-1234 is no problem because ...");
 
-			// Exemptions
-			report.setExemptions(ExemptionSet.createFromConfiguration(cfg));
+            vulasConfiguration.setProperty(ExemptionScope.CFG, "teST, provIDED");
+            vulasConfiguration.setProperty(ExemptionUnassessed.CFG, "knOWN");
 
-			// Fetch the vulns
-			report.fetchAppVulnerabilities();
+            final Configuration cfg = vulasConfiguration.getConfiguration();
 
-			// Loop over vulnerabilities
-			report.processVulnerabilities();
+            final GoalContext goal_context = new GoalContext();
+            goal_context.setVulasConfiguration(vulasConfiguration);
+            goal_context.setTenant(this.testTenant);
+            goal_context.setSpace(this.testSpace);
+            goal_context.setApplication(this.testApp);
 
-			final Path report_dir = Paths.get("./target/vulas/report");
-			if(!report_dir.toFile().exists())
-				report_dir.toFile().mkdirs();
+            final Report report = new Report(goal_context, this.testApp, null);
 
-			report.writeResult(report_dir);
-			
-			// Check that files exist
-			assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_HTML)));
-			assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_XML)));
-			assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_JSON)));
-			
-			// Validate Html
-			final Tidy tidy = new Tidy();
-			tidy.parse(new ByteArrayInputStream(FileUtil.readInputStream(new FileInputStream(new File("./target/vulas/report/" + Report.REPORT_FILE_HTML)))), new FileOutputStream(new File("./target/jtidy-html.txt")));
-			
-			// Allow no errors
-			assertEquals(0, tidy.getParseErrors());
-			
-			// Allow just the following 3 warnings (interestingly, a missing </table> will only result in additional warnings)
-			//line 361 column 41 - Warning: <td> attribute "width" has invalid value "25%"
-			//line 381 column 41 - Warning: <td> attribute "width" has invalid value "75%"
-			//line 1 column 1 - Warning: html doctype doesn't match content
-			assertEquals(3, tidy.getParseWarnings());
-			
-			// Check the HTTP calls made
-			String path = "/backend" + PathBuilder.appVulnDeps(this.testApp, true, false, true);
-			path = path.substring(0, path.indexOf('?'));
-			verifyHttp(server).times(1, 
-					method(Method.GET),
-					uri(path),
-					parameter("includeHistorical", "true"), parameter("includeAffected", "false"), parameter("includeAffectedUnconfirmed", "true") );
-			verifyHttp(server).times(1, 
-					method(Method.GET),
-					uri(path),
-					parameter("includeHistorical", "false"), parameter("includeAffected", "true"), parameter("includeAffectedUnconfirmed", "true") );
-		} catch (Exception e) {
-			e.printStackTrace();
-			assertTrue(false);
-		}
-	}
+            // Set all kinds of exceptions
+            report.setExceptionThreshold(
+                    cfg.getString(CoreConfiguration.REP_EXC_THRESHOLD, Report.THRESHOLD_ACT_EXE));
+
+            // Exemptions
+            report.setExemptions(ExemptionSet.createFromConfiguration(cfg));
+
+            // Fetch the vulns
+            report.fetchAppVulnerabilities();
+
+            // Loop over vulnerabilities
+            report.processVulnerabilities();
+
+            final Path report_dir = Paths.get("./target/vulas/report");
+            if (!report_dir.toFile().exists()) report_dir.toFile().mkdirs();
+
+            report.writeResult(report_dir);
+
+            // Check that files exist
+            assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_HTML)));
+            assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_XML)));
+            assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_JSON)));
+
+            // Validate Html
+            final Tidy tidy = new Tidy();
+            tidy.parse(
+                    new ByteArrayInputStream(
+                            FileUtil.readInputStream(
+                                    new FileInputStream(
+                                            new File(
+                                                    "./target/vulas/report/"
+                                                            + Report.REPORT_FILE_HTML)))),
+                    new FileOutputStream(new File("./target/jtidy-html.txt")));
+
+            // Allow no errors
+            assertEquals(0, tidy.getParseErrors());
+
+            // Allow just the following 3 warnings (interestingly, a missing </table> will only
+            // result in additional warnings)
+            // line 361 column 41 - Warning: <td> attribute "width" has invalid value "25%"
+            // line 381 column 41 - Warning: <td> attribute "width" has invalid value "75%"
+            // line 1 column 1 - Warning: html doctype doesn't match content
+            assertEquals(3, tidy.getParseWarnings());
+
+            // Check the HTTP calls made
+            String path = "/backend" + PathBuilder.appVulnDeps(this.testApp, true, false, true);
+            path = path.substring(0, path.indexOf('?'));
+            verifyHttp(server)
+                    .times(
+                            1,
+                            method(Method.GET),
+                            uri(path),
+                            parameter("includeHistorical", "true"),
+                            parameter("includeAffected", "false"),
+                            parameter("includeAffectedUnconfirmed", "true"));
+            verifyHttp(server)
+                    .times(
+                            1,
+                            method(Method.GET),
+                            uri(path),
+                            parameter("includeHistorical", "false"),
+                            parameter("includeAffected", "true"),
+                            parameter("includeAffectedUnconfirmed", "true"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
 }

@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.java.sign;
 
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -31,7 +30,7 @@ public class StringSimilarityLevenshtein {
 
     private LevenshteinSimilarityCalculator fLevenshtein = new LevenshteinSimilarityCalculator();
 
-    //@Ignore
+    // @Ignore
     @Test
     public void checkWithSimpackConformance() throws Exception {
         String sa1 = new String("Language");
@@ -51,20 +50,27 @@ public class StringSimilarityLevenshtein {
     }
 
     @Test
-    public void testLevenshteinSimilarity(){
+    public void testLevenshteinSimilarity() {
 
-    	  String sa1 = new String("HttpRoutedConnection conn = (HttpRoutedConnection)context.getAttribute(\"http.connection\");");
-          String sa2 = new String("HttpRoutedConnection conn = (HttpRoutedConnection) context.getAttribute(ExecutionContext.HTTP_CONNECTION);");
-          String sa3 = new String("verticalDrawAction");
-          String sa4 = new String("drawV erticalAction");
-          String sa5 = new String(" throw new IllegalArgumentException(\"The buffer size specified for the MultipartStream is too small\");");
-          String sa6 = new String("throw new IllegalArgumentException(\"boundary may not be null\");");
+        String sa1 =
+                new String(
+                        "HttpRoutedConnection conn ="
+                            + " (HttpRoutedConnection)context.getAttribute(\"http.connection\");");
+        String sa2 =
+                new String(
+                        "HttpRoutedConnection conn = (HttpRoutedConnection)"
+                            + " context.getAttribute(ExecutionContext.HTTP_CONNECTION);");
+        String sa3 = new String("verticalDrawAction");
+        String sa4 = new String("drawV erticalAction");
+        String sa5 =
+                new String(
+                        " throw new IllegalArgumentException(\"The buffer size specified for the"
+                            + " MultipartStream is too small\");");
+        String sa6 =
+                new String("throw new IllegalArgumentException(\"boundary may not be null\");");
 
-         System.out.println(fLevenshtein.calculateSimilarity(sa1, sa2));
-         System.out.println(fLevenshtein.calculateSimilarity(sa3, sa4));
-         System.out.println(fLevenshtein.calculateSimilarity(sa5, sa6));
-
-
+        System.out.println(fLevenshtein.calculateSimilarity(sa1, sa2));
+        System.out.println(fLevenshtein.calculateSimilarity(sa3, sa4));
+        System.out.println(fLevenshtein.calculateSimilarity(sa5, sa6));
     }
-
 }

@@ -46,46 +46,63 @@ import com.xebialabs.restito.server.StubServer;
  */
 public class NvdRestServiceMockup {
 
-	private static  final String[] CVES = new String[] { "CVE-2018-1000865", "CVE-2019-17531", "CVE-2018-0123", "CVE-2014-0050", "CVE-2019-0047" };
-	
-	private static NvdRestServiceMockup instance = null;
-	
-	private StubServer server;
+    private static final String[] CVES =
+            new String[] {
+                "CVE-2018-1000865",
+                "CVE-2019-17531",
+                "CVE-2018-0123",
+                "CVE-2014-0050",
+                "CVE-2019-0047"
+            };
 
-	/**
-	 * Starts the server and registers URIs for the different vulnerabilities in {@link NvdRestServiceMockup#CVES}.
-	 * @throws IOException
-	 */
-	public NvdRestServiceMockup() {
-		server = new StubServer().run();
-		RestAssured.port = server.getPort();
-		System.setProperty(VulasConfiguration.getServiceUrlKey(Service.CVE), "http://localhost:" + server.getPort() + "/nvdrest/vulnerabilities/<ID>");
-		int cves_registered = 0;
-		for(String cve: CVES) {
-			try {
-				whenHttp(server).
-				match(composite(method(Method.GET), uri("/nvdrest/vulnerabilities/" + cve))).
-				then(
-						stringContent(FileUtil.readFile(Paths.get("./src/test/resources/cves/" + cve + "-new.json"))),
-						contentType("application/json"),
-						charset("UTF-8"),
-						status(HttpStatus.OK_200));
-				cves_registered++;
-			} catch (IOException e) {
-				System.err.println("Could not register URI for cve [" + cve + "]: " + e.getMessage());
-			}
-		}
-		if(cves_registered==0) {
-			throw new IllegalStateException("None of the CVEs could be registered");
-		}
-	}
-	
-	/**
-	 * Creates the singleton (if necessary).
-	 */
-	public static synchronized final void create() {
-		if(instance==null) {
-			instance = new NvdRestServiceMockup();
-		}
-	}
+    private static NvdRestServiceMockup instance = null;
+
+    private StubServer server;
+
+    /**
+     * Starts the server and registers URIs for the different vulnerabilities in {@link NvdRestServiceMockup#CVES}.
+     * @throws IOException
+     */
+    public NvdRestServiceMockup() {
+        server = new StubServer().run();
+        RestAssured.port = server.getPort();
+        System.setProperty(
+                VulasConfiguration.getServiceUrlKey(Service.CVE),
+                "http://localhost:" + server.getPort() + "/nvdrest/vulnerabilities/<ID>");
+        int cves_registered = 0;
+        for (String cve : CVES) {
+            try {
+                whenHttp(server)
+                        .match(
+                                composite(
+                                        method(Method.GET), uri("/nvdrest/vulnerabilities/" + cve)))
+                        .then(
+                                stringContent(
+                                        FileUtil.readFile(
+                                                Paths.get(
+                                                        "./src/test/resources/cves/"
+                                                                + cve
+                                                                + "-new.json"))),
+                                contentType("application/json"),
+                                charset("UTF-8"),
+                                status(HttpStatus.OK_200));
+                cves_registered++;
+            } catch (IOException e) {
+                System.err.println(
+                        "Could not register URI for cve [" + cve + "]: " + e.getMessage());
+            }
+        }
+        if (cves_registered == 0) {
+            throw new IllegalStateException("None of the CVEs could be registered");
+        }
+    }
+
+    /**
+     * Creates the singleton (if necessary).
+     */
+    public static final synchronized void create() {
+        if (instance == null) {
+            instance = new NvdRestServiceMockup();
+        }
+    }
 }

@@ -21,21 +21,19 @@ package com.sap.psr.vulas.shared.util;
 
 import static org.junit.Assert.assertEquals;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Set;
 
 import org.junit.Test;
 
 public class FileSearchTest {
 
-	@Test
-	public void testSearch() {
-		final FileSearch fs1 = new FileSearch(new String[] {"bar", "baz", "txt"}, -1);
-		assertEquals(3, fs1.search(Paths.get("src/test/resources/foo")).size());	
-		final FileSearch fs2 = new FileSearch(new String[] {"bar", "baz", "txt"});
-		assertEquals(3, fs2.search(Paths.get("src/test/resources/foo")).size());		
-		final FileSearch fs3 = new FileSearch(new String[] {"bar", "baz", "txt"}, 10);
-		assertEquals(2, fs3.search(Paths.get("src/test/resources/foo")).size());
-	}
+    @Test
+    public void testSearch() {
+        final FileSearch fs1 = new FileSearch(new String[] {"bar", "baz", "txt"}, -1);
+        assertEquals(3, fs1.search(Paths.get("src/test/resources/foo")).size());
+        final FileSearch fs2 = new FileSearch(new String[] {"bar", "baz", "txt"});
+        assertEquals(3, fs2.search(Paths.get("src/test/resources/foo")).size());
+        final FileSearch fs3 = new FileSearch(new String[] {"bar", "baz", "txt"}, 10);
+        assertEquals(2, fs3.search(Paths.get("src/test/resources/foo")).size());
+    }
 }

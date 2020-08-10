@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.java.sign;
 
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -38,5 +37,4 @@ public abstract class StringSimilarity {
     public void identicalStringsShouldBeSimilar() throws Exception {
         assertThat(calculateSimilarity("change distiller", "change distiller"), is(1.0));
     }
-
 }
