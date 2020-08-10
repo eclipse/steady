@@ -41,24 +41,24 @@ public class JsonBuilderTest {
         pretty_json = b.getJson(true, "    ");
         assertEquals(
                 "{\n"
-                    + "    \"array_property\":[\n"
-                    + "        {\n"
-                    + "            \"string_property\":\"string value\"\n"
-                    + "        },\n"
-                    + "        {\n"
-                    + "            \"int_property1\":null\n"
-                    + "        },\n"
-                    + "        {\n"
-                    + "            \"int_property2\":3\n"
-                    + "        }\n"
-                    + "    ]\n"
-                    + "}",
+                        + "    \"array_property\":[\n"
+                        + "        {\n"
+                        + "            \"string_property\":\"string value\"\n"
+                        + "        },\n"
+                        + "        {\n"
+                        + "            \"int_property1\":null\n"
+                        + "        },\n"
+                        + "        {\n"
+                        + "            \"int_property2\":3\n"
+                        + "        }\n"
+                        + "    ]\n"
+                        + "}",
                 pretty_json);
 
         json = b.getJson();
         assertEquals(
                 "{\"array_property\":[{\"string_property\":\"string"
-                    + " value\"},{\"int_property1\":null},{\"int_property2\":3}]}",
+                        + " value\"},{\"int_property1\":null},{\"int_property2\":3}]}",
                 json);
     }
 

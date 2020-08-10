@@ -261,10 +261,8 @@ public class JavaIdTest {
             URL u =
                     Class.forName("org.junit.Assert")
                             .getResource(
-                                    '/'
-                                            + "org.junit.Assert".replace('.', '/')
-                                            + ".class"); // new
-                                                         // URL("jar:file:/test/foo.jar!bar.class");
+                                    '/' + "org.junit.Assert".replace('.', '/') + ".class"); // new
+            // URL("jar:file:/test/foo.jar!bar.class");
             URL uj = JavaId.getJarUrl(u);
             assertTrue(
                     uj.toString()
@@ -276,7 +274,7 @@ public class JavaIdTest {
                                     '/'
                                             + "java.util.jar.JarFile".replace('.', '/')
                                             + ".class"); // new
-                                                         // URL("jar:file:/test/foo.jar!bar.class");
+            // URL("jar:file:/test/foo.jar!bar.class");
             uj = JavaId.getJarUrl(u);
             assertTrue(uj != null);
 

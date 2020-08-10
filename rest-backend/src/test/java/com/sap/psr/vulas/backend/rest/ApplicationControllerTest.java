@@ -1423,7 +1423,7 @@ public class ApplicationControllerTest {
 
     private static final String AFF_LIB_JSON =
             "{\"libraryId\": { \"group\":\"com.acme\",\"artifact\":\"Foo\",\"version\":\"1.0.0\""
-                + " },\"source\":\"MANUAL\",\"affected\":\"true\" }";
+                    + " },\"source\":\"MANUAL\",\"affected\":\"true\" }";
 
     /**
      * Creates a transient bug.

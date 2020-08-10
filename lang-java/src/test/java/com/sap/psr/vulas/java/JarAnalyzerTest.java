@@ -156,7 +156,7 @@ public class JarAnalyzerTest {
 
         String qname1 =
                 "foo.bar.Test(Map< Object,  Test>,String , Boolean,Map<String,Map <String"
-                    + " ,String>>)";
+                        + " ,String>>)";
         JavaConstructorId cid = JavaId.parseConstructorQName(qname1);
         String qname2 = cid.getQualifiedName();
         String qname3 =

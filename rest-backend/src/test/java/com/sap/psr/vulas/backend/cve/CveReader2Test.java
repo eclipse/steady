@@ -68,9 +68,8 @@ public class CveReader2Test {
                     "CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N", cve_2018_0123.getCvssVector());
             assertEquals(
                     "Not available",
-                    cve_2018_0123
-                            .getSummary()); // lang was changed to 'de', thus, no english
-                                            // description is found
+                    cve_2018_0123.getSummary()); // lang was changed to 'de', thus, no english
+            // description is found
             publ.setTime(format.parse("2018-02-08T07:29Z"));
             assertEquals(publ, cve_2018_0123.getPublished());
             modi.setTime(format.parse("2018-03-13T13:53Z"));

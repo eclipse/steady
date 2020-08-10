@@ -451,9 +451,8 @@ public class SpaceControllerTest {
                                 com.sap.psr.vulas.shared.json.model.Space[].class);
         assertEquals(
                 1,
-                search_result
-                        .length); // Should be one public space, the private one shall not be
-                                  // returned
+                search_result.length); // Should be one public space, the private one shall not be
+        // returned
 
         // Bad reqeust due to lack of search term
         search_builder =

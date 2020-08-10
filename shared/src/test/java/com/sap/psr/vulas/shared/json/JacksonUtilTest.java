@@ -47,7 +47,7 @@ public class JacksonUtilTest {
     static class TestViews {
         public static
         class DefaultView {} // Not used in member annotations, will return only non-annotated
-                             // fields when used with JacksonUtil
+        // fields when used with JacksonUtil
 
         public static class TestView {}
     }

@@ -167,7 +167,7 @@ public class VulasConfigurationTest {
         assertFalse(ce == null);
         assertEquals(
                 "The following mandatory settings are not specified: [bar], the following settings"
-                    + " do not comply with the required format: []",
+                        + " do not comply with the required format: []",
                 ce.getMessage());
     }
 
@@ -189,7 +189,7 @@ public class VulasConfigurationTest {
         assertFalse(ce == null);
         assertEquals(
                 "The following mandatory settings are not specified: [], the following settings do"
-                    + " not comply with the required format: [vulas.bar]",
+                        + " not comply with the required format: [vulas.bar]",
                 ce.getMessage());
     }
 

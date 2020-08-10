@@ -21,9 +21,8 @@ package com.sap.psr.vulas.java.test;
 
 import java.io.Serializable;
 
-public
-class NestedDeclarations { // Do not change this class, the corresponding test case
-                           // (testNestedDeclarationMess) refers to the line numbers!!!!!!!!!!!!!!!
+public class NestedDeclarations { // Do not change this class, the corresponding test case
+    // (testNestedDeclarationMess) refers to the line numbers!!!!!!!!!!!!!!!
 
     // Member interface
     interface DoSomethingElse {

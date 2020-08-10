@@ -120,7 +120,7 @@ public class TenantControllerTest {
         new_shared_tenant.setDefault(true);
         new_shared_tenant.setTenantToken(
                 TEST_DEFAULT_TENANT); // Token does not matter, will be generated anyways
-                                      // server-side
+        // server-side
 
         MockHttpServletRequestBuilder post_builder =
                 post("/tenants")

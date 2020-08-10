@@ -312,10 +312,9 @@ public class HubIntegrationControllerTest {
                         .andExpect(jsonPath("$[0].lastScan").exists())
                         .andExpect(
                                 jsonPath("$[0].projectId")
-                                        .value(
-                                                "bar.jar")) // Only bar.jar is reported (unknown
-                                                            // digest), foo.jar is ignored
-                                                            // (well-known digest)
+                                        .value("bar.jar")) // Only bar.jar is reported (unknown
+                        // digest), foo.jar is ignored
+                        // (well-known digest)
                         .andExpect(jsonPath("$[0].reachable").exists())
                         .andReturn();
 

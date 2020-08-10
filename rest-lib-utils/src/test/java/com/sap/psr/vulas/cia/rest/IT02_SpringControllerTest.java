@@ -48,7 +48,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
-
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.Artifact;
 

@@ -59,13 +59,13 @@ public class StringSimilarityLevenshtein {
         String sa2 =
                 new String(
                         "HttpRoutedConnection conn = (HttpRoutedConnection)"
-                            + " context.getAttribute(ExecutionContext.HTTP_CONNECTION);");
+                                + " context.getAttribute(ExecutionContext.HTTP_CONNECTION);");
         String sa3 = new String("verticalDrawAction");
         String sa4 = new String("drawV erticalAction");
         String sa5 =
                 new String(
                         " throw new IllegalArgumentException(\"The buffer size specified for the"
-                            + " MultipartStream is too small\");");
+                                + " MultipartStream is too small\");");
         String sa6 =
                 new String("throw new IllegalArgumentException(\"boundary may not be null\");");
 

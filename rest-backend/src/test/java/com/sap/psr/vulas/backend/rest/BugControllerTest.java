@@ -689,9 +689,9 @@ public class BugControllerTest {
     private static final String BUG_URL2 = "http://svn.apache.org/r1565143";
     private static final String BUG_DESCR =
             "MultipartStream.java in Apache Commons FileUpload before 1.3.1, as used in Apache"
-                + " Tomcat, JBoss Web, and other products, allows remote attackers to cause a"
-                + " denial of service (infinite loop and CPU consumption) via a crafted"
-                + " Content-Type header that bypasses a loop&#039;s intended exit conditions.";
+                    + " Tomcat, JBoss Web, and other products, allows remote attackers to cause a"
+                    + " denial of service (infinite loop and CPU consumption) via a crafted"
+                    + " Content-Type header that bypasses a loop&#039;s intended exit conditions.";
 
     /**
      * Creates a transient bug.

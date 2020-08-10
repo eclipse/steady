@@ -19,8 +19,6 @@
  */
 import static org.junit.Assert.assertTrue;
 
-
-
 import org.junit.Test;
 
 import com.sap.psr.vulas.patcheval.representation.ArtifactResult2;
