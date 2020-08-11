@@ -329,16 +329,16 @@ public class WarAnalyzer extends JarAnalyzer {
 									cv.visitConstructors(true);
 									cv.finalizeInstrumentation();
 									this.instrumentedClasses.put(cv.getJavaId(), cv);
-									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(true));
+									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(true));
 								} catch (IOException ioe) {
 									WarAnalyzer.log.error("I/O exception while instrumenting class [" + cv.getJavaId().getQualifiedName() + "]: " + ioe.getMessage());
-									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
 								} catch (CannotCompileException cce) {
 									WarAnalyzer.log.warn("Cannot compile instrumented class [" + cv.getJavaId().getQualifiedName() + "]: " + cce.getMessage());
-									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
 								} catch (Exception e) {
 									WarAnalyzer.log.error(e.getClass().getName() + " occured while instrumenting class [" + cv.getJavaId().getQualifiedName() + "]: " + e.getMessage());
-									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+									this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
 								}
 							}
 						}						

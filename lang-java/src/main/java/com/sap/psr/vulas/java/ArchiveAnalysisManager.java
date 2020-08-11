@@ -324,17 +324,18 @@ public class ArchiveAnalysisManager {
 				// There are remaining tasks, and a timeout has been configured and reached
 				if(!open_tasks.isEmpty() && this.analysisTimeout!=-1 && sw_runtime > this.analysisTimeout) {
 					ArchiveAnalysisManager.log.warn("Timeout of [" + this.analysisTimeout + "ms] reached, the following [" + open_tasks.size() + "] non-completed analysis tasks will be canceled:");
-					for(JarAnalyzer ja: open_tasks.keySet()) {
-						ArchiveAnalysisManager.log.info("    " + ja);
-						open_tasks.get(ja).cancel(true);
+					for(Map.Entry<JarAnalyzer, Future<FileAnalyzer>> e : open_tasks.entrySet()) {
+						ArchiveAnalysisManager.log.info("    " + e.getKey());
+						e.getValue().cancel(true);
 					}
 					throw new JarAnalysisException("Timeout of [" + this.analysisTimeout + "ms] reached, [" + open_tasks.size() + "] have been canceled");
 				}
 				// There are remaining tasks, but no timeout is set or reached
 				else if(!open_tasks.isEmpty()) {
 					ArchiveAnalysisManager.log.info("Waiting for the completion of [" + open_tasks.size() + "] analysis tasks");
-					for(JarAnalyzer ja: open_tasks.keySet())
+					for(JarAnalyzer ja: open_tasks.keySet()) {
 						ArchiveAnalysisManager.log.debug("    " + ja);
+					}
 				}
 			}
 			
@@ -355,9 +356,9 @@ public class ArchiveAnalysisManager {
 	 */
 	private final Map<JarAnalyzer, Future<FileAnalyzer>> getOpenTasks() {
 		final Map<JarAnalyzer, Future<FileAnalyzer>> open_tasks = new HashMap<JarAnalyzer, Future<FileAnalyzer>>();
-		for(JarAnalyzer ja: this.futures.keySet()) {
-			if(!this.futures.get(ja).isDone()) {
-				open_tasks.put(ja, this.futures.get(ja));
+		for(Map.Entry<JarAnalyzer, Future<FileAnalyzer>> e : this.futures.entrySet()) {
+			if(!e.getValue().isDone()) {
+				open_tasks.put(e.getKey(), e.getValue());
 			}
 		}
 		return open_tasks;
@@ -390,9 +391,9 @@ public class ArchiveAnalysisManager {
 	 */
 	public JarAnalyzer getAnalyzerForSubpath(Path _p) {
 		JarAnalyzer ja = null;
-		for(Path p: this.analyzers.keySet()) {
-			if(p.endsWith(_p)) {
-				ja = this.analyzers.get(p); 
+		for(Map.Entry<Path, JarAnalyzer> e : this.analyzers.entrySet()) {
+			if(e.getKey().endsWith(_p)) {
+				ja = e.getValue(); 
 				break;
 			}
 		}

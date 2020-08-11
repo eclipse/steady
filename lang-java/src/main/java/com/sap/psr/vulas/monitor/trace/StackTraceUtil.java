@@ -429,7 +429,7 @@ public class StackTraceUtil {
 
 		for(CtConstructor ctm: ctclass.getDeclaredConstructors()) {
 			c = JavaId.parseConstructorQName(ClassVisitor.removeParameterQualification(ctm.getLongName()));
-			constructor_line_numbers.put(new Integer(ctm.getMethodInfo().getLineNumber(0)), c);
+			constructor_line_numbers.put(Integer.valueOf(ctm.getMethodInfo().getLineNumber(0)), c);
 			if(_e.getLineNumber()>=ctm.getMethodInfo().getLineNumber(0)) {
 				current_distance = _e.getLineNumber() - ctm.getMethodInfo().getLineNumber(0);
 				if(current_distance < shortest_distance) {

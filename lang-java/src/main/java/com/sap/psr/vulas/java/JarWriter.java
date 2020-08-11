@@ -314,8 +314,8 @@ public class JarWriter {
 		}
 
 		// Put all the new entries
-		for(String key: this.mfEntriesToAdd.keySet()) {
-			atts.putValue(key, this.mfEntriesToAdd.get(key));
+		for(Map.Entry<String,String> e : this.mfEntriesToAdd.entrySet()) {
+			atts.putValue(e.getKey(), e.getValue());
 		}
 
 		// Add vulas-specific ones
@@ -488,10 +488,10 @@ public class JarWriter {
 						continue;
 
 					// Loop registered JarEntryWriters to see if any matches (take the input stream from the first match)
-					for(Pattern pattern: this.callbacks.keySet()) {
-						matcher = pattern.matcher(old_entry.getName());
+					for(Map.Entry<Pattern, JarEntryWriter> e : this.callbacks.entrySet()) {
+						matcher = e.getKey().matcher(old_entry.getName());
 						if(matcher.matches()) {
-							is = this.callbacks.get(pattern).getInputStream(pattern.toString(), old_entry);
+							is = e.getValue().getInputStream(e.getKey().toString(), old_entry);
 						}
 					}
 
@@ -517,11 +517,11 @@ public class JarWriter {
 				}
 
 				// Add additional files
-				for(String key: this.additionalFiles.keySet()) {
-					if(this.additionalFiles.get(key).toFile().exists()) {
-						new_entry = new JarEntry(key);
+				for(Map.Entry<String, Path> e : this.additionalFiles.entrySet()) {
+					if(e.getValue().toFile().exists()) {
+						new_entry = new JarEntry(e.getKey());
 						jos.putNextEntry(new_entry);
-						is = new FileInputStream(this.additionalFiles.get(key).toFile());
+						is = new FileInputStream(e.getValue().toFile());
 						while((bytes_read = is.read(bytes)) != -1)
 							jos.write(bytes, 0, bytes_read);
 						is.close();

@@ -385,8 +385,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 		// Make the Decision at the end reading through all the content of the map
 		boolean unMatchedFlag = false;
-		for (SourceCodeChange change : change_containment.keySet()) {
-			Boolean status = change_containment.get(change);
+		for (Boolean status : change_containment.values()) {
 			if(!status) {
 				unMatchedFlag = true;
 			}

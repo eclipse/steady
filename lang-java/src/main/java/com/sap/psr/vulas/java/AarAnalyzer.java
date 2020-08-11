@@ -40,7 +40,7 @@ public class AarAnalyzer extends JarAnalyzer {
 	
 	private static final String CLASSES_JAR = "classes.jar";
 	
-	private JarFile aar;
+	//private JarFile aar;
 	private JarWriter aarWriter;
 	
 	private Path tmpDir = null; // To where the AAR is extracted
@@ -53,7 +53,7 @@ public class AarAnalyzer extends JarAnalyzer {
 	@Override
 	public void analyze(final File _file) throws FileAnalysisException {
 		try {
-			this.aar = new JarFile(_file, false, java.util.zip.ZipFile.OPEN_READ);
+			//this.aar = new JarFile(_file, false, java.util.zip.ZipFile.OPEN_READ);
 			this.aarWriter = new JarWriter(_file.toPath());
 			this.url = _file.getAbsolutePath().toString();
 			

@@ -185,21 +185,21 @@ public class InstrumentationControl {
 		// Case 1: Already instrumented
 		if(_instr_successful==null) {
 			final Integer count = this.alreadyInstrumentedCountPP.get(pid);
-			final Integer new_count = new Integer((count==null ? 1 : count.intValue()+1));
+			final Integer new_count = Integer.valueOf(count==null ? 1 : count.intValue() + 1);
 			this.alreadyInstrumentedCountPP.put(pid, new_count);
 			this.alreadyInstrumentedCount++;
 		}
 		// Case 2: Successful instrumentation
 		else if(_instr_successful.booleanValue()) {
 			final Integer count = this.successfulInstrumentationCountPP.get(pid);
-			final Integer new_count = new Integer((count==null ? 1 : count.intValue()+1));
+			final Integer new_count = Integer.valueOf(count==null ? 1 : count.intValue() + 1);
 			this.successfulInstrumentationCountPP.put(pid, new_count);
 			this.successfulInstrumentationCount++;
 		}
 		// Case 3: Unsuccessful instrumentation
 		else {
 			final Integer count = this.failedInstrumentationCountPP.get(pid);
-			final Integer new_count = new Integer((count==null ? 1 : count.intValue()+1));
+			final Integer new_count = Integer.valueOf(count==null ? 1 : count.intValue() + 1);
 			this.failedInstrumentationCountPP.put(pid, new_count);
 			this.failedInstrumentationCount++;
 			this.failedInstrumentations.add(_jcid);
@@ -226,13 +226,14 @@ public class InstrumentationControl {
 		// Accepted and ignored (blacklisted) JARs
 		if(this.checkedJars.size()>0) {
 			InstrumentationControl.log.info("    JAR name and directory filter: [" + this.acceptedJarsCount + " JARs] accepted for instrumentation, [" + this.blacklistedJarsCount + " JARs] ignored (blacklisted)");
-			if(InstrumentationControl.log.isInfoEnabled())
-				for(String path: this.checkedJars.keySet()) {
-					if(this.checkedJars.get(path)) 
-						InstrumentationControl.log.info("        [IGNOR] [" + path + "]");
+			if(InstrumentationControl.log.isInfoEnabled()) {
+				for(Map.Entry<String, Boolean> e : this.checkedJars.entrySet()) {
+					if(e.getValue()) 
+						InstrumentationControl.log.info("        [IGNOR] [" + e.getKey() + "]");
 					else
-						InstrumentationControl.log.info("        [ACCEP] [" + path + "]");
+						InstrumentationControl.log.info("        [ACCEP] [" + e.getKey() + "]");
 				}
+			}
 		}
 
 		// Accepted and ignored (blacklisted) classes
@@ -240,8 +241,9 @@ public class InstrumentationControl {
 			InstrumentationControl.log.info("    Of  [" + StringUtil.padLeft(this.classesCount, 5) + "] classes considered for instrumentation after class and JAR filters:");
 			InstrumentationControl.log.info("        [" + StringUtil.padLeft(this.alreadyInstrumentedCount, 5) + "] classes in [" + StringUtil.padLeft(this.alreadyInstrumentedCountPP.keySet().size(), 3) + "] packages: Instrumentation existed");
 			if(InstrumentationControl.log.isDebugEnabled())
-				for(JavaPackageId pid : this.alreadyInstrumentedCountPP.keySet())
-					InstrumentationControl.log.debug("        |    " + this.alreadyInstrumentedCountPP.get(pid).intValue() + " in " + pid.toString());
+				for(Map.Entry<JavaPackageId, Integer> e : this.alreadyInstrumentedCountPP.entrySet()) {
+					InstrumentationControl.log.debug("        |    " + e.getValue().intValue() + " in " + e.getKey().toString());
+				}
 
 			// Log no. of instrumented classes, and those for which instrumentation failed (per package)
 			InstrumentationControl.log.info("        [" + StringUtil.padLeft(this.successfulInstrumentationCount, 5) + "] classes in [" + StringUtil.padLeft(this.successfulInstrumentationCountPP.keySet().size(), 3) + "] packages: Instrumentation successful");
@@ -250,8 +252,9 @@ public class InstrumentationControl {
 
 			InstrumentationControl.log.info("        [" + StringUtil.padLeft(this.failedInstrumentationCount, 5) + "] classes in [" + StringUtil.padLeft(this.failedInstrumentationCountPP.keySet().size(), 3) + "] packages: Instrumentation failed");
 			if(InstrumentationControl.log.isDebugEnabled())
-				for(JavaPackageId pid : this.failedInstrumentationCountPP.keySet())
-					InstrumentationControl.log.debug("        |    " + this.failedInstrumentationCountPP.get(pid).intValue() + " in " + pid.toString());
+				for(Map.Entry<JavaPackageId, Integer> e : this.failedInstrumentationCountPP.entrySet()) {
+					InstrumentationControl.log.debug("        |    " + e.getValue().intValue() + " in " + e.getKey().toString());
+				}
 		}
 	}
 
@@ -281,10 +284,10 @@ public class InstrumentationControl {
 	 */
 	public Map<InstrumentationMetrics, Long> getStatistics() {
 		final Map<InstrumentationMetrics, Long> stats = new HashMap<InstrumentationMetrics, Long>();
-		stats.put(InstrumentationMetrics.classesTotal,  			 new Long(this.classesCount));
-		stats.put(InstrumentationMetrics.classesAlreadyInstrumented, new Long(this.alreadyInstrumentedCount));
-		stats.put(InstrumentationMetrics.classesInstrumentedSuccess, new Long(this.successfulInstrumentationCount));
-		stats.put(InstrumentationMetrics.classesInstrumentedFailure, new Long(this.failedInstrumentationCount));
+		stats.put(InstrumentationMetrics.classesTotal,  			 Long.valueOf(this.classesCount));
+		stats.put(InstrumentationMetrics.classesAlreadyInstrumented, Long.valueOf(this.alreadyInstrumentedCount));
+		stats.put(InstrumentationMetrics.classesInstrumentedSuccess, Long.valueOf(this.successfulInstrumentationCount));
+		stats.put(InstrumentationMetrics.classesInstrumentedFailure, Long.valueOf(this.failedInstrumentationCount));
 		return stats;
 	}
 
@@ -432,13 +435,13 @@ public class InstrumentationControl {
 		final Map<String, Long> overall_stats = new HashMap<String, Long>();
 		for(InstrumentationControl ctrl: instances.values()) {
 			final Map<InstrumentationMetrics, Long> stats = ctrl.getStatistics();
-			for(InstrumentationMetrics m: stats.keySet()) {
-				final String key = m.toString();
+			for(Map.Entry<InstrumentationMetrics, Long> e : stats.entrySet()) {
+				final String key = e.getKey().toString();
 				if(overall_stats.containsKey(key)) {
-					final long new_count = overall_stats.get(key).longValue() + stats.get(m).longValue();
-					overall_stats.put(key, new Long(new_count));
+					final long new_count = overall_stats.get(key).longValue() + e.getValue().longValue();
+					overall_stats.put(key, Long.valueOf(new_count));
 				} else {
-					overall_stats.put(key,  stats.get(m));
+					overall_stats.put(key,  stats.get(e.getKey()));
 				}
 			}
 		}

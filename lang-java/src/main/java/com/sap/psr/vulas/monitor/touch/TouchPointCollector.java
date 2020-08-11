@@ -308,7 +308,7 @@ public class TouchPointCollector {
 		private ConstructId caller = null;
 		private ConstructId callee = null;
 
-		private Map<String, Serializable> calleeArgs = null;
+		//private Map<String, Serializable> calleeArgs = null;
 
 		private JarAnalyzer callerJa = null;        
 		private JarAnalyzer calleeJa = null;
@@ -317,7 +317,7 @@ public class TouchPointCollector {
 			this.direction = _direction;
 			this.caller = _caller;
 			this.callee = _callee;
-			this.calleeArgs = _callee_args;
+			//this.calleeArgs = _callee_args;
 			this.callerJa = _caller_ja;
 			this.calleeJa = _callee_ja;   
 		}

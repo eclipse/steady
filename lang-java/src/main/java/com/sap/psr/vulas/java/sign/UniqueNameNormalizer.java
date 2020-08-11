@@ -50,11 +50,11 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 	private static final Pattern CONSTANT_PATTERN = Pattern.compile("([0-9a-zA-Z_\\.]+)\\.([0-9A-Z_]+)");
 
 	private static UniqueNameNormalizer instance = null;
-	
+
 	private ClassLoader classLoader = null;
 
-        private static String cua = null; // class under analysis
-        
+	private static String cua = null; // class under analysis
+
 	private UniqueNameNormalizer() {}
 
 	/**
@@ -94,7 +94,7 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 			classNames.add(cid.getQualifiedName());
 		}
 	}
-	
+
 	/**
 	 * Sets the class loader used for inlining constants, see {@link UniqueNameNormalizer#findConstants(String, String)}.
 	 *
@@ -107,12 +107,12 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 	public boolean haveEqualUniqueName(SourceCodeEntity _e1, SourceCodeEntity _e2) {
 		// Equality before normalization
 		final boolean eq_before_norm = _e1.getUniqueName().equals(_e2.getUniqueName());
-		
+
 		// Equality after normalization
 		final String p1 = this.normalizeUniqueName(_e1);
 		final String p2 = this.normalizeUniqueName(_e2);
 		final boolean eq_after_norm = p1.equals(p2);
-		
+
 		// Print log message in case the pre-processing realized a match that did not exist before
 		if(!eq_before_norm && eq_after_norm) { // && !_e1.equals(_e2)) {
 			UniqueNameNormalizer.log.info("Preprocessor match: Old [" + _e1 + "] and [" + _e2 + "]");
@@ -131,11 +131,11 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 	public String normalizeUniqueName(String _string) {
 		String tmp = _string.trim();
 		tmp = tmp.replaceAll("this\\.", "");
-                tmp = tmp.replaceAll("(Object)", "");
-                if( VulasConfiguration.getGlobal().getConfiguration().getBoolean(SignatureConfiguration.RELAX_STRIP_FINALS) ) {
-                    tmp = tmp.replaceAll("final ", "");
-                }
-                //TODO: Replace single characters 'x' by ASCII codes (cf. CVE-2009-2625) as done by some compilers
+		tmp = tmp.replaceAll("(Object)", "");
+		if( VulasConfiguration.getGlobal().getConfiguration().getBoolean(SignatureConfiguration.RELAX_STRIP_FINALS) ) {
+			tmp = tmp.replaceAll("final ", "");
+		}
+		//TODO: Replace single characters 'x' by ASCII codes (cf. CVE-2009-2625) as done by some compilers
 		tmp = this.inlineConstants(tmp);
 		return tmp;
 	}
@@ -148,62 +148,59 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 	 */
 	@Override
 	public String normalizeUniqueName(SourceCodeEntity _entity) {
-                String toFix = _entity.getUniqueName();
-                // get rid of class name for static methods
-                if ( _entity.getType().isStatement() && cua != null ){
-                    toFix = removeLeadingClassName(toFix);
-                }
+		String toFix = _entity.getUniqueName();
+		// get rid of class name for static methods
+		if ( _entity.getType().isStatement() && cua != null ){
+			toFix = removeLeadingClassName(toFix);
+		}
 		// Normalizations applicable to all entities
 		String tmp = this.normalizeUniqueName(toFix);
-                tmp = this.removeNumberCasts(tmp);
+		tmp = this.removeNumberCasts(tmp);
 		// Normalizations specific to entity types
-                
+
 		// Variable declaration: Remove leading "final"
-		
+
 		return tmp;
 	}
-        
-        /**
-         * <p>removeLeadingClassName.</p>
-         *
-         * @param _string a {@link java.lang.String} object.
-         * @return a {@link java.lang.String} object.
-         */
-        public String removeLeadingClassName(String _string ){
-            String tmp = _string.trim();
-            tmp = tmp.replaceAll(cua+"\\.", "");
-            return tmp;
-        }
-        
-        /**
-         * <p>removeNumberCasts.</p>
-         *
-         * @param _string a {@link java.lang.String} object.
-         * @return a {@link java.lang.String} object.
-         */
-        public String removeNumberCasts(String _string){
-            String regex_string = "[^\"]*\"[^\"]*\"";
-            Pattern pattern_string = Pattern.compile(regex_string);
-            Matcher matcher_string = pattern_string.matcher(_string);
-            // do not substitute when is a user defined string
-            if ( ! matcher_string.matches() ) {
-                String regex = "([^0-9]*)([0-9]+)([BDFL])(.*)";
-                Pattern pattern = Pattern.compile(regex);
-                Matcher matcher = pattern.matcher(_string);
-                String tmp = "";
-                int i =0;
-                while ( matcher.find() ){
-                    String tmp2 = matcher.group(1);
-                    tmp2 += matcher.group(2);
-                    tmp2 += matcher.group(4);
-                    tmp+=tmp2;
-                    i = matcher.end();
-                }
-                return tmp;
-            } else {
-                return _string;
-            }
-        }
+
+	/**
+	 * <p>removeLeadingClassName.</p>
+	 *
+	 * @param _string a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String removeLeadingClassName(String _string ){
+		String tmp = _string.trim();
+		tmp = tmp.replaceAll(cua+"\\.", "");
+		return tmp;
+	}
+
+	/**
+	 * <p>removeNumberCasts.</p>
+	 *
+	 * @param _string a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String removeNumberCasts(String _string){
+		String regex_string = "[^\"]*\"[^\"]*\"";
+		Pattern pattern_string = Pattern.compile(regex_string);
+		Matcher matcher_string = pattern_string.matcher(_string);
+		// do not substitute when is a user defined string
+		if ( ! matcher_string.matches() ) {
+			String regex = "([^0-9]*)([0-9]+)([BDFL])(.*)";
+			Pattern pattern = Pattern.compile(regex);
+			Matcher matcher = pattern.matcher(_string);
+			final StringBuilder tmp = new StringBuilder();
+			int i =0;
+			while(matcher.find()) {
+				tmp.append(matcher.group(1)).append(matcher.group(2)).append(matcher.group(4));
+				i = matcher.end();
+			}
+			return tmp.toString();
+		} else {
+			return _string;
+		}
+	}
 
 	/**
 	 * <p>inlineConstants.</p>
@@ -291,25 +288,25 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 		Class cl = null;
 		for(String qn : this.classNames) {
 			if(qn.indexOf(class_name)!=-1) {
-				
+
 				// If existing, try the member class loader (e.g., set by the Maven plugin)
 				if(this.classLoader!=null) {
 					try {
 						cl = this.classLoader.loadClass(qn);
 					}
 					catch(ClassNotFoundException e) {}
-                                        catch (NoClassDefFoundError e2){}
+					catch (NoClassDefFoundError e2){}
 				}
-				
+
 				// If not existing or unsuccessful, try the system class loader
 				if(cl==null) {
 					try {
 						cl = Class.forName(qn);
 					}
 					catch(ClassNotFoundException e) {} 
-                                        catch( NoClassDefFoundError e2) {}
+					catch( NoClassDefFoundError e2) {}
 				}
-				
+
 				// Add if found, otherwise write error message
 				if(cl==null)
 					UniqueNameNormalizer.log.error("Error instantiating class or interface [" + qn + "], needed for constant [" + _class_name + "." + _field_name + "]");
@@ -340,13 +337,13 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 		}
 		return fields;
 	}
-        
-        /**
-         * <p>setClassUnderAnalysisName.</p>
-         *
-         * @param _name a {@link java.lang.String} object.
-         */
-        public void setClassUnderAnalysisName(String _name){
-            cua = _name;
-        }
+
+	/**
+	 * <p>setClassUnderAnalysisName.</p>
+	 *
+	 * @param _name a {@link java.lang.String} object.
+	 */
+	public void setClassUnderAnalysisName(String _name){
+		cua = _name;
+	}
 }

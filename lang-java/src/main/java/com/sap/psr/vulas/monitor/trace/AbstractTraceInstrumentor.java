@@ -92,8 +92,8 @@ public abstract class AbstractTraceInstrumentor extends AbstractInstrumentor {
 	 */
 	public static final Set<ConstructId> merge(Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> _map, boolean _ordered) {
 		final Set<ConstructId> set = ( _ordered ? new TreeSet<ConstructId>() : new HashSet<ConstructId>() );
-		for(Object key: _map.keySet()) {
-			for(com.sap.psr.vulas.shared.json.model.ConstructId cid: _map.get(key)) {
+		for(Set<com.sap.psr.vulas.shared.json.model.ConstructId> s : _map.values()) {
+			for(com.sap.psr.vulas.shared.json.model.ConstructId cid: s) {
 				set.add(JavaId.toCoreType(cid));
 			}
 		}

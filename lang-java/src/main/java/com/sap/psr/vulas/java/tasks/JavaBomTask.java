@@ -307,8 +307,8 @@ public class JavaBomTask extends AbstractBomTask {
 				
 				// Take information from known dependency
 				app_dep.setScope( (known_dep!=null ? known_dep.getScope() : Scope.RUNTIME) );
-				app_dep.setTransitive( (ja.getParent()!= null? new Boolean(true) :(known_dep!=null ? new Boolean(known_dep.getTransitive()) : new Boolean(false)) ) );
-				app_dep.setDeclared( ((known_dep!=null && ja.getParent()==null) ? new Boolean(true): new Boolean(false)) );
+				app_dep.setTransitive( (ja.getParent()!= null? Boolean.valueOf(true) :(known_dep!=null ? Boolean.valueOf(known_dep.getTransitive()) : Boolean.valueOf(false)) ) );
+				app_dep.setDeclared( ((known_dep!=null && ja.getParent()==null) ? Boolean.valueOf(true): Boolean.valueOf(false)) );
 				
 				// Set the parent (if any)
 				if(known_dep!=null && known_dep.getParent()!=null) {

@@ -174,10 +174,10 @@ public class ClassVisitor {
 		if(this.isInstrumented==null) {
 			try {
 				this.c.getDeclaredField("VUL_CLS_INS");
-				this.isInstrumented = new Boolean(true);
+				this.isInstrumented = Boolean.valueOf(true);
 			}
 			catch(NotFoundException e) {
-				this.isInstrumented = new Boolean(false);
+				this.isInstrumented = Boolean.valueOf(false);
 			}
 		}
 		return this.isInstrumented.booleanValue();
@@ -369,7 +369,7 @@ public class ClassVisitor {
 		// Add member to indicate that the class has been instrumented
 		if(!this.isInstrumented()) {
 			this.addBooleanMember("VUL_CLS_INS", true, true);
-			this.isInstrumented = new Boolean(true);
+			this.isInstrumented = Boolean.valueOf(true);
 		}
 
 		//		this.bytes = this.c.toBytecode();
@@ -429,7 +429,7 @@ public class ClassVisitor {
 		// Avoid problems with JDO/JPA
 		this.addFieldAnnotations(f,  this.fieldAnnotations);
 
-		this.c.addField(f, new Boolean(_value).toString());
+		this.c.addField(f, Boolean.toString(_value));
 	}
 	
 	/**
@@ -506,14 +506,14 @@ public class ClassVisitor {
 	 * The "Java digits" include the ASCII digits 0-9 (\u0030-\u0039). 
 	 */
 	private static Pattern QUALIFIED_TYPE_PATTERN = null;
-	private static Pattern getClassPattern() {
+	private synchronized static Pattern getClassPattern() {
 		if(QUALIFIED_TYPE_PATTERN==null)
 			QUALIFIED_TYPE_PATTERN = Pattern.compile("([0-9a-zA-Z_\\.\\$]*\\.)([a-zA-Z0-9_\\$]*)");
 		return QUALIFIED_TYPE_PATTERN;
 	}
 
 	private static Pattern NESTED_CLASS_PATTERN = null;
-	private static Pattern getNestedClassPattern() {
+	private synchronized static Pattern getNestedClassPattern() {
 		if(NESTED_CLASS_PATTERN==null)
 			NESTED_CLASS_PATTERN = Pattern.compile("([0-9a-zA-Z_\\$]*\\$)([a-zA-Z0-9_]*)");
 		return NESTED_CLASS_PATTERN;
@@ -604,7 +604,7 @@ public class ClassVisitor {
 	 *
 	 * @return a {@link com.sap.psr.vulas.shared.json.model.Application} object.
 	 */
-	public Application getAppContext() { return this.appContext; }
+	public synchronized Application getAppContext() { return this.appContext; }
 
 	/**
 	 * <p>Getter for the field <code>qname</code>.</p>
@@ -618,7 +618,7 @@ public class ClassVisitor {
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
-	public String getOriginalArchiveDigest() { return this.originalArchiveDigest; }
+	public synchronized String getOriginalArchiveDigest() { return this.originalArchiveDigest; }
 
 	/**
 	 * <p>prettyPrint.</p>
