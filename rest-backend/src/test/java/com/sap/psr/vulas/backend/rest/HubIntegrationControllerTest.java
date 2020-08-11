@@ -166,7 +166,6 @@ public class HubIntegrationControllerTest {
     }
     
     @Test
-    @Ignore
     public void testGetHubApps() throws Exception {
     	// Rest-post http-client 4.1.3
     	final Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_http-client-4.1.3.json")), Library.class);
