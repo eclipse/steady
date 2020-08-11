@@ -31,9 +31,12 @@ import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.util.FileSearch;
 import com.sap.psr.vulas.shared.util.StringList;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * <p>SignatureAnalysis class.</p>
  */
+@SuppressFBWarnings(value = "URF_UNREAD_FIELD", justification = "Fields app, isCLI, depPath and uRLClassLoader appear not being used because the metod body of method execute() is commented out")
 public class SignatureAnalysis {
     private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
     private Application app;

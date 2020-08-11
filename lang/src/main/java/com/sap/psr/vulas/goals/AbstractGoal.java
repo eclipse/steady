@@ -279,7 +279,10 @@ public abstract class AbstractGoal implements Runnable {
 	 * @param _c a {@link com.sap.psr.vulas.shared.util.VulasConfiguration} object.
 	 * @return a {@link com.sap.psr.vulas.goals.AbstractGoal} object.
 	 */
-	public final AbstractGoal setConfiguration(VulasConfiguration _c) { this.configuration = _c; return this;}
+	public synchronized final AbstractGoal setConfiguration(VulasConfiguration _c) {
+		this.configuration = _c;
+		return this;
+	}
 
 	/**
 	 * Returns the context of this goal execution. If the context has not been set before, it is constructed
@@ -324,7 +327,7 @@ public abstract class AbstractGoal implements Runnable {
 	 *
 	 * @param _ctx a {@link com.sap.psr.vulas.goals.GoalContext} object.
 	 */
-	public final void setGoalContext(GoalContext _ctx) {
+	public synchronized final void setGoalContext(GoalContext _ctx) {
 		this.goalContext = _ctx;
 	}
 

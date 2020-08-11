@@ -338,6 +338,8 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	    case DELETE:
 	      requestBuilder = RequestBuilder.delete();
 	      break;
+	    default:
+	    	throw new BackendConnectionException("Invalid HTTP method: [" + this.method + "]", null);
 	  }
 
 	  requestBuilder = requestBuilder.setUri(uri);
@@ -360,8 +362,8 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	  // Include additional headers from configuration (if any)
 	  final Map<String, String> add_headers = this.getVulasConfiguration().getServiceHeaders(this.service);
 	  if(add_headers!=null && !add_headers.isEmpty()) {
-	    for(String key: add_headers.keySet()) {
-	      requestBuilder.addHeader(key, add_headers.get(key));
+	    for(Map.Entry<String,String> e : add_headers.entrySet()) {
+	      requestBuilder.addHeader(e.getKey(), e.getValue());
 	    }
 	  }
 
