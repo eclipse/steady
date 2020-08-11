@@ -253,11 +253,11 @@ public class VulasConfiguration {
 		Map<Configuration, String> tmp = new LinkedHashMap<Configuration, String>();
 		boolean removed_existing = false;
 		int i=0;
-		for(Configuration c: individualConfigurations.keySet()) {
+		for(Map.Entry<Configuration, String> e : individualConfigurations.entrySet()) {
 
 			// Wrong position, just append the current layer
 			if(i!=_position) {
-				tmp.put(c,  individualConfigurations.get(c));
+				tmp.put(e.getKey(),  e.getValue());
 			}
 			// Correct position
 			else  {
@@ -266,12 +266,12 @@ public class VulasConfiguration {
 					tmp.put(_cfg, _source);
 
 				// Check if current layer at this position is to be removed (replaced)
-				final String name = individualConfigurations.get(c);
+				final String name = e.getValue();
 				if(_replace_if_existing && name.equals(_source)) {
 					removed_existing = true;
 				}
 				else {
-					tmp.put(c, name);
+					tmp.put(e.getKey(), name);
 				}
 			}
 			i++;
@@ -310,10 +310,9 @@ public class VulasConfiguration {
 
 		// Add value by value to the new layer
 		if(_map!=null) {
-			for(Object key: _map.keySet()) {
-				final Object value = _map.get(key);
-				if( (value!=null || !_ignore_null) && (_ignore_value==null || !value.toString().equals(_ignore_value)) ) {
-					map.put(key.toString(), _map.get(key));	
+			for(Map.Entry<?, ?> e : _map.entrySet()) {
+				if( (e.getValue()!=null || !_ignore_null) && (_ignore_value==null || !e.getValue().toString().equals(_ignore_value)) ) {
+					map.put(e.getKey().toString(), e.getValue());	
 				}
 			}
 			config = new MapConfiguration(map);
@@ -350,9 +349,9 @@ public class VulasConfiguration {
 	 * @return a {@link org.apache.commons.configuration.Configuration} object.
 	 */
 	public Configuration getConfigurationLayer(String _layer_name) {
-		for(Configuration c: this.individualConfigurations.keySet()) {
-			if(this.individualConfigurations.get(c).equals(_layer_name)) {
-				return c;
+		for(Map.Entry<Configuration, String> e : this.individualConfigurations.entrySet()) {
+			if(e.getValue().equals(_layer_name)) {
+				return e.getKey();
 			}
 		}
 		return null;

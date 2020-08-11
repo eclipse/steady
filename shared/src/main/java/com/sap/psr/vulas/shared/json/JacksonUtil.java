@@ -21,10 +21,13 @@ package com.sap.psr.vulas.shared.json;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Helper class for (de)serializing objects with Jackson.
@@ -68,8 +71,8 @@ public class JacksonUtil {
             // Register custom serializers
     		final SimpleModule module = new SimpleModule();
     		if(_custom_serializers!=null && !_custom_serializers.isEmpty()) {
-    			for(Class clazz: _custom_serializers.keySet()) {
-    				module.addSerializer(clazz, _custom_serializers.get(clazz));
+    			for(StdSerializer<?> v : _custom_serializers.values()) {
+    				module.addSerializer(v);
     			}
     		}
     		mapper.registerModule(module);
@@ -112,6 +115,7 @@ public class JacksonUtil {
 	 * @return a {@link java.lang.Object} object.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressFBWarnings(value = "WMI_WRONG_MAP_ITERATOR", justification = "Use of entrySet conflicts with use of generics, and - unlike for Serializers (see asJsonString) - there's no method addSerializer(JsonDeserializer<? extends T>)")
 	public static Object asObject(final String _json, final Map<Class<?>, StdDeserializer<?>> _custom_deserializers, final Class<?> _clazz) {
         try {
             final ObjectMapper mapper = new ObjectMapper();

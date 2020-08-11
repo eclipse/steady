@@ -261,6 +261,11 @@
 			<artifactId>log4j-core</artifactId>
 			<version>2.13.3</version>
 		</dependency>
+		<dependency>
+  			<groupId>com.github.spotbugs</groupId>
+  			<artifactId>spotbugs-annotations</artifactId>
+  			<version>4.1.1</version>
+		</dependency>
 		
 	</dependencies>
 
@@ -450,14 +455,16 @@
 			</plugin>
 
 			<!-- Successor of Findbugs, run fully-qualified with 'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml
-				-Dspotbugs.failOnError=false -P soot,gradle com.github.spotbugs:spotbugs-maven-plugin:3.1.12.2:check' -->
+				-Dspotbugs.includeFilterFile=findbugs-include.xml -Dspotbugs.failOnError=false -P gradle
+				com.github.spotbugs:spotbugs-maven-plugin:4.0.4:check' -->
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.12.2</version>
+				<version>4.0.4</version>
 				<configuration>
 					<failOnError>false</failOnError>
 					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+					<includeFilterFile>findbugs-include.xml</includeFilterFile>
 					<omitVisitors></omitVisitors>
 				</configuration>
 			</plugin>

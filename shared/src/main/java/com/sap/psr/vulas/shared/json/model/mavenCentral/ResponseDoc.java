@@ -231,7 +231,7 @@ public class ResponseDoc implements Comparable {
 	public int compareTo(Object other) {
 		if(other instanceof ResponseDoc) {
 			final ResponseDoc other_doc = (ResponseDoc)other;
-			int c = new Long(this.timestamp).compareTo(Long.valueOf(other_doc.getTimestamp()));
+			int c = Long.compare(this.timestamp, other_doc.getTimestamp());
 			if(c==0) {
 				//c = this.v.compareTo(other_doc.v);
 				
