@@ -22,8 +22,8 @@ package com.sap.psr.vulas.shared.json;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.util.FileUtil;
 
@@ -34,7 +34,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  */
 public class JsonReader<T> {
 	
-	private static final Log log = LogFactory.getLog(JsonReader.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private Class<T> clazz;
 	

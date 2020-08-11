@@ -555,5 +555,4 @@ then you should include the Java option `noverify` in the Surefire configuration
 See here for more information on the `noverify` option:
 
 - [Stackoverflow](http://stackoverflow.com/questions/300639/use-of-noverify-when-launching-java-apps)
-- [Chrononsystems](http://chrononsystems.com/blog/java-7-design-flaw-leads-to-huge-backward-step-for-the-jvm)
 - [Informit](http://www.informit.com/articles/article.aspx?p=1187967&seqNum=2)

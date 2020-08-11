@@ -22,15 +22,15 @@ package com.sap.psr.vulas.monitor;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * Offers methods to create and interact with a hierarchy of {@link ClassLoader}s and {@link Loader}s.
  */
 public class LoaderHierarchy {
 	
-	private static final Log log = LogFactory.getLog(LoaderHierarchy.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private Map<ClassLoader, Loader> loaderMap = new HashMap<ClassLoader, Loader>();
 	

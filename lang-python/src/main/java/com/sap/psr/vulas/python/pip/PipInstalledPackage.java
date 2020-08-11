@@ -26,8 +26,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.ConstructId;
@@ -53,7 +53,7 @@ import com.sap.psr.vulas.shared.util.StringList;
  */
 public class PipInstalledPackage implements Comparable {
 
-	private final static Log log = LogFactory.getLog(PipInstalledPackage.class);
+	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static final String LOCATION = "Location";
 	private static final String REQUIRES = "Requires";

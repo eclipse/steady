@@ -23,17 +23,19 @@
  * and open the template in the editor.
  */
 package com.sap.psr.vulas.shared.json;
-import com.sap.psr.vulas.shared.json.model.ConstructChangeInDependency;
-import com.sap.psr.vulas.shared.json.model.VulnerableDependency;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Scanner;
-import org.apache.log4j.Logger;
+
+import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
-import java.net.URLDecoder;
+
+import com.sap.psr.vulas.shared.json.model.ConstructChangeInDependency;
+import com.sap.psr.vulas.shared.json.model.VulnerableDependency;
 
 /**
  *
@@ -44,7 +46,7 @@ public class VulnerableDependencyJsonTest {
     @Test
     public void testVulnerableDependecyDeserialization(){
         
-        Logger log = Logger.getLogger(VulnerableDependencyJsonTest.class);
+        final Logger log =  org.apache.logging.log4j.LogManager.getLogger();
         String vulndepstring = this.getFile("vulndepJsonExpected.json");
         inputNew = (VulnerableDependency)JacksonUtil.asObject(vulndepstring, VulnerableDependency.class);
         Assert.assertNotEquals(inputNew, null);

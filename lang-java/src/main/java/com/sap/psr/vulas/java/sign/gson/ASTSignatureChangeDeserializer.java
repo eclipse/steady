@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -104,7 +104,7 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.Update;
  */
 public class ASTSignatureChangeDeserializer extends StdDeserializer<SignatureChange> {
 
-	private static final Log log = LogFactory.getLog(ASTSignatureChangeDeserializer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	// Values for JsonElement Names, used as a member name during deserialization
 	// We need only to change these value if the name/value pair of a JsonElement

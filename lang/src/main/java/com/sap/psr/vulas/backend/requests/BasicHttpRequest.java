@@ -35,8 +35,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -63,7 +63,7 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  */
 public class BasicHttpRequest extends AbstractHttpRequest {
 
-	private static final Log log = LogFactory.getLog(BasicHttpRequest.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static final long serialVersionUID = 1L;
 
@@ -75,7 +75,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	/** Will not be serialized as part of the class, but is written to dedicated file. */
 	private transient String payload = null;
 
-	/** Will not be serialized as part of the class, but is written to dedicated file. */
+	/** Will not be serialized as part of the class. */
 	private transient FileInputStream binPayload = null;
 
 	private String contentType = null;
@@ -263,6 +263,18 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 		prefix = prefix.replace("?", "__");
 		prefix = this.ms + "-" + prefix;
 		return prefix;
+	}
+	
+	/**
+	 * Returns the payload size (or -1 if there's no payload).
+	 */
+	public long getPayloadSize() {
+		if(this.payload!=null)
+			return this.payload.getBytes().length;
+		else if(this.payloadPath!=null)
+			return Paths.get(this.payloadPath).toFile().length();
+		else
+			return -1;
 	}
 	
 	/**

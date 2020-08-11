@@ -23,8 +23,8 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -42,7 +42,7 @@ public class ResponseDoc implements Comparable {
 	
 	final static Pattern VERSION_PATTERN = Pattern.compile("([\\d\\.]*)(.*)", Pattern.DOTALL);
 	
-	private static Log log = LogFactory.getLog(ResponseDoc.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private String id;
 	

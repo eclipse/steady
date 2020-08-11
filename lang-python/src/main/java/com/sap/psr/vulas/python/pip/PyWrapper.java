@@ -25,8 +25,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.python.ProcessWrapperException;
 import com.sap.psr.vulas.shared.util.FileUtil;
@@ -38,7 +38,7 @@ import com.sap.psr.vulas.shared.util.StringUtil;
  */
 public class PyWrapper {
 	
-	private final static Log log = LogFactory.getLog(PyWrapper.class);
+	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private Path pathToPython = null;
 	

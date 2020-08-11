@@ -24,8 +24,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 
@@ -34,7 +34,7 @@ import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
  */
 public class DigestUtil {
 	
-	private static final Log log = LogFactory.getLog(DigestUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 	

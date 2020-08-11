@@ -26,8 +26,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.ibm.wala.util.graph.Graph;
 import com.sap.psr.vulas.shared.json.model.ConstructId;
@@ -38,7 +38,7 @@ import com.sap.psr.vulas.shared.json.model.ConstructId;
  */
 public class PrunedGraphGetPaths extends AbstractGetPaths {
 	
-	private static final Log log = LogFactory.getLog(PrunedGraphGetPaths.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private long start_millis = System.currentTimeMillis(), end_millis = System.currentTimeMillis();	
 

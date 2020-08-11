@@ -35,8 +35,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.FileAnalyzer;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
@@ -54,7 +54,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class ArchiveAnalysisManager {
 
-	private static final Log log = LogFactory.getLog(ArchiveAnalysisManager.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private ExecutorService pool;
 	

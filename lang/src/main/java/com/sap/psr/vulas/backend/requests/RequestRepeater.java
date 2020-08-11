@@ -19,8 +19,8 @@
  */
 package com.sap.psr.vulas.backend.requests;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
@@ -30,7 +30,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class RequestRepeater {
 
-	private static final Log log = LogFactory.getLog(RequestRepeater.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private long failCount = 0;
 	private long max = 50;

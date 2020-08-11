@@ -23,8 +23,8 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -41,7 +41,7 @@ public class LibraryId implements Serializable, Comparable<LibraryId> {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(LibraryId.class);	
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();	
 
 	@JsonIgnore
 	private Long id;

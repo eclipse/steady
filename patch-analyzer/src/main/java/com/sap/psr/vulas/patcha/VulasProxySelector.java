@@ -32,8 +32,8 @@ import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.util.StringList;
 import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
@@ -46,7 +46,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class VulasProxySelector extends ProxySelector {
 
-	private static final Log log = LogFactory.getLog(VulasProxySelector.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static ProxySelector instance = new VulasProxySelector();
 

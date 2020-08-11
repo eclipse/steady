@@ -23,8 +23,7 @@ import java.util.LinkedList;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Notes:
@@ -33,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class StopWatch {
 
-	private static Log log = LogFactory.getLog(StopWatch.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private String id;
 

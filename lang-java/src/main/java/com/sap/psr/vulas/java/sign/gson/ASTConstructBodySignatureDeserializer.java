@@ -37,15 +37,15 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * <p>ASTConstructBodySignatureDeserializer class.</p>
  *
  */
 public class ASTConstructBodySignatureDeserializer extends StdDeserializer<ASTConstructBodySignature> {
-private static final Log log = LogFactory.getLog(ASTConstructBodySignatureDeserializer.class);
+private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	/**
 	 * <p>Constructor for ASTConstructBodySignatureDeserializer.</p>
 	 */

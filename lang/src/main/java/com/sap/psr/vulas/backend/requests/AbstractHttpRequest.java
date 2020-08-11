@@ -27,8 +27,8 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.GoalContext;
@@ -40,7 +40,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public abstract class AbstractHttpRequest implements HttpRequest {
 
-	private static final Log log = LogFactory.getLog(AbstractHttpRequest.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	protected long ms = -1;
 
