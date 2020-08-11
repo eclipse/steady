@@ -64,6 +64,7 @@ public class JacksonUtil {
 	 * @return a {@link java.lang.String} object.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressFBWarnings(value = "WMI_WRONG_MAP_ITERATOR", justification = "Use of entrySet causes troubles with generics")
 	public static String asJsonString(final Object _object, final Map<Class<?>, StdSerializer<?>> _custom_serializers, final Class _view) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
@@ -71,8 +72,8 @@ public class JacksonUtil {
             // Register custom serializers
     		final SimpleModule module = new SimpleModule();
     		if(_custom_serializers!=null && !_custom_serializers.isEmpty()) {
-    			for(StdSerializer<?> v : _custom_serializers.values()) {
-    				module.addSerializer(v);
+    			for(Class clazz: _custom_serializers.keySet()) {
+    				module.addSerializer(clazz, _custom_serializers.get(clazz));
     			}
     		}
     		mapper.registerModule(module);
@@ -115,7 +116,7 @@ public class JacksonUtil {
 	 * @return a {@link java.lang.Object} object.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@SuppressFBWarnings(value = "WMI_WRONG_MAP_ITERATOR", justification = "Use of entrySet conflicts with use of generics, and - unlike for Serializers (see asJsonString) - there's no method addSerializer(JsonDeserializer<? extends T>)")
+	@SuppressFBWarnings(value = "WMI_WRONG_MAP_ITERATOR", justification = "Use of entrySet causes troubles with generics")
 	public static Object asObject(final String _json, final Map<Class<?>, StdDeserializer<?>> _custom_deserializers, final Class<?> _clazz) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
