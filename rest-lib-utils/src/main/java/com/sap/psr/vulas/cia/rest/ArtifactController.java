@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.cia.rest;
 
 import java.io.File;
@@ -11,10 +30,13 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.Filter;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +52,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jeantessier.dependencyfinder.cli.JarJarDiff;
 import com.sap.psr.vulas.FileAnalyzer;
+import com.sap.psr.vulas.cia.util.CacheFilter;
 import com.sap.psr.vulas.cia.util.FileAnalyzerFetcher;
 import com.sap.psr.vulas.cia.util.HeaderEcho;
 import com.sap.psr.vulas.cia.dependencyfinder.JarDiffCmd;
@@ -48,6 +71,10 @@ import com.sap.psr.vulas.shared.json.model.diff.JarDiffResult;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>ArtifactController class.</p>
+ *
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/artifacts")
@@ -55,9 +82,15 @@ public class ArtifactController {
 	
 	private static Logger log = LoggerFactory.getLogger(ArtifactController.class);
 
-	
+	@Autowired
+	@Qualifier("cacheFilter")
+	private Filter cacheFilter;
+
 	/**
 	 * Returns the artifact version for the given SHA1. Returns 404 if the SHA1 is not known by the configured external services.
+	 *
+	 * @param sha1 a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{sha1}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Artifact> isWellknownSha1(@PathVariable String sha1) {
@@ -80,46 +113,51 @@ public class ArtifactController {
 
 	
 	/**
-	 * For the given group and artifact identifier, it returns all artifact versions (optionally having the required classifier and packaging) 
-	 * @param classifier (optional, default none)
-	 * @param packaging (optional, default none)
+	 * For the given group and artifact identifier, it returns all artifact versions (optionally having the required classifier and packaging)
+	 *
 	 * @param skipResponseBody (optional, default false)
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param classifierFilter a {@link java.lang.String} object.
+	 * @param packagingFilter a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Set<Artifact>> getArtifactVersions(@PathVariable String mvnGroup, @PathVariable String artifact, 
 			@RequestParam(value="classifier", required=false, defaultValue="") String classifierFilter, 
 			@RequestParam(value="packaging", required=false, defaultValue="") String packagingFilter,
-			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,
-			@RequestHeader(value="X-Vulas-Echo", required=false, defaultValue="") String echo) {
+			@RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody) {
 
-		// Echo
-		final HttpHeaders headers = HeaderEcho.getHeaders(echo);
 		try {
 			RepositoryDispatcher r = new RepositoryDispatcher();
 			Set<Artifact>	response = r.getAllArtifactVersions(mvnGroup, artifact, classifierFilter, packagingFilter);
 			if(response==null){
 				//TODO: does it ever happen that response is null?
-				return new ResponseEntity<Set<Artifact>>(headers,HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<Set<Artifact>>(HttpStatus.BAD_REQUEST);
 			}
 			if(response.isEmpty())
-				return new ResponseEntity<Set<Artifact>>(headers,HttpStatus.NOT_FOUND);
+				return new ResponseEntity<Set<Artifact>>(HttpStatus.NOT_FOUND);
 			if(skipResponseBody)
-				return new ResponseEntity<Set<Artifact>>(headers,HttpStatus.OK);
+				return new ResponseEntity<Set<Artifact>>(HttpStatus.OK);
 			else
-				return new ResponseEntity<Set<Artifact>>(response, headers, HttpStatus.OK);
+				return new ResponseEntity<Set<Artifact>>(response, HttpStatus.OK);
 		}
 		catch(Exception e) {
 			log.error("Error: " + e.getMessage(), e);
 			e.getStackTrace();
-			return new ResponseEntity<Set<Artifact>>(headers,HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Set<Artifact>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	/**
 	 * Returns the latest version for the given group and artifact identifier.
+	 *
 	 * @param classifierFilter (optional, default none)
 	 * @param packagingFilter (optional, default none)
 	 * @param skipResponseBody (optional, default false)
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/latest", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Artifact> getLatestArtifactVersion(@PathVariable String mvnGroup, @PathVariable String artifact, 
@@ -147,9 +185,14 @@ public class ArtifactController {
 
 	/**
 	 * Returns all artifact versions with the given group and artifact identifier and version greater than the requested one.
+	 *
 	 * @param classifierFilter (optional, default none)
 	 * @param packagingFilter (optional, default none)
 	 * @param skipResponseBody (optional, default false)
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/greaterThan/{version:.+}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Set<Artifact>> getGreaterArtifactVersions(@PathVariable String mvnGroup, @PathVariable String artifact,@PathVariable String version,
@@ -176,12 +219,17 @@ public class ArtifactController {
 	}		
 
 	/**
-	 * Returns the artifact versions with the given group, artifact, and version identifier (optionally packaging, classifier). If the language is provided, 
+	 * Returns the artifact versions with the given group, artifact, and version identifier (optionally packaging, classifier). If the language is provided,
 	 * it searches for the artifact only in the configured services supporting it.
- 	 * @param classifier (optional, default none)
-	 * @param packaging (optional, default none)
+	 *
 	 * @param skipResponseBody (optional, default false)
 	 * @param lang (optional, default none)
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param classifierFilter a {@link java.lang.String} object.
+	 * @param packagingFilter a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Artifact> getArtifactVersion(@PathVariable String mvnGroup, @PathVariable String artifact,@PathVariable String version,  
@@ -210,10 +258,16 @@ public class ArtifactController {
 		
 
 	/**
-	 * Downloads the artifact having the given group, artifact, version, packaging and classifier (if any). If the language is provided, 
+	 * Downloads the artifact having the given group, artifact, version, packaging and classifier (if any). If the language is provided,
 	 * it searches for the artifact only in the configured services supporting it.
- 	 * @param classifier (optional, default none)
+	 *
+	 * @param classifier (optional, default none)
 	 * @param lang (mandatory, default none)
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param packaging a {@link java.lang.String} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/{packaging:.+}", method = RequestMethod.GET)
 	public void getArtifact(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String packaging, 
@@ -272,10 +326,16 @@ public class ArtifactController {
 	}
 	
 	/**
-	 * Returns the list of constructs contained in the artifact having the given group, artifact, version, packaging. If the language is provided, 
+	 * Returns the list of constructs contained in the artifact having the given group, artifact, version, packaging. If the language is provided,
 	 * it searches for the artifact only in the configured services supporting it.
-	 * @param type (optional, default "") filter on the @ConstructType 
+	 *
+	 * @param type (optional, default "") filter on the @ConstructType
 	 * @param lang (mandatory, default JAVA)
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param packaging a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/{packaging}/constructIds", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
@@ -325,9 +385,16 @@ public class ArtifactController {
 	/**
 	 * Given the list of ConstructId in the HTTP Request body, this method returns those intersecting the artifact having the given group,
 	 * artifact, version, packaging; 404 otherwise.
+	 *
 	 * @param lang (mandatory, default JAVA)
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param packaging a {@link java.lang.String} object.
+	 * @param cids an array of {@link com.sap.psr.vulas.shared.json.model.ConstructId} objects.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
-	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/{packaging}/constructIds/intersect", method = RequestMethod.POST, 
+	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/{packaging}/constructIds/intersect", method = RequestMethod.POST,
 			consumes = {"application/json;charset=UTF-8"},
 			produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<List<ConstructId>> intersect(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String packaging,
@@ -385,6 +452,12 @@ public class ArtifactController {
 
 		
 	
+	/**
+	 * <p>diffJarArtifacts.</p>
+	 *
+	 * @param artifacts an array of {@link com.sap.psr.vulas.shared.json.model.Artifact} objects.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
 	@RequestMapping(value = "/diff", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json"})
 	public ResponseEntity<JarDiffResult> diffJarArtifacts(@RequestBody Artifact[] artifacts) {
 		// Check args
@@ -433,7 +506,10 @@ public class ArtifactController {
 	}
 
 	/**
-	 * 
+	 * <p>diffJarArtifactsXml.</p>
+	 *
+	 * @param artifacts an array of {@link com.sap.psr.vulas.shared.json.model.Artifact} objects.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/diffxml", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"text/xml"})
 	public ResponseEntity<String> diffJarArtifactsXml(@RequestBody Artifact[] artifacts) {

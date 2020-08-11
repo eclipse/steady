@@ -1,4 +1,23 @@
 /**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
+/**
  *
  */
 package com.sap.psr.vulas.java.sign;
@@ -8,8 +27,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.sign.Signature;
 import com.sap.psr.vulas.sign.SignatureChange;
@@ -30,10 +49,14 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.Levensh
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.NGramsCalculator;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.TokenBasedCalculator;
 
+/**
+ * <p>ASTSignatureComparator class.</p>
+ *
+ */
 public class ASTSignatureComparator implements SignatureComparator {
 
 
-	private static final Log log = LogFactory.getLog(ASTSignatureComparator.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	//If a construct under test contains 50% of the fixes, it is said to contain the Security Fixes
 	// TODO : (A more robust scheme than a simple percentage might be better)
@@ -59,17 +82,38 @@ public class ASTSignatureComparator implements SignatureComparator {
 	private SignatureChange mSignChange = null;
 	private double mStringSimilarity;
 
+	/**
+	 * <p>Constructor for ASTSignatureComparator.</p>
+	 */
 	public ASTSignatureComparator() {}
 
+	/**
+	 * <p>Constructor for ASTSignatureComparator.</p>
+	 *
+	 * @param stringSimilarity a double.
+	 */
 	public ASTSignatureComparator(double stringSimilarity){
 		this.mStringSimilarity = stringSimilarity;
 	}
 
+	/**
+	 * <p>Constructor for ASTSignatureComparator.</p>
+	 *
+	 * @param _sign a {@link com.sap.psr.vulas.sign.Signature} object.
+	 * @param _signChg a {@link com.sap.psr.vulas.sign.SignatureChange} object.
+	 */
 	public ASTSignatureComparator(Signature _sign, SignatureChange _signChg){
 		this.mSignFixed = _sign;
 		this.mSignChange = _signChg;
 	}
 
+	/**
+	 * <p>Constructor for ASTSignatureComparator.</p>
+	 *
+	 * @param _vuln a {@link com.sap.psr.vulas.sign.Signature} object.
+	 * @param _fixed a {@link com.sap.psr.vulas.sign.Signature} object.
+	 * @param _signChg a {@link com.sap.psr.vulas.sign.SignatureChange} object.
+	 */
 	public ASTSignatureComparator(Signature _vuln, Signature _fixed, SignatureChange _signChg){
 		this.mSignVuln = _vuln;
 		this.mSignFixed = _fixed;
@@ -80,6 +124,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 	/*
 	 * @see com.sap.psr.vulas.sign.SignatureComparator#computeSimilarity(com.sap.psr.vulas.sign.Signature, com.sap.psr.vulas.sign.Signature)
 	 */
+	/** {@inheritDoc} */
 	@Override
 	public float computeSimilarity(Signature _a, Signature _b) {
 		Node _vulnerableConstruct = ((ASTSignature)_a).getRoot();
@@ -106,6 +151,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 	 *  _a is the defective construct ( this is used for the patch analyzer)
 	 *  _b is the fixed construct
 	 */
+	/** {@inheritDoc} */
 	@Override
 	public SignatureChange computeChange(Signature _a, Signature _b) {
 		SignatureChange astChange = new ASTSignatureChange(_a, _b);
@@ -114,15 +160,27 @@ public class ASTSignatureComparator implements SignatureComparator {
 	}
 
 
+	/**
+	 * <p>getTotalNumChanges.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getTotalNumChanges(){
 		return this.totalNumFixes;
 	}
 
+	/**
+	 * <p>getMatchedNumChanges.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getMatchedNumChanges(){
 		return this.matchedNumFixes;
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns true of the given signature contains the given change, false otherwise.
 	 */
 	@Override
@@ -136,10 +194,20 @@ public class ASTSignatureComparator implements SignatureComparator {
 		return containsChange(root_of_signature_under_test, list_of_modifications);
 	}
 
+	/**
+	 * <p>getStringSimilarityThreshold.</p>
+	 *
+	 * @return a double.
+	 */
 	public double getStringSimilarityThreshold() {
 		return this.mStringSimilarity;
 	}
 	
+	/**
+	 * <p>setStringSimilarityThreshold.</p>
+	 *
+	 * @param _threshold a double.
+	 */
 	public void setStringSimilarityThreshold(double _threshold) {
 		this.mStringSimilarity = _threshold;
 	}
@@ -510,11 +578,12 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 	/**
 	 *  Search for the specified change element inside Signature (Search using the Node Label)
-	 * @param change , the SourceCodeChange entity that has been changed
+	 *
 	 * @param astRoot The AST to be searched
 	 * @return the Node matching the change elements EntityType and Value
 	 *
 	 * public : for testing purpose, switch to private once done testing
+	 * @param change a {@link ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange} object.
 	 */
 	public Node searchForNode(SourceCodeChange change, Node astRoot){
 
@@ -553,11 +622,12 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 	/**
 	 *  Search for the _entityUniqueName inside Signature (Search using the Node Label)
-	 * @param change , the SourceCodeChange entity that has been changed
+	 *
 	 * @param astRoot The AST to be searched
 	 * @return true if entity is within the AST
 	 *
 	 * public : for testing purpose, switch to private once done testing
+	 * @param change a {@link ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange} object.
 	 */
 	public boolean searchForEntity(SourceCodeChange change, Node astRoot){
 
@@ -589,7 +659,8 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 	/**
 	 *  Search for the _entityUniqueName inside Signature (Search using the Node Label)
-	 * @param _entityUniqueName
+	 *
+	 * @param _entityUniqueName a {@link java.lang.String} object.
 	 * @param astRoot The AST to be searched
 	 * @return true if entity is within the AST
 	 *

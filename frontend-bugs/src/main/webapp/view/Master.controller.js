@@ -1,8 +1,30 @@
+/*
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 sap.ui.controller("view.Master",{
 
 onInit : function() {
 	jQuery.sap.require("sap.m.MessageBox");
 	this.router = sap.ui.core.UIComponent.getRouterFor(this);
+	
+	var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+	model.Config.setModel(oStore.get("vulas-frontend-settings"));
 
 	// move the search bar below the pullToRefresh on touch
 	// devices
@@ -147,16 +169,12 @@ clone : function(obj) {
 														var mLayout = sap.ui
 																.getCore()
 																.byId("Shell");
-														// mLayout is the id of
-														// main layout. Change
-														// it accordingly
+														// mLayout is the id of main layout. Change it accordingly
 
 														mLayout.destroy();
 														sap.ui.getCore()
 																.applyChanges();
-														// jQuery(document.body).html("<span>Logged
-														// out
-														// successfully.</span>");
+														// jQuery(document.body).html("<span>Logged out successfully.</span>");
 														window.location
 																.reload();
 
@@ -187,27 +205,10 @@ clone : function(obj) {
 																		model.Config.setCiaHost(sap.ui.getCore().byId('idCiaURL').getValue());
 																	if (sap.ui.getCore().byId('idLang').getValue() != null )
 																		model.Config.setLang(sap.ui.getCore().byId('idLang').getValue());
-																	// if(sap.ui.getCore().byId('idUsr').getValue()
-																	// !=null &&
-																	// sap.ui.getCore().byId('idUsr').getValue()
-																	// !="")
-																	// model.Config.setUser(sap.ui.getCore().byId('idUsr').getValue());
-																	// if(sap.ui.getCore().byId('idPwd').getValue()
-																	// !=null &&
-																	// sap.ui.getCore().byId('idPwd').getValue()
-																	// !="")
-																	// model.Config.setPwd(sap.ui.getCore().byId('idPwd').getValue());
-																	/*
-																	 * if(sap.ui.getCore().byId('idSkipEmpty').getState()
-																	 * !=model.Config.getSkipEmpty())
-																	 * model.Config.setSkipEmpty(sap.ui.getCore().byId('idSkipEmpty').getState());
-																	 */
+																	if (sap.ui.getCore().byId('idToken').getValue() != null && sap.ui.getCore().byId('idToken').getValue() != "")
+																		model.Config.setToken(sap.ui.getCore().byId('idToken').getValue());
 																	// this.oPopoverSettings.close();
-																	sap.ui
-																			.getCore()
-																			.byId(
-																					'settings_popover')
-																			.close();
+																	sap.ui.getCore().byId('settings_popover').close();
 																}
 															}) ],
 													contentLeft : [ new sap.m.Button(
@@ -216,11 +217,7 @@ clone : function(obj) {
 																icon : "sap-icon://close",
 																press : function() {
 																	// this.oPopoverSettings.close();
-																	sap.ui
-																			.getCore()
-																			.byId(
-																					'settings_popover')
-																			.close();
+																	sap.ui.getCore().byId('settings_popover').close();
 																}
 															}) ]
 												}),
@@ -230,20 +227,9 @@ clone : function(obj) {
 															label : "Back-end URL",
 															content : new sap.m.Input(
 																	{
-
 																		id : "idHostURL",
 																		type : sap.m.InputType.Text,
-																		// placeholder:
-																		// 'Enter
-																		// host
-																		// address
-																		// (default:
-																		// 127.0.0.1)
-																		// ...',
-																		// width:
-																		// "100%",
-																		value : model.Config
-																				.getHost()
+																		value : model.Config.getHost()
 																	})
 														}),
 												new sap.m.InputListItem(
@@ -251,23 +237,12 @@ clone : function(obj) {
 															label : "Cia URL",
 															content : new sap.m.Input(
 																	{
-
 																		id : "idCiaURL",
 																		type : sap.m.InputType.Text,
-																		// placeholder:
-																		// 'Enter
-																		// host
-																		// address
-																		// (default:
-																		// 127.0.0.1)
-																		// ...',
-																		// width:
-																		// "100%",
-																		value : model.Config
-																				.getCiaHostUrl()
+																		value : model.Config.getCiaHost()
 																	})
 														}),
-														new sap.m.InputListItem(
+												new sap.m.InputListItem(
 																{
 																	label : "Lang",
 																	content : new sap.m.ComboBox("idLang",
@@ -278,29 +253,19 @@ clone : function(obj) {
 														            		new sap.ui.core.ListItem({text:'PY'}),
 														            		new sap.ui.core.ListItem({text:''})]
 														            		})
-																})
-										/*
-										 * , new sap.m.InputListItem({
-										 * label:"Username", content:new
-										 * sap.m.Input({ id: "idUsr", type:
-										 * sap.m.InputType.Text, // placeholder:
-										 * 'biroot', // placeholder: 'Enter
-										 * user/login (default: smash) ...', //
-										 * width: "100%", value:
-										 * model.Config.getUser() }) }), new
-										 * sap.m.InputListItem({ label:"Pwd",
-										 * content: new sap.m.Input({ id :
-										 * "idPwd", type:
-										 * sap.m.InputType.Password, //
-										 * placeholder: 'Enter password ...',
-										 * type:"Password", // width: "100%",
-										 * value: "" }) }), new
-										 * sap.m.InputListItem({ label:"Skip
-										 * Empty Apps", content: new
-										 * sap.m.Switch({ id : "idSkipEmpty",
-										 * state: model.Config.getSkipEmpty() //
-										 * width: "100%", }) })
-										 */]
+																}),
+												new sap.m.InputListItem(
+														{
+															label : "Token",
+															content : new sap.m.Input(
+																	{
+
+																		id : "idToken",
+																		type : sap.m.InputType.Text,
+																		value : model.Config.getToken()
+																	})
+														})
+										]
 									});
 							this.getView().addDependent(this.oPopoverSettings);
 						}

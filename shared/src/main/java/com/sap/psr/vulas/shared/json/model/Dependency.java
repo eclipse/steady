@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.shared.json.model;
 
 import java.io.Serializable;
@@ -11,6 +30,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sap.psr.vulas.shared.enums.DependencyOrigin;
 import com.sap.psr.vulas.shared.enums.Scope;
 
+/**
+ * <p>Dependency class.</p>
+ *
+ */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown=true, value={"reachableConstructIds", "touchPoints"}, allowGetters=true)
 public class Dependency implements Serializable, Comparable<Dependency> {
@@ -47,8 +70,21 @@ public class Dependency implements Serializable, Comparable<Dependency> {
 	
 	private String relativePath;
 	
+	/**
+	 * <p>Constructor for Dependency.</p>
+	 */
 	public Dependency() { super(); }
 
+	/**
+	 * <p>Constructor for Dependency.</p>
+	 *
+	 * @param app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 * @param lib a {@link com.sap.psr.vulas.shared.json.model.Library} object.
+	 * @param scope a {@link com.sap.psr.vulas.shared.enums.Scope} object.
+	 * @param transitive a {@link java.lang.Boolean} object.
+	 * @param filename a {@link java.lang.String} object.
+	 * @param path a {@link java.lang.String} object.
+	 */
 	public Dependency(Application app, Library lib, Scope scope, Boolean transitive, String filename, String path) {
 		super();
 		this.app = app;
@@ -61,17 +97,69 @@ public class Dependency implements Serializable, Comparable<Dependency> {
 		this.traced = false;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getId() { return id; }
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 */
 	public void setId(Long id) { this.id = id; }
 	
+	/**
+	 * <p>Getter for the field <code>app</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 */
 	public Application getApp() { return app; }
+	/**
+	 * <p>Setter for the field <code>app</code>.</p>
+	 *
+	 * @param app a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+	 */
 	public void setApp(Application app) { this.app = app; }
+	
+	public void setAppRecursively(Application app) { 
+		this.app = app;
+		if(this.parent!=null)
+			this.parent.setAppRecursively(app);
+	}
 
+	/**
+	 * <p>Getter for the field <code>lib</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Library} object.
+	 */
 	public Library getLib() { return lib; }
+	/**
+	 * <p>Setter for the field <code>lib</code>.</p>
+	 *
+	 * @param lib a {@link com.sap.psr.vulas.shared.json.model.Library} object.
+	 */
 	public void setLib(Library lib) { this.lib = lib; }
 
+	/**
+	 * <p>Getter for the field <code>parent</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Dependency} object.
+	 */
 	public Dependency getParent() { return parent; }
+	/**
+	 * <p>Setter for the field <code>parent</code>.</p>
+	 *
+	 * @param parent a {@link com.sap.psr.vulas.shared.json.model.Dependency} object.
+	 */
 	public void setParent(Dependency parent) { this.parent = parent; }
+	/**
+	 * <p>isParent.</p>
+	 *
+	 * @param _dep a {@link com.sap.psr.vulas.shared.json.model.Dependency} object.
+	 * @return a boolean.
+	 */
 	public boolean isParent(Dependency _dep) {
 		if(this.parent==null)
 			return false;
@@ -81,58 +169,165 @@ public class Dependency implements Serializable, Comparable<Dependency> {
 			return this.parent.isParent(_dep);
 	}
 
+	/**
+	 * <p>Getter for the field <code>origin</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.DependencyOrigin} object.
+	 */
 	public DependencyOrigin getOrigin() { return origin; }
+	/**
+	 * <p>Setter for the field <code>origin</code>.</p>
+	 *
+	 * @param origin a {@link com.sap.psr.vulas.shared.enums.DependencyOrigin} object.
+	 */
 	public void setOrigin(DependencyOrigin origin) { this.origin = origin; }
 	
+	/**
+	 * <p>Getter for the field <code>relativePath</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getRelativePath() {return relativePath;}
+	/**
+	 * <p>Setter for the field <code>relativePath</code>.</p>
+	 *
+	 * @param relativePath a {@link java.lang.String} object.
+	 */
 	public void setRelativePath(String relativePath) {this.relativePath = relativePath;}
 	
+	/**
+	 * <p>Getter for the field <code>scope</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.Scope} object.
+	 */
 	public Scope getScope() { return scope; }
+	/**
+	 * <p>Setter for the field <code>scope</code>.</p>
+	 *
+	 * @param scope a {@link com.sap.psr.vulas.shared.enums.Scope} object.
+	 */
 	public void setScope(Scope scope) { this.scope = scope; }
 	
+	/**
+	 * <p>Getter for the field <code>transitive</code>.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean getTransitive() { return transitive; }
+	/**
+	 * <p>Setter for the field <code>transitive</code>.</p>
+	 *
+	 * @param transitive a {@link java.lang.Boolean} object.
+	 */
 	public void setTransitive(Boolean transitive) { this.transitive = transitive; }
 		
+	/**
+	 * <p>Getter for the field <code>filename</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getFilename() { return filename; }
+	/**
+	 * <p>Setter for the field <code>filename</code>.</p>
+	 *
+	 * @param filename a {@link java.lang.String} object.
+	 */
 	public void setFilename(String filename) { this.filename = filename; }
 	
+	/**
+	 * <p>Getter for the field <code>path</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getPath() { return path; }
+	/**
+	 * <p>Setter for the field <code>path</code>.</p>
+	 *
+	 * @param path a {@link java.lang.String} object.
+	 */
 	public void setPath(String path) { this.path = path; }
 
+	/**
+	 * <p>Getter for the field <code>declared</code>.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean getDeclared() { return declared; }
+	/**
+	 * <p>Setter for the field <code>declared</code>.</p>
+	 *
+	 * @param declared a {@link java.lang.Boolean} object.
+	 */
 	public void setDeclared(Boolean declared) { this.declared = declared; }
 
 	//TODO to check whether to add flags "calls_count" and "reachableArchive" included in old backend
+	/**
+	 * <p>Getter for the field <code>traced</code>.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
 	public Boolean getTraced() { return traced; }
+	/**
+	 * <p>Setter for the field <code>traced</code>.</p>
+	 *
+	 * @param traced a {@link java.lang.Boolean} object.
+	 */
 	public void setTraced(Boolean traced) { this.traced = traced; }
 	
+	/**
+	 * <p>Getter for the field <code>reachableConstructIds</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	public Collection<ConstructId> getReachableConstructIds() { return reachableConstructIds; }
+	/**
+	 * <p>Setter for the field <code>reachableConstructIds</code>.</p>
+	 *
+	 * @param reachableConstructIds a {@link java.util.Collection} object.
+	 */
 	public void setReachableConstructIds(Collection<ConstructId> reachableConstructIds) { this.reachableConstructIds = reachableConstructIds; }
 
+	/**
+	 * <p>Getter for the field <code>touchPoints</code>.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	public List<PathNode> getTouchPoints() { return touchPoints; }
+	/**
+	 * <p>Setter for the field <code>touchPoints</code>.</p>
+	 *
+	 * @param touchPoints a {@link java.util.List} object.
+	 */
 	public void setTouchPoints(List<PathNode> touchPoints) { this.touchPoints = touchPoints; }
 	
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Compares this dependency with the given dependency by looking at parent-child relationships,
 	 * library identifiers and filenames.
 	 */
 	@Override
-	public int compareTo(Dependency _other) {		
+	public int compareTo(Dependency _other) {	
 		if(_other.isParent(this))
 			return -1;
 		else if(this.isParent(_other))
 			return +1;
 		else {
-			if(this.getLib().getLibraryId()!=null && _other.getLib().getLibraryId()!=null) {
-				return this.getLib().getLibraryId().compareTo(_other.getLib().getLibraryId());
+			if(this.getPath()!=null && _other.getPath()!=null){
+				return this.getPath().compareTo(_other.getPath());
 			} else if(this.getFilename()!=null && _other.getFilename()!=null) {
 				return this.getFilename().compareTo(_other.getFilename());
+			} else if(this.getLib().getDigest()!=null && _other.getLib().getDigest()!=null) {
+				return this.getLib().getDigest().compareTo(_other.getLib().getDigest());
+			} else if(this.getLib().getLibraryId()!=null && _other.getLib().getLibraryId()!=null) {
+				return this.getLib().getLibraryId().compareTo(_other.getLib().getLibraryId());
 			} else {
 				throw new IllegalStateException("Cannot compare " + this + " with " + _other);
 			}
 		}
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -150,6 +345,8 @@ public class Dependency implements Serializable, Comparable<Dependency> {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Considers the application, the library, the path and filename, the scope and transitivity to compare the objects.
 	 */
 	@Override
@@ -209,6 +406,12 @@ public class Dependency implements Serializable, Comparable<Dependency> {
 		return true;
 	}
 	
+	/**
+	 * <p>equalLibParentRelPath.</p>
+	 *
+	 * @param obj a {@link java.lang.Object} object.
+	 * @return a boolean.
+	 */
 	public boolean equalLibParentRelPath(Object obj) {
 		if (this == obj)
 			return true;
@@ -237,6 +440,7 @@ public class Dependency implements Serializable, Comparable<Dependency> {
 		return true;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		final StringBuffer b = new StringBuffer();

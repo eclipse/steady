@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.mvn;
 
 
@@ -26,9 +45,14 @@ import org.apache.tools.ant.types.Environment;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.GoalExecutionException;
 import com.sap.psr.vulas.shared.enums.GoalType;
+import com.sap.psr.vulas.shared.json.model.ExemptionBug;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>VulasAgentMojo class.</p>
+ *
+ */
 @Mojo(name = "prepare-vulas-agent", defaultPhase = LifecyclePhase.INITIALIZE, requiresDependencyResolution = ResolutionScope.RUNTIME, threadSafe = true)
 public class VulasAgentMojo extends AbstractVulasMojo {
 
@@ -90,8 +114,14 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 					else {
 						val_str = val.toString();
 					}
-					this.agentOptions.put(key, val_str);
-					getLog().info("    [" + key + "=" + val + "]");
+					
+					// Do not include exemptions, as too many would result in error "The command line is too long."
+					if(key.startsWith(ExemptionBug.CFG_PREFIX) || key.startsWith(ExemptionBug.DEPRECATED_CFG_PREFIX)) {
+						getLog().warn("  Ignoring  [" + key + "=...]");
+					} else {
+						this.agentOptions.put(key, val_str);
+						getLog().info("    [" + key + "=" + val + "]");						
+					}
 				}
 			}
 			
@@ -114,8 +144,14 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 						else {
 							val_str = val.toString();
 						}
-						this.agentOptions.put(key, val_str);
-						getLog().info("    [" + key + "=" + val + "]");
+						
+						// Do not include exemptions, as too many would result in error "The command line is too long."
+						if(key.startsWith(ExemptionBug.CFG_PREFIX) || key.startsWith(ExemptionBug.DEPRECATED_CFG_PREFIX)) {
+							getLog().warn("  Ignoring  [" + key + "=...]");
+						} else {
+							this.agentOptions.put(key, val_str);
+							getLog().info("    [" + key + "=" + val + "]");						
+						}
 					}
 				}
 			}
@@ -199,6 +235,8 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Has to override {@link AbstractVulasMojo#execute} as there is no dedicated {@link GoalType} for the agent preparation.
 	 */
 	@Override
@@ -245,6 +283,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 		return vulasAgentArtifact.getFile();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void createGoal() {
 		throw new RuntimeException("Create goal not valid for Mojo [" + this.getClass().getName() + "]");

@@ -11,6 +11,8 @@ The following goals perform some sort of application analysis:
 - `test`: This is not an actual goal implemented by any of the clients, but describes the collection of execution traces by a so-called Java agent that _dynamically instruments_ Java bytecode during JUnit and integration tests.
 - [`instr`](#static-instrumentation-instr): Produces a modified version of Java archives (_static instrumentation_) that can be deployed/executed in order to collect traces of actual method executions.
 - [`t2c`](#reachable-from-traces-t2c): Builds a call graph (starting from traced methods) and checks whether vulnerable code is potentially reachable from those.
+- [`checkcode`](#analyze-unconfirmed-vulnerabilities-checkcode) Downloads unconfirmed vulnerabilities from the backend to the client, and checks whether the affected dependencies contain vulnerable of fixed constructs.
+
 
 The following goals are related to data management and reporting:
 
@@ -126,7 +128,7 @@ In the @@PROJECT_NAME@@ frontend, tab "Vulnerabilities", the column "Static Anal
 
 #### How does it work
 
-@@PROJECT_NAME@@ uses [Wala](http://wala.sourceforge.net/wiki/index.php/Main_Page) or [Soot](https://sable.github.io/soot/), both static analysis frameworks for Java, in order to construct a call graph representing all possible program executions starting from application methods. This graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.
+@@PROJECT_NAME@@ uses [Wala](http://wala.sourceforge.net/wiki/index.php/Main_Page) or [Soot](https://soot-oss.github.io/soot/), both static analysis frameworks for Java, in order to construct a call graph representing all possible program executions starting from application methods. This graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.
 
 #### Run as follows
 
@@ -192,7 +194,7 @@ vulas.reach.searchShortest = true
 
 #### Call graph construction framework
 
-Behind the scene, a source code analysis framework is used to construct the call graph, either starting from application methods (`a2c`) or from traced methods (`t2c`). Right now, the two frameworks [Wala](https://github.com/wala/WALA/wiki) and [Soot](http://www.sable.mcgill.ca/soot/) are supported and can be configured with `vulas.reach.fwk`. Both offer several configuration options to influence the accuracy of the call graph and its construction time. Once the call graph has been constructed, its size (in terms of nodes and edges) is printed to the console, which is useful for comparing the impact of the different configuration options, e.g.
+Behind the scene, a source code analysis framework is used to construct the call graph, either starting from application methods (`a2c`) or from traced methods (`t2c`). Right now, the two frameworks [Wala](https://github.com/wala/WALA/wiki) and [Soot](https://soot-oss.github.io/soot/) are supported and can be configured with `vulas.reach.fwk`. Both offer several configuration options to influence the accuracy of the call graph and its construction time. Once the call graph has been constructed, its size (in terms of nodes and edges) is printed to the console, which is useful for comparing the impact of the different configuration options, e.g.
 
 ```log
 [vulas-reach-1] INFO  com.sap.psr.vulas.cg.wala.WalaCallgraphConstructor  - Normalized call graph has [167639 nodes] (with distinct ConstructId) and [1279495 edges]
@@ -208,7 +210,7 @@ The setting `vulas.reach.wala.callgraph.algorithm` determines the construction a
 vulas.reach.wala.callgraph.algorithm = 0-1-CFA
 ```
 
-The setting `vulas.reach.wala.callgraph.reflection` determines the consideration of reflection, which is commonly used to instantiate and invoke classes and methods. See [here](https://github.com/wala/WALA/blob/master/com.ibm.wala.core/src/com/ibm/wala/ipa/callgraph/AnalysisOptions.java) for more information.
+The setting `vulas.reach.wala.callgraph.reflection` determines the consideration of reflection, which is commonly used to instantiate and invoke classes and methods. See [here](https://github.com/wala/WALA/blob/master/com.ibm.wala.core/src/main/java/com/ibm/wala/ipa/callgraph/AnalysisOptions.java) for more information.
 
 ```ini
 # Reflection option to be used for call graph construction
@@ -517,6 +519,28 @@ vulas.reach.identifyTouchpoints = true
 vulas.reach.searchShortest = true
 ```
 
+## Analyze unconfirmed vulnerabilities (checkcode)
+
+#### Objective
+
+Downloads unconfirmed vulnerable dependencies (appearing as orange hourglasses in the report and application frontend) and analyze each dependency to determine whether they contain the vulnerable or fixed code. This is done by constructing the Abstract Syntax Tree (AST) of the constructs changed to fix the vulnerability, and comparing it with the AST(s) build from the bytecode of artifacts known to be vulnerable or fixed (as a result of other evaluation strategies).
+
+#### Result
+
+In case of equalities to either vulnerable/fixed code, affected libraries are uploaded to the backend, thereby resolving the unconfirmed vulnerabilities (orange hourglasses will turn either red or green).
+
+#### Run as follows
+
+`vulas.shared.cia.serviceUrl` must be set.
+
+```sh tab="CLI"
+java -jar vulas-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal checkcode 
+```
+
+```sh tab="Maven"
+mvn -Dvulas vulas:checkcode
+```
+
 ## Upload analysis files (upload)
 
 #### Objective
@@ -529,6 +553,10 @@ Uploads analysis data in folder `vulas.core.uploadDir` to the backend. Such data
     # When true, serialized HTTP requests will be deleted after the upload succeeded (incl. the JSON files)
     # Default: true
     vulas.core.upload.deleteAfterSuccess = true
+    
+    # Maximum size of *.json files (in bytes) that will be considered for upload.
+    # Default: -1 (no limit)
+    vulas.core.upload.maxSize = -1
 ```
 
 #### Run as follows
@@ -563,18 +591,19 @@ Identified vulnerabilities including any information gathered during static and 
 #### Configure as follows
 
 ```ini
-    # A vulnerability in blacklisted scopes will not cause an exception  (multiple scopes to be separated by comma)
+    # Exempts the given vulnerability from causing a build exception
+    # This can apply to all libraries including the vulnerable code (by omitting `libraries` or explicitely specifying `*`)
+    # or to selected libraries with the given digest(s).
+    # 
+    # Default: -
+    vulas.report.exemptBug.<vuln-id>.reason = <reason>
+    vulas.report.exemptBug.<vuln-id>.libraries = [ * | digest [, digest] ]
+
+    # A vulnerability in exempted scopes will not cause an exception  (multiple scopes to be separated by comma)
+    #
     # Default: test, provided
     # Note: For CLI, all dependencies are considered as RUNTIME dependencies
-    vulas.report.exceptionScopeBlacklist = TEST, PROVIDED
-
-    # Specified vulnerabilities will not cause a build exception (multiple bugs to be separated by comma)
-    # Default: -
-    vulas.report.exceptionExcludeBugs = <vuln-id>
-
-    # Explanation why the given vulnerability is not relevant/exploitable in the specific application context
-    # Default: -
-    vulas.report.exceptionExcludeBugs.<vuln-id> = Not exploitable because ...
+    vulas.report.exemptScope = TEST, PROVIDED
 
     # Determines whether un-assessed vulnerabilities (e.g. vulnerabilities marked with an orange hourglass symbol) throw a build exception. Un-assessed vulns are those where
     # the method signature(s) of a bug appear in an archive, however, it is yet unclear whether the methods
@@ -604,12 +633,18 @@ Identified vulnerabilities including any information gathered during static and 
     #   CLI: -
     #   MVN: ${project.build.directory}/vulas/report
     vulas.report.reportDir =
+
+    # If true, a CURL command will be printed to the console for all exempted findings in order to permanently mark
+    # a given library as non-vulnerable, independent of the specific application.
+    # Default: false
+    # Note: The scope of this assessment is beyond a specific application, hence, the CURL command requires a security token.
+    vulas.report.createLibraryAssessments = 
 ```
 
 #### Run as follows
 
 ```sh tab="CLI"
-java -Dvulas.core.appContext.group=<GROUP> -Dvulas.core.appContext.artifact=<ARTIFACT> -Dvulas.core.appContext.version=@@PROJECT_VERSION@@
+java -Dvulas.core.appContext.group=<GROUP> -Dvulas.core.appContext.artifact=<ARTIFACT> -Dvulas.core.appContext.version=<VERSION>
      -jar vulas-cli-jar-with-dependencies.jar -goal report
 ```
 
@@ -623,38 +658,22 @@ mvn -Dvulas vulas:report
 
 #### Exemptions
 
-The settings `vulas.report.exceptionExcludeBugs` and `vulas.report.exceptionExcludeBugs.<vuln-id>` can be used to capture the results of an audit or assessment by developers in regards to whether a vulnerability is problematic in a given application context. Exempted bugs do not result in build exceptions and are also shown in the apps Web frontend.
+The setting `vulas.report.exemptBug.<vuln-id>.reason` can be used to capture the results of an audit or assessment by developers in regards to whether a vulnerability is problematic in a given application context. Exempted bugs do not result in build exceptions, but are still shown in both the report and the apps Web frontend.
 
 #### Build exceptions
 
 Other settings to fine-tune the threshold for build exceptions are as follows:
 
-- `vulas.report.exceptionScopeBlacklist` can be used to exclude certain Maven scopes (default: test)
+- `vulas.report.exemptScope` can be used to exclude certain Maven scopes (default: test)
 - `vulas.report.exceptionThreshold` can be used to specify whether a build exception is thrown when vulnerable code is included, potentially reachable, actually reached or not at all (values: `noException`, `dependsOn`, `potentiallyExecutes`, `actuallyExecutes`; default: `actuallyExecutes`)
 
 ## Clean and delete apps (clean)
 
 #### Objective
 
-Deletes application-specific data in the backend, e.g., traces collected during JUnit tests, or application constructs and dependencies collected through the `app` goal. Right after executing `clean` for a given application, the apps Web frontend will be empty for the respective application.
+Deletes application-specific data in the backend, e.g., traces collected during JUnit tests, application constructs and dependencies collected through the `app` goal. Right after executing `clean` for a given application, the apps Web frontend will be empty for the respective application.
 
-#### Configure as follows
-
-```ini
-    # When true, details of past goal executions will be deleted
-    # Default: false
-    vulas.core.clean.goalHistory = false
-
-    # When true, all but the latest X app versions will be deleted (latest according to the application creation date)
-    # Default: false
-    vulas.core.clean.purgeVersions = false
-
-    # Specifies X, i.e., the number of application versions to be kept if purgeVersions is set to true (0 will delete all versions)
-    # Default: 3
-    vulas.core.clean.purgeVersions.keepLast = 3
-```
-
-Run as follows to **clean the current version**:
+Run as follows to clean the **current version**, e.g., the version specified in `pom.xml` (Maven) or `vulas-custom.properties` (CLI):
 
 ```sh tab="CLI"
 java -jar vulas-cli-jar-with-dependencies.jar -goal clean
@@ -664,7 +683,31 @@ java -jar vulas-cli-jar-with-dependencies.jar -goal clean
 mvn -Dvulas vulas:clean
 ```
 
-Run as follows to **delete an application including all its versions**:
+#### Configure as follows
+
+The following options can be used to delete **multiple versions**.
+
+Important: In this case, only the creation date of application versions (in the backend) is considered to select the versions to be deleted. Versions specified in `pom.xml`, `vulas-custom.properties` etc. are not considered at all. 
+
+```ini
+    # When true, all but the latest X app versions will be deleted (latest according to the application creation date).
+    # The value of X is configured with the option 'vulas.core.clean.purgeVersions.keepLast', see below.
+    # Default: false
+    vulas.core.clean.purgeVersions = false
+
+    # Specifies X, i.e., the number of application versions to be kept if purgeVersions is set to true.
+    # Set this to 0 to delete all versions.
+    # Default: 3
+    vulas.core.clean.purgeVersions.keepLast = 3
+
+    # When true, the history of past goal executions will be deleted (NOTE: this does not delete the scan results themselves!
+    # you may want to use the two directives above to purge scan results.)
+    # The default value is recommended, in normal scenarios you should leave this to false.
+    # Default: false
+    vulas.core.clean.goalHistory = false
+```
+
+Run as follows to delete **all versions**:
 
 ```sh tab="CLI"
 java -Dvulas.core.clean.purgeVersions=true -Dvulas.core.clean.purgeVersions.keepLast=0 -jar vulas-cli-jar-with-dependencies.jar -goal clean
@@ -674,12 +717,13 @@ java -Dvulas.core.clean.purgeVersions=true -Dvulas.core.clean.purgeVersions.keep
 mvn -Dvulas -Dvulas.core.clean.purgeVersions=true -Dvulas.core.clean.purgeVersions.keepLast=0 vulas:clean
 ```
 
-!!! critical Troubleshooting
-    Maven will fail to delete an application if a corresponding `<module>` does not exit any longer in the `pom.xml`. The CLI must be used in these cases and the Maven coordinates (GAV) of the item to be cleaned shall be provided as system properties when calling the CLI. For example, if you want to delete an application with GAV `myGroup:myArtifact:myVersion`, the following command line should be used
+#### Troubleshooting
 
-    ```sh
-    java -Dvulas.core.clean.purgeVersions=true -Dvulas.core.clean.purgeVersions.keepLast=0 -Dvulas.core.appContext.group=myGroup -Dvulas.core.appContext.artifact=myArtifact -Dvulas.core.appContext.version=myVersion -jar vulas-cli-jar-with-dependencies.jar -goal clean
-    ```
+The Maven plugin will fail to delete an application if a corresponding `<module>` does not exit any longer in the `pom.xml`. The CLI must be used in these cases and the Maven coordinates (GAV) of the item to be cleaned shall be provided as system properties when calling the CLI. For example, if you want to delete an application with GAV `myGroup:myArtifact:myVersion`, the following command line be used
+
+```sh
+java -Dvulas.core.appContext.group=myGroup -Dvulas.core.appContext.artifact=myArtifact -Dvulas.core.appContext.version=myVersion -jar vulas-cli-jar-with-dependencies.jar -goal clean
+```
 
 ## Clean workspaces (cleanspace)
 

@@ -5,4 +5,11 @@
 **Important**: Due to the current lack of an authorization concept, we do not advise to expose an instance of @@PROJECT_NAME@@ to the Internet.
 
 - [Deploy on Docker](./tutorials/docker/) and [Import the knowledge base](../vuln_db/tutorials/vuln_db_tutorial/#batch-import-from-knowledge-base)
+- [Build JAVA archives and local Docker images](./tutorials/build/)
 - [Push Docker images to a registry](./tutorials/registry/)
+- [Deploy on Kubernetes with Kustomize](./tutorials/kustomize/)
+- [Deploy on Kubernetes with Helm](./tutorials/helm/)
+
+### Miscellaneous information
+
+- [Kubernetes resource requirements](./tutorials/kubernetes_resources/)

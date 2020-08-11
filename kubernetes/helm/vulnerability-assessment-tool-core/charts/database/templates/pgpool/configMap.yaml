@@ -1,0 +1,178 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: {{ template "pgpool.configMapName" . }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+
+data:
+  {{- $release := .Release.Name }}
+  PG_PRIMARY_SERVICE_NAME: {{ $release }}-db-master
+  PG_REPLICA_SERVICE_NAME: {{ $release }}-db-slave
+  {{- if .Values.pgpool.debug }}
+  CRUNCHY_DEBUG: "true"
+  {{- else }}
+  CRUNCHY_DEBUG: "False"
+  {{- end }}
+
+  {{- with .Values.global.dbCredentials }}
+  pool_passwd:
+    {{ .pool_user }}:TEXT{{ .pool_password }}
+
+    {{ .postgres_user }}:TEXT{{ .postgres_password }}
+
+  pool_hba.conf: |
+    host    all         {{ .pool_user }}           0.0.0.0/0          md5
+    host    all         {{ .postgres_user }}         0.0.0.0/0          md5
+  {{- end }}
+
+  pgpool.conf: |
+    listen_addresses = '*'
+    port = 5432
+    socket_dir = '/tmp'
+
+    pcp_port = 9898
+    pcp_socket_dir = '/tmp'
+
+    master_slave_mode = 'on'
+    master_slave_sub_mode = 'stream'
+    load_balance_mode = '{{ .Values.pgpool.loadBalanceMode }}'
+
+    port = 5432
+    use_watchdog = '{{ .Values.pgpool.useWatchDog }}'
+
+    {{- if eq ( .Values.pgpool.useWatchDog | quote ) "on" -}}
+    wd_hostname = {{ .Values.global.core.pgpool.service }}
+    wd_port = 9898
+    {{- end }}
+
+    backend_hostname0 = '{{ $release }}-db-master'
+    backend_port0 = 5432
+    backend_flag0 = 'ALWAYS_MASTER'
+
+    backend_hostname1 = '{{ $release }}-db-slave'
+    backend_port1 = 5432
+
+    failover_on_backend_error = '{{ .Values.pgpool.failOverOnBackendError }}'
+
+    enable_pool_hba = on
+    pool_passwd = 'pool_passwd'
+    authentication_timeout = 60
+    ssl = off
+
+    num_init_children = {{ .Values.pgpool.numInitChildren }}
+    max_pool = {{ .Values.pgpool.maxPool }}
+
+    child_life_time = {{ .Values.pgpool.connectionLifeTime }}
+    child_max_connections = 0
+    connection_life_time = 0
+    client_idle_limit = 0
+
+    log_destination = 'stderr'
+    print_timestamp = on
+    log_connections = on
+    log_hostname = on
+    log_statement = on
+    log_per_node_statement = off
+    log_standby_delay = 'if_over_threshold'
+
+    syslog_facility = 'LOCAL0'
+    syslog_ident = 'pgpool'
+    debug_level = 0
+
+    pid_file_name = '/tmp/pgpool.pid'
+    logdir = '/tmp'
+
+    connection_cache = on
+    reset_query_list = 'ABORT; DISCARD ALL'
+
+    replication_mode = off
+    replicate_select = off
+    insert_lock = off
+    lobj_lock_table = ''
+
+    replication_stop_on_mismatch = off
+    failover_if_affected_tuples_mismatch = off
+
+    load_balance_mode = off
+    ignore_leading_white_space = on
+    white_function_list = ''
+    black_function_list = 'currval,lastval,nextval,setval'
+
+    master_slave_mode = on
+    master_slave_sub_mode = 'stream'
+
+    {{- with .Values.global.dbCredentials }}
+    sr_check_period = 10
+    sr_check_user = '{{ .pool_user }}'
+    sr_check_password = '{{ .pool_password }}'
+    delay_threshold = 10000000
+
+    follow_master_command = ''
+    parallel_mode = off
+    pgpool2_hostname = ''
+
+    health_check_period = 0
+    health_check_timeout = 20
+    health_check_user = '{{ .pool_user }}'
+    health_check_password = '{{ .pool_password }}'
+    health_check_max_retries = 0
+    health_check_retry_delay = 1
+
+    failover_command = ''
+    failback_command = ''
+    fail_over_on_backend_error = on
+    search_primary_node_timeout = 10
+
+    recovery_user = '{{ .postgres_user }}'
+    recovery_password = '{{ .postgres_password }}'
+    {{- end }}
+    recovery_1st_stage_command = ''
+    recovery_2nd_stage_command = ''
+    recovery_timeout = 90
+    client_idle_limit_in_recovery = 0
+    use_watchdog = off
+    trusted_servers = ''
+    ping_path = '/bin'
+    wd_hostname = ''
+    wd_port = 9000
+    wd_authkey = ''
+    delegate_IP = ''
+    ifconfig_path = '/sbin'
+    if_up_cmd = 'ifconfig eth0:0 inet $_IP_$ netmask 255.255.255.0'
+    if_down_cmd = 'ifconfig eth0:0 down'
+    arping_path = '/usr/sbin'
+    arping_cmd = 'arping -U $_IP_$ -w 1'
+    clear_memqcache_on_escalation = on
+    wd_escalation_command = ''
+    wd_lifecheck_method = 'heartbeat'
+    wd_interval = 10
+    wd_heartbeat_port = 9694
+    wd_heartbeat_keepalive = 2
+    wd_heartbeat_deadtime = 30
+    heartbeat_destination0 = 'host0_ip1'
+    heartbeat_destination_port0 = 9694
+    heartbeat_device0 = ''
+    wd_life_point = 3
+    wd_lifecheck_query = 'SELECT 1'
+    wd_lifecheck_dbname = 'template1'
+    wd_lifecheck_user = 'nobody'
+    wd_lifecheck_password = ''
+    relcache_expire = 0
+    relcache_size = 256
+    check_temp_table = on
+    memory_cache_enabled = off
+    memqcache_method = 'shmem'
+    memqcache_memcached_host = 'localhost'
+    memqcache_memcached_port = 11211
+    memqcache_total_size = 67108864
+    memqcache_max_num_cache = 1000000
+    memqcache_expire = 0
+    memqcache_auto_cache_invalidation = on
+    memqcache_maxcache = 409600
+    memqcache_cache_block_size = 1048576
+    memqcache_oiddir = '/var/log/pgpool/oiddir'
+    white_memqcache_table_list = ''
+    black_memqcache_table_list = ''

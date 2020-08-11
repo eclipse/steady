@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.cg;
 
 import java.nio.file.Path;
@@ -5,8 +24,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.sap.psr.vulas.shared.enums.GoalClient;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
@@ -21,9 +40,13 @@ import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
 import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>Abstract AbstractReachGoal class.</p>
+ *
+ */
 public abstract class AbstractReachGoal extends AbstractAppGoal {
 
-    private static final Log log = LogFactory.getLog(AbstractReachGoal.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
     private Set<Path> preparedDepClasspath = new HashSet<Path>();
 
@@ -34,6 +57,11 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
 
     private Set<com.sap.psr.vulas.shared.json.model.ConstructId> appConstructs = null;
 
+    /**
+     * <p>Constructor for AbstractReachGoal.</p>
+     *
+     * @param _type a {@link com.sap.psr.vulas.shared.enums.GoalType} object.
+     */
     protected AbstractReachGoal(GoalType _type) {
         super(_type);
     }
@@ -41,7 +69,7 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
     /**
      * Calls the backend in order to retrieve all application constructs of the given application.
      *
-     * @return
+     * @return a {@link java.util.Set} object.
      */
     protected final Set<com.sap.psr.vulas.shared.json.model.ConstructId> getAppConstructs() {
         if (this.appConstructs == null) {
@@ -121,6 +149,8 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
      * Gets the entry points of the {@link ReachabilityAnalyzer}.
      * <p>
      * MUST be overridden by subclasses, e.g., by {@link A2CGoal} and {@link T2CGoal}.
+     *
+     * @return a {@link java.util.Set} object.
      */
     protected abstract Set<com.sap.psr.vulas.shared.json.model.ConstructId> getEntryPoints();
 
@@ -128,10 +158,14 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
      * Sets the entry points of the {@link ReachabilityAnalyzer}.
      * <p>
      * MUST be overridden by subclasses, e.g., by {@link A2CGoal} and {@link T2CGoal}.
+     *
+     * @param _ra a {@link com.sap.psr.vulas.cg.ReachabilityAnalyzer} object.
      */
     protected abstract void setEntryPoints(ReachabilityAnalyzer _ra);
 
     /**
+     * {@inheritDoc}
+     *
      * Prepares the classpaths.
      */
     @Override
@@ -140,6 +174,7 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
         this.prepareClasspath();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected final void executeTasks() throws Exception {
 
@@ -181,6 +216,8 @@ public abstract class AbstractReachGoal extends AbstractAppGoal {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Deletes pre-processed JAR files (if any).
      */
     @Override

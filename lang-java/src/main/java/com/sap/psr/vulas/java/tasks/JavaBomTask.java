@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.java.tasks;
 
 import java.nio.file.Path;
@@ -8,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.DirAnalyzer;
@@ -27,15 +46,20 @@ import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Dependency;
+import com.sap.psr.vulas.shared.util.DependencyUtil;
 import com.sap.psr.vulas.shared.util.StringList;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.ThreadUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import com.sap.psr.vulas.tasks.AbstractBomTask;
 
+/**
+ * <p>JavaBomTask class.</p>
+ *
+ */
 public class JavaBomTask extends AbstractBomTask {
 
-	private static final Log log = LogFactory.getLog(JavaBomTask.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static final String[] EXT_FILTER = new String[] { "jar", "war", "class", "java", "aar" };
 
@@ -45,6 +69,7 @@ public class JavaBomTask extends AbstractBomTask {
 	
 	private static final List<GoalClient> pluginGoalClients = Arrays.asList(GoalClient.MAVEN_PLUGIN, GoalClient.GRADLE_PLUGIN);
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getLanguage() { return new HashSet<ProgrammingLanguage>(Arrays.asList(new ProgrammingLanguage[] { ProgrammingLanguage.JAVA })); }
 
@@ -62,6 +87,7 @@ public class JavaBomTask extends AbstractBomTask {
 		return this.appJarNames!=null && !this.isOneOfGoalClients(pluginGoalClients);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void configure(VulasConfiguration _cfg) throws GoalConfigurationException {
 		super.configure(_cfg);
@@ -100,6 +126,7 @@ public class JavaBomTask extends AbstractBomTask {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void execute() throws GoalExecutionException {
 
@@ -287,9 +314,9 @@ public class JavaBomTask extends AbstractBomTask {
 				if(known_dep!=null && known_dep.getParent()!=null) {
 					// Complete the draft parent dependency with library info
 					for(JarAnalyzer ja2: app_dependencies) {
+						//TODO: As soon as we add the relative path to the JARAnalyzer, it must also be used to uniquely identify the parent and set all its fields
 						if(ja2.getPath().toString().equals(known_dep.getParent().getPath())) {
 							known_dep.getParent().setLib(ja2.getLibrary());
-							known_dep.getParent().setFilename(ja2.getFileName());
 							break;
 						}
 					}
@@ -300,6 +327,32 @@ public class JavaBomTask extends AbstractBomTask {
 			} catch (FileAnalysisException e) {
 				log.error(e.getMessage(), e);
 			}
+		}
+		
+		// Get a clean set of dependencies
+		final Set<Dependency> no_dupl_deps = DependencyUtil.removeDuplicateLibraryDependencies(a.getDependencies());
+		a.setDependencies(no_dupl_deps);
+		
+		// Fix parents on dependencies that were removed (this block should be removed once we use the relativePath and we get a dependency tree representing the actual one 
+		for(Dependency d : a.getDependencies()) {
+			if(d.getParent()!=null ) {
+				for(Dependency existing: a.getDependencies()) {
+					//TODO: as soon as we add the relative path to the JARAnalyzer, it must also be used to uniquely identify the parent
+					if(existing.getLib().getDigest().equals(d.getParent().getLib().getDigest())) {
+						d.getParent().setLib(existing.getLib());
+						d.getParent().setPath(existing.getPath());
+						d.getParent().setFilename(existing.getFilename());
+						break;
+					}
+				}
+			}
+		}
+	
+		
+		// Check whether the parent-child dependency relationships are consistent
+		final boolean consistent_deps = DependencyUtil.isValidDependencyCollection(a);
+		if(!consistent_deps) {
+			throw new GoalExecutionException("Inconsistent application dependencies cannot be uploaded", null);
 		}
 
 		// Set the one to be returned

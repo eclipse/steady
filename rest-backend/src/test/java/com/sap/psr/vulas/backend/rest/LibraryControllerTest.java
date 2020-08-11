@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.rest;
 
 import static org.hamcrest.Matchers.is;
@@ -33,8 +52,10 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.web.context.WebApplicationContext;
 
 import com.sap.psr.vulas.backend.model.Library;
+import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.backend.repo.LibraryRepository;
 import com.sap.psr.vulas.shared.categories.RequiresNetwork;
+import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.util.FileUtil;
 
@@ -171,4 +192,27 @@ public class LibraryControllerTest {
     	managed_lib = LibraryRepository.FILTER.findOne(libRepository.findByDigest("1E48256A2341047E7D729217ADEEC8217F6E3A1A"));
     	assertTrue(modifiedAt.getTimeInMillis()==managed_lib.getModifiedAt().getTimeInMillis());
     }
+    
+    /**
+     * post lib with well known digest, not well known libid
+     * @throws Exception
+     */
+    @Test
+    @Category(RequiresNetwork.class)
+    public void testPostNotWellKnownLibId() throws Exception {
+
+    	Library lib = new Library("1E48256A2341047E7D729217ADEEC8217F6E3A1A");
+    	lib.setDigestAlgorithm(DigestAlgorithm.SHA1);
+    	lib.setLibraryId(new LibraryId("bar","bar","0"));
+    	MockHttpServletRequestBuilder post_builder = post("/libs/")
+    			.content(JacksonUtil.asJsonString(lib).getBytes())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+    	mockMvc.perform(post_builder)	
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.wellknownDigest", is(true)))
+                .andExpect(jsonPath("$.libraryId.artifact", is("commons-fileupload")))
+                .andExpect(jsonPath("$.digest", is("1E48256A2341047E7D729217ADEEC8217F6E3A1A")));
+        }
 }

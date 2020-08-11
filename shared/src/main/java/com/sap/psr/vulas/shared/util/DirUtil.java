@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.shared.util;
 
 import java.io.BufferedOutputStream;
@@ -17,18 +36,25 @@ import java.util.jar.JarEntry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 
+/**
+ * <p>DirUtil class.</p>
+ *
+ */
 public class DirUtil {
 
-	private static final Log log = LogFactory.getLog(DirUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * Returns true if the given directory contains a file with the given name, false otherwise.
-	 * @param
+	 *
+	 * @param _dir a {@link java.io.File} object.
+	 * @param _filename a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
 	public static final boolean containsFile(final File _dir, final String _filename) {
 		if(_dir.isDirectory()) {
@@ -41,8 +67,10 @@ public class DirUtil {
 
 	/**
 	 * Searches recursively in the given directory and returns all the contained files and directories (excluding the given directory).
-	 * @param _dir
-	 * @return
+	 *
+	 * @param _dir a {@link java.io.File} object.
+	 * @param _ignore an array of {@link java.lang.String} objects.
+	 * @return an array of {@link java.io.File} objects.
 	 */
 	public static File[] getAllFiles(final File _dir, final String[] _ignore) {
 		if(!_dir.isDirectory())
@@ -73,6 +101,14 @@ public class DirUtil {
 		return list.toArray(new File[list.size()]);
 	}
 
+	/**
+	 * <p>unzip.</p>
+	 *
+	 * @param _zip a {@link java.io.File} object.
+	 * @param _out_dir a {@link java.io.File} object.
+	 * @return a {@link java.io.File} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public static File unzip(final File _zip, File _out_dir) throws IOException {
 		if (_zip.isDirectory())
 			return _zip;
@@ -121,13 +157,13 @@ public class DirUtil {
 	/**
 	 * Checks whether the given archive entry, e.g., from a {@link ZipEntry} and {@link JarEntry}, when extracted, is below the given {@link Path}.
 	 * This method should be used before extracting archive entries, in order to protect against the ZipSlip vulnerability.
-	 * 
+	 *
 	 * On *nix machines, any occurence of a Windows name separator (\) will be replace by the *nix name separator (/) in order
 	 * to detect malicious Windows archives (archive entries) on *nix as well.
-	 * 
-	 * @param _destination_path
-	 * @param _entry_name
-	 * @return
+	 *
+	 * @param _destination_path a {@link java.nio.file.Path} object.
+	 * @param _entry_name a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
 	public static boolean isBelowDestinationPath(Path _destination_path, String _entry_name) {
 		String entry_name = _entry_name;
@@ -147,6 +183,11 @@ public class DirUtil {
 	/**
 	 * Returns all paths of the first set that are sub-paths of one of the paths of the second set.
 	 * The filter can be inverted with help of the boolean argument.
+	 *
+	 * @param _to_be_filtered a {@link java.util.Set} object.
+	 * @param _filter a {@link java.util.Set} object.
+	 * @param _keep_subpaths a boolean.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public static Set<Path> filterSubpaths(Set<Path> _to_be_filtered, Set<Path> _filter, boolean _keep_subpaths) {
 		final Set<Path> result = new HashSet<Path>();
@@ -169,11 +210,13 @@ public class DirUtil {
 	}
 
 	/**
-	 * Computes a digest for the given directory. This digest is computed over the concatenation of the digests contained in the respective directory. 
-	 * @param _dir
-	 * @param _alg
-	 * @return
-	 * @see {@link FileUtil#getDigest(File, DigestAlgorithm)}
+	 * Computes a digest for the given directory. This digest is computed over the concatenation of the digests contained in the respective directory.
+	 *
+	 * @param _dir a {@link java.io.File} object.
+	 * @param _alg a {@link com.sap.psr.vulas.shared.enums.DigestAlgorithm} object.
+	 * @see FileUtil#getDigest(File, DigestAlgorithm)
+	 * @param _ignore an array of {@link java.lang.String} objects.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getDigest(final File _dir, final String[] _ignore, DigestAlgorithm _alg) {
 		if(!_dir.isDirectory())

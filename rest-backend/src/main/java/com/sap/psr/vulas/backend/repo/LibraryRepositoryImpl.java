@@ -1,8 +1,26 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.repo;
 
 import java.nio.file.Path;
 import java.util.Calendar;
-import java.util.Collection;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
@@ -21,6 +39,10 @@ import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>LibraryRepositoryImpl class.</p>
+ *
+ */
 public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 	
 	private static Logger log = LoggerFactory.getLogger(LibraryRepositoryImpl.class);
@@ -46,6 +68,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 	@Autowired
 	ReferenceUpdater refUpdater;
 	
+	/** {@inheritDoc} */
 	public Library customSave(Library _lib) {
 		final StopWatch sw = new StopWatch("Save library " + _lib).start();
 		final String digest = _lib.getDigest();
@@ -63,17 +86,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 			_lib.setId(managed_lib.getId());
 			_lib.setCreatedAt(managed_lib.getCreatedAt());
 			_lib.setModifiedAt(Calendar.getInstance());
-			
-			//	Re-create wellknownDigest if it is null in our current db (this part should be removed once it is created for all)
-			if(managed_lib.getWellknownDigest()==null || (managed_lib.getDigestTimestamp()==null && managed_lib.getWellknownDigest())) {
-				_lib.verifyDigest();
-			}
-			else {
-				_lib.setWellknownDigest(managed_lib.getWellknownDigest());
-				_lib.setDigestVerificationUrl(managed_lib.getDigestVerificationUrl());
-				_lib.setDigestTimestamp(managed_lib.getDigestTimestamp());
-			}
-			
+						
 			//keep the existing lib GAV if the newly posted/put doesn't have one
 			if(_lib.getLibraryId()==null){
 				// Recreate libId if null (to be removed once we ensure we added to the existing libs)
@@ -84,7 +97,7 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 			}
 					
 		} catch(EntityNotFoundException e1) {			
-			LibraryRepositoryImpl.log.info("Library [" + _lib.getDigest() + "] does not yet exist, going to save it.");
+			LibraryRepositoryImpl.log.debug("Library [" + _lib.getDigest() + "] does not yet exist, going to save it.");
 		}
 		
 		// Retrieve libId from Maven if digest verified
@@ -99,6 +112,11 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 		sw.lap("Updated refs to nested properties");
 		
 		_lib.setBundledLibraryIds(refUpdater.saveNestedBundledLibraryIds(_lib.getBundledLibraryIds()));
+		
+		// we always verify the digest to make sure all fields are filled and check that
+		// libraryId provided by the client is known (replaced with known one otherwise)
+		// Note that this replaces digestVerificationUrl, digestTimestamp and WellknownDigest
+		_lib.verifyDigest();
 		
 		_lib = this.saveNestedLibraryId(_lib);
 		
@@ -142,19 +160,21 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 		return _lib;
 	}
 	
+	/** {@inheritDoc} */
 	public Library saveIncomplete(Library _lib) throws PersistenceException {
 		Library incomplete = new Library(_lib.getDigest());
+		incomplete.setDigestAlgorithm(_lib.getDigestAlgorithm());
 		if (_lib.getLibraryId()!=null){
-			LibraryRepositoryImpl.log.info("Setting library Id ["+_lib.getLibraryId().toString()+"] of incomplete library [" +_lib.getDigest()+ "]");
+			LibraryRepositoryImpl.log.debug("Setting library Id ["+_lib.getLibraryId().toString()+"] of incomplete library [" +_lib.getDigest()+ "]");
 			incomplete.setLibraryId(_lib.getLibraryId());
 		}
 		else
 			incomplete.setLibraryId(null);
 		
 		if(_lib.getConstructs()!=null)
-			LibraryRepositoryImpl.log.info("Library ["+_lib.getDigest()+"] to be saved has [" +_lib.getConstructs().size()+"] constructs");
+			LibraryRepositoryImpl.log.debug("Library ["+_lib.getDigest()+"] to be saved has [" +_lib.getConstructs().size()+"] constructs");
 		if(_lib.getProperties()!=null)
-			LibraryRepositoryImpl.log.info("Library ["+_lib.getDigest()+"] to be saved has [" +_lib.getProperties().size()+"] properties");
+			LibraryRepositoryImpl.log.debug("Library ["+_lib.getDigest()+"] to be saved has [" +_lib.getProperties().size()+"] properties");
 		
 		try{
 			return this.libRepository.save(incomplete);

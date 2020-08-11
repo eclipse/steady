@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.python;
 
 import java.io.File;
@@ -18,8 +37,8 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.ConstructId;
@@ -33,9 +52,13 @@ import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringUtil;
 
 //TODO: Decide what to do with default arg values in functions and methods? Right now, they are part of the qname, which is probably wrong.
+/**
+ * <p>Python3FileAnalyzer class.</p>
+ *
+ */
 public class Python3FileAnalyzer extends Python3BaseListener implements FileAnalyzer {  
 
-	private final static Log log = LogFactory.getLog(Python3FileAnalyzer.class);
+	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	protected Map<ConstructId, Construct> constructs = null;
 
@@ -53,6 +76,8 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 	private File file = null;
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Will not be instantiated by the {@link FileAnalyzerFactory}, but by {@link PythonFileAnalyzer}.
 	 */
 	@Override
@@ -60,6 +85,9 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 		return new String[] {};
 	}
 
+	/**
+	 * <p>Constructor for Python3FileAnalyzer.</p>
+	 */
 	public Python3FileAnalyzer() {
 		super();
 	}
@@ -68,9 +96,9 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 	 * Sets context information in case an {@link InputStream} is parsed using {@link Python3FileAnalyzer#getConstructs(InputStream)}.
 	 * In this case, package and module information cannot be obtained from the file and file system.
 	 * The method is called by {@link PythonArchiveAnalyzer}.
-	 * 
-	 * @param _module
-	 * @param _pack
+	 *
+	 * @param _module a {@link com.sap.psr.vulas.python.PythonId} object.
+	 * @param _pack a {@link com.sap.psr.vulas.python.PythonId} object.
 	 */
 	public void setContext(PythonId _module, PythonId _pack) {
 		this.constructs = new TreeMap<ConstructId, Construct>();
@@ -83,6 +111,7 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 		this.constructs.put(module, new Construct(module, ""));	
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean canAnalyze(File _file) {
 		final String ext = FileUtil.getFileExtension(_file);
@@ -95,6 +124,7 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void analyze(final File _file) throws FileAnalysisException {
 		if(!FileUtil.isAccessibleFile(_file.toPath()))
@@ -103,8 +133,9 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Enter a parse tree produced by {@link Python3Parser#stmt}.
-	 * @param ctx the parse tree
 	 */
 	@Override
 	public void enterStmt(Python3Parser.StmtContext ctx) { // TODO reads stmts before class defs and func defs are entered
@@ -119,6 +150,7 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 		stmts.add(stmt);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void enterClassdef(Python3Parser.ClassdefContext ctx) {
 		// Happens if class name is 'async', due to the Python grammar's problem with the ASYNC keyword, cf. testPythonFileWithAsync
@@ -137,6 +169,7 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 		this.context.push(id);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void exitClassdef(Python3Parser.ClassdefContext ctx) {
 		if(!PythonFileAnalyzer.isTopOfType(this.context, PythonId.Type.CLASS))
@@ -145,6 +178,7 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 			context.pop();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void enterFuncdef(Python3Parser.FuncdefContext ctx) {
 		// Happens if method or function name is 'async', due to the Python grammar's problem with the ASYNC keyword, cf. testPythonFileWithAsync
@@ -180,6 +214,7 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 		this.context.push(id);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void exitFuncdef(Python3Parser.FuncdefContext _ctx) {
 		final PythonId.Type[] types = new PythonId.Type[] { PythonId.Type.FUNCTION, PythonId.Type.CONSTRUCTOR, PythonId.Type.METHOD };
@@ -212,6 +247,7 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 			return _name + "$" + count;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean containsConstruct(ConstructId _id) throws FileAnalysisException {
 		return this.constructs.containsKey(_id);
@@ -221,6 +257,10 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 	 * Maybe promote this method, which uses the shared type as argument, to the interface.
 	 * Alternatively, make all core-internal interfaces work with core types, not with shared
 	 * types. Example to be changed: SignatureFactory.
+	 *
+	 * @param _id a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+	 * @return a {@link com.sap.psr.vulas.Construct} object.
+	 * @throws com.sap.psr.vulas.FileAnalysisException if any.
 	 */
 	public Construct getConstruct(com.sap.psr.vulas.shared.json.model.ConstructId _id) throws FileAnalysisException {
 		for(ConstructId cid: this.constructs.keySet())
@@ -229,11 +269,21 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Construct getConstruct(ConstructId _id) throws FileAnalysisException {
 		return this.constructs.get(_id);
 	}
 
+	/**
+	 * <p>Getter for the field <code>constructs</code>.</p>
+	 *
+	 * @param m a {@link java.io.InputStream} object.
+	 * @return a {@link java.util.Map} object.
+	 * @throws com.sap.psr.vulas.FileAnalysisException if any.
+	 * @throws java.io.IOException if any.
+	 * @throws org.antlr.v4.runtime.RecognitionException if any.
+	 */
 	public Map<ConstructId, Construct> getConstructs(InputStream m) throws FileAnalysisException, IOException, RecognitionException {
 		final ANTLRInputStream input = new ANTLRInputStream(m);
 		final Python3Lexer lexer = new Python3Lexer(input);
@@ -261,6 +311,7 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 		return this.constructs;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
 		if(this.constructs==null) {
@@ -297,16 +348,19 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
 		return this.constructs;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasChilds() {
 		return false;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) {
 		return null;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return "Python3 parser for [" + this.file + "]";

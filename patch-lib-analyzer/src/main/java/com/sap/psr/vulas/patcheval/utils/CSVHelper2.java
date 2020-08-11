@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -24,21 +43,26 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * Helper class for writing results to file.
- * 
  */
 public class CSVHelper2 {
-    private static final Log log = LogFactory.getLog(CSVHelper2.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
     static String COMMA_DELIMITER = ";";
     static String NEW_LINE_SEPARATOR = "\n";
     static Random ran = new Random();
        
    
+    /**
+     * <p>getShortRepoPathName.</p>
+     *
+     * @param repoPath a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String getShortRepoPathName( String repoPath ){
         int idx = repoPath.indexOf("/src/");
         int idx_trunk;
@@ -65,11 +89,11 @@ public class CSVHelper2 {
     
     /**
      * This method appends the results for the newly analyzed libraries to an existing file f and returns a string containing ALL results for bugId
-     * 
-     * @param bugId
+     *
+     * @param bugId a {@link java.lang.String} object.
      * @param f csv file where to append the new results
-     * @param newResults
-     * @return a string for the CSV results of ALL libraries related to bugId 
+     * @param newResults a {@link java.util.List} object.
+     * @return a string for the CSV results of ALL libraries related to bugId
      */
     public static String appendResultsToFile(String bugId, File f, List<ConstructPathLibResult2> newResults) {
     	 StringBuilder sb = new StringBuilder();
@@ -148,10 +172,10 @@ public class CSVHelper2 {
              sb.append(COMMA_DELIMITER);
              if(cpr.getVulnAst()!=null){
              	String path = File.separator+"asts" + File.separator  
-             			+bugId+"_vulnAst_"+cpr.getQname().replace('*', '-') + "_" + getShortRepoPathName(cpr.getPath()).replace('/', '-') + ".txt";
+             			+bugId+"_vulnAst_"+cpr.getQname().replaceAll("[^a-zA-Z0-9\\._]+", "-") + "_" + getShortRepoPathName(cpr.getPath()).replaceAll("[^a-zA-Z0-9\\._]+", "-") + ".txt";
              	if(path.length()>260){
              		path = (File.separator+"asts" + File.separator  
-                 			+bugId+"_vulnAst_"+cpr.getQname().replace('*', '-') + "_" + getShortRepoPathName(cpr.getPath()).replace('/', '-')).substring(0, 200) + ".txt";
+                 			+bugId+"_vulnAst_"+cpr.getQname().replaceAll("[^a-zA-Z0-9\\._]+", "-") + "_" + getShortRepoPathName(cpr.getPath()).replaceAll("[^a-zA-Z0-9\\._]+", "-")).substring(0, 200) + ".txt";
              	}
              	File astV =  new File(PEConfiguration.getBaseFolder().toString()+path);
              	if(!astV.exists()){
@@ -162,10 +186,10 @@ public class CSVHelper2 {
              sb.append(COMMA_DELIMITER);
              if(cpr.getFixedAst()!=null) {
              	String path =  File.separator+"asts"+File.separator  +
-             			bugId+"_fixedAst_"+cpr.getQname().replace('*', '-') + "_" + getShortRepoPathName(cpr.getPath()).replace('/', '-')+".txt";
+             			bugId+"_fixedAst_"+cpr.getQname().replaceAll("[^a-zA-Z0-9\\._]+", "-") + "_" + getShortRepoPathName(cpr.getPath()).replaceAll("[^a-zA-Z0-9\\._]+", "-")+".txt";
              	if(path.length()>260){
              		path = ( File.separator+"asts"+File.separator  
-                 			+bugId+"_fixedAst_"+cpr.getQname().replace('*', '-') + "_" + getShortRepoPathName(cpr.getPath()).replace('/', '-')).substring(0, 200) + ".txt";
+                 			+bugId+"_fixedAst_"+cpr.getQname().replaceAll("[^a-zA-Z0-9\\._]+", "-") + "_" + getShortRepoPathName(cpr.getPath()).replaceAll("[^a-zA-Z0-9\\._]+", "-")).substring(0, 200) + ".txt";
              	}
              	File astF =  new File(PEConfiguration.getBaseFolder().toString()+path);
               	if(!astF.exists()){
@@ -190,10 +214,10 @@ public class CSVHelper2 {
 
 	/**
 	 * This method write all results to a new CSV file and returns the CSV as string.
-	 *  
-	 * @param bugId
-	 * @param allResults
-	 * @return
+	 *
+	 * @param bugId a {@link java.lang.String} object.
+	 * @param allResults a {@link java.util.List} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String writeResultsToFile(String bugId, List<ConstructPathLibResult2> allResults) {
         File f = new File(PEConfiguration.getBaseFolder().toString()+ File.separator  +bugId+".csv");
@@ -251,10 +275,9 @@ public class CSVHelper2 {
 	
 	/**
 	 * This method rewrites the csv file including the results of the bytecode comparison
-	 * 
-	 * @param bugId
-	 * @param results artifactResults enriched with the comparison of bytecodes
-	 * @throws IOException
+	 *
+	 * @param bugId a {@link java.lang.String} object.
+	 * @param r a {@link com.sap.psr.vulas.patcheval.representation.ArtifactResult2} object.
 	 */
 	public static synchronized void rewriteLineInCSV(String bugId, ArtifactResult2 r) {
 	

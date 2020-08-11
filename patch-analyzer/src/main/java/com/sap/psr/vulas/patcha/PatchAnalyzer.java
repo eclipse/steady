@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.patcha;
 
 import java.net.MalformedURLException;
@@ -19,8 +38,8 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.ConstructChange;
@@ -43,9 +62,13 @@ import com.sap.psr.vulas.vcs.NoRepoClientException;
 import com.sap.psr.vulas.vcs.RepoMismatchException;
 
 
+/**
+ * <p>PatchAnalyzer class.</p>
+ *
+ */
 public class PatchAnalyzer {
 
-	private static final Log log = LogFactory.getLog(PatchAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private String id = Double.toString(Math.random());
 	private String bugid = null;
@@ -58,6 +81,14 @@ public class PatchAnalyzer {
 	private FileAnalyzer sourceConstructs = null;
 	private String sourceRev = null;
 
+	/**
+	 * <p>Constructor for PatchAnalyzer.</p>
+	 *
+	 * @param _url a {@link java.lang.String} object.
+	 * @param _bugid a {@link java.lang.String} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 * @throws com.sap.psr.vulas.vcs.NoRepoClientException if any.
+	 */
 	public PatchAnalyzer(String _url, String _bugid) throws IllegalArgumentException, NoRepoClientException {
 		// Check parameters
 		try {
@@ -68,6 +99,12 @@ public class PatchAnalyzer {
 		}
 	}
 
+	/**
+	 * <p>setMetaInfo.</p>
+	 *
+	 * @param _descr a {@link java.lang.String} object.
+	 * @param _link a {@link java.lang.String} object.
+	 */
 	public void setMetaInfo(String _descr, String _link) {
 		this.bugDescription = _descr;
 		this.bugLinks = _link;
@@ -75,9 +112,10 @@ public class PatchAnalyzer {
 
 	/**
 	 * Switches to a new VCS. Upon success, previous analysis results are lost.
-	 * @param _url
-	 * @throws MalformedURLException if the given URL is invalid (previous results are kept)
-	 * @throws NoRepoClientException if no VCS client can be created for the given URL (previous results are kept)
+	 *
+	 * @param _url a {@link java.lang.String} object.
+	 * @throws java.net.MalformedURLException if the given URL is invalid (previous results are kept)
+	 * @throws com.sap.psr.vulas.vcs.NoRepoClientException if no VCS client can be created for the given URL (previous results are kept)
 	 */
 	public void setRepoURL(String _url) throws MalformedURLException, NoRepoClientException {
 		final URL u = new URL(_url);
@@ -95,17 +133,24 @@ public class PatchAnalyzer {
 	/**
 	 * Sets the bug ID, which is associated to the changes when storing the results. In other words, the changes identified are supposed
 	 * to fix the bug with the given identifier.
-	 * @param _b
+	 *
+	 * @param _b a {@link java.lang.String} object.
 	 */
 	public void setBugId(String _b) { this.bugid = _b; }
 
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getId() { return this.id; }
 
 	/**
 	 * Creates and initializes a VCS client of a certain type (e.g., SVN or GIT) for a given URL.
-	 * @param _url
-	 * @return
-	 * @throws NoRepoClientException if client creation and initialization failed
+	 *
+	 * @param _url a {@link java.net.URL} object.
+	 * @throws com.sap.psr.vulas.vcs.NoRepoClientException if client creation and initialization failed
+	 * @return a {@link com.sap.psr.vulas.vcs.IVCSClient} object.
 	 */
 	public static IVCSClient createVCSClient(URL _url) throws NoRepoClientException {
 		IVCSClient client = null;
@@ -139,22 +184,39 @@ public class PatchAnalyzer {
 			return client;
 	}
 
+	/**
+	 * <p>searchCommitLog.</p>
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @param _asOf a {@link java.util.Date} object.
+	 * @return a {@link java.util.Map} object.
+	 */
 	public Map<String,String> searchCommitLog(String _s, Date _asOf) {
 		this.search = _s;
 		return this.vcs.searchCommitLog(_s, _asOf);
 	}
 
+	/**
+	 * <p>getCommitLogEntries.</p>
+	 *
+	 * @param _revs a {@link java.util.Set} object.
+	 * @return a {@link java.util.Map} object.
+	 */
 	public Map<String,String> getCommitLogEntries(Set<String> _revs) { //String[] _s) {
 		return this.vcs.getCommitLogEntries(_revs);
 	}
 
+	/**
+	 * <p>cleanup.</p>
+	 */
 	public void cleanup() { this.vcs.cleanup(); }
 
 	/**
 	 * Identifies all constructs that have been changed in the given revision. To that end, all files touched are downloaded from the remote repository,
 	 * and afterwards compared according to the syntax of the respective programming language.
-	 * @param _rev
-	 * @return
+	 *
+	 * @param _rev a {@link java.lang.String} object.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public Set<ConstructChange> identifyConstructChanges(String _rev) {
 		Set<ConstructChange> ch = this.changes.get(_rev);
@@ -204,9 +266,10 @@ public class PatchAnalyzer {
 
 	/**
 	 * Identifies all programming constructs of a given revision number.
-	 * @param _revision
-	 * @return
-	 * @throws Exception 
+	 *
+	 * @throws java.lang.Exception
+	 * @param _rev a {@link java.lang.String} object.
+	 * @return a {@link java.util.Map} object.
 	 */
 	public Map<ConstructId,Construct> identifySourceConstructs(String _rev) throws Exception {
 		if(!(this.sourceRev.equals(_rev)) || this.sourceConstructs==null) {
@@ -242,6 +305,13 @@ public class PatchAnalyzer {
 		return ch;
 	}
 
+	/**
+	 * <p>toJSON.</p>
+	 *
+	 * @param _revs an array of {@link java.lang.String} objects.
+	 * @return a {@link java.lang.String} object.
+	 * @throws java.util.ConcurrentModificationException if any.
+	 */
 	public String toJSON(String[] _revs) throws ConcurrentModificationException {
 		final StringBuilder b = new StringBuilder();
 		b.append(" { ");
@@ -290,7 +360,9 @@ public class PatchAnalyzer {
 	}
 
 	/**
-	 * @param args
+	 * <p>main.</p>
+	 *
+	 * @param _args an array of {@link java.lang.String} objects.
 	 */
 	public static void main(String[] _args) {
 		// Prepare parsing of cmd line arguments
@@ -432,6 +504,7 @@ public class PatchAnalyzer {
 					if(delete) pa.cleanup();
 				} catch (Exception e) {
 					PatchAnalyzer.log.error(e.getMessage());
+					System.exit(127);
 				}
 			}
 		}
@@ -439,6 +512,7 @@ public class PatchAnalyzer {
 			PatchAnalyzer.log.error(pe.getMessage());
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp( "PatchAnalyzer", options );
+			System.exit(125);
 		}
 	}
 

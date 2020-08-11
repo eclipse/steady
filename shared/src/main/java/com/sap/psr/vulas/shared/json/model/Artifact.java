@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.shared.json.model;
 
 import java.io.Serializable;
@@ -5,18 +24,22 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>Artifact class.</p>
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Artifact implements Serializable,Comparable<Object> {
 	
-	private static Log log = LogFactory.getLog(Artifact.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	final static Pattern VERSION_PATTERN = Pattern.compile("([\\d\\.]*)(.*)", Pattern.DOTALL);
 	
@@ -33,14 +56,25 @@ public class Artifact implements Serializable,Comparable<Object> {
 	
 	private String repository;
 	
+	/**
+	 * <p>Constructor for Artifact.</p>
+	 */
 	public Artifact() { super(); }
 	
+	/**
+	 * <p>Constructor for Artifact.</p>
+	 *
+	 * @param _g a {@link java.lang.String} object.
+	 * @param _a a {@link java.lang.String} object.
+	 * @param _v a {@link java.lang.String} object.
+	 */
 	public Artifact(String _g,String _a,String _v) {
 		super();
 		libId = new LibraryId(_g,_a,_v);
 	}
 
 	// this method does not reuse the compareTo of LibID as the timestamp is used before the version for comparing artifacts
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(Object _other) {
 		if(_other instanceof Artifact) {
@@ -62,6 +96,7 @@ public class Artifact implements Serializable,Comparable<Object> {
 		}
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		final StringBuilder b = new StringBuilder();
@@ -74,54 +109,119 @@ public class Artifact implements Serializable,Comparable<Object> {
 		return b.toString();
 	}
 
+	/**
+	 * <p>Getter for the field <code>libId</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
+	 */
 	public LibraryId getLibId() {
 		return libId;
 	}
 
+	/**
+	 * <p>Setter for the field <code>libId</code>.</p>
+	 *
+	 * @param libId a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
+	 */
 	public void setLibId(LibraryId libId) {
 		this.libId = libId;
 	}
 
+	/**
+	 * <p>Getter for the field <code>timestamp</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getTimestamp() {
 		return timestamp;
 	}
 
+	/**
+	 * <p>Setter for the field <code>timestamp</code>.</p>
+	 *
+	 * @param timestamp a {@link java.lang.Long} object.
+	 */
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
 
+	/**
+	 * <p>Getter for the field <code>repository</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getRepository() {
 		return repository;
 	}
 
+	/**
+	 * <p>Setter for the field <code>repository</code>.</p>
+	 *
+	 * @param repository a {@link java.lang.String} object.
+	 */
 	public void setRepository(String repository) {
 		this.repository = repository;
 	}
 
+	/**
+	 * <p>Getter for the field <code>classifier</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getClassifier() {
 		return classifier;
 	}
 
+	/**
+	 * <p>Setter for the field <code>classifier</code>.</p>
+	 *
+	 * @param classifier a {@link java.lang.String} object.
+	 */
 	public void setClassifier(String classifier) {
 		this.classifier = classifier;
 	}
 
+	/**
+	 * <p>Getter for the field <code>packaging</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getPackaging() {
 		return packaging;
 	}
 
+	/**
+	 * <p>Setter for the field <code>packaging</code>.</p>
+	 *
+	 * @param packaging a {@link java.lang.String} object.
+	 */
 	public void setPackaging(String packaging) {
 		this.packaging = packaging;
 	}
 	
+	/**
+	 * <p>getProgrammingLanguage.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 */
 	public ProgrammingLanguage getProgrammingLanguage() {
 		return this.lang;
 	}
 
+	/**
+	 * <p>setProgrammingLanguage.</p>
+	 *
+	 * @param _lang a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 */
 	public void setProgrammingLanguage(ProgrammingLanguage _lang) {
 		this.lang = _lang;
 	}
 	
+	/**
+	 * <p>getAbsM2Path.</p>
+	 *
+	 * @return a {@link java.nio.file.Path} object.
+	 */
 	@JsonIgnore
 	public Path getAbsM2Path() {
 		return Paths.get(VulasConfiguration.getGlobal().getLocalM2Repository().toString(), this.getRelM2Path().toString()).normalize();
@@ -150,11 +250,22 @@ public class Artifact implements Serializable,Comparable<Object> {
 		return Paths.get(b.toString());
 	}
 
+	/**
+	 * <p>isCached.</p>
+	 *
+	 * @return a boolean.
+	 * @throws java.lang.IllegalStateException if any.
+	 */
 	@JsonIgnore
 	public boolean isCached() throws IllegalStateException {
 		return this.getAbsM2Path().toFile().exists();
 	}
 	
+	/**
+	 * <p>getContentType.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	@JsonIgnore
 	public String getContentType() {
 		if(this.getPackaging()!=null){
@@ -172,9 +283,10 @@ public class Artifact implements Serializable,Comparable<Object> {
 	}
 	
 	/**
-     * Returns the artifact's filename root, e.g., guice-3.0.0
-     * To be completed with one of the available postfix in this.ec
-	 * @return
+	 * Returns the artifact's filename root, e.g., guice-3.0.0
+	 * To be completed with one of the available postfix in this.ec
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 	@JsonIgnore
 	public String getM2Filename() {
@@ -197,6 +309,7 @@ public class Artifact implements Serializable,Comparable<Object> {
 	}
 	
 	
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -210,6 +323,7 @@ public class Artifact implements Serializable,Comparable<Object> {
 		return result;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -269,8 +383,8 @@ public class Artifact implements Serializable,Comparable<Object> {
 	 * classifier is one of 'sources', 'javadoc', 'test-sources', and 'tests', and
 	 * packaging is one of 'pom', 'jar' and 'war'.
 	 * Without all this information, a download is not possible.
-	 * @param _doc
-	 * @return
+	 *
+	 * @return a boolean.
 	 */
 	public boolean isReadyForDownload() {
 		return this.getLibId().getMvnGroup()!=null && !this.getLibId().getMvnGroup().equals("")  &&

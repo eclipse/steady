@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.repo;
 
 
@@ -11,6 +30,10 @@ import com.sap.psr.vulas.backend.model.Space;
 import com.sap.psr.vulas.backend.util.ReferenceUpdater;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>SpaceRepositoryImpl class.</p>
+ *
+ */
 public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 	
 	private static Logger log = LoggerFactory.getLogger(SpaceRepositoryImpl.class);
@@ -24,6 +47,7 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 	@Autowired
 	ReferenceUpdater refUpdater;
 	
+	/** {@inheritDoc} */
 	public Space customSave(Space _s) {
 		final StopWatch sw = new StopWatch("Save " + _s).start();
 
@@ -45,7 +69,7 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 			//	_s.setSpaceOwners(managed_space.getSpaceOwners());
 			
 		} catch (EntityNotFoundException e1) {			
-			SpaceRepositoryImpl.log.info("Space [" + _s.getSpaceToken() + "] does not yet exist, going to save it.");
+			SpaceRepositoryImpl.log.debug("Space [" + _s.getSpaceToken() + "] does not yet exist, going to save it.");
 		}
 		
 		// Update refs to independent entities
@@ -65,9 +89,10 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 	}
 	
 	/**
-	 * Returns the default space for the given tenant token. In case the tenant token is not provided, it uses the default tenant. If 
+	 * {@inheritDoc}
+	 *
+	 * Returns the default space for the given tenant token. In case the tenant token is not provided, it uses the default tenant. If
 	 * the default space for the given tenant or the default tenant do not exist, it returns null.
-	 * @return the default space for the given tenant token; null otherwise
 	 */
 	public Space getDefaultSpace(String _tenant_token) {
 		Space s = null;
@@ -92,10 +117,10 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 	}
 		
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns the space for the given space token. In case a space token is not provided, it returns the default space of the
 	 * default tenant (if existing, null otherwise)
-	 * @return the space for the given space token; default space if token is null; null otherwise.
-	 * @throws Exception 
 	 */
 	public Space getSpace(String _spaceToken) {
 		Space space = null;		
@@ -111,7 +136,7 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 			}
 		}
 		
-		log.info("Found " + space + " for token [" + _spaceToken + "]");
+		log.debug("Found " + space + " for token [" + _spaceToken + "]");
 		return space;
 	}
 }

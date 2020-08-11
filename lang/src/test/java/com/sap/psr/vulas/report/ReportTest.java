@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.report;
 
 import static com.xebialabs.restito.builder.stub.StubHttp.whenHttp;
@@ -8,10 +27,15 @@ import static com.xebialabs.restito.semantics.Action.status;
 import static com.xebialabs.restito.semantics.Action.stringContent;
 import static com.xebialabs.restito.semantics.Condition.composite;
 import static com.xebialabs.restito.semantics.Condition.method;
-import static com.xebialabs.restito.semantics.Condition.uri;
 import static com.xebialabs.restito.semantics.Condition.parameter;
+import static com.xebialabs.restito.semantics.Condition.uri;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,6 +44,7 @@ import org.apache.commons.configuration.Configuration;
 import org.glassfish.grizzly.http.Method;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.junit.Test;
+import org.w3c.tidy.Tidy;
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.AbstractGoalTest;
@@ -29,8 +54,11 @@ import com.sap.psr.vulas.goals.GoalExecutionException;
 import com.sap.psr.vulas.shared.connectivity.PathBuilder;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.Application;
+import com.sap.psr.vulas.shared.json.model.ExemptionBug;
+import com.sap.psr.vulas.shared.json.model.ExemptionScope;
+import com.sap.psr.vulas.shared.json.model.ExemptionSet;
+import com.sap.psr.vulas.shared.json.model.ExemptionUnassessed;
 import com.sap.psr.vulas.shared.util.FileUtil;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 
 public class ReportTest extends AbstractGoalTest {
@@ -89,6 +117,18 @@ public class ReportTest extends AbstractGoalTest {
 			this.configureBackendServiceUrl(server);
 			this.setupMockServices(this.testApp);
 
+			// Exemptions
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.reason", "The vulnerable library with digest 6F1EBC is no problem because ...");
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2014-0050.libraries", "6F1EBC6CE20AD8B3D4825CEB2E625E5C432A0E10");
+			
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2013-2186.reason", "Vulnerability CVE-2013-2186 is no problem because ...");
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2013-2186.libraries", "*");
+			
+			vulasConfiguration.setProperty(ExemptionBug.CFG_PREFIX + ".CVE-2019-1234.reason", "Vulnerability CVE-2019-1234 is no problem because ...");
+			
+			vulasConfiguration.setProperty(ExemptionScope.CFG, "teST, provIDED");
+			vulasConfiguration.setProperty(ExemptionUnassessed.CFG, "knOWN");
+			
 			final Configuration cfg = vulasConfiguration.getConfiguration();
 
 			final GoalContext goal_context = new GoalContext();
@@ -102,14 +142,8 @@ public class ReportTest extends AbstractGoalTest {
 			// Set all kinds of exceptions
 			report.setExceptionThreshold(cfg.getString(CoreConfiguration.REP_EXC_THRESHOLD, Report.THRESHOLD_ACT_EXE));
 
-			// Excluded bugs
-			report.addExcludedBugs(cfg.getStringArray(CoreConfiguration.REP_EXCL_BUGS));
-
-			// Excluded scopes
-			report.addExcludedScopes(cfg.getStringArray(CoreConfiguration.REP_EXC_SCOPE_BL));
-
-			// Exclude non-assessed vuln deps
-			report.setIgnoreUnassessed(cfg.getString(CoreConfiguration.REP_EXCL_UNASS, Report.IGN_UNASS_KNOWN));
+			// Exemptions
+			report.setExemptions(ExemptionSet.createFromConfiguration(cfg));
 
 			// Fetch the vulns
 			report.fetchAppVulnerabilities();
@@ -122,7 +156,25 @@ public class ReportTest extends AbstractGoalTest {
 				report_dir.toFile().mkdirs();
 
 			report.writeResult(report_dir);
-
+			
+			// Check that files exist
+			assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_HTML)));
+			assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_XML)));
+			assertTrue(FileUtil.isAccessibleFile(report_dir.resolve(Report.REPORT_FILE_JSON)));
+			
+			// Validate Html
+			final Tidy tidy = new Tidy();
+			tidy.parse(new ByteArrayInputStream(FileUtil.readInputStream(new FileInputStream(new File("./target/vulas/report/" + Report.REPORT_FILE_HTML)))), new FileOutputStream(new File("./target/jtidy-html.txt")));
+			
+			// Allow no errors
+			assertEquals(0, tidy.getParseErrors());
+			
+			// Allow just the following 3 warnings (interestingly, a missing </table> will only result in additional warnings)
+			//line 361 column 41 - Warning: <td> attribute "width" has invalid value "25%"
+			//line 381 column 41 - Warning: <td> attribute "width" has invalid value "75%"
+			//line 1 column 1 - Warning: html doctype doesn't match content
+			assertEquals(3, tidy.getParseWarnings());
+			
 			// Check the HTTP calls made
 			String path = "/backend" + PathBuilder.appVulnDeps(this.testApp, true, false, true);
 			path = path.substring(0, path.indexOf('?'));

@@ -1,52 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    This file is part of Eclipse Steady.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    SPDX-License-Identifier: Apache-2.0
+
+    Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.sap.research.security.vulas</groupId>
 	<artifactId>root</artifactId>
-	<version>3.0.20-SNAPSHOT</version>
+	<version>3.1.14-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>Vulas</name>
-	<description>Vulas analyses your Java and Python applications for open-source dependencies with known vulnerabilities, using both static analysis and testing to determine code context and usage for greater accuracy.</description>
-	<url>https://github.com/SAP/vulas</url>
+	<name>Eclipse Steady</name>
+	<description>Analyses your Java and Python applications for open-source dependencies with known vulnerabilities, using both static analysis and testing to determine code context and usage for greater accuracy.</description>
+	<url>https://eclipse.github.io/steady/</url>
+	<inceptionYear>2018</inceptionYear>
+	
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
 			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>manual</distribution><!-- Must be build and installed locally 
-				(manual), cannot be redistributed on Maven (repo) -->
 		</license>
 	</licenses>
-	<organization>
-		<name>SAP Security Research</name>
-	</organization>
+	
 	<developers>
 		<developer>
-			<id>plate</id>
-			<name>Henrik PLATE</name>
+			<name>Henrik Plate</name>
 			<email>henrik.plate@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 		<developer>
 			<id>ponta</id>
-			<name>Serena Elisa PONTA</name>
+			<name>Serena Elisa Ponta</name>
 			<email>serena.ponta@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 		<developer>
 			<id>sabetta</id>
-			<name>Antonino SABETTA</name>
+			<name>Antonino Sabetta</name>
 			<email>antonino.sabetta@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 		<developer>
 			<id>dangremont</id>
-			<name>Cedric DANGREMONT</name>
+			<name>Cedric Dangremont</name>
 			<email>cedric.dangremont@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 		<developer>
 			<id>pezze</id>
-			<name>Alessandro PEZZE</name>
+			<name>Alessandro Pezze</name>
 			<email>a.pezze@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
 		</developer>
 	</developers>
 
@@ -63,7 +91,6 @@
 		<module>lang-java-reach</module>
 		<module>lang-java-reach-wala</module>
 		<module>lang-java-reach-soot</module>
-
 		<module>lang-python</module>
 
 		<!-- Analysis of security patches and libraries -->
@@ -73,14 +100,11 @@
 
 		<!-- Allow the scanning of applications -->
 		<module>cli-scanner</module>
-		<module>plugin-maven</module> <!-- NOTE: The naming violates the Maven naming convention (which asks for 
-			vulas-maven-plugin), but this is just a warning. -->
+		<module>plugin-maven</module>
 
 		<!-- Web frontends -->
 		<module>frontend-apps</module>
 		<module>frontend-bugs</module>
-		<!-- module>frontend-patch-analyzer</module--> <!-- IMPORTANT: This frontend is years old, one has to check whether it still 
-			works. -->
 
 		<!-- REST services -->
 		<module>rest-lib-utils-init</module>
@@ -94,12 +118,14 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		
-		<!-- Repos to which Vulas artifacts will be deployed, must be provided as system property (-D) (no defaults)  -->
+
+		<!-- Repos to which Vulas artifacts will be deployed, must be provided
+			as system property (-D) (no defaults) -->
 		<snapshots.repo></snapshots.repo>
 		<releases.repo></releases.repo>
-		
-		<!-- Repos used for resolving dependencies, specify as system property (-D) to change the defaults -->
+
+		<!-- Repos used for resolving dependencies, specify as system property
+			(-D) to change the defaults -->
 		<gradle.repo>https://maven.google.com/</gradle.repo>
 	</properties>
 
@@ -116,25 +142,99 @@
 				</repository>
 			</repositories>
 		</profile>
+
+		<!-- Activate when deploying to the Central Repo. Also see https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release -->
+		<profile>
+			<id>javadoc</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.2.1</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!--  Run the following to fix all JavaDoc: "mvn -DdefaultAuthor=SAP -X -DfixTags=param,return,throws -P gradle clean compile org.apache.maven.plugins:maven-javadoc-plugin:3.1.1:fix"
+					The tag 'links' results in an exception in module lang-java.-->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>3.1.1</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Activate when deploying to the Central Repo. Also see https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release -->
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- Deploy to the Central Repository according to https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release. -->
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.8</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
 	</profiles>
 
 	<distributionManagement>
-        <snapshotRepository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>build.snapshots.repo</id>
-            <name>snapshots</name>
-            <url>${snapshots.repo}</url>
-        </snapshotRepository>
-        <repository>
-            <id>build.releases.repo</id>
-            <name>releases</name>
-            <url>${releases.repo}</url>
-        </repository>
-        <site>
-            <id>vulas.website</id>
-            <name>Vulas Documentation</name>
-            <url>file:${project.basedir}/docs/site</url>
-        </site>
+		<!-- To deploy snaphots to Sonatype, call deploy w/o profiles javadoc and release, but with -Dsnapshots.repo=https://oss.sonatype.org/content/repositories/snapshots -->
+		<snapshotRepository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>build.snapshots.repo</id>
+			<name>snapshots</name>
+			<url>${snapshots.repo}</url>
+		</snapshotRepository>
+		<repository>
+			<id>build.releases.repo</id>
+			<name>releases</name>
+			<url>${releases.repo}</url>
+		</repository>
+		<site>
+			<id>vulas.website</id>
+			<name>Vulas Documentation</name>
+			<url>file:${project.basedir}/docs/site</url>
+		</site>
 	</distributionManagement>
 
 	<!-- Dependencies common to all child projects -->
@@ -148,19 +248,20 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>4.13</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.2</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.13.3</version>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.13.3</version>
 		</dependency>
+		
 	</dependencies>
 
 	<!-- Use the same versions across all child projects -->
@@ -169,7 +270,7 @@
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
-				<version>4.5.8</version>
+				<version>4.5.12</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-cli</groupId>
@@ -194,22 +295,22 @@
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-compress</artifactId>
-				<version>1.18</version>
+				<version>1.20</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-beanutils</groupId>
 				<artifactId>commons-beanutils</artifactId>
-				<version>1.9.3</version>
+				<version>1.9.4</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.code.gson</groupId>
 				<artifactId>gson</artifactId>
-				<version>2.8.5</version>
+				<version>2.8.6</version>
 			</dependency>
 			<dependency>
 				<groupId>org.javassist</groupId>
 				<artifactId>javassist</artifactId>
-				<version>3.25.0-GA</version>
+				<version>3.26.0-GA</version>
 			</dependency>
 			<dependency>
 				<groupId>org.antlr</groupId>
@@ -221,17 +322,17 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-core</artifactId>
-				<version>2.9.9</version>
+				<version>2.9.10</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>2.9.9</version>
+				<version>2.9.10.5</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-annotations</artifactId>
-				<version>2.9.9</version>
+				<version>2.9.10</version>
 			</dependency>
 
 			<!-- Versions of 'org.apache.maven' artifacts should be identical -->
@@ -266,21 +367,21 @@
 	</dependencyManagement>
 
 	<scm>
-		<url>https://github.com/SAP/vulas</url>
-		<connection>scm:git:https://github.com/SAP/vulas</connection>
-		<developerConnection>scm:git:https://github.com/SAP/vulas</developerConnection>
+		<connection>scm:git:git://github.com/eclipse/steady.git</connection>
+		<developerConnection>scm:git:ssh://github.com:sap/eclipse/steady.git</developerConnection>
+		<url>https://github.com/eclipse/steady/tree/master</url>
 	</scm>
 
 	<issueManagement>
-		<url>https://github.com/SAP/vulas/issues</url>
+		<url>https://github.com/eclipse/steady/issues</url>
 		<system>GitHub</system>
 	</issueManagement>
 
 	<build>
 		<plugins>
 
-			<!-- Show whether there are newer versions available, run fully-qualified with
-				'mvn -DallowMajorUpdates=false -DprocessDependencyManagement=false org.codehaus.mojo:versions-maven-plugin:2.5:display-dependency-updates' -->
+			<!-- Show whether there are newer versions available, run fully-qualified
+				with 'mvn -DallowMajorUpdates=false -DprocessDependencyManagement=false org.codehaus.mojo:versions-maven-plugin:2.7:display-dependency-updates' -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
@@ -301,13 +402,59 @@
 					<allowMajorUpdates>false</allowMajorUpdates>
 				</configuration>
 			</plugin>
+			
+			<!-- Run with 'mvn -Dproject.name="Eclipse Steady" license:format -P gradle' -->
+			<plugin>
+			    <groupId>com.mycila</groupId>
+			    <artifactId>license-maven-plugin</artifactId>
+			    <version>3.0</version>
+			    <configuration>
+			        <header>Apache-2-Header-Template.txt</header>
+			        <properties>
+            			<owner>SAP SE or an SAP affiliate company</owner>
+                    </properties>
+			        <excludes>
+			            <exclude>**/.dockerignore</exclude>
+			            <exclude>**/.gitattributes</exclude>
+			            <exclude>**/.xsaccess</exclude>
+			            <exclude>**/.xsapp</exclude>
+			            <exclude>**/requirements.txt</exclude>
+			            <exclude>**/NOTICE.txt</exclude>
+			            <exclude>**/LICENSE.txt</exclude>
+			            <exclude>**/README.md</exclude>
+			            <exclude>**/CONTRIBUTING.md</exclude>
+			            <exclude>**/CONTRIBUTORS.md</exclude>
+			            <exclude>**/findbugs-exclude.xml</exclude>
+			            <exclude>**/src/test/resources/**</exclude>
+			            <exclude>**/log4j.properties</exclude>
+			            <exclude>**/*.g4</exclude>
+			            <exclude>**/*.tokens</exclude>
+			            <exclude>**/*.log</exclude>
+			            <exclude>**/.travis/**</exclude>
+			            <exclude>**/kubernetes/**</exclude>
+			            <exclude>**/docker/**</exclude>
+			            <exclude>**/docs/**</exclude>
+			            <exclude>**/.github/**</exclude>
+			            <exclude>**/gradle-wrapper.*</exclude>
+			            <exclude>**/.gradle/**</exclude>
+			            <exclude>**/.gradle_home/**</exclude>
+			            <exclude>**/*.gradle</exclude>
+			            <exclude>**/gradlew.bat</exclude>
+			            <exclude>**/gradlew</exclude>
+			            <exclude>**/src/it/settings.xml</exclude>
+			            <exclude>**/src/main/webapp/helpers/pqueue.js</exclude>
+			            <exclude>**/src/main/webapp/helpers/transpiled/pqueueES5.js</exclude>
+			            <exclude>**/src/main/webapp/d3.v3.min.js</exclude>
+			        </excludes>
+			    </configuration>
+			</plugin>
 
-			<!-- Successor of Findbugs, run fully-qualified with
-			    'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.failOnError=false -P soot,gradle com.github.spotbugs:spotbugs-maven-plugin:3.1.11:check' -->
+			<!-- Successor of Findbugs, run fully-qualified with 'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml
+				-Dspotbugs.failOnError=false -P soot,gradle com.github.spotbugs:spotbugs-maven-plugin:3.1.12.2:check' -->
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.11</version>
+				<version>3.1.12.2</version>
 				<configuration>
 					<failOnError>false</failOnError>
 					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
@@ -337,7 +484,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.0</version>
+				<version>0.8.4</version>
 				<configuration>
 					<excludes>
 						<!-- Exclude ANTLR generated classes -->
@@ -371,15 +518,16 @@
 						</goals>
 						<configuration>
 							<rules>
-								<!-- implementation is needed only for Maven 2 -->
-								<rule implementation="org.jacoco.maven.RuleConfiguration">
-									<element>BUNDLE</element>
+								<rule>
+									<element>CLASS</element>
+									<excludes>
+										<exclude>*Test</exclude>
+									</excludes>
 									<limits>
-										<!-- implementation is needed only for Maven 2 -->
-										<limit implementation="org.jacoco.report.check.Limit">
-											<counter>COMPLEXITY</counter>
+										<limit>
+											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.0</minimum>
+											<minimum>0%</minimum>
 										</limit>
 									</limits>
 								</rule>
@@ -388,10 +536,16 @@
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 
 		<pluginManagement>
 			<plugins>
+				<plugin>
+			        <groupId>com.google.cloud.tools</groupId>
+			        <artifactId>jib-maven-plugin</artifactId>
+			    	<version>1.7.0</version>
+			    </plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
@@ -400,7 +554,7 @@
 						<dependency>
 							<groupId>org.apache.maven.wagon</groupId>
 							<artifactId>wagon-file</artifactId>
-							<version>3.3.2</version>
+							<version>3.3.4</version>
 						</dependency>
 					</dependencies>
 				</plugin>
@@ -412,7 +566,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>2.4.3</version>
+					<version>3.1.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -455,7 +609,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>3.7.1</version>
-				<!--configuration> <outputDirectory>${project.basedir}/docs/site</outputDirectory> 
+				<!--configuration> <outputDirectory>${project.basedir}/docs/site</outputDirectory>
 					</configuration -->
 			</plugin>
 			<plugin>
@@ -488,7 +642,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.11</version>
+				<version>3.1.12.2</version>
 				<configuration>
 					<failOnError>false</failOnError>
 					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>

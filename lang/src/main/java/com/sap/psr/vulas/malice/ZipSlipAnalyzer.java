@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.malice;
 
 import java.io.BufferedInputStream;
@@ -14,8 +33,8 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.util.DirUtil;
 import com.sap.psr.vulas.shared.util.StringUtil;
@@ -26,16 +45,16 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  * Supports the following archive types:
  * - ZIP and derivates JAR, WAR, EAR, AAR
  * - TAR and TAR.GZ
- * 
- * @see https://github.com/snyk/zip-slip-vulnerability
  *
+ * See https://github.com/snyk/zip-slip-vulnerability
  */
 public class ZipSlipAnalyzer implements MaliciousnessAnalyzer {
 
-	private static final Log log = LogFactory.getLog(ZipSlipAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private Path destinationPath = VulasConfiguration.getGlobal().getTmpDir().toAbsolutePath().resolve(StringUtil.getRandonString(10));
 
+	/** {@inheritDoc} */
 	@Override
 	public MaliciousnessAnalysisResult isMalicious(File _file) {
 		MaliciousnessAnalysisResult mal = null;
@@ -75,6 +94,7 @@ public class ZipSlipAnalyzer implements MaliciousnessAnalyzer {
 		return mal;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public MaliciousnessAnalysisResult isMalicious(InputStream _is, boolean _log) {
 		final StringBuffer buffer = new StringBuffer();
@@ -128,7 +148,7 @@ public class ZipSlipAnalyzer implements MaliciousnessAnalyzer {
 		} else {
 			mal.setReason("Archive is NOT subject to ZipSlip vulnerability, all [" + count + "] archive entries would be extracted inside or below an intended target folder");
 			if(_log)
-				log.info(mal.getReason());
+				log.debug(mal.getReason());
 		}
 		
 		return mal;

@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.util;
 
 import java.io.BufferedReader;
@@ -12,10 +31,19 @@ import org.apache.http.client.config.RequestConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <p>ConnectionUtil class.</p>
+ *
+ */
 public class ConnectionUtil {
 	
 	private static Logger log = LoggerFactory.getLogger(ConnectionUtil.class);
 
+	/**
+	 * <p>getProxyConfig.</p>
+	 *
+	 * @return a {@link org.apache.http.client.config.RequestConfig} object.
+	 */
 	public static RequestConfig getProxyConfig() {
 		RequestConfig config = null;
 		final String phost = System.getProperty("http.proxyHost", null);
@@ -33,6 +61,13 @@ public class ConnectionUtil {
 		return config;
 	}
 	
+	/**
+	 * <p>readInputStream.</p>
+	 *
+	 * @param _is a {@link java.io.InputStream} object.
+	 * @return a {@link java.lang.String} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public static String readInputStream(@NotNull InputStream _is) throws IOException {
 		final StringBuilder result_builder = new StringBuilder();
         try {

@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.cg.wala;
 
 import java.io.File;
@@ -7,8 +26,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -45,7 +64,8 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class WalaCallgraphConstructor implements ICallgraphConstructor {
 
-    private static final Log log = LogFactory.getLog(WalaCallgraphConstructor.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+    /** Constant <code>FRAMEWORK="wala"</code> */
     public static final String FRAMEWORK = "wala";
 
     // Packages to be excluded for call graph construction, which is read from wala-cfg.properties
@@ -58,12 +78,23 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
     
     private VulasConfiguration vulasConfiguration = null;
 
+    /**
+     * <p>getFramework.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getFramework() { return WalaCallgraphConstructor.FRAMEWORK; }
     
+    /**
+     * <p>Getter for the field <code>appContext</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+     */
     public Application getAppContext() {
         return this.appContext;
     }
     
+    /** {@inheritDoc} */
     public void setVulasConfiguration(VulasConfiguration _cfg) {
     	this.vulasConfiguration = _cfg;
     }
@@ -85,10 +116,12 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
     private long buildTimeNano = -1;
 
 
+    /** {@inheritDoc} */
     public void setAppContext(Application _ctx) {
         this.appContext = _ctx;
     }
 
+    /** {@inheritDoc} */
     public void setAppClasspath(String _cp) {
         if (this.classpath != null) {
             this.classpath += System.getProperty("path.separator");
@@ -98,6 +131,7 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
         WalaCallgraphConstructor.log.info("Add to wala classpath the application: [" + this.classpath + "]");
     }
 
+    /** {@inheritDoc} */
     public void setDepClasspath(String _dependenciesClasspath) {
         if (this.classpath != null) {
             this.classpath += System.getProperty("path.separator");
@@ -108,6 +142,8 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Filter and find all entrypoints in scope
      */
     public void setEntrypoints(Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs) throws CallgraphConstructException {
@@ -219,7 +255,7 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
     }
 
     /**
-     * Given an IMethod, identify whether it's an object constructor<init>, class initializer<clinit> or a method, return the ConstructId
+     * Given an IMethod, identify whether it's an object constructor&lt;clinit&gt;, class initializer&lt;clinit&gt; or a method, return the ConstructId
      *
      * @param _method
      * @return
@@ -275,16 +311,17 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
 
     /**
      * Returns a human-readable description of the constructor's specific configuration.
+     *
+     * @return a {@link org.apache.commons.configuration.Configuration} object.
      */
     public Configuration getConstructorConfiguration() {
         return this.vulasConfiguration.getConfiguration().subset("vulas.reach.wala");
     }
 
     /**
-     * Parse command line arguments, and then build callgraph based on these properties
+     * {@inheritDoc}
      *
-     * @param _bugid
-     * @param _only_new
+     * Parse command line arguments, and then build callgraph based on these properties
      */
     public void buildCallgraph(boolean _policy) throws CallgraphConstructException {
         WalaCallgraphConstructor.log.info("Starting call graph construction for " + this.appContext.toString(false));
@@ -374,6 +411,8 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
 
     /**
      * Normalizing a wala callgraph to a general graph represented by ConstructId
+     *
+     * @return a {@link com.ibm.wala.util.graph.Graph} object.
      */
     public Graph<com.sap.psr.vulas.shared.json.model.ConstructId> getCallgraph() {
         Graph<com.sap.psr.vulas.shared.json.model.ConstructId> graph = SlowSparseNumberedGraph.make();
@@ -409,10 +448,16 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
         return graph;
     }
 
+    /**
+     * <p>Getter for the field <code>entrypoints</code>.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<com.sap.psr.vulas.shared.json.model.ConstructId> getEntrypoints() {
         return this.filteredEP;
     }
 
+    /** {@inheritDoc} */
     public void setExcludePackages(String _packages) {
 
         // Overwrite configuration (if requested)

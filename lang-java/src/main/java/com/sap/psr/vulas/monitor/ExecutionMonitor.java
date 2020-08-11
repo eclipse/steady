@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.monitor;
 
 import java.util.Iterator;
@@ -5,8 +24,7 @@ import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.AbstractGoal;
@@ -21,8 +39,6 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  * during the class loading process. Receives callbacks from instrumented code that is executed
  * during application tests. The collected information is then uploaded to the central Vulas
  * backend using the {@link UploadScheduler}.
- * 
- *
  */
 public class ExecutionMonitor {
 
@@ -30,7 +46,7 @@ public class ExecutionMonitor {
 
 	private static ExecutionMonitor instance = null;
 
-	private static Log log = null;
+	private static Logger log = null;
 	
 	private static boolean PAUSE_COLLECTION = false;
 
@@ -47,6 +63,9 @@ public class ExecutionMonitor {
 	 */
 	private AbstractGoal exe = null;
 
+	/**
+	 * <p>Constructor for ExecutionMonitor.</p>
+	 */
 	public ExecutionMonitor() {
 		try {
 			final Application app_ctx = CoreConfiguration.getAppContext();
@@ -75,22 +94,42 @@ public class ExecutionMonitor {
 
 	// ====================================== STATIC METHODS
 
+	/**
+	 * <p>Getter for the field <code>instance</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.monitor.ExecutionMonitor} object.
+	 */
 	public synchronized static ExecutionMonitor getInstance() {
 		if(ExecutionMonitor.instance==null) ExecutionMonitor.instance = new ExecutionMonitor();
 		return ExecutionMonitor.instance;
 	}
 	
-	private static final Log getLog() {
+	private static final Logger getLog() {
 		if(ExecutionMonitor.log==null)
-			ExecutionMonitor.log = LogFactory.getLog(ExecutionMonitor.class);
+			ExecutionMonitor.log = org.apache.logging.log4j.LogManager.getLogger();
 		return ExecutionMonitor.log;
 	}
 	
+	/**
+	 * <p>isPaused.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public static boolean isPaused() { return ExecutionMonitor.PAUSE_COLLECTION; }
+	/**
+	 * <p>setPaused.</p>
+	 *
+	 * @param _bool a boolean.
+	 */
 	public static synchronized void setPaused(boolean _bool) { ExecutionMonitor.PAUSE_COLLECTION = _bool; }
 
 	// ====================================== INSTANCE METHODS
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() {
 		final StringBuffer b = new StringBuffer();
 		b.append("ExecutionMonitor [id=").append(this.id);
@@ -103,6 +142,12 @@ public class ExecutionMonitor {
 		return b.toString();
 	}
 
+	/**
+	 * <p>enablePeriodicUpload.</p>
+	 *
+	 * @param _interval a long.
+	 * @param _batch_size a int.
+	 */
 	public void enablePeriodicUpload(long _interval, int _batch_size) {
 		this.periodicUploader = new UploadScheduler(this, _interval, _batch_size);
 		final Thread thread = new Thread(this.periodicUploader, "vulas-periodic-trace-upload");
@@ -111,15 +156,38 @@ public class ExecutionMonitor {
 		this.shutdownUploader.addObserver(this.periodicUploader);
 	}
 
+	/**
+	 * <p>isPeriodicUploadEnabled.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isPeriodicUploadEnabled() { return this.periodicUploader!=null && this.periodicUploader.isEnabled(); }
+	/**
+	 * <p>getPeriodicUploadInterval.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getPeriodicUploadInterval() { return (this.periodicUploader==null ? -1 : this.periodicUploader.getInterval()); };
+	/**
+	 * <p>getPeriodicUploadBatchSize.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getPeriodicUploadBatchSize() { return (this.periodicUploader==null ? -1 : this.periodicUploader.getBatchSize()); };
 
+	/**
+	 * <p>startGoal.</p>
+	 *
+	 * @throws com.sap.psr.vulas.goals.GoalConfigurationException if any.
+	 */
 	public void startGoal() throws GoalConfigurationException {
 		if(this.exe!=null)
 			this.exe.start();
 	}
 
+	/**
+	 * <p>stopGoal.</p>
+	 */
 	public void stopGoal() {
 		if(this.exe!=null) {
 			this.exe.stop();
@@ -140,7 +208,6 @@ public class ExecutionMonitor {
 
 	/**
 	 * Iterates over all configured {@link IInstrumentor}s and calls {@link IInstrumentor#awaitUpload()} for each of them.
-	 * @param batchSize
 	 */
 	public void awaitUpload() {
 		final List<IInstrumentor> instrumentorList = InstrumentorFactory.getInstrumentors();
@@ -158,7 +225,8 @@ public class ExecutionMonitor {
 
 	/**
 	 * Iterates over all configured {@link IInstrumentor}s and calls {@link IInstrumentor#upladInformation(AbstractGoal, int)} for each of them.
-	 * @param batchSize
+	 *
+	 * @param batchSize a int.
 	 */
 	public synchronized void uploadInformation(int batchSize) {
 		final List<IInstrumentor> instrumentorList = InstrumentorFactory.getInstrumentors();

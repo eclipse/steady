@@ -1,7 +1,7 @@
-mkdocs
-pymdown-extensions
-mkdocs-material
-markdown-include
+mkdocs==1.0.4
+pymdown-extensions==6.1
+mkdocs-material==4.4.3
+markdown-include==0.5.1
 GitPython
 fire
 pathlib

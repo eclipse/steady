@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.cg.soot;
 
 import com.ibm.wala.util.graph.Graph;
@@ -12,8 +31,8 @@ import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import soot.*;
 import soot.jimple.infoflow.entryPointCreators.IEntryPointCreator;
 import soot.jimple.toolkits.callgraph.CallGraph;
@@ -28,8 +47,9 @@ import java.util.*;
  */
 public class SootCallgraphConstructor implements ICallgraphConstructor {
 
-    private static final Log log = LogFactory.getLog(SootCallgraphConstructor.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
+    /** Constant <code>FRAMEWORK="soot"</code> */
     public static final String FRAMEWORK = "soot";
 
     private long buildTimeNano = -1;
@@ -55,24 +75,36 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
     private CallGraph callgraph = null;
 
     /**
-     * Set the context of the application to be analyzed
+     * {@inheritDoc}
      *
-     * @param _ctx
+     * Set the context of the application to be analyzed
      */
     public void setAppContext(Application _ctx) {
         this.appContext = _ctx;
     }
     
+    /** {@inheritDoc} */
     public void setVulasConfiguration(VulasConfiguration _cfg) {
     	this.vulasConfiguration = _cfg;
     }
 
+    /**
+     * <p>Getter for the field <code>appContext</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+     */
     public Application getAppContext() {
         return this.appContext;
     }
 
+    /**
+     * <p>getFramework.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getFramework() { return SootCallgraphConstructor.FRAMEWORK; }
 
+    /** {@inheritDoc} */
     public void setDepClasspath(String _dependenciesClasspath) {
         if (this.classpath != null) {
             this.classpath += System.getProperty("path.separator");
@@ -82,6 +114,7 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
         SootCallgraphConstructor.log.info("Add to soot classpath the dependencies: [" + this.classpath + "]");
     }
 
+    /** {@inheritDoc} */
     public void setAppClasspath(String _cp) {
         if (this.classpath != null) {
             this.classpath += System.getProperty("path.separator");
@@ -104,6 +137,8 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
 
     /**
      * Returns a human-readable description of the constructor's specific configuration.
+     *
+     * @return a {@link org.apache.commons.configuration.Configuration} object.
      */
     public Configuration getConstructorConfiguration() {
         return this.vulasConfiguration.getConfiguration().subset(SootConfiguration.SOOT_CONFIGURATION_SETTINGS);
@@ -114,6 +149,9 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
      * First resets and then configures Soot's Options
      */
 
+    /**
+     * <p>sootSetup.</p>
+     */
     protected void sootSetup() {
 
         // start with a clean run of Soot
@@ -183,8 +221,8 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
     /**
      * Gets the SootMethod that correspond to the given constructs
      *
-     * @param _constructs
-     * @throws CallgraphConstructException
+     * @param _constructs a {@link java.util.Set} object.
+     * @throws com.sap.psr.vulas.cg.CallgraphConstructException
      */
     protected void sootMethods4entrypoints(Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs) throws CallgraphConstructException {
 
@@ -270,9 +308,9 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
     }
 
     /**
-     * Filter and find all entrypoints in Scene
+     * {@inheritDoc}
      *
-     * @throws CallgraphConstructException if the entrypoints could not be set.
+     * Filter and find all entrypoints in Scene
      */
     public void setEntrypoints(Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs) throws CallgraphConstructException {
 
@@ -333,6 +371,8 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
 
 
     /**
+     * {@inheritDoc}
+     *
      * Read all configurations and parse command line options, and then build callgraph based on these properties
      */
     public void buildCallgraph(boolean _policy) throws CallgraphConstructException {
@@ -424,6 +464,8 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
 
     /**
      * Normalizing a soot callgraph to a general graph represented by ConstructId
+     *
+     * @return a {@link com.ibm.wala.util.graph.Graph} object.
      */
     public Graph<com.sap.psr.vulas.shared.json.model.ConstructId> getCallgraph() {
         final Graph<com.sap.psr.vulas.shared.json.model.ConstructId> graph = SlowSparseNumberedGraph.make();
@@ -461,10 +503,16 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
         return graph;
     }
 
+    /**
+     * <p>Getter for the field <code>entrypoints</code>.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<com.sap.psr.vulas.shared.json.model.ConstructId> getEntrypoints() {
         return this.filteredEP;
     }
 
+    /** {@inheritDoc} */
     public void setExcludePackages(String _packages) {
         // Overwrite configuration (if requested)
         if (_packages != null && !_packages.equals(""))

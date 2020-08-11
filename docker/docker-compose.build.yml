@@ -1,0 +1,60 @@
+version: '2'
+
+services:
+  frontend-apps:
+    build: 
+      context: ./frontend-apps
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+    image: vulnerability-assessment-tool-frontend-apps:${VULAS_RELEASE}
+
+  frontend-bugs:
+    build: 
+      context: ./frontend-bugs
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+    image: vulnerability-assessment-tool-frontend-bugs:${VULAS_RELEASE}
+
+  patch-lib-analyzer:
+    build: 
+      context: ./patch-lib-analyzer
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+    image: vulnerability-assessment-tool-patch-lib-analyzer:${VULAS_RELEASE}
+
+  rest-backend:
+    build: 
+      context: ./rest-backend    
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+    image: vulnerability-assessment-tool-rest-backend:${VULAS_RELEASE}
+
+  rest-lib-utils:
+    build: 
+      context: ./rest-lib-utils 
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+    image: vulnerability-assessment-tool-rest-lib-utils:${VULAS_RELEASE}
+
+  patch-analyzer:
+    build: 
+      context: ./patch-analyzer 
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+    image: vulnerability-assessment-tool-patch-analyzer:${VULAS_RELEASE}
+    entrypoint: /bin/sleep 1
+
+  rest-nvd:
+    extends:
+      file: ../rest-nvd/docker-compose.yml
+      service: rest-nvd
+    build:
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+    image: vulnerability-assessment-tool-rest-nvd:${VULAS_RELEASE}

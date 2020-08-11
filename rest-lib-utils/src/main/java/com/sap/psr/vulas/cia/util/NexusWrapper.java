@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.cia.util;
 
 import java.nio.file.Path;
@@ -26,6 +45,10 @@ import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.Artifact;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>NexusWrapper class.</p>
+ *
+ */
 public class NexusWrapper implements RepositoryWrapper {
 
 	
@@ -48,6 +71,7 @@ public class NexusWrapper implements RepositoryWrapper {
 			CONFIGURED=true;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
 		return SUPP_LANG;
@@ -146,6 +170,7 @@ public class NexusWrapper implements RepositoryWrapper {
 	
 	
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<Artifact> getAllArtifactVersions(String group, String artifact, String classifier, String packaging) throws InterruptedException {
 		
@@ -168,6 +193,7 @@ public class NexusWrapper implements RepositoryWrapper {
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<Artifact> getGreaterArtifactVersions(String group, String artifact, String greaterThanVersion,
 			String classifier, String packaging) throws Exception {
@@ -199,18 +225,21 @@ public class NexusWrapper implements RepositoryWrapper {
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Artifact getLatestArtifactVersion(String group, String artifact, String classifier, String packaging) {
 		return this.resolveInNexus(group, artifact, "RELEASE", classifier, packaging);
 		 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Artifact getArtifactVersion(String group, String artifact, String version, String classifier,
 			String packaging,ProgrammingLanguage lang) throws Exception {
 		return this.resolveInNexus(group, artifact, version, classifier, packaging);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Path downloadArtifact(Artifact a) throws Exception {
 		final Map<String,String> params = new HashMap<String,String>();
@@ -243,6 +272,7 @@ public class NexusWrapper implements RepositoryWrapper {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Artifact getArtifactForDigest(String digest) throws InterruptedException {
 		//currently it only returns the lib id, to check whether package classifier and timestamp can be obtained (if needed)
@@ -264,6 +294,7 @@ public class NexusWrapper implements RepositoryWrapper {
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isConfigured() {
 		return CONFIGURED;

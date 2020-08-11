@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.monitor;
 
 import java.net.URL;
@@ -11,8 +30,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.BackendConnector;
@@ -32,7 +51,10 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  * Controls whether or not a given Java class is instrumented.
  * To that end, it uses a couple of blacklists and whitelists read from the configuration.
  * Moreover, it maintains statistics to report on the overall number of classes and constructs instrumented.
- * @see {@link DynamicTransformer}, {@link JarAnalyzer} and {@link WarAnalyzer}.
+ *
+ * @see DynamicTransformer
+ * @see JarAnalyzer
+ * @see WarAnalyzer
  */
 public class InstrumentationControl {
 
@@ -40,7 +62,7 @@ public class InstrumentationControl {
 
 	public static enum InstrumentationMetrics { classesTotal, classesInstrumentedSuccess, classesInstrumentedFailure, classesAlreadyInstrumented };
 
-	private static final Log log = LogFactory.getLog(InstrumentationControl.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * All instances of the class, used to produce overall instrumentation statistics.
@@ -152,6 +174,7 @@ public class InstrumentationControl {
 
 	/**
 	 * Updates the statistics depending on whether the instrumentation of the given Java class succeeded or not.
+	 *
 	 * @param _jcid the class that was instrumented successfully or not
 	 * @param _instr_successful null if the class was already instrumented, or true/false if the instrumentation was done in this transformer
 	 */
@@ -232,6 +255,12 @@ public class InstrumentationControl {
 		}
 	}
 
+	/**
+	 * <p>getMetric.</p>
+	 *
+	 * @param _metric a {@link com.sap.psr.vulas.monitor.InstrumentationControl.InstrumentationMetrics} object.
+	 * @return a long.
+	 */
 	public long getMetric(InstrumentationMetrics _metric) {
 		if(InstrumentationMetrics.classesTotal.equals(_metric))
 			return this.classesCount;
@@ -245,6 +274,11 @@ public class InstrumentationControl {
 			return -1;
 	}
 
+	/**
+	 * <p>getStatistics.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
 	public Map<InstrumentationMetrics, Long> getStatistics() {
 		final Map<InstrumentationMetrics, Long> stats = new HashMap<InstrumentationMetrics, Long>();
 		stats.put(InstrumentationMetrics.classesTotal,  			 new Long(this.classesCount));
@@ -258,8 +292,9 @@ public class InstrumentationControl {
 	 * Returns true if the JAR at the specified path is blacklisted, false otherwise.
 	 * A JAR is blacklisted if the file name matches any of the patterns specified with configuration parameter instr.blacklist.jars,
 	 * or if it resides in a directory (or subdirectory) of any of the paths specified with instr.blacklist.dirs.
-	 * @param _path
-	 * @return
+	 *
+	 * @param _url a {@link java.net.URL} object.
+	 * @return a boolean.
 	 */
 	public boolean isBlacklistedJar(URL _url) {
 		// If the URL does not point to a class that has been loaded from a URL, return false
@@ -305,8 +340,9 @@ public class InstrumentationControl {
 	 * Returns true if the class with the specified qualified name is blacklisted, false otherwise.
 	 * A qualified name is blacklisted if its package (or any of its parent packages) is specified
 	 * as part of the configuration parameters instr.blacklist.classes.jre or instr.blacklist.classes.custom.
-	 * @param _qname
-	 * @return
+	 *
+	 * @param _qname a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
 	public boolean isBlacklistedClass(String _qname) {
 		if(!this.checkedClasses.containsKey(_qname)) {
@@ -325,39 +361,60 @@ public class InstrumentationControl {
 
 	/**
 	 * Returns the total number of classes looked at.
+	 *
+	 * @return a int.
 	 */
 	public int countClassesTotal() { return this.classesCount; }
 
 	/**
 	 * Returns the number of classes that were already instrumented.
+	 *
 	 * @see #updateInstrumentationStatistics(JavaId, Boolean)
+	 * @return a int.
 	 */
 	public int countClassesInstrumentedAlready() { return this.alreadyInstrumentedCount; }
 
 	/**
 	 * Returns the number of classes that were successfully instrumented.
+	 *
 	 * @see #updateInstrumentationStatistics(JavaId, Boolean)
+	 * @return a int.
 	 */
 	public int countClassesInstrumentedSuccess() { return this.successfulInstrumentationCount; }
 
 	/**
 	 * Returns the number of classes that could not be instrumented.
+	 *
 	 * @see #updateInstrumentationStatistics(JavaId, Boolean)
+	 * @return a int.
 	 */
 	public int countClassesInstrumentedFailure() { return this.failedInstrumentationCount; }
 	
 	/**
 	 * Returns the classes which could not be instrumented, hence, for which no
 	 * traces or other information could be collected.
+	 *
+	 * @return a {@link java.util.Set} object.
 	 */
 	public Set<JavaId> getFailedInstrumentations() { return this.failedInstrumentations; }
 	
 	// ====================================== STATIC MEMBERS
 
+	/**
+	 * <p>getInstance.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.monitor.InstrumentationControl} object.
+	 */
 	public static synchronized InstrumentationControl getInstance() {
 		return InstrumentationControl.getInstance(null);
 	}
 
+	/**
+	 * <p>getInstance.</p>
+	 *
+	 * @param _context a {@link java.lang.Object} object.
+	 * @return a {@link com.sap.psr.vulas.monitor.InstrumentationControl} object.
+	 */
 	public static synchronized InstrumentationControl getInstance(Object _context) {
 		InstrumentationControl instance = null;
 		if(!instances.containsKey(_context))
@@ -366,6 +423,11 @@ public class InstrumentationControl {
 		return instance;
 	}
 
+	/**
+	 * <p>getOverallStatistics.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
 	public static synchronized Map<String, Long> getOverallStatistics() {
 		final Map<String, Long> overall_stats = new HashMap<String, Long>();
 		for(InstrumentationControl ctrl: instances.values()) {
@@ -383,6 +445,9 @@ public class InstrumentationControl {
 		return overall_stats;
 	}
 
+	/**
+	 * <p>logOverallStatistics.</p>
+	 */
 	public static synchronized void logOverallStatistics() {
 		for(InstrumentationControl ctrl: instances.values()) {
 			ctrl.logStatistics();

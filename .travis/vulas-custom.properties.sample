@@ -1,0 +1,29 @@
+# vulas.core.space.token = <WORKSPACE_TOKEN>
+vulas.shared.backend.serviceUrl=http://localhost:8033/backend
+vulas.shared.tmpDir = vulas/tmp
+
+vulas.core.appContext.group = <GROUP>
+vulas.core.appContext.artifact = <ARTIFACT>
+vulas.core.appContext.version = <VERSION>
+
+# One or more dirs with application code and dependencies constructs (JAR, class, java), comma-separated
+# Please extract nested JARs
+vulas.core.app.sourceDir = app
+
+# One or more package prefixes for code belonging to application, multiple entries to be comma-separated
+vulas.core.app.appPrefixes =
+
+vulas.core.uploadEnabled = true
+
+vulas.reach.wala.callgraph.reflection = NO_FLOW_TO_CASTS_NO_METHOD_INVOKE
+vulas.reach.timeout = 120
+
+vulas.core.instr.sourceDir =
+vulas.core.instr.targetDir = vulas/target
+vulas.core.instr.includeDir = vulas/include
+vulas.core.instr.libDir = vulas/lib
+vulas.core.instr.instrumentorsChoosen = com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
+vulas.core.instr.searchRecursive = true
+
+vulas.report.reportDir = vulas/report
+vulas.report.exceptionExcludeBugs =

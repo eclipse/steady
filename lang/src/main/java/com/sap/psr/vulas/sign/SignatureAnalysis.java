@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.sign;
 
 import java.net.URLClassLoader;
@@ -5,18 +24,18 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.util.FileSearch;
 import com.sap.psr.vulas.shared.util.StringList;
 
 /**
- *
+ * <p>SignatureAnalysis class.</p>
  */
 public class SignatureAnalysis {
-    private static final Log log = LogFactory.getLog(SignatureAnalysis.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
     private Application app;
     
     private StringList bugs;
@@ -30,41 +49,90 @@ public class SignatureAnalysis {
     */
     private static SignatureAnalysis instance = null;
     
+    /**
+     * <p>Constructor for SignatureAnalysis.</p>
+     */
     protected SignatureAnalysis(){
         super();
     }
     
+    /**
+     * <p>Getter for the field <code>instance</code>.</p>
+     *
+     * @return a {@link com.sap.psr.vulas.sign.SignatureAnalysis} object.
+     */
     public synchronized static SignatureAnalysis getInstance(){
         if(instance==null){
             instance = new SignatureAnalysis();
         }
         return instance;
     }
+    /**
+     * <p>setUrlClassLoader.</p>
+     *
+     * @param _ucl a {@link java.net.URLClassLoader} object.
+     */
     public void setUrlClassLoader(URLClassLoader _ucl){
         this.uRLClassLoader = _ucl;
     }
 
+    /**
+     * <p>Setter for the field <code>app</code>.</p>
+     *
+     * @param _a a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+     */
     public void setApp(Application _a){
         this.app=_a;
     }
+    /**
+     * <p>setBug.</p>
+     *
+     * @param _bugs a {@link java.lang.String} object.
+     */
     public void setBug(String _bugs){
         this.bugs=new StringList();
         this.bugs.addAll(_bugs, ",", true);
     }
+    /**
+     * <p>Setter for the field <code>bugs</code>.</p>
+     *
+     * @param _bugs a {@link com.sap.psr.vulas.shared.util.StringList} object.
+     */
     public void setBugs(StringList _bugs){
         this.bugs=_bugs;
     }
+    /**
+     * <p>setCLParameter.</p>
+     *
+     * @param _param a {@link java.lang.String} object.
+     * @param _value a {@link java.lang.String} object.
+     */
     public void setCLParameter(String _param, String _value){
         clParameters.put(_param, _value);
     }
+    /**
+     * <p>setIsCli.</p>
+     *
+     * @param _iscli a {@link java.lang.Boolean} object.
+     */
     public void setIsCli(Boolean _iscli){
         this.isCLI = _iscli;
     }
+    /**
+     * <p>setPath.</p>
+     *
+     * @param _p a {@link java.nio.file.Path} object.
+     */
     public void setPath(Path _p){
         this.depPath = _p;
     }
     
     /* execute the signature analysis */
+    /**
+     * <p>execute.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     public void execute() throws Exception {        
         /*ArchiveFixContainmentCheck archive_check = null;
             

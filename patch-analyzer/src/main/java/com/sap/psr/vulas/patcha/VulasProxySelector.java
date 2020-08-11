@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.patcha;
 
 import java.io.IOException;
@@ -13,20 +32,27 @@ import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.util.StringList;
 import com.sap.psr.vulas.shared.util.StringList.CaseSensitivity;
 import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>VulasProxySelector class.</p>
+ *
+ */
 public class VulasProxySelector extends ProxySelector {
 
-	private static final Log log = LogFactory.getLog(VulasProxySelector.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static ProxySelector instance = new VulasProxySelector();
 
+	/**
+	 * <p>registerAsDefault.</p>
+	 */
 	public static void registerAsDefault() {
 		ProxySelector.setDefault(VulasProxySelector.instance);
 	}
@@ -41,6 +67,9 @@ public class VulasProxySelector extends ProxySelector {
 
 	ProxySelector def = null;
 
+	/**
+	 * <p>Constructor for VulasProxySelector.</p>
+	 */
 	public VulasProxySelector() {
 
 		// Remember current default (fallback solution)
@@ -65,6 +94,7 @@ public class VulasProxySelector extends ProxySelector {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<Proxy> select( URI uri ) {
 		List<Proxy> l = null;
@@ -84,6 +114,7 @@ public class VulasProxySelector extends ProxySelector {
 		return l;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void connectFailed( URI uri, SocketAddress sa, IOException ioe ) {
 		if ( uri == null || sa == null || ioe == null ) {

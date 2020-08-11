@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.cia.dependencyfinder;
 
 import java.util.Iterator;
@@ -19,32 +38,48 @@ import com.sap.psr.vulas.shared.json.model.diff.JarDiffResult;
 /**
  * Visits all kinds of changes and creates instances of the classes contained in package
  * {@link com.sap.psr.vulas.cia.dependencyfinder.model}. Inspired from {@link com.jeantessier.diff.Report}.
- * 
- *
  */
 public class JarDiffVisitor extends VisitorBase {
 	
 	private JarDiffResult jarDiffResult = new JarDiffResult();
 		
+	/**
+	 * <p>Constructor for JarDiffVisitor.</p>
+	 *
+	 * @param _old a {@link com.sap.psr.vulas.shared.json.model.Artifact} object.
+	 * @param _new a {@link com.sap.psr.vulas.shared.json.model.Artifact} object.
+	 */
 	public JarDiffVisitor(Artifact _old, Artifact _new) {
 		this.jarDiffResult.setOldLibId(_old.getLibId());
 		this.jarDiffResult.setNewLibId(_new.getLibId());
 	}
 	
+	/**
+	 * <p>Getter for the field <code>jarDiffResult</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.diff.JarDiffResult} object.
+	 */
 	public JarDiffResult getJarDiffResult() {
 		return jarDiffResult;
 	}
 
+	/**
+	 * <p>Setter for the field <code>jarDiffResult</code>.</p>
+	 *
+	 * @param jarDiffResult a {@link com.sap.psr.vulas.shared.json.model.diff.JarDiffResult} object.
+	 */
 	public void setJarDiffResult(JarDiffResult jarDiffResult) {
 		this.jarDiffResult = jarDiffResult;
 	}
 
+	/** {@inheritDoc} */
 	public void visitProjectDifferences(ProjectDifferences differences) {
         for (Differences packageDifference : differences.getPackageDifferences()) {
             packageDifference.accept(this);
         }
     }
 
+    /** {@inheritDoc} */
     public void visitPackageDifferences(PackageDifferences differences) {
         if (differences.isRemoved()) {
         	jarDiffResult.addDeletedPackage(new com.sap.psr.vulas.shared.json.model.ConstructId(ProgrammingLanguage.JAVA, ConstructType.PACK, differences.getName()));
@@ -96,6 +131,7 @@ public class JarDiffVisitor extends VisitorBase {
     	return c;
     }
 
+    /** {@inheritDoc} */
     public void visitClassDifferences(ClassDifferences differences) {
         if (differences.isRemoved()) {
         	jarDiffResult.addDeletedClass(this.getClass(differences.getOldClass()));
@@ -120,6 +156,7 @@ public class JarDiffVisitor extends VisitorBase {
         }
     }
 
+    /** {@inheritDoc} */
     public void visitInterfaceDifferences(InterfaceDifferences differences) {
         if (differences.isRemoved()) {
             jarDiffResult.addDeletedInterface(this.getClass(differences.getOldClass()));

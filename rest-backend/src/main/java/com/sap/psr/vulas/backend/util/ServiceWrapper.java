@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.util;
 
 import java.net.URI;
@@ -24,7 +43,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.sap.psr.vulas.backend.rest.CoverageController;
-import com.sap.psr.vulas.backend.rest.CoverageController.CveClassifierResponse;
 import com.sap.psr.vulas.backend.rest.CoverageController.JiraSearchResponse;
 import com.sap.psr.vulas.shared.connectivity.PathBuilder;
 import com.sap.psr.vulas.shared.connectivity.Service;
@@ -39,8 +57,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 /**
  * Makes RESTful services available to local clients.
- * Depends on 
- *
+ * Depends on
  */
 public class ServiceWrapper {
 
@@ -50,6 +67,11 @@ public class ServiceWrapper {
 
 	private ServiceWrapper() {}
 
+	/**
+	 * <p>Getter for the field <code>instance</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.backend.util.ServiceWrapper} object.
+	 */
 	public static synchronized ServiceWrapper getInstance() {
 		if(instance==null) instance = new ServiceWrapper();
 		return instance;
@@ -57,13 +79,13 @@ public class ServiceWrapper {
 
 	/**
 	 * Returns all versions of the Maven artifact with the given group and artifact identifiers and packaging "JAR".
-	 * 
-	 * @param _group
-	 * @param _artifact
+	 *
+	 * @param _group a {@link java.lang.String} object.
+	 * @param _artifact a {@link java.lang.String} object.
 	 * @param _latest if true, only the latest version will be returned
 	 * @param _gt if specified, only versions greater than the provided value are returned
-	 * @return
-	 * @throws ServiceConnectionException
+	 * @throws com.sap.psr.vulas.shared.connectivity.ServiceConnectionException
+	 * @return a {@link java.util.Collection} object.
 	 */
 	public Collection<LibraryId> getAllArtifactVersions(String _group, String _artifact, boolean _latest, String _gt) throws ServiceConnectionException {
 		// Build URL
@@ -121,6 +143,16 @@ public class ServiceWrapper {
 		return result;
 	}
 	
+	/**
+	 * <p>getArtifactConstructs.</p>
+	 *
+	 * @param _group a {@link java.lang.String} object.
+	 * @param _artifact a {@link java.lang.String} object.
+	 * @param _version a {@link java.lang.String} object.
+	 * @param _t a {@link com.sap.psr.vulas.shared.enums.ConstructType} object.
+	 * @return a {@link java.util.List} object.
+	 * @throws com.sap.psr.vulas.shared.connectivity.ServiceConnectionException if any.
+	 */
 	public List<ConstructId> getArtifactConstructs(String _group, String _artifact, String _version, ConstructType _t) throws ServiceConnectionException {
 		// Build URL
 		final String service_url = VulasConfiguration.getGlobal().getServiceUrl(Service.CIA, true);
@@ -150,6 +182,14 @@ public class ServiceWrapper {
 		return result;
 	}
 
+	/**
+	 * <p>diffJars.</p>
+	 *
+	 * @param _old a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
+	 * @param _new a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.diff.JarDiffResult} object.
+	 * @throws com.sap.psr.vulas.shared.connectivity.ServiceConnectionException if any.
+	 */
 	public JarDiffResult diffJars(LibraryId _old, LibraryId _new) throws ServiceConnectionException {
 		final String service_url = VulasConfiguration.getGlobal().getServiceUrl(Service.CIA, true);
 		final String service_path = PathBuilder.diffArtifacts();
@@ -212,37 +252,14 @@ public class ServiceWrapper {
 		}
 		log.info(b.toString()+"]");
 	}
-
-	public CveClassifierResponse classify(String _cve) throws ServiceConnectionException {
-		CveClassifierResponse response = null;
-		
-		final String service_url = VulasConfiguration.getGlobal().getServiceUrl(Service.CVE, true);
-		if(service_url==null || service_url.equals("")) {
-			log.error("Configuration setting [" + VulasConfiguration.getGlobal().getServiceUrlKey(Service.CVE) + "] not specified") ;
-		}
-		else {
-			// Parameters
-			final String param_template = "{cve}";
-			final Map<String,String> params = new HashMap<String,String>();
-			params.put("cve", _cve);
-			
-			// Make the query
-			URI uri = null;
-			try {
-				uri = new URI(service_url);
-				this.logCallInfo(uri, params);
-				final RestTemplate rest_template = new RestTemplate();	
-				response = rest_template.getForObject(service_url + param_template, CveClassifierResponse.class, params);
-			} catch (RestClientException e) {
-				throw new ServiceConnectionException(uri, e);
-			} catch (URISyntaxException use) {
-				throw new ServiceConnectionException("Cannot create service URI from [" + service_url + "]", use);
-			}
-		}
-		
-		return response;
-	}
 	
+	/**
+	 * <p>searchJira.</p>
+	 *
+	 * @param _bugid a {@link java.lang.String} object.
+	 * @return a {@link com.sap.psr.vulas.backend.rest.CoverageController.JiraSearchResponse} object.
+	 * @throws com.sap.psr.vulas.shared.connectivity.ServiceConnectionException if any.
+	 */
 	public JiraSearchResponse searchJira(String _bugid) throws ServiceConnectionException {
 		JiraSearchResponse response = null;
 		

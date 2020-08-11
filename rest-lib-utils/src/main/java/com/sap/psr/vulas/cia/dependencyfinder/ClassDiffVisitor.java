@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.cia.dependencyfinder;
 
 import java.util.Collection;
@@ -81,7 +100,6 @@ import com.sap.psr.vulas.shared.json.model.diff.ClassModification;
 /**
  * Visits all kinds of changes and creates instances of the classes contained in package
  * {@link com.sap.psr.vulas.cia.dependencyfinder.model}. Inspired from {@link com.jeantessier.diff.ClassReport}.
- *
  */
 public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.classreader.Visitor {
 
@@ -109,6 +127,11 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
     private Collection<FeatureDifferences> newConstructors = new TreeSet<FeatureDifferences>();
     private Collection<FeatureDifferences> newMethods = new TreeSet<FeatureDifferences>();
 	
+	/**
+	 * <p>Constructor for ClassDiffVisitor.</p>
+	 *
+	 * @param _c a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+	 */
 	public ClassDiffVisitor(com.sap.psr.vulas.shared.json.model.ConstructId _c) {
 		this.classDiffResult = new ClassDiffResult();
 		this.classDiffResult.setClazz(_c);
@@ -156,6 +179,7 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 		return m;
 	}
 			
+	/** {@inheritDoc} */
 	public void visitClassDifferences(ClassDifferences differences) {
 		this.differences = differences;
 
@@ -164,6 +188,7 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 		}
 	}
 
+	/** {@inheritDoc} */
 	public void visitInterfaceDifferences(InterfaceDifferences differences) {
 		this.differences = differences;
 
@@ -172,10 +197,12 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 		}
 	}
 
+	/** {@inheritDoc} */
 	public void visitFieldDifferences(FieldDifferences differences) {
 		// Do nothing
 	}
 	
+	/** {@inheritDoc} */
 	public void visitConstructorDifferences(ConstructorDifferences differences) {
         if (differences.isRemoved()) {
             removedConstructors.add(differences);
@@ -198,6 +225,7 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
         }
     }
 
+    /** {@inheritDoc} */
     public void visitMethodDifferences(MethodDifferences differences) {
         if (differences.isRemoved()) {
             removedMethods.add(differences);
@@ -220,246 +248,311 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
         }
     }
 
+	/** {@inheritDoc} */
 	public void visitClassfiles(Collection<Classfile> classfiles) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitClassfile(Classfile classfile) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitConstantPool(ConstantPool constantPool) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitClass_info(Class_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitFieldRef_info(FieldRef_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitMethodRef_info(MethodRef_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitInterfaceMethodRef_info(InterfaceMethodRef_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitString_info(String_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitInteger_info(Integer_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitFloat_info(Float_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitLong_info(Long_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitDouble_info(Double_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitNameAndType_info(NameAndType_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitUTF8_info(UTF8_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitMethodHandle_info(MethodHandle_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitMethodType_info(MethodType_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitInvokeDynamic_info(InvokeDynamic_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitField_info(Field_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitMethod_info(Method_info entry) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitConstantValue_attribute(ConstantValue_attribute attribute) {
 		attribute.getRawValue().accept(this);
 	}
 
+	/** {@inheritDoc} */
 	public void visitCode_attribute(Code_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitExceptions_attribute(Exceptions_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitInnerClasses_attribute(InnerClasses_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitEnclosingMethod_attribute(EnclosingMethod_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitSynthetic_attribute(Synthetic_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitSignature_attribute(Signature_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitSourceFile_attribute(SourceFile_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitSourceDebugExtension_attribute(SourceDebugExtension_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitLineNumberTable_attribute(LineNumberTable_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitLocalVariableTable_attribute(LocalVariableTable_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitLocalVariableTypeTable_attribute(LocalVariableTypeTable_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitDeprecated_attribute(Deprecated_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitRuntimeVisibleAnnotations_attribute(RuntimeVisibleAnnotations_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitRuntimeInvisibleAnnotations_attribute(RuntimeInvisibleAnnotations_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitRuntimeVisibleParameterAnnotations_attribute(RuntimeVisibleParameterAnnotations_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitRuntimeInvisibleParameterAnnotations_attribute(RuntimeInvisibleParameterAnnotations_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitAnnotationDefault_attribute(AnnotationDefault_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitCustom_attribute(Custom_attribute attribute) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitInstruction(Instruction instruction) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitExceptionHandler(ExceptionHandler helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitInnerClass(InnerClass helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitLineNumber(LineNumber helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitLocalVariable(LocalVariable helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitLocalVariableType(LocalVariableType helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitParameter(Parameter helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitAnnotation(Annotation helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitElementValuePair(ElementValuePair helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitByteConstantElementValue(ByteConstantElementValue helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitCharConstantElementValue(CharConstantElementValue helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitDoubleConstantElementValue(DoubleConstantElementValue helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitFloatConstantElementValue(FloatConstantElementValue helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitIntegerConstantElementValue(IntegerConstantElementValue helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitLongConstantElementValue(LongConstantElementValue helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitShortConstantElementValue(ShortConstantElementValue helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitBooleanConstantElementValue(BooleanConstantElementValue helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitStringConstantElementValue(StringConstantElementValue helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitEnumElementValue(EnumElementValue helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitClassElementValue(ClassElementValue helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitAnnotationElementValue(AnnotationElementValue helper) {
 		// Do nothing
 	}
 
+	/** {@inheritDoc} */
 	public void visitArrayElementValue(ArrayElementValue helper) {
 		// Do nothing
 	}
 
+	/**
+	 * <p>Getter for the field <code>classDiffResult</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.diff.ClassDiffResult} object.
+	 */
 	public ClassDiffResult getClassDiffResult() {
 		
 		if (removedConstructors.size() != 0) {

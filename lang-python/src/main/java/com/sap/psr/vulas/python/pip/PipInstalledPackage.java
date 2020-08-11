@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.python.pip;
 
 import java.nio.file.Path;
@@ -7,8 +26,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.ConstructId;
@@ -28,9 +47,13 @@ import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.FilenamePatternSearch;
 import com.sap.psr.vulas.shared.util.StringList;
 
+/**
+ * <p>PipInstalledPackage class.</p>
+ *
+ */
 public class PipInstalledPackage implements Comparable {
 
-	private final static Log log = LogFactory.getLog(PipInstalledPackage.class);
+	private final static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static final String LOCATION = "Location";
 	private static final String REQUIRES = "Requires";
@@ -50,45 +73,74 @@ public class PipInstalledPackage implements Comparable {
 	
 	private FileAnalyzer fileAnalyzer = null;
 
+	/**
+	 * <p>Constructor for PipInstalledPackage.</p>
+	 *
+	 * @param _name a {@link java.lang.String} object.
+	 * @param _version a {@link java.lang.String} object.
+	 */
 	public PipInstalledPackage(String _name, String _version) {
 		this.name = _name;
 		this.version = _version;
 	}
 
+	/**
+	 * <p>Getter for the field <code>properties</code>.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
 	public Map<String, String> getProperties() { return properties; }
 
 	/**
 	 * Returns the installation path of the Python package.
-	 * @return
+	 *
+	 * @return a {@link java.nio.file.Path} object.
 	 */
 	public Path getInstallPath() {
 		return Paths.get(this.properties.get(LOCATION));
 	}
 
+	/**
+	 * <p>Getter for the field <code>downloadUrl</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getDownloadUrl() {
 		return downloadUrl;
 	}
 
+	/**
+	 * <p>Setter for the field <code>downloadUrl</code>.</p>
+	 *
+	 * @param downloadUrl a {@link java.lang.String} object.
+	 */
 	public void setDownloadUrl(String downloadUrl) {
 		this.downloadUrl = downloadUrl;
 	}
 
 	/**
 	 * Returns the download path of the Python package. This path is extracted from the output of "pip install".
-	 * @return
+	 *
+	 * @return a {@link java.nio.file.Path} object.
 	 */
 	public Path getDownloadPath() {
 		return downloadPath;
 	}
 
+	/**
+	 * <p>Setter for the field <code>downloadPath</code>.</p>
+	 *
+	 * @param downloadPath a {@link java.nio.file.Path} object.
+	 */
 	public void setDownloadPath(Path downloadPath) {
 		this.downloadPath = downloadPath;
 	}
 
 	/**
 	 * Returns a {@link Library} representing the analyzed archive.
-	 * @return
-	 * @throws FileAnalysisException
+	 *
+	 * @throws com.sap.psr.vulas.FileAnalysisException
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Library} object.
 	 */
 	public Library getLibrary() throws FileAnalysisException {
 		Library lib = null;
@@ -117,8 +169,10 @@ public class PipInstalledPackage implements Comparable {
 
 	/**
 	 * Returns true if this package requieres the given package, as indicated by the 'Requires' property, false otherwise.
-	 * @param _pack
-	 * @return
+	 *
+	 * @param _pack a {@link com.sap.psr.vulas.python.pip.PipInstalledPackage} object.
+	 * @return a boolean.
+	 * @throws java.lang.IllegalStateException if any.
 	 */
 	public boolean requires(PipInstalledPackage _pack) throws IllegalStateException {
 		if(this.properties==null || !this.properties.containsKey(REQUIRES))
@@ -133,15 +187,27 @@ public class PipInstalledPackage implements Comparable {
 
 	/**
 	 * Sets the properties as provided by pip.
-	 * @param properties
+	 *
+	 * @param properties a {@link java.util.Map} object.
 	 */
 	public void addProperties(Map<String, String> properties) {
 		this.properties.putAll(properties);
 	}
 
+	/**
+	 * <p>Getter for the field <code>name</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getName() { return name; }
+	/**
+	 * <p>Getter for the field <code>version</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getVersion() { return version; }
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		final StringBuffer b = new StringBuffer();
@@ -149,6 +215,11 @@ public class PipInstalledPackage implements Comparable {
 		return b.toString();
 	}
 
+	/**
+	 * <p>Getter for the field <code>digest</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getDigest() {
 		if(this.downloadPath==null && (this.properties==null || !this.properties.containsKey(LOCATION)))
 			throw new IllegalStateException(this + " does not have local download path nor property [" + LOCATION + "]");
@@ -226,6 +297,11 @@ public class PipInstalledPackage implements Comparable {
 		return this.constructs;
 	}
 	
+	/**
+	 * <p>getNestedArchives.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	public Set<FileAnalyzer> getNestedArchives() {
 		if(this.fileAnalyzer!=null && !(this.fileAnalyzer instanceof DirAnalyzer)) {
 			return this.fileAnalyzer.getChilds(true);
@@ -234,6 +310,7 @@ public class PipInstalledPackage implements Comparable {
 		}
 	}
 
+	/** {@inheritDoc} */
 	public int compareTo(Object _other) {
 		if(_other instanceof PipInstalledPackage) {
 			final PipInstalledPackage other = (PipInstalledPackage)_other;
@@ -324,10 +401,11 @@ public class PipInstalledPackage implements Comparable {
 
 	/**
 	 * Filter the given packages according to whether the artifact name is (or is not, depending on the boolean flag) contained in the given filter.
-	 * @param _packages
-	 * @param _filter
-	 * @param _include
-	 * @return
+	 *
+	 * @param _packages a {@link java.util.Set} object.
+	 * @param _filter a {@link com.sap.psr.vulas.shared.util.StringList} object.
+	 * @param _include a boolean.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public static Set<PipInstalledPackage> filterUsingArtifact(Set<PipInstalledPackage> _packages, StringList _filter, boolean _include) {
 		final Set<PipInstalledPackage> r = new HashSet<PipInstalledPackage>();
@@ -347,6 +425,7 @@ public class PipInstalledPackage implements Comparable {
 		return r;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -356,6 +435,7 @@ public class PipInstalledPackage implements Comparable {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -381,20 +461,29 @@ public class PipInstalledPackage implements Comparable {
 	/**
 	 * https://stackoverflow.com/questions/19097057/pip-e-no-magic-underscore-to-dash-replacement
 	 * https://www.python.org/dev/peps/pep-0008/#package-and-module-names
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 	public String getStandardDistributionName() {
 		return PipInstalledPackage.getStandardDistributionName(this.getName());
 	}
 	
+	/**
+	 * <p>getStandardDistributionName.</p>
+	 *
+	 * @param _name a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getStandardDistributionName(String _name) {
 		return _name.toLowerCase().replaceAll("\\p{Punct}", "_");
 	}
 	
 	/**
 	 * Returns true if the standard distribution name of this package is equal to the one of the given package.
-	 * @param _other
-	 * @return
-	 * @see {@link PipInstalledPackage#getStandardDistributionName()}
+	 *
+	 * @param _other a {@link com.sap.psr.vulas.python.pip.PipInstalledPackage} object.
+	 * @see PipInstalledPackage#getStandardDistributionName()
+	 * @return a boolean.
 	 */
 	public boolean equalsStandardDistributionName(PipInstalledPackage _other) {
 		return this.getStandardDistributionName().equals(_other.getStandardDistributionName());

@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.component;
 
 import java.io.File;
@@ -37,6 +56,10 @@ import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.ThreadUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>ApplicationExporter class.</p>
+ *
+ */
 @Component
 public class ApplicationExporter {
 
@@ -54,6 +77,21 @@ public class ApplicationExporter {
 	@Autowired
 	private ApplicationRepository appRepository;
 
+	/**
+	 * <p>produceExportAsync.</p>
+	 *
+	 * @param _tenant a {@link com.sap.psr.vulas.backend.model.Tenant} object.
+	 * @param _space a {@link com.sap.psr.vulas.backend.model.Space} object.
+	 * @param separator a {@link java.lang.String} object.
+	 * @param includeSpaceProperties an array of {@link java.lang.String} objects.
+	 * @param includeGoalConfiguration an array of {@link java.lang.String} objects.
+	 * @param includeGoalSystemInfo an array of {@link java.lang.String} objects.
+	 * @param _selected_bugs an array of {@link java.lang.String} objects.
+	 * @param _incl_all_bugs a boolean.
+	 * @param _incl_exemptions a boolean.
+	 * @param _format a {@link com.sap.psr.vulas.shared.enums.ExportFormat} object.
+	 * @param _msg a {@link com.sap.psr.vulas.backend.util.Message} object.
+	 */
 	public synchronized void produceExportAsync(final Tenant _tenant, final Space _space, final String separator, final String[] includeSpaceProperties, final String[] includeGoalConfiguration, final String[] includeGoalSystemInfo, final String[] _selected_bugs, final boolean _incl_all_bugs, final boolean _incl_exemptions, final ExportFormat _format, final Message _msg) {
 		// Check whether SMTP is properly configured (throws ISE if not)
 		SmtpClient.getSmtpProperties(VulasConfiguration.getGlobal().getConfiguration());
@@ -77,13 +115,20 @@ public class ApplicationExporter {
 	}
 
 	/**
-	 * 
-	 * @param _tenant
-	 * @param separator
-	 * @param includeSpaceProperties
-	 * @param includeGoalConfiguration
-	 * @param includeGoalSystemInfo
-	 * @param _msg
+	 * <p>produceExport.</p>
+	 *
+	 * @param _tenant a {@link com.sap.psr.vulas.backend.model.Tenant} object.
+	 * @param separator a {@link java.lang.String} object.
+	 * @param includeSpaceProperties an array of {@link java.lang.String} objects.
+	 * @param includeGoalConfiguration an array of {@link java.lang.String} objects.
+	 * @param includeGoalSystemInfo an array of {@link java.lang.String} objects.
+	 * @param _space a {@link com.sap.psr.vulas.backend.model.Space} object.
+	 * @param _selected_bugs an array of {@link java.lang.String} objects.
+	 * @param _incl_all_bugs a boolean.
+	 * @param _incl_exemptions a boolean.
+	 * @param _format a {@link com.sap.psr.vulas.shared.enums.ExportFormat} object.
+	 * @return a {@link java.nio.file.Path} object.
+	 * @throws java.io.IOException if any.
 	 */
 	@Transactional
 	public synchronized Path produceExport(Tenant _tenant, Space _space, String separator, String[] includeSpaceProperties, String[] includeGoalConfiguration, String[] includeGoalSystemInfo, String[] _selected_bugs, boolean _incl_all_bugs, boolean _incl_exemptions, ExportFormat _format) throws IOException {
@@ -214,13 +259,15 @@ public class ApplicationExporter {
 	
 	/**
 	 * Creates a set with the given number of sublists of the given list.
-	 * 
+	 *
 	 * If the given list is null, the method returns an empty set.
 	 * If the given list is empty or its size is smaller than the given number, the method returns a set that just contains the given list as its only element.
-	 * 
-	 * @param _list
-	 * @param _num
-	 * @return
+	 *
+	 * @param _list a {@link java.util.List} object.
+	 * @param _num a int.
+	 * @param <T> a T object.
+	 * @return a {@link java.util.Set} object.
+	 * @throws java.lang.IllegalArgumentException if any.
 	 */
 	public static <T> Set<List<T>> partition(List<T> _list, int _num) throws IllegalArgumentException {
 		final Set<List<T>> parts = new HashSet<List<T>>();

@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.cia.rest;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -51,14 +70,23 @@ import springfox.documentation.swagger.web.ApiKeyVehicle;
 import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+/**
+ * <p>MainController class.</p>
+ *
+ */
 @Configuration
-@ComponentScan
+@ComponentScan({"com.sap.psr.vulas.cia.util,com.sap.psr.vulas.cia.rest"})
 @EnableAutoConfiguration
 @EnableSwagger2
 public class MainController extends SpringBootServletInitializer {
 	
 	private static Logger log = LoggerFactory.getLogger(MainController.class);
 
+	/**
+	 * <p>backendApi.</p>
+	 *
+	 * @return a {@link springfox.documentation.spring.web.plugins.Docket} object.
+	 */
 	@Bean
 	public Docket backendApi() {
 		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any()).paths(PathSelectors.any()).build().pathMapping("/")
@@ -100,7 +128,8 @@ public class MainController extends SpringBootServletInitializer {
 
 	/**
 	 * Can be used to do some initialization at application startup, but does not do anything right now.
-	 * @return
+	 *
+	 * @return a {@link org.springframework.http.converter.json.Jackson2ObjectMapperBuilder} object.
 	 */
 //	@Bean
 //	CommandLineRunner init() { return null; }
@@ -127,10 +156,16 @@ public class MainController extends SpringBootServletInitializer {
 		return builder;
 	}
 
+	/**
+	 * <p>main.</p>
+	 *
+	 * @param args an array of {@link java.lang.String} objects.
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(MainController.class, args);
 	}
 
+    /** {@inheritDoc} */
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(MainController.class);

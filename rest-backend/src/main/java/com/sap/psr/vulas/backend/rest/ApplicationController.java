@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.rest;
 
 import java.io.BufferedReader;
@@ -22,6 +41,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.Filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +49,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.DispatcherServletAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -73,6 +94,7 @@ import com.sap.psr.vulas.backend.repo.SpaceRepository;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
 import com.sap.psr.vulas.backend.repo.TracesRepository;
 import com.sap.psr.vulas.backend.repo.V_AppVulndepRepository;
+import com.sap.psr.vulas.backend.util.CacheFilter;
 import com.sap.psr.vulas.backend.util.DependencyUtil;
 import com.sap.psr.vulas.backend.util.Message;
 import com.sap.psr.vulas.backend.util.ServiceWrapper;
@@ -129,11 +151,20 @@ public class ApplicationController {
 	private final V_AppVulndepRepository appVulDepRepository;
 	
 	private final ApplicationExporter appExporter;
+
+	private final Filter cacheFilter;
 	
+	/** Constant <code>SENDER_EMAIL="vulas.backend.smtp.sender"</code> */
 	public final static String SENDER_EMAIL = "vulas.backend.smtp.sender";
 	
+	/** Constant <code>ALL_APPS_CSV_SUBJECT="vulas.backend.allApps.mailSubject"</code> */
 	public static final String ALL_APPS_CSV_SUBJECT = "vulas.backend.allApps.mailSubject";
 
+	/**
+	 * <p>dispatcherServlet.</p>
+	 *
+	 * @return a {@link org.springframework.web.servlet.DispatcherServlet} object.
+	 */
 	@Bean(name = DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
 	public DispatcherServlet dispatcherServlet() {
 		DispatcherServlet dispatcherServlet = new DispatcherServlet();
@@ -142,7 +173,7 @@ public class ApplicationController {
 	}
 
 	@Autowired
-	ApplicationController(ApplicationRepository appRepository, GoalExecutionRepository gexeRepository, DependencyRepository depRepository, TracesRepository traceRepository, LibraryRepository libRepository, PathRepository pathRepository, BugRepository bugRepository, SpaceRepository tokenRepository, ConstructIdRepository cidRepository, AffectedLibraryRepository affLibRepository, TenantRepository tenantRepository, V_AppVulndepRepository appVulDepRepository, ApplicationExporter appExporter) {
+	ApplicationController(ApplicationRepository appRepository, GoalExecutionRepository gexeRepository, DependencyRepository depRepository, TracesRepository traceRepository, LibraryRepository libRepository, PathRepository pathRepository, BugRepository bugRepository, SpaceRepository tokenRepository, ConstructIdRepository cidRepository, AffectedLibraryRepository affLibRepository, TenantRepository tenantRepository, V_AppVulndepRepository appVulDepRepository, ApplicationExporter appExporter, Filter cacheFilter) {
 		this.appRepository = appRepository;
 		this.gexeRepository = gexeRepository;
 		this.depRepository = depRepository;
@@ -156,9 +187,18 @@ public class ApplicationController {
 		this.tenantRepository = tenantRepository;
 		this.appVulDepRepository = appVulDepRepository;
 		this.appExporter = appExporter;
+		this.cacheFilter = cacheFilter;
 	}
 
 	//TODO: The space headers must become mandatory once we get (most of) users to switch to vulas3
+	/**
+	 * <p>createApplication.</p>
+	 *
+	 * @param application a {@link com.sap.psr.vulas.backend.model.Application} object.
+	 * @param skipResponseBody a {@link java.lang.Boolean} object.
+	 * @param space a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, 
 			produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -205,9 +245,15 @@ public class ApplicationController {
 
 	/**
 	 * Deletes multiple {@link Application} versions at once.
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given digest does not exist,
 	 * 		   422 {@link HttpStatus.UNPROCESSABLE_ENTITY} if the value of path variable (digest) does not equal the corresponding field in the body
 	 * 		   200 {@link HttpStatus#OK} if the library was successfully re-created
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param keep a {@link java.lang.Integer} object.
+	 * @param mode a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}", method = RequestMethod.DELETE)
 	@JsonView(Views.Default.class)
@@ -332,11 +378,17 @@ public class ApplicationController {
 
 	/**
 	 * Re-creates the {@link Application} with a given GAV.
-	 * @param digest
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given digest does not exist,
 	 * 		   422 {@link HttpStatus.UNPROCESSABLE_ENTITY} if the value of path variable (digest) does not equal the corresponding field in the body
 	 *		   400 {@link HttpStatus.BAD_REQUEST} if the set of application dependencies is not valid (contains duplicated entries or the parent are not listed in the main set)
 	 * 		   200 {@link HttpStatus#OK} if the library was successfully re-created
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param application a {@link com.sap.psr.vulas.backend.model.Application} object.
+	 * @param skipResponseBody a {@link java.lang.Boolean} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -392,7 +444,15 @@ public class ApplicationController {
 	}
 
 	/**
-	 * @return sorted set of all {@link Application}s of the respective tenant and space 
+	 * <p>getApplications.</p>
+	 *
+	 * @return sorted set of all {@link Application}s of the respective tenant and space
+	 * @param skipEmpty a {@link java.lang.Boolean} object.
+	 * @param g a {@link java.lang.String} object.
+	 * @param a a {@link java.lang.String} object.
+	 * @param v a {@link java.lang.String} object.
+	 * @param asOfTimestamp a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -465,8 +525,17 @@ public class ApplicationController {
 	
 	/**
 	 * Compiles a list of all {@link Application}s of the respective {@link Tenant}, which is either sent by email (as attachment) or returned as part of the HTTP response.
-	 * 
-	 * @return
+	 *
+	 * @param separator a {@link java.lang.String} object.
+	 * @param includeSpaceProperties an array of {@link java.lang.String} objects.
+	 * @param includeGoalConfiguration an array of {@link java.lang.String} objects.
+	 * @param includeGoalSystemInfo an array of {@link java.lang.String} objects.
+	 * @param vuln an array of {@link java.lang.String} objects.
+	 * @param to an array of {@link java.lang.String} objects.
+	 * @param format a {@link java.lang.String} object.
+	 * @param tenant a {@link java.lang.String} object.
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
 	 */
 	@RequestMapping(value = "/export", method = RequestMethod.GET)
 	public void exportApplications(
@@ -572,9 +641,14 @@ public class ApplicationController {
 	/**
 	 * Cleans an {@link Application} so that it does not have any of the following:
 	 * {@link ConstructId}s, {@link Dependency}s, {@link Trace}s, to be continued
-	 * 
-	 * @param groupId ArtifactId VersionId 
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param clean a {@link java.lang.Boolean} object.
+	 * @param cleanGoalHistory a {@link java.lang.Boolean} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Application> cleanApplication(@PathVariable String mvnGroup, 
@@ -615,8 +689,15 @@ public class ApplicationController {
 
 	/**
 	 * Searches for {@link ConstructId}s in all of the {@link Application}'s dependencies.
-	 * @param groupId ArtifactId VersionId 
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param searchString a {@link java.lang.String} object.
+	 * @param constructTypes an array of {@link com.sap.psr.vulas.shared.enums.ConstructType} objects.
+	 * @param wildcardSearch a boolean.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/search", method = RequestMethod.GET)
 	@JsonView(Views.Default.class)
@@ -668,15 +749,19 @@ public class ApplicationController {
 			return new ResponseEntity<Set<ConstructSearchResult>>(HttpStatus.NOT_FOUND);
 		}
 		catch(Exception e) {
-			log.info("Error while searching for constructs in dependencies of app " + app + ": " + e.getMessage());
+			log.error("Error while searching for constructs in dependencies of app " + app + ": " + e.getMessage());
 			return new ResponseEntity<Set<ConstructSearchResult>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	/**
-	 * 
-	 * @param groupId ArtifactId VersionId 
+	 * <p>isApplicationExisting.</p>
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}", method = RequestMethod.OPTIONS)
 	public ResponseEntity<Application> isApplicationExisting(
@@ -701,9 +786,14 @@ public class ApplicationController {
 	}
 
 	/**
-	 * Returns the {@link Application} with the given Group Artifact Version (GAV). 
-	 * @param groupId ArtifactId VersionId 
+	 * Returns the {@link Application} with the given Group Artifact Version (GAV).
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param inclTraces a {@link java.lang.Boolean} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.CountDetails.class)
@@ -741,9 +831,13 @@ public class ApplicationController {
 	}
 
 	/**
-	 * 
-	 * @param 
-	 * @return 
+	 * <p>getApplicationConstructIds.</p>
+	 *
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/constructIds", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Collection<ConstructId>> getApplicationConstructIds(@PathVariable String mvnGroup, 
@@ -767,9 +861,15 @@ public class ApplicationController {
 	}
 
 	/**
-	 * 
-	 * @param 
+	 * <p>createGoalExecution.</p>
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application group artifact version of the goal execution is do not exist, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param goalExecution a {@link com.sap.psr.vulas.backend.model.GoalExecution} object.
+	 * @param skipResponseBody a {@link java.lang.Boolean} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<GoalExecution> createGoalExecution(@PathVariable String mvnGroup, 
@@ -812,9 +912,16 @@ public class ApplicationController {
 	}
 	
 	/**
-	 * 
-	 * @param 
+	 * <p>updateGoalExecution.</p>
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application group artifact version of the goal execution is do not exist, 200 {@link HttpStatus#OK} if the goal execution was successfully updates
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param executionId a {@link java.lang.String} object.
+	 * @param goalExecution a {@link com.sap.psr.vulas.backend.model.GoalExecution} object.
+	 * @param skipResponseBody a {@link java.lang.Boolean} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals/{executionId}", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<GoalExecution> updateGoalExecution(@PathVariable String mvnGroup, 
@@ -854,9 +961,14 @@ public class ApplicationController {
 	}
 	
 	/**
-	 * 
-	 * @param application group, artifact,version and goal executionId
+	 * <p>isGoalExecutionExisting.</p>
+	 *
 	 * @return  404 {@link HttpStatus#NOT_FOUND} if application with given GAV or the given executionId do not exist, 200 {@link HttpStatus#OK} if the executionId for the given Application is found
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param executionId a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals/{executionId}", method = RequestMethod.OPTIONS)
 	public ResponseEntity<GoalExecution> isGoalExecutionExisting(@PathVariable String mvnGroup, 
@@ -887,9 +999,13 @@ public class ApplicationController {
 
 	/**
 	 * Returns the {@link GoalExceution} for the given {@link Application} and having the given identifier.
-	 * 
-	 * @param 
-	 * @return
+	 *
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param id a {@link java.lang.Long} object.
+	 * @param space a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals/{id}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.GoalDetails.class)
@@ -918,9 +1034,13 @@ public class ApplicationController {
 	
 	/**
 	 * Returns the latest {@link GoalExceution} for the given {@link Application} and having the given {@link GoalType}.
-	 * 
-	 * @param 
-	 * @return
+	 *
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param type a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals/latest", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.GoalDetails.class)
@@ -956,9 +1076,13 @@ public class ApplicationController {
 	}
 
 	/**
-	 * 
-	 * @param 
+	 * <p>getGoalExecutions.</p>
+	 *
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -983,9 +1107,13 @@ public class ApplicationController {
 	}
 
 	/**
-	 * 
-	 * @param
+	 * <p>deleteGoalExecutions.</p>
+	 *
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/goals", method = RequestMethod.DELETE)
 	public ResponseEntity<List<GoalExecution>> deleteGoalExecutions(@PathVariable String mvnGroup, 
@@ -1012,15 +1140,20 @@ public class ApplicationController {
 			try {
 				this.gexeRepository.delete(gexe);
 			} catch (Exception e) {
-				log.info("Error while deleting goal execution " + gexe + ": " + e.getMessage());
+				log.error("Error while deleting goal execution " + gexe + ": " + e.getMessage());
 			}
 		}
 		return new ResponseEntity<List<GoalExecution>>(HttpStatus.OK);
 	}
 	/**
 	 * Returns a collection of {@link Bug}s relevant for the {@link Application} with the given GAV.
-	 * @param group/artifact/version
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param historical a {@link java.lang.Boolean} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/bugs", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.BugDetails.class)
@@ -1060,8 +1193,12 @@ public class ApplicationController {
 
 	/**
 	 * Returns a collection of {@link DependencyIntersection}s for the {@link Application} with the given GAV.
-	 * @param group/artifact/version
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/intersect", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -1094,8 +1231,12 @@ public class ApplicationController {
 
 	/**
 	 * Returns a collection of {@link Dependency} for the {@link Application} with the given GAV.
-	 * @param group/artifact/version
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -1128,8 +1269,13 @@ public class ApplicationController {
 
 	/**
 	 * Returns a collection of {@link Bug}s relevant for the {@link Application} with the given GAV.
-	 * @param group/artifact/version
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param digest a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.DepDetails.class) // extends View LibDetails that allows to see the properties
@@ -1165,8 +1311,13 @@ public class ApplicationController {
 	/**
 	 * Provides application-specific metrics regarding application size and the size of all application dependencies.
 	 * Requires that the given dependency has a valid library Id.
-	 * @param group/artifact/version
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param excludedScopes an array of {@link com.sap.psr.vulas.shared.enums.Scope} objects.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/metrics", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Metrics> getApplicationMetrics(
@@ -1238,8 +1389,14 @@ public class ApplicationController {
 	/**
 	 * Provides application-specific metrics related to updating the current dependency to the provided one.
 	 * Requires that the given dependency has a valid library Id.
-	 * @param group/artifact/version
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param digest a {@link java.lang.String} object.
+	 * @param otherVersion a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}/updateMetrics", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.DepDetails.class) // extends View LibDetails that allows to see the properties
@@ -1304,7 +1461,7 @@ public class ApplicationController {
 							if(jdr.isDeleted(tp.getTo().toSharedType())) {
 								deleted_callees.add(tp.getTo());
 								ratio_callers_to_modify.incrementCount();
-								log.info("Touch point callee " + tp.getTo().toString() + " deleted from " + dep.getLib().getLibraryId().toString() + " to " + otherVersion);
+								log.debug("Touch point callee " + tp.getTo().toString() + " deleted from " + dep.getLib().getLibraryId().toString() + " to " + otherVersion);
 							}
 						}
 					}
@@ -1393,8 +1550,14 @@ public class ApplicationController {
 	/**
 	 * Provides application-specific changes required to update the current dependency to the provided one.
 	 * Requires that the given dependency has a valid library Id.
-	 * @param group/artifact/version
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param digest a {@link java.lang.String} object.
+	 * @param otherVersion a {@link com.sap.psr.vulas.backend.model.LibraryId} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}/updateChanges", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.DepDetails.class) // extends View LibDetails that allows to see the properties
@@ -1444,7 +1607,7 @@ public class ApplicationController {
 					if(tp.getDirection()==TouchPoint.Direction.A2L) {
 						if(jdr.isDeleted(tp.getTo().toSharedType())) {
 							callsToModify.add(tp);
-							log.info("Touch point callee " + tp.getTo().toString() + " deleted from " + dep.getLib().getLibraryId().toString() + " to " + otherVersion);
+							log.debug("Touch point callee " + tp.getTo().toString() + " deleted from " + dep.getLib().getLibraryId().toString() + " to " + otherVersion);
 						}
 					}
 				}
@@ -1466,8 +1629,17 @@ public class ApplicationController {
 
 	/**
 	 * Returns a collection of {@link VulnerableDependency}s relevant for the {@link Application} with the given GAV.
-	 * @param group/artifact/version
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param historical a {@link java.lang.Boolean} object.
+	 * @param affected a {@link java.lang.Boolean} object.
+	 * @param includeAffectedUnconfirmed a {@link java.lang.Boolean} object.
+	 * @param addExcemptionInfo a {@link java.lang.Boolean} object.
+	 * @param lastChange a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/vulndeps", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -1477,6 +1649,7 @@ public class ApplicationController {
 			@RequestParam(value="includeAffected", required=false, defaultValue="true") Boolean affected, // affected==1
 			@RequestParam(value="includeAffectedUnconfirmed", required=false, defaultValue="true") Boolean includeAffectedUnconfirmed, // affectedConfirmed==0
 			@RequestParam(value="addExcemptionInfo", required=false, defaultValue="false") Boolean addExcemptionInfo, // consider configuration setting "vulas.report.exceptionScopeBlacklist" and "vulas.report.exceptionExcludeBugs"
+			@RequestParam(value="lastChange", required=false, defaultValue="") String lastChange, // a timestamp identifier which is used to cache the response or not
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
@@ -1498,10 +1671,10 @@ public class ApplicationController {
 			final TreeSet<VulnerableDependency> vd_list = new TreeSet<VulnerableDependency>();
 			
 			// Update traced and reachable flags 
-			// Populate the set to be returned depending on the historical flag
+			// Populate the set to be returned depending on the historical, affected, unconfirmed flags
 			for (VulnerableDependency vd : vd_all){
-				if(   (includeAffectedUnconfirmed || vd.getAffectedVersionConfirmed()==1) &&
-					 ((historical && vd.getAffectedVersion()==0) || (affected && vd.getAffectedVersion()==1)) ) {
+				if( (includeAffectedUnconfirmed && vd.getAffectedVersionConfirmed()==0) ||  ( vd.getAffectedVersionConfirmed()==1 &&
+					 ((historical && vd.getAffectedVersion()==0) || (affected && vd.getAffectedVersion()==1)))  ) {
 					
 					// Update CVE data (if needed)
 					this.bugRepository.updateCachedCveData(vd.getBug(), false);
@@ -1509,8 +1682,15 @@ public class ApplicationController {
 					vd_list.add(vd);
 				}
 			}
+
+			// If the request has a valid `lastChange` querystring parameter,
+			// then we instruct Nginx to cache the response for 2 months
+			HttpHeaders headers = new HttpHeaders();
+			if (lastChange != null && !lastChange.equals("")) {
+				headers.add("X-Accel-Expires", "5256000");
+			}
 			
-			return new ResponseEntity<TreeSet<VulnerableDependency>>(vd_list, HttpStatus.OK);
+			return new ResponseEntity<TreeSet<VulnerableDependency>>(vd_list, headers, HttpStatus.OK);
 		}
 		catch(EntityNotFoundException enfe) {
 			return new ResponseEntity<TreeSet<VulnerableDependency>>(HttpStatus.NOT_FOUND);
@@ -1519,7 +1699,9 @@ public class ApplicationController {
 
 	/**
 	 * Returns a collection of all {@link VulnerableDependency}s of all applications.
+	 *
 	 * @param unconfirmedOnly if true, only non-assessed {@link VulnerableDependency}s are considered
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/vulndeps", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -1570,8 +1752,19 @@ public class ApplicationController {
 
 	/**
 	 * Returns a {@link VulnerableDependency}s containing the details of the bugId affecting the dependency digest for the {@link Application} with the given GAV.
-	 * @param group/artifact/version
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param digest a {@link java.lang.String} object.
+	 * @param bugid a {@link java.lang.String} object.
+	 * @param vulnDepOrigin a {@link com.sap.psr.vulas.shared.enums.VulnDepOrigin} object.
+	 * @param bundledGroup a {@link java.lang.String} object.
+	 * @param bundledArtifact a {@link java.lang.String} object.
+	 * @param bundledVersion a {@link java.lang.String} object.
+	 * @param bundledLibrary a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/vulndeps/{digest}/bugs/{bugid}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.VulnDepDetails.class)
@@ -1605,9 +1798,15 @@ public class ApplicationController {
 	}
 
 	/**
-	 * 
-	 * @param 
+	 * <p>createTraces.</p>
+	 *
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param traces an array of {@link com.sap.psr.vulas.backend.model.Trace} objects.
+	 * @param skipResponseBody a {@link java.lang.Boolean} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/traces", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -1643,9 +1842,13 @@ public class ApplicationController {
 	}
 
 	/**
-	 * 
-	 * @param 
+	 * <p>getTraces.</p>
+	 *
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/traces", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -1669,9 +1872,13 @@ public class ApplicationController {
 	}
 	
 	/**
-	 * Returns a {@link Collection} of all application {@link Dependency}s including their reachable {@link ConstructId}s. 
-	 * @param 
+	 * Returns a {@link Collection} of all application {@link Dependency}s including their reachable {@link ConstructId}s.
+	 *
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/reachableConstructIds", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.DepDetails.class)
@@ -1695,9 +1902,15 @@ public class ApplicationController {
 	}
 
 	/**
-	 * 
-	 * @param 
+	 * <p>createPaths.</p>
+	 *
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param paths an array of {@link com.sap.psr.vulas.backend.model.Path} objects.
+	 * @param skipResponseBody a {@link java.lang.Boolean} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/paths", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -1733,9 +1946,13 @@ public class ApplicationController {
 	}
 
 	/**
-	 * 
-	 * @param 
+	 * <p>getPaths.</p>
+	 *
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/paths", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -1759,9 +1976,15 @@ public class ApplicationController {
 	}
 
 	/**
-	 * 
-	 * @param 
+	 * <p>getVulndepPaths.</p>
+	 *
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param digest a {@link java.lang.String} object.
+	 * @param bugId a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}/paths/{bugId}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -1797,13 +2020,26 @@ public class ApplicationController {
 	}
 
 	/**
-	 * 
-	 * @param 
+	 * <p>getVulndepConstructPaths.</p>
+	 *
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param digest a {@link java.lang.String} object.
+	 * @param bugId a {@link java.lang.String} object.
+	 * @param qname a {@link java.lang.String} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}/paths/{bugId}/{qname}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
-	public ResponseEntity<List<Path>> getVulndepConstructPaths(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String digest, @PathVariable String bugId, @PathVariable String qname,
+	public ResponseEntity<List<Path>> getVulndepConstructPaths(
+			@PathVariable String mvnGroup,
+			@PathVariable String artifact,
+			@PathVariable String version,
+			@PathVariable String digest,
+			@PathVariable String bugId,
+			@PathVariable String qname,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_SPACE_HEADER, required=false) String space) {
 
 		Space s = null;
@@ -1813,6 +2049,7 @@ public class ApplicationController {
 			log.error("Error retrieving space: " + e);
 			return new ResponseEntity<List<Path>>(HttpStatus.NOT_FOUND);
 		}
+		
 		// Ensure that app exists
 		Application app = null;
 		try { app = ApplicationRepository.FILTER.findOne(this.appRepository.findByGAV(mvnGroup,artifact,version,s)); }
@@ -1853,9 +2090,15 @@ public class ApplicationController {
 	}
 
 	/**
-	 * 
-	 * @param 
+	 * <p>createReachableConstructIds.</p>
+	 *
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param digest a {@link java.lang.String} object.
+	 * @param constructIds an array of {@link com.sap.psr.vulas.backend.model.ConstructId} objects.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}/reachableConstructIds", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Set<ConstructId>> createReachableConstructIds(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String digest, @RequestBody ConstructId[] constructIds,
@@ -1890,9 +2133,16 @@ public class ApplicationController {
 	}
 
 	/**
-	 * 
-	 * @param 
+	 * <p>createTouchPoints.</p>
+	 *
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param digest a {@link java.lang.String} object.
+	 * @param touchPoints an array of {@link com.sap.psr.vulas.backend.model.TouchPoint} objects.
+	 * @param skipResponseBody a {@link java.lang.Boolean} object.
+	 * @param space a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/deps/{digest}/touchPoints", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Set<TouchPoint>> createTouchPoints(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String digest, @RequestBody TouchPoint[] touchPoints, @RequestParam(value="skipResponseBody", required=false, defaultValue="false") Boolean skipResponseBody,

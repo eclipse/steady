@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.cg;
 
 import java.util.ArrayList;
@@ -8,15 +27,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.ibm.wala.util.graph.Graph;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>CallgraphReachableSearch class.</p>
+ *
+ */
 public class CallgraphReachableSearch implements Runnable {
 
-	private static final Log log = LogFactory.getLog(CallgraphReachableSearch.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private Callgraph graph = null;
 
@@ -42,27 +65,58 @@ public class CallgraphReachableSearch implements Runnable {
 	 */
 	private Map<String, Set<NodeMetaInformation>> reachableConstructs = new HashMap<String, Set<NodeMetaInformation>>();
 
+	/**
+	 * <p>setCallgraph.</p>
+	 *
+	 * @param _g a {@link com.sap.psr.vulas.cg.Callgraph} object.
+	 * @return a {@link com.sap.psr.vulas.cg.CallgraphReachableSearch} object.
+	 */
 	public CallgraphReachableSearch setCallgraph(Callgraph _g) {
 		this.graph = _g;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>findTouchPoints</code>.</p>
+	 *
+	 * @param _ft a boolean.
+	 * @return a {@link com.sap.psr.vulas.cg.CallgraphReachableSearch} object.
+	 */
 	public CallgraphReachableSearch setFindTouchPoints(boolean _ft) {
 		this.findTouchPoints = _ft;
 		return this;
 	}
 
+	/**
+	 * <p>setCallback.</p>
+	 *
+	 * @param _analyzer a {@link com.sap.psr.vulas.cg.ReachabilityAnalyzer} object.
+	 * @return a {@link com.sap.psr.vulas.cg.CallgraphReachableSearch} object.
+	 */
 	public CallgraphReachableSearch setCallback(ReachabilityAnalyzer _analyzer) {
 		this.analyzer = _analyzer;
 		return this;
 	}
 
+	/**
+	 * <p>setMinMax.</p>
+	 *
+	 * @param _min a int.
+	 * @param _max a int.
+	 * @return a {@link com.sap.psr.vulas.cg.CallgraphReachableSearch} object.
+	 */
 	public CallgraphReachableSearch setMinMax(int _min, int _max) {
 		this.min = _min;
 		this.max = _max;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>appConstructs</code>.</p>
+	 *
+	 * @param _app_constructs a {@link java.util.Set} object.
+	 * @return a {@link com.sap.psr.vulas.cg.CallgraphReachableSearch} object.
+	 */
 	public CallgraphReachableSearch setAppConstructs(Set<com.sap.psr.vulas.shared.json.model.ConstructId> _app_constructs) {
 		this.appConstructs = _app_constructs;
 		return this;
@@ -101,6 +155,7 @@ public class CallgraphReachableSearch implements Runnable {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void run() {
 		if(this.graph!=null && this.graph.getGraph()!=null) {
@@ -176,10 +231,20 @@ public class CallgraphReachableSearch implements Runnable {
 		}	
 	}
 
+	/**
+	 * <p>Getter for the field <code>touchPoints</code>.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
 	public Map<String, Set<List<NodeMetaInformation>>> getTouchPoints() {
 		return touchPoints;
 	}
 
+	/**
+	 * <p>Getter for the field <code>reachableConstructs</code>.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
 	public Map<String, Set<NodeMetaInformation>> getReachableConstructs() {
 		return reachableConstructs;
 	}	

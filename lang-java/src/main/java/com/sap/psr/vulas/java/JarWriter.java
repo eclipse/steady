@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.java;
 
 import java.io.BufferedInputStream;
@@ -27,8 +46,8 @@ import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.shared.util.DigestUtil;
@@ -38,11 +57,10 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 /**
  * Utility class to extract and rewrite JAR files, offering the following possibilities to modify the JAR: Skip original manifest file entries, add new manifest file entries, add new JAR entries, replace the content of existing JAR entries (using JarEntryWriter).
- *
  */
 public class JarWriter {
 
-	private static final Log log = LogFactory.getLog(JarWriter.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	public final SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM yyyy HH:mm:ss");
 
@@ -51,8 +69,10 @@ public class JarWriter {
 	 */
 	public static final String MANIFEST_ENTRY_VULAS_MODIF = "VULAS-modifiedAt";
 
+	/** Constant <code>MANIFEST_ENTRY_ORIG_SHA1="VULAS-originalSHA1"</code> */
 	public static final String MANIFEST_ENTRY_ORIG_SHA1 = "VULAS-originalSHA1";
 
+	/** Constant <code>hexArray</code> */
 	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
 
 	private JarFile originalJar = null;
@@ -81,6 +101,12 @@ public class JarWriter {
 	/** Additional files to be written in the JAR (entryname:path). */
 	private Map<String,Path> additionalFiles = new HashMap<String,Path>();
 
+	/**
+	 * <p>Constructor for JarWriter.</p>
+	 *
+	 * @param _jar a {@link java.nio.file.Path} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public JarWriter(Path _jar) throws IOException {
 		final File file = _jar.toFile();
 		this.originalJar = new JarFile(file, VulasConfiguration.getGlobal().getConfiguration().getBoolean(CoreConfiguration.VERIFY_JARS, true), JarFile.OPEN_READ);
@@ -92,15 +118,17 @@ public class JarWriter {
 
 	/**
 	 * Returns the size of the original JAR file.
+	 *
 	 * @see #getInstrumentedFileSize()
-	 * @return
+	 * @return a long.
 	 */
 	public long getFileSize() { return this.originalFileSize; }
 
 	/**
 	 * Returns the size of the instrumented JAR file or -1 if no instrumentation took place.
+	 *
 	 * @see #getFileSize()
-	 * @return
+	 * @return a long.
 	 */
 	public long getInstrumentedFileSize() {
 		if(this.rewrittenFile!=null)
@@ -111,13 +139,17 @@ public class JarWriter {
 
 	/**
 	 * Returns the original manifest.
+	 *
+	 * @return a {@link java.util.jar.Manifest} object.
 	 */
 	public Manifest getOriginalManifest() { return this.originalManifest; }
 
 	/**
 	 * Extract the JAR to a given directory, or to a new temporary directory if null.
-	 * @param _todir
-	 * @return
+	 *
+	 * @param _todir a {@link java.nio.file.Path} object.
+	 * @return a {@link java.nio.file.Path} object.
+	 * @throws java.io.IOException if any.
 	 */
 	public Path extract(Path _todir) throws IOException {
 		// Target directory, to be returned
@@ -177,7 +209,8 @@ public class JarWriter {
 
 	/**
 	 * Returns the SHA1 digest of the JAR. Either taken from the manifest (entry VULAS-originalSHA1, in case the original JAR has been instrumented
-	 * offline), or by computing it on the fly.  
+	 * offline), or by computing it on the fly.
+	 *
 	 * @return the SHA1 digest of the JAR
 	 */
 	public synchronized String getSHA1() {
@@ -195,22 +228,25 @@ public class JarWriter {
 	/**
 	 * Entries of the original manifest which will not be rewritten.
 	 * Must be called before "rewrite".
-	 * @param _entry
+	 *
+	 * @param _entry a {@link java.lang.String} object.
 	 */
 	public void skipManifestEntry(String _entry) { this.mfEntriesToSkip.add(_entry); }
 
 	/**
 	 * Additional manifest file entries to be included in re-written archives.
 	 * Must be called before "rewrite".
-	 * @param _key
-	 * @param _val
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _val a {@link java.lang.String} object.
 	 */
 	public void addManifestEntry(String _key, String _val) { this.mfEntriesToAdd.put(_key,  _val); }
 
 	/**
-	 * Returns true if the given manifest file entry exists, false otherwise. 
-	 * @param _key
-	 * @return
+	 * Returns true if the given manifest file entry exists, false otherwise.
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
 	public boolean hasManifestEntry(String _key) {
 		//log.info(this.originalManifest.getMainAttributes().keySet());
@@ -229,7 +265,8 @@ public class JarWriter {
 
 	/**
 	 * Returns true if the JAR has been rewritten by Vulas. Implemented by checking manifest file entries.
-	 * @return
+	 *
+	 * @return a boolean.
 	 */
 	public boolean isRewrittenByVulas() {
 		// Somehow the containsKey does not work, use getValue instead
@@ -243,13 +280,18 @@ public class JarWriter {
 	/**
 	 * Will be appended to the file name of re-written archives (if any).
 	 * Must be called before "rewrite".
+	 *
+	 * @param _string a {@link java.lang.String} object.
 	 */
 	public void setClassifier(String _string) {
 		this.classifier = _string;
 	}
 
 	/**
-	 * Register a JarEntryWriter for a given pattern. 
+	 * Register a JarEntryWriter for a given pattern.
+	 *
+	 * @param _regex a {@link java.lang.String} object.
+	 * @param _writer a {@link com.sap.psr.vulas.java.JarEntryWriter} object.
 	 */
 	public void register(String _regex, JarEntryWriter _writer) {
 		this.callbacks.put(Pattern.compile(_regex), _writer);
@@ -285,6 +327,8 @@ public class JarWriter {
 
 	/**
 	 * Returns the file name of the original JAR file.
+	 *
+	 * @return a {@link java.nio.file.Path} object.
 	 */
 	public Path getOriginalJarFileName() {
 		final Path complete_path = Paths.get(this.originalJar.getName());
@@ -293,7 +337,8 @@ public class JarWriter {
 
 	/**
 	 * Returns the file name of the to-be-rewritten JAR.
-	 * @return
+	 *
+	 * @return a {@link java.nio.file.Path} object.
 	 */
 	public Path getRewriteJarFileName() {
 		final Path complete_path = Paths.get(this.originalJar.getName());
@@ -318,11 +363,25 @@ public class JarWriter {
 		return path;
 	}
 
+	/**
+	 * <p>addFiles.</p>
+	 *
+	 * @param _target_dir a {@link java.lang.String} object.
+	 * @param _paths a {@link java.util.Set} object.
+	 * @param _overwrite a boolean.
+	 */
 	public void addFiles(String _target_dir, Set<Path> _paths, boolean _overwrite) {
 		for(Path p: _paths)
 			this.addFile(_target_dir, p, _overwrite);
 	}
 
+	/**
+	 * <p>addFile.</p>
+	 *
+	 * @param _target_dir a {@link java.lang.String} object.
+	 * @param _path a {@link java.nio.file.Path} object.
+	 * @param _overwrite a boolean.
+	 */
 	public void addFile(String _target_dir, Path _path, boolean _overwrite) {
 		String entry_name = null;
 		if(_target_dir==null)
@@ -334,6 +393,12 @@ public class JarWriter {
 			this.additionalFiles.put(entry_name, _path);	
 	}
 
+	/**
+	 * <p>hasEntry.</p>
+	 *
+	 * @param _entry_name a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public boolean hasEntry(String _entry_name) {
 		boolean has = false;
 		final Enumeration<JarEntry> en =  this.originalJar.entries();
@@ -351,7 +416,8 @@ public class JarWriter {
 	/**
 	 * The rewritten JAR file. Must be called after "rewrite". If rewrite is called multiple times, this method
 	 * only returns the last rewritten JAR file.
-	 * @return
+	 *
+	 * @return a {@link java.io.File} object.
 	 */
 	public File getRewrittenJarFile() {
 		return this.rewrittenFile;
@@ -362,7 +428,10 @@ public class JarWriter {
 	 * the JAR will be rewritten to a temporary directory. If the target JAR already exists, it will
 	 * not be written (see {@link JarWriter#getRewriteJarFileName()}).
 	 * See here: http://docs.oracle.com/javase/7/docs/technotes/guides/jar/jar.html
-	 * @throws JarAnalysisException
+	 *
+	 * @throws com.sap.psr.vulas.java.JarAnalysisException
+	 * @param _todir a {@link java.nio.file.Path} object.
+	 * @return a {@link java.nio.file.Path} object.
 	 */
 	public Path rewrite(Path _todir) throws JarAnalysisException {
 		// Target dir
@@ -478,6 +547,13 @@ public class JarWriter {
 		return this.rewrittenFile.toPath();
 	}
 
+	/**
+	 * <p>appendToClasspath.</p>
+	 *
+	 * @param _classpath a {@link java.util.Set} object.
+	 * @param _to_append a {@link java.util.Set} object.
+	 * @param _preprocess a boolean.
+	 */
 	public final static void appendToClasspath(Set<Path> _classpath, Set<Path> _to_append, boolean _preprocess) {
 		for(Path p: _to_append)
 			appendToClasspath(_classpath, p, _preprocess);
@@ -488,13 +564,13 @@ public class JarWriter {
 	 * a manifest entry "Class-Path", in which case the archive is re-written to a temporary file w/o this entry.
 	 * The method returns the path that has been appended, which is identical to the given path unless an archive
 	 * has been rewritten.
-	 * 
+	 *
 	 * TODO: Maybe add a parameter to specify problematic entries, rather than hardcoding "Class-Path" here.
-	 * 
-	 * @param _classpath
-	 * @param _to_append
-	 * @param _preprocess
-	 * @return
+	 *
+	 * @param _classpath a {@link java.util.Set} object.
+	 * @param _to_append a {@link java.nio.file.Path} object.
+	 * @param _preprocess a boolean.
+	 * @return a {@link java.nio.file.Path} object.
 	 */
 	public final static Path appendToClasspath(Set<Path> _classpath, Path _to_append, boolean _preprocess) {
 		Path appended_path = _to_append;

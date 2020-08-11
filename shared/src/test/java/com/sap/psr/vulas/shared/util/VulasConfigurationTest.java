@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.shared.util;
 
 import static org.junit.Assert.assertEquals;
@@ -17,6 +36,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.junit.Test;
 
+import com.sap.psr.vulas.shared.connectivity.Service;
 import com.sap.psr.vulas.shared.json.model.KeyValue;
 
 public class VulasConfigurationTest {
@@ -177,5 +197,32 @@ public class VulasConfigurationTest {
 		} catch (IOException e) {
 			assertTrue(false);
 		}
+	}
+	
+	@Test
+	public void testGetServiceUrl() {
+		final String url = "http://localhost:8000/backend";
+		VulasConfiguration c1 = new VulasConfiguration();
+		c1.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), url + "////");
+		assertEquals(url, c1.getServiceUrl(Service.BACKEND));
+		c1.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), url + "/");
+		assertEquals(url, c1.getServiceUrl(Service.BACKEND));
+		c1.setProperty(VulasConfiguration.getServiceUrlKey(Service.BACKEND), url);
+		assertEquals(url, c1.getServiceUrl(Service.BACKEND));
+	}
+	
+	@Test
+	public void testGetServiceHeaders() {
+		final String url = "http://localhost:8000/backend";
+		VulasConfiguration c1 = new VulasConfiguration();
+		c1.setProperty("vulas.shared.backend.header.foo", "bar");
+		c1.setProperty("vulas.shared.backend.header.baz", 1);
+		c1.setProperty("vulas.shared.backend.header.X-Vulas-Client-Token", "AJDEY@HEX@EWX@XEH@I*QA");
+		//c1.setProperty("vulas.shared.backend.header.test", "123, 456");
+		final Map<String, String> headers = c1.getServiceHeaders(Service.BACKEND);
+		assertEquals("bar", headers.get("foo"));
+		assertEquals("1", headers.get("baz"));
+		assertEquals("AJDEY@HEX@EWX@XEH@I*QA", headers.get("X-Vulas-Client-Token"));
+		//assertEquals("123, 456", headers.get("test"));
 	}
 }

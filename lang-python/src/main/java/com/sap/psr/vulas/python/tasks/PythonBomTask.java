@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.python.tasks;
 
 import java.io.IOException;
@@ -7,8 +26,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalysisException;
@@ -34,20 +53,27 @@ import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import com.sap.psr.vulas.tasks.AbstractBomTask;
 
+/**
+ * <p>PythonBomTask class.</p>
+ *
+ */
 public class PythonBomTask extends AbstractBomTask {
 
-	private static final Log log = LogFactory.getLog(PythonBomTask.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static final String[] EXT_FILTER = new String[] { "whl", "egg", "py" };
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getLanguage() { return new HashSet<ProgrammingLanguage>(Arrays.asList(new ProgrammingLanguage[] { ProgrammingLanguage.PY })); }
 
+	/** {@inheritDoc} */
 	@Override
 	public void configure(VulasConfiguration _cfg) throws GoalConfigurationException {
 		super.configure(_cfg);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void execute() throws GoalExecutionException {
 

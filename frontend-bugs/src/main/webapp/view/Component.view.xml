@@ -1,6 +1,28 @@
+<!--
+
+    This file is part of Eclipse Steady.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    SPDX-License-Identifier: Apache-2.0
+
+    Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+
+-->
 <mvc:View controllerName="view.Component" xmlns="sap.m" xmlns:ce="sap.ui.codeeditor"
           xmlns:c="sap.suite.ui.commons" xmlns:form="sap.ui.layout.form"
-          xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:m="sap.ui.commons.layout" xmlns:commons="sap.ui.commons" xmlns:mm="sap.m">
+          xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:m="sap.ui.commons.layout" xmlns:commons="sap.ui.commons" xmlns:mm="sap.m"
+          xmlns:html="http://www.w3.org/1999/xhtml">
     <Page id="componentPage">
         <headerContent>
             <Button icon="sap-icon://refresh"  press="loadData" tooltip="Reload App data"  />
@@ -135,8 +157,8 @@
 <!-- 								 type="json" /> -->
 						</l:VerticalLayout>   
                         <Table xmlns="sap.ui.table" id="idBugAnalysisList" width="99%" selectionMode = "None" editable="false"
-                                rows="{/affectedVersions}" allowColumnReordering="false" 
-                                cellClick="onBugListItemTap" 
+                                rows="{/affectedVersions}" allowColumnReordering="false" growing="true" growingScrollToLoad="true" growingThreshold="10"
+                                cellClick="onBugListItemTap"  class="bugList" height="300"
                             >
                             <columns>
                                 <Column xmlns="sap.ui.table" width="10%" mergeDuplicates="false" 
@@ -225,38 +247,32 @@
                                         </SegmentedButton>
                                     </template>
                                 </Column>
-                                <Column xmlns="sap.ui.table" width="10%" mergeDuplicates="false" >
-                                    <Label text="Patch eval" xmlns="sap.ui.commons" />
-                                        <template>
-<!--                                             <l:HorizontalLayout> -->
-                                            
-                                            <m:MatrixLayout columns="1">
-										<m:MatrixLayoutRow>
-										<m:MatrixLayoutCell>
-                                           <Image xmlns="sap.m" decorative="true" 
-                                                    src="{
-                                                            parts: ['patcheval', 'patchevalAff'],
-                                                            formatter: 'model.Formatter.showImagePE'
-                                                            }">
-                                            </Image>
-                                             <TextView xmlns="sap.ui.commons" wrapping="true" 
-                                                      tooltip="{parts: ['firstFixed', 'lastVulnerable', 'fromIntersection', 'toIntersection'], formatter: 'model.Formatter.tooltipPEFormatter'}"
-                                               text="{
-			 												parts: ['patcheval'],
-			 												formatter: 'model.Formatter.affectedVersionSource'
-			 												}"/>
-                                            	</m:MatrixLayoutCell>
-                                            	</m:MatrixLayoutRow>
-                                            		<m:MatrixLayoutRow>
-										<m:MatrixLayoutCell>
-			 								<TextView xmlns="sap.ui.commons" 
-                                               text="{parts: ['firstFixed', 'lastVulnerable', 'fromIntersection', 'toIntersection', 'overallConfidence','pathConfidence'], formatter: 'model.Formatter.tooltipPEFormatter'}"/>
-                                            	</m:MatrixLayoutCell>
-                                            	</m:MatrixLayoutRow>
-<!--                                             </l:HorizontalLayout> -->
- </m:MatrixLayout>
-                                        </template>
-                                       </Column>
+                                <Column xmlns="sap.ui.table" width="10%" mergeDuplicates="false">
+                                    <Label text="Patch eval" 
+                                        xmlns="sap.ui.commons" />
+                                    <template>
+                                        <m:MatrixLayout columns="1">
+                                            <m:MatrixLayoutRow>
+                                                <m:MatrixLayoutCell>
+                                                    <Image xmlns="sap.m" decorative="true" src="{
+                                                                                            parts: ['patcheval', 'patchevalAff'],
+                                                                                            formatter: 'model.Formatter.showImagePE'
+                                                                                            }">
+                                                    </Image>
+                                                    <TextView xmlns="sap.ui.commons" wrapping="true" tooltip="{parts: ['firstFixed', 'lastVulnerable', 'fromIntersection', 'toIntersection'], formatter: 'model.Formatter.tooltipPEFormatter'}" text="{
+                                                                                            parts: ['patcheval'],
+                                                                                            formatter: 'model.Formatter.affectedVersionSource'
+                                                                                            }"/>
+                                                </m:MatrixLayoutCell>
+                                            </m:MatrixLayoutRow>
+                                            <m:MatrixLayoutRow>
+                                                <m:MatrixLayoutCell>
+                                                    <TextView xmlns="sap.ui.commons" text="{parts: ['firstFixed', 'lastVulnerable', 'fromIntersection', 'toIntersection', 'overallConfidence','pathConfidence'], formatter: 'model.Formatter.tooltipPEFormatter'}"/>
+                                                </m:MatrixLayoutCell>
+                                            </m:MatrixLayoutRow>
+                                        </m:MatrixLayout>
+                                    </template>
+                                </Column>
 <!--                                 <Column xmlns="sap.ui.table" width="3%" mergeDuplicates="false" > -->
 <!--                                	 <Label text="Confidence" xmlns="sap.ui.commons" /> -->
 <!--                                	 <template> -->

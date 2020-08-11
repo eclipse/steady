@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.java.goals;
 
 import java.io.IOException;
@@ -5,8 +24,8 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.AbstractAppGoal;
@@ -20,9 +39,13 @@ import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.ThreadUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>InstrGoal class.</p>
+ *
+ */
 public class InstrGoal extends AbstractAppGoal {
 
-	private static final Log log = LogFactory.getLog(InstrGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private Path libPath = null;
 
@@ -32,36 +55,98 @@ public class InstrGoal extends AbstractAppGoal {
 	
 	private Set<Path> instrPaths = new HashSet<Path>();
 
+	/**
+	 * <p>Constructor for InstrGoal.</p>
+	 */
 	public InstrGoal() { super(GoalType.INSTR); }
 
+	/**
+	 * <p>Getter for the field <code>libPath</code>.</p>
+	 *
+	 * @return a {@link java.nio.file.Path} object.
+	 */
 	public Path getLibPath() { return this.libPath; }
 
+	/**
+	 * <p>Setter for the field <code>libPath</code>.</p>
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public void setLibPath(Path _p) throws IllegalArgumentException {
 		if(FileUtil.isAccessibleDirectory(_p) || FileUtil.isAccessibleFile(_p))
 			this.libPath = _p;
 	}
 
+	/**
+	 * <p>hasLibPath.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean hasLibPath() { return this.getLibPath()!=null; }
 
+	/**
+	 * <p>Getter for the field <code>inclPath</code>.</p>
+	 *
+	 * @return a {@link java.nio.file.Path} object.
+	 */
 	public Path getInclPath() { return this.inclPath; }
 
+	/**
+	 * <p>Setter for the field <code>inclPath</code>.</p>
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public void setInclPath(Path _p) throws IllegalArgumentException {
 		if(FileUtil.isAccessibleDirectory(_p) || FileUtil.isAccessibleFile(_p))
 			this.inclPath = _p;
 	}
 
+	/**
+	 * <p>hasInclPath.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean hasInclPath() { return this.getInclPath()!=null; }
 
+	/**
+	 * <p>Getter for the field <code>targetPath</code>.</p>
+	 *
+	 * @return a {@link java.nio.file.Path} object.
+	 */
 	public Path getTargetPath() { return this.targetPath; }
 
+	/**
+	 * <p>Setter for the field <code>targetPath</code>.</p>
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public void setTargetPath(Path _p) throws IllegalArgumentException {
 		this.targetPath = _p;
 	}
 
+	/**
+	 * <p>hasTargetPath.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean hasTargetPath() { return this.getTargetPath()!=null; }
 	
+	/**
+	 * <p>Getter for the field <code>instrPaths</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	public Set<Path> getInstrPaths() { return this.instrPaths; }
 	
+	/**
+	 * <p>addInstrPath.</p>
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public void addInstrPath(Path _p) throws IllegalArgumentException {
 		if(!FileUtil.isAccessibleDirectory(_p) && !FileUtil.isAccessibleFile(_p))
 			log.warn("[" + _p + "] is not an accessible file or directory");
@@ -72,14 +157,27 @@ public class InstrGoal extends AbstractAppGoal {
 
 	}
 
+	/**
+	 * <p>addInstrPaths.</p>
+	 *
+	 * @param _paths a {@link java.util.Set} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public void addInstrPaths(Set<Path> _paths) throws IllegalArgumentException {
 		for(Path p: _paths)
 			this.addInstrPath(p);
 	}
 
+	/**
+	 * <p>hasInstrPaths.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean hasInstrPaths() { return this.getInstrPaths()!=null && !this.getInstrPaths().isEmpty(); }
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Checks whether one or more {@link Path}s with application constructs, and one or more {@link Path}s
 	 * with dependencies are available.
 	 */
@@ -132,6 +230,7 @@ public class InstrGoal extends AbstractAppGoal {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void executeTasks() throws Exception {
 		final Application app = this.getApplicationContext();

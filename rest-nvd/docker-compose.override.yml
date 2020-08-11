@@ -1,0 +1,6 @@
+version: "2"
+
+services:
+ rest-nvd:
+  ports:
+   - "22222:80"

@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    This file is part of Eclipse Steady.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    SPDX-License-Identifier: Apache-2.0
+
+    Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+
+-->
 <vulas-report>
 
 	<!-- Metadata -->
@@ -32,12 +53,12 @@
 			<value>$exceptionThreshold</value>
 		</configuration>
 		<configuration>
-			<name>exceptionScopeBlacklist</name>
-			<value>$exceptionScopeBlacklist</value>
+			<name>exemptScopes</name>
+			<value>$exemptScopes</value>
 		</configuration>
 		<configuration>
-			<name>exceptionExcludedBugs</name>
-			<value>$exceptionExcludedBugs</value>
+			<name>exemptBugs</name>
+			<value>$exemptBugs</value>
 		</configuration>
 	</configurations>
 	
@@ -46,9 +67,7 @@
 		
 		#foreach( $vul in $vulnsToReport )
 		<vulnerability>
-		
-			<!-- Removed with Vulas v3: <bugId>$vul.bugid</bugId> -->
-		
+				
 			<bug>
 				<id>$vul.bug.getBugId()</id>
 				<cvssScore>$vul.bug.getCvssScore()</cvssScore>

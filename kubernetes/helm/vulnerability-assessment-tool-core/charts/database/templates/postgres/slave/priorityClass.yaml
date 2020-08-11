@@ -1,0 +1,22 @@
+{{- if .Values.global.podPriorityClass.enabled -}}
+apiVersion: scheduling.k8s.io/v1beta1
+kind: PriorityClass
+
+metadata:
+  name: {{ template "postgres.slave.priorityClassName" . }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+
+{{- if .Values.postgres.slave.podPriorityClass }}
+{{- if .Values.postgres.slave.podPriorityClass.spec }}
+{{- toYaml .Values.postgres.slave.podPriorityClass.spec | nindent 0 }}
+{{- else }}
+# INFO: default podPriorityClass
+globalDefault: false
+value: 40000
+preemptionPolicy: PreemptLowerPriority
+description: "Specific priority for {{ template "postgres.slave.podName" . }} with preemption"
+{{- end -}}
+{{- end -}}
+{{- end -}}

@@ -1,5 +1,25 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.java;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,14 +35,15 @@ import java.util.concurrent.TimeUnit;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.FileAnalyzer;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.json.model.Dependency;
 import com.sap.psr.vulas.shared.util.FileSearch;
+import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StopWatch;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
@@ -33,7 +54,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class ArchiveAnalysisManager {
 
-	private static final Log log = LogFactory.getLog(ArchiveAnalysisManager.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private ExecutorService pool;
 	
@@ -54,7 +75,8 @@ public class ArchiveAnalysisManager {
 	private long analysisTimeout = -1;
 
 	/**
-	 * 
+	 * <p>Constructor for ArchiveAnalysisManager.</p>
+	 *
 	 * @param _pool_size the number of parallel analysis threads
 	 * @param _timeout the timeout in milleseconds to wait for the completion of all analysis tasks (-1 means no timeout)
 	 * @param _instr whether or not the Java archives shall be instrumented
@@ -67,10 +89,26 @@ public class ArchiveAnalysisManager {
 		this.ctx = _ctx;
 	}
 
+	/**
+	 * <p>Setter for the field <code>instrument</code>.</p>
+	 *
+	 * @param _instr a boolean.
+	 */
 	public void setInstrument(boolean _instr) { this.instrument = _instr; }
 
+	/**
+	 * <p>Setter for the field <code>workDir</code>.</p>
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
+	 */
 	public void setWorkDir(Path _p) { this.setWorkDir(_p, false); }
 
+	/**
+	 * <p>Setter for the field <code>workDir</code>.</p>
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
+	 * @param _create a boolean.
+	 */
 	public void setWorkDir(Path _p, boolean _create) {
 		this.workDir = _p;
 		if(_create) {
@@ -83,27 +121,64 @@ public class ArchiveAnalysisManager {
 		ArchiveAnalysisManager.log.info("Work dir set to [" + _p + "]");
 	}
 
+	/**
+	 * <p>Setter for the field <code>libDir</code>.</p>
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
+	 */
 	public void setLibDir(Path _p) {
 		this.libDir = _p;
 		ArchiveAnalysisManager.log.info("Lib dir set to [" + _p + "]");
 	}
 
+	/**
+	 * <p>setIncludeDir.</p>
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
+	 */
 	public void setIncludeDir(Path _p) {
 		this.inclDir = _p;
 		ArchiveAnalysisManager.log.info("Include dir set to [" + _p + "]");
+	}
+	
+	/**
+	 * <p>getSupportedFileExtensions.</p>
+	 *
+	 * @return an array of {@link java.lang.String} objects.
+	 */
+	public static String[] getSupportedFileExtensions() { return new String[] { "jar", "war", "aar" }; }
+
+	/**
+	 * <p>canAnalyze.</p>
+	 *
+	 * @param _file a {@link java.io.File} object.
+	 * @return a boolean.
+	 */
+	public static final boolean canAnalyze(File _file) {
+		final String ext = FileUtil.getFileExtension(_file);
+		if(ext == null || ext.equals(""))
+			return false;
+		for(String supported_ext: getSupportedFileExtensions()) {
+			if(supported_ext.equalsIgnoreCase(ext))
+				return true;
+		}
+		return false;
 	}
 
 	/**
 	 * Determines whether the instrumented JAR is renamed or not. If yes, the new file name follows the following format:
 	 * - If app context is provided: [originalJarName]-vulas-[appGroupId]-[appArtifactId]-[appVersion].jar
 	 * - Otherwise: [originalJarName]-vulas.jar
-	 * @param boolean
+	 *
+	 * @param _b a boolean.
 	 */
 	public void setRename(boolean _b) { this.rename = _b; }
 
 	/**
 	 * Takes a map of file system paths to {@link Dependency}s.
 	 * Entries will be used when instantiating {@link JarAnalyzer}s in {@link #startAnalysis(Set, JarAnalyzer)}.
+	 *
+	 * @param _deps a {@link java.util.Map} object.
 	 */
 	public void setKnownDependencies(Map<Path, Dependency> _deps) {
 		this.knownDependencies = _deps;
@@ -112,7 +187,9 @@ public class ArchiveAnalysisManager {
 	/**
 	 * Returns the {@link Dependency} for a given archive, or null if no such archive is known.
 	 * The underlying map is built during the execution of the Maven plugin.
-	 * @param _p
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.Dependency} object.
 	 */
 	public Dependency getKnownDependency(Path _p) {
 		if(this.knownDependencies!=null)
@@ -124,6 +201,9 @@ public class ArchiveAnalysisManager {
 	/**
 	 * Starts the analysis for all {@link Path}s of the given {@link Map} that have a null value.
 	 * As such, it can be used to avoid analyzing archives multiple times.
+	 *
+	 * @param _paths a {@link java.util.Map} object.
+	 * @param _parent a {@link com.sap.psr.vulas.java.JarAnalyzer} object.
 	 */
 	public void startAnalysis(@NotNull Map<Path, JarAnalyzer> _paths, JarAnalyzer _parent) {
 		
@@ -147,6 +227,9 @@ public class ArchiveAnalysisManager {
 
 	/**
 	 * Starts the analysis for all the given {@link Path}s, which must point to either JAR or WAR archives.
+	 *
+	 * @param _paths a {@link java.util.Set} object.
+	 * @param parent a {@link com.sap.psr.vulas.java.JarAnalyzer} object.
 	 */
 	public void startAnalysis(@NotNull Set<Path> _paths, JarAnalyzer parent) {
 
@@ -210,7 +293,6 @@ public class ArchiveAnalysisManager {
 				if(parent!=null)
 					ja.setParent(parent);
 
-				
 				ja.setRename(this.rename);
 				ja.setWorkDir(this.workDir);
 
@@ -250,9 +332,9 @@ public class ArchiveAnalysisManager {
 				}
 				// There are remaining tasks, but no timeout is set or reached
 				else if(!open_tasks.isEmpty()) {
-					ArchiveAnalysisManager.log.info("Waiting for the completion of [" + open_tasks.size() + "] analysis tasks:");
+					ArchiveAnalysisManager.log.info("Waiting for the completion of [" + open_tasks.size() + "] analysis tasks");
 					for(JarAnalyzer ja: open_tasks.keySet())
-						ArchiveAnalysisManager.log.info("    " + ja);
+						ArchiveAnalysisManager.log.debug("    " + ja);
 				}
 			}
 			
@@ -281,6 +363,11 @@ public class ArchiveAnalysisManager {
 		return open_tasks;
 	}
 
+	/**
+	 * <p>Getter for the field <code>analyzers</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	public Set<JarAnalyzer> getAnalyzers() {
 		final HashSet<JarAnalyzer> analyzers = new HashSet<JarAnalyzer>();
 		for(JarAnalyzer ja : this.analyzers.values()) {
@@ -297,8 +384,9 @@ public class ArchiveAnalysisManager {
 
 	/**
 	 * Returns the analyzer used to analyze a Java archive whose path ends with the given sub-path _p (the first match is taken), null if no such analyzer can be found.
-	 * @param _p
-	 * @return
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
+	 * @return a {@link com.sap.psr.vulas.java.JarAnalyzer} object.
 	 */
 	public JarAnalyzer getAnalyzerForSubpath(Path _p) {
 		JarAnalyzer ja = null;

@@ -1,10 +1,31 @@
+/*
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 jQuery.sap.declare("model.Config");
+jQuery.sap.require("jquery.sap.storage");
 
 model.Config = {
-	mock : true,
-	host : "/backend",
-    ciaHost : "/cia",
-    lang : "",
+		cookie : {  host : "/backend",
+			ciaHost : "/cia",
+			token : ""
+		},
+	lang : "",
 	user: "",
 	pwd: "",
 	user: "",
@@ -12,12 +33,45 @@ model.Config = {
 	skipEmpty : true
 };
 
-model.Config.setHost = function(_host){
-	model.Config.host=_host;
+var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+
+//populates the settings with the data read from the cookie
+//called in the init of Master.controller
+model.Config.setModel = function(_m){
+	if(_m) {
+		if (typeof _m === 'string') {
+			model.Config.cookie = JSON.parse(_m)
+		} else {
+			model.Config.cookie = _m
+		}
+	}
+}
+
+model.Config.setHost = function(_host) {
+	model.Config.cookie.host=_host;
+	oStore.put("vulas-frontend-settings", model.Config.cookie)
+}
+
+model.Config.getHost = function() {
+	return model.Config.cookie.host;
 }
 
 model.Config.setCiaHost = function(_host){
-	model.Config.ciaHost=_host;
+	model.Config.cookie.ciaHost=_host;
+	oStore.put("vulas-frontend-settings", model.Config.cookie)
+}
+
+model.Config.getCiaHost = function() {
+	return model.Config.cookie.ciaHost;
+}
+
+model.Config.setToken = function(_token){
+	model.Config.cookie.token =_token;
+	oStore.put("vulas-frontend-settings", model.Config.cookie)
+}
+
+model.Config.getToken = function() {
+	return model.Config.cookie.token;
 }
 
 model.Config.setLang = function(_lang){
@@ -28,9 +82,6 @@ model.Config.getLang = function(){
 	return model.Config.lang;
 }
 
-model.Config.getHost = function(){
-	return model.Config.host;
-}
 model.Config.setUser = function(_usr){
 	model.Config.user=_usr;
 }
@@ -60,152 +111,78 @@ model.Config.loadDataSync = function(oModel,sUrl, method) {
 }
 
 model.Config.getCvesServiceUrl = function(cve) {
-	//return model.Config.host+"/vulasfrontend/xs/assessment/getArchives.xsjs";
-	return model.Config.host+"/cves/"+ cve;
+	return model.Config.getHost()+"/cves/"+ cve;
 }
+
 /**
  * get the bugs list
  */
 model.Config.getBugsAsUrl = function(){
-    return model.Config.host+"/bugs?lang="+ model.Config.lang;
+    return model.Config.getHost()+"/bugs?lang="+ model.Config.lang;
 }
 
 model.Config.getBugsAsBaseUrl = function(){
-    return model.Config.host+"/bugs";
+    return model.Config.getHost()+"/bugs";
 }
 
-
 /**
- * Get detail for the selected bugid
+ * Get details for the selected bugid
  */
 model.Config.getBugDetailsAsUrl = function(bugId, source){
     return model.Config.getBugsAsBaseUrl()+"/"+bugId;
 }
 
+/**
+ * Get affectedLibrary for selected bugid and GAV
+ */
 model.Config.getBugDetailsAffVersion = function(bugId, source,g,a,v){
     return model.Config.getBugsAsBaseUrl()+"/"+bugId+"/affectedLibIds/"+g+"/"+a+"/"+v+"/?source="+source;
 }
 
+/**
+ * Get all affectedLibraries for selected bugid
+ */
 model.Config.getBugAllAffVersion = function(bugId){
     return model.Config.getBugsAsBaseUrl()+"/"+bugId+"/affectedLibIds";
 }
 
-
+/**
+ * Get all libraries for selected bugid
+ */
 model.Config.getBugDetailsLibrariesAsUrl = function(bugId){
     return model.Config.getBugsAsBaseUrl()+"/"+bugId+"/libraries";
 }
 
-/**
- * the service url for applications
- */
-model.Config.getMyAppsServiceUrl = function() {
-	//return model.Config.host+"/vulasfrontend/xs/assessment/getMyApplications.xsjs";
-	if(model.Config.skipEmpty)
-		return model.Config.host+"/apps?skipEmpty=true";
-	else
-		return model.Config.host+"/apps";
-};
-
-/**
- * the service url for archives
- */
-model.Config.getArchivesServiceUrl = function(g,a,v) {
-	//return model.Config.host+"/vulasfrontend/xs/assessment/getArchives.xsjs";
-	return model.Config.host+"/apps/"+ g + "/" + a + "/" + v +"/deps";
-};
-
-/**
- * the service url for goal executions
- */
-model.Config.getGoalExecutionsServiceUrl = function(g,a,v) {
-	//return model.Config.host+"/vulasfrontend/xs/assessment/getGoalExecutions.xsjs";
-	return model.Config.host+"/apps/"+ g + "/" + a + "/" + v +"/goals";
-};
-
-/**
- * the service url for goal execution details
- */
-model.Config.getGoalExecutionDetailsServiceUrl = function() {
-	return model.Config.host+"/vulasfrontend/xs/assessment/getGoalExecutionDetails.xsjs";
-};
-
-/**
- * the service url for user info
- */
-/*model.Config.getUserServiceUrl = function() {
-	return model.Config.host+"/vulasfrontend/xs/assessment/getUserInfo.xsjs";
-};*/
-
-/**
- * the service url for archive properties
- */
-model.Config.getArchivePropertiesServiceUrl = function(g,a,v,sha1) {
-	//return model.Config.host+"/vulasfrontend/xs/assessment/getArchiveDetails.xsjs";
-	//console.log(model.Config.host+"/apps/"+ g + "/" + a + "/" + v +"/deps/" + sha1);
-	return model.Config.host+"/apps/"+ g + "/" + a + "/" + v +"/deps/" + sha1;
-};
-
-/**
- * the service url for used vulnerabilities
- */
-model.Config.getUsedVulnerabilitiesServiceUrl = function(g,a,v) {
-	//return model.Config.host+"/vulasfrontend/xs/assessment/getUsedVulnerabilities.xsjs";
-	return model.Config.host+"/apps/"+ g + "/" + a + "/" + v +"/vulndeps";
-};
-
-/**
- * the service url for vulnerability details
- */
-model.Config.getVulnerabilityDetailsServiceUrl = function(g,a,v,sha1,bug) {
-	//return model.Config.host+"/vulasfrontend/xs/assessment/getVulnerabilityDetails.xsjs";
-//	console.log(model.Config.host+"/apps/"+ g + "/" + a + "/" + v +"/vulndeps/"+sha1+"/bugs/"+bug);
-	return model.Config.host+"/apps/"+ g + "/" + a + "/" + v +"/vulndeps/"+sha1+"/bugs/"+bug;
-};
-
-model.Config.getReachabilityGraphServiceUrl = function(g,a,v,sha1,bug,cid) {
-	//return model.Config.host+"/vulasfrontend/xs/assessment/getReachabilityGraph.xsjs";
-	return model.Config.host+"/apps/"+ g + "/" + a + "/" + v +"/deps/"+sha1+"/paths/"+bug+"/"+cid;
-};
-
-/**
- * the service url for packages including test coverage
- */
-model.Config.getPackagesWithTestCoverageServiceUrl = function(g,a,v) {
-	//return model.Config.host+"/vulasfrontend/xs/assessment/getPackagesWithTestCoverage.xsjs";
-	return model.Config.host+"/apps/"+ g + "/" + a + "/" + v;
-};
-
-/**
- * the service url for CVE details
- */
-model.Config.getCveDetailsUrl = function() {
-	return model.Config.host+"/vulasfrontend/xs/assessment/getCveDetails.xsjs";
-};
-
 model.Config.getDiff = function() {
-	return model.Config.ciaHost+"/constructs/diff";
+	return model.Config.getCiaHost()+"/constructs/diff";
 };
 
+/**
+ * Get affected construct changes for selected bugid and library digest
+ */
 model.Config.getAffectedConstructsSha1Bugid = function(sha1,bugid){
-    //return model.Config.host+"/libs/"+sha1+"/bugs/"+bugid+"/constructIds";
-    return model.Config.host+"/libs/"+sha1+"/bugs/"+bugid+"/affConstructChanges";
+    return model.Config.getHost()+"/libs/"+sha1+"/bugs/"+bugid+"/affConstructChanges";
 };
 
-
-model.Config.getCiaHostUrl = function() {
-    return model.Config.ciaHost;
-};
-
+/**
+ * Get all artifacts for a given GA
+ */
 model.Config.getAffectedMavenArtifacts = function(ga) {
-  return model.Config.getCiaHostUrl() + "/artifacts/" + ga;
+  return model.Config.getCiaHost() + "/artifacts/" + ga;
 };
 
+/**
+ * Get library for selected digest
+ */
 model.Config.getLibraryDetailsUrl = function(sha1){
-  return model.Config.host+"/libs/"+sha1;  
+  return model.Config.getHost()+"/libs/"+sha1;  
 };
 
+/**
+ * Get all applications with dependency on selected digest
+ */
 model.Config.getLibraryApplicationsUrl = function(sha1){
-  return model.Config.host+"/libs/"+sha1+"/apps";  
+  return model.Config.getHost()+"/libs/"+sha1+"/apps";  
 };
 
 model.Config.getMavenId = function (affectedVersion){
@@ -229,7 +206,7 @@ model.Config.getMavenId = function (affectedVersion){
 
 
 model.Config.uploadManualAssessment = function(data, pbugid ){
-    var baseurl = model.Config.host + "/bugs/";
+    var baseurl = model.Config.getHost() + "/bugs/";
     var trail = "/affectedLibIds?source=MANUAL";
     var fullUrl = baseurl + pbugid + trail;
     var elementArray = [];
@@ -271,7 +248,7 @@ model.Config.uploadManualAssessment = function(data, pbugid ){
     $.ajax({
         type: "PUT",
         url : fullUrl,
-        headers : {'content-type': "application/json",'cache-control': "no-cache" },
+        headers : {'content-type': "application/json",'cache-control': "no-cache", 'X-Vulas-Client-Token' : model.Config.getToken() },
         data : JSON.stringify(elementArray),
         success : function(msg){
             sap.ui.commons.MessageBox.alert("Data correctly updated via PUT");
@@ -284,7 +261,7 @@ model.Config.uploadManualAssessment = function(data, pbugid ){
                   $.ajax({
                       type: "POST",
                       url : fullUrl,
-                      headers : {'content-type': "application/json",'cache-control': "no-cache" },
+                      headers : {'content-type': "application/json",'cache-control': "no-cache",'X-Vulas-Client-Token' : model.Config.getToken() },
                       data : JSON.stringify(elementArray),
                       success : function(msg){
                           sap.ui.commons.MessageBox.alert("Data correctly updated via POST");
@@ -355,7 +332,7 @@ model.Config.uploadCVEDescription = function(newjson, url){
     $.ajax({
         type: "PUT",
         url : url,
-        headers : {'content-type': "application/json",'cache-control': "no-cache" },
+        headers : {'content-type': "application/json",'cache-control': "no-cache",'X-Vulas-Client-Token' : model.Config.getToken() },
         data : JSON.stringify(newjson),
         success : function(msg){
             sap.ui.commons.MessageBox.alert("Data correctly updated");
@@ -383,20 +360,4 @@ model.Config.uploadCVEDescription = function(newjson, url){
     return toLookup;
 };*/
 
-/**
- * 
- */
-(function() {
 
-	// The "reponder" URL parameter defines if the app shall run with mock data
-	var responderOn = jQuery.sap.getUriParameters().get("responderOn");
-
-	// set the flag for later usage
-	model.Config.isMock = ("true" === responderOn)
-			|| !model.Config.getMyAppsServiceUrl()
-			|| !model.Config.getArchivesServiceUrl()
-			|| !model.Config.getUsedVulnerabilitiesServiceUrl()
-			|| !model.Config.getPackagesWithTestCoverageServiceUrl()
-			|| !model.Config.getArchivePropertiesServiceUrl()
-			|| !model.Config.getVulnerabilityDetailsServiceUrl()
-})();

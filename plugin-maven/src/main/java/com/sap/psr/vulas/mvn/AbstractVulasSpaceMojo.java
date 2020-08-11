@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.mvn;
 
 import java.nio.file.Path;
@@ -30,6 +49,10 @@ import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>Abstract AbstractVulasSpaceMojo class.</p>
+ *
+ */
 public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
 
 	@Parameter(defaultValue = "${project}", property = "project", required = true, readonly = true)
@@ -50,10 +73,11 @@ public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
     protected VulasConfiguration vulasConfiguration = new VulasConfiguration();
     
 	/**
-	 * Puts the plugin configuration element <layeredConfiguration> as a new layer into {@link VulasConfiguration}.
+	 * Puts the plugin configuration element &lt;layeredConfiguration&gt; as a new layer into {@link VulasConfiguration}.
 	 * If no such element exists, e.g., because the POM file does not contain a plugin section for Vulas, default settings
 	 * are established using {@link MavenProject} and {@link VulasConfiguration#setPropertyIfEmpty(String, Object)}.
-	 * @throws Exception
+	 *
+	 * @throws java.lang.Exception
 	 */
 	public final void prepareConfiguration() throws Exception {
 
@@ -103,6 +127,9 @@ public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
 
 	/**
 	 * This method, called by Maven, first invokes {@link AbstractVulasSpaceMojo#createGoal()} and then {@link AbstractVulasSpaceMojo#executeGoal()}.
+	 *
+	 * @throws org.apache.maven.plugin.MojoExecutionException if any.
+	 * @throws org.apache.maven.plugin.MojoFailureException if any.
 	 */
 	public final void execute() throws MojoExecutionException, MojoFailureException {
 		try {
@@ -132,17 +159,17 @@ public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
 
 	/**
 	 * Creates the respective goal.
-	 * 
+	 *
 	 * MUST be overridden by subclasses.
-	 * @return
 	 */
 	protected abstract void createGoal();
 
 	/**
-	 * Simply calls {@AbstractAnalysisGoal#execute}.
-	 * 
+	 * Calls {@link AbstractSpaceGoal#executeSync()}.
+	 *
 	 * CAN be overridden by subclasses.
-	 * @return
+	 *
+	 * @throws java.lang.Exception if any.
 	 */
 	protected void executeGoal() throws Exception {
 		this.goal.executeSync();

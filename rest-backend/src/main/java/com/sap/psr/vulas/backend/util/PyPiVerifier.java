@@ -1,7 +1,27 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -20,9 +40,14 @@ import org.slf4j.LoggerFactory;
 
 import com.jayway.jsonpath.JsonPath;
 import com.sap.psr.vulas.backend.model.Library;
+import com.sap.psr.vulas.backend.model.LibraryId;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 
+/**
+ * <p>PyPiVerifier class.</p>
+ *
+ */
 public class PyPiVerifier implements DigestVerifier {
 	
 	private static Logger log = LoggerFactory.getLogger(PyPiVerifier.class);
@@ -43,29 +68,37 @@ public class PyPiVerifier implements DigestVerifier {
 	
 	private SimpleDateFormat dateFormat = null;
 	
+	/**
+	 * <p>Constructor for PyPiVerifier.</p>
+	 */
 	public PyPiVerifier() {
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
 		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
 		return SUPP_LANG;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<DigestAlgorithm> getSupportedDigestAlgorithms() {
 		return SUPP_ALG;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getVerificationUrl() { return url; }
 	
+	/** {@inheritDoc} */
 	@Override
 	public java.util.Calendar getReleaseTimestamp() { return this.timestamp; }
 	
+	/** {@inheritDoc} */
 	@Override
-	public Boolean verify(final Library _lib) throws VerificationException {
+	public List<LibraryId> verify(final Library _lib) throws VerificationException {
 		if(_lib==null || _lib.getDigest()==null)
 			throw new IllegalArgumentException("No library or digest provided: [" + _lib + "]");
 		
@@ -75,7 +108,7 @@ public class PyPiVerifier implements DigestVerifier {
 		this.url = new String("https://pypi.python.org/pypi/<name>/<version>/json").replaceAll("<name>", _lib.getLibraryId().getMvnGroup()).replaceAll("<version>", _lib.getLibraryId().getVersion());
 
 		String response_body = null;
-		Boolean verified = false;
+		List<LibraryId> verified_lids = null;
 		int sc = -1;
 		try {
 			final CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -88,12 +121,10 @@ public class PyPiVerifier implements DigestVerifier {
 				HttpEntity entity = response.getEntity();
 				if (sc==HttpStatus.SC_OK && entity != null) {
 					response_body = ConnectionUtil.readInputStream(entity.getContent());
-					verified = this.containsMD5(response_body, _lib.getDigest());
+					verified_lids = new ArrayList<LibraryId>();
+					if(this.containsMD5(response_body, _lib.getDigest()))
+						verified_lids.add(_lib.getLibraryId());
 
-					// Check whether given and returned libid correspond
-					//final LibraryId returned_libid = new LibraryId((String)JsonPath.read(response_body, "$.response.docs[0].g"),(String)JsonPath.read(response_body, "$.response.docs[0].a"),(String)JsonPath.read(response_body, "$.response.docs[0].v"));
-					//if(_lib.getLibraryId()!=null && !_lib.getLibraryId().equals(returned_libid))
-					//	log.warn("Given and returned library identifiers do not match: Given [" + _lib.getLibraryId() + "], returned [" + returned_libid + "]");
 				}
 			} finally {
 				response.close();
@@ -101,7 +132,7 @@ public class PyPiVerifier implements DigestVerifier {
 		} catch (Exception e) {
 			throw new VerificationException(_lib, this.url, e);
 		}
-		return verified;
+		return verified_lids;
 	}
 	
 	/**

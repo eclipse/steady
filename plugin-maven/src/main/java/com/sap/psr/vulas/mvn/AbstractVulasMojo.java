@@ -1,5 +1,25 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.mvn;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -16,13 +36,14 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.goals.AbstractAppGoal;
 import com.sap.psr.vulas.goals.GoalExecutionException;
+import com.sap.psr.vulas.java.ArchiveAnalysisManager;
+import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.GoalClient;
 import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.json.model.Application;
@@ -36,6 +57,10 @@ import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>Abstract AbstractVulasMojo class.</p>
+ *
+ */
 public abstract class AbstractVulasMojo extends AbstractMojo {
 
     private static final String INCLUDES = "vulas.maven.includes";
@@ -44,6 +69,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
 
     private static final String IGNORE_POMS = "vulas.maven.ignorePoms";
     
+    /** Constant <code>PLUGIN_CFG_LAYER="Maven-Plugin-Config"</code> */
     protected static final String PLUGIN_CFG_LAYER = "Maven-Plugin-Config";
 
     @Parameter(defaultValue = "${project}", property = "project", required = true, readonly = true)
@@ -54,7 +80,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     protected MavenSession session;
 
     /**
-     * All plugin configuration settings of the element <layeredConfiguration> are put in this {@link Map}.
+     * All plugin configuration settings of the element &lt;layeredConfiguration&gt; are put in this {@link Map}.
      */
     @Parameter
     private Map<?, ?> layeredConfiguration;
@@ -69,11 +95,11 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     protected VulasConfiguration vulasConfiguration = new VulasConfiguration();
 
     /**
-     * Puts the plugin configuration element <layeredConfiguration> as a new layer into {@link VulasConfiguration}.
+     * Puts the plugin configuration element &lt;layeredConfiguration&gt; as a new layer into {@link VulasConfiguration}.
      * If no such element exists, e.g., because the POM file does not contain a plugin section for Vulas, default settings
      * are established using {@link MavenProject} and {@link VulasConfiguration#setPropertyIfEmpty(String, Object)}.
      *
-     * @throws Exception
+     * @throws java.lang.Exception
      */
     public final void prepareConfiguration() throws Exception {
     	
@@ -125,6 +151,9 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
 
     /**
      * This method, called by Maven, first invokes {@link AbstractVulasMojo#createGoal()} and then {@link AbstractVulasMojo#executeGoal()}.
+     *
+     * @throws org.apache.maven.plugin.MojoExecutionException if any.
+     * @throws org.apache.maven.plugin.MojoFailureException if any.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
@@ -165,8 +194,8 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
      * Evaluates the configuration settings {@link AbstractVulasMojo#INCLUDES}, {@link AbstractVulasMojo#EXCLUDES} and {@link #IGNORE_POMS} to
      * determine whether the given {@link MavenProject} shall be processed.
      *
-     * @param _prj
-     * @return
+     * @param _prj a {@link org.apache.maven.project.MavenProject} object.
+     * @return a boolean.
      */
     protected boolean isPassingFilter(MavenProject _prj) {
         boolean do_process = true;
@@ -199,17 +228,15 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
      * Creates the respective goal.
      * <p>
      * MUST be overridden by subclasses.
-     *
-     * @return
      */
     protected abstract void createGoal();
 
     /**
-     * Simply calls {@AbstractAnalysisGoal#execute}.
+     * Calls {@link AbstractAppGoal#executeSync()}.
      * <p>
      * CAN be overridden by subclasses.
      *
-     * @return
+     * @throws java.lang.Exception if any.
      */
     protected void executeGoal() throws Exception {
         this.goal.executeSync();
@@ -256,28 +283,31 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
                 // Create lib w/o SHA1
                 lib = new Library();
                 lib.setLibraryId(new LibraryId(a.getGroupId(), a.getArtifactId(), a.getVersion()));
-
+                lib.setDigest(FileUtil.getDigest(a.getFile(),DigestAlgorithm.SHA1));
+                
                 // Create dependency and put into map
                 dep = new Dependency(this.goal.getGoalContext().getApplication(), lib, Scope.fromString(a.getScope().toUpperCase(), Scope.RUNTIME), !direct_artifacts.contains(a), null, a.getFile().toPath().toString());
-                
-                // Set parent dependency (if any)
+                                
+                // Set parent dependency (if there is any and it is NOT an intra-project Maven dependency with path target/classes)
                 final LibraryId parent = this.getParent(a.getDependencyTrail());
                 if(parent!=null) {
-                	for(Dependency d: dep_for_path.values()) {
-                		if(d.getLib().getLibraryId().equals(parent)) {
-                			dep.setParent(d);
+                	for(Dependency parent_dep: dep_for_path.values()) {
+                		final File artifact_file = Paths.get(parent_dep.getPath()).toFile();
+                		if(parent_dep.getLib().getLibraryId().equals(parent) && !artifact_file.isDirectory() && ArchiveAnalysisManager.canAnalyze(artifact_file)) {
+                			dep.setParent(parent_dep);
                 			break;
                 		}
                 	}
                 }
                 
+                getLog().info("Dependency [" + StringUtil.padLeft(++count, 4) + "]: Dependency [libid=" + dep.getLib().getLibraryId() + ", parent=" + (dep.getParent()==null ? "null" : dep.getParent().getLib().getLibraryId()) + ", path=" + a.getFile().getPath() + ", direct=" + direct_artifacts.contains(a) + ", scope=" + dep.getScope() + "] created for Maven artifact [g=" + a.getGroupId() + ", a=" + a.getArtifactId() + ", base version=" + a.getBaseVersion() + ", version=" + a.getVersion() + ", classifier=" + a.getClassifier() + "]");
+                getLog().info("    " + StringUtil.join(a.getDependencyTrail(), " => "));
+                
                 // Check consistency
                 if( (dep.getParent()==null && dep.getTransitive()) || (dep.getParent()!=null && !dep.getTransitive()) ) {
+                	// Note that those warnings are printed for all dependency trails that include intrta-project dependencies (since they are ignored for the time being)
                 	getLog().warn("Dependency is transitive [" + dep.getTransitive() + "], but parent is [" + (dep.getParent()==null ? "null" : "present") + "]");
                 }
-                
-                getLog().info("Dependency [" + StringUtil.padLeft(++count, 4) + "]: Dependency [libid=" + dep.getLib().getLibraryId() + ", parent=" + (dep.getParent()==null ? "null" : dep.getParent().getLib().getLibraryId()) + ", path " + a.getFile().getPath() + ", direct=" + direct_artifacts.contains(a) + ", scope=" + dep.getScope() + "] created for Maven artifact [g=" + a.getGroupId() + ", a=" + a.getArtifactId() + ", base version=" + a.getBaseVersion() + ", version=" + a.getVersion() + ", classifier=" + a.getClassifier() + "]");
-                getLog().info("    " + StringUtil.join(a.getDependencyTrail(), " => "));
                 
                 dep_for_path.put(a.getFile().toPath(), dep);
             }
@@ -285,10 +315,16 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
             //TODO: Is it necessary to check whether the above dependency (via getArtifacts) is actually the one added to the classpath (via project.getRuntimeClasspathElements())?
             //TODO: It may be that a different version (file) is chosen due to conflict resolution. Still, those cases should also be visible in the frontend (archive view).
 
-            ((AbstractAppGoal) this.goal).setKnownDependencies(dep_for_path);
+            ((AbstractAppGoal)this.goal).setKnownDependencies(dep_for_path);
         }
     }
     
+    /**
+     * <p>getParent.</p>
+     *
+     * @param _trail a {@link java.util.List} object.
+     * @return a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
+     */
     protected final LibraryId getParent(List<String> _trail) {
     	LibraryId parent = null;
     	// Should not occur
@@ -306,6 +342,12 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     	return parent;
     }
     
+    /**
+     * Parses one element of the {@link Artifact}'s dependency trail, which is a {@link String} comprising groupId, artifactId, type and version.
+     * 
+     * @param _string
+     * @return a {@link LibraryId} created from groupId, artifactId and version (or null if the given String does not have the expected format)
+     */
 	protected final LibraryId parseGAPV(@NotNull String _string) {
 		final String[] gapv = _string.split(":");
 		if(gapv.length!=4) {

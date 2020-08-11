@@ -1,9 +1,28 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.python.sign;
 
 import java.io.File;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.FileAnalysisException;
@@ -25,9 +44,11 @@ import com.sap.psr.vulas.sign.SignatureFactory;
  */
 public class PythonSignatureFactory implements SignatureFactory {
 
-	private static final Log log = LogFactory.getLog(PythonSignatureFactory.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns true if the given {@link ConstructId} is of type Java method or Java constructor.
 	 */
 	@Override
@@ -38,6 +59,7 @@ public class PythonSignatureFactory implements SignatureFactory {
 				  ConstructType.METH.equals(_id.getType()) || ConstructType.CONS.equals(_id.getType()) );
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Signature createSignature(Construct _construct) {
 		if(_construct!=null && _construct.getContent()!=null)
@@ -46,6 +68,7 @@ public class PythonSignatureFactory implements SignatureFactory {
 			return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Signature createSignature(ConstructId _cid, File _file) {
 		if(!_cid.getLang().equals(ProgrammingLanguage.PY))
@@ -77,6 +100,7 @@ public class PythonSignatureFactory implements SignatureFactory {
 		return signature;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SignatureChange computeChange(Construct _from, Construct _to) {
 		// TODO Auto-generated method stub

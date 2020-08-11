@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.java.sign;
 
 import java.util.HashMap;
@@ -20,10 +39,19 @@ import ch.uzh.ifi.seal.changedistiller.model.classifiers.java.JavaEntityType;
 import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 
+/**
+ * <p>ASTConstructBodySignature class.</p>
+ *
+ */
 public class ASTConstructBodySignature extends ASTSignature {
 
 		private static final long serialVersionUID = 2722815156114326441L;
 
+	    /**
+	     * <p>Constructor for ASTConstructBodySignature.</p>
+	     *
+	     * @param _construct a {@link com.sap.psr.vulas.Construct} object.
+	     */
 	    public ASTConstructBodySignature(Construct _construct){
 	    	 super(JavaEntityType.METHOD, _construct.getId().getSimpleName());
 		     sMethodBodyConverter = sInjector.getInstance(JavaMethodBodyConverter.class);
@@ -33,33 +61,47 @@ public class ASTConstructBodySignature extends ASTSignature {
 
 	    //A Copy constructor :
 	    //To make a copy of the defective construct, the "Node" object is mutable as implemented in changedistiller
+	    /**
+	     * <p>Constructor for ASTConstructBodySignature.</p>
+	     *
+	     * @param copy a {@link com.sap.psr.vulas.java.sign.ASTConstructBodySignature} object.
+	     */
 	    public ASTConstructBodySignature(ASTConstructBodySignature copy){
 	    		this(copy._construct);
 	    }
 
 
+	    /**
+	     * <p>Constructor for ASTConstructBodySignature.</p>
+	     *
+	     * @param fLabel a {@link ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType} object.
+	     * @param fValue a {@link java.lang.String} object.
+	     */
 	    public ASTConstructBodySignature(EntityType fLabel, String fValue) {
 	    	super(fLabel,fValue);
 			// TODO Auto-generated constructor stub
 		}
 
-		/**
-	     * Returns the generated {@link JavaCompilation} from the file identified by the given filename. This method assumes
-	     * that the filename is relative to <code>{@value #TEST_DATA_BASE_DIR}</code>.
-	     *
-	     * @param filename
-	     *            of the file to compile (relative to {@value #TEST_DATA_BASE_DIR}).
-	     * @return the compilation of the file
-	     */
+	   /**
+	    * Returns the generated {@link JavaCompilation} from the file identified by the given filename.
+	    *
+	    * @param _file a {@link java.lang.String} object.
+	    */
 	   public void prepareCompilationFromFile(String _file) {
 	        fCompilation = CompilationUtils.compileFile(_file);
 	    }
 
+	    /**
+	     * <p>prepareCompilationFromSource.</p>
+	     *
+	     * @param src a {@link java.lang.String} object.
+	     */
 	    public void prepareCompilationFromSource(String src){
 	    	fCompilation = CompilationUtils.compileSource(getSourceCodeWithSnippets(src));
 	    }
 
 
+	    /** {@inheritDoc} */
 	    @Override
 	    protected String getSourceCodeWithSnippets(String... snippets) {
 	        StringBuilder src = new StringBuilder("public class Foo { ");
@@ -71,6 +113,12 @@ public class ASTConstructBodySignature extends ASTSignature {
 	    }
 
 
+	   /**
+	    * <p>convertConstructBody.</p>
+	    *
+	    * @param methodName a {@link java.lang.String} object.
+	    * @return a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
+	    */
 	   public Node convertConstructBody(String methodName) {
 	        AbstractMethodDeclaration method = CompilationUtils.findMethod(fCompilation.getCompilationUnit(), methodName);
 	        fRoot = new Node(JavaEntityType.METHOD, methodName);
@@ -134,11 +182,12 @@ public class ASTConstructBodySignature extends ASTSignature {
 	    	return buffer.toString();
 	    }*/
 
-		  /**
-		     * Helper method for building a JSON element of a Node in the AST
-		     * @param n
-		     * @param buffer
-		     */
+		 /**
+		  * Helper method for building a JSON element of a Node in the AST
+		  *
+		  * @param json a {@link java.lang.String} object.
+		  * @return a {@link com.sap.psr.vulas.sign.Signature} object.
+		  */
 		    /*private void buildJsonElement(Node n ,StringBuilder buffer){
 		    	buffer.append("\"Value\" : " ).append(JsonBuilder.escape(n.getValue().toString())).append(",");
 				buffer.append("\"SourceCodeEntity\" :{ " ) ; //open SourceCodeEntity json element
@@ -152,13 +201,12 @@ public class ASTConstructBodySignature extends ASTSignature {
 				buffer.append("},");//close off SourceCodeEntity json element
 				buffer.append("\"EntityType\" : " ).append(JsonBuilder.escape(n.getEntity().getType().toString()));    //Entity Type
 		    }*/
-
-
 		 public Signature toASTSignature(String json){
 			 return null;
 		 }
 
 
+		 /** {@inheritDoc} */
 		 @Override
 		 public String toJson(){
 			 final Map<Class<?>, StdSerializer<?>> custom_serializers = new HashMap<Class<?>, StdSerializer<?>>();
@@ -215,6 +263,11 @@ public class ASTConstructBodySignature extends ASTSignature {
 		}
 
 
+		/**
+		 * <p>toRTEDString.</p>
+		 *
+		 * @return a {@link java.lang.String} object.
+		 */
 		public String toRTEDString(){
 			return treeRTED(fRoot, new StringBuffer());
 		}

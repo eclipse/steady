@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.cia.util;
 
 import java.nio.file.Path;
@@ -18,15 +37,19 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.sap.psr.vulas.cia.model.mavenCentral.MavenVersionsSearch;
-import com.sap.psr.vulas.cia.model.mavenCentral.ResponseDoc;
 import com.sap.psr.vulas.cia.util.ArtifactDownloader.DefaultRequestCallback;
 import com.sap.psr.vulas.cia.util.ArtifactDownloader.FileResponseExtractor;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.Artifact;
+import com.sap.psr.vulas.shared.json.model.mavenCentral.MavenVersionsSearch;
+import com.sap.psr.vulas.shared.json.model.mavenCentral.ResponseDoc;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 
+/**
+ * <p>MavenCentralWrapper class.</p>
+ *
+ */
 public class MavenCentralWrapper implements RepositoryWrapper {
 	
 	private static final String baseUrl;
@@ -53,6 +76,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 			CONFIGURED = true;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<ProgrammingLanguage> getSupportedLanguages() {
 		return SUPP_LANG;
@@ -178,6 +202,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public Path downloadArtifact(Artifact _doc) throws Exception {
 		final String url = MAVEN_CENTRAL_REPO;
@@ -201,6 +226,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public Artifact getArtifactForDigest(String _sha1) throws RepoException {
 		Artifact doc = null;
@@ -248,17 +274,20 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<Artifact> getAllArtifactVersions(String group, String artifact, String classifier, String packaging) throws Exception {
 		return this.getArtifactVersions(group, artifact, null , false, null, classifier, packaging); 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<Artifact> getGreaterArtifactVersions(String group, String artifact, String greaterThanVersion,
 			String classifier, String packaging)  throws Exception  {
 		return this.getArtifactVersions(group, artifact, null , false, greaterThanVersion, classifier, packaging);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Artifact getLatestArtifactVersion(String group, String artifact, String classifier, String packaging)  throws Exception  {
 		Set<Artifact> a = this.getArtifactVersions(group, artifact, null , true, null, classifier, packaging);
@@ -271,6 +300,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 		return list.get(0);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Artifact getArtifactVersion(String group, String artifact, String version, String classifier,
 			String packaging, ProgrammingLanguage lang) throws Exception  {
@@ -284,6 +314,16 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 		return list.get(0);
 	}
 
+	/**
+	 * <p>getArtifactForClass.</p>
+	 *
+	 * @param classname a {@link java.lang.String} object.
+	 * @param rows a {@link java.lang.String} object.
+	 * @param classifierFilter a {@link java.lang.String} object.
+	 * @param packagingFilter a {@link java.lang.String} object.
+	 * @return a {@link java.util.Set} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public Set<Artifact> getArtifactForClass(String classname, String rows, String classifierFilter, String packagingFilter) throws Exception {
 		final StringBuilder query = new StringBuilder();
 		query.append("fc:\"").append(classname).append("\"");
@@ -313,6 +353,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 		return filtered;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isConfigured() {
 		return CONFIGURED;

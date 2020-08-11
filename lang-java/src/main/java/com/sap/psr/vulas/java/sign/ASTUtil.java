@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.java.sign;
 
 import java.util.Collection;
@@ -7,8 +26,8 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import ch.uzh.ifi.seal.changedistiller.model.classifiers.ChangeType;
 import ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType;
@@ -18,18 +37,21 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 
 /**
  * Implements different methods for comparing nodes (incl. their descendents).
- *
  */
 public class ASTUtil {
 
-	private static final Log log = LogFactory.getLog(ASTUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	public static enum NODE_COMPARE_MODE { ENTITY_TYPE, VALUE };
 
 	/**
 	 * Returns true if the nodes are equal with regard to parameter mode.
-	 * @param _mode
-	 * @return
+	 *
+	 * @param _mode a {@link com.sap.psr.vulas.java.sign.ASTUtil.NODE_COMPARE_MODE} object.
+	 * @param _left a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
+	 * @param _right a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
+	 * @return a boolean.
+	 * @throws java.lang.IllegalArgumentException if any.
 	 */
 	public static final boolean isEqual(@NotNull Node _left, @NotNull Node _right, @NotNull NODE_COMPARE_MODE _mode) throws IllegalArgumentException {
 		boolean is_equal = true;
@@ -76,6 +98,14 @@ public class ASTUtil {
 		return is_equal;
 	}
 
+	/**
+	 * <p>intersectSourceCodeChanges.</p>
+	 *
+	 * @param _a a {@link java.util.Collection} object.
+	 * @param _b a {@link java.util.Collection} object.
+	 * @param _relaxed a boolean.
+	 * @return a {@link java.util.Set} object.
+	 */
 	public static final Set<Object> intersectSourceCodeChanges(Collection _a, Collection _b, boolean _relaxed) {
 		SourceCodeEntity.setIgnoreSourceRange(true);
 		if(_relaxed)
@@ -100,12 +130,13 @@ public class ASTUtil {
 	}
 
 	/**
-	 * 
-	 * @param _a
-	 * @param _b
-	 * @param _relaxed
+	 * <p>intersectSourceCodeChanges.</p>
+	 *
+	 * @param _a a {@link java.util.Collection} object.
+	 * @param _b a {@link java.util.Collection} object.
+	 * @param _relaxed a boolean.
 	 * @param _cn ClassName
-	 * @return 
+	 * @return a {@link java.util.Set} object.
 	 */
 	public static final Set<Object> intersectSourceCodeChanges(Collection _a, Collection _b, boolean _relaxed, String _cn) {
 		UniqueNameNormalizer uniqueNN = UniqueNameNormalizer.getInstance();
@@ -133,7 +164,8 @@ public class ASTUtil {
 	}
 
 	/**
-	 *  Maps <<String Representation of ChangeType>> to <<SourceCode ChangeType enumeration>>
+	 *  Maps string representation of {@link ChangeType} to the corresponding enumeration value.
+	 *
 	 * @param changeType - String representation of changeType
 	 * @return instance of ChangeType corresponding to the SourceCodeChange EntityType
 	 */
@@ -345,10 +377,10 @@ public class ASTUtil {
 	 * Helper method for mapping the JaveEntityTypes  for source code entities to string name of EntityType in the JSON
 	 * TODO : It might be better to move this into a BaseClass, might also be used for deserializing SourceCodeChange
 	 *
-	 * @param type , string representation of source code entity type
 	 * @return Corresponding EntityType
 	 *
 	 * Number of SourceCodeEntityTypes
+	 * @param type a {@link java.lang.String} object.
 	 */
 	public static EntityType getJavaEntityType (String type){
 		EntityType entityType = null;

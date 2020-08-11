@@ -1,0 +1,34 @@
+{
+  "digest": "123",
+  "digestAlgorithm": "SHA1",
+  "properties": [
+    {
+      "source": "JAVA_MANIFEST",
+      "name": "entry",
+      "value": "value"
+    }
+  ],
+  "constructs": [
+    {
+      "lang": "JAVA",
+      "type": "CLAS",
+      "qname": "org.lib.Foo"
+    },
+    {
+      "lang": "JAVA",
+      "type": "CONS",
+      "qname": "org.lib.Foo()"
+    },
+    {
+      "lang": "JAVA",
+      "type": "METH",
+      "qname": "org.lib.Foo.bar()"
+    }
+  ],
+  "libraryId": {
+    "group": "org.lib",
+    "artifact": "bar",
+    "version": "1.0.0"
+  },
+  "wellknownDigest": false
+}

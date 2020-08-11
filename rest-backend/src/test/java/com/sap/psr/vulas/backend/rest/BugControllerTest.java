@@ -1,8 +1,27 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.rest;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -13,7 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -21,7 +39,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -35,13 +52,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.sap.psr.vulas.backend.cve.Cve;
+import com.sap.psr.vulas.backend.cve.CveReader2;
+import com.sap.psr.vulas.backend.cve.NvdRestServiceMockup;
 import com.sap.psr.vulas.backend.model.AffectedConstructChange;
 import com.sap.psr.vulas.backend.model.AffectedLibrary;
 import com.sap.psr.vulas.backend.model.Bug;
@@ -56,6 +75,7 @@ import com.sap.psr.vulas.backend.repo.ConstructChangeRepository;
 import com.sap.psr.vulas.backend.repo.ConstructIdRepository;
 import com.sap.psr.vulas.backend.repo.LibraryIdRepository;
 import com.sap.psr.vulas.backend.repo.LibraryRepository;
+import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 import com.sap.psr.vulas.shared.enums.BugOrigin;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.ContentMaturityLevel;
@@ -135,7 +155,7 @@ public class BugControllerTest {
      */
     @Test
     public void testGetBug() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	this.bugRepository.customSave(bug,true);
     	mockMvc.perform(get("/bugs/"
                 + bug.getBugId()))
@@ -151,12 +171,41 @@ public class BugControllerTest {
     }
     
     /**
+     * Save bug and update its description and score. 
+     * @throws Exception
+     */
+    @Test
+    public void testUpdateCachedCveData() throws Exception {
+    	final String id = "CVE-2019-17531";
+    	
+    	// Create mockup service and read correct CVE data
+    	NvdRestServiceMockup.create();
+    	final CveReader2 reader = new CveReader2();
+    	final Cve cve = reader.read(id);
+    	
+    	// Create bug without wrong data
+    	final Bug b1 = this.createExampleBug(id, "Lorem ipsum");
+    	this.bugRepository.customSave(b1, true);
+    	assertFalse(cve.getSummary().equals(b1.getDescription()));
+
+    	// Update cache with correct data from mockup service
+    	//this.bugRepository.updateCachedCveData(b1, true);
+    	mockMvc.perform(post("/cves/refreshCache/"
+                + id))
+                .andExpect(status().isOk());
+    	
+    	// Check whether the descr has been updated
+    	final Bug b2 = this.bugRepository.findByBugId("CVE-2019-17531").get(0);
+    	assertTrue(cve.getSummary().equals(b2.getDescription()));
+    }
+    
+    /**
      * Rest-post and rest-get.
      * @throws Exception
      */
     @Test
     public void testPost() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	
     	// Rest-post
     	final MockHttpServletRequestBuilder post_builder = post("/bugs/")
@@ -220,7 +269,7 @@ public class BugControllerTest {
      */
     @Test
     public void testDuplicatePost() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	
     	// Rest-post
     	final MockHttpServletRequestBuilder post_builder = post("/bugs/")
@@ -252,7 +301,7 @@ public class BugControllerTest {
      */
     @Test
     public void testDelete() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	
     	// Rest-post
     	final MockHttpServletRequestBuilder post_builder = post("/bugs/")
@@ -285,7 +334,7 @@ public class BugControllerTest {
      */
     @Test
     public void testPostPut() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	
     	// Rest-post
     	final MockHttpServletRequestBuilder post_builder = post("/bugs/")
@@ -326,7 +375,7 @@ public class BugControllerTest {
      */
     @Test
     public void testPostChangePut() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	
     	// Rest-post
     	final MockHttpServletRequestBuilder post_builder = post("/bugs/")
@@ -374,7 +423,7 @@ public class BugControllerTest {
      */
     @Test
     public void testPutNotFound() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	
     	// Rest-put
     	final MockHttpServletRequestBuilder put_builder = put("/bugs/" + bug.getBugId())
@@ -390,7 +439,7 @@ public class BugControllerTest {
     
     @Test
     public void testAffectedLibrary() throws Exception {
-    	final Bug bug = this.createExampleBug();
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
     	
     	MockHttpServletRequestBuilder post_builder = post("/bugs/")
     			.content(JacksonUtil.asJsonString(bug).getBytes())
@@ -463,8 +512,16 @@ public class BugControllerTest {
     	
     	assertTrue(createdAffLib.getModifiedAt().getTimeInMillis()==afterPutAffLib.getModifiedAt().getTimeInMillis());
 
+    	//Get affLib by GA
+    	MockHttpServletRequestBuilder get_builder = get("/bugs/CVE-2014-0050/affectedLibIds/bar/bar");
+    	mockMvc.perform(get_builder)	
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType))
+        .andExpect(jsonPath("$.length()", is(1)));
+    	
+    	
     	// Get affected library with affectedcc
-    	MockHttpServletRequestBuilder get_builder = get("/bugs/CVE-2014-0050/affectedLibIds/bar/bar/0.0.1?source=PROPAGATE_MANUAL");
+    	get_builder = get("/bugs/CVE-2014-0050/affectedLibIds/bar/bar/0.0.1?source=PROPAGATE_MANUAL");
     	mockMvc.perform(get_builder)	
         .andExpect(status().isOk())
         .andExpect(content().contentType(contentType))
@@ -491,7 +548,67 @@ public class BugControllerTest {
     	
     	assertTrue(afterGetAffLib.getModifiedAt().getTimeInMillis()<afterLastPutAffLib.getModifiedAt().getTimeInMillis());
     }
+  
+    
+    @Test
+    public void testGetWellKnownAffectedLibrary() throws Exception {
+    	final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
+    	this.bugRepository.customSave(bug,true);
     	
+    	LibraryId lid1 = new LibraryId("com.foo", "bar", "1.0");
+    	libIdRepository.save(lid1);
+
+    	LibraryId lid2 = new LibraryId("com.foo", "bar", "1.0-copy");
+    	libIdRepository.save(lid2);
+
+    	Library l1 = new Library("1E48256A2341047E7D729217ADEEC8217F6E3A1A");
+    	l1.setLibraryId(lid1);
+    	l1.setWellknownDigest(true);
+    	libRepository.customSave(l1);
+    	
+    	Library l2 = new Library("123FD");
+    	l2.setLibraryId(lid2);
+    	l2.setWellknownDigest(false);
+    	libRepository.customSave(l2);
+    	
+		// the libraryId for l1 must have been replaced with the official one (from
+		// Maven Central) during the digest verification, thus we create the affected
+		// library for the latter
+    	AffectedLibrary afflib1 = new AffectedLibrary(bug, new LibraryId("commons-fileupload","commons-fileupload","1.2.2"), true, null, null, null);
+    	afflib1.setSource(AffectedVersionSource.MANUAL);
+    	
+    	
+    	AffectedLibrary afflib2 = new AffectedLibrary(bug, lid2, true, null, null, null);
+    	afflib2.setSource(AffectedVersionSource.MANUAL);
+    	
+    	AffectedLibrary[] afflibs = new AffectedLibrary[2];
+    	afflibs[0]=afflib1;afflibs[1]=afflib2;
+    	afflibRepository.customSave(bug, afflibs);
+    	
+    	final MockHttpServletRequestBuilder get_builder = get("/bugs/" + bug.getBugId()+"/affectedLibIds?onlyWellKnown=true");
+    	mockMvc.perform(get_builder)	
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.length()", is(1)));
+    	
+    	mockMvc.perform(get("/bugs/" + bug.getBugId()+"/affectedLibIds"))	
+		        .andExpect(status().isOk())
+		        .andExpect(content().contentType(contentType))
+		        .andExpect(jsonPath("$.length()", is(2)));
+
+    	mockMvc.perform(get("/bugs/" + bug.getBugId()+"/affectedLibIds?onlyWellKnown=true&source=MANUAL"))
+		        .andExpect(status().isOk())
+		        .andExpect(content().contentType(contentType))
+		        .andExpect(jsonPath("$.length()", is(1)));
+
+		mockMvc.perform(get("/bugs/" + bug.getBugId()+"/affectedLibIds?source=MANUAL"))	
+		        .andExpect(status().isOk())
+		        .andExpect(content().contentType(contentType))
+		        .andExpect(jsonPath("$.length()", is(2)));
+    	
+    }
+  
+    
     /*@Test
     public void postSingleBug() throws Exception {
     	//https://shdhumale.wordpress.com/2011/07/07/code-to-compress-and-decompress-json-object/
@@ -505,23 +622,33 @@ public class BugControllerTest {
         
     /**
      * Creates a transient bug.
+     * @param _id TODO
+     * @param _descr TODO
      * @return
      */
-    private final Bug createExampleBug() {
-    	Collection<String> references = new ArrayList<String>();
+    private final Bug createExampleBug(String _id, String _descr) {
+    	final Collection<String> references = new ArrayList<String>();
     	references.add(BUG_URL1);
     	references.add(BUG_URL2);
-    	final ConstructId cid = new ConstructId(ProgrammingLanguage.JAVA, ConstructType.CLAS, "com.acme.Foo");
-    	final ConstructChange cc1 = new ConstructChange("svn.apache.org", "123456", "/trunk/src/main/java/com/acme/Foo.java", cid, Calendar.getInstance(), ConstructChangeType.MOD);
-    	final ConstructChange cc2 = new ConstructChange("svn.apache.org", "123456", "/branch/1.x/src/main/java/com/acme/Foo.java", cid, Calendar.getInstance(), ConstructChangeType.MOD);
-    	final Bug b = new Bug(BUG_ID, BUG_DESCR, references);
+    	
+    	final Bug b = new Bug(_id, _descr, references);
     	b.setOrigin(BugOrigin.PUBLIC);
     	b.setMaturity(ContentMaturityLevel.READY);
+    	b.setCvssScore(0.1f);
+    	b.setCvssVersion("1.9"); // Note: This version does not exist
+    	b.setCvssVector("bla");
+    	
+    	final ConstructId cid = new ConstructId(ProgrammingLanguage.JAVA, ConstructType.CLAS, "com.acme.Foo");
+    	
+    	final Set<ConstructChange> ccs = new HashSet<ConstructChange>();
+    	final ConstructChange cc1 = new ConstructChange("svn.apache.org", "123456", "/trunk/src/main/java/com/acme/Foo.java", cid, Calendar.getInstance(), ConstructChangeType.MOD);
+    	final ConstructChange cc2 = new ConstructChange("svn.apache.org", "123456", "/branch/1.x/src/main/java/com/acme/Foo.java", cid, Calendar.getInstance(), ConstructChangeType.MOD);
     	cc1.setBug(b);
     	cc2.setBug(b);
-    	Set<ConstructChange> ccs = new HashSet<ConstructChange>();
-    	ccs.add(cc1); ccs.add(cc2);
+    	ccs.add(cc1);
+    	ccs.add(cc2);
     	b.setConstructChanges(ccs);
+    	
     	return b;
     }
 }

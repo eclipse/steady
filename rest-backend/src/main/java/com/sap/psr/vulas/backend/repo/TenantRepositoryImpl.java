@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.repo;
 
 import java.io.IOException;
@@ -25,6 +44,10 @@ import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>TenantRepositoryImpl class.</p>
+ *
+ */
 public class TenantRepositoryImpl implements TenantRepositoryCustom {
 
 	private static Logger log = LoggerFactory.getLogger(TenantRepositoryImpl.class);
@@ -36,6 +59,7 @@ public class TenantRepositoryImpl implements TenantRepositoryCustom {
 	SpaceRepository spaceRepository;
 	
 	
+	/** {@inheritDoc} */
 	public Boolean isTenantComplete(Tenant _tenant){
 		// Check arguments
 		if(_tenant==null) {
@@ -50,9 +74,9 @@ public class TenantRepositoryImpl implements TenantRepositoryCustom {
 	}
 	
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns the tenant for the given tenant token. In case a tenant token is not provided, it returns the default tenant (if existing, null otherwise)
-	 * @return the tenant for the given tenant token; default tenant if token is null; null otherwise.
-	 * @throws Exception 
 	 */
 	public Tenant getTenant(String _tenantToken) {
 		Tenant tenant = null;		
@@ -73,7 +97,7 @@ public class TenantRepositoryImpl implements TenantRepositoryCustom {
 			}
 		}
 		
-		log.info("Found " + tenant + " for token [" + _tenantToken + "]");
+		log.debug("Found " + tenant + " for token [" + _tenantToken + "]");
 		return tenant;
 	}
 }

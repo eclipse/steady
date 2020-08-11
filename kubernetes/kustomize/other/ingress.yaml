@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: default-ingress
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /apps
+            backend:
+              serviceName: frontend-apps
+              servicePort: 8080
+          - path: /backend
+            backend:
+              serviceName: rest-backend
+              servicePort: 8091
+          - path: /cia
+            backend:
+              serviceName: rest-lib-utils
+              servicePort: 8092
+          - path: /
+            backend:
+              serviceName: default-backend
+              servicePort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: auth-ingress
+  annotations:
+    ingress.kubernetes.io/auth-type: basic
+    ingress.kubernetes.io/auth-realm: Default realm
+    ingress.kubernetes.io/auth-secret: bugs-frontend-secret
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /bugs
+            backend:
+              serviceName: frontend-bugs
+              servicePort: 8080

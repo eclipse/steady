@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.rest;
 
 import java.io.BufferedReader;
@@ -14,6 +33,7 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.Filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +54,7 @@ import com.sap.psr.vulas.backend.model.Application;
 import com.sap.psr.vulas.backend.model.Space;
 import com.sap.psr.vulas.backend.model.Tenant;
 import com.sap.psr.vulas.backend.repo.ApplicationRepository;
+import com.sap.psr.vulas.backend.util.CacheFilter;
 import com.sap.psr.vulas.backend.repo.SpaceRepository;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
 import com.sap.psr.vulas.backend.util.TokenUtil;
@@ -47,6 +68,10 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 import springfox.documentation.annotations.ApiIgnore;
 
+/**
+ * <p>SpaceController class.</p>
+ *
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/spaces")
@@ -68,12 +93,15 @@ public class SpaceController {
 	
 	private final ApplicationExporter appExporter;
 
+	private final Filter cacheFilter;
+
 	@Autowired
-	SpaceController(TenantRepository tenantRepository, SpaceRepository spaceRepository, ApplicationRepository appRepository, ApplicationExporter appExporter) {
+	SpaceController(TenantRepository tenantRepository, SpaceRepository spaceRepository, ApplicationRepository appRepository, ApplicationExporter appExporter, Filter cacheFilter) {
 		this.tenantRepository = tenantRepository;
 		this.spaceRepository = spaceRepository;
 		this.appRepository = appRepository;
 		this.appExporter = appExporter;
+		this.cacheFilter = cacheFilter;
 
 		//(SP, 27-10-2017) It is not mandatory to have default tenant & spaces. This is only required for 
 		// the existing internal VULAS system to be backward compatible with vulas 2.x
@@ -81,8 +109,9 @@ public class SpaceController {
 
 	/**
 	 * Returns all {@link Space}s of the given {@link Tenant}.
-	 * @param token
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if space with given token does not exist, 200 {@link HttpStatus#OK} if the space is found
+	 * @param tenant a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Collection<Space>> getAllSpaces(
@@ -109,8 +138,9 @@ public class SpaceController {
 
 	/**
 	 * Returns the default {@link Space} of the given {@link Tenant}.
-	 * @param token
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if no default space exists, 200 {@link HttpStatus#OK} if the space is found
+	 * @param tenant a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "default", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Space> getDefaultSpace(
@@ -139,8 +169,13 @@ public class SpaceController {
 
 	/**
 	 * Returns all public {@link Space}s of the given {@link Tenant} whose property with the given name matches the search expression defined by {@link ComparisonMode}, {@link CaseSensitivity} and value.
-	 * @param token
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if no default space exists, 200 {@link HttpStatus#OK} if the space is found
+	 * @param propertyName a {@link java.lang.String} object.
+	 * @param mode a {@link com.sap.psr.vulas.shared.util.StringList.ComparisonMode} object.
+	 * @param caseSensitivity a {@link com.sap.psr.vulas.shared.util.StringList.CaseSensitivity} object.
+	 * @param value an array of {@link java.lang.String} objects.
+	 * @param tenant a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "search", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<List<Space>> searchSpaces(
@@ -180,8 +215,10 @@ public class SpaceController {
 
 	/**
 	 * Checks whether a {@link Space} with the given token exists for the given {@link Tenant}.
-	 * @param token
+	 *
+	 * @param token a {@link java.lang.String} object.
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if space with given token does not exist, 200 {@link HttpStatus#OK} if the space is found
+	 * @param tenant a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.OPTIONS)
 	public ResponseEntity<Space> isSpaceExisting(
@@ -206,8 +243,10 @@ public class SpaceController {
 
 	/**
 	 * Returns a {@link Space} with the given token and the given {@link Tenant}.
-	 * @param token
+	 *
+	 * @param token a {@link java.lang.String} object.
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if space with given token does not exist, 200 {@link HttpStatus#OK} if the space is found
+	 * @param tenant a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.GET)
 	public ResponseEntity<Space> getSpace(
@@ -232,6 +271,10 @@ public class SpaceController {
 
 	/**
 	 * Creates a new {@link Space} with a new, random token in the database and returns it to the client.
+	 *
+	 * @param space a {@link com.sap.psr.vulas.backend.model.Space} object.
+	 * @param tenant a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Space> createSpace(
@@ -289,6 +332,11 @@ public class SpaceController {
 
 	/**
 	 * Modifies an existing {@link Space} and returns it to the client.
+	 *
+	 * @param token a {@link java.lang.String} object.
+	 * @param new_space a {@link com.sap.psr.vulas.backend.model.Space} object.
+	 * @param tenant a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Space> modifySpace(
@@ -368,6 +416,11 @@ public class SpaceController {
 
 	/**
 	 * Cleans a given {@link Space}, i.e., removes all its applications.
+	 *
+	 * @param token a {@link java.lang.String} object.
+	 * @param clean a {@link java.lang.Boolean} object.
+	 * @param tenant a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.POST)
 	public ResponseEntity<Space> cleanSpace(
@@ -454,6 +507,10 @@ public class SpaceController {
 
 	/**
 	 * Deletes a given {@link Space}.
+	 *
+	 * @param token a {@link java.lang.String} object.
+	 * @param tenant a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.DELETE)
 	public ResponseEntity<Space> deleteSpace(
@@ -542,7 +599,17 @@ public class SpaceController {
 	}
 
 	/**
-	 * @return sorted set of all {@link Application}s of the respective tenant and space (as CSV attachment) 
+	 * <p>getApplications.</p>
+	 *
+	 * @param token a {@link java.lang.String} object.
+	 * @param includeSpaceProperties an array of {@link java.lang.String} objects.
+	 * @param includeGoalConfiguration an array of {@link java.lang.String} objects.
+	 * @param includeGoalSystemInfo an array of {@link java.lang.String} objects.
+	 * @param includeBugs a {@link java.lang.String} object.
+	 * @param includeExemptions a {@link java.lang.String} object.
+	 * @param tenant a {@link java.lang.String} object.
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
 	 */
 	@RequestMapping(value = "/{token:.+}/apps", method = RequestMethod.GET)
 	public void getApplications(

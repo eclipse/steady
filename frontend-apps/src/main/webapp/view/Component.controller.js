@@ -1,3 +1,22 @@
+/*
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 var groupId = "";
 var artifactId = "";
 var versionId = "";
@@ -94,8 +113,18 @@ sap.ui.controller("view.Component", {
 		})
 	},
 	
+	toggleAdvancedResults: function () {
+		if(this.getView().byId("toggleAdvancedResults").getSelected()){
+			this.getView().byId("idReach").setVisible(true);
+			this.getView().byId("idExec").setVisible(true);
+		} else {
+			this.getView().byId("idReach").setVisible(false);
+		    this.getView().byId("idExec").setVisible(false);
+		}
+	},
+
 	// Vulnerabilities tab: Loads data from backend, post-processes CVSS info and prepares mitigation tab
-	 loadVulns:function(hard) {
+	loadVulns:function(hard) {
 		
 		// Empty table, set to busy and reset counter
 		var oConstructView = this.getView().byId("idPatchAnalysisList");
@@ -108,18 +137,10 @@ sap.ui.controller("view.Component", {
 		// URL to load data
 		var incl_hist = this.getView().byId("includeHistorical").getSelected();
 		var incl_unconfirmed = this.getView().byId("includeUnconfirmed").getSelected();
-		
-		if(this.getView().byId("showAdvanced").getSelected()){
-			this.getView().byId("idReach").setVisible(true);
-			this.getView().byId("idExec").setVisible(true);
-		} else {
-			this.getView().byId("idReach").setVisible(false);
-		    this.getView().byId("idExec").setVisible(false);
-		}
 		  
 		var add_excemption_info = true;
 		var cache = model.lastChange
-		if (hard) {
+		if (hard === true) {
 			cache = false
 		}
 		var sUrl = model.Config.getUsedVulnerabilitiesServiceUrl(groupId, artifactId, versionId, incl_hist, incl_unconfirmed, add_excemption_info, cache);

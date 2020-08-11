@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.java.sign.gson;
 
 import ch.uzh.ifi.seal.changedistiller.distilling.Distiller;
@@ -18,15 +37,27 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
+
+/**
+ * <p>ASTConstructBodySignatureDeserializer class.</p>
+ *
+ */
 public class ASTConstructBodySignatureDeserializer extends StdDeserializer<ASTConstructBodySignature> {
-private static final Log log = LogFactory.getLog(ASTConstructBodySignatureDeserializer.class);
+private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+	/**
+	 * <p>Constructor for ASTConstructBodySignatureDeserializer.</p>
+	 */
 	public ASTConstructBodySignatureDeserializer() {
 		this(null);
 	}
 
+	/**
+	 * <p>Constructor for ASTConstructBodySignatureDeserializer.</p>
+	 *
+	 * @param t a {@link java.lang.Class} object.
+	 */
 	public ASTConstructBodySignatureDeserializer(Class<ASTConstructBodySignature> t) {
 		super(t);
 	}
@@ -71,6 +102,7 @@ private static final Log log = LogFactory.getLog(ASTConstructBodySignatureDeseri
 		return ast_node;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ASTConstructBodySignature deserialize(JsonParser jp, DeserializationContext ctx) throws IOException, JsonProcessingException {
 		final JsonNode json_root = jp.getCodec().readTree(jp);

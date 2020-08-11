@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.java.sign.gson;
 
 import java.lang.reflect.Type;
@@ -22,28 +41,27 @@ import com.sap.psr.vulas.sign.Signature;
 /**
  *  This class is used to deserialize an AST JSON representation of a construct body object into its corresponding
  *  java Signatures object
- /**
-
-JSON representation of ASTConstructBodySignature:
-
-Node:
-    - fLabel : EntityType
-    - fValue : String
-
-    -- fMatched : boolean
-    -- fOrdered : boolean
-
-    - fEntity : SourceCodeEntity
-		 -  fUniqueName : String  //same information as fValue above
-		 -  fType : EntityType    //same information ast fLabel above
-		 -  fModifiers : int	 // this is always zero (Not sure if i should have it in the json object)
-		 -  fAssociatedEntities : List<SourceCodeEntity>
-		 -  SourceRange fRange : SourceRange
-				- end : int
-				- start : int
-    -  fAssociatedNodes : List<Node>
-
-**/
+/**
+ *
+ *JSON representation of ASTConstructBodySignature:
+ *
+ *Node:
+ *    - fLabel : EntityType
+ *    - fValue : String
+ *
+ *    -- fMatched : boolean
+ *    -- fOrdered : boolean
+ *
+ *    - fEntity : SourceCodeEntity
+ *		 -  fUniqueName : String  //same information as fValue above
+ *		 -  fType : EntityType    //same information ast fLabel above
+ *		 -  fModifiers : int	 // this is always zero (Not sure if i should have it in the json object)
+ *		 -  fAssociatedEntities : List&lt;SourceCodeEntity&gt;
+ *		 -  SourceRange fRange : SourceRange
+ *				- end : int
+ *				- start : int
+ *    -  fAssociatedNodes : List&lt;Node&gt;
+ */
 public class ASTSignatureDeserializer implements JsonDeserializer<Signature> {
 
 	//Values for JsonElement Names, used as a member name during deserialization
@@ -66,6 +84,7 @@ public class ASTSignatureDeserializer implements JsonDeserializer<Signature> {
 	//Signature
 	//private Signature sign = null;
 
+	  /** {@inheritDoc} */
 	  @Override
 	  public Signature deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
 	      throws JsonParseException {

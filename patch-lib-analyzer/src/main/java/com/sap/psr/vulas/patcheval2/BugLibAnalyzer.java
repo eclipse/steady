@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -6,31 +25,9 @@
 package com.sap.psr.vulas.patcheval2;
 
 
-import com.google.gson.Gson;
-import com.sap.psr.vulas.backend.BackendConnectionException;
-import com.sap.psr.vulas.backend.BackendConnector;
-import com.sap.psr.vulas.java.sign.gson.GsonHelper;
-import com.sap.psr.vulas.patcheval.representation.ArtifactLibrary;
-import com.sap.psr.vulas.patcheval.representation.ConstructPathLibResult2;
-import com.sap.psr.vulas.patcheval.representation.OrderedCCperConstructPath2;
-import com.sap.psr.vulas.patcheval.representation.OverallConstructChange;
-import com.sap.psr.vulas.patcheval.utils.CSVHelper2;
-import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
-import com.sap.psr.vulas.shared.json.model.BugChangeList;
-import com.sap.psr.vulas.shared.json.model.ConstructChange;
-import com.sap.psr.vulas.shared.json.model.ConstructId;
-import com.sap.psr.vulas.shared.json.model.Library;
-import com.sap.psr.vulas.shared.json.model.LibraryId;
-import com.sap.psr.vulas.shared.enums.ConstructChangeType;
-import com.sap.psr.vulas.shared.enums.ConstructType;
-import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
-import com.sap.psr.vulas.shared.json.model.AffectedLibrary;
-import com.sap.psr.vulas.shared.json.model.Artifact;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,34 +43,59 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
+
+import com.sap.psr.vulas.backend.BackendConnectionException;
+import com.sap.psr.vulas.backend.BackendConnector;
+import com.sap.psr.vulas.patcheval.representation.ConstructPathLibResult2;
+import com.sap.psr.vulas.patcheval.representation.OrderedCCperConstructPath2;
+import com.sap.psr.vulas.patcheval.representation.OverallConstructChange;
+import com.sap.psr.vulas.patcheval.utils.CSVHelper2;
+import com.sap.psr.vulas.patcheval.utils.PEConfiguration;
+import com.sap.psr.vulas.shared.enums.ConstructChangeType;
+import com.sap.psr.vulas.shared.enums.ConstructType;
+import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
+import com.sap.psr.vulas.shared.json.model.Artifact;
+import com.sap.psr.vulas.shared.json.model.Bug;
+import com.sap.psr.vulas.shared.json.model.ConstructChange;
+import com.sap.psr.vulas.shared.json.model.ConstructId;
+import com.sap.psr.vulas.shared.json.model.Library;
+import com.sap.psr.vulas.shared.json.model.LibraryId;
+import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 
 
 /**
  * Given a bug, this class analyzes all versions (retrieved from Maven central) of JARs containing vulnerable code produces a csv file.
- * 
  */
 public class BugLibAnalyzer {
-    private static final Log log = LogFactory.getLog(BugLibAnalyzer.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
     
-    private BugChangeList bug;
+    private Bug bug;
     private ExecutorService executorService = null ;
     
+    /**
+     * <p>Constructor for BugLibAnalyzer.</p>
+     */
     public BugLibAnalyzer(){}
     
-    public void setBug(BugChangeList _b){
+    /**
+     * <p>Setter for the field <code>bug</code>.</p>
+     *
+     * @param _b a {@link com.sap.psr.vulas.shared.json.model.Bug} object.
+     */
+    public void setBug(Bug _b){
     	this.bug=_b;
     }
 
     /**
      * This method retrieves all versions of all libraries to be check for this.bug by using
      * GET /backend/bugs/{bugId}/libraries and  GET /cia/artifacts/{group)/{artifact}
-     *  
+     *
      * @return the list of libraries (having a libraryId) to be analysed for this.bug
-     * @throws BackendConnectionException
-     * @throws InterruptedException 
+     * @throws com.sap.psr.vulas.backend.BackendConnectionException
+     * @throws java.lang.InterruptedException
      */
     public LinkedList<Artifact> getLibToCheck() throws BackendConnectionException, InterruptedException{
     	
@@ -191,11 +213,12 @@ public class BugLibAnalyzer {
     }
     
     /**
-     * 
-     * this method creates a CSV for all versions of all libraries related to this.bug and returns the csv as string 
-     * 
+     *
+     * this method creates a CSV for all versions of all libraries related to this.bug and returns the csv as string
+     *
      * @return the csv file containing the analysis results as string
-     * @throws InterruptedException 
+     * @throws java.lang.InterruptedException
+     * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
      */
     public String createCSV( ) throws BackendConnectionException, InterruptedException{
     	LinkedList<Artifact> finalLibrariesList = this.getLibToCheck();
@@ -208,11 +231,11 @@ public class BugLibAnalyzer {
 
     /**
      * this method analyzes the libraries provided as first argument and appends the result to the file provided as second arguments if it exists or creates a new one otherwise.
-     * 
+     *
      * @param finalLibrariesList the list of libraries to be analyzed
      * @param existing the file where to append the result (it will be created if null)
      * @return the csv file containing the analysis results as string
-     * @throws BackendConnectionException
+     * @throws com.sap.psr.vulas.backend.BackendConnectionException
      */
     public String createCSV(LinkedList<Artifact> finalLibrariesList, File existing) throws BackendConnectionException{
 

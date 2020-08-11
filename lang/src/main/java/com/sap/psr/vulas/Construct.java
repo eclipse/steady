@@ -1,9 +1,28 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas;
 
 import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.json.JsonBuilder;
@@ -12,32 +31,62 @@ import com.sap.psr.vulas.shared.util.DigestUtil;
 /**
  * A programming construct represents a container for programming statements in a given programming language, e.g., a Java constructor or a C function.
  * Programming constructs are created by instances of FileAnalyzer, e.g., JavaFileAnalyzer or JavaClassAnalyzer.
- *
  */
 public class Construct {
 	
-	private static final Log log = LogFactory.getLog(Construct.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	private ConstructId id = null;
 	private String content, contentDigest = null;
 	
+	/**
+	 * <p>Constructor for Construct.</p>
+	 *
+	 * @param _id a {@link com.sap.psr.vulas.ConstructId} object.
+	 * @param _content a {@link java.lang.String} object.
+	 */
 	public Construct(ConstructId _id, String _content) {
 		if(_id == null || _content==null) throw new IllegalArgumentException("Id and content must be provided");
 		this.id = _id;
 		this.setContent(_content);		
 	}
+	/**
+	 * <p>getDigest.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getDigest() {
 		return contentDigest;
 	}
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.ConstructId} object.
+	 */
 	public ConstructId getId() {
 		return id;
 	}
+	/**
+	 * <p>Getter for the field <code>content</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getContent() {
 		return content;
 	}
+	/**
+	 * <p>Setter for the field <code>content</code>.</p>
+	 *
+	 * @param _content a {@link java.lang.String} object.
+	 */
 	public void setContent(String _content) {
 		this.content = _content;
 		this.contentDigest = DigestUtil.getDigestAsString(_content, StandardCharsets.UTF_8, DigestAlgorithm.MD5);
 	}
+	/**
+	 * <p>toJSON.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toJSON() {
 		final JsonBuilder jb = new JsonBuilder();
 		jb.startObject();
@@ -46,6 +95,7 @@ public class Construct {
 		jb.endObject();
 		return jb.getJson();
 	}
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -54,6 +104,7 @@ public class Construct {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -75,6 +126,11 @@ public class Construct {
 			return false;
 		return true;
 	}
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() {
     	return this.id.toString();
 	}

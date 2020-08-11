@@ -16,56 +16,25 @@ In this tutorial you will be guided through the necessary steps to set-up the @@
 
 - git
 - docker
+- docker-compose
 
 ## Installation
 
-### Clone from GitHub
+### Setup
+
+Clone locally the `vulnerability-assessment-tool` repository
 
 ```sh
 git clone https://github.com/SAP/vulnerability-assessment-tool
 ```
 
-### Build Docker images
-
-All the following commands are supposed to be executed from the root folder of the project.
-Before proceeding, be sure to move there with:
-
-```sh
-cd vulnerability-assessment-tool
-```
-
-Make a copy of the sample configuration:
+Customize the file `docker/.env` to match your needs, make sure you set the version you want to run in VULAS_RELEASE.
 
 ```sh
 cp docker/.env.sample docker/.env
 ```
 
-Customize the file `docker/.env` to match your needs.
-
-!!! info "Sensitive information"
-
-	In `docker/.env` you must configure at least `POSTGRES_USER=`, you should also configure the `HAPROXY`'s user and password as well as the credentials to access the bugs' frontend
-
-At this point, you are ready to perform the actual build with the following command:
-
-```sh
-docker build --tag vulnerability-assessment-tool-generator:@@PROJECT_VERSION@@ -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
-docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags=-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow vulnerability-assessment-tool-generator:@@PROJECT_VERSION@@
-```
-
-!!! warning "Build error"
-
-	If the command above fails, add `-DreuseForks=False` flag to `mvn_flags`. As shown in the example below.
-
-    ```sh
-    docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags='-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow -DreuseForks=False' vulnerability-assessment-tool-generator:@@PROJECT_VERSION@@
-    ```
-
-In case you are running behind a proxy you need to configure it in the `--build-arg` arguments.
-
-As a result, the folders `docker/<component-name>` will contain compiled JARs (or WARs, depending on the component). The folder `docker/client-tools` will be populated with the JARs for client side tools (CLI, plugins, patchanalyzer).
-
-Finally, you may want to make all artifacts available to the developers of your organization (e.g., through an internal Nexus or other artifact distribution system).
+> In `docker/.env` you must configure at least `POSTGRES_USER=`, you should also configure the `HAPROXY`'s user and password as well as the credentials to access the bugs' frontend
 
 ### Run
 
@@ -86,9 +55,11 @@ In order for the tool to detect vulnerabilities, you need to import and analyze 
 
 Follow the instructions mentioned [here](../../../vuln_db/tutorials/vuln_db_tutorial/#batch-import-from-knowledge-base), to import and build all the vulnerabilities' knowledge.
 
+---
+
 Get going:
 
-1. [Import](../../../vuln_db/tutorials/vuln_db_tutorial/) all the CVEs and bugs in your local datababse
+1. [Import](../../../vuln_db/tutorials/vuln_db_tutorial/) all the CVEs and bugs in your local database
 2. Setup your [workspace](../../../user/manuals/setup/#workspace) (if you don't have one)
 3. Become familiar with the various analysis [goals](../../../user/manuals/analysis/) (first time users)
 4. Analyze your [Java](../../../user/tutorials/java_maven/) or [Python](../../../user/tutorials/python_cli/) application (on a regular basis)

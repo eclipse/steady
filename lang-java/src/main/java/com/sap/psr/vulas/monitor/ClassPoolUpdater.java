@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.monitor;
 
 import java.io.File;
@@ -10,8 +29,8 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.java.JavaId;
@@ -28,7 +47,7 @@ import javassist.NotFoundException;
  */
 public class ClassPoolUpdater {
 
-	private static final Log log = LogFactory.getLog(ClassPoolUpdater.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static ClassPoolUpdater instance = null;
 
@@ -40,6 +59,9 @@ public class ClassPoolUpdater {
 	private Set<Path> appendedResources = null;
 	private boolean useDefault = true;
 
+	/**
+	 * <p>Constructor for ClassPoolUpdater.</p>
+	 */
 	public ClassPoolUpdater() { this(true); }
 	
 	private ClassPoolUpdater(boolean _use_default) {
@@ -56,7 +78,8 @@ public class ClassPoolUpdater {
 	 * This instance will be created at the time of the first call, later calls will return this instance.
 	 * If the default {@link ClassPool} is sufficient, i.e., if no custom resources need to be added to its
 	 * classpath, one can also create an instance using the public constructor.
-	 * @return
+	 *
+	 * @return a {@link com.sap.psr.vulas.monitor.ClassPoolUpdater} object.
 	 */
 	public static synchronized ClassPoolUpdater getInstance() {
 		if(ClassPoolUpdater.instance==null) {
@@ -66,9 +89,10 @@ public class ClassPoolUpdater {
 	}
 
 	/**
-	 * 
-	 * @param _files
-	 * @return
+	 * <p>getClasspaths.</p>
+	 *
+	 * @param _files a {@link java.util.Set} object.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public Set<Path> getClasspaths(Set<Path> _files) {
 		Set<Path> paths = new HashSet<Path>();
@@ -88,8 +112,9 @@ public class ClassPoolUpdater {
 
 	/**
 	 * For a given class file, the method returns the directory ....
-	 * @param _class_file
-	 * @return
+	 *
+	 * @param _class_file a {@link java.io.File} object.
+	 * @return a {@link java.nio.file.Path} object.
 	 */
 	public Path getClasspath(File _class_file) {
 		// Must have file extension "class"
@@ -165,24 +190,32 @@ public class ClassPoolUpdater {
 	 * Appends a directory to the classpath of the default {@link ClassPool}. This directory corresponds to the
 	 * given file minus the path elements that correspond to the Java package structure of the given {@link CtClass}.
 	 * Returns true if the path has been appended, false otherwise.
-	 * @param _ctclass
-	 * @param _file
+	 *
+	 * @param _ctclass a {@link javassist.CtClass} object.
+	 * @param _file a {@link java.io.File} object.
+	 * @return a boolean.
 	 */
 	public boolean updateClasspath(CtClass _ctclass, File _file) {
 		// Append (null handled in other method)
 		return this.appendToClasspath(this.getClasspath(_file));
 	}
 	
+	/**
+	 * <p>appendToClasspath.</p>
+	 *
+	 * @param _paths a {@link java.util.Set} object.
+	 */
 	public void appendToClasspath(Set<Path> _paths) {
 		for(Path p: _paths)
 			this.appendToClasspath(p);
 	}
 
 	/**
-	 * If not done already, appends the given {@link Path} to the classpath of the 
+	 * If not done already, appends the given {@link Path} to the classpath of the
 	 * {@link ClassPoolUpdater#customClassPool}.
-	 * 
-	 * @param _path
+	 *
+	 * @param _path a {@link java.nio.file.Path} object.
+	 * @return a boolean.
 	 */
 	public synchronized boolean appendToClasspath(Path _path) {
 		boolean appended = false;
@@ -205,6 +238,11 @@ public class ClassPoolUpdater {
 		return appended;
 	}
 	
+	/**
+	 * <p>countClasspathElements.</p>
+	 *
+	 * @return a int.
+	 */
 	public int countClasspathElements() {
 		return this.appendedResources.size();
 	}
@@ -212,8 +250,8 @@ public class ClassPoolUpdater {
 	/**
 	 * Resets the {@link ClassPoolUpdater} to its initial state. In particular, a new instance of the {@link ClassPool} will be created, and all
 	 * all the {@link Path}s that have been added to its class path will be removed.
-	 * 
-	 * @see {@link #appendToClasspath(Path)}
+	 *
+	 * @see ClassPoolUpdater#appendToClasspath(Path)
 	 */
 	public synchronized void reset() {
 		this.appendedResources.clear();
@@ -224,20 +262,20 @@ public class ClassPoolUpdater {
 	}
 
 	/**
-	 * Return a {@link ClassPool} object that can be filled using the method
-	 * {@link ClassPoolUpdater#appendToResourceList(java.nio.file.Path)} of 
-	 * {@link Path} representing the loaded resources.
-	 * 
-	 * @return A {@link ClasPool} object, can be null if there is none
+	 * Returns a {@link ClassPool} object that can be populated using the methods
+	 * {@link #appendToClasspath(java.nio.file.Path)} and {@link #appendToClasspath(Set)}.
+	 *
+	 * @return A {@link ClassPool} object, can be null if there is none
 	 */
 	public ClassPool getCustomClassPool() { return this.customClassPool; }
 
 	/**
-	 * This method look into the custom ClassPool and return a string with the 
+	 * This method look into the custom ClassPool and return a string with the
 	 * physical path of the JAR if is present in the resources loaded into the
 	 * ClassPool. If is not found it returns null
 	 * PS: We can add to the ClassPool all the resources that we want using
-	 * the method {@ClassPoolUpdater#appendToClasspath}
+	 * the methods {@link #appendToClasspath(java.nio.file.Path)} and {@link #appendToClasspath(Set)}.
+	 *
 	 * @param _cid the ConstructId that we want to search in the ClassPool
 	 * @return the JAR path or null if is not found
 	 */

@@ -1,11 +1,32 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.rest;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.Filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,16 +43,27 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.sap.psr.vulas.backend.model.AffectedLibrary;
 import com.sap.psr.vulas.backend.model.Bug;
+import com.sap.psr.vulas.backend.model.Dependency;
+import com.sap.psr.vulas.backend.model.Library;
 import com.sap.psr.vulas.backend.model.LibraryId;
+import com.sap.psr.vulas.backend.model.VulnerableDependency;
 import com.sap.psr.vulas.backend.model.view.Views;
 import com.sap.psr.vulas.backend.repo.AffectedLibraryRepository;
 import com.sap.psr.vulas.backend.repo.BugRepository;
+import com.sap.psr.vulas.backend.repo.DependencyRepository;
 import com.sap.psr.vulas.backend.repo.LibraryIdRepository;
+import com.sap.psr.vulas.backend.repo.LibraryRepository;
 import com.sap.psr.vulas.backend.util.ArtifactMaps;
+import com.sap.psr.vulas.backend.util.CacheFilter;
 import com.sap.psr.vulas.backend.util.ServiceWrapper;
+import com.sap.psr.vulas.shared.enums.VulnDepOrigin;
 import com.sap.psr.vulas.shared.json.model.Version;
 
 
+/**
+ * <p>LibraryIdController class.</p>
+ *
+ */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/libids")
@@ -45,19 +77,27 @@ public class LibraryIdController {
 	
 	private final BugRepository bugRepository;
 
+	private final Filter cacheFilter;
+
 	@Autowired
-	LibraryIdController(AffectedLibraryRepository afflibRepository, LibraryIdRepository libIdRepository, BugRepository bugRepository) {
+	LibraryIdController(AffectedLibraryRepository afflibRepository, LibraryIdRepository libIdRepository, BugRepository bugRepository, Filter cacheFilter) {
 		this.afflibRepository = afflibRepository;
 		this.libIdRepository = libIdRepository;
 		this.bugRepository = bugRepository;
+		this.cacheFilter = cacheFilter;
 	}
 
 	/**
 	 * Returns a list of all {@link Bug}s affecting the given Maven artifact.
 	 * This list can be filtered by proving a CVSS threshold (geCvss) or bug identifiers (selecteBugs).
-	 * 
-	 * @param 
-	 * @return 
+	 *
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param affected a {@link java.lang.Boolean} object.
+	 * @param selectedBugs an array of {@link java.lang.String} objects.
+	 * @param geCvss a float.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/bugs", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -114,14 +154,14 @@ public class LibraryIdController {
 	 * Returns all versions of the Maven artifact with the given group and artifact identifiers and packaging "JAR".
 	 * The boolean flags secureOnly and vulnerableOnly can be used to filter the result set.
 	 * The method can be used, for instance, to inform developers over all none-vulnerable library versions as a replacement for a vulnerable one.
-	 * 
-	 * @param mvnGroup
-	 * @param artifact
+	 *
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
 	 * @param latest if true, only the latest version will be returned
 	 * @param greaterThanVersion if specified, only versions greater than the provided value are returned
 	 * @param secureOnly if true, only those versions w/o known vulnerabilities are returned
 	 * @param vulnerableOnly if true, only those versions with known vulnerabilities are returned
-	 * @return
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.LibraryIdDetails.class)
@@ -143,7 +183,7 @@ public class LibraryIdController {
 
 		try {		
 
-			// All library IDs known locally
+			// All library IDs known locally w/ affected libraries
 			List<LibraryId> known_libids = this.libIdRepository.findLibIds(mvnGroup, artifact);
 			
 			// Check whether the given group/artifact has synonyms maintained in the configuration
@@ -165,6 +205,26 @@ public class LibraryIdController {
 						vuln_libids.add(l.toSharedType());
 						break;
 					}
+				}
+			}
+			
+			//all libids rebundled in a libraryId having the given GA
+			List<Object[]> libids_w_rebundles = this.libIdRepository.findBundledLibIdByGA(mvnGroup, artifact);
+			
+			for(Object[] e: libids_w_rebundles) {
+				//check whether the libId rebundles a vulnerable library. If so, add it to vuln_libids
+				LibraryId lid = LibraryIdRepository.FILTER.findOne(libIdRepository.findById(((BigInteger)e[0]).longValue()));
+				
+				if(!vuln_libids.contains(lid)){
+					LibraryId lid_bundled = LibraryIdRepository.FILTER.findOne(libIdRepository.findById(((BigInteger)e[1]).longValue()));
+								
+					for(AffectedLibrary afflib: lid_bundled.getAffLibraries()) {
+						Boolean affected = this.afflibRepository.isBugLibIdAffected(afflib.getBugId().getBugId(), afflib.getLibraryId());
+						if(affected !=null && affected){
+							vuln_libids.add(lid.toSharedType());
+							break;
+						}
+					}	
 				}
 			}
 
@@ -211,7 +271,6 @@ public class LibraryIdController {
 						result.add(a);
 				}
 			}
-
 			return new ResponseEntity<List<com.sap.psr.vulas.shared.json.model.LibraryId>>(result, HttpStatus.OK);
 		}
 		catch(Exception e) {

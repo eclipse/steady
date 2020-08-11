@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.cg;
 
 import java.util.ArrayList;
@@ -6,12 +25,16 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
+
+/**
+ * <p>PathSimilarity class.</p>
+ *
+ */
 public class PathSimilarity {
 	
-	private static final Log log = LogFactory.getLog( PathSimilarity.class );
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger( PathSimilarity.class );
 
 	//ArrayList: every path has a unique index
 	ArrayList<LinkedList<String>> paths = null;
@@ -19,14 +42,27 @@ public class PathSimilarity {
 	//group all paths based on the node joint, the map key is the qname of the node joint, the value are all paths id in this group, id is read from ArrayList paths
 	HashMap<String, HashSet<Integer>> groupedPaths = null;
 	
+	/**
+	 * <p>Constructor for PathSimilarity.</p>
+	 *
+	 * @param _p a {@link java.util.ArrayList} object.
+	 */
 	public PathSimilarity(ArrayList<LinkedList<String>> _p) {
 		this.paths = _p;
 	}
 	
+	/**
+	 * <p>addPath.</p>
+	 *
+	 * @param _p a {@link java.util.LinkedList} object.
+	 */
 	public void addPath (LinkedList<String> _p) {
 		this.paths.add(_p);
 	}
 	
+	/**
+	 * <p>groupPathsByJointNode.</p>
+	 */
 	public void groupPathsByJointNode () {
 		this.groupedPaths = new HashMap<String, HashSet<Integer>>();
 		for (int i = 0; i < this.paths.size(); i++) {
@@ -90,6 +126,12 @@ public class PathSimilarity {
 	}
 	
 	//one way to compute the similarity between two paths
+	/**
+	 * <p>pathSimilarity.</p>
+	 *
+	 * @param _path1 a {@link java.util.LinkedList} object.
+	 * @param _path2 a {@link java.util.LinkedList} object.
+	 */
 	public void pathSimilarity (LinkedList<String> _path1, LinkedList<String> _path2) {
 		int count = 0;
 		HashSet<List<String>> overlaps = overlapPath(_path1, _path2);

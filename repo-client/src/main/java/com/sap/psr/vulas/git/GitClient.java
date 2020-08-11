@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.git;
 
 import java.io.File;
@@ -17,8 +36,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
@@ -49,10 +68,14 @@ import com.sap.psr.vulas.vcs.RepoMismatchException;
  * https://github.com/centic9/jgit-cookbook
  */
 
+/**
+ * <p>GitClient class.</p>
+ *
+ */
 public class GitClient implements IVCSClient {
 
 	private static final int RANDOM_ID_LENGTH = 8;
-	private static final Log log = LogFactory.getLog( GitClient.class );
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger( GitClient.class );
 	private static final String TYPE = "GIT";
 
 	private String id;
@@ -63,6 +86,11 @@ public class GitClient implements IVCSClient {
 	private String url = null;
 	private Repository repository = null;
 
+	/**
+	 * <p>getType.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getType() { return GitClient.TYPE; }
 
 	/*
@@ -161,6 +189,8 @@ public class GitClient implements IVCSClient {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 *  NOTE: this method does much more than just setting the repository URL!
 	 *  It effectively invokes the (private) pseudo-constructor "setup()"
 	 *
@@ -198,6 +228,7 @@ public class GitClient implements IVCSClient {
 	/*
 	 *
 	 */
+	/** {@inheritDoc} */
 	public void setWorkDir( Path _dir ) {
 		if ( _dir != null ) {
 			this.workDir = _dir;
@@ -216,11 +247,12 @@ public class GitClient implements IVCSClient {
 
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Performs a search in the repository root.
 	 *
 	 * This returns ALL the commits whose commit msg contains _str
 	 * (only those younger than _asOf)
-	 *
 	 */
 	public Map<String, String> searchCommitLog( String _textToSearch, Date _asOf ) {
 		final Map<String, String> hits = new HashMap<String, String>();
@@ -305,6 +337,7 @@ public class GitClient implements IVCSClient {
 	/*
 	 *  The result contains pairs (rev_no, commit_msg)
 	 */
+	/** {@inheritDoc} */
 	public Map<String, String> getCommitLogEntries( Set<String> _revs ) {
 		final Map<String, String> hits = new HashMap<String, String>();
 		if (!_revs.isEmpty() ) {
@@ -362,13 +395,15 @@ public class GitClient implements IVCSClient {
 	 * http://www.eclipse.org/forums/index.php/t/213979/
 	 * https://github.com/centic9/jgit-cookbook/blob/master/src/main/java/org/dstadler/jgit/api/ReadFileFromCommit.java
 	 */
+	/** {@inheritDoc} */
 	public Set<FileChange> getFileChanges( String _rev ) {
 		final StopWatch sw = new StopWatch("Get file changes for revision [" + _rev.substring( 0, (_rev.length()>8)?8:_rev.length() ) + "]").start();
 
 		String branch = "";
-		if(_rev.contains(":")){
-			branch = _rev.substring(_rev.indexOf(":")+1, _rev.length())+":";
-			_rev= _rev.substring(0,_rev.indexOf(":")-1);
+		if(_rev.contains(":")) {
+			String [] rev_branch = _rev.split(":");
+			_rev = rev_branch[0];
+			branch = rev_branch[1];
 		}
 
 		// TODO: use this.repository instead
@@ -480,6 +515,8 @@ public class GitClient implements IVCSClient {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * TODO: To be implemented
 	 */
 	public Map<String, String> listEntries(String path, String _asof, String _until) {
@@ -559,10 +596,10 @@ public class GitClient implements IVCSClient {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Check out the file at path _path (relative to the repository root) at
 	 * revision _rev
-	 *
-	 * @return File file object
 	 */
 	public File checkoutFile( String _rev_branch, String _path ) throws IllegalStateException {
 		if ( _path.equals( "/dev/null" ) )
@@ -631,12 +668,18 @@ public class GitClient implements IVCSClient {
 	/*
 	 *
 	 */
+	/** {@inheritDoc} */
 	public Path checkout( String _rev ) {
 		// checks out a specific _revision and puts it in a temp folder (Path)
 		GitClient.log.error( "GitClient::checkout(String) not implemented yet." );
 		return null;
 	}
 
+	/**
+	 * <p>getRepoRelativePath.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getRepoRelativePath(){
 		/*
 		String rel_path = null;
@@ -657,6 +700,7 @@ public class GitClient implements IVCSClient {
 		return url.toString().replace(repository.toString(), "");
 	}
 
+	/** {@inheritDoc} */
 	public long getRevisionTimeStamp(String _rev){
 		if(_rev.contains(":")){
 			_rev= _rev.substring(0,_rev.indexOf(":")-1);

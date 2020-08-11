@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas;
 
 import java.util.ServiceLoader;
@@ -14,6 +33,10 @@ import com.sap.psr.vulas.sign.SignatureChange;
 import com.sap.psr.vulas.sign.SignatureFactory;
 
 
+/**
+ * <p>ConstructChange class.</p>
+ *
+ */
 public class ConstructChange implements Comparable<ConstructChange> {
 
 	private Construct def =  null, fix = null;
@@ -33,6 +56,16 @@ public class ConstructChange implements Comparable<ConstructChange> {
 	 */
 	private String repoPath = null;
 
+	/**
+	 * <p>Constructor for ConstructChange.</p>
+	 *
+	 * @param _repo a {@link java.lang.String} object.
+	 * @param _repo_path a {@link java.lang.String} object.
+	 * @param _def a {@link com.sap.psr.vulas.Construct} object.
+	 * @param _fix a {@link com.sap.psr.vulas.Construct} object.
+	 * @param _rev a {@link java.lang.String} object.
+	 * @param _time_stamp a {@link java.lang.String} object.
+	 */
 	public ConstructChange(String _repo, String _repo_path, Construct _def, Construct _fix, String _rev, String _time_stamp) {
 		if(_def==null && _fix==null) throw new IllegalArgumentException("At least one construct must be provided (defective, fixed or both)");
 		this.repo = _repo;
@@ -51,29 +84,52 @@ public class ConstructChange implements Comparable<ConstructChange> {
 		}
 	}
 
+	/**
+	 * <p>Getter for the field <code>repo</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getRepo() { return this.repo; }
 
 	/**
 	 * Returns the file in which the construct is defined.
-	 * @return
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 	public String getRepoPath() { return this.repoPath; }
 
+	/**
+	 * <p>Getter for the field <code>committedAt</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getCommittedAt() { return committedAt; }
 
 	/**
 	 * Returns true if a {@link SignatureChange} was computed and the list of changes is non-empty, false otherwise.
+	 *
+	 * @return a boolean.
 	 */
 	public boolean hasSignatureChange(){
 		return this.signatureChange!=null && !signatureChange.isEmpty();
 	}
 
+	/**
+	 * <p>getType.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.ConstructChangeType} object.
+	 */
 	public ConstructChangeType getType() {
 		if(this.def == null) return ConstructChangeType.ADD;
 		else if(this.fix == null) return ConstructChangeType.DEL;
 		else return ConstructChangeType.MOD;
 	}
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() {
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append(this.getType().toString());
@@ -102,6 +158,11 @@ public class ConstructChange implements Comparable<ConstructChange> {
 		return buffer.toString();
 	}
 
+	/**
+	 * <p>toJSON.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toJSON() {
 		final StringBuilder b = new StringBuilder();
 
@@ -138,6 +199,8 @@ public class ConstructChange implements Comparable<ConstructChange> {
 
 	/**
 	 * Returns the construct that is subject to change.
+	 *
+	 * @return a {@link com.sap.psr.vulas.Construct} object.
 	 */
 	public Construct getConstruct() {
 		if(this.getType()==ConstructChangeType.DEL)
@@ -146,6 +209,7 @@ public class ConstructChange implements Comparable<ConstructChange> {
 			return this.fix;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -156,6 +220,8 @@ public class ConstructChange implements Comparable<ConstructChange> {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns true if construct id and revision are equal.
 	 */
 	@Override
@@ -172,6 +238,7 @@ public class ConstructChange implements Comparable<ConstructChange> {
 		return (tc.equals(oc) && this.commit.equals(other.commit));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public final int compareTo(ConstructChange _cc) {
 		final int id_comparison_result = this.getConstruct().getId().compareTo(_cc.getConstruct().getId());

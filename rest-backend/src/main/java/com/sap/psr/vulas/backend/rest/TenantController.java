@@ -1,6 +1,26 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.rest;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.Filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +38,14 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.sap.psr.vulas.backend.model.Tenant;
 import com.sap.psr.vulas.backend.model.view.Views;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
+import com.sap.psr.vulas.backend.util.CacheFilter;
 import com.sap.psr.vulas.backend.util.TokenUtil;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>TenantController class.</p>
+ *
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/tenants")
@@ -30,13 +55,18 @@ public class TenantController {
 
 	private TenantRepository tenantRepository;
 
+	private final Filter cacheFilter;
+
 	@Autowired
-	TenantController(TenantRepository tenantRepository) {
+	TenantController(TenantRepository tenantRepository, Filter cacheFilter) {
 		this.tenantRepository = tenantRepository;
+		this.cacheFilter = cacheFilter;
 	}
 	
 	/**
 	 * Returns all existing {@link Tenant}s.
+	 *
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -58,6 +88,8 @@ public class TenantController {
 	
 	/**
 	 * Returns the default {@link Tenant}.
+	 *
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "default", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -81,7 +113,8 @@ public class TenantController {
 
 	/**
 	 * Checks whether a {@link Tenant} with the given token exists in the database.
-	 * @param token
+	 *
+	 * @param token a {@link java.lang.String} object.
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if tenant with given token does not exist, 200 {@link HttpStatus#OK} if the tenant is found
 	 */
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.OPTIONS)
@@ -98,6 +131,9 @@ public class TenantController {
 
 	/**
 	 * Creates a new {@link Tenant} with a new, random token in the database and returns it to the client.
+	 *
+	 * @param tenant a {@link com.sap.psr.vulas.backend.model.Tenant} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -128,6 +164,9 @@ public class TenantController {
 
 	/**
 	 * Gets an existing {@link Tenant} and returns it to the client.
+	 *
+	 * @param token a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -149,6 +188,10 @@ public class TenantController {
 	
 	/**
 	 * Modifies an existing {@link Tenant} and returns it to the client.
+	 *
+	 * @param token a {@link java.lang.String} object.
+	 * @param new_tenant a {@link com.sap.psr.vulas.backend.model.Tenant} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -191,6 +234,9 @@ public class TenantController {
 
 	/**
 	 * Deletes a given {@link Tenant}.
+	 *
+	 * @param token a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{token:.+}", method = RequestMethod.DELETE)
 	@JsonView(Views.Default.class)

@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -8,8 +27,8 @@ package com.sap.psr.vulas.cg;
 import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.backend.BackendConnector;
@@ -22,7 +41,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  */
 public class MethodNameFilter {
 
-	private static Log log = LogFactory.getLog(MethodNameFilter.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static MethodNameFilter instance = null;
 	
@@ -41,6 +60,7 @@ public class MethodNameFilter {
 	/**
 	 * If there is a MethodNameFilter instance available it will return it,
 	 * otherwise instantiate it and then return
+	 *
 	 * @return an instantiation of the class MethodNameFilter
 	 */
 	public synchronized static MethodNameFilter getInstance() {
@@ -52,6 +72,7 @@ public class MethodNameFilter {
 	/**
 	 * Check if the argument is a string contained in the list of the blacklisted
 	 * methods
+	 *
 	 * @param value a string representing the complete name of a method
 	 * @return a boolean value stating if value is blacklisted or not
 	 */
@@ -63,7 +84,8 @@ public class MethodNameFilter {
 	 * Check if the argument is a string representing a method of an external library
 	 * (meaning not of my application). To define the domain of the application we use
 	 * the entries on which we built the graph.
-	 * @param app_entries Entry methods that we used to define the app domain. Use {@link BackendConnector#getApplicationConstructIds(MavenId)} to get them.
+	 *
+	 * @param app_entries Entry methods that we used to define the app domain. Use {@link BackendConnector#getAppConstructIds(com.sap.psr.vulas.goals.GoalContext, com.sap.psr.vulas.shared.json.model.Application)} to get them.
 	 * @param value a string representing the complete name of a method
 	 * @return a boolean value stating if value is part of a library or not
 	 */
@@ -75,7 +97,8 @@ public class MethodNameFilter {
 	 * Check if the argument is a string representing a method of my application
 	 * (meaning not of an external library). To define the domain of the application we use
 	 * the entries on which we built the graph.
-	 * @param app_entries Entry methods that we used to define the app domain. Use {@link BackendConnector#getApplicationConstructIds(MavenId)} to get them.
+	 *
+	 * @param app_entries Entry methods that we used to define the app domain. Use {@link BackendConnector#getAppConstructIds(com.sap.psr.vulas.goals.GoalContext, com.sap.psr.vulas.shared.json.model.Application)} to get them.
 	 * @param value  a string representing the complete name of a method
 	 * @return a boolean value stating if value is part of the application or not
 	 */

@@ -1,11 +1,31 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.shared.util;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 
@@ -14,17 +34,17 @@ import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
  */
 public class DigestUtil {
 	
-	private static final Log log = LogFactory.getLog(DigestUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 	
 	/**
-	 * Returns a digest for the given {@link String}, using the given {@link Charset} (typically {@link StandardCharsets#UTF_8) and {@link DigestAlgorithm}.
+	 * Returns a digest for the given {@link String}, using the given {@link Charset} (typically {@link StandardCharsets#UTF_8}) and {@link DigestAlgorithm}.
 	 *
-	 * @param _source
-	 * @param _charset
-	 * @param _alg
-	 * @return
+	 * @param _source a {@link java.lang.String} object.
+	 * @param _charset a {@link java.nio.charset.Charset} object.
+	 * @param _alg a {@link com.sap.psr.vulas.shared.enums.DigestAlgorithm} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public final static String getDigestAsString(String _source, Charset _charset, DigestAlgorithm _alg) {
 		return DigestUtil.bytesToHex(DigestUtil.getDigestAsBytes(_source, _charset, _alg));
@@ -49,6 +69,12 @@ public class DigestUtil {
 		return digest;
 	}
 	
+	/**
+	 * <p>bytesToHex.</p>
+	 *
+	 * @param bytes an array of {@link byte} objects.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String bytesToHex(byte[] bytes) {
 	    char[] hexChars = new char[bytes.length * 2];
 	    for ( int j = 0; j < bytes.length; j++ ) {

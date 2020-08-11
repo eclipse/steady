@@ -46,8 +46,8 @@ import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 import org.apache.http.annotation.Immutable;
 import org.apache.http.conn.util.InetAddressUtils;
 
@@ -79,7 +79,7 @@ public abstract class AbstractVerifier implements X509HostnameVerifier {
         Arrays.sort(BAD_COUNTRY_2LDS);
     }
 
-    private final Log log = LogFactory.getLog(getClass());
+    private final Logger log = org.apache.logging.log4j.LogManager.getLogger(getClass());
 
     public AbstractVerifier() {
         super();

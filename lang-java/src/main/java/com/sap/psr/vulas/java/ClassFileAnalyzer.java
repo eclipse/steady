@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.java;
 
 import java.io.File;
@@ -8,8 +27,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.ConstructId;
@@ -27,7 +46,7 @@ import javassist.CtClass;
  */
 public class ClassFileAnalyzer implements FileAnalyzer {
 
-	private static final Log log = LogFactory.getLog(ClassFileAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/** The file to be analyzed. */
 	private File file = null;
@@ -35,11 +54,13 @@ public class ClassFileAnalyzer implements FileAnalyzer {
 	/** All Java constructs found in the given class file. */
 	private Map<ConstructId, Construct> constructs = null;
 	
+	/** {@inheritDoc} */
 	@Override
 	public String[] getSupportedFileExtensions() {
 		return new String[] { "class" };
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean canAnalyze(File _file) {
 		final String ext = FileUtil.getFileExtension(_file);
@@ -52,11 +73,18 @@ public class ClassFileAnalyzer implements FileAnalyzer {
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void analyze(final File _file) throws FileAnalysisException {
 		this.setFile(_file);
 	}
 	
+	/**
+	 * <p>Setter for the field <code>file</code>.</p>
+	 *
+	 * @param _file a {@link java.io.File} object.
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public void setFile(File _file) throws IllegalArgumentException {
 		final String ext = FileUtil.getFileExtension(_file);
 		if(!ext.equals("class"))
@@ -66,6 +94,7 @@ public class ClassFileAnalyzer implements FileAnalyzer {
 		this.file = _file;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
 		if(this.constructs==null) {
@@ -107,15 +136,19 @@ public class ClassFileAnalyzer implements FileAnalyzer {
 		return this.constructs;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean containsConstruct(ConstructId _id) throws FileAnalysisException { return this.getConstructs().containsKey(_id); }
 
+	/** {@inheritDoc} */
 	@Override
 	public Construct getConstruct(ConstructId _id) throws FileAnalysisException { return this.getConstructs().get(_id); }
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasChilds() { return false; }
 	
+	/** {@inheritDoc} */
 	@Override
 	public Set<FileAnalyzer> getChilds(boolean _recursive) { return null; }
 }

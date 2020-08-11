@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.cia.rest;
 
 import java.io.FileNotFoundException;
@@ -45,6 +64,10 @@ import com.sap.psr.vulas.sign.SignatureFactory;
 
 import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
+/**
+ * <p>ConstructController class.</p>
+ *
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/constructs")
@@ -56,6 +79,13 @@ public class ConstructController {
 	 * Provided that (1) the given GAV is known to the software repo (e.g., Maven Central) and (2) an artifact with classifier 'source' exists for it,
 	 * the method returns the source code of the given Java construct.
 	 * Attention: For the time being, only the types CONSTRUCTOR and METHOD are supported.
+	 *
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param type a {@link java.lang.String} object.
+	 * @param qname a {@link java.lang.String} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/{type:.+}/{qname:.+}", method = RequestMethod.GET)
 	public void getConstructSourceForGav(@PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @PathVariable String type, @PathVariable String qname, HttpServletResponse response) {
@@ -63,8 +93,8 @@ public class ConstructController {
 		JavaId jid = null;
 		JavaId def_ctx = null;
 		try {
-			jid = this.getJavaId(type, qname);
-			def_ctx = this.getCompilationUnit(jid);
+			jid = JavaId.getJavaId(type, qname);
+			def_ctx = JavaId.getCompilationUnit(jid);
 			log.debug("Determined compilation unit " + def_ctx + " for qname [" + qname + "]");
 			file = ClassDownloader.getInstance().getClass(mvnGroup, artifact, version, def_ctx.getQualifiedName(), ClassDownloader.Format.JAVA);
 
@@ -113,6 +143,11 @@ public class ConstructController {
 	 * Provided that (1) the given SHA1 is known to the software repo (e.g., Maven Central) and (2) an artifact with classifier 'source' exists for the corresponding GAV,
 	 * the method returns the source code of the given Java construct.
 	 * Attention: For the time being, only the types CONSTRUCTOR and METHOD are supported.
+	 *
+	 * @param sha1 a {@link java.lang.String} object.
+	 * @param type a {@link java.lang.String} object.
+	 * @param qname a {@link java.lang.String} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
 	 */
 	@RequestMapping(value = "/{sha1:.+}/{type:.+}/{qname:.+}", method = RequestMethod.GET)
 	public void getConstructSourceForSha1(@PathVariable String sha1, @PathVariable String type, @PathVariable String qname, HttpServletResponse response) {
@@ -126,8 +161,8 @@ public class ConstructController {
 			if(doc==null)
 				throw new RuntimeException("SHA1 [" + sha1 + "] not found");
 
-			jid = this.getJavaId(type, qname);
-			def_ctx = this.getCompilationUnit(jid);
+			jid = JavaId.getJavaId(type, qname);
+			def_ctx = JavaId.getCompilationUnit(jid);
 			log.debug("Determined compilation unit " + def_ctx + " for qname [" + qname + "]");
 			file = ClassDownloader.getInstance().getClass(doc.getLibId().getMvnGroup(), doc.getLibId().getArtifact(), doc.getLibId().getVersion(), def_ctx.getQualifiedName(), ClassDownloader.Format.JAVA);
 
@@ -168,43 +203,52 @@ public class ConstructController {
 		}
 	}
 
-	/**
-	 * 
-	 * @param _jid
-	 * @return
-	 */
-	private JavaId getCompilationUnit(JavaId _jid) {
-		// Got it --> return provided object
-		if( (_jid.getType().equals(JavaId.Type.CLASS) && !((JavaClassId)_jid).isNestedClass()) ||
-				(_jid.getType().equals(JavaId.Type.INTERFACE) && !((JavaInterfaceId)_jid).isNested()) ||
-				(_jid.getType().equals(JavaId.Type.ENUM) && !((JavaEnumId)_jid).isNested()) ) {
-			return _jid;
-		} else {
-			return this.getCompilationUnit((JavaId)_jid.getDefinitionContext());
-		}
-	}
-
-	private JavaId getJavaId(String _type, String _qname) {
-		JavaId.Type type = JavaId.typeFromString(_type);
-
-		// Check params
-		if(JavaId.Type.METHOD!=type && JavaId.Type.CONSTRUCTOR!=type)
-			throw new IllegalArgumentException("Only types METH and CONS are supported, got [" + type + "]");
-
-		// Parse JavaId
-		JavaId jid = null;
-		if(JavaId.Type.CONSTRUCTOR==type)
-			jid = JavaId.parseConstructorQName(_qname);
-		else if(JavaId.Type.METHOD==type)
-			jid = JavaId.parseMethodQName(_qname);
-
-		return jid;
-	}
+//	/**
+//	 * 
+//	 * @param _jid
+//	 * @return
+//	 */
+//	private JavaId getCompilationUnit(JavaId _jid) {
+//		// Got it --> return provided object
+//		if( (_jid.getType().equals(JavaId.Type.CLASS) && !((JavaClassId)_jid).isNestedClass()) ||
+//				(_jid.getType().equals(JavaId.Type.INTERFACE) && !((JavaInterfaceId)_jid).isNested()) ||
+//				(_jid.getType().equals(JavaId.Type.ENUM) && !((JavaEnumId)_jid).isNested()) ) {
+//			return _jid;
+//		} else {
+//			return this.getCompilationUnit((JavaId)_jid.getDefinitionContext());
+//		}
+//	}
+//
+//	private JavaId getJavaId(String _type, String _qname) {
+//		JavaId.Type type = JavaId.typeFromString(_type);
+//
+//		// Check params
+//		if(JavaId.Type.METHOD!=type && JavaId.Type.CONSTRUCTOR!=type)
+//			throw new IllegalArgumentException("Only types METH and CONS are supported, got [" + type + "]");
+//
+//		// Parse JavaId
+//		JavaId jid = null;
+//		if(JavaId.Type.CONSTRUCTOR==type)
+//			jid = JavaId.parseConstructorQName(_qname);
+//		else if(JavaId.Type.METHOD==type)
+//			jid = JavaId.parseMethodQName(_qname);
+//
+//		return jid;
+//	}
 
 	/**
 	 * Provided that (1) the given GAV is known to the software repo (e.g., Maven Central) and (2) an artifact with classifier 'source' exists for it,
 	 * the method returns the abstract syntax tree (AST) of the given Java construct.
 	 * Attention: For the time being, only the types CONSTRUCTOR and METHOD are supported.
+	 *
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param type a {@link java.lang.String} object.
+	 * @param qname a {@link java.lang.String} object.
+	 * @param sources a {@link java.lang.Boolean} object.
+	 * @param lang a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/{type:.+}/{qname:.+}/sign", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Signature> getConstructAstForGav(@PathVariable String mvnGroup, 
@@ -218,8 +262,8 @@ public class ConstructController {
 			JavaId jid = null;
 			JavaId def_ctx = null;
 			try {			
-				jid = this.getJavaId(type, qname);
-				def_ctx = this.getCompilationUnit(jid);
+				jid = JavaId.getJavaId(type, qname);
+				def_ctx = JavaId.getCompilationUnit(jid);
 				log.debug("Determined compilation unit " + def_ctx + " for qname [" + qname + "]");
 				if(sources)
 					file = ClassDownloader.getInstance().getClass(mvnGroup, artifact, version, def_ctx.getQualifiedName(), ClassDownloader.Format.JAVA);
@@ -301,6 +345,11 @@ public class ConstructController {
 	 * Provided that (1) the given SHA1 is known to the software repo (e.g., Maven Central) and (2) an artifact with classifier 'source' exists for the corresponding GAV,
 	 * the method returns the abstract syntax tree (AST) of the given Java construct.
 	 * Attention: For the time being, only the types CONSTRUCTOR and METHOD are supported.
+	 *
+	 * @param sha1 a {@link java.lang.String} object.
+	 * @param type a {@link java.lang.String} object.
+	 * @param qname a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
 	 */
 	@RequestMapping(value = "/{sha1}/{type}/{qname}/ast", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<ASTConstructBodySignature> getConstructAstForSha1(@PathVariable String sha1, @PathVariable String type, @PathVariable String qname) {
@@ -314,8 +363,8 @@ public class ConstructController {
 			JavaId jid = null;
 			JavaId def_ctx = null;
 
-			jid = this.getJavaId(type, qname);
-			def_ctx = this.getCompilationUnit(jid);
+			jid = JavaId.getJavaId(type, qname);
+			def_ctx = JavaId.getCompilationUnit(jid);
 			log.info("Determined compilation unit " + def_ctx + " for qname [" + qname + "]");
 
 			file = ClassDownloader.getInstance().getClass(doc.getLibId().getMvnGroup(), doc.getLibId().getArtifact(), doc.getLibId().getVersion(), def_ctx.getQualifiedName(), ClassDownloader.Format.JAVA);
@@ -356,6 +405,12 @@ public class ConstructController {
 		}
 	}
 
+	/**
+	 * <p>diffConstructAsts.</p>
+	 *
+	 * @param asts an array of {@link com.sap.psr.vulas.java.sign.ASTConstructBodySignature} objects.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
 	@RequestMapping(value = "/diff", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<SignatureChange> diffConstructAsts(@RequestBody ASTConstructBodySignature[] asts) {
 		// Check args

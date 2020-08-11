@@ -1,11 +1,29 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.monitor.touch;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.backend.BackendConnectionException;
@@ -17,12 +35,16 @@ import com.sap.psr.vulas.java.JavaId;
 import com.sap.psr.vulas.java.JavaMethodId;
 import com.sap.psr.vulas.monitor.ClassVisitor;
 
+/**
+ * <p>ConstructIdUtil class.</p>
+ *
+ */
 public class ConstructIdUtil {
 
-	private static Log log = null;
-	private static final Log getLog() {
+	private static Logger log = null;
+	private static final Logger getLog() {
 		if(ConstructIdUtil.log==null)
-			ConstructIdUtil.log = LogFactory.getLog(ConstructIdUtil.class);
+			ConstructIdUtil.log = org.apache.logging.log4j.LogManager.getLogger();
 		return ConstructIdUtil.log;
 	}
 	
@@ -44,6 +66,11 @@ public class ConstructIdUtil {
 		}
 	}
 
+	/**
+	 * <p>Getter for the field <code>instance</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.monitor.touch.ConstructIdUtil} object.
+	 */
 	public synchronized static ConstructIdUtil getInstance() {
 		if(ConstructIdUtil.instance==null)
 			ConstructIdUtil.instance =  new ConstructIdUtil();
@@ -55,8 +82,9 @@ public class ConstructIdUtil {
 	 * The check is implemented by looing at the definition context, which should be either
 	 * class or enum. The reason is that, e.g., static initializers are not considered at
 	 * the time of the source code analysis, hence, are not part of the collection.
-	 * @param _jid
-	 * @return
+	 *
+	 * @param _jid a {@link com.sap.psr.vulas.ConstructId} object.
+	 * @return a boolean.
 	 */
 	public boolean isAppConstruct(ConstructId _jid) {
 		boolean is_app_construct = false;
@@ -75,8 +103,9 @@ public class ConstructIdUtil {
 
 	/**
 	 * Returns true if the given {@link ConstructId} is neither part of the application nor a test method, false otherwise.
-	 * @param _jid
-	 * @return
+	 *
+	 * @param _jid a {@link com.sap.psr.vulas.ConstructId} object.
+	 * @return a boolean.
 	 */
 	public boolean isLibConstruct(ConstructId _jid) {
 		boolean is_lib_construct = false;
@@ -102,9 +131,10 @@ public class ConstructIdUtil {
 
 	/**
 	 * Returns true if the given {@link JavaId} is an instance of {@link JavaClassInit}, {@link JavaMethodId} or
-	 * {@link JavaConstructorId}, false otherwise. 
-	 * @param _jid
-	 * @return
+	 * {@link JavaConstructorId}, false otherwise.
+	 *
+	 * @param _jid a {@link com.sap.psr.vulas.ConstructId} object.
+	 * @return a boolean.
 	 */
 	public static boolean isOfInstrumentableType(ConstructId _jid) {
 		return _jid instanceof JavaClassInit || _jid instanceof JavaConstructorId || _jid instanceof JavaMethodId;
@@ -112,10 +142,10 @@ public class ConstructIdUtil {
 
 	/**
 	 * Given a qualified name return the ConstructId that represent it. For now is
-	 * implemented only on constructors and method (also including <clinit> and <init>).
+	 * implemented only on constructors and method (also including &lt;clinit&gt; and &lt;init&gt;).
 	 * If the type requested is null or is not in the range of teh allowed types the method return null
-	 * 
-	 * @param _qname the qname of the construct. 
+	 *
+	 * @param _qname the qname of the construct.
 	 * @param type can be CONSTRUCTOR,CLASSINIT,METHOD,CLASS,NESTED_CLASS
 	 * @return Return the java representation of this constructid or null if is not found
 	 */

@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.monitor;
 
 import java.io.IOException;
@@ -9,8 +28,8 @@ import java.security.ProtectionDomain;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.core.util.CoreConfiguration;
 import com.sap.psr.vulas.java.JarAnalyzer;
@@ -37,7 +56,7 @@ public class DynamicTransformer implements ClassFileTransformer {
 
 	// ====================================== STATIC MEMBERS
 
-	private static final Log log = LogFactory.getLog(DynamicTransformer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private static DynamicTransformer instance = null;
 
@@ -92,10 +111,25 @@ public class DynamicTransformer implements ClassFileTransformer {
 		catch(Exception e) {;}
 	}
 
+	/**
+	 * <p>isTransformationEnabled.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isTransformationEnabled() { return transformationEnabled; }
 
+	/**
+	 * <p>Setter for the field <code>transformationEnabled</code>.</p>
+	 *
+	 * @param transformationEnabled a boolean.
+	 */
 	public void setTransformationEnabled(boolean transformationEnabled) { this.transformationEnabled = transformationEnabled; }
 
+	/**
+	 * <p>Getter for the field <code>loaderHierarchy</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.monitor.LoaderHierarchy} object.
+	 */
 	public LoaderHierarchy getLoaderHierarchy() { return this.loaderHierarchy; }
 
 	/**
@@ -104,7 +138,14 @@ public class DynamicTransformer implements ClassFileTransformer {
 	 * <p>
 	 * The method is called by the JRE class loading process and returns the instrumented bytecode for a given
 	 * class.
+	 *
 	 * @return the instrumented bytecode
+	 * @param loader a {@link java.lang.ClassLoader} object.
+	 * @param className a {@link java.lang.String} object.
+	 * @param classBeingRedefined a {@link java.lang.Class} object.
+	 * @param protectionDomain a {@link java.security.ProtectionDomain} object.
+	 * @param classfileBuffer an array of {@link byte} objects.
+	 * @throws java.lang.instrument.IllegalClassFormatException if any.
 	 */
 	public byte[] transform(ClassLoader loader, String className,
 			Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
@@ -185,6 +226,11 @@ public class DynamicTransformer implements ClassFileTransformer {
 		return byteCode;
 	}
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toString() {
 		final StringBuffer b = new StringBuffer();
 		b.append("DynamicTransformer [id=").append(this.id);
@@ -197,7 +243,8 @@ public class DynamicTransformer implements ClassFileTransformer {
 
 	/**
 	 * Singleton method: Creates (if necessary) and returns the single instance that can be created for this class.
-	 * @return
+	 *
+	 * @return a {@link com.sap.psr.vulas.monitor.DynamicTransformer} object.
 	 */
 	public static synchronized DynamicTransformer getInstance() {
 		if(DynamicTransformer.instance==null) {
@@ -215,11 +262,17 @@ public class DynamicTransformer implements ClassFileTransformer {
 
 	/**
 	 * Returns true if the Singleton has been created.
-	 * @param agentArgs
-	 * @param inst
+	 *
+	 * @return a boolean.
 	 */
 	public static synchronized boolean isInstantiated() { return DynamicTransformer.instance!=null; }
 
+	/**
+	 * <p>premain.</p>
+	 *
+	 * @param agentArgs a {@link java.lang.String} object.
+	 * @param inst a {@link java.lang.instrument.Instrumentation} object.
+	 */
 	public static void premain(String agentArgs, Instrumentation inst) {
 		// Create monitor, which will register upload scheduler and start goal execution
 		final ExecutionMonitor m = ExecutionMonitor.getInstance();

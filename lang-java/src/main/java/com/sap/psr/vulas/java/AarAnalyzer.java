@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.java;
 
 import java.io.File;
@@ -5,15 +24,19 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.jar.JarFile;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.FileAnalysisException;
 import com.sap.psr.vulas.shared.util.FileUtil;
 
+/**
+ * <p>AarAnalyzer class.</p>
+ *
+ */
 public class AarAnalyzer extends JarAnalyzer {
 
-	private static final Log log = LogFactory.getLog(AarAnalyzer.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 	
 	private static final String CLASSES_JAR = "classes.jar";
 	
@@ -22,9 +45,11 @@ public class AarAnalyzer extends JarAnalyzer {
 	
 	private Path tmpDir = null; // To where the AAR is extracted
 	
+	/** {@inheritDoc} */
 	@Override
 	public String[] getSupportedFileExtensions() { return new String[] { "aar" }; }
 	
+	/** {@inheritDoc} */
 	@Override
 	public void analyze(final File _file) throws FileAnalysisException {
 		try {
@@ -63,12 +88,18 @@ public class AarAnalyzer extends JarAnalyzer {
 	}
 	
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns the SHA1 digest of the AAR by computing it on the fly.
-	 * @return the SHA1 digest of the AAR
 	 */
 	@Override
 	public synchronized String getSHA1() { return this.aarWriter.getSHA1(); }
 	
+	/**
+	 * <p>getFileName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getFileName() {
 		return this.aarWriter.getOriginalJarFileName().toString();// + "!" + CLASSES_JAR;
 	}

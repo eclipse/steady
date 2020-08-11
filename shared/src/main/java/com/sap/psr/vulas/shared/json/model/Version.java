@@ -1,39 +1,66 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.shared.json.model;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 
 
 /**
  * This class represents software versions as major.minor[.maintenance[.build]].
- * 
- * @see https://en.wikipedia.org/wiki/Software_versioning
+ * See https://en.wikipedia.org/wiki/Software_versioning for more information.
  */
 public class Version implements Comparable<Version>{
 
-	private static Log log = LogFactory.getLog(Version.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	final static Pattern VERSION_PATTERN = Pattern.compile("([\\d\\.]*)(.*)", Pattern.DOTALL);
 
 	private String version;
 
+	/**
+	 * <p>Constructor for Version.</p>
+	 *
+	 * @param _v a {@link java.lang.String} object.
+	 */
 	public Version(String _v){
 		this.version=_v;
 	}
 
+	/**
+	 * <p>Getter for the field <code>version</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getVersion() {
 		return this.version;
 	}
 
 	/**
-	 * This method returns the major release of the library, i.e., the string before the first '.', if any; 0 otherwise 
-	 * 
+	 * This method returns the major release of the library, i.e., the string before the first '.', if any; 0 otherwise
+	 *
 	 * @return the string (usually a digit) before the first '.' if any; 0 otherwise
-	 * 
 	 */
 	public String getMajorRelease() {
 		String[] versions = this.version.split("\\.");
@@ -43,7 +70,7 @@ public class Version implements Comparable<Version>{
 
 	/**
 	 * This method returns the minor release, i.e., major.minor if minor exists; major.0 otherwise
-	 * 
+	 *
 	 * @return major.minor if minor exists; major.0 otherwise
 	 */
 	public String getMinorRelease() {
@@ -63,7 +90,7 @@ public class Version implements Comparable<Version>{
 
 	/**
 	 * This method returns the maintenance release, i.e., major.minor.maintenance, where minor and maintenance are set to 0 if they do not exist in this.version
-	 * 
+	 *
 	 * @return major.minor.maintenance
 	 */
 	public String getMaintenanceRelease() {
@@ -75,8 +102,8 @@ public class Version implements Comparable<Version>{
 	}
 
 	/**
-	 * This method returns true if the Version is a maintenance release, i.e., only has 3 fields (major.minor.maintenance) or the fourth is 0 or"RELEASE" (major.minor.maintenance.0||RELEASE) 
-	 * 
+	 * This method returns true if the Version is a maintenance release, i.e., only has 3 fields (major.minor.maintenance) or the fourth is 0 or"RELEASE" (major.minor.maintenance.0||RELEASE)
+	 *
 	 * @return major.minor.maintenance
 	 */
 	public Boolean isMaintenanceRelease() {
@@ -89,9 +116,8 @@ public class Version implements Comparable<Version>{
 
 	/**
 	 * This method compares versions that only contains numbers. It returns 0 if they are equal or contains letters
-	 * 
-	 * 	@param other version to compare
-	 * 	@return 0 if they are equal or contains letters; 1 if this.version>other.version; -1 otherwise
+	 *
+	 * @return a int.
 	 */
 	public int compareNumberVersion(Version other) {
 	
@@ -110,7 +136,8 @@ public class Version implements Comparable<Version>{
 				Pattern p = Pattern.compile("^[0-9]*$");
 				Matcher m = p.matcher(varray[v]);
 				Matcher m1 = p.matcher(otherVersions[v]);
-				if(m.matches() &&  m1.matches()){
+				//we proceed if the version matches the pattern with some non-empty groups (i.e., the version contains numbers at all)
+				if(m.matches() && m.start()>0 &&  m1.matches() && m1.start()>0){ 
 					if (Integer.parseInt(varray[v])==Integer.parseInt(otherVersions[v]))
 						break;
 					return (Integer.parseInt(varray[v])>Integer.parseInt(otherVersions[v]))?1:-1;
@@ -121,11 +148,13 @@ public class Version implements Comparable<Version>{
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return this.version;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -134,6 +163,7 @@ public class Version implements Comparable<Version>{
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -151,6 +181,7 @@ public class Version implements Comparable<Version>{
 		return true;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(Version o) {
 

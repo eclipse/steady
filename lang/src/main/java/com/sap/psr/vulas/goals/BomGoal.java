@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.goals;
 
 import java.io.File;
@@ -8,8 +27,8 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.core.util.CoreConfiguration;
@@ -23,13 +42,22 @@ import com.sap.psr.vulas.shared.util.DependencyUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import com.sap.psr.vulas.tasks.BomTask;
 
+/**
+ * <p>BomGoal class.</p>
+ *
+ */
 public class BomGoal extends AbstractAppGoal {
 
-	private static final Log log = LogFactory.getLog(BomGoal.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
+	/**
+	 * <p>Constructor for BomGoal.</p>
+	 */
 	public BomGoal() { super(GoalType.APP); }
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Evaluates the configuration setting {@link CoreConfiguration#APP_PREFIXES}.
 	 */
 	@Override
@@ -37,6 +65,7 @@ public class BomGoal extends AbstractAppGoal {
 		super.prepareExecution();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void executeTasks() throws Exception {
 
@@ -66,8 +95,10 @@ public class BomGoal extends AbstractAppGoal {
 		final MaliciousnessAnalyzerLoop loop = new MaliciousnessAnalyzerLoop();
 		
 		// Get a clean set of dependencies
-		final Set<Dependency> no_dupl_deps = DependencyUtil.removeDuplicateLibraryDependencies(a.getDependencies());
-		a.setDependencies(no_dupl_deps);
+		// The removal of dependencies on the same digest is not done here any longer to be able to set parents on the dependencies that will not be removed
+		// Once we add the usage of relativePath to distinguish among dependencies, the removal can be done at this step again.
+	//	final Set<Dependency> no_dupl_deps = DependencyUtil.removeDuplicateLibraryDependencies(a.getDependencies());
+	//	a.setDependencies(no_dupl_deps);
 
 		// Upload libraries and binaries (if requested)
 		if(a.getDependencies()!=null) {

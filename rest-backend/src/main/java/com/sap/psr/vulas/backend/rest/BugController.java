@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.rest;
 
 import java.io.BufferedWriter;
@@ -46,6 +65,10 @@ import com.sap.psr.vulas.shared.enums.AffectedVersionSource;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.util.StopWatch;
 
+/**
+ * <p>BugController class.</p>
+ *
+ */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping(path="/bugs")
@@ -71,7 +94,9 @@ public class BugController {
 
 	/**
 	 * Returns a collection of all {@link Bug}s present in the backend.
-	 * @return 
+	 *
+	 * @param lang a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 * @return a {@link java.lang.Iterable} object.
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
@@ -84,7 +109,8 @@ public class BugController {
 
 	/**
 	 * Returns a collection of all {@link Bug}s present in the backend.
-	 * @return 
+	 *
+	 * @return a {@link java.lang.Iterable} object.
 	 */
 	@RequestMapping(value = "/dump", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.BugDetails.class)
@@ -94,7 +120,8 @@ public class BugController {
 
 	/**
 	 * Creates a new {@link Bug} with a given bug ID (e.g., CVE identifier).
-	 * @param bug
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
@@ -115,6 +142,12 @@ public class BugController {
 		}
 	}
 	
+	/**
+	 * <p>createAllBugs.</p>
+	 *
+	 * @param bugs an array of {@link com.sap.psr.vulas.backend.model.Bug} objects.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
 	@RequestMapping(value = "/dump", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.BugDetails.class)
 	public ResponseEntity<Bug[]> createAllBugs(@RequestBody Bug[] bugs) {
@@ -161,8 +194,9 @@ public class BugController {
 
 	/**
 	 * Returns the {@link Bug} with the given external ID. This ID is provided by the user when creating a bug, e.g., a CVE identifier.
-	 * @param id
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given bug ID does not exist, 200 {@link HttpStatus#OK} if the bug is found
+	 * @param bugid a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{bugid}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.BugDetails.class)
@@ -185,9 +219,10 @@ public class BugController {
 	}
 	
 	/**
-	 * 
-	 * @param bugId 
+	 * <p>isBugExisting.</p>
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given bugid does not exist, 200 {@link HttpStatus#OK} if the bug is found
+	 * @param bugid a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{bugid}", method = RequestMethod.OPTIONS)
 	public ResponseEntity<Bug> isBugExisting(@PathVariable String bugid) {
@@ -209,10 +244,12 @@ public class BugController {
 
 	/**
 	 * Re-creates the {@link Bug} with a given bug ID (e.g., CVE identifier).
-	 * @param bug
+	 *
+	 * @param bug a {@link com.sap.psr.vulas.backend.model.Bug} object.
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given bug ID does not exist,
 	 * 		   422 {@link HttpStatus.UNPROCESSABLE_ENTITY} if the value of path variable (bug ID) does not equal the corresponding field in the body
 	 * 		   200 {@link HttpStatus#OK} if the bug was successfully re-created
+	 * @param bugid a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{bugid}", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Bug> updateBug(@PathVariable String bugid, @RequestBody Bug bug) {
@@ -233,8 +270,9 @@ public class BugController {
 
 	/**
 	 * Deletes the {@link Bug} with the given external ID. This ID is provided by the user when creating a bug, e.g., a CVE identifier.
-	 * @param id
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given bug ID does not exist, 200 {@link HttpStatus#OK} if the bug was successfully deleted
+	 * @param bugid a {@link java.lang.String} object.
 	 */
 	@RequestMapping(value = "/{bugid}", method = RequestMethod.DELETE)
 	@CacheEvict(value = "bug")
@@ -257,9 +295,12 @@ public class BugController {
 	/**
 	 * Creates a set of {@link AffectedLibrary}s for the given {@link Bug} and {@link AffectedVersionSource}.
 	 * Note that {@link AffectedLibrary}s cannot be modified or deleted individually, but always as bulk for a given {@link AffectedVersionSource}.
-	 * The only exception is the source CHECK_VERSION which allows the PUT method to add  new AffectedLibraries 
-	 * @param _bug
-	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created, 422 {@link HttpStatus#UNPROCESSABLE_ENTITY} if the source in the path variable and JSON content are not consistent or when attempting to save an affected lib for a digest verified against Maven Central (in such case the affected Library must be defined for the corresponding LibraryId)  
+	 * The only exception is the source CHECK_VERSION which allows the PUT method to add  new AffectedLibraries
+	 *
+	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created, 422 {@link HttpStatus#UNPROCESSABLE_ENTITY} if the source in the path variable and JSON content are not consistent or when attempting to save an affected lib for a digest verified against Maven Central (in such case the affected Library must be defined for the corresponding LibraryId)
+	 * @param bugid a {@link java.lang.String} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 * @param affectedLibraries an array of {@link com.sap.psr.vulas.backend.model.AffectedLibrary} objects.
 	 */
 	@RequestMapping(value = "/{bugid}/affectedLibIds", method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.BugAffLibs.class)
@@ -293,8 +334,11 @@ public class BugController {
 	/**
 	 * Adds a set of {@link AffectedLibrary}s for the given {@link Bug} and {@link AffectedVersionSource}.
 	 * This method is only allows for source CHECK_VERSION, AST_EQUALITY, MINOR_EQUALITY MAJOR_EQUALITY GREATER_RELEASE TO_REVIEW
-	 * @param _bug
+	 *
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param bugid a {@link java.lang.String} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 * @param affectedLibraries an array of {@link com.sap.psr.vulas.backend.model.AffectedLibrary} objects.
 	 */
 	@RequestMapping(value = "/{bugid}/affectedLibIds", method = RequestMethod.PUT, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.BugAffLibs.class)
@@ -325,21 +369,53 @@ public class BugController {
 	/**
 	 * Creates a set of {@link AffectedLibrary}s for the given {@link Bug} and {@link AffectedVersionSource}.
 	 * Note that {@link AffectedLibrary}s cannot be created, modified or deleted individually, but always as bulk for a given {@link AffectedVersionSource}.
-	 * @param _bug
+	 *
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param bugid a {@link java.lang.String} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
 	 */
 	@RequestMapping(value = "/{bugid}/affectedLibIds", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.BugAffLibs.class)
-	public ResponseEntity<List<AffectedLibrary>> getAllAffectedLibraries(@PathVariable String bugid, @RequestParam(value="source", required=false) AffectedVersionSource source) {
+	public ResponseEntity<List<AffectedLibrary>> getAllAffectedLibraries(@PathVariable String bugid, 
+			@RequestParam(value="source", required=false) AffectedVersionSource source,
+			@RequestParam(value="onlyWellKnown", required=false, defaultValue="false") Boolean onlyWellknown) {
+		Bug bug = null;
+		try { bug = BugRepository.FILTER.findOne(this.bugRepository.findByBugId(bugid)); }
+		catch (EntityNotFoundException e) { return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.NOT_FOUND); }
+		return new ResponseEntity<List<AffectedLibrary>>(this.afflibRepository.getAffectedLibraries(bug, source, onlyWellknown), HttpStatus.OK);
+	}
+
+	/**
+	 * <p>getAffectedLibrariesByGA.</p>
+	 *
+	 * @param bugid a {@link java.lang.String} object.
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
+	@RequestMapping(value = "/{bugid}/affectedLibIds/{mvnGroup:.+}/{artifact:.+}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
+	@JsonView(Views.BugAffLibsDetails.class)
+	public ResponseEntity<List<AffectedLibrary>> getAffectedLibrariesByGA(@PathVariable String bugid, @PathVariable String mvnGroup, @PathVariable String artifact, @RequestParam(value="source", required=false) AffectedVersionSource source) {
 		Bug bug = null;
 		try { bug = BugRepository.FILTER.findOne(this.bugRepository.findByBugId(bugid)); }
 		catch (EntityNotFoundException e) { return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.NOT_FOUND); }
 		if(source==null)
-			return new ResponseEntity<List<AffectedLibrary>>(this.afflibRepository.findByBug(bug), HttpStatus.OK);
+			return new ResponseEntity<List<AffectedLibrary>>(this.afflibRepository.findByBugAndGA(bug, mvnGroup, artifact), HttpStatus.OK);
 		else
-			return new ResponseEntity<List<AffectedLibrary>>(this.afflibRepository.findByBugAndSource(bug, source), HttpStatus.OK);
+			return new ResponseEntity<List<AffectedLibrary>>(this.afflibRepository.findByBugAndGAAndSource(bug, mvnGroup, artifact, source), HttpStatus.OK);
 	}
 	
+	/**
+	 * <p>getAffectedLibraryDetails.</p>
+	 *
+	 * @param bugid a {@link java.lang.String} object.
+	 * @param mvnGroup a {@link java.lang.String} object.
+	 * @param artifact a {@link java.lang.String} object.
+	 * @param version a {@link java.lang.String} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
 	@RequestMapping(value = "/{bugid}/affectedLibIds/{mvnGroup:.+}/{artifact:.+}/{version:.+}", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.BugAffLibsDetails.class)
 	public ResponseEntity<List<AffectedLibrary>> getAffectedLibraryDetails(@PathVariable String bugid, @PathVariable String mvnGroup, @PathVariable String artifact, @PathVariable String version, @RequestParam(value="source", required=false) AffectedVersionSource source) {
@@ -353,9 +429,11 @@ public class BugController {
 	}
 	
 	/**
-	 * 
-	 * @param bugId 
+	 * <p>areBugAffectedLibrariesExisting.</p>
+	 *
 	 * @return 404 {@link HttpStatus#NOT_FOUND} if affected libraries for a given bugId and source does not exist, 200 {@link HttpStatus#OK} if they are found
+	 * @param bugid a {@link java.lang.String} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
 	 */
 	@RequestMapping(value = "/{bugid}/affectedLibIds", method = RequestMethod.OPTIONS)
 	public ResponseEntity<List<AffectedLibrary>> areBugAffectedLibrariesExisting(@PathVariable String bugid, @RequestParam(value="source", required=true) AffectedVersionSource source) {
@@ -377,8 +455,10 @@ public class BugController {
 	/**
 	 * Creates a set of {@link AffectedLibrary}s for the given {@link Bug} and {@link AffectedVersionSource}.
 	 * Note that {@link AffectedLibrary}s cannot be created, modified or deleted individually, but always as bulk for a given {@link AffectedVersionSource}.
-	 * @param _bug
+	 *
 	 * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+	 * @param bugid a {@link java.lang.String} object.
+	 * @param source a {@link com.sap.psr.vulas.shared.enums.AffectedVersionSource} object.
 	 */
 	@RequestMapping(value = "/{bugid}/affectedLibIds", method = RequestMethod.DELETE, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<List<AffectedLibrary>> deleteAffectedLibraries(@PathVariable String bugid, @RequestParam(value="source", required=true) AffectedVersionSource source) {
@@ -402,6 +482,12 @@ public class BugController {
 		return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.OK);
 	}
 
+	/**
+	 * <p>getAllBugLibraries.</p>
+	 *
+	 * @param bugid a {@link java.lang.String} object.
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
 	@RequestMapping(value = "/{bugid}/libraries", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	@JsonView(Views.Default.class)
 	public ResponseEntity<List<Library>> getAllBugLibraries(@PathVariable String bugid) {

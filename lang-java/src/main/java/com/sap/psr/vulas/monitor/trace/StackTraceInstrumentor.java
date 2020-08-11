@@ -1,11 +1,30 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.monitor.trace;
 
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.backend.BackendConnectionException;
@@ -21,13 +40,12 @@ import javassist.CtBehavior;
  * Tracks how many times a construct has been invoked. Downloads the list of relevant bugs from the backend and
  * collects the stack trace for all their change list elements. Stack traces collected will be transformed into
  * call paths that are again uploaded to the backend.
- *
  */
 public class StackTraceInstrumentor extends AbstractTraceInstrumentor {
 
 	// ====================================== STATIC MEMBERS
 
-	private static final Log log = LogFactory.getLog(StackTraceInstrumentor.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	// ====================================== INSTANCE MEMBERS
 
@@ -36,6 +54,9 @@ public class StackTraceInstrumentor extends AbstractTraceInstrumentor {
 	 */
 	private Set<ConstructId> constructsCollectStacktrace = null;
 
+	/**
+	 * <p>Constructor for StackTraceInstrumentor.</p>
+	 */
 	public StackTraceInstrumentor() {
 		try {
 			final Map<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> bug_change_lists = BackendConnector.getInstance().getAppBugs(CoreConfiguration.buildGoalContextFromConfiguration(this.vulasConfiguration), CoreConfiguration.getAppContext(this.vulasConfiguration));
@@ -52,10 +73,17 @@ public class StackTraceInstrumentor extends AbstractTraceInstrumentor {
 		}
 	}
 
+	/**
+	 * <p>isStacktraceRequestedFor.</p>
+	 *
+	 * @param _construct a {@link com.sap.psr.vulas.ConstructId} object.
+	 * @return a boolean.
+	 */
 	public boolean isStacktraceRequestedFor(ConstructId _construct) {
 		return this.constructsCollectStacktrace!=null && this.constructsCollectStacktrace.contains(_construct);
 	}
 
+	/** {@inheritDoc} */
 	public void instrument(StringBuffer _code, JavaId _jid, CtBehavior _behavior, ClassVisitor _cv) throws CannotCompileException {
 
 		// Inject some basic stuff common to several instrumentors

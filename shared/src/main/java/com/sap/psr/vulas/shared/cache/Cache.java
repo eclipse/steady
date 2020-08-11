@@ -1,12 +1,29 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.shared.cache;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
 import com.sap.psr.vulas.shared.util.StopWatch;
 
@@ -18,7 +35,7 @@ import com.sap.psr.vulas.shared.util.StopWatch;
  */
 public class Cache<S, T> {
 	
-	private static final Log log = LogFactory.getLog(Cache.class);
+	private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	private long refreshMilli = -1;
 	private int maxSize = -1;
@@ -36,21 +53,29 @@ public class Cache<S, T> {
 	private long cacheFetchErrorCount = 0;
 	private long cacheFetchDuration = 0;
 	
+	/** Constant <code>MILLI_IN_MIN=60L * 1000L</code> */
 	public static final long MILLI_IN_MIN  = 60L * 1000L;
+	/** Constant <code>MILLI_IN_HOUR=60L * MILLI_IN_MIN</code> */
 	public static final long MILLI_IN_HOUR = 60L * MILLI_IN_MIN;
+	/** Constant <code>MILLI_IN_DAY=24L * MILLI_IN_HOUR</code> */
 	public static final long MILLI_IN_DAY  = 24L * MILLI_IN_HOUR;
 	
 	/**
-	 * @param _reader
-	 * @param _refresh_min
+	 * <p>Constructor for Cache.</p>
+	 *
+	 * @param _reader a {@link com.sap.psr.vulas.shared.cache.ObjectFetcher} object.
+	 * @param _refresh_min a long.
 	 */
 	public Cache(ObjectFetcher<S, T> _reader, long _refresh_min) {
 		this(_reader, _refresh_min, -1);
 	}
 	
 	/**
-	 * @param _reader
-	 * @param _refresh_min
+	 * <p>Constructor for Cache.</p>
+	 *
+	 * @param _reader a {@link com.sap.psr.vulas.shared.cache.ObjectFetcher} object.
+	 * @param _refresh_min a long.
+	 * @param _max_size a int.
 	 */
 	public Cache(ObjectFetcher<S, T> _reader, long _refresh_min, int _max_size) {
 		if(_reader==null)
@@ -63,17 +88,28 @@ public class Cache<S, T> {
 		this.reader = _reader;
 		this.refreshMilli = _refresh_min * MILLI_IN_MIN;
 		this.maxSize = _max_size;
+		
 	}
 	
+	/**
+	 * <p>get.</p>
+	 *
+	 * @param _key a S object.
+	 * @return a T object.
+	 * @throws com.sap.psr.vulas.shared.cache.CacheException if any.
+	 */
 	public synchronized T get(S _key) throws CacheException {
 		return this.get(_key, false);
 	}
 	
 	/**
 	 * Reads the cache entry for the given key. In case such an object does not exist, the method
-	 * calls {@link CveReader#fetch(String)} in order to read the object from the remote store.
-	 * @param _key
-	 * @return
+	 * calls {@link ObjectFetcher#fetch(Object)} in order to read the object from the remote store.
+	 *
+	 * @param _key the key of the entry to be returned
+	 * @param _force_fetch if true, the entry will be fetched no matter whether it already exists in the cache
+	 * @return the entry for the given key
+	 * @throws com.sap.psr.vulas.shared.cache.CacheException if any.
 	 */
 	public synchronized T get(S _key, boolean _force_fetch) throws CacheException {
 		final long current_time = System.currentTimeMillis();
@@ -131,10 +167,35 @@ public class Cache<S, T> {
 		return e.getObject();
 	}
 
+	/**
+	 * <p>getCacheRequest.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getCacheRequest() { return this.cacheRequestCount; }
+	/**
+	 * <p>getCacheHit.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getCacheHit() { return this.cacheHitCount; }
+	/**
+	 * <p>getCacheMiss.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getCacheMiss() { return this.cacheMissCount; }
+	/**
+	 * <p>getCacheFetch.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getCacheFetch() { return this.cacheFetchCount; }
+	/**
+	 * <p>getCacheDelete.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getCacheDelete() { return this.cacheDeleteCount; }
 	
 	private class CacheEntry<U> {

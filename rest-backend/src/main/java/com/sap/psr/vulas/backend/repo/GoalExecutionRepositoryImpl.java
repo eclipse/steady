@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.repo;
 
 import java.util.Collection;
@@ -23,6 +42,10 @@ import com.sap.psr.vulas.shared.util.StringList.ComparisonMode;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 
+/**
+ * <p>GoalExecutionRepositoryImpl class.</p>
+ *
+ */
 public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCustom {
 
 	private static Logger log = LoggerFactory.getLogger(GoalExecutionRepositoryImpl.class);
@@ -37,6 +60,7 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 	ReferenceUpdater refUpdater;
 
 	//@CacheEvict(value="gexe", key="#_app")
+	/** {@inheritDoc} */
 	@Override
 	public GoalExecution customSave(Application _app, GoalExecution _provided_gexe) {
 		GoalExecution managed_gexe = null;
@@ -65,6 +89,7 @@ public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCusto
 	}
 
 	//@Cacheable(value="gexe", key="#_app", sync=true) //, unless="#result.isEmpty()") // Note that in Spring proxy mode (default), only external calls will be cached. Calls within the class (this....) will not.
+	/** {@inheritDoc} */
 	@Override
 	public GoalExecution findLatestGoalExecution(Application _app, GoalType _type) {
 		Long id = null;

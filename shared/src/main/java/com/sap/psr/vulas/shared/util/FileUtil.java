@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.shared.util;
 
 import java.io.ByteArrayOutputStream;
@@ -25,8 +44,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.zip.ZipInputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 
@@ -36,13 +55,14 @@ import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
  */
 public class FileUtil {
 
-	private static final Log log = LogFactory.getLog(FileUtil.class);
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * Returns the file extension of the given {@link File} or null if the file does not have an extension.
-	 * @param the file whose extension is to be returned
+	 *
+	 * @param _file the file whose extension is to be returned
 	 * @return the file extension of the given file (converted to lower case)
-	 * @throws IllegalArgumentException if the file argument is null or the file does not exist
+	 * @throws java.lang.IllegalArgumentException if the file argument is null or the file does not exist
 	 */
 	public static String getFileExtension(File _file) throws IllegalArgumentException {
 		String ext = null;
@@ -58,9 +78,10 @@ public class FileUtil {
 
 	/**
 	 * Checks whether the given {@link Path} points to a file that has one of the given file extensions.
-	 * @param _p
-	 * @param _extensions
-	 * @return
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
+	 * @param _extensions an array of {@link java.lang.String} objects.
+	 * @return a boolean.
 	 */
 	public static boolean hasFileExtension(Path _p, String[]  _extensions) {
 		if(_p.toFile().isFile()) {
@@ -76,6 +97,13 @@ public class FileUtil {
 		return false;
 	}
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @param _paths a {@link java.util.Set} object.
+	 * @param _sep a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String toString(Set<Path> _paths, String _sep) {
 		final StringBuilder b = new StringBuilder();
 		int i = 0;
@@ -86,15 +114,23 @@ public class FileUtil {
 		return b.toString();
 	}
 
-	/** 
-	 * Creates a new temporary directory with the given prefix inside the directory returned by {@link #getVulasTmpDir()}.  
-	 * @return
-	 * @throws IOException
+	/**
+	 * Creates a new temporary directory with the given prefix inside the directory returned by {@link VulasConfiguration#getTmpDir()}.
+	 *
+	 * @throws java.io.IOException
+	 * @param _prefix a {@link java.lang.String} object.
+	 * @return a {@link java.nio.file.Path} object.
 	 */
 	public static Path createTmpDir(String _prefix) throws IOException {
 		return Files.createTempDirectory(VulasConfiguration.getGlobal().getTmpDir(), _prefix);
 	}
 
+	/**
+	 * <p>isAccessibleFile.</p>
+	 *
+	 * @param _arg a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public static boolean isAccessibleFile(String _arg) {
 		if(_arg==null || _arg.equals(""))
 			return false;
@@ -102,6 +138,12 @@ public class FileUtil {
 			return FileUtil.isAccessibleFile(Paths.get(_arg));
 	}
 
+	/**
+	 * <p>isAccessibleFile.</p>
+	 *
+	 * @param _arg a {@link java.nio.file.Path} object.
+	 * @return a boolean.
+	 */
 	public static boolean isAccessibleFile(Path _arg) {
 		boolean result = false;
 		if(_arg!=null) {
@@ -111,6 +153,12 @@ public class FileUtil {
 		return result;
 	}
 
+	/**
+	 * <p>isAccessibleDirectory.</p>
+	 *
+	 * @param _dir a {@link java.nio.file.Path} object.
+	 * @return a boolean.
+	 */
 	public final static boolean isAccessibleDirectory(Path _dir) {
 		if(_dir==null)
 			return false;
@@ -119,6 +167,12 @@ public class FileUtil {
 		}
 	}
 
+	/**
+	 * <p>isAccessibleDirectory.</p>
+	 *
+	 * @param _dir a {@link java.io.File} object.
+	 * @return a boolean.
+	 */
 	public final static boolean  isAccessibleDirectory(File _dir) {
 		if(_dir==null)
 			return false;
@@ -127,6 +181,12 @@ public class FileUtil {
 		}
 	}
 
+	/**
+	 * <p>isAccessibleDirectory.</p>
+	 *
+	 * @param _dir a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public final static boolean isAccessibleDirectory(String _dir) {
 		if(_dir==null || _dir.equals(""))
 			return false;
@@ -134,6 +194,11 @@ public class FileUtil {
 			return FileUtil.isAccessibleDirectory(Paths.get(_dir));
 	}
 
+	/**
+	 * <p>createDirectory.</p>
+	 *
+	 * @param _p a {@link java.nio.file.Path} object.
+	 */
 	public final static void createDirectory(Path _p) {
 		if(!_p.toFile().exists()) {
 			try {
@@ -146,7 +211,8 @@ public class FileUtil {
 
 	/**
 	 * Removes path information from the argument as to return the file name.
-	 * @param complete file path
+	 *
+	 * @param _file_path complete file path
 	 * @return file name
 	 */
 	public static String getFileName(String _file_path) {
@@ -155,8 +221,10 @@ public class FileUtil {
 
 	/**
 	 * Removes path information and, if requested, the file extension from the given file name.
-	 * @param complete file path
+	 *
+	 * @param _file_path complete file path
 	 * @return file name
+	 * @param _keep_ext a boolean.
 	 */
 	public static String getFileName(String _file_path, boolean _keep_ext) {
 		String n = _file_path;
@@ -166,17 +234,18 @@ public class FileUtil {
 		if(idx!=-1) n = n.substring(idx+1);
 
 		// Remove file extension
-		if(!_keep_ext && n.indexOf(".")!=-1)
-			n = n.substring(0, n.indexOf("."));
+		if(!_keep_ext && n.lastIndexOf(".")!=-1)
+			n = n.substring(0, n.lastIndexOf("."));
 
 		return n;
 	}
 
 	/**
 	 * Returns the name of the {@link Charset} configured via configuration parameter {@link VulasConfiguration#CHARSET}.
-	 * 
-	 * @see {@link #readFile(Path)}, {@link #writeToFile(File, byte[])}, etc.
-	 * @return
+	 *
+	 * @see FileUtil#readFile(Path)
+	 * @see FileUtil#writeToFile(File, byte[])
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getCharsetName() {
 		return FileUtil.getCharset().name();
@@ -184,9 +253,10 @@ public class FileUtil {
 
 	/**
 	 * Returns the {@link Charset} configured via configuration parameter {@link VulasConfiguration#CHARSET}.
-	 * 
-	 * @see {@link #readFile(Path)}, {@link #writeToFile(File, byte[])}, etc.
-	 * @return
+	 *
+	 * @see FileUtil#readFile(Path)
+	 * @see FileUtil#writeToFile(File, byte[])
+	 * @return a {@link java.nio.charset.Charset} object.
 	 */
 	public static Charset getCharset() {
 		final String cs = VulasConfiguration.getGlobal().getConfiguration().getString(VulasConfiguration.CHARSET, "UTF-8");
@@ -198,6 +268,14 @@ public class FileUtil {
 		}
 	}
 	
+	/**
+	 * <p>copyFile.</p>
+	 *
+	 * @param _source_file a {@link java.nio.file.Path} object.
+	 * @param _target_dir a {@link java.nio.file.Path} object.
+	 * @return a {@link java.nio.file.Path} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public static Path copyFile(Path _source_file, Path _target_dir) throws IOException {
 		final Path to = _target_dir.resolve(_source_file.getFileName());
 		try (final InputStream is = new FileInputStream(_source_file.toFile());
@@ -212,6 +290,13 @@ public class FileUtil {
 
 	// Reading files
 
+	/**
+	 * <p>readFile.</p>
+	 *
+	 * @param _p a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public static String readFile(String _p) throws IOException {
 		return FileUtil.readFile(Paths.get(_p));
 	}
@@ -219,12 +304,11 @@ public class FileUtil {
 	/**
 	 * Preserves the line breaks of the original file.
 	 * As such, it can be used for calculating digests.
-	 * 
-	 * @see {@link DigestUtil#getDigestAsString(String,java.nio.charset.Charset, DigestAlgorithm)}
-	 * 
-	 * @param _p
-	 * @return
-	 * @throws IOException
+	 *
+	 * @see DigestUtil#getDigestAsString(String,java.nio.charset.Charset, DigestAlgorithm)
+	 * @param _p a {@link java.nio.file.Path} object.
+	 * @throws java.io.IOException
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String readFile(Path _p) throws IOException {
 		try (final InputStream is = new FileInputStream(_p.toFile())) {
@@ -234,10 +318,11 @@ public class FileUtil {
 	
 	/**
 	 * Reads the given {@link InputStream} into a {@link String}.
-	 * 
-	 * @param _p
-	 * @return
-	 * @throws IOException
+	 *
+	 * @param _is a {@link java.io.InputStream} object.
+	 * @param _cs a {@link java.nio.charset.Charset} object.
+	 * @throws java.io.IOException
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String readInputStream(InputStream _is, Charset _cs) throws IOException {
 		return new String(FileUtil.readInputStream(_is), _cs);		
@@ -245,10 +330,10 @@ public class FileUtil {
 
 	/**
 	 * Reads the given {@link InputStream} into a byte array.
-	 * 
-	 * @param _p
-	 * @return
-	 * @throws IOException
+	 *
+	 * @param _is a {@link java.io.InputStream} object.
+	 * @throws java.io.IOException
+	 * @return an array of {@link byte} objects.
 	 */
 	public static byte[] readInputStream(InputStream _is) throws IOException {
 		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -264,6 +349,10 @@ public class FileUtil {
 
 	/**
 	 * Writes a {@link String} to the given {@link File}.
+	 *
+	 * @param _f a {@link java.io.File} object.
+	 * @param _content a {@link java.lang.String} object.
+	 * @throws java.io.IOException if any.
 	 */
 	public static final void writeToFile(File _f, String _content) throws IOException {
 		if(_content!=null)
@@ -273,7 +362,12 @@ public class FileUtil {
 	/**
 	 * Writes the given content to a file that is in
 	 * the temporary directory returned by {@link VulasConfiguration#getTmpDir()}.
+	 *
 	 * @return the path of the file
+	 * @param _filename a {@link java.lang.String} object.
+	 * @param _suffix a {@link java.lang.String} object.
+	 * @param _content a {@link java.lang.String} object.
+	 * @throws java.io.IOException if any.
 	 */
 	public static final Path writeToTmpFile(String _filename, String _suffix, String _content) throws IOException {
 		final Path dir = VulasConfiguration.getGlobal().getTmpDir();
@@ -285,6 +379,10 @@ public class FileUtil {
 
 	/**
 	 * Writes a byte array to the given {@link File}.
+	 *
+	 * @param _f a {@link java.io.File} object.
+	 * @param _content an array of {@link byte} objects.
+	 * @throws java.io.IOException if any.
 	 */
 	public static final void writeToFile(File _f, byte[] _content) throws IOException {
 		try {
@@ -299,7 +397,9 @@ public class FileUtil {
 	/**
 	 * Expects a {@link String} array with multiple paths and returns a set for all those paths that represent
 	 * accessible files or directories in the file system.
-	 * @param _p
+	 *
+	 * @param _paths an array of {@link java.lang.String} objects.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public static Set<Path> getPaths(String[] _paths) {
 		final Set<Path> r = new HashSet<Path>();
@@ -313,6 +413,13 @@ public class FileUtil {
 		return r;
 	}
 
+	/**
+	 * <p>getPath.</p>
+	 *
+	 * @param _path a {@link java.lang.String} object.
+	 * @param _create a boolean.
+	 * @return a {@link java.nio.file.Path} object.
+	 */
 	public static Path getPath(String _path, boolean _create) {
 		if(_path==null || _path.equals(""))
 			return null;
@@ -332,8 +439,9 @@ public class FileUtil {
 
 	/**
 	 * Returns a {@link Path} object for the given {@link String} in case the path exists in the file system, null otherwise.
-	 * @param _path
-	 * @return
+	 *
+	 * @param _path a {@link java.lang.String} object.
+	 * @return a {@link java.nio.file.Path} object.
 	 */
 	public static Path getPath(String _path) {
 		return FileUtil.getPath(_path, false);
@@ -341,16 +449,18 @@ public class FileUtil {
 
 	/**
 	 * Returns the SHA1 digest for the given file.
-	 * @param _file
-	 * @return
+	 *
+	 * @param _file a {@link java.io.File} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String getSHA1(File _file) { return FileUtil.getDigest(_file, DigestAlgorithm.SHA1); }
 
 	/**
 	 * Returns a digest for the given file, using the given algorithm.
-	 * @param _file
-	 * @param _alg
-	 * @return
+	 *
+	 * @param _file a {@link java.io.File} object.
+	 * @param _alg a {@link com.sap.psr.vulas.shared.enums.DigestAlgorithm} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static final String getDigest(File _file, DigestAlgorithm _alg) {
 		try {
@@ -381,9 +491,9 @@ public class FileUtil {
 
 	/**
 	 * Searches for the JAR file containing the class file of the given {@link Class}.
-	 * 
-	 * @param _clazz
-	 * @return
+	 *
+	 * @param _clazz a {@link java.lang.Class} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getJarFilePath(Class<?> _clazz) {
 		final ClassLoader cl = _clazz.getClassLoader();
@@ -393,10 +503,10 @@ public class FileUtil {
 	
 	/**
 	 * Searches for JAR files containing the given resources.
-	 * 
-	 * @param _cl
-	 * @param _resources
-	 * @return
+	 *
+	 * @param _cl a {@link java.lang.ClassLoader} object.
+	 * @param _resources an array of {@link java.lang.String} objects.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public static Set<String> getJarFilePathsForResources(ClassLoader _cl, String[] _resources) {
 		final Set<String> jar_paths = new HashSet<String>();
@@ -414,10 +524,9 @@ public class FileUtil {
 	
 	/**
 	 * Returns all JARs known to the given {@link URLClassLoader}.
-	 * 
-	 * @param _cl
-	 * @param _resources
-	 * @return
+	 *
+	 * @param _cl a {@link java.net.URLClassLoader} object.
+	 * @return a {@link java.util.Set} object.
 	 */
 	public static Set<String> getJarFilePaths(URLClassLoader _cl) {
 		final Set<String> jar_paths = new HashSet<String>();		
@@ -440,6 +549,9 @@ public class FileUtil {
 	 * Examples of URLs are as follows:
 	 * url:file:/a/b/c.jar!123.class
 	 * file:/a/b/c.jar
+	 *
+	 * @param _url a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getJARFilePath(String _url) {
 		String file_url = null, file_path = null;
@@ -469,6 +581,13 @@ public class FileUtil {
 		return file_path;
 	}
 	
+	/**
+	 * <p>isZipped.</p>
+	 *
+	 * @param _f a {@link java.io.File} object.
+	 * @return a {@link java.lang.Boolean} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public static Boolean isZipped(File _f) throws IOException{
 		ZipInputStream zis = new ZipInputStream(new FileInputStream(_f));
 		boolean isZipped = zis.getNextEntry() != null;			

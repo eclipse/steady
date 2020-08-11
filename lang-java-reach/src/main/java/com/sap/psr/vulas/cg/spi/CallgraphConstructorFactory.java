@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.cg.spi;
 
 import java.io.IOException;
@@ -11,18 +30,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.cg.ReachabilityConfiguration;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
+/**
+ * <p>CallgraphConstructorFactory class.</p>
+ *
+ */
 public class CallgraphConstructorFactory {
 
+    /** Constant <code>classLoaderToFindPlugins</code> */
     public static ClassLoader classLoaderToFindPlugins = Thread.currentThread().getContextClassLoader();
 
-    private static final Log log = LogFactory.getLog(CallgraphConstructorFactory.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
     /**
      * Build a call graph constructor, searching the service registry for a service implementation that registers itself using the given string
@@ -30,6 +54,7 @@ public class CallgraphConstructorFactory {
      * @param analysisFramework the framework to use, e.g., wala, soot
      * @param appContext        the application for the call graph construction
      * @return the build call graph constructor
+     * @param useURLClassloader a boolean.
      */
     public static ICallgraphConstructor buildCallgraphConstructor(String analysisFramework, Application appContext, boolean useURLClassloader) {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();

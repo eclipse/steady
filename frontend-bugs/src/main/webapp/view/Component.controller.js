@@ -1,3 +1,22 @@
+/*
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 var groupId = "";
 var artifactId = "";
 var version = "";
@@ -259,7 +278,7 @@ sap.ui.controller(
 											var aNaUrl = model.Config.getAffectedMavenArtifacts(gas[ga] );
 											$.ajax({  type: "GET",
 											        url: aNaUrl,
-											        headers : {'content-type': "application/json",'cache-control': "no-cache" ,'X-Vulas-Version':model.Version.version,'X-Vulas-Component':'appfrontend'},
+											        headers : {'content-type': "application/json",'cache-control': "no-cache" ,'X-Vulas-Version':model.Version.version,'X-Vulas-Component':'bugfrontend'},
 											        success: function(response) {
 												allversions.setData(response);
 												var oAffectedMavenVersions = allversions.getObject("/");
@@ -280,110 +299,108 @@ sap.ui.controller(
 										}
 	
 										
-											/**/
-											// update the table
-											var newModelData = {};
-											newModelData.affectedVersions = newlibraries;
-											//oBugAnalysisView.setModel(oBugAnalysisModel);
-											var newModel = new sap.ui.model.json.JSONModel();
-											newModel.setData(newModelData);
-											var listlength = newModel.getObject("/affectedVersions").length;
-											if (listlength == 0) {
-												listlength = 1;
-											}
-											oBugAnalysisView.setVisibleRowCount(listlength);
-											oBugAnalysisView.setModel(newModel);
-											oBugAnalysisView.sort(oBugAnalysisView.getColumns()[2]);
-											oBugAnalysisView.setBusy(false);
-											
-											
-											// CVE info
-	
-											var cveDetailModel = new sap.ui.model.json.JSONModel();
-											
-											// defining a special one-way binded Model for the top presentation information of the CVE
-											// we do not want the data in the top part of the screen to be updated until the "Update Bug!" button has been pressed
-											var cveDetailpresentationModel = new sap.ui.model.json.JSONModel();
-											cveDetailpresentationModel.setDefaultBindingMode(sap.ui.model.BindingMode.OneWay);
-											
-											var refs=[];
-				                			if(bug.reference!=[]){
-				                				for(var i=0;i<bug.reference.length;i++){
-				                					var ref = {};
-				                					ref.url = bug.reference[i];
-				                					refs.push(ref);
-				                				}
-				                			}
-					                    	if(bug.description==null ||bug.cvssScore==null){
-					                    		//var cveUrl = "http://cve.circl.lu/api/cve/"+bugId;
-					                    		var externalCveModel = new sap.ui.model.json.JSONModel();
-					            	    		var cveUrl = model.Config.getCvesServiceUrl(bugId);	    		
-					            	    		model.Config.loadDataSync (externalCveModel,cveUrl, 'GET');
-					            	    		//cveDetailModel.setProperty("/reference",refs);
-					                    	}
-					                    		
-				                    		//var
-											idCveUpdateURLNew.setValue("");
-											cve={};
-				                    		cve.reference = refs;
-				                    		if(bug.description!=null){
-				                    			cve.summary=bug.description;
-											}
-											else{
-				                    			cve.summary=externalCveModel.getObject("/summary");
-											}
-				                			cve.summaryAlt = bug.descriptionAlt;
-				                			cve.bugIdAlt = bug.bugIdAlt;
-				                			cve.Published = bug.createdAt;
-				                			cve.Modified = bug.modifiedAt;
-				                			if(bug.cvssScore!=null){
-				                				cve.cvssScore = "" + bug.cvssScore;
-				                			}
-											else{
-				                				cve.cvssScore=externalCveModel.getObject("/cvss");
-				                			}
-											cve.cvssVector = bug.cvssVector;
-				                			cve.cvssVersion = bug.cvssVersion;
-				                			cve.maturity = bug.maturity;
-				                			cve.origin = bug.origin; 
-				                			cveDetailModel.setData(cve);
-				                			cveDetailpresentationModel.setData(cve);
-					                		
-					                		
-											// assigning the one-way binded model to the information presentation part of the screen (top).
-					                    	idCveModelDetailsView.setModel(cveDetailpresentationModel,"cveModel");
-					                    	
-					                    	// assigning the dynamic two-way binded model to the update-related input fields.
-					                    	idCveModelDetailsUpdateView.setModel(cveDetailModel,"cveUpdateModel");
-					                    	
-					                    	// setting all URL items to selected=true
-											var items = idCveUpdateReferences.getItems();
-											if(items!=[]){
-												var item;
-												for(var i=0;i<items.length;i++){
-													item = items[i];
-													item.setSelected (true);
-												}
-											}
+										/**/
+										// update the table
+										var newModelData = {};
+										newModelData.affectedVersions = newlibraries;
+										//oBugAnalysisView.setModel(oBugAnalysisModel);
+										var newModel = new sap.ui.model.json.JSONModel();
+										newModel.setData(newModelData);
+										var listlength = newModel.getObject("/affectedVersions").length;
+										if (listlength == 0) {
+											listlength = 1;
+										}
+										//oBugAnalysisView.setVisibleRowCount(listlength);
+										oBugAnalysisView.setModel(newModel);
+										oBugAnalysisView.sort(oBugAnalysisView.getColumns()[2]);
+										oBugAnalysisView.setBusy(false);
 
 
-											var data1 = "{\"ContentMaturityLevel\":  [	{\"Maturity\": \"DRAFT\"},	{\"Maturity\": \"READY\"}  ]}";
-											var maturityModel = new sap.ui.model.json.JSONModel();
-											maturityModel.setDefaultBindingMode(sap.ui.model.BindingMode.OneWay);
-											maturityModel.setJSON(data1);
-											//var oJsonFile = new sap.ui.model.json.JSONModel("model/maturity.json");
-											//var oldModel = new sap.ui.model.json.JSONModel(jQuery.sap.getModulePath("model", "/maturity.json"));
-											idCveUpdateMaturity2.setModel(maturityModel,"maturityModel");
-											var tmp = idCveUpdateMaturity.getValue();
-											idCveUpdateMaturity2.setSelectedKey (tmp);
-											
-											var data2 = "{\"ContentOriginLevel\":[{\"Origin\":\"PUBLIC\"},{\"Origin\":\"MCHLRN\"},{\"Origin\":\"SRCSCN\"}]}";
-											var originModel = new sap.ui.model.json.JSONModel();
-											originModel.setDefaultBindingMode(sap.ui.model.BindingMode.OneWay);
-											originModel.setJSON(data2);
-											idCveUpdateOrigin2.setModel(originModel,"originModel");	
-											tmp = idCveUpdateOrigin.getValue();
-											idCveUpdateOrigin2.setSelectedKey (tmp);				                    	
+										// CVE info
+
+										var cveDetailModel = new sap.ui.model.json.JSONModel();
+
+										// defining a special one-way binded Model for the top presentation information of the CVE
+										// we do not want the data in the top part of the screen to be updated until the "Update Bug!" button has been pressed
+										var cveDetailpresentationModel = new sap.ui.model.json.JSONModel();
+										cveDetailpresentationModel.setDefaultBindingMode(sap.ui.model.BindingMode.OneWay);
+
+										var refs = [];
+										if (bug.reference != []) {
+											for (var i = 0; i < bug.reference.length; i++) {
+												var ref = {};
+												ref.url = bug.reference[i];
+												refs.push(ref);
+											}
+										}
+										if (bug.description == null || bug.cvssScore == null) {
+											//var cveUrl = "http://cve.circl.lu/api/cve/"+bugId;
+											var externalCveModel = new sap.ui.model.json.JSONModel();
+											var cveUrl = model.Config.getCvesServiceUrl(bugId);
+											model.Config.loadDataSync(externalCveModel, cveUrl, 'GET');
+											//cveDetailModel.setProperty("/reference",refs);
+										}
+
+										//var
+										idCveUpdateURLNew.setValue("");
+										cve = {};
+										cve.reference = refs;
+										if (bug.description != null) {
+											cve.summary = bug.description;
+										} else {
+											cve.summary = externalCveModel.getObject("/summary");
+										}
+										cve.summaryAlt = bug.descriptionAlt;
+										cve.bugIdAlt = bug.bugIdAlt;
+										cve.Published = bug.createdAt;
+										cve.Modified = bug.modifiedAt;
+										if (bug.cvssScore != null) {
+											cve.cvssScore = "" + bug.cvssScore;
+										} else {
+											cve.cvssScore = externalCveModel.getObject("/cvss");
+										}
+										cve.cvssVector = bug.cvssVector;
+										cve.cvssVersion = bug.cvssVersion;
+										cve.maturity = bug.maturity;
+										cve.origin = bug.origin;
+										cveDetailModel.setData(cve);
+										cveDetailpresentationModel.setData(cve);
+
+
+										// assigning the one-way binded model to the information presentation part of the screen (top).
+										idCveModelDetailsView.setModel(cveDetailpresentationModel, "cveModel");
+
+										// assigning the dynamic two-way binded model to the update-related input fields.
+										idCveModelDetailsUpdateView.setModel(cveDetailModel, "cveUpdateModel");
+
+										// setting all URL items to selected=true
+										var items = idCveUpdateReferences.getItems();
+										if (items != []) {
+											var item;
+											for (var i = 0; i < items.length; i++) {
+												item = items[i];
+												item.setSelected(true);
+											}
+										}
+
+
+										var data1 = "{\"ContentMaturityLevel\":  [	{\"Maturity\": \"DRAFT\"},	{\"Maturity\": \"READY\"}  ]}";
+										var maturityModel = new sap.ui.model.json.JSONModel();
+										maturityModel.setDefaultBindingMode(sap.ui.model.BindingMode.OneWay);
+										maturityModel.setJSON(data1);
+										//var oJsonFile = new sap.ui.model.json.JSONModel("model/maturity.json");
+										//var oldModel = new sap.ui.model.json.JSONModel(jQuery.sap.getModulePath("model", "/maturity.json"));
+										idCveUpdateMaturity2.setModel(maturityModel, "maturityModel");
+										var tmp = idCveUpdateMaturity.getValue();
+										idCveUpdateMaturity2.setSelectedKey(tmp);
+
+										var data2 = "{\"ContentOriginLevel\":[{\"Origin\":\"PUBLIC\"},{\"Origin\":\"MCHLRN\"},{\"Origin\":\"SRCSCN\"}]}";
+										var originModel = new sap.ui.model.json.JSONModel();
+										originModel.setDefaultBindingMode(sap.ui.model.BindingMode.OneWay);
+										originModel.setJSON(data2);
+										idCveUpdateOrigin2.setModel(originModel, "originModel");
+										tmp = idCveUpdateOrigin.getValue();
+										idCveUpdateOrigin2.setSelectedKey(tmp);
 	
 									});
 									});

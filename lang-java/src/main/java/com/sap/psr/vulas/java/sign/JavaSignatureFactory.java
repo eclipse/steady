@@ -1,9 +1,27 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.java.sign;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,8 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+
 
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.FileAnalysisException;
@@ -32,9 +50,7 @@ import com.sap.psr.vulas.sign.Signature;
 import com.sap.psr.vulas.sign.SignatureChange;
 import com.sap.psr.vulas.sign.SignatureFactory;
 
-import javassist.ClassPool;
 import javassist.CtClass;
-import javassist.NotFoundException;
 import javassist.bytecode.ClassFile;
 
 /**
@@ -45,12 +61,7 @@ import javassist.bytecode.ClassFile;
  */
 public class JavaSignatureFactory implements SignatureFactory {
 
-	private static final Log log = LogFactory.getLog(JavaSignatureFactory.class);
-
-	/**
-	 * Java Decompiler, e.g., {@link ProcyonDecompiler}.
-	 */
-	final IDecompiler decompiler = new ProcyonDecompiler();
+	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
 	/**
 	 * Cache of contructs, so that the decompilation and parsing must not be done over and over again.
@@ -61,8 +72,15 @@ public class JavaSignatureFactory implements SignatureFactory {
 	 * Cache of contructs, so that the decompilation and parsing must not be done over and over again.
 	 */
 	final Map<ConstructId, Construct> compiledCache = new HashMap<ConstructId, Construct>();
+	
+	/**
+	 * Java Decompiler, e.g., {@link ProcyonDecompiler}.
+	 */
+	final IDecompiler decompiler = new ProcyonDecompiler();
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Returns true if the given {@link ConstructId} is of type Java method or Java constructor.
 	 */
 	@Override
@@ -73,10 +91,9 @@ public class JavaSignatureFactory implements SignatureFactory {
 	}	
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Creates the construct signature on the basis of the source code provided by {@link Construct#getContent()}.
-	 * @param _c the construct for which the siganture shall be created
-	 * @param _src
-	 * @return
 	 */
 	@Override
 	public Signature createSignature(Construct _c) {
@@ -96,11 +113,11 @@ public class JavaSignatureFactory implements SignatureFactory {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Creates the construct signature on the basis of a given Java source file.
-	 * @param _cid the construct ID whose signature shall be created
-	 * @param _java_file the Java source code file
-	 * @return
-	 * @see JavaSignatureFactory#create(Construct)
+	 * 
+	 * @see JavaSignatureFactory#createFromSourceCache(ConstructId)
 	 */
 	@Override
 	public Signature createSignature(ConstructId _cid, File _java_file) {
@@ -181,40 +198,6 @@ public class JavaSignatureFactory implements SignatureFactory {
 	}
 
 	/**
-	 * Creates the construct signature on the basis of a Java class file. The implementation
-	 * decompiles the file using {@link JavaSignatureFactory#decompiler} and calls
-	 * {@link JavaSignatureFactory#createFromJavaFile(ConstructId, File)}.
-	 * @param _c
-	 * @param _java_class_file
-	 * @return
-	 * @see JavaSignatureFactory#createFromJavaFile(ConstructId, File)
-	 */
-	private Signature createFromClassFile(ConstructId _cid, File _java_class_file) {
-		/*//Handling Nested classes (ex. MultipartStream$ProgressNotifier.java we are not able to find the correct constructs)
-		//_cid.getName() , MultipartStream$ProgressNotifier
-		String name = _cid.getName();
-		String simpleName = _cid.getSimpleName();
-		String qName = _cid.getQualifiedName();
-		String context = _cid.getDefinitionContext().toString();
-
-		if(qName.contains("$") && !qName.contains("access")){
-			int i = _cid.getQualifiedName().toString().lastIndexOf('.');
-			int j = _cid.getQualifiedName().toString().indexOf('$',i);
-			String parentClassName   = _cid.getQualifiedName().toString().substring(i+1,j);
-				try {
-					String _fileContent = readFile(_javaFile.toString());
-					String sanitizedContent = encloseWithParentClass(parentClassName,_fileContent);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		}
-		 */
-		
-		return null;
-	}
-
-	/**
 	 * Returns true if the signature creation is supported for the given {@link ConstructId}. This depends
 	 * on whether the ID's definition context can be obtained, and whether the latter is a nested class.
 	 * @param _cid
@@ -240,44 +223,6 @@ public class JavaSignatureFactory implements SignatureFactory {
 		}
 
 		return supported;
-	}
-
-	/**
-	 * Creates the construct signature on the basis of a {@link CtClass} that is read from the {@link ClassPool}.
-	 * @param _c
-	 * @param _java_class_file
-	 * @return
-	 * @see JavaSignatureFactory#createFromJavaFile(ConstructId, File)
-	 */
-	Signature createFromCtClass(ConstructId _cid, ClassPool _classpool) throws IllegalArgumentException, IllegalStateException {
-		// Try to read from cache
-		Signature signature = this.createFromCompiledCache(_cid);
-
-		// Otherwise create it from scratch
-		if(signature==null) {
-			// Check argument
-			JavaSignatureFactory.isSupported(_cid, true);
-
-			// Get and check the definition context of the construct whose signature we're about to create
-			final JavaClassId class_id = (JavaClassId)(JavaId.toCoreType(_cid)).getDefinitionContext();
-
-			// Get default classpool if necessary
-			final ClassPool cp = (_classpool==null ? ClassPool.getDefault() : _classpool);
-
-			// Get the class and write its bytecode to a temp file
-			Path class_file;
-			try {
-				final CtClass ctclass = cp.get(class_id.getQualifiedName());
-				class_file = this.writeBytesToTmpFile(class_id,  ctclass);
-				signature = this.createSignature(_cid, class_file.toFile());
-			} catch (NotFoundException nfe) {
-				throw new IllegalStateException("Error while searching class [" + class_id.getQualifiedName() + "]: " + nfe.getMessage());
-			} catch (IOException ioe) {
-				throw new IllegalStateException("Error while writing temp file for construct [" + _cid.getQname() + "]: " + ioe.getMessage());
-			}
-		}
-
-		return signature;
 	}
 
 	/**
@@ -329,6 +274,8 @@ public class JavaSignatureFactory implements SignatureFactory {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Computes a so-called signature change, i.e., changes required to transform the signature of the first given {@link Construct} into the signature of the second.
 	 */
 	@Override
@@ -347,80 +294,4 @@ public class JavaSignatureFactory implements SignatureFactory {
 		}
 		return change;
 	}
-
-	/**
-	 *
-	 * @param _constructID - Type of Construct (Class, Nested Class, Constructor, Method, Package)
-	 * @return The ASTSignature to use for the specific construct type.
-	 *
-	 */
-	/*	private ASTSignature getConstructType(Construct _construct){
-
-		ASTSignature signature  = null;
-		ConstructId _constructID = _construct.getId();
-
-		if(_constructID instanceof JavaMethodId || _constructID instanceof JavaConstructorId){
-			signature = new ASTConstructBodySignature(_construct);
-		}
-		else if(_constructID instanceof JavaClassId || _constructID instanceof JavaClassInit){
-			//signature = new ASTClassBodySignature(_construct);
-		}
-		return signature;
-	}*/
-
-	/**
-	 * Extracts name of construct from the full qualified Name
-	 *
-	 * Example : Input : [org.apache.commons.fileupload.MultipartStream(InputStream,byte[],int,ProgressNotifier)]
-	 * 					 Output : MultipartStream
-	 *
-	 * @param _cid for the construct.
-	 * @return the name of the construct (ex. MultipartStream, getCNs, verify)
-	 */
-	/*	private String extractConstructName(ConstructId _cid){
-		String constructName = null;
-		if(_cid instanceof JavaMethodId ){ 
-			constructName = ((JavaMethodId)_cid).getSimpleName();
-		}
-		else if(_cid instanceof JavaConstructorId) {
-			constructName = ((JavaConstructorId)_cid).getJavaClassContext().getSimpleName();
-		}
-		else {
-			log.info("Constructs of type [" +_cid.getClass().getSimpleName() + "] not supported");
-		}
-		return constructName;
-	}*/
-
-	/*	private String encloseWithParentClass(String parentClassName, String... snippets) {
-		StringBuilder src = new StringBuilder("public class "+parentClassName +"{ ");
-		for (String statement : snippets) {
-			src.append(statement).append(' ');
-		}
-		src.append("}");
-		return src.toString();
-	}
-	 */
-	/**
-	 * Alternative method for reading contents of a file into a String
-	 *
-	 * @param pathname - of the file (Absolute or Relative Path)
-	 * @return String representing content of the file
-	 * @throws IOException
-	 */
-	/*	private static String readFile(String pathname) throws IOException {
-
-		File file = new File(pathname);
-		StringBuilder fileContents = new StringBuilder((int)file.length());
-		Scanner scanner = new Scanner(file);
-		String lineSeparator = System.getProperty("line.separator");
-
-		try {
-			while(scanner.hasNextLine()) {
-				fileContents.append(scanner.nextLine() + lineSeparator);
-			}
-			return fileContents.toString();
-		} finally {
-			scanner.close();
-		}
-	}*/
 }

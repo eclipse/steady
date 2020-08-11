@@ -1,3 +1,22 @@
+/**
+ * This file is part of Eclipse Steady.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 package com.sap.psr.vulas.backend.model;
 
 
@@ -21,6 +40,10 @@ import com.sap.psr.vulas.backend.repo.ConstructIdRepository;
 import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 
+/**
+ * <p>ConstructId class.</p>
+ *
+ */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
@@ -50,8 +73,18 @@ public class ConstructId implements Serializable, Comparable {
 	@Column(nullable = false, length = 3072)
 	private String qname;
 	
+	/**
+	 * <p>Constructor for ConstructId.</p>
+	 */
 	public ConstructId() { super(); }
 
+	/**
+	 * <p>Constructor for ConstructId.</p>
+	 *
+	 * @param lang a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 * @param type a {@link com.sap.psr.vulas.shared.enums.ConstructType} object.
+	 * @param qname a {@link java.lang.String} object.
+	 */
 	public ConstructId(ProgrammingLanguage lang, ConstructType type, String qname) {
 		super();
 		this.lang = lang;
@@ -59,24 +92,70 @@ public class ConstructId implements Serializable, Comparable {
 		this.qname = qname;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getId() { return id; }
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 */
 	public void setId(Long id) { this.id = id; } 
 
+	/**
+	 * <p>Getter for the field <code>lang</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 */
 	public ProgrammingLanguage getLang() { return lang; }
+	/**
+	 * <p>Setter for the field <code>lang</code>.</p>
+	 *
+	 * @param lang a {@link com.sap.psr.vulas.shared.enums.ProgrammingLanguage} object.
+	 */
 	public void setLang(ProgrammingLanguage lang) { this.lang = lang; }
 
+	/**
+	 * <p>Getter for the field <code>type</code>.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.enums.ConstructType} object.
+	 */
 	public ConstructType getType() { return type; }
+	/**
+	 * <p>Setter for the field <code>type</code>.</p>
+	 *
+	 * @param type a {@link com.sap.psr.vulas.shared.enums.ConstructType} object.
+	 */
 	public void setType(ConstructType type) { this.type = type; }
 
+	/**
+	 * <p>Getter for the field <code>qname</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getQname() { return qname; }
+	/**
+	 * <p>Setter for the field <code>qname</code>.</p>
+	 *
+	 * @param qname a {@link java.lang.String} object.
+	 */
 	public void setQname(String qname) { this.qname = qname; }
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public final String toString() {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("[").append(this.getLang()).append(":").append(this.getType()).append(":").append(this.getQname()).append("]");
 		return builder.toString();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -87,6 +166,7 @@ public class ConstructId implements Serializable, Comparable {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -114,6 +194,7 @@ public class ConstructId implements Serializable, Comparable {
 		return true;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(Object _other) {
 		if(_other==null || !(_other instanceof ConstructId))
@@ -125,8 +206,9 @@ public class ConstructId implements Serializable, Comparable {
 	
 	/**
 	 * Returns a {@link ConstructId} of type {@link ConstructType#PACK} in which the given construct ID has been declared.
-	 * @param _cid
-	 * @return
+	 *
+	 * @param _cid a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
+	 * @return a {@link com.sap.psr.vulas.backend.model.ConstructId} object.
 	 */
 	public static ConstructId getPackageOf(ConstructId _cid) {
 		ConstructId pid = null;
@@ -173,6 +255,11 @@ public class ConstructId implements Serializable, Comparable {
 		return pid;
 	}
 	
+	/**
+	 * <p>toSharedType.</p>
+	 *
+	 * @return a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+	 */
 	public com.sap.psr.vulas.shared.json.model.ConstructId toSharedType() {
 		final com.sap.psr.vulas.shared.json.model.ConstructId shared_type = new com.sap.psr.vulas.shared.json.model.ConstructId();
 		shared_type.setLang(this.getLang());

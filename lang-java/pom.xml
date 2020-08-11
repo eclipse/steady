@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    This file is part of Eclipse Steady.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    SPDX-License-Identifier: Apache-2.0
+
+    Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+
+-->
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -7,7 +28,7 @@
 	<parent>
 		<groupId>com.sap.research.security.vulas</groupId>
 		<artifactId>root</artifactId>
-		<version>3.0.20-SNAPSHOT</version>
+		<version>3.1.14-SNAPSHOT</version>
 	</parent>
 	<artifactId>lang-java</artifactId>
 
@@ -28,14 +49,14 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.bitbucket.mstrobel</groupId>
+			<artifactId>procyon-compilertools</artifactId>
+			<version>0.5.36</version>
+		</dependency>
+		<dependency>
 			<groupId>ch.uzh.ifi.seal</groupId>
 			<artifactId>changedistiller</artifactId>
 			<version>0.0.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bitbucket.mstrobel</groupId>
-			<artifactId>procyon-compilertools</artifactId>
-			<version>0.5.35</version>
 		</dependency>
 		<!-- The following are dependencies of ChangeDistiller (which is not in 
 			any repository) -->
@@ -73,7 +94,7 @@
 			<artifactId>commons-compress</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Used to mock REST services -->
 		<dependency>
 			<groupId>com.xebialabs.restito</groupId>
@@ -89,29 +110,22 @@
 
 	<build>
 		<plugins>
-			<!-- Plugin configuration to create a JAR archive that can be used for 
-				instrumentation. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<executions>
+
+
+					<!-- Include changedistiller, which is not available on Maven Central -->
 					<execution>
+						<id>1</id>
 						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<transformers>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<manifestEntries>
-										<premain-class>com.sap.psr.vulas.monitor.DynamicTransformer</premain-class>
-									</manifestEntries>
-								</transformer>
-							</transformers>
 							<artifactSet>
 								<includes>
-									<include>com.sap.research.security.vulas:vulas-core</include>
 									<include>ch.uzh.ifi.seal:changedistiller</include>
 								</includes>
 							</artifactSet>
@@ -123,6 +137,51 @@
 									</excludes>
 								</filter>
 							</filters>
+						</configuration>
+					</execution>
+
+
+					<!-- For instrumentation with the -agent option, incl. a repackaged 
+						version of httpclient -->
+					<execution>
+						<id>2</id>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+							<shadedArtifactAttached>true</shadedArtifactAttached>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<manifestEntries>
+										<premain-class>com.sap.psr.vulas.monitor.DynamicTransformer</premain-class>
+									</manifestEntries>
+								</transformer>
+							</transformers>
+							<artifactSet>
+								<includes>
+									<include>*:*</include>
+								</includes>
+								<excludes>
+									<exclude>ch.uzh.ifi.seal:changedistiller</exclude>
+								</excludes>
+							</artifactSet>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+									</excludes>
+								</filter>
+							</filters>
+							<relocations>
+								<relocation>
+									<pattern>org.apache.http</pattern>
+									<shadedPattern>org.eclipse.steady.repackaged.org.apache.http</shadedPattern>
+								</relocation>
+							</relocations>
 						</configuration>
 					</execution>
 				</executions>
@@ -139,38 +198,6 @@
 					<execution>
 						<goals>
 							<goal>antlr4</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- Plugin configuration to create an assembly with all necessary files. -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<index>true</index>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-						</manifest>
-						<manifestEntries>
-							<!-- Required so that the Agent can be used for instrumentation -->
-							<premain-class>com.sap.psr.vulas.monitor.DynamicTransformer</premain-class>
-						</manifestEntries>
-						<addMavenDescriptor>false</addMavenDescriptor>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id> <!-- this is used for inheritance merges -->
-						<phase>package</phase> <!-- bind to the packaging phase -->
-						<goals>
-							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
