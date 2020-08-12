@@ -74,7 +74,7 @@ public class PrunedGraphGetPaths extends AbstractGetPaths {
 	}
 
 	private void assemblePath(Integer _src, Integer _tgt, LinkedList<Integer> _path, HashSet<LinkedList<Integer>> _allpaths) {
-		if (_src == _tgt) {
+		if (_src.equals(_tgt)) {
 			LinkedList<Integer> newPath = new LinkedList<Integer>();
 			newPath.addAll(_path);
 			_allpaths.add(newPath);
@@ -112,7 +112,7 @@ public class PrunedGraphGetPaths extends AbstractGetPaths {
 		// Intialization: no edge at all in the pruned callgraph
 		while (nodes.hasNext()) {
 			node = nodes.next();
-			if (node == _tgt) {
+			if (node.equals(_tgt)) {
 				this.edges.put(node, new HashSet<Integer>());
 			} else
 				this.edges.put(node, null);

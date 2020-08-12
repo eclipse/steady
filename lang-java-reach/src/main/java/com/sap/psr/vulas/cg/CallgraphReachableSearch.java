@@ -45,10 +45,6 @@ public class CallgraphReachableSearch implements Runnable {
 
 	private boolean findTouchPoints = true;
 
-	private StopWatch sw = null;
-
-	private ReachabilityAnalyzer analyzer = null;
-
 	private Set<com.sap.psr.vulas.shared.json.model.ConstructId> appConstructs = null;
 
 	private int min = -1;
@@ -84,17 +80,6 @@ public class CallgraphReachableSearch implements Runnable {
 	 */
 	public CallgraphReachableSearch setFindTouchPoints(boolean _ft) {
 		this.findTouchPoints = _ft;
-		return this;
-	}
-
-	/**
-	 * <p>setCallback.</p>
-	 *
-	 * @param _analyzer a {@link com.sap.psr.vulas.cg.ReachabilityAnalyzer} object.
-	 * @return a {@link com.sap.psr.vulas.cg.CallgraphReachableSearch} object.
-	 */
-	public CallgraphReachableSearch setCallback(ReachabilityAnalyzer _analyzer) {
-		this.analyzer = _analyzer;
 		return this;
 	}
 
@@ -159,7 +144,7 @@ public class CallgraphReachableSearch implements Runnable {
 	@Override
 	public void run() {
 		if(this.graph!=null && this.graph.getGraph()!=null) {
-			StopWatch sw = null;
+			final StopWatch sw = new StopWatch("Collect touch points and reachable constructs per library, nodes [" + this.min + " - " + this.max + "]").setTotal(max-min).start();
 			try {				
 				// Loop over all nodes
 				final Graph<Integer> wala_graph = this.graph.getGraph();
@@ -174,8 +159,6 @@ public class CallgraphReachableSearch implements Runnable {
 					Iterator<Integer> successor_nodes_iterator = null;
 					NodeMetaInformation current_node_metainf = null, successor_node_metainf = null;
 					String current_node_qname = null;
-
-					sw = new StopWatch("Collect touch points and reachable constructs per library, nodes [" + this.min + " - " + this.max + "]").setTotal(max-min).start();
 
 					for(int current_node=this.min; current_node<this.max; current_node++) {
 						try {

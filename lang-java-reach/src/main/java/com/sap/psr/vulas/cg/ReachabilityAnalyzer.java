@@ -428,11 +428,11 @@ public class ReachabilityAnalyzer implements Runnable {
 
                 // Create parallel call graph searches
                 final Set<CallgraphPathSearch> searches = new HashSet<CallgraphPathSearch>();
-                for (String bug : this.targetConstructs.keySet()) {
+                for (Map.Entry<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> e : this.targetConstructs.entrySet()) {
                     final CallgraphPathSearch search = new CallgraphPathSearch()
                             .setEntrypoints(src_ep)
-                            .setTargetpoints(this.targetConstructs.get(bug))
-                            .setLabel(bug)
+                            .setTargetpoints(e.getValue())
+                            .setLabel(e.getKey())
                             .setCallback(this)
                             .setShortestPaths(search_shortest)
                             .setCallgraph(this.callgraph);
@@ -467,14 +467,14 @@ public class ReachabilityAnalyzer implements Runnable {
                         for (List<com.sap.psr.vulas.shared.json.model.ConstructId> l : this.rcPaths.get(search.getLabel())) {
                             path_count++;
                             shortest_path_sum += l.size();
-                            shortest_path_avg = new Double(Math.abs((double) shortest_path_sum / path_count)).intValue();
+                            shortest_path_avg = (int)Math.abs((double)shortest_path_sum / path_count);
                             shortest_path_min = (l.size() < shortest_path_min ? l.size() : shortest_path_min);
                             shortest_path_max = (l.size() > shortest_path_max ? l.size() : shortest_path_max);
                         }
                     }
 
                     tp_sum += this.targetConstructs.get(search.getLabel()).size();
-                    tp_avg = new Double(Math.abs((double) tp_sum / bugs_count)).intValue();
+                    tp_avg = (int)Math.abs((double)tp_sum / bugs_count);
                     tp_min = (this.targetConstructs.get(search.getLabel()).size() < tp_min ? this.targetConstructs.get(search.getLabel()).size() : tp_min);
                     tp_max = (this.targetConstructs.get(search.getLabel()).size() > tp_max ? this.targetConstructs.get(search.getLabel()).size() : tp_max);
                 }
@@ -526,7 +526,7 @@ public class ReachabilityAnalyzer implements Runnable {
         final ExecutorService pool = Executors.newFixedThreadPool(no_threads);
 
         // Partition size
-        final int size = new Double(Math.ceil((double) this.callgraph.getNodeCount() / (double) no_threads)).intValue();
+        final int size = (int)Math.ceil((double)this.callgraph.getNodeCount() / (double)no_threads);
 
         // Create parallel call graph searches
         final Set<CallgraphReachableSearch> searches = new HashSet<CallgraphReachableSearch>();
@@ -553,18 +553,18 @@ public class ReachabilityAnalyzer implements Runnable {
 
                 // Reachable constructs
                 final Map<String, Set<NodeMetaInformation>> reachable_constructs = search.getReachableConstructs();
-                for (String key : reachable_constructs.keySet()) {
-                    if (!this.reachableConstructs.containsKey(key))
-                        this.reachableConstructs.put(key, new HashSet<NodeMetaInformation>());
-                    this.reachableConstructs.get(key).addAll(reachable_constructs.get(key));
+                for (Map.Entry<String, Set<NodeMetaInformation>> e : reachable_constructs.entrySet()) {
+                    if (!this.reachableConstructs.containsKey(e.getKey()))
+                        this.reachableConstructs.put(e.getKey(), new HashSet<NodeMetaInformation>());
+                    this.reachableConstructs.get(e.getKey()).addAll(e.getValue());
                 }
 
                 // Touch points
                 final Map<String, Set<List<NodeMetaInformation>>> touch_points = search.getTouchPoints();
-                for (String key : touch_points.keySet()) {
-                    if (!this.touchPoints.containsKey(key))
-                        this.touchPoints.put(key, new HashSet<List<NodeMetaInformation>>());
-                    this.touchPoints.get(key).addAll(touch_points.get(key));
+                for (Map.Entry<String, Set<List<NodeMetaInformation>>> e : touch_points.entrySet()) {
+                    if (!this.touchPoints.containsKey(e.getKey()))
+                        this.touchPoints.put(e.getKey(), new HashSet<List<NodeMetaInformation>>());
+                    this.touchPoints.get(e.getKey()).addAll(e.getValue());
                 }
             }
         } catch (InterruptedException e) {
@@ -770,12 +770,12 @@ public class ReachabilityAnalyzer implements Runnable {
 
         // Log if paths will be dropped
         int uploaded_path_count = 0;
-        for (com.sap.psr.vulas.shared.json.model.ConstructId con : counters.keySet()) {
-            if (counters.get(con).intValue() > max_path) {
-                ReachabilityAnalyzer.log.warn("[" + counters.get(con).intValue() + "] paths lead to construct [" + con + "], only [" + max_path + "] will be uploaded");
+        for (Map.Entry<com.sap.psr.vulas.shared.json.model.ConstructId, Integer> e : counters.entrySet()) {
+            if (e.getValue().intValue() > max_path) {
+                ReachabilityAnalyzer.log.warn("[" + e.getValue().intValue() + "] paths lead to construct [" + e.getKey()+ "], only [" + max_path + "] will be uploaded");
                 uploaded_path_count += max_path;
             } else {
-                uploaded_path_count += counters.get(con).intValue();
+                uploaded_path_count += e.getValue().intValue();
             }
         }
 
@@ -812,8 +812,8 @@ public class ReachabilityAnalyzer implements Runnable {
             JsonArray json_constructs = null;
 
             // Loop dependencies
-            for (String sha1 : this.reachableConstructs.keySet()) {
-                nodes = this.reachableConstructs.get(sha1);
+            for (Map.Entry<String, Set<NodeMetaInformation>> e : this.reachableConstructs.entrySet()) {
+                nodes = e.getValue();
                 json_constructs = new JsonArray();
 
                 // Loop reachable constructs
@@ -826,14 +826,14 @@ public class ReachabilityAnalyzer implements Runnable {
 
                 // Upload
                 try {
-                    ReachabilityAnalyzer.log.info("Upload [" + nodes.size() + "] reachable construct IDs for library [sha1=" + sha1 + ", jar URL=" + jar_url + "]");
-                    final boolean success = BackendConnector.getInstance().uploadReachableConstructs(this.goalContext, this.app_ctx, sha1, json_constructs.toString());
+                    ReachabilityAnalyzer.log.info("Upload [" + nodes.size() + "] reachable construct IDs for library [sha1=" + e.getKey() + ", jar URL=" + jar_url + "]");
+                    final boolean success = BackendConnector.getInstance().uploadReachableConstructs(this.goalContext, this.app_ctx, e.getKey(), json_constructs.toString());
                     if (success)
                         this.appendJarName(jar_url, upload_succeeded);
                     else
                         this.appendJarName(jar_url, upload_failed);
-                } catch (BackendConnectionException e) {
-                    ReachabilityAnalyzer.log.error("Error while uploading reachable constructs for library [sha1=" + sha1 + ", jar URL=" + jar_url + "]: " + e.getMessage());
+                } catch (BackendConnectionException bce) {
+                    ReachabilityAnalyzer.log.error("Error while uploading reachable constructs for library [sha1=" + e.getKey() + ", jar URL=" + jar_url + "]: " + bce.getMessage());
                     this.appendJarName(jar_url, upload_failed);
                 }
             }
@@ -851,8 +851,8 @@ public class ReachabilityAnalyzer implements Runnable {
             NodeMetaInformation from = null, to = null;
 
             // Loop dependencies
-            for (String sha1 : this.touchPoints.keySet()) {
-                touch_points = this.touchPoints.get(sha1);
+            for (Map.Entry<String, Set<List<NodeMetaInformation>>> e : this.touchPoints.entrySet()) {
+                touch_points = e.getValue();
                 json_tps = new JsonArray();
 
                 String jar_url = null;
@@ -865,7 +865,7 @@ public class ReachabilityAnalyzer implements Runnable {
                     json_tp.add("from", new JsonParser().parse(JacksonUtil.asJsonString(from.getConstructId())).getAsJsonObject());
                     json_tp.add("to", new JsonParser().parse(JacksonUtil.asJsonString(to.getConstructId())).getAsJsonObject());
                     json_tp.addProperty("source", this.source.toString());
-                    if (sha1.equals(to.getArchiveId())) {
+                    if (e.getKey().equals(to.getArchiveId())) {
                         json_tp.addProperty("direction", "A2L");
                         jar_url = to.getJarUrl();
                     } else {
@@ -878,14 +878,14 @@ public class ReachabilityAnalyzer implements Runnable {
 
                 // Upload
                 try {
-                    ReachabilityAnalyzer.log.info("Upload [" + touch_points.size() + "] touch points for library [sha1=" + sha1 + ", jar URL=" + jar_url + "]");
-                    final boolean success = BackendConnector.getInstance().uploadTouchPoints(this.goalContext, this.app_ctx, sha1, json_tps.toString());
+                    ReachabilityAnalyzer.log.info("Upload [" + touch_points.size() + "] touch points for library [sha1=" + e.getKey() + ", jar URL=" + jar_url + "]");
+                    final boolean success = BackendConnector.getInstance().uploadTouchPoints(this.goalContext, this.app_ctx, e.getKey(), json_tps.toString());
                     if (success)
                         this.appendJarName(jar_url, upload_succeeded);
                     else
                         this.appendJarName(jar_url, upload_failed);
-                } catch (BackendConnectionException e) {
-                    ReachabilityAnalyzer.log.error("Error while uploading touch points for library [sha1=" + sha1 + ", jar URL=" + jar_url + "]: " + e.getMessage());
+                } catch (BackendConnectionException bce) {
+                    ReachabilityAnalyzer.log.error("Error while uploading touch points for library [sha1=" + e.getKey() + ", jar URL=" + jar_url + "]: " + bce.getMessage());
                     this.appendJarName(jar_url, upload_failed);
                 }
             }

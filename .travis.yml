@@ -59,7 +59,7 @@ matrix:
     - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
     install:
     - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
-    script: mvn  --settings .travis/settings.xml -e -B -P gradle -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.includeFilterFile=findbugs-include.xml -Dspotbugs.failOnError=false clean compile com.github.spotbugs:spotbugs-maven-plugin:4.0.4:check
+    script: mvn  --settings .travis/settings.xml -e -B -P gradle -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.includeFilterFile=findbugs-include.xml -Dspotbugs.failOnError=false -Dspring.standalone -DskipTests clean install com.github.spotbugs:spotbugs-maven-plugin:4.0.4:check
 
   - name: Docker - Build the Modules' Jars, Run all Java tests, Create vital containers, Check if they stay alive for more than 20 seconds
     language: bash

@@ -35,7 +35,6 @@ import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
 
-
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.sap.psr.vulas.ConstructId;
@@ -93,7 +92,7 @@ public class Callgraph {
 	 * an instance of JarAnalyzer for all of them. Every node is a method so 
 	 * most of them share the JAR with others methods
 	 */
-	private final HashMap<URL, JarAnalyzer> jarAnalyzersCache = new HashMap<URL, JarAnalyzer>();
+	private final HashMap<URI, JarAnalyzer> jarAnalyzersCache = new HashMap<URI, JarAnalyzer>();
 
 	/**
 	 * Cache of JAR URLs for given construct Ids.
@@ -212,14 +211,19 @@ public class Callgraph {
 	 */
 	private NodeMetaInformation createNodeMetaInformation(com.sap.psr.vulas.shared.json.model.ConstructId target, Integer target_id){
 		URL jar_url = this.collectArchiveInformation(target);
-		String archiveID = null;
+		String archiveId = null;
 		if(jar_url!=null && jar_url.toString().startsWith("file:")) {
-			archiveID = this.getShaFromCachedJarAnalyzer(jar_url);
+			try {
+				archiveId = this.getShaFromCachedJarAnalyzer(jar_url.toURI());
+			} catch (URISyntaxException e) {
+				log.error("Cannot transform [" + jar_url + "] to URI: " + e.getMessage(), e);
+				archiveId = null;
+			}
 		}
 		else {
 			jar_url = null;
 		}
-		return new NodeMetaInformation(target, this.parseNonStaticInnerClassConstruct(target), jar_url, archiveID);
+		return new NodeMetaInformation(target, this.parseNonStaticInnerClassConstruct(target), jar_url, archiveId);
 	}
 
 	/**
@@ -488,14 +492,13 @@ public class Callgraph {
 		}
 	}
 
-	private synchronized String getShaFromCachedJarAnalyzer(URL _jar_url) {
+	private synchronized String getShaFromCachedJarAnalyzer(URI _jar_url) {
 
 		// Build the JarAnalyzer (if possible) and put it into the cache
 		if(!this.jarAnalyzersCache.containsKey(_jar_url)) {
 			JarAnalyzer ja = null;
 			try {
-				final URI uri = _jar_url.toURI();
-				final File file = Paths.get(uri).toFile(); 
+				final File file = Paths.get(_jar_url).toFile(); 
 				ja = new JarAnalyzer();
 				ja.analyze(file);
 			} catch (InvalidPathException ex) {
@@ -504,8 +507,6 @@ public class Callgraph {
 				log.error("Error analyzing the JAR at [" + _jar_url + "]: " + ex.getMessage(), ex);
 			} catch(java.nio.file.FileSystemNotFoundException fsnfe) {
 				log.error("File system not found for [" + _jar_url + "]: " + fsnfe.getMessage(), fsnfe);
-			} catch (URISyntaxException e) {
-				log.error("URI syntax exception for [" + _jar_url + "]: " + e.getMessage(), e);
 			}
 			this.jarAnalyzersCache.put(_jar_url, ja); // ja can be null
 		}
