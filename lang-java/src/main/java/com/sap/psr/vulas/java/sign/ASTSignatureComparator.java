@@ -29,7 +29,6 @@ import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
 
-
 import com.sap.psr.vulas.sign.Signature;
 import com.sap.psr.vulas.sign.SignatureChange;
 import com.sap.psr.vulas.sign.SignatureComparator;
@@ -47,7 +46,6 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.TreeMatcher;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.MatchingFactory;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.LevenshteinSimilarityCalculator;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.NGramsCalculator;
-import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.TokenBasedCalculator;
 
 /**
  * <p>ASTSignatureComparator class.</p>
@@ -67,7 +65,7 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 	//String Similarity Schemes for comparing Node Values
 	private LevenshteinSimilarityCalculator fLevenshtein = new LevenshteinSimilarityCalculator();
-	private TokenBasedCalculator fTokenBased = new TokenBasedCalculator();
+	//private TokenBasedCalculator fTokenBased = new TokenBasedCalculator();
 	private NGramsCalculator fNgrams = new  NGramsCalculator(2);  //Using bi-grams, n = 2
 
 	//Different (Dynamic) string similarity threshold for the different size of SourceCode Changes
@@ -75,11 +73,11 @@ public class ASTSignatureComparator implements SignatureComparator {
 	private static final double STRING_SIMILARITY_THRESHOLD_BETWEEN_TWO_AND_FIVE_CHANGES = 0.6;
 	private static final double STRING_SIMILARITY_THRESHOLD_MORE_THAN__FIVE_CHANGES = 0.5;
 
-	private Map<Node, Double> matchingNodes = new HashMap<Node,Double>();
-	private Node bestMatchNode = null;
-	private Signature mSignVuln = null;
-	private Signature mSignFixed = null;
-	private SignatureChange mSignChange = null;
+	//private Map<Node, Double> matchingNodes = new HashMap<Node,Double>();
+	//private Node bestMatchNode = null;
+	//private Signature mSignVuln = null;
+	//private Signature mSignFixed = null;
+	//private SignatureChange mSignChange = null;
 	private double mStringSimilarity;
 
 	/**
@@ -102,10 +100,10 @@ public class ASTSignatureComparator implements SignatureComparator {
 	 * @param _sign a {@link com.sap.psr.vulas.sign.Signature} object.
 	 * @param _signChg a {@link com.sap.psr.vulas.sign.SignatureChange} object.
 	 */
-	public ASTSignatureComparator(Signature _sign, SignatureChange _signChg){
+	/*public ASTSignatureComparator(Signature _sign, SignatureChange _signChg){
 		this.mSignFixed = _sign;
 		this.mSignChange = _signChg;
-	}
+	}*/
 
 	/**
 	 * <p>Constructor for ASTSignatureComparator.</p>
@@ -114,11 +112,11 @@ public class ASTSignatureComparator implements SignatureComparator {
 	 * @param _fixed a {@link com.sap.psr.vulas.sign.Signature} object.
 	 * @param _signChg a {@link com.sap.psr.vulas.sign.SignatureChange} object.
 	 */
-	public ASTSignatureComparator(Signature _vuln, Signature _fixed, SignatureChange _signChg){
+	/*public ASTSignatureComparator(Signature _vuln, Signature _fixed, SignatureChange _signChg){
 		this.mSignVuln = _vuln;
 		this.mSignFixed = _fixed;
 		this.mSignChange = _signChg;
-	}
+	}*/
 
 
 	/*
@@ -269,19 +267,18 @@ public class ASTSignatureComparator implements SignatureComparator {
 	 * @return
 	 */
 	private boolean containsChange(Node  _root_node,  Set<SourceCodeChange> _changes) {
-
-		totalNumFixes= _changes.size();
-		matchedNumFixes = 0;
-		this.assignSimlarityScheme(totalNumFixes);
+		this.totalNumFixes = _changes.size();
+		this.matchedNumFixes = 0;
+		this.assignSimlarityScheme(this.totalNumFixes);
+		
 		boolean contains_change = false;
 		
 		// Maintains the containment status per change
 		final Map<SourceCodeChange, Boolean> change_containment = new HashMap<SourceCodeChange, Boolean>();
-		
 		int i = 1;
 
 		// Loop over all changes and check each of them
-		if(_changes!= null && _changes.size() > 0) {
+		if(totalNumFixes > 0) {
 			
 			EntityType change_type = null;
 			String change_value = null;
@@ -521,8 +518,6 @@ public class ASTSignatureComparator implements SignatureComparator {
 		return srcCodeEntity;
 	}
 
-
-
 	/**
 	 *
 	 * @param _entityUniqueName ; UniqueName of 'Node' to be searched for
@@ -539,7 +534,6 @@ public class ASTSignatureComparator implements SignatureComparator {
 		}
 		return resultNode;
 	}
-
 
 	/**
 	 * TODO : Enclose this functionality in a generic class, "SignatureSimilarity"
@@ -572,8 +566,6 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 		return flag;
 	}
-
-
 
 	/**
 	 *  Search for the specified change element inside Signature (Search using the Node Label)
@@ -616,9 +608,6 @@ public class ASTSignatureComparator implements SignatureComparator {
 		return tmpNode;
 	}
 
-
-
-
 	/**
 	 *  Search for the _entityUniqueName inside Signature (Search using the Node Label)
 	 *
@@ -654,7 +643,6 @@ public class ASTSignatureComparator implements SignatureComparator {
 
 		return found;
 	}
-
 
 	/**
 	 *  Search for the _entityUniqueName inside Signature (Search using the Node Label)

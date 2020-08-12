@@ -34,9 +34,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
-import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -45,6 +44,8 @@ import org.apache.http.config.SocketConfig;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.logging.log4j.Logger;
+
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.HttpMethod;
 import com.sap.psr.vulas.backend.HttpResponse;
@@ -270,7 +271,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	 */
 	public long getPayloadSize() {
 		if(this.payload!=null)
-			return this.payload.getBytes().length;
+			return this.payload.getBytes(StandardCharsets.UTF_8).length;
 		else if(this.payloadPath!=null)
 			return Paths.get(this.payloadPath).toFile().length();
 		else
@@ -392,7 +393,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 	      if(!this.hasPayload()) {
 	        BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
 	      }else if(this.binPayload==null)  {
-	        BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + ", size=" + StringUtil.byteToKBString(this.payload.getBytes().length) + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
+	        BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + ", size=" + StringUtil.byteToKBString(this.payload.getBytes(StandardCharsets.UTF_8).length) + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
 	      }else {
 	        BasicHttpRequest.log.info("HTTP " + this.method.toString().toUpperCase() + " [uri=" + uri + ", size=" + this.binPayload.available() + (tenant_token==null?"":", tenant=" + tenant_token) + (space_token==null?"":", space=" + space_token) + "]");
 	      }

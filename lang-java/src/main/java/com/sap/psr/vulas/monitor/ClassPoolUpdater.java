@@ -267,7 +267,7 @@ public class ClassPoolUpdater {
 	 *
 	 * @return A {@link ClassPool} object, can be null if there is none
 	 */
-	public ClassPool getCustomClassPool() { return this.customClassPool; }
+	public synchronized ClassPool getCustomClassPool() { return this.customClassPool; }
 
 	/**
 	 * This method look into the custom ClassPool and return a string with the
@@ -279,7 +279,7 @@ public class ClassPoolUpdater {
 	 * @param _cid the ConstructId that we want to search in the ClassPool
 	 * @return the JAR path or null if is not found
 	 */
-	public URL getJarResourcePath(ConstructId _cid) {
+	public synchronized URL getJarResourcePath(ConstructId _cid) {
 		URL url = null;
 		if(_cid instanceof JavaId) {
 			final JavaId jid = (JavaId)_cid;

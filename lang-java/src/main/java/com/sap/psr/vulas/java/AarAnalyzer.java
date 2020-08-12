@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.jar.JarFile;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.apache.logging.log4j.Logger;
 
 
@@ -34,6 +36,7 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  * <p>AarAnalyzer class.</p>
  *
  */
+@NotThreadSafe
 public class AarAnalyzer extends JarAnalyzer {
 
 	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
@@ -51,7 +54,7 @@ public class AarAnalyzer extends JarAnalyzer {
 	
 	/** {@inheritDoc} */
 	@Override
-	public void analyze(final File _file) throws FileAnalysisException {
+	public synchronized void analyze(final File _file) throws FileAnalysisException {
 		try {
 			//this.aar = new JarFile(_file, false, java.util.zip.ZipFile.OPEN_READ);
 			this.aarWriter = new JarWriter(_file.toPath());

@@ -73,7 +73,7 @@ public class InstrumentationControl {
 
 	private Object instrumentationContext = null;
 
-	private LoaderFilter classloaderWhitelist = null;
+	//private LoaderFilter classloaderWhitelist = null;
 	private StringList classloaderBlacklist = new StringList();
 
 	// ------- Members related to blacklist checks for JARs and DIRs
@@ -122,8 +122,8 @@ public class InstrumentationControl {
 		final Configuration cfg = VulasConfiguration.getGlobal().getConfiguration();
 
 		// Only instrument classes loader by a certain class loader
-		if(cfg.getString("instr.whitelist.classloader", null)!=null)
-			this.classloaderWhitelist = new ClassNameLoaderFilter(cfg.getString("instr.whitelist.classloader", null), cfg.getBoolean("instr.whitelist.classloader.acceptChilds", true));
+		//if(cfg.getString("instr.whitelist.classloader", null)!=null)
+		//	this.classloaderWhitelist = new ClassNameLoaderFilter(cfg.getString("instr.whitelist.classloader", null), cfg.getBoolean("instr.whitelist.classloader.acceptChilds", true));
 
 		// Blacklist from configuration (evaluated during transform)
 		this.blacklistedClasses.addAll(cfg.getStringArray(CoreConfiguration.INSTR_BLACKLIST_CLASSES));

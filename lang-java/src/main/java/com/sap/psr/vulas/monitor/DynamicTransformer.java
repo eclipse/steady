@@ -209,16 +209,22 @@ public class DynamicTransformer implements ClassFileTransformer {
 					}
 					catch (IOException ioe) {
 						DynamicTransformer.log.error("I/O exception while instrumenting class [" + dot_classname + "]: " + ioe.getMessage());
-						this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
+						if(cv!=null) {
+							this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), false);
+						}
 					}
 					catch (CannotCompileException cce) {
 						DynamicTransformer.log.warn("Cannot compile instrumented class [" + dot_classname + "]: " + cce.getMessage());
-						this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
+						if(cv!=null) {
+							this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), false);
+						}
 					}
 					// Covers the following problems with Javassist and Java 8: "java.io.IOException: invalid constant type: 15"
 					catch (Exception e) {
 						DynamicTransformer.log.warn(e.getClass().getName() + " occured while instrumenting class [" + dot_classname + "]: " + e.getMessage());
-						this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), Boolean.valueOf(false));
+						if(cv!=null) {
+							this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), false);
+						}
 					}
 				}
 			}

@@ -27,6 +27,7 @@ import ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType;
 import ch.uzh.ifi.seal.changedistiller.model.classifiers.SourceRange;
 import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -51,14 +52,21 @@ public abstract class ASTSignature extends Node implements Signature {
 	}
 
 	private static final long serialVersionUID = -3802437501302095999L;
+	
 	/** Constant <code>sDeclarationConverter</code> */
-	protected static JavaDeclarationConverter sDeclarationConverter;
+	//protected static JavaDeclarationConverter sDeclarationConverter;
+	
     /** Constant <code>sMethodBodyConverter</code> */
-    protected static JavaMethodBodyConverter sMethodBodyConverter;   //Visitor for generation of the AST of construct bodies
+	@SuppressFBWarnings(value="MS_PKGPROTECT", justification="Subclasses can be in different packages")
+    protected static JavaMethodBodyConverter sMethodBodyConverter; //Visitor for generation of the AST of construct bodies
+    
 	/** Constant <code>sInjector</code> */
 	protected static final Injector sInjector = Guice.createInjector(new JavaChangeDistillerModule());
+	
     protected JavaCompilation fCompilation;
+    
     protected Node fRoot;
+    
     protected Construct _construct;
 
     /**

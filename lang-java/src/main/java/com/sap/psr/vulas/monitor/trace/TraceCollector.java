@@ -384,7 +384,7 @@ public class TraceCollector {
 	/**
 	 * <p>awaitUpload.</p>
 	 */
-	public void awaitUpload() {
+	public synchronized void awaitUpload() {
 		if(this.pool!=null) {
 			this.pool.shutdown();
 			try {
@@ -660,7 +660,7 @@ public class TraceCollector {
 	 *
 	 * @return a {@link java.util.Map} object.
 	 */
-	public Map<String,Long> getStatistics() {
+	public synchronized Map<String,Long> getStatistics() {
 		final Map<String, Long> stats = new HashMap<String,Long>();
 		stats.put("archivesAnalyzed", Long.valueOf(this.jarFiles.size()));			
 		stats.put("tracesCollectedMethod", this.methodTraceCount);
