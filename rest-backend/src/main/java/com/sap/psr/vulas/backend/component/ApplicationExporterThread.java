@@ -104,7 +104,7 @@ public class ApplicationExporterThread implements Runnable {
    * @return a {@link com.sap.psr.vulas.backend.component.ApplicationExporterThread} object.
    */
   public ApplicationExporterThread setIncludeSpaceProperties(String[] includeSpaceProperties) {
-    this.includeSpaceProperties = includeSpaceProperties.clone();
+    this.includeSpaceProperties = includeSpaceProperties==null ? null : includeSpaceProperties.clone();
     return this;
   }
 
@@ -115,7 +115,7 @@ public class ApplicationExporterThread implements Runnable {
    * @return a {@link com.sap.psr.vulas.backend.component.ApplicationExporterThread} object.
    */
   public ApplicationExporterThread setIncludeGoalConfiguration(String[] includeGoalConfiguration) {
-    this.includeGoalConfiguration = includeGoalConfiguration.clone();
+    this.includeGoalConfiguration = includeGoalConfiguration==null ? null : includeGoalConfiguration.clone();
     return this;
   }
 
@@ -126,7 +126,7 @@ public class ApplicationExporterThread implements Runnable {
    * @return a {@link com.sap.psr.vulas.backend.component.ApplicationExporterThread} object.
    */
   public ApplicationExporterThread setIncludeGoalSystemInfo(String[] includeGoalSystemInfo) {
-    this.includeGoalSystemInfo = includeGoalSystemInfo.clone();
+    this.includeGoalSystemInfo = includeGoalSystemInfo==null ? null : includeGoalSystemInfo.clone();
     return this;
   }
 
@@ -148,7 +148,7 @@ public class ApplicationExporterThread implements Runnable {
    * @return a {@link com.sap.psr.vulas.backend.component.ApplicationExporterThread} object.
    */
   public ApplicationExporterThread setBugs(String[] bugs) {
-    this.bugs = bugs.clone();
+    this.bugs = bugs==null ? null : bugs.clone();
     return this;
   }
 
