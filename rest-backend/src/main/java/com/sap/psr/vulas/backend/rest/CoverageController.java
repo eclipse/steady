@@ -193,10 +193,10 @@ public class CoverageController {
 			this.total = total;
 		}
 		public JiraIssue[] getIssues() {
-			return issues;
+			return issues.clone();
 		}
 		public void setIssues(JiraIssue[] issues) {
-			this.issues = issues;
+			this.issues = issues.clone();
 		}
 	}
 

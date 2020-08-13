@@ -274,7 +274,11 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
 			            	for ( OverallConstructChange adCc : addedDelMethsConsCC ){
 			        			qnameInJar=false;
 			 		      
-			                    if(adCc!=null && adcids!=null && adcids.contains(adCc.getConstructId())){
+			        			// If adCc could be null, a NPE would anyways be thrown upon the construction of cplr a few lines below
+			        			// As such, the check can be removed here (or the whole logic needs to be changed)
+			                    //if(adCc!=null && adcids!=null && adcids.contains(adCc.getConstructId())){
+			        			
+			                    if(adcids!=null && adcids.contains(adCc.getConstructId())) {	
 			   	                	log.info("adcids contains ["+adCc.getConstructId());
 			   	                	qnameInJar=true;
 			   	                }

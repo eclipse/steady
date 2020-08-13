@@ -529,7 +529,7 @@ public class Library implements Serializable {
 			String uri = null;
 			try {
 				final CloseableHttpClient httpclient = HttpClients.createDefault();
-				uri = new String("http://search.maven.org/solrsearch/select?q=1:<SHA1>&rows=20&wt=json").replaceAll("<SHA1>", _digest);
+				uri = "http://search.maven.org/solrsearch/select?q=1:<SHA1>&rows=20&wt=json".replaceAll("<SHA1>", _digest);
 				final HttpGet method = new HttpGet(uri);
 				if(ConnectionUtil.getProxyConfig()!=null)
 					method.setConfig(ConnectionUtil.getProxyConfig());

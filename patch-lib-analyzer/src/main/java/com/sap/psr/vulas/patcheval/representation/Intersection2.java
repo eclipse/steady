@@ -29,7 +29,7 @@ package com.sap.psr.vulas.patcheval.representation;
  */
 public class Intersection2 {
     ArtifactResult2 from, to;
-    int occurrences;
+    //int occurrences;
     Double confidence;
     
     /**
@@ -43,9 +43,8 @@ public class Intersection2 {
     public Intersection2(ArtifactResult2 from, ArtifactResult2 to, int o, Double d) {
         this.from = from;
         this.to = to;
-        this.occurrences = o;
-        this.confidence = d;
-        
+        //this.occurrences = o;
+        this.confidence = d;        
     }
 
     /**
@@ -100,10 +99,5 @@ public class Intersection2 {
      */
     public void setConfidence(Double confidence) {
         this.confidence = confidence;
-    }
-
-    
-
-
-    
+    }    
 }

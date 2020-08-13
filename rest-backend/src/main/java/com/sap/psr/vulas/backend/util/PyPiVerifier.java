@@ -105,7 +105,7 @@ public class PyPiVerifier implements DigestVerifier {
 		if(_lib.getLibraryId()==null || _lib.getLibraryId().getMvnGroup()==null || _lib.getLibraryId().getVersion()==null)
 			return null;
 
-		this.url = new String("https://pypi.python.org/pypi/<name>/<version>/json").replaceAll("<name>", _lib.getLibraryId().getMvnGroup()).replaceAll("<version>", _lib.getLibraryId().getVersion());
+		this.url = "https://pypi.python.org/pypi/<name>/<version>/json".replaceAll("<name>", _lib.getLibraryId().getMvnGroup()).replaceAll("<version>", _lib.getLibraryId().getVersion());
 
 		String response_body = null;
 		List<LibraryId> verified_lids = null;

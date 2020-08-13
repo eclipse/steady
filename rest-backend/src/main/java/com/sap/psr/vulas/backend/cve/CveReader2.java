@@ -102,7 +102,7 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 			final String url = VulasConfiguration.getGlobal().getServiceUrl(Service.CVE, true);
 			
 			final CloseableHttpClient httpclient = HttpClients.createDefault();
-			uri = new String(url).replaceAll("<ID>", _key);
+			uri = url.replaceAll("<ID>", _key);
 			log.info("Query details of [" + _key + "] at [" + uri + "]");
 			final HttpGet method = new HttpGet(uri);
 			if(ConnectionUtil.getProxyConfig()!=null)
@@ -138,9 +138,8 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 		return cve;
 	}
 	
-	final static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-	
 	private final static Cve buildFromJson(String _id, String _json) throws ParseException {
+		final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 		final Cve cve = new Cve();
 		cve.setId(_id);
 		

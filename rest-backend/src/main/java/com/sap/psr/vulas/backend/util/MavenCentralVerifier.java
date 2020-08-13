@@ -91,7 +91,7 @@ public class MavenCentralVerifier implements DigestVerifier {
 		if(_lib==null || _lib.getDigest()==null)
 			throw new IllegalArgumentException("No library or digest provided: [" + _lib + "]");
 
-		this.url = new String("http://search.maven.org/solrsearch/select?q=1:<SHA1>&rows=20&wt=json").replaceAll("<SHA1>", _lib.getDigest());
+		this.url = "http://search.maven.org/solrsearch/select?q=1:<SHA1>&rows=20&wt=json".replaceAll("<SHA1>", _lib.getDigest());
 
 		String mvnResponse = null;
 		List<LibraryId> verified_lids = null;

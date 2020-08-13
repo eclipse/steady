@@ -215,7 +215,7 @@ public class LibraryIdController {
 				//check whether the libId rebundles a vulnerable library. If so, add it to vuln_libids
 				LibraryId lid = LibraryIdRepository.FILTER.findOne(libIdRepository.findById(((BigInteger)e[0]).longValue()));
 				
-				if(!vuln_libids.contains(lid)){
+				if(!vuln_libids.contains(lid.toSharedType())){
 					LibraryId lid_bundled = LibraryIdRepository.FILTER.findOne(libIdRepository.findById(((BigInteger)e[1]).longValue()));
 								
 					for(AffectedLibrary afflib: lid_bundled.getAffLibraries()) {

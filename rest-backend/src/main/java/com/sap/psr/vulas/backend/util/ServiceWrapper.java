@@ -245,9 +245,9 @@ public class ServiceWrapper {
 		if(_params!=null && _params.size()>0) {
 			b.append(" with params [");
 			int i=0;
-			for(String key: _params.keySet()) {
+			for(Map.Entry<String, String> e : _params.entrySet()) {
 				if(i++>0) b.append(", ");
-				b.append(key).append("=").append(_params.get(key));
+				b.append(e.getKey()).append("=").append(e.getValue());
 			}
 		}
 		log.info(b.toString()+"]");

@@ -90,7 +90,7 @@ public class SpaceController {
 	private TenantRepository tenantRepository;
 
 	private ApplicationRepository appRepository;
-	
+
 	private final ApplicationExporter appExporter;
 
 	private final Filter cacheFilter;
@@ -102,9 +102,6 @@ public class SpaceController {
 		this.appRepository = appRepository;
 		this.appExporter = appExporter;
 		this.cacheFilter = cacheFilter;
-
-		//(SP, 27-10-2017) It is not mandatory to have default tenant & spaces. This is only required for 
-		// the existing internal VULAS system to be backward compatible with vulas 2.x
 	}
 
 	/**
@@ -116,7 +113,7 @@ public class SpaceController {
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Collection<Space>> getAllSpaces(
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
-		
+
 		// Check whether tenant exists or retrieve default
 		Tenant t = null;
 		try {
@@ -145,7 +142,7 @@ public class SpaceController {
 	@RequestMapping(value = "default", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
 	public ResponseEntity<Space> getDefaultSpace(
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
-		
+
 		// Check whether tenant exists or retrieve default
 		Tenant t = null;
 		try {
@@ -184,7 +181,7 @@ public class SpaceController {
 			@RequestParam(value="caseSensitivity", required=false, defaultValue="CASE_SENSITIVE") CaseSensitivity caseSensitivity,
 			@RequestParam(value="value", required=true) String[] value,
 			@ApiIgnore @RequestHeader(value=Constants.HTTP_TENANT_HEADER, required=false) String tenant) {
-		
+
 		// Check whether tenant exists or retrieve default
 		Tenant t = null;
 		try {
@@ -304,12 +301,13 @@ public class SpaceController {
 				t = this.tenantRepository.getTenant(tenant);
 			} 
 			catch(EntityNotFoundException enfe) {
-				log.error("Tenant [" + t.getTenantToken() + "] not found");
+				log.error("Tenant [" + tenant + "] not found");
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
-			}catch (Exception e){
-				log.error("Error retrieving tenant: " + e);
+			} catch (Exception e) {
+				log.error("Error retrieving tenant [" + tenant + "]: " + e);
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}
+
 			//check that only 1 default space per tenant is created
 			if(space.isDefault() && this.spaceRepository.findDefault(t.getTenantToken())!=null) {
 				log.error("A default space for the given tenant already exists, adjust the configuration accordingly");
@@ -364,10 +362,10 @@ public class SpaceController {
 				t = this.tenantRepository.getTenant(tenant);
 			} 
 			catch(EntityNotFoundException enfe) {
-				log.error("Tenant [" + t.getTenantToken() + "] not found");
+				log.error("Tenant [" + tenant + "] not found");
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
-			}catch (Exception e){
-				log.error("Error retrieving tenant: " + e);
+			} catch (Exception e) {
+				log.error("Error retrieving tenant [" + tenant + "]: " + e);
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}
 
@@ -435,10 +433,10 @@ public class SpaceController {
 				t = this.tenantRepository.getTenant(tenant);
 			} 
 			catch(EntityNotFoundException enfe) {
-				log.error("Tenant [" + t.getTenantToken() + "] not found");
+				log.error("Tenant [" + tenant + "] not found");
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
-			}catch (Exception e){
-				log.error("Error retrieving tenant: " + e);
+			} catch (Exception e) {
+				log.error("Error retrieving tenant [" + tenant + "]: " + e);
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}
 
@@ -524,10 +522,10 @@ public class SpaceController {
 				t = this.tenantRepository.getTenant(tenant);
 			} 
 			catch(EntityNotFoundException enfe) {
-				log.error("Tenant [" + t.getTenantToken() + "] not found");
+				log.error("Tenant [" + tenant + "] not found");
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
-			}catch (Exception e){
-				log.error("Error retrieving tenant: " + e);
+			} catch (Exception e) {
+				log.error("Error retrieving tenant [" + tenant + "]: " + e);
 				return new ResponseEntity<Space>(HttpStatus.NOT_FOUND);
 			}
 
@@ -640,7 +638,7 @@ public class SpaceController {
 		try {
 			final boolean include_bugs = Boolean.valueOf(includeBugs);
 			final boolean include_exemptions = Boolean.valueOf(includeExemptions);
-			
+
 			final Space space = SpaceRepository.FILTER.findOne(this.spaceRepository.findBySecondaryKey(t, token));
 
 			final java.nio.file.Path json_file = this.appExporter.produceExport(t, space, ";", includeSpaceProperties, includeGoalConfiguration, includeGoalSystemInfo, null, include_bugs, include_exemptions, ExportFormat.JSON);
