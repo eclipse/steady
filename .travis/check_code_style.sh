@@ -12,8 +12,8 @@ java_files=java-files.txt
 if [[ -f $java_files ]]; then
     rm $java_files
 fi
-sed -n "s/.*<module>\(.*\)<\/module>.*/\1/p" pom.xml | xargs -I % sh -c 'find %/src/main/java -name *.java >> java-files.txt'
-sed -n "s/.*<module>\(.*\)<\/module>.*/\1/p" pom.xml | xargs -I % sh -c 'find %/src/test/java -name *.java >> java-files.txt'
+sed -n "s/.*<module>\(.*\)<\/module>.*/\1/p" pom.xml | xargs -I % sh -c 'find %/src/main/java -name *.java >> java-files.txt 2>/dev/null'
+sed -n "s/.*<module>\(.*\)<\/module>.*/\1/p" pom.xml | xargs -I % sh -c 'find %/src/test/java -name *.java >> java-files.txt 2>/dev/null'
 count=`less $java_files | wc -l`
 printf "Found [%s] Java files in all modules' source directories\n" $count
 
@@ -42,7 +42,7 @@ else
     else
         count_noncompliant=`less non-compliant-files.txt | wc -l`
         printf "[%s] files are NOT compliant with Google Java Style Guide:\n" $count_noncompliant
-        more non-compliant-files.txt
+        cat non-compliant-files.txt
         exit 1
     fi
 fi

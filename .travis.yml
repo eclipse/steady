@@ -48,9 +48,9 @@ matrix:
     - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
     script: mvn --settings .travis/settings.xml -e -B -P gradle,javadoc -Dspring.standalone -DskipTests clean package
 
-  - name: OpenJDK8 - Run Spotbugs and check code style 
+  - name: OpenJDK11 - Run Spotbugs and check code style 
     language: java
-    jdk: openjdk8
+    jdk: openjdk11
     cache:
       timeout: 1000
       directories:
@@ -59,7 +59,7 @@ matrix:
     - rm -rf $HOME/.m2/repository/com/sap/research/security/vulas/
     install:
     - echo 'Skipping install stage, dependencies will be downloaded during build and test stages.'
-    script: mvn  --settings .travis/settings.xml -e -B -P gradle -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.includeFilterFile=findbugs-include.xml -Dspotbugs.failOnError=true -Dspring.standalone -DskipTests clean install com.github.spotbugs:spotbugs-maven-plugin:4.0.4:check
+    script: bash .travis/check_code_style.sh && mvn  --settings .travis/settings.xml -e -B -P gradle -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.includeFilterFile=findbugs-include.xml -Dspotbugs.failOnError=true -Dspring.standalone -DskipTests clean install com.github.spotbugs:spotbugs-maven-plugin:4.0.4:check
 
   - name: Docker - Build the Modules' Jars, Run all Java tests, Create vital containers, Check if they stay alive for more than 20 seconds
     language: bash
