@@ -91,10 +91,9 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
   protected JarFile jar = null;
   protected boolean instrument =
       false; // Set by the constructor, determines whether or not the class methods/constructors are
-             // instrumented
-  protected boolean rename =
-      false; // Appends app context to original file name:
-             // <originalJarName>-vulas-<appGroupId>-<appArtifactId>-<appVersion>.jar
+  // instrumented
+  protected boolean rename = false; // Appends app context to original file name:
+  // <originalJarName>-vulas-<appGroupId>-<appArtifactId>-<appVersion>.jar
 
   protected int classCount = 0;
   protected int enumCount = 0;

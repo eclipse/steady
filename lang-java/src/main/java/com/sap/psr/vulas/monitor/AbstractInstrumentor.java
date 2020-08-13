@@ -49,7 +49,7 @@ public abstract class AbstractInstrumentor implements IInstrumentor {
     final StringBuffer buffer = new StringBuffer();
     buffer.append(
         "Class vul_cls = null;"); // Different techniques will be used to determine the current
-                                  // method's class
+    // method's class
     buffer.append("ClassLoader vul_cls_ldr = null;");
     buffer.append("java.net.URL vul_cls_res = null;");
     if (_buffer.length() == 0 || _buffer.indexOf(buffer.toString()) == -1)

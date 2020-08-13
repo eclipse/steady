@@ -347,9 +347,8 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
         // (http://www.merlin.uzh.ch/publication/show/2531)
         mDistiller.extractClassifiedSourceCodeChanges(defSignatureNode, fixSignatureNode);
         List<SourceCodeChange> change =
-            structureEntity
-                .getSourceCodeChanges(); // Extract the set of sourceCodeChanges from the
-                                         // StructureEntityVersion
+            structureEntity.getSourceCodeChanges(); // Extract the set of sourceCodeChanges from the
+        // StructureEntityVersion
 
         // Debug
         if (change != null) this.listOfChanges = new HashSet<SourceCodeChange>(change);

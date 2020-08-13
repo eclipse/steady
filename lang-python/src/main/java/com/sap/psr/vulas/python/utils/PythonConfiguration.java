@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.python.utils;
 
-
 import org.apache.logging.log4j.Logger;
 
 import com.sap.psr.vulas.shared.util.VulasConfiguration;

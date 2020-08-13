@@ -224,7 +224,7 @@ public class CustomEntryPointCreator extends DefaultEntryPointCreator {
 
         if (parentMethod
             .isAbstract()) { // if we have added to much methods above, we only generate methods for
-                             // the abstract ones here
+          // the abstract ones here
           // the next if statement deals with name clashes of methods of several interfaces
           if (dummyClass.declaresMethod(
               parentMethod.getName(),

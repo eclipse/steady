@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.shared.enums;
 
-
 /**
  * Defines the maturity of database content. Can be used, for instance, to configure a space in regards
  * to bugs that shall be considered for application analysis.

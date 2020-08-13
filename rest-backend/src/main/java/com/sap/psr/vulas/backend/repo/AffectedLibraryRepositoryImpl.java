@@ -308,8 +308,8 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
       _vd.setAffectedVersionConfirmed(0);
       _vd.setAffectedVersion(
           1); // when the confirmed flag is 0, the value of affected-version is irrelevant but we
-              // set it to 1 so that the UI doesn't filter it out when filtering out historical
-              // vulnerabilities
+      // set it to 1 so that the UI doesn't filter it out when filtering out historical
+      // vulnerabilities
     }
   }
 

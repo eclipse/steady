@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.vcs;
 
-
 /**
  * Thrown to indicate that a given IVCSClient cannot interact with a VCS repository at the given URL.
  * Reasons can be, for instance, that there is no VCS repository at all or a different type than expected (e.g., GIT instead of SVN).

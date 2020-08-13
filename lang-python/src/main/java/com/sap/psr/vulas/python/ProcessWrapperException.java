@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.python;
 
-
 /**
  * Thrown to indicate a problem when calling OS-level services.
  */

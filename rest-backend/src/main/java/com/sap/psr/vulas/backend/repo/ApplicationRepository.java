@@ -338,7 +338,9 @@ public interface ApplicationRepository
           + " ) " // select bug if all other cc of the same bug are PACK, ADD or Test changes
           + "   AND NOT (lc.type='MODU' AND (lc.qname='setup' OR lc.qname='tests' OR"
           + " lc.qname='test.__init__'))"
-          + " " // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs. Similarly tests.py originates such a generic module that would bring up too many FPs
+          + " " // Python-specific exception: setup.py is virtually everywhere, considering it would
+                // bring far too many FPs. Similarly tests.py originates such a generic module that
+                // would bring up too many FPs
   )
   TreeSet<VulnerableDependency> findJPQLVulnerableDependenciesByGAV(
       @Param("mvnGroup") String group,
@@ -559,7 +561,9 @@ public interface ApplicationRepository
           + " c1.qname LIKE '%Test%' and NOT cc1.constructChangeType='ADD') )    AND NOT"
           + " (lc.type='MODU' AND (lc.qname='setup' OR lc.qname='tests' OR"
           + " lc.qname='test.__init__'))"
-          + " )" // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs. Similarly tests.py originates such a generic module that would bring up too many FPs
+          + " )" // Python-specific exception: setup.py is virtually everywhere, considering it
+                 // would bring far too many FPs. Similarly tests.py originates such a generic
+                 // module that would bring up too many FPs
   )
   List<Application> findAppsByCC(@Param("listOfConstructs") List<ConstructId> listOfConstructs);
 

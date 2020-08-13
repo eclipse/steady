@@ -219,8 +219,8 @@ public class VulnerableDependency implements Serializable, Comparable<Vulnerable
     this.setAffectedVersionConfirmed(0);
     this.setAffectedVersion(
         1); // when the confirmed flag is 0, the value of affected-version is irrelevant but we set
-            // it to 1 so that the UI doesn't filter it out when filtering out historical
-            // vulnerabilities
+    // it to 1 so that the UI doesn't filter it out when filtering out historical
+    // vulnerabilities
   }
 
   /**

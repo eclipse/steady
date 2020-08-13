@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.shared.json.model;
 
-
 public interface IExemption {
 
   /**

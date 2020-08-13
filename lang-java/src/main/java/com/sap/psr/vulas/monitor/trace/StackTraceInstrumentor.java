@@ -118,8 +118,8 @@ public class StackTraceInstrumentor extends AbstractTraceInstrumentor {
     _code.append("params.put(\"path\", \"" + Boolean.valueOf(is_stacktrace_requested) + "\");");
     _code.append(
         "params.put(\"junit\", \"true\");"); // corresponds to collectDetails= true -> SIngle
-                                             // StacktraceInstrumentor. junit is the name of the
-                                             // argument in the Execution Monitor
+    // StacktraceInstrumentor. junit is the name of the
+    // argument in the Execution Monitor
     _code.append("params.put(\"counter\", new Integer(" + member_name + "));");
 
     // Callback method

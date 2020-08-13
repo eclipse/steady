@@ -501,7 +501,7 @@ public class ASTSignatureComparator implements SignatureComparator {
     // return tmpNode;
     // return bestMatchNode;
     return firstMatchedNode; // Returning the first Match that we have found, might be a good
-                             // approach
+    // approach
   }
 
   /**

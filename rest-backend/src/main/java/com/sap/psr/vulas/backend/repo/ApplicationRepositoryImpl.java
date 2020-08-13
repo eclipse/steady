@@ -630,14 +630,14 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
     final TreeSet<VulnerableDependency> vd_all = new TreeSet<VulnerableDependency>();
     vd_all.addAll(
         vd_list_cc); // this must be done before the add for bundled vulndeps to ensure that we do
-                     // not consider as bundledcc the cases where the code signature was not
-                     // altered.
+    // not consider as bundledcc the cases where the code signature was not
+    // altered.
     vd_all.addAll(vd_list_bundled_cc);
     vd_all.addAll(vd_list_bundled_av);
     vd_all.addAll(
         vd_list_libid); // this must be added after the vd_list_bundled_av, to ensure that we get
-                        // the info that a pair dep,bug comes out of something rebundled, though we
-                        // overwrite it as FP at the level of the rebundling artifact
+    // the info that a pair dep,bug comes out of something rebundled, though we
+    // overwrite it as FP at the level of the rebundling artifact
 
     // Read exemption info from configuration and enrich vuln dep
     if (_add_exemption_info) {

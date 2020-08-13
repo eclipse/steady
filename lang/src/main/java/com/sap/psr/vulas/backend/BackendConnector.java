@@ -1172,7 +1172,7 @@ public class BackendConnector {
         ur = (HttpRequest) ois.readObject();
         ur.setGoalContext(
             _ctx); // configuration is not serialized to disk (cf. GoalContext), hence, has to be
-                   // set again
+        // set again
         if (max_size > 0 && ur instanceof BasicHttpRequest) {
           final long payload_size = ((BasicHttpRequest) ur).getPayloadSize();
           if (payload_size > max_size) {

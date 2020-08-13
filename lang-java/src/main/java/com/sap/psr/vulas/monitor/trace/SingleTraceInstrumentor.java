@@ -52,8 +52,8 @@ public class SingleTraceInstrumentor extends AbstractTraceInstrumentor {
     _code.append("java.util.Map params = new java.util.HashMap();");
     _code.append(
         "params.put(\"junit\", \"false\");"); // corresponds to collectDetails= false -> SIngle
-                                              // Instrumentor. junit is the name of the argument in
-                                              // the Execution Monitor
+    // Instrumentor. junit is the name of the argument in
+    // the Execution Monitor
     _code.append("params.put(\"counter\", new Integer(1));");
 
     // Change boolean flag to prevent subsequent executions of the callback (only here, in the

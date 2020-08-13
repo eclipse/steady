@@ -2055,10 +2055,9 @@ public class ApplicationController {
       @RequestParam(value = "includeAffectedUnconfirmed", required = false, defaultValue = "true")
           Boolean includeAffectedUnconfirmed, // affectedConfirmed==0
       @RequestParam(value = "addExcemptionInfo", required = false, defaultValue = "false")
-          Boolean
-              addExcemptionInfo, // consider configuration setting
-                                 // "vulas.report.exceptionScopeBlacklist" and
-                                 // "vulas.report.exceptionExcludeBugs"
+          Boolean addExcemptionInfo, // consider configuration setting
+      // "vulas.report.exceptionScopeBlacklist" and
+      // "vulas.report.exceptionExcludeBugs"
       @RequestParam(value = "lastChange", required = false, defaultValue = "")
           String lastChange, // a timestamp identifier which is used to cache the response or not
       @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)

@@ -302,7 +302,7 @@ public class Report {
     long vulns_incl = 0, vulns_reach = 0, vulns_traced = 0;
     long vulns_traced_not_reach =
         0; // A particularly interesting case: Static analysis says it is not reachable, however, we
-           // collected a trace
+    // collected a trace
 
     // Collect obsolete exemptions
     final Set<String> obsolHistorical = new HashSet<String>();

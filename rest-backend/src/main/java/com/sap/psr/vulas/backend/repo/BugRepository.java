@@ -60,11 +60,10 @@ public interface BugRepository extends CrudRepository<Bug, Long>, BugRepositoryC
    * @param bugid a {@link java.lang.String} object.
    * @return a {@link java.util.List} object.
    */
-  @Query(
-      "SELECT b FROM Bug b  WHERE b.bugId=:bugId") // adding 'JOIN FETCH b.constructChanges', the
-                                                   // junit tests fails: e.g., it tries to insert
-                                                   // twice the same bug as if the equal return
-                                                   // false?
+  @Query("SELECT b FROM Bug b  WHERE b.bugId=:bugId") // adding 'JOIN FETCH b.constructChanges', the
+  // junit tests fails: e.g., it tries to insert
+  // twice the same bug as if the equal return
+  // false?
   List<Bug> findByBugId(@Param("bugId") String bugid);
 
   /**
@@ -73,11 +72,10 @@ public interface BugRepository extends CrudRepository<Bug, Long>, BugRepositoryC
    * @param bugid a {@link java.lang.String} object.
    * @return a {@link java.util.List} object.
    */
-  @Query(
-      "SELECT b FROM Bug b  WHERE b.bugId=:bugId") // adding 'JOIN FETCH b.constructChanges', the
-                                                   // junit tests fails: e.g., it tries to insert
-                                                   // twice the same bug as if the equal return
-                                                   // false?
+  @Query("SELECT b FROM Bug b  WHERE b.bugId=:bugId") // adding 'JOIN FETCH b.constructChanges', the
+  // junit tests fails: e.g., it tries to insert
+  // twice the same bug as if the equal return
+  // false?
   @Cacheable(value = "bug", unless = "#result.isEmpty()")
   List<Bug> findCoverageByBugId(@Param("bugId") String bugid);
 
@@ -118,7 +116,8 @@ public interface BugRepository extends CrudRepository<Bug, Long>, BugRepositoryC
           + " cc1.constructChangeType='ADD')"
           + " ) " // select bug if all other cc of the same bug are PACK, ADD or Test changes
           + "   AND NOT (lc.type='MODU' AND (lc.qname='setup' OR lc.qname='tests' OR"
-          + " lc.qname='test.__init__'))" // Python-specific exception: setup.py is virtually everywhere, considering it would bring far too many FPs
+          + " lc.qname='test.__init__'))" // Python-specific exception: setup.py is virtually
+                                          // everywhere, considering it would bring far too many FPs
   )
   List<Bug> findByLibrary(@Param("bundledDigest") Library bundledDigest);
 

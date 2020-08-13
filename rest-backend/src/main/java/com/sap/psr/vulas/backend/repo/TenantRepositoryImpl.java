@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.backend.repo;
 
-
 import javax.persistence.EntityNotFoundException;
 
 import org.slf4j.Logger;

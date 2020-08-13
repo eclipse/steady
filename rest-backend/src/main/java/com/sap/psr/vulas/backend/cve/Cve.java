@@ -22,7 +22,6 @@ package com.sap.psr.vulas.backend.cve;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

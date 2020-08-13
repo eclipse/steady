@@ -312,7 +312,7 @@ public class HubIntegrationControllerTest {
                 jsonPath("$[0].projectId")
                     .value(
                         "bar.jar")) // Only bar.jar is reported (unknown digest), foo.jar is ignored
-                                    // (well-known digest)
+            // (well-known digest)
             .andExpect(jsonPath("$[0].reachable").exists())
             .andReturn();
 

@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.tasks;
 
-
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.Application;

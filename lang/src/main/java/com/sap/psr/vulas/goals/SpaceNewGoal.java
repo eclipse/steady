@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.goals;
 
-
 import org.apache.logging.log4j.Logger;
 
 import com.sap.psr.vulas.backend.BackendConnector;

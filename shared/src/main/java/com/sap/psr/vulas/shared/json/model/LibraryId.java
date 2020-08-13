@@ -21,7 +21,6 @@ package com.sap.psr.vulas.shared.json.model;
 
 import java.io.Serializable;
 
-
 import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

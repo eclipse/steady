@@ -66,7 +66,7 @@ public class ExemptionUnassessed implements IExemption {
           + "]";
     else if (this.value.equals(Value.KNOWN))
       return "Unassessed findings in libraries known to artifact repositories such as Maven"
-                 + " Central are exempted according to configuration setting ["
+          + " Central are exempted according to configuration setting ["
           + CFG
           + "]";
     else return "Illegal State, check configuration setting [" + CFG + "]";
