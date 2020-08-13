@@ -117,7 +117,7 @@ public interface BugRepository extends CrudRepository<Bug, Long>, BugRepositoryC
           + " ) " // select bug if all other cc of the same bug are PACK, ADD or Test changes
           + "   AND NOT (lc.type='MODU' AND (lc.qname='setup' OR lc.qname='tests' OR"
           + " lc.qname='test.__init__'))" // Python-specific exception: setup.py is virtually
-                                          // everywhere, considering it would bring far too many FPs
+  // everywhere, considering it would bring far too many FPs
   )
   List<Bug> findByLibrary(@Param("bundledDigest") Library bundledDigest);
 

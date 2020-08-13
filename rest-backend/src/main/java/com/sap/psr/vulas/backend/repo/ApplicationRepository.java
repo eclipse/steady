@@ -339,8 +339,8 @@ public interface ApplicationRepository
           + "   AND NOT (lc.type='MODU' AND (lc.qname='setup' OR lc.qname='tests' OR"
           + " lc.qname='test.__init__'))"
           + " " // Python-specific exception: setup.py is virtually everywhere, considering it would
-                // bring far too many FPs. Similarly tests.py originates such a generic module that
-                // would bring up too many FPs
+  // bring far too many FPs. Similarly tests.py originates such a generic module that
+  // would bring up too many FPs
   )
   TreeSet<VulnerableDependency> findJPQLVulnerableDependenciesByGAV(
       @Param("mvnGroup") String group,
@@ -562,8 +562,8 @@ public interface ApplicationRepository
           + " (lc.type='MODU' AND (lc.qname='setup' OR lc.qname='tests' OR"
           + " lc.qname='test.__init__'))"
           + " )" // Python-specific exception: setup.py is virtually everywhere, considering it
-                 // would bring far too many FPs. Similarly tests.py originates such a generic
-                 // module that would bring up too many FPs
+  // would bring far too many FPs. Similarly tests.py originates such a generic
+  // module that would bring up too many FPs
   )
   List<Application> findAppsByCC(@Param("listOfConstructs") List<ConstructId> listOfConstructs);
 
