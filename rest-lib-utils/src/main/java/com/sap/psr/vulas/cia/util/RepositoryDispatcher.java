@@ -142,7 +142,7 @@ public class RepositoryDispatcher  implements RepositoryWrapper {
 		Artifact result = null;
 		final ServiceLoader<RepositoryWrapper> loader = ServiceLoader.load(RepositoryWrapper.class);
 		for(RepositoryWrapper dv: loader) {
-			if(dv.isConfigured() && (lang==null || lang.equals("") || dv.getSupportedLanguages().contains(lang))){
+			if(dv.isConfigured() && (lang==null || lang.toString().equals("") || dv.getSupportedLanguages().contains(lang))){
 				try{
 					result = dv.getArtifactVersion(group, artifact, version, classifier, packaging, null);
 					if(result != null)

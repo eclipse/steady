@@ -26,7 +26,6 @@ import java.util.TreeSet;
 
 import org.apache.logging.log4j.Logger;
 
-
 import com.sap.psr.vulas.ConstructChange;
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalysisException;
@@ -42,7 +41,6 @@ import com.sap.psr.vulas.vcs.FileChange;
 public class FileComparator {
 
 	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
-	private File def, fix = null;
 
 	private FileAnalyzer defAnalyzer, fixAnalyzer = null;
 
@@ -88,12 +86,10 @@ public class FileComparator {
 		this.timeStamp = _time_stamp;
 
 		if(_def!=null) {
-			this.def = _def;
 			this.defAnalyzer = FileAnalyzerFactory.buildFileAnalyzer(_def);
 			this.defAnalyzer.getConstructs();
 		}
 		if(_fix!=null) {
-			this.fix = _fix;
 			this.fixAnalyzer = FileAnalyzerFactory.buildFileAnalyzer(_fix);
 			this.fixAnalyzer.getConstructs();
 		}
