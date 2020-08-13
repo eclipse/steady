@@ -934,7 +934,7 @@ public class BugLibManager {
             boolean toUpload = true;
             if (!addnew) {
               for (Counter i : existingAffLib) {
-                if (i.getName().toString().equals(e.getKey().toString())
+                if (i.getName().equals(e.getKey().toString())
                     && i.getCount() == e.getValue().size()) {
                   toUpload = false;
                   BugLibManager.log.info(
