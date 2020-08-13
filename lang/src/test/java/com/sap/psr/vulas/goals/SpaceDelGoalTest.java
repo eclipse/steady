@@ -30,7 +30,6 @@ import static com.xebialabs.restito.semantics.Condition.delete;
 import static com.xebialabs.restito.semantics.Condition.method;
 import static com.xebialabs.restito.semantics.Condition.post;
 import static com.xebialabs.restito.semantics.Condition.uri;
-import static com.xebialabs.restito.semantics.Condition.withHeader;
 
 import org.glassfish.grizzly.http.Method;
 import org.glassfish.grizzly.http.util.HttpStatus;
@@ -43,71 +42,62 @@ import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
 import com.sap.psr.vulas.shared.json.model.Space;
 import com.sap.psr.vulas.shared.json.model.Tenant;
-import com.sap.psr.vulas.shared.util.Constants;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 /**
  * https://zeroturnaround.com/rebellabs/the-correct-way-to-use-integration-tests-in-your-build-process/
  *
  */
 public class SpaceDelGoalTest extends AbstractGoalTest {
-	
-	private void setupMockServices(Tenant _t, Space _s) {
-		final String s_json = JacksonUtil.asJsonString(_s);
-		
-		// Options space
-		whenHttp(server).
-		match(composite(method(Method.OPTIONS), uri("/backend" + PathBuilder.space(_s)))). //, withHeader(Constants.HTTP_TENANT_HEADER, _t.getTenantToken())
-		then(
-				stringContent(s_json),
-				contentType("application/json"),
-				charset("UTF-8"),
-				status(HttpStatus.OK_200));
-		
-		expect()
-			.statusCode(200).
-			when()
-			.options("/backend" + PathBuilder.space(_s));
-		
-		// Delete space
-		whenHttp(server).
-		match(delete("/backend" + PathBuilder.space(_s))).
-		then(
-				stringContent(s_json),
-				contentType("application/json"),
-				charset("UTF-8"),
-				status(HttpStatus.OK_200));
-		
-		expect()
-			.statusCode(200).
-			when()
-			.delete("/backend" + PathBuilder.space(_s));
 
-		// Post goal exe
-		whenHttp(server).
-		match(post("/backend" + PathBuilder.goalExcecutions(null, _s, null))).
-		then(
-				stringContent(s_json),
-				contentType("application/json"),
-				charset("UTF-8"),
-				status(HttpStatus.OK_200));
-		
-		expect()
-			.statusCode(200).
-			when()
-			.post("/backend" + PathBuilder.goalExcecutions(null, _s, null));
-	}
+  private void setupMockServices(Tenant _t, Space _s) {
+    final String s_json = JacksonUtil.asJsonString(_s);
 
-	@Test
-	public void testDelSpace() throws GoalConfigurationException, GoalExecutionException {
-		// Mock REST services
-		this.configureBackendServiceUrl(server);
-		this.setupMockServices(this.testTenant, this.testSpace);
-		
-		this.vulasConfiguration.setProperty(CoreConfiguration.TENANT_TOKEN, testTenant.getTenantToken());
-		this.vulasConfiguration.setProperty(CoreConfiguration.SPACE_TOKEN, testSpace.getSpaceToken());
-		
-		final AbstractGoal goal = GoalFactory.create(GoalType.SPACEDEL, GoalClient.CLI);
-		goal.setConfiguration(this.vulasConfiguration).executeSync();
-	}
+    // Options space
+    whenHttp(server)
+        .match(composite(method(Method.OPTIONS), uri("/backend" + PathBuilder.space(_s))))
+        . // , withHeader(Constants.HTTP_TENANT_HEADER, _t.getTenantToken())
+        then(
+            stringContent(s_json),
+            contentType("application/json"),
+            charset("UTF-8"),
+            status(HttpStatus.OK_200));
+
+    expect().statusCode(200).when().options("/backend" + PathBuilder.space(_s));
+
+    // Delete space
+    whenHttp(server)
+        .match(delete("/backend" + PathBuilder.space(_s)))
+        .then(
+            stringContent(s_json),
+            contentType("application/json"),
+            charset("UTF-8"),
+            status(HttpStatus.OK_200));
+
+    expect().statusCode(200).when().delete("/backend" + PathBuilder.space(_s));
+
+    // Post goal exe
+    whenHttp(server)
+        .match(post("/backend" + PathBuilder.goalExcecutions(null, _s, null)))
+        .then(
+            stringContent(s_json),
+            contentType("application/json"),
+            charset("UTF-8"),
+            status(HttpStatus.OK_200));
+
+    expect().statusCode(200).when().post("/backend" + PathBuilder.goalExcecutions(null, _s, null));
+  }
+
+  @Test
+  public void testDelSpace() throws GoalConfigurationException, GoalExecutionException {
+    // Mock REST services
+    this.configureBackendServiceUrl(server);
+    this.setupMockServices(this.testTenant, this.testSpace);
+
+    this.vulasConfiguration.setProperty(
+        CoreConfiguration.TENANT_TOKEN, testTenant.getTenantToken());
+    this.vulasConfiguration.setProperty(CoreConfiguration.SPACE_TOKEN, testSpace.getSpaceToken());
+
+    final AbstractGoal goal = GoalFactory.create(GoalType.SPACEDEL, GoalClient.CLI);
+    goal.setConfiguration(this.vulasConfiguration).executeSync();
+  }
 }

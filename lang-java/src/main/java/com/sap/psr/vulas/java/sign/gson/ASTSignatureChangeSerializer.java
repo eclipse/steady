@@ -26,7 +26,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.sap.psr.vulas.java.sign.ASTSignatureChange;
-import com.sap.psr.vulas.shared.json.JsonBuilder;
 
 import ch.uzh.ifi.seal.changedistiller.model.entities.Delete;
 import ch.uzh.ifi.seal.changedistiller.model.entities.Insert;
@@ -41,89 +40,93 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.Update;
  */
 public class ASTSignatureChangeSerializer extends StdSerializer<ASTSignatureChange> {
 
-	/**
-	 * <p>Constructor for ASTSignatureChangeSerializer.</p>
-	 */
-	public ASTSignatureChangeSerializer() {
-		this(null);
-	}
+  /**
+   * <p>Constructor for ASTSignatureChangeSerializer.</p>
+   */
+  public ASTSignatureChangeSerializer() {
+    this(null);
+  }
 
-	/**
-	 * <p>Constructor for ASTSignatureChangeSerializer.</p>
-	 *
-	 * @param t a {@link java.lang.Class} object.
-	 */
-	public ASTSignatureChangeSerializer(Class<ASTSignatureChange> t) {
-		super(t);
-	}
-	
-	/**
-	 * Helper method for building a "SourceCodeEntity" element
-	 *
-	 * @param change - SourcCodeChangeElement
-	 * @param buffer
-	 */
-	private void writeSourceCodeEntityElement(JsonGenerator jgen, String _property_name, SourceCodeEntity _entity) throws IOException {
-		jgen.writeObjectFieldStart(_property_name);
-		jgen.writeStringField("UniqueName", _entity.getUniqueName().toString());
-		jgen.writeStringField("EntityType", _entity.getType().toString());
-		jgen.writeStringField("Modifiers", Integer.toString(_entity.getModifiers()));
-		jgen.writeObjectFieldStart("SourceCodeRange");
-		jgen.writeStringField("Start", Integer.toString(_entity.getSourceRange().getStart()));
-		jgen.writeStringField("End", Integer.toString(_entity.getSourceRange().getEnd()));
-		jgen.writeEndObject();
-		jgen.writeEndObject();
-	}
+  /**
+   * <p>Constructor for ASTSignatureChangeSerializer.</p>
+   *
+   * @param t a {@link java.lang.Class} object.
+   */
+  public ASTSignatureChangeSerializer(Class<ASTSignatureChange> t) {
+    super(t);
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	public void serialize(ASTSignatureChange value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+  /**
+   * Helper method for building a "SourceCodeEntity" element
+   *
+   * @param change - SourcCodeChangeElement
+   * @param buffer
+   */
+  private void writeSourceCodeEntityElement(
+      JsonGenerator jgen, String _property_name, SourceCodeEntity _entity) throws IOException {
+    jgen.writeObjectFieldStart(_property_name);
+    jgen.writeStringField("UniqueName", _entity.getUniqueName().toString());
+    jgen.writeStringField("EntityType", _entity.getType().toString());
+    jgen.writeStringField("Modifiers", Integer.toString(_entity.getModifiers()));
+    jgen.writeObjectFieldStart("SourceCodeRange");
+    jgen.writeStringField("Start", Integer.toString(_entity.getSourceRange().getStart()));
+    jgen.writeStringField("End", Integer.toString(_entity.getSourceRange().getEnd()));
+    jgen.writeEndObject();
+    jgen.writeEndObject();
+  }
 
-		jgen.writeStartObject();
+  /** {@inheritDoc} */
+  @Override
+  public void serialize(ASTSignatureChange value, JsonGenerator jgen, SerializerProvider provider)
+      throws IOException, JsonProcessingException {
 
-		jgen.writeObjectFieldStart("StructureEntity");
+    jgen.writeStartObject();
 
-		jgen.writeStringField("UniqueName", value.getStructureEntity().getUniqueName());
-		jgen.writeStringField("EntityType", value.getStructureEntity().getType().toString());
-		jgen.writeStringField("Modifiers", Integer.toString(value.getStructureEntity().getModifiers()));
+    jgen.writeObjectFieldStart("StructureEntity");
 
-		jgen.writeArrayFieldStart("changes");
+    jgen.writeStringField("UniqueName", value.getStructureEntity().getUniqueName());
+    jgen.writeStringField("EntityType", value.getStructureEntity().getType().toString());
+    jgen.writeStringField("Modifiers", Integer.toString(value.getStructureEntity().getModifiers()));
 
-		for(SourceCodeChange change : value.getListOfChanges()) {
-			
-			jgen.writeStartObject();
-			
-			jgen.writeStringField("OperationType", change.getClass().getSimpleName());
-			jgen.writeStringField("changeType", change.getChangeType().toString());
-						
-			// INSERT OPERATION
-			if(change instanceof Insert) {
-				this.writeSourceCodeEntityElement(jgen, "InsertedEntity", change.getChangedEntity());
-				this.writeSourceCodeEntityElement(jgen, "ParentEntity", change.getParentEntity());
-			}
-			//DELETE OPERATION
-			else if(change instanceof Delete) {
-				this.writeSourceCodeEntityElement(jgen, "DeletedEntity", change.getChangedEntity());
-				this.writeSourceCodeEntityElement(jgen, "ParentEntity", change.getParentEntity());
-			}
-			//MOVE OPERATION
-			else if(change instanceof Move) {
-				this.writeSourceCodeEntityElement(jgen, "OldParentEntity", change.getParentEntity());
-				this.writeSourceCodeEntityElement(jgen, "MovedEntity", change.getChangedEntity());
-				this.writeSourceCodeEntityElement(jgen, "NewParentEntity", ((Move)change).getNewParentEntity());
-				this.writeSourceCodeEntityElement(jgen, "NewEntity", ((Move)change).getNewEntity());
-			}
-			//UPDATE OPERATION
-			else if(change instanceof Update) {
-				this.writeSourceCodeEntityElement(jgen, "NewEntity", ((Update)change).getNewEntity());
-				this.writeSourceCodeEntityElement(jgen, "UpdatedEntity", ((Update)change).getChangedEntity());
-				this.writeSourceCodeEntityElement(jgen, "ParentEntity", change.getParentEntity());
-			}
-			
-			jgen.writeEndObject();
-		}
-		jgen.writeEndArray(); // changes
-		jgen.writeEndObject(); // StructureEntity
-		jgen.writeEndObject();
-	}
+    jgen.writeArrayFieldStart("changes");
+
+    for (SourceCodeChange change : value.getListOfChanges()) {
+
+      jgen.writeStartObject();
+
+      jgen.writeStringField("OperationType", change.getClass().getSimpleName());
+      jgen.writeStringField("changeType", change.getChangeType().toString());
+
+      // INSERT OPERATION
+      if (change instanceof Insert) {
+        this.writeSourceCodeEntityElement(jgen, "InsertedEntity", change.getChangedEntity());
+        this.writeSourceCodeEntityElement(jgen, "ParentEntity", change.getParentEntity());
+      }
+      // DELETE OPERATION
+      else if (change instanceof Delete) {
+        this.writeSourceCodeEntityElement(jgen, "DeletedEntity", change.getChangedEntity());
+        this.writeSourceCodeEntityElement(jgen, "ParentEntity", change.getParentEntity());
+      }
+      // MOVE OPERATION
+      else if (change instanceof Move) {
+        this.writeSourceCodeEntityElement(jgen, "OldParentEntity", change.getParentEntity());
+        this.writeSourceCodeEntityElement(jgen, "MovedEntity", change.getChangedEntity());
+        this.writeSourceCodeEntityElement(
+            jgen, "NewParentEntity", ((Move) change).getNewParentEntity());
+        this.writeSourceCodeEntityElement(jgen, "NewEntity", ((Move) change).getNewEntity());
+      }
+      // UPDATE OPERATION
+      else if (change instanceof Update) {
+        this.writeSourceCodeEntityElement(jgen, "NewEntity", ((Update) change).getNewEntity());
+        this.writeSourceCodeEntityElement(
+            jgen, "UpdatedEntity", ((Update) change).getChangedEntity());
+        this.writeSourceCodeEntityElement(jgen, "ParentEntity", change.getParentEntity());
+      }
+
+      jgen.writeEndObject();
+    }
+    jgen.writeEndArray(); // changes
+    jgen.writeEndObject(); // StructureEntity
+    jgen.writeEndObject();
+  }
 }

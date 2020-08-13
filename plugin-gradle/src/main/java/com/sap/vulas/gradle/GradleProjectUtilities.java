@@ -28,63 +28,60 @@ import java.util.Map;
 
 import static com.sap.vulas.gradle.VulasPluginCommon.*;
 
-
 public class GradleProjectUtilities {
 
+  private static final Map<String, ProjectOutputTypes> knownPlugins;
 
-    private static final Map<String, ProjectOutputTypes> knownPlugins;
+  static {
+    knownPlugins = new HashMap<>();
+    knownPlugins.put("java", ProjectOutputTypes.JAR);
+    knownPlugins.put("com.android.library", ProjectOutputTypes.AAR);
+    knownPlugins.put("com.android.application", ProjectOutputTypes.APK);
+  }
 
-    static {
-        knownPlugins = new HashMap<>();
-        knownPlugins.put("java", ProjectOutputTypes.JAR);
-        knownPlugins.put("com.android.library", ProjectOutputTypes.AAR);
-        knownPlugins.put("com.android.application", ProjectOutputTypes.APK);
+  protected static String getMandatoryProjectProperty(
+      Project project, GradleGavProperty property, Logger logger) {
+
+    final String propertyName = property.name();
+
+    logger.debug("Looking for property [{}] in project", propertyName);
+
+    String propertyValue = null;
+
+    if (project.hasProperty(propertyName)) {
+      propertyValue = project.getProperties().get(propertyName).toString();
     }
 
-
-    protected static String getMandatoryProjectProperty(Project project, GradleGavProperty property, Logger logger) {
-
-        final String propertyName=property.name();
-
-        logger.debug("Looking for property [{}] in project", propertyName);
-
-        String propertyValue = null;
-
-        if(project.hasProperty(propertyName)) {
-            propertyValue = project.getProperties().get(propertyName).toString();
-        }
-
-        if (propertyValue == null || propertyValue.isEmpty() || propertyValue.equals("undefined")) {
-            logger.error("Property [{}] is not defined, please define it!", propertyName);
-            throw new GradleException();
-        }
-
-        logger.debug("Property found: {}={}", propertyName, propertyValue);
-
-        return propertyValue;
+    if (propertyValue == null || propertyValue.isEmpty() || propertyValue.equals("undefined")) {
+      logger.error("Property [{}] is not defined, please define it!", propertyName);
+      throw new GradleException();
     }
 
-    protected static ProjectOutputTypes determineProjectOutputType(Project project, Logger logger) {
+    logger.debug("Property found: {}={}", propertyName, propertyValue);
 
-        ProjectOutputTypes projectOutputType = null;
+    return propertyValue;
+  }
 
-        for ( String kp: knownPlugins.keySet()) {
-            if (project.getPlugins().hasPlugin(kp)) {
-                logger.quiet("Found plugin: " + kp);
-                projectOutputType = knownPlugins.get(kp);
-                break;
-            }
-        }
+  protected static ProjectOutputTypes determineProjectOutputType(Project project, Logger logger) {
 
-        if (projectOutputType != null) {
-            logger.quiet("Project type determined: {}", projectOutputType.toString());
-        }
+    ProjectOutputTypes projectOutputType = null;
 
-        return projectOutputType;
+    for (String kp : knownPlugins.keySet()) {
+      if (project.getPlugins().hasPlugin(kp)) {
+        logger.quiet("Found plugin: " + kp);
+        projectOutputType = knownPlugins.get(kp);
+        break;
+      }
     }
 
-    protected static boolean hasKnownProjectOutputType(Project project, Logger logger) {
-        return determineProjectOutputType(project, logger) != null;
+    if (projectOutputType != null) {
+      logger.quiet("Project type determined: {}", projectOutputType.toString());
     }
 
+    return projectOutputType;
+  }
+
+  protected static boolean hasKnownProjectOutputType(Project project, Logger logger) {
+    return determineProjectOutputType(project, logger) != null;
+  }
 }

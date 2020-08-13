@@ -29,7 +29,6 @@ import java.util.TreeMap;
 
 import org.apache.logging.log4j.Logger;
 
-
 import com.sap.psr.vulas.Construct;
 import com.sap.psr.vulas.ConstructId;
 import com.sap.psr.vulas.FileAnalysisException;
@@ -46,109 +45,125 @@ import javassist.CtClass;
  */
 public class ClassFileAnalyzer implements FileAnalyzer {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
-	/** The file to be analyzed. */
-	private File file = null;
+  /** The file to be analyzed. */
+  private File file = null;
 
-	/** All Java constructs found in the given class file. */
-	private Map<ConstructId, Construct> constructs = null;
-	
-	/** {@inheritDoc} */
-	@Override
-	public String[] getSupportedFileExtensions() {
-		return new String[] { "class" };
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public boolean canAnalyze(File _file) {
-		final String ext = FileUtil.getFileExtension(_file);
-		if(ext == null || ext.equals(""))
-			return false;
-		for(String supported_ext: this.getSupportedFileExtensions()) {
-			if(supported_ext.equalsIgnoreCase(ext))
-				return true;
-		}
-		return false;
-	}
+  /** All Java constructs found in the given class file. */
+  private Map<ConstructId, Construct> constructs = null;
 
-	/** {@inheritDoc} */
-	@Override
-	public void analyze(final File _file) throws FileAnalysisException {
-		this.setFile(_file);
-	}
-	
-	/**
-	 * <p>Setter for the field <code>file</code>.</p>
-	 *
-	 * @param _file a {@link java.io.File} object.
-	 * @throws java.lang.IllegalArgumentException if any.
-	 */
-	public void setFile(File _file) throws IllegalArgumentException {
-		final String ext = FileUtil.getFileExtension(_file);
-		if(!ext.equals("class"))
-			throw new IllegalArgumentException("Expected a class file but got [" + _file + "]");
-		if(!FileUtil.isAccessibleFile(_file.toPath()))
-			throw new IllegalArgumentException("Cannot open file [" + _file + "]");
-		this.file = _file;
-	}
+  /** {@inheritDoc} */
+  @Override
+  public String[] getSupportedFileExtensions() {
+    return new String[] {"class"};
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	public Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
-		if(this.constructs==null) {
-			try {
-				this.constructs = new TreeMap<ConstructId, Construct>();
+  /** {@inheritDoc} */
+  @Override
+  public boolean canAnalyze(File _file) {
+    final String ext = FileUtil.getFileExtension(_file);
+    if (ext == null || ext.equals("")) return false;
+    for (String supported_ext : this.getSupportedFileExtensions()) {
+      if (supported_ext.equalsIgnoreCase(ext)) return true;
+    }
+    return false;
+  }
 
-				// Create a Javassist representation of the class file
-				final CtClass ctclass;
-				try (final FileInputStream fis = new FileInputStream(this.file)) {
-					ctclass = ClassPool.getDefault().makeClass(fis);
-				}
+  /** {@inheritDoc} */
+  @Override
+  public void analyze(final File _file) throws FileAnalysisException {
+    this.setFile(_file);
+  }
 
-				// Update default class pool so that other classes are also found (e.g., the declaring class of nested classes when constructing the ClassVisitor)
-				//TODO HP, 4.4.16: This does not yet seem to work
-				ClassPoolUpdater.getInstance().updateClasspath(ctclass, this.file);
+  /**
+   * <p>Setter for the field <code>file</code>.</p>
+   *
+   * @param _file a {@link java.io.File} object.
+   * @throws java.lang.IllegalArgumentException if any.
+   */
+  public void setFile(File _file) throws IllegalArgumentException {
+    final String ext = FileUtil.getFileExtension(_file);
+    if (!ext.equals("class"))
+      throw new IllegalArgumentException("Expected a class file but got [" + _file + "]");
+    if (!FileUtil.isAccessibleFile(_file.toPath()))
+      throw new IllegalArgumentException("Cannot open file [" + _file + "]");
+    this.file = _file;
+  }
 
-				// Only add constructs of ctclass is either a class or enum (no interfaces)
-				if(ctclass.isInterface()) {
-					ClassFileAnalyzer.log.debug("Interface [" + ctclass.getName() + "] skipped");
-				}
-				else {
-					// Use a class visitor to get all constructs from the class file
-					final ClassVisitor cv = new ClassVisitor(ctclass);
-					final Set<ConstructId> temp_constructs = cv.getConstructs();
+  /** {@inheritDoc} */
+  @Override
+  public Map<ConstructId, Construct> getConstructs() throws FileAnalysisException {
+    if (this.constructs == null) {
+      try {
+        this.constructs = new TreeMap<ConstructId, Construct>();
 
-					// Add all constructs with a "" body
-					// TODO: Change Construct so that string (for source files) and binary bodies (file compiled classes) can be covered
-					for(ConstructId c: temp_constructs)
-						this.constructs.put(c, new Construct(c, ""));
-				}
-			} catch (FileNotFoundException e) {
-				throw new FileAnalysisException(e.getMessage(), e);
-			} catch (IOException e) {
-				throw new FileAnalysisException("IO exception while analysing class file [" + this.file.getName() + "]: " + e.getMessage(), e);
-			} catch (RuntimeException e) {
-				throw new FileAnalysisException("Runtime exception while analysing class file [" + this.file.getName() + "]: " + e.getMessage(), e);
-			}
-		}
-		return this.constructs;
-	}
+        // Create a Javassist representation of the class file
+        final CtClass ctclass;
+        try (final FileInputStream fis = new FileInputStream(this.file)) {
+          ctclass = ClassPool.getDefault().makeClass(fis);
+        }
 
-	/** {@inheritDoc} */
-	@Override
-	public boolean containsConstruct(ConstructId _id) throws FileAnalysisException { return this.getConstructs().containsKey(_id); }
+        // Update default class pool so that other classes are also found (e.g., the declaring class
+        // of nested classes when constructing the ClassVisitor)
+        // TODO HP, 4.4.16: This does not yet seem to work
+        ClassPoolUpdater.getInstance().updateClasspath(ctclass, this.file);
 
-	/** {@inheritDoc} */
-	@Override
-	public Construct getConstruct(ConstructId _id) throws FileAnalysisException { return this.getConstructs().get(_id); }
-	
-	/** {@inheritDoc} */
-	@Override
-	public boolean hasChilds() { return false; }
-	
-	/** {@inheritDoc} */
-	@Override
-	public Set<FileAnalyzer> getChilds(boolean _recursive) { return null; }
+        // Only add constructs of ctclass is either a class or enum (no interfaces)
+        if (ctclass.isInterface()) {
+          ClassFileAnalyzer.log.debug("Interface [" + ctclass.getName() + "] skipped");
+        } else {
+          // Use a class visitor to get all constructs from the class file
+          final ClassVisitor cv = new ClassVisitor(ctclass);
+          final Set<ConstructId> temp_constructs = cv.getConstructs();
+
+          // Add all constructs with a "" body
+          // TODO: Change Construct so that string (for source files) and binary bodies (file
+          // compiled classes) can be covered
+          for (ConstructId c : temp_constructs) this.constructs.put(c, new Construct(c, ""));
+        }
+      } catch (FileNotFoundException e) {
+        throw new FileAnalysisException(e.getMessage(), e);
+      } catch (IOException e) {
+        throw new FileAnalysisException(
+            "IO exception while analysing class file ["
+                + this.file.getName()
+                + "]: "
+                + e.getMessage(),
+            e);
+      } catch (RuntimeException e) {
+        throw new FileAnalysisException(
+            "Runtime exception while analysing class file ["
+                + this.file.getName()
+                + "]: "
+                + e.getMessage(),
+            e);
+      }
+    }
+    return this.constructs;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public boolean containsConstruct(ConstructId _id) throws FileAnalysisException {
+    return this.getConstructs().containsKey(_id);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Construct getConstruct(ConstructId _id) throws FileAnalysisException {
+    return this.getConstructs().get(_id);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public boolean hasChilds() {
+    return false;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Set<FileAnalyzer> getChilds(boolean _recursive) {
+    return null;
+  }
 }

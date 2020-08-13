@@ -46,111 +46,120 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import com.xebialabs.restito.server.StubServer;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = MainController.class,webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+    classes = MainController.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class IT02_CoverageControllerIT {
-	
-	/** Mocks the CVE endpoint. */
-	protected StubServer cveService;
-	
-	/** Mocks JIRA. */
-	protected StubServer jiraService;
-	
-	private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-			MediaType.APPLICATION_JSON.getSubtype(),
-			Charset.forName("utf8"));
 
-	private MockMvc mockMvc;
-	private HttpMessageConverter<?> mappingJackson2HttpMessageConverter;
-	
-	@Autowired
-	private WebApplicationContext webApplicationContext;
+  /** Mocks the CVE endpoint. */
+  protected StubServer cveService;
 
-	@Autowired
-	void setConverters(HttpMessageConverter<?>[] converters) {
+  /** Mocks JIRA. */
+  protected StubServer jiraService;
 
-		this.mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream().filter(
-				new Predicate<HttpMessageConverter<?>>() {
-					@Override
-					public boolean test(HttpMessageConverter<?> hmc) {
-						return hmc instanceof MappingJackson2HttpMessageConverter;
-					}
-				}).findAny().get();
+  private MediaType contentType =
+      new MediaType(
+          MediaType.APPLICATION_JSON.getType(),
+          MediaType.APPLICATION_JSON.getSubtype(),
+          Charset.forName("utf8"));
 
-		Assert.assertNotNull("the JSON message converter must not be null",
-				this.mappingJackson2HttpMessageConverter);
-	}
+  private MockMvc mockMvc;
+  private HttpMessageConverter<?> mappingJackson2HttpMessageConverter;
 
-	@Before
-	public void setup() throws Exception {
-		this.mockMvc = webAppContextSetup(webApplicationContext).build();
+  @Autowired private WebApplicationContext webApplicationContext;
 
-		// CVE service
-		cveService = new StubServer().run();
-		RestAssured.port = cveService.getPort();
-		StringBuffer b = new StringBuffer();
-		b.append("http://localhost:").append(cveService.getPort()).append("/cves/");
-		VulasConfiguration.getGlobal().setProperty(VulasConfiguration.getServiceUrlKey(Service.CVE), b.toString());
-		
-		// JIRA service
-		jiraService = new StubServer().run();
-		RestAssured.port = jiraService.getPort();
-		b = new StringBuffer();
-		b.append("http://localhost:").append(cveService.getPort()).append("/rest/api/2/search");
-		VulasConfiguration.getGlobal().setProperty(VulasConfiguration.getServiceUrlKey(Service.JIRA), b.toString());
-	}
-	
-	@After
-	public void stop() {
-		cveService.stop();
-		jiraService.stop();
-	}
+  @Autowired
+  void setConverters(HttpMessageConverter<?>[] converters) {
 
-	@Test
-	public void testJiraSearch() throws Exception {
-		//JiraSearchResponse r = ServiceWrapper.getInstance().searchJira("CVE-2014-0160");
-		System.out.println("Something");
-	}
+    this.mappingJackson2HttpMessageConverter =
+        Arrays.asList(converters).stream()
+            .filter(
+                new Predicate<HttpMessageConverter<?>>() {
+                  @Override
+                  public boolean test(HttpMessageConverter<?> hmc) {
+                    return hmc instanceof MappingJackson2HttpMessageConverter;
+                  }
+                })
+            .findAny()
+            .get();
 
-	/**
-	 * Tests the coverage service, which makes calls to Jira and the classifier service.
-	 * @throws Exception
-	 */
-	/*@Test
-	public void testUnknown() throws Exception {
-		MvcResult r = mockMvc.perform(get("/coverage/CVE-2014-0050"))
-				.andExpect(status().is2xxSuccessful())
-				.andExpect(jsonPath("$.bug", is("CVE-2014-0050")))
-				.andExpect(jsonPath("$.description", startsWith("MultipartStream.java in Apache Commons FileUpload")))
-				//.andExpect(jsonPath("$.statusText", is(CoverageStatus.UNKNOWN.toString())))
-				.andReturn();
+    Assert.assertNotNull(
+        "the JSON message converter must not be null", this.mappingJackson2HttpMessageConverter);
+  }
 
-		String content = r.getResponse().getContentAsString();
+  @Before
+  public void setup() throws Exception {
+    this.mockMvc = webAppContextSetup(webApplicationContext).build();
 
-		r = mockMvc.perform(get("/coverage/CVE-2017-0001"))
-				.andExpect(status().is2xxSuccessful())
-				.andExpect(jsonPath("$.bug", is("CVE-2017-0001")))
-				.andExpect(jsonPath("$.description", startsWith("The Graphics Device Interface (GDI) in Microsoft Windows Vista SP2")))
-				.andExpect(jsonPath("$.statusText", is(CoverageStatus.OUT_OF_SCOPE.toString())))
-				.andReturn();
+    // CVE service
+    cveService = new StubServer().run();
+    RestAssured.port = cveService.getPort();
+    StringBuffer b = new StringBuffer();
+    b.append("http://localhost:").append(cveService.getPort()).append("/cves/");
+    VulasConfiguration.getGlobal()
+        .setProperty(VulasConfiguration.getServiceUrlKey(Service.CVE), b.toString());
 
-		content = r.getResponse().getContentAsString();
-		
-		r = mockMvc.perform(get("/coverage/CVE-2017-12629"))
-				.andExpect(status().is2xxSuccessful())
-				.andExpect(jsonPath("$.bug", is("CVE-2017-12629")))
-				.andExpect(jsonPath("$.description", startsWith("Remote code execution occurs in Apache Solr")))
-				.andExpect(jsonPath("$.statusText", is(CoverageStatus.OPEN.toString())))
-				.andReturn();
+    // JIRA service
+    jiraService = new StubServer().run();
+    RestAssured.port = jiraService.getPort();
+    b = new StringBuffer();
+    b.append("http://localhost:").append(cveService.getPort()).append("/rest/api/2/search");
+    VulasConfiguration.getGlobal()
+        .setProperty(VulasConfiguration.getServiceUrlKey(Service.JIRA), b.toString());
+  }
 
-		content = r.getResponse().getContentAsString();
-	}*/
+  @After
+  public void stop() {
+    cveService.stop();
+    jiraService.stop();
+  }
 
-	/*@Test
-	public void testOutOfScope() throws Exception {
-		mockMvc.perform(get("/coverage/CVE-2014-0160"))
-			.andExpect(status().is2xxSuccessful())
-			.andExpect(jsonPath("$.bug", is("CVE-2014-0160")))
-			.andExpect(jsonPath("$.statusText", is(CoverageStatus.OUT_OF_SCOPE.toString())));
-	}*/
+  @Test
+  public void testJiraSearch() throws Exception {
+    // JiraSearchResponse r = ServiceWrapper.getInstance().searchJira("CVE-2014-0160");
+    System.out.println("Something");
+  }
+
+  /**
+   * Tests the coverage service, which makes calls to Jira and the classifier service.
+   * @throws Exception
+   */
+  /*@Test
+  public void testUnknown() throws Exception {
+  	MvcResult r = mockMvc.perform(get("/coverage/CVE-2014-0050"))
+  			.andExpect(status().is2xxSuccessful())
+  			.andExpect(jsonPath("$.bug", is("CVE-2014-0050")))
+  			.andExpect(jsonPath("$.description", startsWith("MultipartStream.java in Apache Commons FileUpload")))
+  			//.andExpect(jsonPath("$.statusText", is(CoverageStatus.UNKNOWN.toString())))
+  			.andReturn();
+
+  	String content = r.getResponse().getContentAsString();
+
+  	r = mockMvc.perform(get("/coverage/CVE-2017-0001"))
+  			.andExpect(status().is2xxSuccessful())
+  			.andExpect(jsonPath("$.bug", is("CVE-2017-0001")))
+  			.andExpect(jsonPath("$.description", startsWith("The Graphics Device Interface (GDI) in Microsoft Windows Vista SP2")))
+  			.andExpect(jsonPath("$.statusText", is(CoverageStatus.OUT_OF_SCOPE.toString())))
+  			.andReturn();
+
+  	content = r.getResponse().getContentAsString();
+
+  	r = mockMvc.perform(get("/coverage/CVE-2017-12629"))
+  			.andExpect(status().is2xxSuccessful())
+  			.andExpect(jsonPath("$.bug", is("CVE-2017-12629")))
+  			.andExpect(jsonPath("$.description", startsWith("Remote code execution occurs in Apache Solr")))
+  			.andExpect(jsonPath("$.statusText", is(CoverageStatus.OPEN.toString())))
+  			.andReturn();
+
+  	content = r.getResponse().getContentAsString();
+  }*/
+
+  /*@Test
+  public void testOutOfScope() throws Exception {
+  	mockMvc.perform(get("/coverage/CVE-2014-0160"))
+  		.andExpect(status().is2xxSuccessful())
+  		.andExpect(jsonPath("$.bug", is("CVE-2014-0160")))
+  		.andExpect(jsonPath("$.statusText", is(CoverageStatus.OUT_OF_SCOPE.toString())));
+  }*/
 }

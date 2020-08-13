@@ -37,61 +37,65 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  */
 public class ReportGoal extends AbstractAppGoal {
 
-	private Set<Application> modules = null;
+  private Set<Application> modules = null;
 
-	/**
-	 * <p>Constructor for ReportGoal.</p>
-	 */
-	public ReportGoal() { super(GoalType.REPORT); }
+  /**
+   * <p>Constructor for ReportGoal.</p>
+   */
+  public ReportGoal() {
+    super(GoalType.REPORT);
+  }
 
-	/**
-	 * <p>setApplicationModules.</p>
-	 *
-	 * @param _modules a {@link java.util.Set} object.
-	 */
-	public void setApplicationModules(Set<Application> _modules) {
-		this.modules = _modules;
-	}
+  /**
+   * <p>setApplicationModules.</p>
+   *
+   * @param _modules a {@link java.util.Set} object.
+   */
+  public void setApplicationModules(Set<Application> _modules) {
+    this.modules = _modules;
+  }
 
-	/**
-	 * <p>setReportDir.</p>
-	 *
-	 * @param _path a {@link java.nio.file.Path} object.
-	 * @throws java.lang.IllegalArgumentException if any.
-	 */
-	public void setReportDir(Path _path) throws IllegalArgumentException {
-		if(!FileUtil.isAccessibleDirectory(_path))
-			throw new IllegalArgumentException("Cannot write report to [" + _path + "]");
-	}
+  /**
+   * <p>setReportDir.</p>
+   *
+   * @param _path a {@link java.nio.file.Path} object.
+   * @throws java.lang.IllegalArgumentException if any.
+   */
+  public void setReportDir(Path _path) throws IllegalArgumentException {
+    if (!FileUtil.isAccessibleDirectory(_path))
+      throw new IllegalArgumentException("Cannot write report to [" + _path + "]");
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	protected void executeTasks() throws Exception {
-		final Configuration cfg = this.getConfiguration().getConfiguration();
+  /** {@inheritDoc} */
+  @Override
+  protected void executeTasks() throws Exception {
+    final Configuration cfg = this.getConfiguration().getConfiguration();
 
-		final Report report = new Report(this.getGoalContext(), this.getApplicationContext(), this.modules);
-		report.setExceptionThreshold(cfg.getString(CoreConfiguration.REP_EXC_THRESHOLD, Report.THRESHOLD_ACT_EXE));
-		report.setExemptions(ExemptionSet.createFromConfiguration(cfg));
-		report.setCreateAffectedLibraries(cfg.getBoolean(CoreConfiguration.REP_CREATE_AFF_LIB, false));
+    final Report report =
+        new Report(this.getGoalContext(), this.getApplicationContext(), this.modules);
+    report.setExceptionThreshold(
+        cfg.getString(CoreConfiguration.REP_EXC_THRESHOLD, Report.THRESHOLD_ACT_EXE));
+    report.setExemptions(ExemptionSet.createFromConfiguration(cfg));
+    report.setCreateAffectedLibraries(cfg.getBoolean(CoreConfiguration.REP_CREATE_AFF_LIB, false));
 
-		// Fetch the vulns
-		try {
-			report.fetchAppVulnerabilities();
-		} catch (Exception e) {
-			throw new GoalExecutionException("Error fetching vulnerabilities: " + e.getMessage(), e);
-		}
+    // Fetch the vulns
+    try {
+      report.fetchAppVulnerabilities();
+    } catch (Exception e) {
+      throw new GoalExecutionException("Error fetching vulnerabilities: " + e.getMessage(), e);
+    }
 
-		report.processVulnerabilities();
-		report.writeResult(this.getConfiguration().getDir(CoreConfiguration.REP_DIR));
+    report.processVulnerabilities();
+    report.writeResult(this.getConfiguration().getDir(CoreConfiguration.REP_DIR));
 
-		// Stats
-		this.addGoalStats("report", report.getStats());
+    // Stats
+    this.addGoalStats("report", report.getStats());
 
-		// Throw exception if threshold is not met (or none is defined)
-		if(report.isThrowBuildException()) {
-			final ReportException re = new ReportException(report.getExceptionMessage(), null);
-			re.setLongMessage(report.getResultAsString());
-			throw re;
-		}
-	}
+    // Throw exception if threshold is not met (or none is defined)
+    if (report.isThrowBuildException()) {
+      final ReportException re = new ReportException(report.getExceptionMessage(), null);
+      re.setLongMessage(report.getResultAsString());
+      throw re;
+    }
+  }
 }

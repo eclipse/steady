@@ -48,147 +48,152 @@ import com.sap.psr.vulas.shared.json.model.Application;
 
 public class VulasCliTest extends AbstractGoalTest {
 
-	/**
-	 * App creation results in the following two HTTP calls.
-	 * @param _a TODO
-	 */
-	private void setupMockServices(Application _a) {
-		final String s_json = JacksonUtil.asJsonString(_a);
-		
-		// Options app: 200
-		whenHttp(server).
-				match(composite(method(Method.OPTIONS), uri("/backend" + PathBuilder.app(_a)))).
-			then(
-				stringContent(s_json),
-				contentType("application/json"),
-				charset("UTF-8"),
-				status(HttpStatus.OK_200));
-				
-		// Put app: 200
-		whenHttp(server).
-		match(put("/backend" + PathBuilder.apps())).
-		then(
-				stringContent(s_json),
-				contentType("application/json"),
-				charset("UTF-8"),
-				status(HttpStatus.OK_200));
+  /**
+   * App creation results in the following two HTTP calls.
+   * @param _a TODO
+   */
+  private void setupMockServices(Application _a) {
+    final String s_json = JacksonUtil.asJsonString(_a);
 
-		// Post app: 200 (for clean goal)
-		whenHttp(server).
-		match(post("/backend" + PathBuilder.app(_a))).
-		then(
-				stringContent(s_json),
-				contentType("application/json"),
-				charset("UTF-8"),
-				status(HttpStatus.OK_200));
-		
-//		expect()
-//		.statusCode(201).
-//		when()
-//		.post("/backend" + PathBuilder.apps());
+    // Options app: 200
+    whenHttp(server)
+        .match(composite(method(Method.OPTIONS), uri("/backend" + PathBuilder.app(_a))))
+        .then(
+            stringContent(s_json),
+            contentType("application/json"),
+            charset("UTF-8"),
+            status(HttpStatus.OK_200));
 
-		whenHttp(server).
-		match(post("/backend" + PathBuilder.goalExcecutions(null, null, _a))).
-		then(
-				stringContent(s_json),
-				contentType("application/json"),
-				charset("UTF-8"),
-				status(HttpStatus.CREATED_201));
+    // Put app: 200
+    whenHttp(server)
+        .match(put("/backend" + PathBuilder.apps()))
+        .then(
+            stringContent(s_json),
+            contentType("application/json"),
+            charset("UTF-8"),
+            status(HttpStatus.OK_200));
 
-//		expect()
-//		.statusCode(201).
-//		when()
-//		.post("/backend" + PathBuilder.goalExcecutions(null, null, _a));
-	}
+    // Post app: 200 (for clean goal)
+    whenHttp(server)
+        .match(post("/backend" + PathBuilder.app(_a)))
+        .then(
+            stringContent(s_json),
+            contentType("application/json"),
+            charset("UTF-8"),
+            status(HttpStatus.OK_200));
 
-	@Test
-	public void testCleanGoal() throws GoalConfigurationException, GoalExecutionException {
-		// Mock REST services
-		this.configureBackendServiceUrl(server);
-		this.setupMockServices(this.testApp);
+    //		expect()
+    //		.statusCode(201).
+    //		when()
+    //		.post("/backend" + PathBuilder.apps());
 
-		final String[] args = new String[] { "-goal", "clean" };
-		VulasCli.main(args);
+    whenHttp(server)
+        .match(post("/backend" + PathBuilder.goalExcecutions(null, null, _a)))
+        .then(
+            stringContent(s_json),
+            contentType("application/json"),
+            charset("UTF-8"),
+            status(HttpStatus.CREATED_201));
 
-		// Check the HTTP calls made
-		verifyHttp(server).times(1, 
-				method(Method.POST),
-				uri("/backend" + PathBuilder.app(testApp)));
-		verifyHttp(server).times(2, 
-				method(Method.POST),
-				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
-	}
+    //		expect()
+    //		.statusCode(201).
+    //		when()
+    //		.post("/backend" + PathBuilder.goalExcecutions(null, null, _a));
+  }
 
-	@Test
-	public void testAppGoal() throws GoalConfigurationException, GoalExecutionException {
-		// App: Relative and absolute folders with and without spaces
-		final Path rel_app_with_space = Paths.get("src", "test", "resources", "appfolder with space");
-		final Path abs_app = Paths.get("src", "test", "resources", "appfolder").toAbsolutePath();
-		final Path py_app = Paths.get("src", "test", "resources", "foo").toAbsolutePath();
-		final String app_string = rel_app_with_space.toString() + "," + abs_app + "," + py_app;
+  @Test
+  public void testCleanGoal() throws GoalConfigurationException, GoalExecutionException {
+    // Mock REST services
+    this.configureBackendServiceUrl(server);
+    this.setupMockServices(this.testApp);
 
-		// Dep: Relative and absolute folders with and without spaces
-		final Path rel_dep_with_space = Paths.get("src", "test", "resources", "depfolder with space");
-		final Path abs_dep = Paths.get("src", "test", "resources", "depfolder").toAbsolutePath();
-		final Path cc = Paths.get("src", "test", "resources", "depfolder", "commons-collections-3.2.2.jar");
-		final String dep_string = cc.toString() + "," + rel_dep_with_space.toString() + "," + abs_dep.toString();
+    final String[] args = new String[] {"-goal", "clean"};
+    VulasCli.main(args);
 
-		System.setProperty(CoreConfiguration.APP_DIRS, app_string + "," + dep_string);
+    // Check the HTTP calls made
+    verifyHttp(server).times(1, method(Method.POST), uri("/backend" + PathBuilder.app(testApp)));
+    verifyHttp(server)
+        .times(
+            2,
+            method(Method.POST),
+            uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
+  }
 
-		// Mock REST services
-		this.configureBackendServiceUrl(server);
-		this.setupMockServices(this.testApp);
+  @Test
+  public void testAppGoal() throws GoalConfigurationException, GoalExecutionException {
+    // App: Relative and absolute folders with and without spaces
+    final Path rel_app_with_space = Paths.get("src", "test", "resources", "appfolder with space");
+    final Path abs_app = Paths.get("src", "test", "resources", "appfolder").toAbsolutePath();
+    final Path py_app = Paths.get("src", "test", "resources", "foo").toAbsolutePath();
+    final String app_string = rel_app_with_space.toString() + "," + abs_app + "," + py_app;
 
-		final String[] args = new String[] { "-goal", "app" };
-		VulasCli.main(args);
+    // Dep: Relative and absolute folders with and without spaces
+    final Path rel_dep_with_space = Paths.get("src", "test", "resources", "depfolder with space");
+    final Path abs_dep = Paths.get("src", "test", "resources", "depfolder").toAbsolutePath();
+    final Path cc =
+        Paths.get("src", "test", "resources", "depfolder", "commons-collections-3.2.2.jar");
+    final String dep_string =
+        cc.toString() + "," + rel_dep_with_space.toString() + "," + abs_dep.toString();
 
-		// Check the HTTP calls made
-		verifyHttp(server).times(1, 
-				method(Method.PUT),
-				uri("/backend" + PathBuilder.app(this.testApp)));
-		verifyHttp(server).times(2, 
-				method(Method.POST),
-				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
-	}
+    System.setProperty(CoreConfiguration.APP_DIRS, app_string + "," + dep_string);
 
-	@Test
-	@Category(com.sap.psr.vulas.shared.categories.Slow.class)
-	public void testPyAppGoal() throws GoalConfigurationException, GoalExecutionException {
-		System.setProperty(CoreConfiguration.APP_DIRS, "./src/test/resources/cf-helloworld");
-		
-		// Mock REST services
-		this.configureBackendServiceUrl(server);
-		this.setupMockServices(this.testApp);
+    // Mock REST services
+    this.configureBackendServiceUrl(server);
+    this.setupMockServices(this.testApp);
 
-		final String[] args = new String[] { "-goal", "app" };
-		VulasCli.main(args);
+    final String[] args = new String[] {"-goal", "app"};
+    VulasCli.main(args);
 
-		// Check the HTTP calls made
-		verifyHttp(server).times(1, 
-				method(Method.PUT),
-				uri("/backend" + PathBuilder.app(this.testApp)));
-		verifyHttp(server).times(2, 
-				method(Method.POST),
-				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
-	}
-	
-	@Test
-	public void testJavaAppGoal() throws GoalConfigurationException, GoalExecutionException {
-		System.setProperty(CoreConfiguration.APP_DIRS, "./src/test/resources/java-app");
-		
-		// Mock REST services
-		this.configureBackendServiceUrl(server);
-		this.setupMockServices(this.testApp);
+    // Check the HTTP calls made
+    verifyHttp(server)
+        .times(1, method(Method.PUT), uri("/backend" + PathBuilder.app(this.testApp)));
+    verifyHttp(server)
+        .times(
+            2,
+            method(Method.POST),
+            uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
+  }
 
-		final String[] args = new String[] { "-goal", "app" };
-		VulasCli.main(args);
+  @Test
+  @Category(com.sap.psr.vulas.shared.categories.Slow.class)
+  public void testPyAppGoal() throws GoalConfigurationException, GoalExecutionException {
+    System.setProperty(CoreConfiguration.APP_DIRS, "./src/test/resources/cf-helloworld");
 
-		// Check the HTTP calls made
-		verifyHttp(server).times(1, 
-				method(Method.PUT),
-				uri("/backend" + PathBuilder.app(this.testApp)));
-		verifyHttp(server).times(2, 
-				method(Method.POST),
-				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
-	}
+    // Mock REST services
+    this.configureBackendServiceUrl(server);
+    this.setupMockServices(this.testApp);
+
+    final String[] args = new String[] {"-goal", "app"};
+    VulasCli.main(args);
+
+    // Check the HTTP calls made
+    verifyHttp(server)
+        .times(1, method(Method.PUT), uri("/backend" + PathBuilder.app(this.testApp)));
+    verifyHttp(server)
+        .times(
+            2,
+            method(Method.POST),
+            uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
+  }
+
+  @Test
+  public void testJavaAppGoal() throws GoalConfigurationException, GoalExecutionException {
+    System.setProperty(CoreConfiguration.APP_DIRS, "./src/test/resources/java-app");
+
+    // Mock REST services
+    this.configureBackendServiceUrl(server);
+    this.setupMockServices(this.testApp);
+
+    final String[] args = new String[] {"-goal", "app"};
+    VulasCli.main(args);
+
+    // Check the HTTP calls made
+    verifyHttp(server)
+        .times(1, method(Method.PUT), uri("/backend" + PathBuilder.app(this.testApp)));
+    verifyHttp(server)
+        .times(
+            2,
+            method(Method.POST),
+            uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
+  }
 }

@@ -42,60 +42,73 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class WalaCallGraphTest {
-	
-	static{
-		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.OFFLINE.toString());
-	}
 
-    private GoalContext getGoalContext() {
-        final GoalContext ctx = new GoalContext();
-        ctx.setApplication(new Application("foo", "bar", "0.0"));
-        ctx.setVulasConfiguration(new VulasConfiguration());
-        return ctx;
+  static {
+    VulasConfiguration.getGlobal()
+        .setProperty(
+            CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.OFFLINE.toString());
+  }
+
+  private GoalContext getGoalContext() {
+    final GoalContext ctx = new GoalContext();
+    ctx.setApplication(new Application("foo", "bar", "0.0"));
+    ctx.setVulasConfiguration(new VulasConfiguration());
+    return ctx;
+  }
+
+  @Test
+  public void callgraphServiceRegistered() {
+    ICallgraphConstructor callgraphConstructor =
+        CallgraphConstructorFactory.buildCallgraphConstructor("wala", null, false);
+    assertEquals(callgraphConstructor.getFramework(), "wala");
+    assertEquals(
+        callgraphConstructor.getClass().getName(), WalaCallgraphConstructor.class.getName());
+    assertTrue(callgraphConstructor instanceof ICallgraphConstructor);
+  }
+
+  @Test
+  public void examplesWalaTest() {
+    final ReachabilityAnalyzer ra = new ReachabilityAnalyzer(this.getGoalContext());
+    ra.setCallgraphConstructor(WalaCallgraphConstructor.FRAMEWORK, false);
+
+    // Set classpaths
+    final Set<Path> app_paths = new HashSet<Path>(), dep_paths = new HashSet<Path>();
+    app_paths.add(Paths.get("./src/test/resources/examples.jar"));
+    dep_paths.add(Paths.get("./src/test/resources/empty.jar"));
+    ra.setAppClasspaths(app_paths);
+    ra.setDependencyClasspaths(dep_paths);
+
+    // Set the EP manually
+    final Set<ConstructId> entrypoints = new HashSet<ConstructId>();
+    entrypoints.add(
+        JavaId.toSharedType(
+            JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Examples.main(String[])")));
+    ra.setEntryPoints(entrypoints, PathSource.A2C, false);
+    ra.setAppConstructs(entrypoints);
+
+    // Set the target constructs (manually, rather than using a bug)
+    final Map<String, Set<ConstructId>> target_constructs = new HashMap<String, Set<ConstructId>>();
+    final Set<ConstructId> changes = new HashSet<ConstructId>();
+    changes.add(
+        JavaId.toSharedType(
+            JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Cat.saySomething()")));
+    changes.add(
+        JavaId.toSharedType(
+            JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Fish.saySomething()")));
+    changes.add(
+        JavaId.toSharedType(
+            JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Dog.saySomething()")));
+    changes.add(
+        JavaId.toSharedType(
+            JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Car.saySomething()")));
+    target_constructs.put("does-not-exist", changes);
+    ra.setTargetConstructs(target_constructs);
+
+    try {
+      ReachabilityAnalyzer.startAnalysis(ra, 600000);
+    } catch (InterruptedException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
-
-
-    @Test
-    public void callgraphServiceRegistered() {
-        ICallgraphConstructor callgraphConstructor = CallgraphConstructorFactory.buildCallgraphConstructor("wala", null, false);
-        assertEquals(callgraphConstructor.getFramework(), "wala");
-        assertEquals(callgraphConstructor.getClass().getName(), WalaCallgraphConstructor.class.getName());
-        assertTrue(callgraphConstructor instanceof ICallgraphConstructor);
-    }
-
-    @Test
-    public void examplesWalaTest() {
-        final ReachabilityAnalyzer ra = new ReachabilityAnalyzer(this.getGoalContext());
-        ra.setCallgraphConstructor(WalaCallgraphConstructor.FRAMEWORK, false);
-
-        // Set classpaths
-        final Set<Path> app_paths = new HashSet<Path>(), dep_paths = new HashSet<Path>();
-        app_paths.add(Paths.get("./src/test/resources/examples.jar"));
-        dep_paths.add(Paths.get("./src/test/resources/empty.jar"));
-        ra.setAppClasspaths(app_paths);
-        ra.setDependencyClasspaths(dep_paths);
-
-        // Set the EP manually
-        final Set<ConstructId> entrypoints = new HashSet<ConstructId>();
-        entrypoints.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Examples.main(String[])")));
-        ra.setEntryPoints(entrypoints, PathSource.A2C, false);
-        ra.setAppConstructs(entrypoints);
-
-        // Set the target constructs (manually, rather than using a bug)
-        final Map<String, Set<ConstructId>> target_constructs = new HashMap<String, Set<ConstructId>>();
-        final Set<ConstructId> changes = new HashSet<ConstructId>();
-        changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Cat.saySomething()")));
-        changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Fish.saySomething()")));
-        changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Dog.saySomething()")));
-        changes.add(JavaId.toSharedType(JavaId.parseMethodQName("com.sap.psr.vulas.cg.test.Car.saySomething()")));
-        target_constructs.put("does-not-exist", changes);
-        ra.setTargetConstructs(target_constructs);
-
-        try {
-            ReachabilityAnalyzer.startAnalysis(ra, 600000);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+  }
 }

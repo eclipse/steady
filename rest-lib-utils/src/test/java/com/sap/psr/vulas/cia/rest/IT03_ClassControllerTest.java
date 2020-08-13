@@ -30,20 +30,21 @@ import com.sap.psr.vulas.shared.json.model.Artifact;
 
 public class IT03_ClassControllerTest {
 
-	@Test
-	public void getArtifactsForClassTest(){
-		
-		MavenCentralWrapper r = new MavenCentralWrapper();
-		try {
-			Set<Artifact> response = r.getArtifactForClass("org.apache.commons.fileupload.MultipartStream", "1000",null,"jar");
-					
-			System.out.println(response.size());
-			assertTrue(response.size()>=172);
-			
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+  @Test
+  public void getArtifactsForClassTest() {
+
+    MavenCentralWrapper r = new MavenCentralWrapper();
+    try {
+      Set<Artifact> response =
+          r.getArtifactForClass(
+              "org.apache.commons.fileupload.MultipartStream", "1000", null, "jar");
+
+      System.out.println(response.size());
+      assertTrue(response.size() >= 172);
+
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
 }
