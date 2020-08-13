@@ -19,20 +19,19 @@
  */
 package com.sap.psr.vulas.java.sign;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.sap.psr.vulas.Construct;
+import com.sap.psr.vulas.sign.Signature;
+
 import ch.uzh.ifi.seal.changedistiller.JavaChangeDistillerModule;
 import ch.uzh.ifi.seal.changedistiller.ast.java.JavaCompilation;
-import ch.uzh.ifi.seal.changedistiller.ast.java.JavaDeclarationConverter;
 import ch.uzh.ifi.seal.changedistiller.ast.java.JavaMethodBodyConverter;
 import ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType;
 import ch.uzh.ifi.seal.changedistiller.model.classifiers.SourceRange;
 import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.sap.psr.vulas.Construct;
-import com.sap.psr.vulas.sign.Signature;
 
 /**
  * <p>Abstract ASTSignature class.</p>
