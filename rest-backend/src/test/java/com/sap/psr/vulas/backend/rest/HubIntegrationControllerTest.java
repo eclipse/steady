@@ -30,7 +30,9 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -44,6 +46,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.ActiveProfiles;
@@ -66,6 +70,7 @@ import com.sap.psr.vulas.backend.repo.GoalExecutionRepository;
 import com.sap.psr.vulas.backend.repo.LibraryRepository;
 import com.sap.psr.vulas.backend.repo.SpaceRepository;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
+import com.sap.psr.vulas.backend.rest.HubIntegrationController.ExportItem;
 import com.sap.psr.vulas.shared.enums.ExportConfiguration;
 import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
@@ -189,6 +194,37 @@ public class HubIntegrationControllerTest {
     	
     	// Make sure the app exists
     	assertEquals(1, this.appRepository.count());
+    	
+    	//@@@@@@@@@@@@@@@
+    	// Get all spaces and evaluate the export setting
+    			final List<Space> spaces = this.spaceRepository.findAllTenantSpaces(DEFAULT_TENANT);
+    			Boolean aggregate=true;
+    			outerloop:
+    				for(Space s: spaces) {
+    					// Export will be aggregated (one item only, corresponding to the space)
+    					if(aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) {
+    						System.out.println("aggregate");
+    						//if asOfTimestamp has been specified, we check if at least 1 application in the space has lastChange>asOfTimestamp
+    						Boolean toAdd=true;
+    						
+    						System.out.println("item to be created for space: " + s);
+    						
+    					}
+    					// Export will be individual (one item per space application)
+    					else if((!aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) || s.getExportConfiguration()==ExportConfiguration.DETAILED) {
+    						System.out.println("NOT aggregate");
+    						final Set<Application> apps = this.appRepository.getApplications(false, s.getSpaceToken(), 0);
+    						for(Application app1: apps) {
+    							System.out.println("item to be created for app: " + app1);
+    						}
+    					}
+    					// No export
+    					else if(s.getExportConfiguration()==ExportConfiguration.OFF) {
+    						continue;
+    					}
+    				}
+
+    	//@@@@@@@@@@@@@@@
     	
     	// Read all public apps as strings
     	MvcResult response = mockMvc.perform(get("/hubIntegration/apps"))
