@@ -244,6 +244,7 @@ public class HubIntegrationController {
 		// Get all spaces and evaluate the export setting
 		final List<Space> spaces = this.spaceRepository.findAllTenantSpaces(t.getTenantToken());
 
+		log.info("Found ["+spaces.size()+"] spaces");
 		outerloop:
 			for(Space s: spaces) {
 				// Export will be aggregated (one item only, corresponding to the space)
@@ -265,7 +266,9 @@ public class HubIntegrationController {
 				}
 				// Export will be individual (one item per space application)
 				else if((!aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) || s.getExportConfiguration()==ExportConfiguration.DETAILED) {
+					log.info("Export detailed");
 					final Set<Application> apps = this.appRepository.getApplications(skipEmpty, s.getSpaceToken(), Long.parseLong(asOfTimestamp));
+					log.info("Found ["+apps.size()+"] apps");
 					for(Application app: apps) {
 						final ExportItem item = new ExportItem(s, app);
 						if(max==-1 || items.size()<max)

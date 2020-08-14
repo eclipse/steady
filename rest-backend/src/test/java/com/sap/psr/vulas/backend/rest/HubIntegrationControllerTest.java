@@ -195,37 +195,6 @@ public class HubIntegrationControllerTest {
     	// Make sure the app exists
     	assertEquals(1, this.appRepository.count());
     	
-    	//@@@@@@@@@@@@@@@
-    	// Get all spaces and evaluate the export setting
-    			final List<Space> spaces = this.spaceRepository.findAllTenantSpaces(DEFAULT_TENANT);
-    			Boolean aggregate=true;
-    			outerloop:
-    				for(Space s: spaces) {
-    					// Export will be aggregated (one item only, corresponding to the space)
-    					if(aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) {
-    						System.out.println("aggregate");
-    						//if asOfTimestamp has been specified, we check if at least 1 application in the space has lastChange>asOfTimestamp
-    						Boolean toAdd=true;
-    						
-    						System.out.println("item to be created for space: " + s);
-    						
-    					}
-    					// Export will be individual (one item per space application)
-    					else if((!aggregate && s.getExportConfiguration()==ExportConfiguration.AGGREGATED) || s.getExportConfiguration()==ExportConfiguration.DETAILED) {
-    						System.out.println("NOT aggregate");
-    						final Set<Application> apps = this.appRepository.getApplications(false, s.getSpaceToken(), 0);
-    						for(Application app1: apps) {
-    							System.out.println("item to be created for app: " + app1);
-    						}
-    					}
-    					// No export
-    					else if(s.getExportConfiguration()==ExportConfiguration.OFF) {
-    						continue;
-    					}
-    				}
-
-    	//@@@@@@@@@@@@@@@
-    	
     	// Read all public apps as strings
     	MvcResult response = mockMvc.perform(get("/hubIntegration/apps"))
     			.andExpect(status().isOk())
