@@ -496,50 +496,7 @@ public class FileUtil {
   public static String getJarFilePath(Class<?> _clazz) {
     final ClassLoader cl = _clazz.getClassLoader();
     final URL res_url = cl.getResource(_clazz.getName().replace('.', '/') + ".class");
-    return FileUtil.getJARFilePath(res_url.toString());
-  }
-
-  /**
-   * Searches for JAR files containing the given resources.
-   *
-   * @param _cl a {@link java.lang.ClassLoader} object.
-   * @param _resources an array of {@link java.lang.String} objects.
-   * @return a {@link java.util.Set} object.
-   */
-  public static Set<String> getJarFilePathsForResources(ClassLoader _cl, String[] _resources) {
-    final Set<String> jar_paths = new HashSet<String>();
-    if (_cl != null && _resources != null) {
-      for (String r : _resources) {
-        final URL u = _cl.getResource(r);
-        final String jar_path = FileUtil.getJARFilePath(u.toString());
-        if (jar_path != null) {
-          jar_paths.add(jar_path);
-        }
-      }
-    }
-    return jar_paths;
-  }
-
-  /**
-   * Returns all JARs known to the given {@link URLClassLoader}.
-   *
-   * @param _cl a {@link java.net.URLClassLoader} object.
-   * @return a {@link java.util.Set} object.
-   */
-  public static Set<String> getJarFilePaths(URLClassLoader _cl) {
-    final Set<String> jar_paths = new HashSet<String>();
-    final URL[] urls = _cl.getURLs();
-    log.info(
-        "Class loader search path contains ["
-            + urls.length
-            + "] items: Search for configurations in JAR files");
-    for (int i = 0; i < urls.length; i++) {
-      final String jar_path = FileUtil.getJARFilePath(urls[i].toString());
-      if (jar_path != null) {
-        jar_paths.add(jar_path);
-      }
-    }
-    return jar_paths;
+    return FileUtil.getJarFilePath(res_url.toString());
   }
 
   /**
@@ -554,7 +511,7 @@ public class FileUtil {
    * @param _url a {@link java.lang.String} object.
    * @return a {@link java.lang.String} object.
    */
-  public static String getJARFilePath(String _url) {
+  public static String getJarFilePath(String _url) {
     String file_url = null, file_path = null;
 
     // (1) Bring _url into form "file:/<abc>.jar"
@@ -578,6 +535,51 @@ public class FileUtil {
     }
 
     return file_path;
+  }
+  
+  /**
+   * Searches for JAR files containing the given resources.
+   *
+   * @param _cl a {@link java.lang.ClassLoader} object.
+   * @param _resources an array of {@link java.lang.String} objects.
+   * @return a {@link java.util.Set} object.
+   */
+  public static Set<String> getJarFilePathsForResources(ClassLoader _cl, String[] _resources) {
+    final Set<String> jar_paths = new HashSet<String>();
+    if (_cl != null && _resources != null) {
+      for (String r : _resources) {
+        final URL u = _cl.getResource(r);
+        if(u!=null) {
+          final String jar_path = FileUtil.getJarFilePath(u.toString());
+          if (jar_path != null) {
+            jar_paths.add(jar_path);
+          }
+        }
+      }
+    }
+    return jar_paths;
+  }
+
+  /**
+   * Returns all JARs known to the given {@link URLClassLoader}.
+   *
+   * @param _cl a {@link java.net.URLClassLoader} object.
+   * @return a {@link java.util.Set} object.
+   */
+  public static Set<String> getJarFilePaths(URLClassLoader _cl) {
+    final Set<String> jar_paths = new HashSet<String>();
+    final URL[] urls = _cl.getURLs();
+    log.info(
+        "Class loader search path contains ["
+            + urls.length
+            + "] items: Search for configurations in JAR files");
+    for (int i = 0; i < urls.length; i++) {
+      final String jar_path = FileUtil.getJarFilePath(urls[i].toString());
+      if (jar_path != null) {
+        jar_paths.add(jar_path);
+      }
+    }
+    return jar_paths;
   }
 
   /**

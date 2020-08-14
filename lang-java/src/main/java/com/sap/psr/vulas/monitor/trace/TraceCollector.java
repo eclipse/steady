@@ -318,7 +318,7 @@ public class TraceCollector {
     final String jar_path =
         (_url == null
             ? null
-            : FileUtil.getJARFilePath(_url.toString())); // The complete FS path pointing to the JAR
+            : FileUtil.getJarFilePath(_url.toString())); // The complete FS path pointing to the JAR
     final String jar_name = (jar_path == null ? null : FileUtil.getFileName(jar_path));
 
     // Ignore blacklisted JARs, cf. MONI_BLACKLIST_JARS
@@ -643,7 +643,7 @@ public class TraceCollector {
             	}
             }*/
 
-            jar_path = (jar_url == null ? null : FileUtil.getJARFilePath(jar_url.toString()));
+            jar_path = (jar_url == null ? null : FileUtil.getJarFilePath(jar_url.toString()));
             if (jar_path != null && this.jarFiles.containsKey(jar_path)) {
               ja = this.jarFiles.get(jar_path);
               json.append(",\"lib\":\"").append(ja.getSHA1()).append("\"");

@@ -374,7 +374,7 @@ public class InstrumentationControl {
 
     // Check whether it has been loaded from a JAR: If not, return false (probably an app class),
     // otherwise check the blacklist
-    final String jar_path = FileUtil.getJARFilePath(_url.toString());
+    final String jar_path = FileUtil.getJarFilePath(_url.toString());
     if (jar_path == null) return false;
 
     // If a JAR URL can be determined, check if we already checked whether it is blacklisted
