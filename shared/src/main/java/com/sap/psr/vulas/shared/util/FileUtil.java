@@ -536,7 +536,7 @@ public class FileUtil {
 
     return file_path;
   }
-  
+
   /**
    * Searches for JAR files containing the given resources.
    *
@@ -549,7 +549,7 @@ public class FileUtil {
     if (_cl != null && _resources != null) {
       for (String r : _resources) {
         final URL u = _cl.getResource(r);
-        if(u!=null) {
+        if (u != null) {
           final String jar_path = FileUtil.getJarFilePath(u.toString());
           if (jar_path != null) {
             jar_paths.add(jar_path);

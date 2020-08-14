@@ -87,8 +87,8 @@ public class FileUtilTest {
     // https://stackoverflow.com/questions/46694600/java-9-compatability-issue-with-classloader-getsystemclassloader
     // https://blog.codefx.org/java/java-9-migration-guide/#Casting-To-URL-Class-Loader
     final ClassLoader cl = FileUtil.class.getClassLoader();
-    if(cl instanceof URLClassLoader) {
-      final Set<String> jars = FileUtil.getJarFilePaths((URLClassLoader)cl);
+    if (cl instanceof URLClassLoader) {
+      final Set<String> jars = FileUtil.getJarFilePaths((URLClassLoader) cl);
       assertTrue(!jars.isEmpty());
     }
   }
