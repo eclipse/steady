@@ -45,13 +45,3 @@ sourceSets {
         }
     }
 }
-
-// workaround to delegate gradle distribution download to maven
-// procedure to update gradle version
-//  1. change the gradle.distribution.url property in pom.xml to point to a newer version
-//  2. run mvn process-sources
-//  3. run ./gradlew wrapper on Linux/Mac, gardlew.bat on windows
-//  4. if there is any change, commit the content of gradle/wrapper folder (including the jar there)
-task wrapper(type: Wrapper) {
-    distributionUrl "gradle.zip"
-}

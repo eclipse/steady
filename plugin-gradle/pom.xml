@@ -33,7 +33,7 @@
     <name>Plugin for Gradle</name>
     <description></description>
     <properties>
-        <gradle.distribution.url>http://downloads.gradle.org/distributions/gradle-4.4-bin.zip</gradle.distribution.url>
+        <gradle.distribution.url>https://services.gradle.org/distributions/gradle-5.0-bin.zip</gradle.distribution.url>
         <gradle.executable>./gradlew</gradle.executable>
         <gradle.task>build</gradle.task>
     </properties>
