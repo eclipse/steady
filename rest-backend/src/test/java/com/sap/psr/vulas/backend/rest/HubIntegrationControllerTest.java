@@ -21,7 +21,6 @@ package com.sap.psr.vulas.backend.rest;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,7 +38,6 @@ import javax.persistence.EntityNotFoundException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,7 +164,6 @@ public class HubIntegrationControllerTest {
     }
     
     @Test
-    @Ignore
     public void testGetHubApps() throws Exception {
     	// Rest-post http-client 4.1.3
     	final Library lib = (Library)JacksonUtil.asObject(FileUtil.readFile(Paths.get("./src/test/resources/real_examples/lib_http-client-4.1.3.json")), Library.class);
@@ -196,7 +193,7 @@ public class HubIntegrationControllerTest {
     			.andExpect(status().isOk())
     			.andExpect(content().string("[\"" + DEFAULT_SPACE + " (" + token + ") " + app.getMvnGroup() + ":" + app.getArtifact() + ":" + app.getVersion() + "\"]"))
     			.andReturn();
-    	
+    	    	
     	// Read all public apps as JSON
     	response = mockMvc.perform(get("/hubIntegration/apps/json"))
     			.andExpect(status().isOk())
@@ -257,7 +254,7 @@ public class HubIntegrationControllerTest {
     	assertEquals(1, vuln_deps.size());
     }
     
-    @Ignore
+    
     @Test
     public void testGetHubAppWithSlashChar() throws Exception {
     	// Rest-post http-client 4.1.3

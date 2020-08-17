@@ -40,6 +40,7 @@ import java.util.function.Predicate;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -109,6 +110,12 @@ public class SpaceControllerTest {
 		this.spaceRepository.deleteAll();
 		this.tenantRepository.deleteAll();
 	}
+
+   @After
+    public void reset() throws Exception {
+		this.spaceRepository.deleteAll();
+		this.tenantRepository.deleteAll(); 
+   	}
 
 //	/**
 //	 * Check space creation without tenant header
