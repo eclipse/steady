@@ -21,7 +21,6 @@ package com.sap.psr.vulas.backend.rest;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -30,9 +29,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -41,13 +38,10 @@ import javax.persistence.EntityNotFoundException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.ActiveProfiles;
@@ -70,7 +64,6 @@ import com.sap.psr.vulas.backend.repo.GoalExecutionRepository;
 import com.sap.psr.vulas.backend.repo.LibraryRepository;
 import com.sap.psr.vulas.backend.repo.SpaceRepository;
 import com.sap.psr.vulas.backend.repo.TenantRepository;
-import com.sap.psr.vulas.backend.rest.HubIntegrationController.ExportItem;
 import com.sap.psr.vulas.shared.enums.ExportConfiguration;
 import com.sap.psr.vulas.shared.enums.Scope;
 import com.sap.psr.vulas.shared.json.JacksonUtil;
@@ -198,11 +191,9 @@ public class HubIntegrationControllerTest {
     	// Read all public apps as strings
     	MvcResult response = mockMvc.perform(get("/hubIntegration/apps"))
     			.andExpect(status().isOk())
-    			//.andExpect(content().string("[\"" + DEFAULT_SPACE + " (" + token + ") " + app.getMvnGroup() + ":" + app.getArtifact() + ":" + app.getVersion() + "\"]"))
+    			.andExpect(content().string("[\"" + DEFAULT_SPACE + " (" + token + ") " + app.getMvnGroup() + ":" + app.getArtifact() + ":" + app.getVersion() + "\"]"))
     			.andReturn();
-    	
-    	System.out.println("response body: "+ response.getResponse().getContentAsString());
-    	
+    	    	
     	// Read all public apps as JSON
     	response = mockMvc.perform(get("/hubIntegration/apps/json"))
     			.andExpect(status().isOk())
