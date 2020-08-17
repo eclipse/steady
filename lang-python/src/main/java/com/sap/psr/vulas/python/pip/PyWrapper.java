@@ -1,21 +1,19 @@
 /**
  * This file is part of Eclipse Steady.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * SPDX-License-Identifier: Apache-2.0
+ * <p>SPDX-License-Identifier: Apache-2.0
  *
- * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ * <p>Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
 package com.sap.psr.vulas.python.pip;
 
@@ -31,10 +29,7 @@ import com.sap.psr.vulas.python.ProcessWrapperException;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringUtil;
 
-/**
- * <p>PyWrapper class.</p>
- *
- */
+/** PyWrapper class. */
 public class PyWrapper {
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
@@ -61,8 +56,9 @@ public class PyWrapper {
    */
   public PyWrapper(Path _path_to_python, Path _log_dir) throws ProcessWrapperException {
     this.pathToPython = _path_to_python;
-    if (_log_dir != null) this.logDir = _log_dir;
-    else {
+    if (_log_dir != null) {
+      this.logDir = _log_dir;
+    } else {
       try {
         FileUtil.createTmpDir("vulas-pip-");
       } catch (IOException e) {
@@ -72,7 +68,7 @@ public class PyWrapper {
   }
 
   /**
-   * <p>isAvailable.</p>
+   * isAvailable.
    *
    * @return a boolean.
    */
@@ -91,7 +87,7 @@ public class PyWrapper {
   }
 
   /**
-   * <p>Runs a Python script.</p>
+   * Runs a Python script.
    *
    * @param _script a {@link java.nio.file.Path} object.
    * @param _args a {@link java.util.List} object.
