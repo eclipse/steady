@@ -226,7 +226,7 @@ public class JavaIdTest {
   public void filterInputNotNull0Output0() {
 
     // Arrange
-    final HashSet _set = new HashSet();
+    final HashSet<ConstructId> _set = new HashSet<ConstructId>();
     final JavaId.Type[] _filter = {};
 
     // Act
@@ -241,7 +241,7 @@ public class JavaIdTest {
   public void filterInputNotNullNotNullOutput0() {
 
     // Arrange
-    final HashSet _set = new HashSet();
+    final HashSet<ConstructId> _set = new HashSet<ConstructId>();
     final String _filter = "";
 
     // Act
