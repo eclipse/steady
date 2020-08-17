@@ -57,7 +57,7 @@ public class VirtualenvWrapperTest {
     final VirtualenvWrapper vew = new VirtualenvWrapper(project);
     final Path ve_path = vew.getPathToVirtualenv();
     assertTrue(FileUtil.isAccessibleDirectory(ve_path));
-    
+
     // Get packages
     final Set<PipInstalledPackage> packs = vew.getInstalledPackages();
     assertTrue(packs.size() >= 8);

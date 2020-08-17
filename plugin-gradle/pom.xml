@@ -63,6 +63,8 @@
             <scope>runtime</scope>
         </dependency>
         
+        <!-- See https://developer.android.com/studio/releases/gradle-plugin for compatibility of
+        Gradle and the Gradle plugin -->
         <dependency>
             <groupId>com.android.tools.build</groupId>
             <artifactId>gradle</artifactId>
