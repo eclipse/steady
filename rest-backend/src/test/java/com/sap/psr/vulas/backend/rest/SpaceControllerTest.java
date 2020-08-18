@@ -92,8 +92,7 @@ public class SpaceControllerTest {
   @Autowired
   void setConverters(HttpMessageConverter<?>[] converters) {
     this.mappingJackson2HttpMessageConverter =
-        Arrays.asList(converters)
-            .stream()
+        Arrays.asList(converters).stream()
             .filter(
                 new Predicate<HttpMessageConverter<?>>() {
                   @Override

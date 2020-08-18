@@ -157,7 +157,7 @@
                     <executable>${gradle.executable}</executable>
                     <arguments combine.children="append">
                         <argument>--no-daemon</argument>
-                        <argument>--debug</argument>
+                        <argument>--info</argument>
                         <argument>--full-stacktrace</argument>
                         <argument>-Pversion=${project.version}</argument>
                     </arguments>
