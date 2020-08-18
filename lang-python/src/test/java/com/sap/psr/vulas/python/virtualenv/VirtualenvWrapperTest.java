@@ -60,7 +60,7 @@ public class VirtualenvWrapperTest {
 
     // Get packages
     final Set<PipInstalledPackage> packs = vew.getInstalledPackages();
-    assertTrue(packs.size() >= 8);
+    assertEquals(8, packs.size());
 
     // Get rid of the project itself
     final Set<PipInstalledPackage> filtered_packs =

@@ -202,7 +202,7 @@ public class CallgraphTest {
 
   @Test
   public void testJarDigest() {
-    final String qname = "java.lang.String";
+    final String qname = "org.junit.Test";
     final JavaClassId cid = JavaId.parseClassQName(qname);
     final JarAnalyzer ja = new JarAnalyzer();
     try {
