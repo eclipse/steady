@@ -565,26 +565,21 @@ public class Library implements Serializable {
    *
    */
   public void verifyDigest() {
-    if (this.getWellknownDigest() == null
-        || this.getDigestVerificationUrl() == null
-        || this.getDigestTimestamp() == null) {
-      try {
-        final DigestVerifierEnumerator dv = new DigestVerifierEnumerator();
-        final List<LibraryId> verified = dv.verify(this);
-        if (verified != null) {
-          this.setDigestVerificationUrl(dv.getVerificationUrl());
-          this.setWellknownDigest(verified.size() > 0);
-          this.setDigestTimestamp(dv.getReleaseTimestamp());
-
-          if (this.getLibraryId() != null
-              && verified.size() > 0
-              && !verified.contains(this.getLibraryId())) {
-            this.setLibraryId(verified.get(0));
-          }
+    try {
+      final DigestVerifierEnumerator dv = new DigestVerifierEnumerator();
+      final List<LibraryId> verified = dv.verify(this);
+      if (verified != null) {
+        this.setDigestVerificationUrl(dv.getVerificationUrl());
+        this.setWellknownDigest(verified.size() > 0);
+        this.setDigestTimestamp(dv.getReleaseTimestamp());
+        if (this.getLibraryId() != null
+            && verified.size() > 0
+            && !verified.contains(this.getLibraryId())) {
+          this.setLibraryId(verified.get(0));
         }
-      } catch (VerificationException e) {
-        log.error(e.getMessage());
       }
+    } catch (VerificationException e) {
+      log.error(e.getMessage());
     }
   }
 

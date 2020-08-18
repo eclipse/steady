@@ -40,6 +40,7 @@ import java.util.function.Predicate;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -107,12 +108,18 @@ public class SpaceControllerTest {
     Assert.assertNotNull(
         "the JSON message converter must not be null", this.mappingJackson2HttpMessageConverter);
   }
-
+  
   @Before
   public void setup() throws Exception {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
     this.spaceRepository.deleteAll();
     this.tenantRepository.deleteAll();
+  }
+  
+  @After
+  public void reset() throws Exception {
+    this.spaceRepository.deleteAll();
+    this.tenantRepository.deleteAll(); 
   }
 
   //	/**
