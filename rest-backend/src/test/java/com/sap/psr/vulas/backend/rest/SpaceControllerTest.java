@@ -1,21 +1,19 @@
 /**
  * This file is part of Eclipse Steady.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * SPDX-License-Identifier: Apache-2.0
+ * <p>SPDX-License-Identifier: Apache-2.0
  *
- * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ * <p>Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
 package com.sap.psr.vulas.backend.rest;
 
@@ -94,7 +92,8 @@ public class SpaceControllerTest {
   @Autowired
   void setConverters(HttpMessageConverter<?>[] converters) {
     this.mappingJackson2HttpMessageConverter =
-        Arrays.asList(converters).stream()
+        Arrays.asList(converters)
+            .stream()
             .filter(
                 new Predicate<HttpMessageConverter<?>>() {
                   @Override
@@ -108,18 +107,18 @@ public class SpaceControllerTest {
     Assert.assertNotNull(
         "the JSON message converter must not be null", this.mappingJackson2HttpMessageConverter);
   }
-  
+
   @Before
   public void setup() throws Exception {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
     this.spaceRepository.deleteAll();
     this.tenantRepository.deleteAll();
   }
-  
+
   @After
   public void reset() throws Exception {
     this.spaceRepository.deleteAll();
-    this.tenantRepository.deleteAll(); 
+    this.tenantRepository.deleteAll();
   }
 
   //	/**
@@ -158,6 +157,7 @@ public class SpaceControllerTest {
 
   /**
    * Check space creation.
+   *
    * @throws Exception
    */
   @Test
@@ -250,6 +250,7 @@ public class SpaceControllerTest {
 
   /**
    * Check presence of spaces.
+   *
    * @throws Exception
    */
   @Test
@@ -280,6 +281,7 @@ public class SpaceControllerTest {
 
   /**
    * Check space creation and deletion.
+   *
    * @throws Exception
    */
   @Test
@@ -335,6 +337,7 @@ public class SpaceControllerTest {
 
   /**
    * Test modification of read-only space.
+   *
    * @throws Exception
    */
   @Test
@@ -372,6 +375,7 @@ public class SpaceControllerTest {
 
   /**
    * Creates a workspace and searches for it.
+   *
    * @throws Exception
    */
   @Test
