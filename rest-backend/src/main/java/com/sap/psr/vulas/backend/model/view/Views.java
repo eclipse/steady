@@ -19,8 +19,6 @@
  */
 package com.sap.psr.vulas.backend.model.view;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 /**
  * Json Views used to filter the entity fields to be serialized based on the API used.
  *
@@ -37,18 +35,30 @@ import com.fasterxml.jackson.annotation.JsonView;
  * LibraryIdDetails: Used in the LibraryIdController to include infomation about affected LibIds when getting all versions of a Maven artifact
  */
 public class Views {
-	
-	public interface Default {}	
-	public interface BugDetails {}
-	public interface BugAffLibs {}
-	public interface LibDetails extends CountDetails{}
-	public interface CountDetails {}
-	public interface DepDetails extends LibDetails {}
-	public interface AppDepDetails {}
-	public interface GoalDetails {}
-	public interface VulnDepDetails {}
-	public interface Never {}
-	public interface LibraryIdDetails {}
-	public interface BugAffLibsDetails extends BugAffLibs {}
-	public interface Overview {}
+
+  public interface Default {}
+
+  public interface BugDetails {}
+
+  public interface BugAffLibs {}
+
+  public interface LibDetails extends CountDetails {}
+
+  public interface CountDetails {}
+
+  public interface DepDetails extends LibDetails {}
+
+  public interface AppDepDetails {}
+
+  public interface GoalDetails {}
+
+  public interface VulnDepDetails {}
+
+  public interface Never {}
+
+  public interface LibraryIdDetails {}
+
+  public interface BugAffLibsDetails extends BugAffLibs {}
+
+  public interface Overview {}
 }

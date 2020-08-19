@@ -28,145 +28,143 @@ import com.sap.psr.vulas.shared.enums.ConstructChangeType;
 
 import com.sap.psr.vulas.shared.json.model.ConstructId;
 
-
-
 /**
  * class representing a consolidated change list
  * (no duplicates because of multiple commits on the same construct)
  */
 public class OverallConstructChange {
-    String fixedBody, buggyBody;
-    ConstructChangeType changetype;
-    String repoPath;
-    ConstructId constructId;
-    
-    /**
-     * <p>Constructor for OverallConstructChange.</p>
-     *
-     * @param fixedBody a {@link java.lang.String} object.
-     * @param buggyBody a {@link java.lang.String} object.
-     * @param changetype a {@link com.sap.psr.vulas.shared.enums.ConstructChangeType} object.
-     * @param repoPath a {@link java.lang.String} object.
-     * @param constructId a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
-     */
-    public OverallConstructChange(String fixedBody, String buggyBody, ConstructChangeType changetype, String repoPath, ConstructId constructId) {
-        this.fixedBody = fixedBody;
-        this.buggyBody = buggyBody;
-        this.changetype = changetype;
-        this.repoPath = repoPath;
-        this.constructId = constructId;
-    }
-    
-   
+  String fixedBody, buggyBody;
+  ConstructChangeType changetype;
+  String repoPath;
+  ConstructId constructId;
 
-    /**
-     * <p>Getter for the field <code>fixedBody</code>.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getFixedBody() {
-        return fixedBody;
-    }
+  /**
+   * <p>Constructor for OverallConstructChange.</p>
+   *
+   * @param fixedBody a {@link java.lang.String} object.
+   * @param buggyBody a {@link java.lang.String} object.
+   * @param changetype a {@link com.sap.psr.vulas.shared.enums.ConstructChangeType} object.
+   * @param repoPath a {@link java.lang.String} object.
+   * @param constructId a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+   */
+  public OverallConstructChange(
+      String fixedBody,
+      String buggyBody,
+      ConstructChangeType changetype,
+      String repoPath,
+      ConstructId constructId) {
+    this.fixedBody = fixedBody;
+    this.buggyBody = buggyBody;
+    this.changetype = changetype;
+    this.repoPath = repoPath;
+    this.constructId = constructId;
+  }
 
-    /**
-     * <p>Setter for the field <code>fixedBody</code>.</p>
-     *
-     * @param fixedBody a {@link java.lang.String} object.
-     */
-    public void setFixedBody(String fixedBody) {
-        this.fixedBody = fixedBody;
-    }
+  /**
+   * <p>Getter for the field <code>fixedBody</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String getFixedBody() {
+    return fixedBody;
+  }
 
-    /**
-     * <p>Getter for the field <code>buggyBody</code>.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getBuggyBody() {
-        return buggyBody;
-    }
+  /**
+   * <p>Setter for the field <code>fixedBody</code>.</p>
+   *
+   * @param fixedBody a {@link java.lang.String} object.
+   */
+  public void setFixedBody(String fixedBody) {
+    this.fixedBody = fixedBody;
+  }
 
-    /**
-     * <p>Setter for the field <code>buggyBody</code>.</p>
-     *
-     * @param buggyBody a {@link java.lang.String} object.
-     */
-    public void setBuggyBody(String buggyBody) {
-        this.buggyBody = buggyBody;
-    }
+  /**
+   * <p>Getter for the field <code>buggyBody</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String getBuggyBody() {
+    return buggyBody;
+  }
 
-    /**
-     * <p>getChangeType.</p>
-     *
-     * @return a {@link com.sap.psr.vulas.shared.enums.ConstructChangeType} object.
-     */
-    public ConstructChangeType getChangeType() {
-        return changetype;
-    }
+  /**
+   * <p>Setter for the field <code>buggyBody</code>.</p>
+   *
+   * @param buggyBody a {@link java.lang.String} object.
+   */
+  public void setBuggyBody(String buggyBody) {
+    this.buggyBody = buggyBody;
+  }
 
-    /**
-     * <p>setChangeType.</p>
-     *
-     * @param changetype a {@link com.sap.psr.vulas.shared.enums.ConstructChangeType} object.
-     */
-    public void setChangeType(ConstructChangeType changetype) {
-        this.changetype = changetype;
-    }
+  /**
+   * <p>getChangeType.</p>
+   *
+   * @return a {@link com.sap.psr.vulas.shared.enums.ConstructChangeType} object.
+   */
+  public ConstructChangeType getChangeType() {
+    return changetype;
+  }
 
-    /**
-     * <p>Getter for the field <code>repoPath</code>.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getRepoPath() {
-        return repoPath;
-    }
+  /**
+   * <p>setChangeType.</p>
+   *
+   * @param changetype a {@link com.sap.psr.vulas.shared.enums.ConstructChangeType} object.
+   */
+  public void setChangeType(ConstructChangeType changetype) {
+    this.changetype = changetype;
+  }
 
-    /**
-     * <p>Setter for the field <code>repoPath</code>.</p>
-     *
-     * @param repoPath a {@link java.lang.String} object.
-     */
-    public void setRepoPath(String repoPath) {
-        this.repoPath = repoPath;
-    }
+  /**
+   * <p>Getter for the field <code>repoPath</code>.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String getRepoPath() {
+    return repoPath;
+  }
 
-    /**
-     * <p>Getter for the field <code>constructId</code>.</p>
-     *
-     * @return a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
-     */
-    public ConstructId getConstructId() {
-        return constructId;
-    }
+  /**
+   * <p>Setter for the field <code>repoPath</code>.</p>
+   *
+   * @param repoPath a {@link java.lang.String} object.
+   */
+  public void setRepoPath(String repoPath) {
+    this.repoPath = repoPath;
+  }
 
-    /**
-     * <p>Setter for the field <code>constructId</code>.</p>
-     *
-     * @param constructId a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
-     */
-    public void setConstructId(ConstructId constructId) {
-        this.constructId = constructId;
-    }
+  /**
+   * <p>Getter for the field <code>constructId</code>.</p>
+   *
+   * @return a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+   */
+  public ConstructId getConstructId() {
+    return constructId;
+  }
 
-    /**
-     * <p>Getter for the field <code>changetype</code>.</p>
-     *
-     * @return a {@link com.sap.psr.vulas.shared.enums.ConstructChangeType} object.
-     */
-    public ConstructChangeType getChangetype() {
-        return changetype;
-    }
+  /**
+   * <p>Setter for the field <code>constructId</code>.</p>
+   *
+   * @param constructId a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
+   */
+  public void setConstructId(ConstructId constructId) {
+    this.constructId = constructId;
+  }
 
-    /**
-     * <p>Setter for the field <code>changetype</code>.</p>
-     *
-     * @param changetype a {@link com.sap.psr.vulas.shared.enums.ConstructChangeType} object.
-     */
-    public void setChangetype(ConstructChangeType changetype) {
-        this.changetype = changetype;
-    }
+  /**
+   * <p>Getter for the field <code>changetype</code>.</p>
+   *
+   * @return a {@link com.sap.psr.vulas.shared.enums.ConstructChangeType} object.
+   */
+  public ConstructChangeType getChangetype() {
+    return changetype;
+  }
 
-    
-    
+  /**
+   * <p>Setter for the field <code>changetype</code>.</p>
+   *
+   * @param changetype a {@link com.sap.psr.vulas.shared.enums.ConstructChangeType} object.
+   */
+  public void setChangetype(ConstructChangeType changetype) {
+    this.changetype = changetype;
+  }
 }

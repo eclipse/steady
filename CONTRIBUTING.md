@@ -1,3 +1,3 @@
 # Contributing
 
-Follow the [guide](https://sap.github.io/vulnerability-assessment-tool/contributor/) in our Documentation
+Follow the [guide](https://eclipse.github.io/steady/contributor/) in our Documentation

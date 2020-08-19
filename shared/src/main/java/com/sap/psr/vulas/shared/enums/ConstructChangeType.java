@@ -38,19 +38,27 @@ import com.sap.psr.vulas.shared.json.model.ConstructId;
  * the construct has been deleted in an early commit and added in a later commit (or vice-versa).
  */
 public enum ConstructChangeType {
-	ADD((byte)10), MOD((byte)20), DEL((byte)30), NUL((byte)40);
-	private byte value;
-	private ConstructChangeType(byte _value) { this.value = _value; }
-	/**
-	 * <p>toString.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String toString() {
-		     if(this.value==10) return "ADD";
-		else if(this.value==20) return "MOD";
-		else if(this.value==30) return "DEL";
-		else if(this.value==40) return "NUL";
-		else throw new IllegalArgumentException("[" + this.value + "] is not a valid construct change type");
-	}
+  ADD((byte) 10),
+  MOD((byte) 20),
+  DEL((byte) 30),
+  NUL((byte) 40);
+  private byte value;
+
+  private ConstructChangeType(byte _value) {
+    this.value = _value;
+  }
+  /**
+   * <p>toString.</p>
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String toString() {
+    if (this.value == 10) return "ADD";
+    else if (this.value == 20) return "MOD";
+    else if (this.value == 30) return "DEL";
+    else if (this.value == 40) return "NUL";
+    else
+      throw new IllegalArgumentException(
+          "[" + this.value + "] is not a valid construct change type");
+  }
 }

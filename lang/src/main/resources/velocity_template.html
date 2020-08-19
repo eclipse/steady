@@ -359,7 +359,17 @@
 			<table class="configurations">
 				<tr>
 					<td valign="top" width="25%">
-						<h2>Generated at: $generatedAt</h2>
+						<h2>Generated: </h2>
+						<div class="target-summary">
+							<span>at: </span><h3>$generatedAt</h3><br>
+							<span>with: </span><h3>$generatedWith</h3><br>
+							<!--
+								Version:         $generatedWith
+								Build timestamp: $buildTimestamp
+								Build number:    $buildNumber
+								Build branch:    $buildBranch
+							-->
+						</div>
 
 						<h2>Target: </h2>
 						<div class="target-summary">
@@ -468,13 +478,13 @@
 								</summary>
 								#foreach( $vul in $vulnsAboveThreshold )
 								<div class="vulnerability"
-								#if     ( $vul.bug.getCvssScore() ge 9 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#e94f37"
-								#elseif ( $vul.bug.getCvssScore() ge 8 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#ed6f5b"
-								#elseif ( $vul.bug.getCvssScore() ge 7 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fb8b24"
-								#elseif ( $vul.bug.getCvssScore() ge 6 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fb9537"
-								#elseif ( $vul.bug.getCvssScore() ge 5 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fba04b"
-								#elseif ( $vul.bug.getCvssScore() ge 4 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#f4d35e"
-								#elseif ( $vul.bug.getCvssScore() lt 3 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#bdd358"
+								#if     ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() ge 9 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#e94f37"
+								#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() ge 8 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#ed6f5b"
+								#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() ge 7 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fb8b24"
+								#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() ge 6 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fb9537"
+								#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() ge 5 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fba04b"
+								#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() ge 4 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#f4d35e"
+								#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() lt 3 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#bdd358"
 								#else style="border-left-style:solid;border-left-width:15px;border-left-color:grey"
 								#end >
 								<details>
@@ -501,13 +511,13 @@
 										<div>
 											CVSS Score:
 											<span
-												#if     ( $vul.bug.getCvssScore().floatValue() ge 9.0 ) style="color:#e94f37;font-weight:bold"
-												#elseif ( $vul.bug.getCvssScore().floatValue() ge 8.0 ) style="color:#ed6f5b;font-weight:bold"
-												#elseif ( $vul.bug.getCvssScore().floatValue() ge 7.0 ) style="color:#fb8b24;font-weight:bold"
-												#elseif ( $vul.bug.getCvssScore().floatValue() ge 6.0 ) style="color:#fb9537;font-weight:bold"
-												#elseif ( $vul.bug.getCvssScore().floatValue() ge 5.0 ) style="color:#fba04b;font-weight:bold"
-												#elseif ( $vul.bug.getCvssScore().floatValue() ge 4.0 ) style="color:#f4d35e;font-weight:bold"
-												#elseif ( $vul.bug.getCvssScore() lt 3 ) style="color:#bdd358;font-weight:bold"
+												#if     ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore().floatValue() ge 9.0 ) style="color:#e94f37;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore().floatValue() ge 8.0 ) style="color:#ed6f5b;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore().floatValue() ge 7.0 ) style="color:#fb8b24;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore().floatValue() ge 6.0 ) style="color:#fb9537;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore().floatValue() ge 5.0 ) style="color:#fba04b;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore().floatValue() ge 4.0 ) style="color:#f4d35e;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() lt 3 ) style="color:#bdd358;font-weight:bold"
 												#else style="color:grey;font-weight:bold"
 												#end >
 												$vul.bug.getCvssDisplayString()
@@ -671,13 +681,13 @@
 								</summary>
 								#foreach( $vul in $vulnsBelowThreshold )
 								<div class="vulnerability"
-								#if     ( $vul.bug.getCvssScore() ge 9 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#e94f37"
-								#elseif ( $vul.bug.getCvssScore() ge 8 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#ed6f5b"
-								#elseif ( $vul.bug.getCvssScore() ge 7 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fb8b24"
-								#elseif ( $vul.bug.getCvssScore() ge 6 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fb9537"
-								#elseif ( $vul.bug.getCvssScore() ge 5 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fba04b"
-								#elseif ( $vul.bug.getCvssScore() ge 4 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#f4d35e"
-								#elseif ( $vul.bug.getCvssScore() lt 3 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#bdd358"
+								#if     ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() ge 9 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#e94f37"
+								#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() ge 8 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#ed6f5b"
+								#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() ge 7 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fb8b24"
+								#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() ge 6 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fb9537"
+								#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() ge 5 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#fba04b"
+								#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() ge 4 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#f4d35e"
+								#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() lt 3 ) style="border-left-style:solid;border-left-width:15px;border-left-color:#bdd358"
 								#else style="border-left-style:solid;border-left-width:15px;border-left-color:grey"
 								#end >
 									<details>
@@ -704,13 +714,13 @@
 										<div>
 											CVSS Score:
 											<span
-												#if     ( $vul.bug.getCvssScore().floatValue() ge 9.0 ) style="color:#e94f37;font-weight:bold"
-												#elseif ( $vul.bug.getCvssScore().floatValue() ge 8.0 ) style="color:#ed6f5b;font-weight:bold"
-												#elseif ( $vul.bug.getCvssScore().floatValue() ge 7.0 ) style="color:#fb8b24;font-weight:bold"
-												#elseif ( $vul.bug.getCvssScore().floatValue() ge 6.0 ) style="color:#fb9537;font-weight:bold"
-												#elseif ( $vul.bug.getCvssScore().floatValue() ge 5.0 ) style="color:#fba04b;font-weight:bold"
-												#elseif ( $vul.bug.getCvssScore().floatValue() ge 4.0 ) style="color:#f4d35e;font-weight:bold"
-												#elseif ( $vul.bug.getCvssScore() lt 3 ) style="color:#bdd358;font-weight:bold"
+												#if     ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore().floatValue() ge 9.0 ) style="color:#e94f37;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore().floatValue() ge 8.0 ) style="color:#ed6f5b;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore().floatValue() ge 7.0 ) style="color:#fb8b24;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore().floatValue() ge 6.0 ) style="color:#fb9537;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore().floatValue() ge 5.0 ) style="color:#fba04b;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore().floatValue() ge 4.0 ) style="color:#f4d35e;font-weight:bold"
+												#elseif ( $vul.bug.getCvssScore() && $vul.bug.getCvssScore() lt 3 ) style="color:#bdd358;font-weight:bold"
 												#else style="color:grey;font-weight:bold"
 												#end >
 												$vul.bug.getCvssDisplayString()
