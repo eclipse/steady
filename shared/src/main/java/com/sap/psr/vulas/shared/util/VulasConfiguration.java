@@ -566,6 +566,18 @@ public class VulasConfiguration {
   /** Constant <code>OPTI_SETTINGS="vulas.shared.settings.optional"</code> */
   public static final String OPTI_SETTINGS = "vulas.shared.settings.optional";
 
+  /** Constant <code>VERSION="vulas.shared.version"</code> */
+  public static final String VERSION = "vulas.shared.version";
+
+  /** Constant <code>VERSION="vulas.shared.version"</code> */
+  public static final String BUILD_TIMESTAMP = "vulas.shared.buildTimestamp";
+
+  /** Constant <code>VERSION="vulas.shared.version"</code> */
+  public static final String BUILD_NUMBER = "vulas.shared.buildNumber";
+
+  /** Constant <code>VERSION="vulas.shared.version"</code> */
+  public static final String BUILD_BRANCH = "vulas.shared.buildBranch";
+
   /** Constant <code>HOMEPAGE="vulas.shared.homepage"</code> */
   public static final String HOMEPAGE = "vulas.shared.homepage";
 
