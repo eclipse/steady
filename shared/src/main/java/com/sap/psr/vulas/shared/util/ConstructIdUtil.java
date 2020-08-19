@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.Logger;
 
-
 import com.sap.psr.vulas.shared.json.model.ConstructId;
 
 /**
@@ -35,31 +34,29 @@ import com.sap.psr.vulas.shared.json.model.ConstructId;
  */
 public class ConstructIdUtil {
 
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
-	
-	/**
-	 * <p>filterWithRegex.</p>
-	 *
-	 * @param _in a {@link java.util.Set} object.
-	 * @param _qname_filter an array of {@link java.lang.String} objects.
-	 * @return a {@link java.util.Set} object.
-	 */
-	public static Set<ConstructId> filterWithRegex(Set<ConstructId> _in, String[] _qname_filter) {
-		final Set<ConstructId> result = new HashSet<ConstructId>();
-		final Set<Pattern> filter = new HashSet<Pattern>();
-		Matcher m = null;
-		for(String f: _qname_filter) 
-			filter.add(Pattern.compile(f));
-		final int count_before = _in.size();
-		for(ConstructId c: _in) {
-			for(Pattern p: filter) {
-				m = p.matcher(c.getQname());
-				if(m.matches())
-					result.add(c);
-			}
-		}
-		final int count_after = result.size();
-		log.info("[" + (count_before-count_after) + "/" + count_before + "] items filtered");
-		return result;
-	}
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+
+  /**
+   * <p>filterWithRegex.</p>
+   *
+   * @param _in a {@link java.util.Set} object.
+   * @param _qname_filter an array of {@link java.lang.String} objects.
+   * @return a {@link java.util.Set} object.
+   */
+  public static Set<ConstructId> filterWithRegex(Set<ConstructId> _in, String[] _qname_filter) {
+    final Set<ConstructId> result = new HashSet<ConstructId>();
+    final Set<Pattern> filter = new HashSet<Pattern>();
+    Matcher m = null;
+    for (String f : _qname_filter) filter.add(Pattern.compile(f));
+    final int count_before = _in.size();
+    for (ConstructId c : _in) {
+      for (Pattern p : filter) {
+        m = p.matcher(c.getQname());
+        if (m.matches()) result.add(c);
+      }
+    }
+    final int count_after = result.size();
+    log.info("[" + (count_before - count_after) + "/" + count_before + "] items filtered");
+    return result;
+  }
 }

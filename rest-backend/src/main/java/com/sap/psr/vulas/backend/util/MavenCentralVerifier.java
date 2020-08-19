@@ -49,93 +49,106 @@ import com.sap.psr.vulas.shared.json.model.mavenCentral.ResponseDoc;
  */
 public class MavenCentralVerifier implements DigestVerifier {
 
-	private static Logger log = LoggerFactory.getLogger(MavenCentralVerifier.class);
-	
-	private static Set<ProgrammingLanguage> SUPP_LANG = new HashSet<ProgrammingLanguage>();
+  private static Logger log = LoggerFactory.getLogger(MavenCentralVerifier.class);
 
-	private static Set<DigestAlgorithm> SUPP_ALG = new HashSet<DigestAlgorithm>();
-	
-	static {
-		SUPP_LANG.add(ProgrammingLanguage.JAVA);
-		SUPP_ALG.add(DigestAlgorithm.SHA1);
-	}
-	
-	private String url = null;
-	
-	/** Release timestamp of the given digest (null if unknown). */
-	private java.util.Calendar timestamp;
-	
-	/** {@inheritDoc} */
-	@Override
-	public Set<ProgrammingLanguage> getSupportedLanguages() {
-		return SUPP_LANG;
-	}
+  private static Set<ProgrammingLanguage> SUPP_LANG = new HashSet<ProgrammingLanguage>();
 
-	/** {@inheritDoc} */
-	@Override
-	public Set<DigestAlgorithm> getSupportedDigestAlgorithms() {
-		return SUPP_ALG;
-	}
+  private static Set<DigestAlgorithm> SUPP_ALG = new HashSet<DigestAlgorithm>();
 
-	/** {@inheritDoc} */
-	@Override
-	public String getVerificationUrl() { return url; }
-	
-	/** {@inheritDoc} */
-	@Override
-	public java.util.Calendar getReleaseTimestamp() { return this.timestamp; }
+  static {
+    SUPP_LANG.add(ProgrammingLanguage.JAVA);
+    SUPP_ALG.add(DigestAlgorithm.SHA1);
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	public List<LibraryId> verify(final Library _lib) throws VerificationException {
-		if(_lib==null || _lib.getDigest()==null)
-			throw new IllegalArgumentException("No library or digest provided: [" + _lib + "]");
+  private String url = null;
 
-		this.url = new String("http://search.maven.org/solrsearch/select?q=1:<SHA1>&rows=20&wt=json").replaceAll("<SHA1>", _lib.getDigest());
+  /** Release timestamp of the given digest (null if unknown). */
+  private java.util.Calendar timestamp;
 
-		String mvnResponse = null;
-		List<LibraryId> verified_lids = null;
-		int sc = -1;
-		try {
-			final CloseableHttpClient httpclient = HttpClients.createDefault();
-			final HttpGet method = new HttpGet(this.url);
-			if(ConnectionUtil.getProxyConfig()!=null)
-				method.setConfig(ConnectionUtil.getProxyConfig());
-			final CloseableHttpResponse response = httpclient.execute(method);
-			try {
-				sc = response.getStatusLine().getStatusCode();
-				HttpEntity entity = response.getEntity();
-				if (sc==HttpStatus.SC_OK && entity != null) {
-					mvnResponse = ConnectionUtil.readInputStream(entity.getContent());
-					MavenVersionsSearch json_response = (MavenVersionsSearch) JacksonUtil.asObject(mvnResponse, MavenVersionsSearch.class);
-					long num_found = json_response.getResponse().getNumFound();
-					
-					verified_lids = new ArrayList<LibraryId>();
-					if(num_found>1) {
-						log.warn("The lookup of SHA1 digest [" + _lib.getDigest() + "] in Maven Central returned [" + num_found + "] artifacts");
-					}
-					if(num_found>=1) {
-						
-						for(ResponseDoc d: json_response.getResponse().getSortedDocs()) {
-							LibraryId current = new LibraryId(d.getG(),d.getA(),d.getV());
-							verified_lids.add(current);
-							// take timestamp of the artifact corresponding to the provided libraryId or the
-							// first one as that's the one we will use in case the provided one is not among
-							// the list of verified 
-							if(this.timestamp==null || current.equals(_lib.getLibraryId())) {
-								final long ms = d.getTimestamp();;
-								this.timestamp = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-								this.timestamp.setTimeInMillis(ms);						
-							}
-						}	
-					}
-				}
-			} finally {
-				response.close();
-			}
-		} catch (Exception e) {
-			throw new VerificationException(_lib, this.url, e);
-		}
-		return verified_lids;
-	}
+  /** {@inheritDoc} */
+  @Override
+  public Set<ProgrammingLanguage> getSupportedLanguages() {
+    return SUPP_LANG;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Set<DigestAlgorithm> getSupportedDigestAlgorithms() {
+    return SUPP_ALG;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String getVerificationUrl() {
+    return url;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public java.util.Calendar getReleaseTimestamp() {
+    return this.timestamp;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public List<LibraryId> verify(final Library _lib) throws VerificationException {
+    if (_lib == null || _lib.getDigest() == null)
+      throw new IllegalArgumentException("No library or digest provided: [" + _lib + "]");
+
+    this.url =
+        new String("http://search.maven.org/solrsearch/select?q=1:<SHA1>&rows=20&wt=json")
+            .replaceAll("<SHA1>", _lib.getDigest());
+
+    String mvnResponse = null;
+    List<LibraryId> verified_lids = null;
+    int sc = -1;
+    try {
+      final CloseableHttpClient httpclient = HttpClients.createDefault();
+      final HttpGet method = new HttpGet(this.url);
+      if (ConnectionUtil.getProxyConfig() != null)
+        method.setConfig(ConnectionUtil.getProxyConfig());
+      final CloseableHttpResponse response = httpclient.execute(method);
+      try {
+        sc = response.getStatusLine().getStatusCode();
+        HttpEntity entity = response.getEntity();
+        if (sc == HttpStatus.SC_OK && entity != null) {
+          mvnResponse = ConnectionUtil.readInputStream(entity.getContent());
+          MavenVersionsSearch json_response =
+              (MavenVersionsSearch) JacksonUtil.asObject(mvnResponse, MavenVersionsSearch.class);
+          long num_found = json_response.getResponse().getNumFound();
+
+          verified_lids = new ArrayList<LibraryId>();
+          if (num_found > 1) {
+            log.warn(
+                "The lookup of SHA1 digest ["
+                    + _lib.getDigest()
+                    + "] in Maven Central returned ["
+                    + num_found
+                    + "] artifacts");
+          }
+          if (num_found >= 1) {
+
+            for (ResponseDoc d : json_response.getResponse().getSortedDocs()) {
+              LibraryId current = new LibraryId(d.getG(), d.getA(), d.getV());
+              verified_lids.add(current);
+              // take timestamp of the artifact corresponding to the provided libraryId or the
+              // first one as that's the one we will use in case the provided one is not among
+              // the list of verified
+              if (this.timestamp == null || current.equals(_lib.getLibraryId())) {
+                final long ms = d.getTimestamp();
+                ;
+                this.timestamp = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+                this.timestamp.setTimeInMillis(ms);
+              }
+            }
+          }
+        }
+      } finally {
+        response.close();
+      }
+    } catch (Exception e) {
+      throw new VerificationException(_lib, this.url, e);
+    }
+    return verified_lids;
+  }
 }

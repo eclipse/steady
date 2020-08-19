@@ -24,7 +24,6 @@ import java.nio.file.Path;
 
 import org.apache.logging.log4j.Logger;
 
-
 import com.sap.psr.vulas.shared.util.FileUtil;
 
 /**
@@ -33,41 +32,41 @@ import com.sap.psr.vulas.shared.util.FileUtil;
  * @param <T>
  */
 public class JsonReader<T> {
-	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
-	
-	private Class<T> clazz;
-	
-	/**
-	 * <p>Constructor for JsonReader.</p>
-	 *
-	 * @param _clazz a {@link java.lang.Class} object.
-	 */
-	public JsonReader(Class<T> _clazz) {
-		this.clazz = _clazz;
-	}
-	
-	/**
-	 * <p>read.</p>
-	 *
-	 * @param _path a {@link java.nio.file.Path} object.
-	 * @return a T object.
-	 */
-	@SuppressWarnings("unchecked")
-	public T read(Path _path) {
-		T object = null;
-		if(FileUtil.isAccessibleFile(_path)) {
-			try {
-				final String json = FileUtil.readFile(_path);
-				object = (T)JacksonUtil.asObject(json, this.clazz);
-			} catch (IOException e) {
-				log.error("Error reading from file [" + _path + "]: " + e.getMessage(), e);
-			} catch (ClassCastException e) {
-				log.error("Error reading from file [" + _path + "]: " + e.getMessage(), e);
-			} catch (Exception e) {
-				log.error("Error reading from file [" + _path + "]: " + e.getMessage(), e);
-			}
-		}
-		return object;
-	}	
+
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+
+  private Class<T> clazz;
+
+  /**
+   * <p>Constructor for JsonReader.</p>
+   *
+   * @param _clazz a {@link java.lang.Class} object.
+   */
+  public JsonReader(Class<T> _clazz) {
+    this.clazz = _clazz;
+  }
+
+  /**
+   * <p>read.</p>
+   *
+   * @param _path a {@link java.nio.file.Path} object.
+   * @return a T object.
+   */
+  @SuppressWarnings("unchecked")
+  public T read(Path _path) {
+    T object = null;
+    if (FileUtil.isAccessibleFile(_path)) {
+      try {
+        final String json = FileUtil.readFile(_path);
+        object = (T) JacksonUtil.asObject(json, this.clazz);
+      } catch (IOException e) {
+        log.error("Error reading from file [" + _path + "]: " + e.getMessage(), e);
+      } catch (ClassCastException e) {
+        log.error("Error reading from file [" + _path + "]: " + e.getMessage(), e);
+      } catch (Exception e) {
+        log.error("Error reading from file [" + _path + "]: " + e.getMessage(), e);
+      }
+    }
+    return object;
+  }
 }

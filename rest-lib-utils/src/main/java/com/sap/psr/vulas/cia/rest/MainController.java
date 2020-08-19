@@ -52,65 +52,65 @@ import com.sap.psr.vulas.python.sign.PythonConstructDigestSerializer;
 @ComponentScan({"com.sap.psr.vulas.cia.util,com.sap.psr.vulas.cia.rest"})
 @EnableAutoConfiguration
 public class MainController extends SpringBootServletInitializer {
-	
-	private static Logger log = LoggerFactory.getLogger(MainController.class);
 
-	/**
-	 * <p>backendApi.</p>
-	 *
-	 * @return a {@link springfox.documentation.spring.web.plugins.Docket} object.
-	 */	
-    @Bean
-    public GroupedOpenApi publicApi() {
-        return GroupedOpenApi.builder()
-                .setGroup("public")
-                .pathsToMatch("/**")
-                .build();
-    }
+  private static Logger log = LoggerFactory.getLogger(MainController.class);
 
-	/**
-	 * Can be used to do some initialization at application startup, but does not do anything right now.
-	 *
-	 * @return a {@link org.springframework.http.converter.json.Jackson2ObjectMapperBuilder} object.
-	 */
-//	@Bean
-//	CommandLineRunner init() { return null; }
-//
-	@Bean
-	public Jackson2ObjectMapperBuilder jacksonBuilder() {
-		final Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+  /**
+   * <p>backendApi.</p>
+   *
+   * @return a {@link springfox.documentation.spring.web.plugins.Docket} object.
+   */
+  @Bean
+  public GroupedOpenApi publicApi() {
+    return GroupedOpenApi.builder().setGroup("public").pathsToMatch("/**").build();
+  }
 
-		builder.defaultViewInclusion(true);
-		//builder.indentOutput(true).dateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+  /**
+   * Can be used to do some initialization at application startup, but does not do anything right now.
+   *
+   * @return a {@link org.springframework.http.converter.json.Jackson2ObjectMapperBuilder} object.
+   */
+  //	@Bean
+  //	CommandLineRunner init() { return null; }
+  //
+  @Bean
+  public Jackson2ObjectMapperBuilder jacksonBuilder() {
+    final Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
 
-		// Custom serializers
-		Map<Class<?>,JsonSerializer<?>> custom_serializers = new HashMap<Class<?>,JsonSerializer<?>>();
-		custom_serializers.put(ASTSignatureChange.class, new ASTSignatureChangeSerializer());
-		custom_serializers.put(ASTConstructBodySignature.class, new ASTConstructBodySignatureSerializer());
-		custom_serializers.put(PythonConstructDigest.class, new PythonConstructDigestSerializer());
-		builder.serializersByType(custom_serializers);
+    builder.defaultViewInclusion(true);
+    // builder.indentOutput(true).dateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 
-		// Custom de-serializers
-		Map<Class<?>,JsonDeserializer<?>> custom_deserializers = new HashMap<Class<?>,JsonDeserializer<?>>();
-		custom_deserializers.put(ASTConstructBodySignature.class, new ASTConstructBodySignatureDeserializer());
-		builder.deserializersByType(custom_deserializers);
+    // Custom serializers
+    Map<Class<?>, JsonSerializer<?>> custom_serializers =
+        new HashMap<Class<?>, JsonSerializer<?>>();
+    custom_serializers.put(ASTSignatureChange.class, new ASTSignatureChangeSerializer());
+    custom_serializers.put(
+        ASTConstructBodySignature.class, new ASTConstructBodySignatureSerializer());
+    custom_serializers.put(PythonConstructDigest.class, new PythonConstructDigestSerializer());
+    builder.serializersByType(custom_serializers);
 
-		return builder;
-	}
+    // Custom de-serializers
+    Map<Class<?>, JsonDeserializer<?>> custom_deserializers =
+        new HashMap<Class<?>, JsonDeserializer<?>>();
+    custom_deserializers.put(
+        ASTConstructBodySignature.class, new ASTConstructBodySignatureDeserializer());
+    builder.deserializersByType(custom_deserializers);
 
-	/**
-	 * <p>main.</p>
-	 *
-	 * @param args an array of {@link java.lang.String} objects.
-	 */
-	public static void main(String[] args) {
-		SpringApplication.run(MainController.class, args);
-	}
+    return builder;
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(MainController.class);
-    }
-    
+  /**
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects.
+   */
+  public static void main(String[] args) {
+    SpringApplication.run(MainController.class, args);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+    return application.sources(MainController.class);
+  }
 }

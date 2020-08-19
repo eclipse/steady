@@ -21,7 +21,6 @@ package com.sap.psr.vulas.goals;
 
 import org.apache.logging.log4j.Logger;
 
-
 import com.sap.psr.vulas.backend.BackendConnector;
 import com.sap.psr.vulas.shared.enums.GoalType;
 import com.sap.psr.vulas.shared.json.model.Space;
@@ -31,25 +30,28 @@ import com.sap.psr.vulas.shared.json.model.Space;
  *
  */
 public class SpaceDelGoal extends AbstractSpaceGoal {
-	
-	private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
-	/**
-	 * <p>Constructor for SpaceDelGoal.</p>
-	 */
-	public SpaceDelGoal() { super(GoalType.SPACEDEL); }
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
-	/** {@inheritDoc} */
-	@Override
-	protected void executeTasks() throws Exception {
-		final Space s = this.getGoalContext().getSpace();
+  /**
+   * <p>Constructor for SpaceDelGoal.</p>
+   */
+  public SpaceDelGoal() {
+    super(GoalType.SPACEDEL);
+  }
 
-		final BackendConnector bc = BackendConnector.getInstance();
+  /** {@inheritDoc} */
+  @Override
+  protected void executeTasks() throws Exception {
+    final Space s = this.getGoalContext().getSpace();
 
-		// Check that space exists
-		if(!bc.isSpaceExisting(this.getGoalContext(), s))
-			throw new GoalExecutionException("Space with token [" + s.getSpaceToken() + "] does not exist", null);
+    final BackendConnector bc = BackendConnector.getInstance();
 
-		bc.deleteSpace(this.getGoalContext(), s);
-	}
+    // Check that space exists
+    if (!bc.isSpaceExisting(this.getGoalContext(), s))
+      throw new GoalExecutionException(
+          "Space with token [" + s.getSpaceToken() + "] does not exist", null);
+
+    bc.deleteSpace(this.getGoalContext(), s);
+  }
 }

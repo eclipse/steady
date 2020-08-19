@@ -29,11 +29,12 @@ import org.junit.Test;
 
 public class MaliciousnessAnalyzerLoopTest {
 
-	@Test
-	public void testLoop() {
-		final MaliciousnessAnalyzerLoop loop = new MaliciousnessAnalyzerLoop();
-		final Set<MaliciousnessAnalysisResult> results = loop.isMalicious(new File("src/test/resources/zip-slip.zip"));
-		assertTrue(results.size()>0);
-		assertEquals(1d, results.iterator().next().getResult(), 0d);
-	}
+  @Test
+  public void testLoop() {
+    final MaliciousnessAnalyzerLoop loop = new MaliciousnessAnalyzerLoop();
+    final Set<MaliciousnessAnalysisResult> results =
+        loop.isMalicious(new File("src/test/resources/zip-slip.zip"));
+    assertTrue(results.size() > 0);
+    assertEquals(1d, results.iterator().next().getResult(), 0d);
+  }
 }
