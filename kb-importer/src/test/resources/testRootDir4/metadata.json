@@ -1,0 +1,30 @@
+{
+	"vulnerability_id": "CVE-2018-1258",
+	"aliases": [],
+	"affected_artifacts": [
+		{
+			"id": "pkg:maven://org.springframework.security/spring-security-config@5.1.1.RELEASE",
+			"reason": "Manual review(frontend)",
+			"affected": false
+		},
+		{
+			"id": "pkg:maven://org.springframework.security/spring-security-config@5.1.3.RELEASE",
+			"reason": "Manual review(frontend)",
+			"affected": false
+		},
+		{
+			"id": "pkg:maven://org.springframework.security/spring-security-config@5.0.12.RELEASE",
+			"reason": "Manual review(frontend)",
+			"affected": false
+		}
+	],
+	"notes": [
+		{
+			"links": [
+				"https://snyk.io/vuln/SNYK-JAVA-ORGSPRINGFRAMEWORK-31651",
+				"https://spring.io/blog/2018/05/09/spring-project-vulnerability-reports-published"
+			],
+			"text": "Spring Framework version 5.0.5 when used in combination with any versions of Spring Security contains an authorization bypass when using method security. An unauthorized malicious user can gain unauthorized access to methods that should be restricted."
+		}
+	]
+}

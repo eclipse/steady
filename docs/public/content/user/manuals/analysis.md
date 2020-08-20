@@ -553,6 +553,10 @@ Uploads analysis data in folder `vulas.core.uploadDir` to the backend. Such data
     # When true, serialized HTTP requests will be deleted after the upload succeeded (incl. the JSON files)
     # Default: true
     vulas.core.upload.deleteAfterSuccess = true
+    
+    # Maximum size of *.json files (in bytes) that will be considered for upload.
+    # Default: -1 (no limit)
+    vulas.core.upload.maxSize = -1
 ```
 
 #### Run as follows

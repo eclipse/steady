@@ -19,7 +19,6 @@
  */
 package com.sap.psr.vulas.java.sign.gson;
 
-import ch.uzh.ifi.seal.changedistiller.distilling.Distiller;
 import java.io.IOException;
 import java.util.List;
 
@@ -36,123 +35,125 @@ import ch.uzh.ifi.seal.changedistiller.model.classifiers.SourceRange;
 import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <p>ASTConstructBodySignatureDeserializer class.</p>
  *
  */
-public class ASTConstructBodySignatureDeserializer extends StdDeserializer<ASTConstructBodySignature> {
-private static final Log log = LogFactory.getLog(ASTConstructBodySignatureDeserializer.class);
-	/**
-	 * <p>Constructor for ASTConstructBodySignatureDeserializer.</p>
-	 */
-	public ASTConstructBodySignatureDeserializer() {
-		this(null);
-	}
+public class ASTConstructBodySignatureDeserializer
+    extends StdDeserializer<ASTConstructBodySignature> {
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  /**
+   * <p>Constructor for ASTConstructBodySignatureDeserializer.</p>
+   */
+  public ASTConstructBodySignatureDeserializer() {
+    this(null);
+  }
 
-	/**
-	 * <p>Constructor for ASTConstructBodySignatureDeserializer.</p>
-	 *
-	 * @param t a {@link java.lang.Class} object.
-	 */
-	public ASTConstructBodySignatureDeserializer(Class<ASTConstructBodySignature> t) {
-		super(t);
-	}
+  /**
+   * <p>Constructor for ASTConstructBodySignatureDeserializer.</p>
+   *
+   * @param t a {@link java.lang.Class} object.
+   */
+  public ASTConstructBodySignatureDeserializer(Class<ASTConstructBodySignature> t) {
+    super(t);
+  }
 
-	private Node getAstNode(JsonNode _json_node){
+  private Node getAstNode(JsonNode _json_node) {
 
-		final String value = _json_node.findValue("Value").asText();
-		final String type_str = _json_node.findValue("EntityType").asText();
-		final EntityType type = ASTUtil.getJavaEntityType(type_str);
+    final String value = _json_node.findValue("Value").asText();
+    final String type_str = _json_node.findValue("EntityType").asText();
+    final EntityType type = ASTUtil.getJavaEntityType(type_str);
 
-		// Instantiate the Node object here
-		Node ast_node = new Node(type, value);
+    // Instantiate the Node object here
+    Node ast_node = new Node(type, value);
 
-		// Retrieve the SourceCodeEntity
-		final JsonNode src_code_entity = _json_node.findValue("SourceCodeEntity");
-		final int modifiers = src_code_entity.findValue("Modifiers").asInt();
+    // Retrieve the SourceCodeEntity
+    final JsonNode src_code_entity = _json_node.findValue("SourceCodeEntity");
+    final int modifiers = src_code_entity.findValue("Modifiers").asInt();
 
-		// SourceRange JsonObject
-		final JsonNode src_range_json = src_code_entity.findValue("SourceRange");
-		final int src_start = src_range_json.findValue("Start").asInt();
-		final int src_end = src_range_json.findValue("End").asInt();
-		final SourceRange src_range = new SourceRange(src_start, src_end);
+    // SourceRange JsonObject
+    final JsonNode src_range_json = src_code_entity.findValue("SourceRange");
+    final int src_start = src_range_json.findValue("Start").asInt();
+    final int src_end = src_range_json.findValue("End").asInt();
+    final SourceRange src_range = new SourceRange(src_start, src_end);
 
-		final SourceCodeEntity srcCodeEntity =  new SourceCodeEntity(value, type, modifiers, src_range);
-		ast_node.setEntity(srcCodeEntity);
+    final SourceCodeEntity srcCodeEntity = new SourceCodeEntity(value, type, modifiers, src_range);
+    ast_node.setEntity(srcCodeEntity);
 
-		// Loop the children
-		List<JsonNode> children = _json_node.findValues("C");
-		
-                for(JsonNode json_child: children) {
-                    if ( json_child.isArray() ){
-                        for ( int i=0; i<json_child.size(); i++ ) {
-                            Node ast_child = getAstNode(json_child.get(i));
-                            ast_node.add(ast_child);
-                        }
-                    } else {
-                        Node ast_child = getAstNode(json_child);
-                        ast_node.add(ast_child);
-                    }                    
-		}
+    // Loop the children
+    List<JsonNode> children = _json_node.findValues("C");
 
-		return ast_node;
-	}
+    for (JsonNode json_child : children) {
+      if (json_child.isArray()) {
+        for (int i = 0; i < json_child.size(); i++) {
+          Node ast_child = getAstNode(json_child.get(i));
+          ast_node.add(ast_child);
+        }
+      } else {
+        Node ast_child = getAstNode(json_child);
+        ast_node.add(ast_child);
+      }
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public ASTConstructBodySignature deserialize(JsonParser jp, DeserializationContext ctx) throws IOException, JsonProcessingException {
-		final JsonNode json_root = jp.getCodec().readTree(jp);
-		final List<JsonNode> ast_nodes = json_root.findValues("ast");
-		final JsonNode ast_root  = ast_nodes.get(0);
-		final String value = ast_root.findValue("Value").asText();
-		final String type_str = ast_root.findValue("EntityType").asText();
-		final EntityType type = ASTUtil.getJavaEntityType(type_str);
+    return ast_node;
+  }
 
-		// To be returned
-		ASTConstructBodySignature astConstructSign = new ASTConstructBodySignature(type, value);
+  /** {@inheritDoc} */
+  @Override
+  public ASTConstructBodySignature deserialize(JsonParser jp, DeserializationContext ctx)
+      throws IOException, JsonProcessingException {
+    final JsonNode json_root = jp.getCodec().readTree(jp);
+    final List<JsonNode> ast_nodes = json_root.findValues("ast");
+    final JsonNode ast_root = ast_nodes.get(0);
+    final String value = ast_root.findValue("Value").asText();
+    final String type_str = ast_root.findValue("EntityType").asText();
+    final EntityType type = ASTUtil.getJavaEntityType(type_str);
 
-		//Create the Root Node
-		astConstructSign.setRoot(astConstructSign);
+    // To be returned
+    ASTConstructBodySignature astConstructSign = new ASTConstructBodySignature(type, value);
 
-		//TODO : Check if these setting are really necessary to compute the "diff" as an input to changedistiller
-		//Settings for order and matching
-		//astConstructSign.enableInOrder();
-		//astConstructSign.enableMatched();
+    // Create the Root Node
+    astConstructSign.setRoot(astConstructSign);
 
-		// Loop the children
-		List<JsonNode> children = ast_root.findValues("C");
-                // from jackson documentation:
-                // findValues(String fieldName)
-                // Method for finding JSON Object fields with specified name, and returning found ones as a List.
-		for(JsonNode json_child: children) {
-                    if ( json_child.isArray() ){
-                        for ( int i=0; i<json_child.size(); i++ ) {
-                            Node ast_child = getAstNode(json_child.get(i));
-                            astConstructSign.add(ast_child);
-                        }
-                    } else {
-                        Node ast_child = getAstNode(json_child);
-                        astConstructSign.add(ast_child);
-                    }                    
-		}
+    // TODO : Check if these setting are really necessary to compute the "diff" as an input to
+    // changedistiller
+    // Settings for order and matching
+    // astConstructSign.enableInOrder();
+    // astConstructSign.enableMatched();
 
-		// Retrieve the SourceCodeEntity
-		final JsonNode src_code_entity = ast_root.findValue("SourceCodeEntity");
-		final int modifiers = src_code_entity.findValue("Modifiers").asInt();
+    // Loop the children
+    List<JsonNode> children = ast_root.findValues("C");
+    // from jackson documentation:
+    // findValues(String fieldName)
+    // Method for finding JSON Object fields with specified name, and returning found ones as a
+    // List.
+    for (JsonNode json_child : children) {
+      if (json_child.isArray()) {
+        for (int i = 0; i < json_child.size(); i++) {
+          Node ast_child = getAstNode(json_child.get(i));
+          astConstructSign.add(ast_child);
+        }
+      } else {
+        Node ast_child = getAstNode(json_child);
+        astConstructSign.add(ast_child);
+      }
+    }
 
-		// SourceRange JsonObject
-		final JsonNode src_range_json = src_code_entity.findValue("SourceRange");
-		final int src_start = src_range_json.findValue("Start").asInt();
-		final int src_end = src_range_json.findValue("End").asInt();
-		final SourceRange src_range = new SourceRange(src_start, src_end);
+    // Retrieve the SourceCodeEntity
+    final JsonNode src_code_entity = ast_root.findValue("SourceCodeEntity");
+    final int modifiers = src_code_entity.findValue("Modifiers").asInt();
 
-		final SourceCodeEntity srcCodeEntity =  new SourceCodeEntity(value, type, modifiers, src_range);
-		astConstructSign.setEntity(srcCodeEntity);
+    // SourceRange JsonObject
+    final JsonNode src_range_json = src_code_entity.findValue("SourceRange");
+    final int src_start = src_range_json.findValue("Start").asInt();
+    final int src_end = src_range_json.findValue("End").asInt();
+    final SourceRange src_range = new SourceRange(src_start, src_end);
 
-		return astConstructSign;
-	}
+    final SourceCodeEntity srcCodeEntity = new SourceCodeEntity(value, type, modifiers, src_range);
+    astConstructSign.setEntity(srcCodeEntity);
+
+    return astConstructSign;
+  }
 }

@@ -19,19 +19,19 @@
  */
 package com.sap.psr.vulas.java.sign;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.sap.psr.vulas.Construct;
+import com.sap.psr.vulas.sign.Signature;
+
 import ch.uzh.ifi.seal.changedistiller.JavaChangeDistillerModule;
 import ch.uzh.ifi.seal.changedistiller.ast.java.JavaCompilation;
-import ch.uzh.ifi.seal.changedistiller.ast.java.JavaDeclarationConverter;
 import ch.uzh.ifi.seal.changedistiller.ast.java.JavaMethodBodyConverter;
 import ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType;
 import ch.uzh.ifi.seal.changedistiller.model.classifiers.SourceRange;
 import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.sap.psr.vulas.Construct;
-import com.sap.psr.vulas.sign.Signature;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * <p>Abstract ASTSignature class.</p>
@@ -39,98 +39,108 @@ import com.sap.psr.vulas.sign.Signature;
  */
 public abstract class ASTSignature extends Node implements Signature {
 
-	/**
-	 * <p>Constructor for ASTSignature.</p>
-	 *
-	 * @param label a {@link ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType} object.
-	 * @param value a {@link java.lang.String} object.
-	 */
-	public ASTSignature(EntityType label, String value) {
-		super(label, value);
-		// TODO Auto-generated constructor stub
-	}
+  /**
+   * <p>Constructor for ASTSignature.</p>
+   *
+   * @param label a {@link ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType} object.
+   * @param value a {@link java.lang.String} object.
+   */
+  public ASTSignature(EntityType label, String value) {
+    super(label, value);
+    // TODO Auto-generated constructor stub
+  }
 
-	private static final long serialVersionUID = -3802437501302095999L;
-	/** Constant <code>sDeclarationConverter</code> */
-	protected static JavaDeclarationConverter sDeclarationConverter;
-    /** Constant <code>sMethodBodyConverter</code> */
-    protected static JavaMethodBodyConverter sMethodBodyConverter;   //Visitor for generation of the AST of construct bodies
-	/** Constant <code>sInjector</code> */
-	protected static final Injector sInjector = Guice.createInjector(new JavaChangeDistillerModule());
-    protected JavaCompilation fCompilation;
-    protected Node fRoot;
-    protected Construct _construct;
+  private static final long serialVersionUID = -3802437501302095999L;
 
-    /**
-     * Prints this Node and its children with <code>value ['{' child [, child]* '}']</code>.
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    protected String getTreeString() {
-        return fRoot.print(new StringBuilder()).toString();
-    }
+  /** Constant <code>sDeclarationConverter</code> */
+  // protected static JavaDeclarationConverter sDeclarationConverter;
 
-    /**
-     * <p>getFirstLeaf.</p>
-     *
-     * @return a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
-     */
-    public Node getFirstLeaf() {
-        return ((Node) fRoot.getFirstLeaf());
-    }
+  /** Constant <code>sMethodBodyConverter</code> */
+  @SuppressFBWarnings(
+      value = "MS_PKGPROTECT",
+      justification = "Subclasses can be in different packages")
+  protected static JavaMethodBodyConverter
+      sMethodBodyConverter; // Visitor for generation of the AST of construct bodies
 
-    /**
-     * <p>getFirstChild.</p>
-     *
-     * @return a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
-     */
-    public Node getFirstChild() {
-        return (Node) fRoot.getFirstChild();
-    }
+  /** Constant <code>sInjector</code> */
+  protected static final Injector sInjector = Guice.createInjector(new JavaChangeDistillerModule());
 
-    /**
-     * <p>getLastChild.</p>
-     *
-     * @return a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
-     */
-    public Node getLastChild() {
-        return (Node) fRoot.getLastChild();
-    }
+  protected JavaCompilation fCompilation;
 
-    /**
-     * <p>createRootNode.</p>
-     *
-     * @param label a {@link ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType} object.
-     * @param value a {@link java.lang.String} object.
-     */
-    public void createRootNode(EntityType label, String value) {
-        fRoot = new Node(label, value);
-        fRoot.setEntity(new SourceCodeEntity(value, label, new SourceRange()));
-    }
+  protected Node fRoot;
 
-    /**
-     * <p>getSourceCodeWithSnippets.</p>
-     *
-     * @param snippets a {@link java.lang.String} object.
-     * @return a {@link java.lang.String} object.
-     */
-    protected abstract String getSourceCodeWithSnippets(String... snippets);
+  protected Construct _construct;
 
-    /**
-     * <p>getRoot.</p>
-     *
-     * @return a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
-     */
-    public Node getRoot(){
-    	return (Node) this.fRoot;
-    }
+  /**
+   * Prints this Node and its children with <code>value ['{' child [, child]* '}']</code>.
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  protected String getTreeString() {
+    return fRoot.print(new StringBuilder()).toString();
+  }
 
-    /**
-     * <p>setRoot.</p>
-     *
-     * @param n a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
-     */
-    public void setRoot(Node n){
-    	fRoot = n;
-    }
+  /**
+   * <p>getFirstLeaf.</p>
+   *
+   * @return a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
+   */
+  public Node getFirstLeaf() {
+    return ((Node) fRoot.getFirstLeaf());
+  }
+
+  /**
+   * <p>getFirstChild.</p>
+   *
+   * @return a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
+   */
+  public Node getFirstChild() {
+    return (Node) fRoot.getFirstChild();
+  }
+
+  /**
+   * <p>getLastChild.</p>
+   *
+   * @return a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
+   */
+  public Node getLastChild() {
+    return (Node) fRoot.getLastChild();
+  }
+
+  /**
+   * <p>createRootNode.</p>
+   *
+   * @param label a {@link ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType} object.
+   * @param value a {@link java.lang.String} object.
+   */
+  public void createRootNode(EntityType label, String value) {
+    fRoot = new Node(label, value);
+    fRoot.setEntity(new SourceCodeEntity(value, label, new SourceRange()));
+  }
+
+  /**
+   * <p>getSourceCodeWithSnippets.</p>
+   *
+   * @param snippets a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
+  protected abstract String getSourceCodeWithSnippets(String... snippets);
+
+  /**
+   * <p>getRoot.</p>
+   *
+   * @return a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
+   */
+  public Node getRoot() {
+    return (Node) this.fRoot;
+  }
+
+  /**
+   * <p>setRoot.</p>
+   *
+   * @param n a {@link ch.uzh.ifi.seal.changedistiller.treedifferencing.Node} object.
+   */
+  public void setRoot(Node n) {
+    fRoot = n;
+  }
 }

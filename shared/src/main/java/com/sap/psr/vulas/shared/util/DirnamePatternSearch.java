@@ -32,35 +32,35 @@ import javax.validation.constraints.NotNull;
  */
 public class DirnamePatternSearch extends AbstractFileSearch {
 
-	private Pattern pattern = null;
+  private Pattern pattern = null;
 
-	/**
-	 * <p>Constructor for DirnamePatternSearch.</p>
-	 *
-	 * @param _regex a {@link java.lang.String} object.
-	 */
-	public DirnamePatternSearch(@NotNull String _regex) {
-		this(Pattern.compile(_regex));
-	}
-	
-	/**
-	 * <p>Constructor for DirnamePatternSearch.</p>
-	 *
-	 * @param _pattern a {@link java.util.regex.Pattern} object.
-	 */
-	public DirnamePatternSearch(@NotNull Pattern _pattern) {
-		this.pattern = _pattern;
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public FileVisitResult preVisitDirectory(Path _f, BasicFileAttributes attrs) {
-		if(_f.toFile().isDirectory() && !this.foundFile(_f) && _f.getFileName()!=null) {
-			final Matcher m = this.pattern.matcher(_f.getFileName().toString());
-			if(m.matches()) {
-				this.addFile(_f);
-			}
-		}
-		return FileVisitResult.CONTINUE;
-	}
+  /**
+   * <p>Constructor for DirnamePatternSearch.</p>
+   *
+   * @param _regex a {@link java.lang.String} object.
+   */
+  public DirnamePatternSearch(@NotNull String _regex) {
+    this(Pattern.compile(_regex));
+  }
+
+  /**
+   * <p>Constructor for DirnamePatternSearch.</p>
+   *
+   * @param _pattern a {@link java.util.regex.Pattern} object.
+   */
+  public DirnamePatternSearch(@NotNull Pattern _pattern) {
+    this.pattern = _pattern;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public FileVisitResult preVisitDirectory(Path _f, BasicFileAttributes attrs) {
+    if (_f.toFile().isDirectory() && !this.foundFile(_f) && _f.getFileName() != null) {
+      final Matcher m = this.pattern.matcher(_f.getFileName().toString());
+      if (m.matches()) {
+        this.addFile(_f);
+      }
+    }
+    return FileVisitResult.CONTINUE;
+  }
 }

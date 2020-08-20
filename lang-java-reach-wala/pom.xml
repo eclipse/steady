@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.sap.research.security.vulas</groupId>
             <artifactId>lang-java-reach</artifactId>
-            <version>3.1.12</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

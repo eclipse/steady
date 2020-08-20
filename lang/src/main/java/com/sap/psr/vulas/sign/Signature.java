@@ -25,28 +25,27 @@ package com.sap.psr.vulas.sign;
  */
 public interface Signature {
 
-	/**
-	 * Returns true if the signatures are equal, false otherwise.
-	 *
-	 * @param _o the signature to compare with
-	 * @return a boolean.
-	 */
-	public boolean equals(Object _o);
+  /**
+   * Returns true if the signatures are equal, false otherwise.
+   *
+   * @param _o the signature to compare with
+   * @return a boolean.
+   */
+  public boolean equals(Object _o);
 
-	/**
-	 * Returns a short (perhaps compressed) JSON representation of the signature, to be uploaded to the central Vulas engine.
-	 * The reason to have a short representation is that we need to upload and store signatures for all applications and dependencies analyzed.
-	 * Moreover, it would be very good to create a representation that can be compared also on server-side, e.g., by means of SQL statements or stored procedures.
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String toJson();
+  /**
+   * Returns a short (perhaps compressed) JSON representation of the signature, to be uploaded to the central Vulas engine.
+   * The reason to have a short representation is that we need to upload and store signatures for all applications and dependencies analyzed.
+   * Moreover, it would be very good to create a representation that can be compared also on server-side, e.g., by means of SQL statements or stored procedures.
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  public String toJson();
 
-	/**
-	 * <p>toString.</p>
-	 *
-	 * @return String representation of signature
-	 */
-	public String toString();
-
+  /**
+   * <p>toString.</p>
+   *
+   * @return String representation of signature
+   */
+  public String toString();
 }

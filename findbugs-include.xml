@@ -1,0 +1,11 @@
+<FindBugsFilter>
+    <Match>
+        <Or>
+            <Bug category="PERFORMANCE" />
+            <Bug category="SECURITY" />
+            <Bug category="CORRECTNESS" />
+            <Bug category="MALICIOUS_CODE" />
+            <Bug category="MT_CORRECTNESS" />
+        </Or>
+    </Match>
+</FindBugsFilter>

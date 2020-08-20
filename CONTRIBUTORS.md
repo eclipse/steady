@@ -2,15 +2,16 @@
 
 SAP Security Research team
 
-- Henrik Plate
-- Serena Ponta
-- Antonino Sabetta
+- [Henrik Plate](https://github.com/henrikplate)
+- [Serena Ponta](https://github.com/serenaponta)
+- [Antonino Sabetta](https://github.com/copernico)
 
 SAP Security Testing team
 
 - [Alessandro Pezzé](https://github.com/Naramsim)
 - Cedric Dangremont
 - [HOANG Quoc Trung](https://github.com/ichbinfrog)
+- [Sumeet Patil](https://github.com/sumeetpatil)
 
 University of Paderborn
 

@@ -168,8 +168,8 @@ The second requirement could be described in entire books and would still lack a
 
 These are some of the most important rules to give you an initial impression:
 
-- Apply a clean coding style adapted to the surrounding code, even though we are aware the existing code is not fully clean
-- Use tabs for indentation (except if the modified file consistently uses spaces)
+- Check your Java code with [Spotbugs](https://spotbugs.github.io/) by running `mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.includeFilterFile=findbugs-include.xml -Dspotbugs.failOnError=true clean compile com.github.spotbugs:spotbugs-maven-plugin:4.0.4:check`. Code with MEDIUM or HIGH priority findings in one of the following categories will be rejected (see `findbugs-include.xml`): PERFORMANCE, SECURITY, CORRECTNESS, MALICIOUS_CODE, MT_CORRECTNESS
+- Strictly follow [Google's Java Style Guide](https://google.github.io/styleguide/javaguide.html), e.g., by installing the respective plugin for your IDE or by using the script `.travis/check_code_style.sh`. Contributions will be automatically checked using [google-java-format](https://github.com/google/google-java-format), and rejected if they do not comply.
 - Use variable naming conventions like in the other files you are seeing (e.g. hungarian notation)
 - No `System.out.println`
 - Only access public APIs of other entities (there are exceptions, but this is the rule)

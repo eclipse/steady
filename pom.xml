@@ -97,6 +97,7 @@
 		<module>repo-client</module>
 		<module>patch-analyzer</module>
 		<module>patch-lib-analyzer</module>
+		<module>kb-importer</module>
 
 		<!-- Allow the scanning of applications -->
 		<module>cli-scanner</module>
@@ -116,6 +117,9 @@
 		<!-- Leave at 1.7, otherwise the agent may not work with older applications -->
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
+		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
+		<maven.compiler.skipMultiThreadWarning>true</maven.compiler.skipMultiThreadWarning>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -252,15 +256,21 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.2</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.13.3</version>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.13.3</version>
 		</dependency>
+		<dependency>
+  			<groupId>com.github.spotbugs</groupId>
+  			<artifactId>spotbugs-annotations</artifactId>
+  			<version>4.1.1</version>
+		</dependency>
+		
 	</dependencies>
 
 	<!-- Use the same versions across all child projects -->
@@ -449,14 +459,17 @@
 			</plugin>
 
 			<!-- Successor of Findbugs, run fully-qualified with 'mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml
-				-Dspotbugs.failOnError=false -P soot,gradle com.github.spotbugs:spotbugs-maven-plugin:3.1.12.2:check' -->
+				-Dspotbugs.includeFilterFile=findbugs-include.xml -Dspotbugs.failOnError=false -P gradle
+				com.github.spotbugs:spotbugs-maven-plugin:4.0.4:check' -->
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.12.2</version>
+				<version>4.0.4</version>
 				<configuration>
 					<failOnError>false</failOnError>
+					<threshold>Medium</threshold>
 					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+					<includeFilterFile>findbugs-include.xml</includeFilterFile>
 					<omitVisitors></omitVisitors>
 				</configuration>
 			</plugin>
@@ -483,7 +496,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.4</version>
+				<version>0.8.5</version>
 				<configuration>
 					<excludes>
 						<!-- Exclude ANTLR generated classes -->
@@ -530,6 +543,17 @@
 										</limit>
 									</limits>
 								</rule>
+								<!-- implementation is needed only for Maven 2 -->
+								<!-- rule implementation="org.jacoco.maven.RuleConfiguration">
+									<element>BUNDLE</element>
+									<limits>
+										<limit implementation="org.jacoco.report.check.Limit">
+											<counter>COMPLEXITY</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.00</minimum>
+										</limit>
+									</limits>
+								</rule-->
 							</rules>
 						</configuration>
 					</execution>
@@ -548,12 +572,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.7.1</version>
+					<version>3.9.1</version>
 					<dependencies>
 						<dependency>
 							<groupId>org.apache.maven.wagon</groupId>
 							<artifactId>wagon-file</artifactId>
-							<version>3.3.4</version>
+							<version>3.4.1</version>
 						</dependency>
 					</dependencies>
 				</plugin>
@@ -580,12 +604,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.22.0</version>
+					<version>2.22.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-failsafe-plugin</artifactId>
-					<version>2.22.0</version>
+					<version>2.22.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.antlr</groupId>

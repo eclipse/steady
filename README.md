@@ -5,7 +5,7 @@
 </p>
 
 # Eclipse Steady (Incubator Project)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![Build Status](https://travis-ci.org/eclipse/steady.svg?branch=master)](https://travis-ci.org/eclipse/steady) [![Release](https://img.shields.io/github/release/eclipse/steady.svg)](https://github.com/eclipse/steady/releases)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![Build Status](https://travis-ci.org/eclipse/steady.svg?branch=master)](https://travis-ci.org/eclipse/steady) [![Release](https://img.shields.io/github/release/eclipse/steady.svg)](https://github.com/eclipse/steady/releases) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4202/badge)](https://bestpractices.coreinfrastructure.org/projects/4202)
 
 **Discover, assess and mitigate known vulnerabilities in your Java and Python projects**
 
@@ -78,7 +78,7 @@ The following is a subset of pending feature requests:
 - Support of JavaScript (client- and server-side)
 - UI dashboards for workspaces
 
-[**Documentation**](https://eclipse.github.io/steady/user/) · [**Support**](https://eclipse.github.io/steady/user/support/) · [**Contributing**](https://eclipse.github.io/steady/contributor/) · [**Deploy guide**](https://eclipse.github.io/steady/admin/tutorials/docker/) · [**Scan guide**](https://eclipse.github.io/steady/user/tutorials/) · [**Vulnerability database**](https://eclipse.github.io/steady/vuln_db/) · [**Blog**](https://blogs.sap.com/tag/vulas/) · [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2605/badge)](https://bestpractices.coreinfrastructure.org/projects/2605)
+[**Documentation**](https://eclipse.github.io/steady/user/) · [**Support**](https://eclipse.github.io/steady/user/support/) · [**Contributing**](https://eclipse.github.io/steady/contributor/) · [**Deploy guide**](https://eclipse.github.io/steady/admin/tutorials/docker/) · [**Scan guide**](https://eclipse.github.io/steady/user/tutorials/) · [**Vulnerability database**](https://eclipse.github.io/steady/vuln_db/) · [**Blog**](https://blogs.sap.com/tag/vulas/)
 
 ## License
 
