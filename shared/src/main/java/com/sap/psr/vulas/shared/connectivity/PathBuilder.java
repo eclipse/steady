@@ -693,4 +693,33 @@ public class PathBuilder {
     sb.append("/constructs/diff");
     return sb.toString();
   }
+
+  /**
+   * Affected Lib Ids
+   *
+   * @param _bugId a {@link java.lang.String} object
+   * @param _g a {@link java.lang.String} object.
+   * @param _a a {@link java.lang.String} object.
+   * @param _v a {@link java.lang.String} object.
+   * @return a {@link java.lang.String} object.
+   */
+  public static final String affectedLibs(String _bugId, String _g, String _a, String _v) {
+    final StringBuilder b = new StringBuilder();
+    b.append(bugAffectedLibs(_bugId)).append("/").append(_g).append("/").append(_a);
+    if (_v != null && !_v.isEmpty()) b.append("/").append(_v);
+    return b.toString();
+  }
+
+  /**
+   * backend:/nvdrest/vulnerabilities/bug_id
+   *
+   * @param _bugId
+   * @return
+   */
+  public static final String nvdRest(@NotNull String _bugId) {
+    final StringBuilder sb = new StringBuilder();
+    sb.append("/nvdrest/vulnerabilities/");
+    sb.append(_bugId);
+    return sb.toString();
+  }
 }

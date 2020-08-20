@@ -1581,4 +1581,51 @@ public class BackendConnector {
             .getBody();
     return json;
   }
+
+  /**
+   * <p>
+   * getBugAffectedLibrary for a GAV. and source
+   * </p>
+   *
+   * @param _bugId a {@link java.lang.String} object.
+   * @param _group a {@link java.lang.String} object.
+   * @param _artifact a {@link java.lang.String} object.
+   * @param _version a {@link java.lang.String} object.
+   * @param _source a {@link java.lang.String} object.
+   * @return {@link com.sap.psr.vulas.shared.json.model.AffectedLibrary} object.
+   * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
+   */
+  public AffectedLibrary[] getBugAffectedLibraries(
+      String _bugId,
+      String _group,
+      String _artifact,
+      String _version,
+      AffectedVersionSource _source)
+      throws BackendConnectionException {
+    final HashMap<String, String> params = new HashMap<String, String>();
+    if (params != null) params.put("source", _source.toString());
+    BasicHttpRequest request =
+        new BasicHttpRequest(
+            HttpMethod.GET, PathBuilder.affectedLibs(_bugId, _group, _artifact, _version), params);
+    String json = request.send().getBody();
+    if (json == null) {
+      json = "[]";
+    }
+    return (AffectedLibrary[]) JacksonUtil.asObject(json, AffectedLibrary[].class);
+  }
+
+  /**
+   * <p>
+   * get CVE description
+   * </p>
+   *
+   * @param _bugId
+   * @return String
+   * @throws BackendConnectionException
+   */
+  public String getCVE(String _bugId) throws BackendConnectionException {
+    final String json =
+        new BasicHttpRequest(HttpMethod.GET, PathBuilder.nvdRest(_bugId), null).send().getBody();
+    return json;
+  }
 }
