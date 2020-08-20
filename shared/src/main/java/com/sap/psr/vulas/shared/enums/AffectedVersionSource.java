@@ -36,5 +36,6 @@ public enum AffectedVersionSource {
   PROPAGATE_MANUAL, // created by patch-lib-analyzer when propagating manual assessments to greater
   // versions for cases where no other sources concluded (i.e. all existing
   // assessments are MANUAL)
-  CHECK_CODE; // created by CHECKCODE goal and digestAnalyzer
+  CHECK_CODE, // created by CHECKCODE goal and digestAnalyzer
+  KAYBEE; // created for kb-importer
 }
