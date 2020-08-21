@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>com.sap.research.security.vulas</groupId>
 			<artifactId>shared</artifactId>
-			<classifier>tests</classifier> <!-- type=test-jar does not seem to work here, use classifier instead -->
+			<classifier>tests</classifier>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
@@ -51,17 +51,15 @@
 			<artifactId>packageurl-java</artifactId>
 			<version>1.1.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>2.4.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>com.google.cloud.tools</groupId>
-				<artifactId>jib-maven-plugin</artifactId>
-				<extensions>true</extensions>
-			</plugin>
-
-			<!-- Make the JAR executable, run the PatchAnalyzer by default -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>

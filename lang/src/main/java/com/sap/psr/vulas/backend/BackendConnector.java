@@ -1624,8 +1624,6 @@ public class BackendConnector {
    * @throws BackendConnectionException
    */
   public String getCVE(String _bugId) throws BackendConnectionException {
-    final String json =
-        new BasicHttpRequest(HttpMethod.GET, PathBuilder.nvdRest(_bugId), null).send().getBody();
-    return json;
+    return new BasicHttpRequest(HttpMethod.GET, PathBuilder.nvdRest(_bugId), null).send().getBody();
   }
 }
