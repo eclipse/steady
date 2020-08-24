@@ -123,12 +123,8 @@ public class CveController {
   /**
    * Returns the {@link Cve} with the given ID, e.g., CVE-2014-0050.
    *
-<<<<<<< HEAD
-   * @return 404 {@link HttpStatus#NOT_FOUND} if the CVE with given ID does not exist, 200 {@link HttpStatus#OK} if the CVE is found
-=======
    * @return 404 {@link HttpStatus#NOT_FOUND} if the CVE with given ID does not exist, 200 {@link
    *     HttpStatus#OK} if the CVE is found
->>>>>>> master
    * @param id a {@link java.lang.String} object.
    */
   @RequestMapping(
@@ -162,15 +158,9 @@ public class CveController {
   }
 
   /**
-<<<<<<< HEAD
-   * Starts a thread that reads CVE information and replicates it in the local database. The thread behavior is
-   * configured using {@link #CACHE_REFRESH_ALL} and {@link #CACHE_REFRESH_SNG}, both described in the file
-   * vulas-rest-backend.properties.
-=======
    * Starts a thread that reads CVE information and replicates it in the local database. The thread
    * behavior is configured using {@link #CACHE_REFRESH_ALL} and {@link #CACHE_REFRESH_SNG}, both
    * described in the file vulas-rest-backend.properties.
->>>>>>> master
    *
    * @return true if the thread got started, false otherwise
    */
