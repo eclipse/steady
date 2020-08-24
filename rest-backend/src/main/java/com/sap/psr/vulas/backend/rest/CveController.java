@@ -52,15 +52,9 @@ public class CveController {
   private final BugRepository bugRepository;
 
   /**
-<<<<<<< HEAD
-   * Creates a thread pre-fetching the CVEs for all bugs.
-   * This thread shall be started by using the REST endpoint {@link #startRefresh()}.
-   * Note: If it would be started right away, multiple backend instances would update the database in parallel.
-=======
    * Creates a thread pre-fetching the CVEs for all bugs. This thread shall be started by using the
    * REST endpoint {@link #startRefresh()}. Note: If it would be started right away, multiple
    * backend instances would update the database in parallel.
->>>>>>> master
    */
   @Autowired
   CveController(BugRepository _bug_repo) {

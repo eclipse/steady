@@ -583,47 +583,6 @@ public class FileUtil {
   }
 
   /**
-<<<<<<< HEAD
-   * Provided that the given URL points to a JAR file (or classes contained therein),
-   * the method transforms the string representation of the given URL
-   * into a string presentation of the local file system path of the JAR file.
-   * If the URL does not point to a JAR, the method returns null.
-   * Examples of URLs are as follows:
-   * url:file:/a/b/c.jar!123.class
-   * file:/a/b/c.jar
-   *
-   * @param _url a {@link java.lang.String} object.
-   * @return a {@link java.lang.String} object.
-   */
-  public static String getJARFilePath(String _url) {
-    String file_url = null, file_path = null;
-
-    // (1) Bring _url into form "file:/<abc>.jar"
-    if (_url != null && _url.startsWith("file:") && _url.endsWith(".jar")) {
-      file_url = _url;
-    } else if (_url != null && _url.startsWith("jar:file:")) {
-      file_url = _url.substring(4); // new String("jar:").length());
-      final int idx = file_url.indexOf('!');
-      if (idx != -1) file_url = file_url.substring(0, idx);
-    }
-
-    // 2) If that worked, transform into FS path
-    if (file_url != null) {
-      URI uri = null;
-      try {
-        uri = new URI(file_url);
-        file_path = Paths.get(uri).toString();
-      } catch (URISyntaxException e) {
-        log.error("Cannot create URI from [" + file_url + "]");
-      }
-    }
-
-    return file_path;
-  }
-
-  /**
-=======
->>>>>>> master
    * <p>isZipped.</p>
    *
    * @param _f a {@link java.io.File} object.

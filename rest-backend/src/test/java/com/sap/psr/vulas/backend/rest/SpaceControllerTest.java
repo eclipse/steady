@@ -92,7 +92,8 @@ public class SpaceControllerTest {
   @Autowired
   void setConverters(HttpMessageConverter<?>[] converters) {
     this.mappingJackson2HttpMessageConverter =
-        Arrays.asList(converters).stream()
+        Arrays.asList(converters)
+            .stream()
             .filter(
                 new Predicate<HttpMessageConverter<?>>() {
                   @Override
@@ -156,10 +157,7 @@ public class SpaceControllerTest {
 
   /**
    * Check space creation.
-<<<<<<< HEAD
-=======
    *
->>>>>>> master
    * @throws Exception
    */
   @Test
@@ -251,11 +249,10 @@ public class SpaceControllerTest {
   }
 
   /**
-   * Check presence of spaces.
-<<<<<<< HEAD
-=======
+   * Check presence of spaces. <<<<<<< HEAD =======
    *
->>>>>>> master
+   * <p>>>>>>>> master
+   *
    * @throws Exception
    */
   @Test
@@ -285,11 +282,10 @@ public class SpaceControllerTest {
   }
 
   /**
-   * Check space creation and deletion.
-<<<<<<< HEAD
-=======
+   * Check space creation and deletion. <<<<<<< HEAD =======
    *
->>>>>>> master
+   * <p>>>>>>>> master
+   *
    * @throws Exception
    */
   @Test
@@ -344,11 +340,10 @@ public class SpaceControllerTest {
   }
 
   /**
-   * Test modification of read-only space.
-<<<<<<< HEAD
-=======
+   * Test modification of read-only space. <<<<<<< HEAD =======
    *
->>>>>>> master
+   * <p>>>>>>>> master
+   *
    * @throws Exception
    */
   @Test
@@ -385,11 +380,10 @@ public class SpaceControllerTest {
   }
 
   /**
-   * Creates a workspace and searches for it.
-<<<<<<< HEAD
-=======
+   * Creates a workspace and searches for it. <<<<<<< HEAD =======
    *
->>>>>>> master
+   * <p>>>>>>>> master
+   *
    * @throws Exception
    */
   @Test

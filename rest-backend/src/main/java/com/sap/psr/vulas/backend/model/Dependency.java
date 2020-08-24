@@ -1,21 +1,19 @@
 /**
  * This file is part of Eclipse Steady.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * SPDX-License-Identifier: Apache-2.0
+ * <p>SPDX-License-Identifier: Apache-2.0
  *
- * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ * <p>Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
 package com.sap.psr.vulas.backend.model;
 
@@ -54,10 +52,7 @@ import com.sap.psr.vulas.shared.enums.ConstructType;
 import com.sap.psr.vulas.shared.enums.DependencyOrigin;
 import com.sap.psr.vulas.shared.enums.Scope;
 
-/**
- * <p>Dependency class.</p>
- *
- */
+/** Dependency class. */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(
     ignoreUnknown = true,
@@ -119,7 +114,6 @@ public class Dependency implements Serializable {
   @Column(columnDefinition = "text")
   private String path;
 
-
   @Column(length = 1024)
   private String relativePath;
 
@@ -135,22 +129,23 @@ public class Dependency implements Serializable {
   private Set<TouchPoint> touchPoints;
 
   /**
-   * Only set when single dependencies are returned by {@link ApplicationController#getDependency(String, String, String, String)}.
-   * TODO: Maybe check if they can always bet set (depending on performance and memory).
+   * Only set when single dependencies are returned by {@link
+   * ApplicationController#getDependency(String, String, String, String)}. TODO: Maybe check if they
+   * can always bet set (depending on performance and memory).
    */
   @Transient private Collection<Trace> traces;
 
   /**
-   * Contains collections of reachable dependency constructs per {@link ConstructType}.
-   * It MUST be a subset of what can be obtained from the library via {@link Library#countConstructTypes()}.
+   * Contains collections of reachable dependency constructs per {@link ConstructType}. It MUST be a
+   * subset of what can be obtained from the library via {@link Library#countConstructTypes()}.
    */
   @Transient private ConstructIdFilter reachableFilter = null;
 
   /**
-   * Contains collections of traced dependency constructs per {@link ConstructType}.
-   * It MUST be a subset of what can be obtained from the library via {@link Library#countConstructTypes()}.
-   * Depending on the quality of the reachability analysis, it SHOULD be a subset of what can be obtained
-   * via {@link Dependency#countReachableConstructTypes()}.
+   * Contains collections of traced dependency constructs per {@link ConstructType}. It MUST be a
+   * subset of what can be obtained from the library via {@link Library#countConstructTypes()}.
+   * Depending on the quality of the reachability analysis, it SHOULD be a subset of what can be
+   * obtained via {@link Dependency#countReachableConstructTypes()}.
    */
   @Transient private ConstructIdFilter tracedFilter = null;
 
@@ -163,15 +158,13 @@ public class Dependency implements Serializable {
   @JsonView(Views.Default.class)
   private Integer reachExecConstructsCounter;
 
-  /**
-   * <p>Constructor for Dependency.</p>
-   */
+  /** Constructor for Dependency. */
   public Dependency() {
     super();
   }
 
   /**
-   * <p>Constructor for Dependency.</p>
+   * Constructor for Dependency.
    *
    * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
    * @param lib a {@link com.sap.psr.vulas.backend.model.Library} object.
@@ -192,7 +185,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Getter for the field <code>id</code>.</p>
+   * Getter for the field <code>id</code>.
    *
    * @return a {@link java.lang.Long} object.
    */
@@ -200,7 +193,7 @@ public class Dependency implements Serializable {
     return id;
   }
   /**
-   * <p>Setter for the field <code>id</code>.</p>
+   * Setter for the field <code>id</code>.
    *
    * @param id a {@link java.lang.Long} object.
    */
@@ -209,7 +202,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Getter for the field <code>app</code>.</p>
+   * Getter for the field <code>app</code>.
    *
    * @return a {@link com.sap.psr.vulas.backend.model.Application} object.
    */
@@ -217,7 +210,7 @@ public class Dependency implements Serializable {
     return app;
   }
   /**
-   * <p>Setter for the field <code>app</code>.</p>
+   * Setter for the field <code>app</code>.
    *
    * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
    */
@@ -226,7 +219,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Getter for the field <code>lib</code>.</p>
+   * Getter for the field <code>lib</code>.
    *
    * @return a {@link com.sap.psr.vulas.backend.model.Library} object.
    */
@@ -235,7 +228,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>setAppRecursively.</p>
+   * setAppRecursively.
    *
    * @param app a {@link com.sap.psr.vulas.backend.model.Application} object.
    */
@@ -245,7 +238,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Setter for the field <code>lib</code>.</p>
+   * Setter for the field <code>lib</code>.
    *
    * @param lib a {@link com.sap.psr.vulas.backend.model.Library} object.
    */
@@ -254,7 +247,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Getter for the field <code>parent</code>.</p>
+   * Getter for the field <code>parent</code>.
    *
    * @return a {@link com.sap.psr.vulas.backend.model.Dependency} object.
    */
@@ -262,7 +255,7 @@ public class Dependency implements Serializable {
     return parent;
   }
   /**
-   * <p>Setter for the field <code>parent</code>.</p>
+   * Setter for the field <code>parent</code>.
    *
    * @param parent a {@link com.sap.psr.vulas.backend.model.Dependency} object.
    */
@@ -271,7 +264,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Getter for the field <code>origin</code>.</p>
+   * Getter for the field <code>origin</code>.
    *
    * @return a {@link com.sap.psr.vulas.shared.enums.DependencyOrigin} object.
    */
@@ -279,7 +272,7 @@ public class Dependency implements Serializable {
     return origin;
   }
   /**
-   * <p>Setter for the field <code>origin</code>.</p>
+   * Setter for the field <code>origin</code>.
    *
    * @param origin a {@link com.sap.psr.vulas.shared.enums.DependencyOrigin} object.
    */
@@ -288,7 +281,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Getter for the field <code>scope</code>.</p>
+   * Getter for the field <code>scope</code>.
    *
    * @return a {@link com.sap.psr.vulas.shared.enums.Scope} object.
    */
@@ -296,7 +289,7 @@ public class Dependency implements Serializable {
     return scope;
   }
   /**
-   * <p>Setter for the field <code>scope</code>.</p>
+   * Setter for the field <code>scope</code>.
    *
    * @param scope a {@link com.sap.psr.vulas.shared.enums.Scope} object.
    */
@@ -305,7 +298,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Getter for the field <code>transitive</code>.</p>
+   * Getter for the field <code>transitive</code>.
    *
    * @return a {@link java.lang.Boolean} object.
    */
@@ -313,7 +306,7 @@ public class Dependency implements Serializable {
     return transitive;
   }
   /**
-   * <p>Setter for the field <code>transitive</code>.</p>
+   * Setter for the field <code>transitive</code>.
    *
    * @param transitive a {@link java.lang.Boolean} object.
    */
@@ -322,7 +315,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Getter for the field <code>filename</code>.</p>
+   * Getter for the field <code>filename</code>.
    *
    * @return a {@link java.lang.String} object.
    */
@@ -330,7 +323,7 @@ public class Dependency implements Serializable {
     return filename;
   }
   /**
-   * <p>Setter for the field <code>filename</code>.</p>
+   * Setter for the field <code>filename</code>.
    *
    * @param filename a {@link java.lang.String} object.
    */
@@ -339,7 +332,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Getter for the field <code>declared</code>.</p>
+   * Getter for the field <code>declared</code>.
    *
    * @return a {@link java.lang.Boolean} object.
    */
@@ -347,7 +340,7 @@ public class Dependency implements Serializable {
     return declared;
   }
   /**
-   * <p>Setter for the field <code>declared</code>.</p>
+   * Setter for the field <code>declared</code>.
    *
    * @param declared a {@link java.lang.Boolean} object.
    */
@@ -356,7 +349,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Getter for the field <code>path</code>.</p>
+   * Getter for the field <code>path</code>.
    *
    * @return a {@link java.lang.String} object.
    */
@@ -364,7 +357,7 @@ public class Dependency implements Serializable {
     return path;
   }
   /**
-   * <p>Setter for the field <code>path</code>.</p>
+   * Setter for the field <code>path</code>.
    *
    * @param path a {@link java.lang.String} object.
    */
@@ -373,7 +366,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Getter for the field <code>relativePath</code>.</p>
+   * Getter for the field <code>relativePath</code>.
    *
    * @return a {@link java.lang.String} object.
    */
@@ -381,7 +374,7 @@ public class Dependency implements Serializable {
     return relativePath;
   }
   /**
-   * <p>Setter for the field <code>relativePath</code>.</p>
+   * Setter for the field <code>relativePath</code>.
    *
    * @param relativePath a {@link java.lang.String} object.
    */
@@ -418,7 +411,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Getter for the field <code>reachableConstructIds</code>.</p>
+   * Getter for the field <code>reachableConstructIds</code>.
    *
    * @return a {@link java.util.Set} object.
    */
@@ -427,7 +420,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Setter for the field <code>reachableConstructIds</code>.</p>
+   * Setter for the field <code>reachableConstructIds</code>.
    *
    * @param reachableConstructIds a {@link java.util.Set} object.
    */
@@ -436,7 +429,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>addReachableConstructIds.</p>
+   * addReachableConstructIds.
    *
    * @param reachableConstructIds a {@link java.util.Set} object.
    */
@@ -447,7 +440,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>countReachableConstructTypes.</p>
+   * countReachableConstructTypes.
    *
    * @return a {@link com.sap.psr.vulas.backend.model.ConstructIdFilter} object.
    */
@@ -460,7 +453,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Getter for the field <code>traces</code>.</p>
+   * Getter for the field <code>traces</code>.
    *
    * @return a {@link java.util.Collection} object.
    */
@@ -470,7 +463,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Setter for the field <code>traces</code>.</p>
+   * Setter for the field <code>traces</code>.
    *
    * @param traces a {@link java.util.Collection} object.
    */
@@ -480,7 +473,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>countTracedConstructTypes.</p>
+   * countTracedConstructTypes.
    *
    * @return a {@link com.sap.psr.vulas.backend.model.ConstructIdFilter} object.
    */
@@ -496,7 +489,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>getTracedConstructs.</p>
+   * getTracedConstructs.
    *
    * @return a {@link java.util.Set} object.
    */
@@ -509,7 +502,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>Getter for the field <code>touchPoints</code>.</p>
+   * Getter for the field <code>touchPoints</code>.
    *
    * @return a {@link java.util.Collection} object.
    */
@@ -517,7 +510,7 @@ public class Dependency implements Serializable {
     return touchPoints;
   }
   /**
-   * <p>Setter for the field <code>touchPoints</code>.</p>
+   * Setter for the field <code>touchPoints</code>.
    *
    * @param touchPoints a {@link java.util.Set} object.
    */
@@ -525,7 +518,7 @@ public class Dependency implements Serializable {
     this.touchPoints = touchPoints;
   }
   /**
-   * <p>addTouchPoints.</p>
+   * addTouchPoints.
    *
    * @param touchPoints a {@link java.util.Set} object.
    */
@@ -534,9 +527,7 @@ public class Dependency implements Serializable {
     else this.getTouchPoints().addAll(touchPoints);
   }
 
-  /**
-   * <p>prePersist.</p>
-   */
+  /** prePersist. */
   @PrePersist
   public void prePersist() {
     if (this.getTraced() == null) {
@@ -599,7 +590,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>equalLibParentRelPath.</p>
+   * equalLibParentRelPath.
    *
    * @param obj a {@link java.lang.Object} object.
    * @return a boolean.
@@ -624,7 +615,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>setTotalTracedExecConstructCount.</p>
+   * setTotalTracedExecConstructCount.
    *
    * @param countTracesOfConstructorsLibrary a {@link java.lang.Integer} object.
    */
@@ -633,7 +624,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>setTotalReachExecConstructCount.</p>
+   * setTotalReachExecConstructCount.
    *
    * @param countReachableExecConstructLibrary a {@link java.lang.Integer} object.
    */

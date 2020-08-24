@@ -80,7 +80,8 @@ public class TenantControllerTest {
   void setConverters(HttpMessageConverter<?>[] converters) {
 
     this.mappingJackson2HttpMessageConverter =
-        Arrays.asList(converters).stream()
+        Arrays.asList(converters)
+            .stream()
             .filter(
                 new Predicate<HttpMessageConverter<?>>() {
                   @Override
@@ -154,10 +155,7 @@ public class TenantControllerTest {
 
   /**
    * Check presence of default tenant.
-<<<<<<< HEAD
-=======
    *
->>>>>>> master
    * @throws Exception
    */
   @Test

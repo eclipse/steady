@@ -87,11 +87,7 @@ public class PyWrapper {
   }
 
   /**
-<<<<<<< HEAD
-   * <p>Runs a Python script.</p>
-=======
    * Runs a Python script.
->>>>>>> master
    *
    * @param _script a {@link java.nio.file.Path} object.
    * @param _args a {@link java.util.List} object.
