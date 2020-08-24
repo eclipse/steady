@@ -39,18 +39,18 @@ import java.util.List;
 
 public abstract class VulasBaseTest {
 
-  protected static List<File> pluginClasspath;
+  protected static List<File> pluginClasspath = new java.util.ArrayList<File>();
 
   protected BuildResult buildResult;
 
-  private static final String MINIMUM_GRADLE_VERSION = "4.4";
+  private static final String MINIMUM_GRADLE_VERSION = "5.0";
 
   @Rule public final TemporaryFolder testProjectDir = new TemporaryFolder();
 
   @BeforeClass
   public static void computeClassPath() throws IOException {
     GradleRunner gr = GradleRunner.create().withPluginClasspath();
-    pluginClasspath = (List<File>) gr.getPluginClasspath();
+    pluginClasspath.addAll((List<File>) gr.getPluginClasspath());
 
     List<String> classpathLines =
         Files.readAllLines(Paths.get("target/test.classpath"), Charset.defaultCharset());

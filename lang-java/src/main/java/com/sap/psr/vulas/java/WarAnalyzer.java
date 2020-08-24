@@ -34,6 +34,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.jar.JarEntry;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.logging.log4j.Logger;
@@ -55,6 +57,7 @@ import javassist.NotFoundException;
  * Analyzes a single Web app archive (WAR) as to identify (and potentially instrument) all its classes (in directory WEB-INF/classes),
  * as well as its JARs (in directory WEB-INF/lib).
  */
+@NotThreadSafe
 public class WarAnalyzer extends JarAnalyzer {
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
@@ -192,7 +195,7 @@ public class WarAnalyzer extends JarAnalyzer {
    * See here: http://docs.oracle.com/javase/7/docs/technotes/guides/jar/jar.html
    */
   @Override
-  protected void createInstrumentedArchive() throws JarAnalysisException {
+  protected synchronized void createInstrumentedArchive() throws JarAnalysisException {
 
     // Additional manifest file entries
     this.jarWriter.addManifestEntry(
@@ -364,7 +367,7 @@ public class WarAnalyzer extends JarAnalyzer {
                   cv.finalizeInstrumentation();
                   this.instrumentedClasses.put(cv.getJavaId(), cv);
                   this.instrControl.updateInstrumentationStatistics(
-                      cv.getJavaId(), new Boolean(true));
+                      cv.getJavaId(), Boolean.valueOf(true));
                 } catch (IOException ioe) {
                   WarAnalyzer.log.error(
                       "I/O exception while instrumenting class ["
@@ -372,7 +375,7 @@ public class WarAnalyzer extends JarAnalyzer {
                           + "]: "
                           + ioe.getMessage());
                   this.instrControl.updateInstrumentationStatistics(
-                      cv.getJavaId(), new Boolean(false));
+                      cv.getJavaId(), Boolean.valueOf(false));
                 } catch (CannotCompileException cce) {
                   WarAnalyzer.log.warn(
                       "Cannot compile instrumented class ["
@@ -380,7 +383,7 @@ public class WarAnalyzer extends JarAnalyzer {
                           + "]: "
                           + cce.getMessage());
                   this.instrControl.updateInstrumentationStatistics(
-                      cv.getJavaId(), new Boolean(false));
+                      cv.getJavaId(), Boolean.valueOf(false));
                 } catch (Exception e) {
                   WarAnalyzer.log.error(
                       e.getClass().getName()
@@ -389,7 +392,7 @@ public class WarAnalyzer extends JarAnalyzer {
                           + "]: "
                           + e.getMessage());
                   this.instrControl.updateInstrumentationStatistics(
-                      cv.getJavaId(), new Boolean(false));
+                      cv.getJavaId(), Boolean.valueOf(false));
                 }
               }
             }

@@ -71,7 +71,7 @@ public class DepthFirstGetPaths extends AbstractGetPaths {
       HashSet<LinkedList<Integer>> paths,
       Integer currentNode,
       Integer _tgt) {
-    if (currentNode == _tgt) {
+    if (currentNode.equals(_tgt)) {
       LinkedList<Integer> newpath = new LinkedList<Integer>();
       newpath.addAll(visited);
       paths.add(newpath);

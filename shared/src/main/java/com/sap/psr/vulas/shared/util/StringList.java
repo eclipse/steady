@@ -235,11 +235,11 @@ public class StringList implements Iterable<String> {
       ComparisonMode _mode,
       CaseSensitivity _case_sensitivity) {
     final HashMap<String, String> out = new HashMap<String, String>();
-    for (String key : _in.keySet()) {
-      if (this.contains(key, _mode, _case_sensitivity)) {
-        if (_keep_matches) out.put(key, _in.get(key));
+    for (Map.Entry<String, String> e : _in.entrySet()) {
+      if (this.contains(e.getKey(), _mode, _case_sensitivity)) {
+        if (_keep_matches) out.put(e.getKey(), e.getValue());
       } else if (!_keep_matches) {
-        out.put(key, _in.get(key));
+        out.put(e.getKey(), e.getValue());
       }
     }
     return out;

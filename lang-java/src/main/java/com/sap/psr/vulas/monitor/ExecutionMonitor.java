@@ -52,7 +52,7 @@ public class ExecutionMonitor {
 
   // ====================================== INSTANCE MEMBERS
 
-  private String id = new Double(Math.random()).toString();
+  private String id = Double.toString(Math.random());
 
   private UploadScheduler shutdownUploader = null;
   private UploadScheduler periodicUploader = null;

@@ -572,7 +572,6 @@ public class Library implements Serializable {
         this.setDigestVerificationUrl(dv.getVerificationUrl());
         this.setWellknownDigest(verified.size() > 0);
         this.setDigestTimestamp(dv.getReleaseTimestamp());
-
         if (this.getLibraryId() != null
             && verified.size() > 0
             && !verified.contains(this.getLibraryId())) {
@@ -622,7 +621,7 @@ public class Library implements Serializable {
       try {
         final CloseableHttpClient httpclient = HttpClients.createDefault();
         uri =
-            new String("http://search.maven.org/solrsearch/select?q=1:<SHA1>&rows=20&wt=json")
+            "http://search.maven.org/solrsearch/select?q=1:<SHA1>&rows=20&wt=json"
                 .replaceAll("<SHA1>", _digest);
         final HttpGet method = new HttpGet(uri);
         if (ConnectionUtil.getProxyConfig() != null)

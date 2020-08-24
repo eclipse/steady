@@ -67,10 +67,11 @@ public class ASTSignatureChangeSerializer extends StdSerializer<ASTSignatureChan
     jgen.writeObjectFieldStart(_property_name);
     jgen.writeStringField("UniqueName", _entity.getUniqueName().toString());
     jgen.writeStringField("EntityType", _entity.getType().toString());
-    jgen.writeStringField("Modifiers", new Integer(_entity.getModifiers()).toString());
+
+    jgen.writeStringField("Modifiers", Integer.toString(_entity.getModifiers()));
     jgen.writeObjectFieldStart("SourceCodeRange");
-    jgen.writeStringField("Start", new Integer(_entity.getSourceRange().getStart()).toString());
-    jgen.writeStringField("End", new Integer(_entity.getSourceRange().getEnd()).toString());
+    jgen.writeStringField("Start", Integer.toString(_entity.getSourceRange().getStart()));
+    jgen.writeStringField("End", Integer.toString(_entity.getSourceRange().getEnd()));
     jgen.writeEndObject();
     jgen.writeEndObject();
   }
@@ -86,8 +87,7 @@ public class ASTSignatureChangeSerializer extends StdSerializer<ASTSignatureChan
 
     jgen.writeStringField("UniqueName", value.getStructureEntity().getUniqueName());
     jgen.writeStringField("EntityType", value.getStructureEntity().getType().toString());
-    jgen.writeStringField(
-        "Modifiers", new Integer(value.getStructureEntity().getModifiers()).toString());
+    jgen.writeStringField("Modifiers", Integer.toString(value.getStructureEntity().getModifiers()));
 
     jgen.writeArrayFieldStart("changes");
 

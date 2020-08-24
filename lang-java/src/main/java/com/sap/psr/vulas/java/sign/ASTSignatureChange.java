@@ -20,7 +20,6 @@
 package com.sap.psr.vulas.java.sign;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,6 +66,47 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
   private StructureEntityVersion structureEntity = null;
 
   /**
+   * <p>Constructor for ASTSignatureChange.</p>
+   *
+   * @param defSignature a {@link com.sap.psr.vulas.sign.Signature} object.
+   * @param fixSignature a {@link com.sap.psr.vulas.sign.Signature} object.
+   */
+  public ASTSignatureChange(Signature defSignature, Signature fixSignature) {
+    super();
+    this.mDefSignature = defSignature;
+    this.mFixSignature = fixSignature;
+    // Name of the root of the AST for either the fixed or for the defective AST
+    mMethodName = ((ASTSignature) mFixSignature).getValue();
+  }
+
+  /**
+   * Used to create instance of ASTSignatureChange during deserialization of
+   * JSON object,  when deserializing a ASTSignatureChange, we only have the list of
+   * SourceCodeChanges
+   * read from the DB.
+   *
+   * @param srcCodeChanges - List of SourceCodeChanges
+   */
+  /*public ASTSignatureChange(Set<SourceCodeChange> srcCodeChanges){
+  	this(null,null);
+  	this.setListOfChanges(srcCodeChanges);
+  	List<SourceCodeChange> srcCodeChgs = new ArrayList<SourceCodeChange>(srcCodeChanges);
+  	this.structureEntity.setSourceCodeChanges(srcCodeChgs);
+  }*/
+
+  /**
+   * <p>Constructor for ASTSignatureChange.</p>
+   *
+   * @param strEntityVersion a {@link ch.uzh.ifi.seal.changedistiller.model.entities.StructureEntityVersion} object.
+   */
+  public ASTSignatureChange(StructureEntityVersion strEntityVersion) {
+    // this(null,null);
+    this.setStructureEntity(strEntityVersion);
+    this.setListOfChanges(
+        new HashSet<SourceCodeChange>(this.getStructureEntity().getSourceCodeChanges()));
+  }
+
+  /**
    * <p>addChange.</p>
    *
    * @param scc a {@link ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange} object.
@@ -99,33 +139,6 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
   }
 
   /**
-   * Used to create instance of ASTSignatureChange during deserialization of
-   * JSON object,  when deserializing a ASTSignatureChange, we only have the list of
-   * SourceCodeChanges
-   * read from the DB.
-   *
-   * @param srcCodeChanges - List of SourceCodeChanges
-   */
-  public ASTSignatureChange(Set<SourceCodeChange> srcCodeChanges) {
-    this(null, null);
-    this.setListOfChanges(srcCodeChanges);
-    List<SourceCodeChange> srcCodeChgs = new ArrayList<SourceCodeChange>(srcCodeChanges);
-    this.structureEntity.setSourceCodeChanges(srcCodeChgs);
-  }
-
-  /**
-   * <p>Constructor for ASTSignatureChange.</p>
-   *
-   * @param strEntityVersion a {@link ch.uzh.ifi.seal.changedistiller.model.entities.StructureEntityVersion} object.
-   */
-  public ASTSignatureChange(StructureEntityVersion strEntityVersion) {
-    // this(null,null);
-    this.setStructureEntity(strEntityVersion);
-    this.listOfChanges =
-        new HashSet<SourceCodeChange>(this.getStructureEntity().getSourceCodeChanges());
-  }
-
-  /**
    * <p>Getter for the field <code>structureEntity</code>.</p>
    *
    * @return a {@link ch.uzh.ifi.seal.changedistiller.model.entities.StructureEntityVersion} object.
@@ -141,28 +154,6 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
    */
   public void setStructureEntity(StructureEntityVersion structureEntity) {
     this.structureEntity = structureEntity;
-  }
-
-  /**
-   * <p>Constructor for ASTSignatureChange.</p>
-   *
-   */
-  public ASTSignatureChange() {
-    super();
-  }
-
-  /**
-   * <p>Constructor for ASTSignatureChange.</p>
-   *
-   * @param defSignature a {@link com.sap.psr.vulas.sign.Signature} object.
-   * @param fixSignature a {@link com.sap.psr.vulas.sign.Signature} object.
-   */
-  public ASTSignatureChange(Signature defSignature, Signature fixSignature) {
-    super();
-    this.mDefSignature = defSignature;
-    this.mFixSignature = fixSignature;
-    // Name of the root of the AST for either the fixed or for the defective AST
-    mMethodName = ((ASTSignature) mFixSignature).getValue();
   }
 
   /** {@inheritDoc} */
@@ -374,8 +365,11 @@ public class ASTSignatureChange extends DistillerUtil implements SignatureChange
     // Good to know :
     // http://stackoverflow.com/questions/905964/how-to-cast-generic-list-types-in-java?answertab=active#tab-top
     final Set<Object> set = new HashSet<Object>();
-    for (SourceCodeChange e : this.listOfChanges) {
-      set.add(e); // need to cast each object specifically
+    if (this.listOfChanges != null) {
+      set.addAll(this.listOfChanges); // Replaces the following loop
+      /*for (SourceCodeChange  e :  this.listOfChanges) {
+      	set.add( e); // need to cast each object specifically
+      }*/
     }
     return set;
   }

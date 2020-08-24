@@ -58,15 +58,14 @@ public class CustomEntryPointCreator extends DefaultEntryPointCreator {
    * @param methodsToCall a {@link java.util.Collection} object.
    */
   public void generateAppropriateDummyClasses(Collection<String> methodsToCall) {
-
-    Map<String, Set<String>> classMap =
+    final Map<String, Set<String>> classMap =
         SootMethodRepresentationParser.v().parseClassNames(methodsToCall, false);
-    for (String className : classMap.keySet()) {
-      SootClass createdClass = Scene.v().getSootClass(className);
+    for (Map.Entry<String, Set<String>> e : classMap.entrySet()) {
+      SootClass createdClass = Scene.v().getSootClass(e.getKey());
       if (createdClass.isConcrete()
           && !createdClass.isPhantom()
           && !createdClass.isPhantomClass()) {
-        for (String method : classMap.get(className)) {
+        for (String method : e.getValue()) {
           SootMethodAndClass methodAndClass =
               SootMethodRepresentationParser.v().parseSootMethodString(method);
           SootMethod methodToInvoke =
@@ -284,7 +283,7 @@ public class CustomEntryPointCreator extends DefaultEntryPointCreator {
     }
 
     JNopStmt startStmt = new JNopStmt();
-    JNopStmt endStmt = new JNopStmt();
+    // JNopStmt endStmt = new JNopStmt();
 
     body.getUnits().add(startStmt);
 

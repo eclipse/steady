@@ -19,6 +19,18 @@
  */
 package com.sap.psr.vulas.cg.soot;
 
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.configuration.Configuration;
+import org.apache.logging.log4j.Logger;
+
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.sap.psr.vulas.cg.CallgraphConstructException;
@@ -30,17 +42,17 @@ import com.sap.psr.vulas.monitor.ClassVisitor;
 import com.sap.psr.vulas.shared.json.model.Application;
 import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
-import org.apache.commons.configuration.Configuration;
-import org.apache.logging.log4j.Logger;
 
-import soot.*;
+import soot.G;
+import soot.MethodOrMethodContext;
+import soot.PackManager;
+import soot.Scene;
+import soot.SootClass;
+import soot.SootMethod;
 import soot.jimple.infoflow.entryPointCreators.IEntryPointCreator;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.options.Options;
-
-import java.lang.reflect.Constructor;
-import java.util.*;
 
 /**
  * Callgraph constructor using soot framework; implementing the interface ICallgraphConstructor
@@ -66,9 +78,9 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
   /**
    * The JAR to be analyzed.
    */
-  private String appJar = null;
-
+  // private String appJar = null;
   protected String classpath = null;
+
   private String appClasspath = null;
   protected final List<SootMethod> entrypoints = new ArrayList<>();
   private final Set<com.sap.psr.vulas.shared.json.model.ConstructId> filteredEP = new HashSet<>();

@@ -34,9 +34,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
-import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -45,6 +44,8 @@ import org.apache.http.config.SocketConfig;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.logging.log4j.Logger;
+
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.HttpMethod;
 import com.sap.psr.vulas.backend.HttpResponse;
@@ -291,7 +292,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
    * Returns the payload size (or -1 if there's no payload).
    */
   public long getPayloadSize() {
-    if (this.payload != null) return this.payload.getBytes().length;
+    if (this.payload != null) return this.payload.getBytes(StandardCharsets.UTF_8).length;
     else if (this.payloadPath != null) return Paths.get(this.payloadPath).toFile().length();
     else return -1;
   }
@@ -365,6 +366,8 @@ public class BasicHttpRequest extends AbstractHttpRequest {
       case DELETE:
         requestBuilder = RequestBuilder.delete();
         break;
+      default:
+        throw new BackendConnectionException("Invalid HTTP method: [" + this.method + "]", null);
     }
 
     requestBuilder = requestBuilder.setUri(uri);
@@ -389,8 +392,8 @@ public class BasicHttpRequest extends AbstractHttpRequest {
     final Map<String, String> add_headers =
         this.getVulasConfiguration().getServiceHeaders(this.service);
     if (add_headers != null && !add_headers.isEmpty()) {
-      for (String key : add_headers.keySet()) {
-        requestBuilder.addHeader(key, add_headers.get(key));
+      for (Map.Entry<String, String> e : add_headers.entrySet()) {
+        requestBuilder.addHeader(e.getKey(), e.getValue());
       }
     }
 
@@ -432,7 +435,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
                   + " [uri="
                   + uri
                   + ", size="
-                  + StringUtil.byteToKBString(this.payload.getBytes().length)
+                  + StringUtil.byteToKBString(this.payload.getBytes(StandardCharsets.UTF_8).length)
                   + (tenant_token == null ? "" : ", tenant=" + tenant_token)
                   + (space_token == null ? "" : ", space=" + space_token)
                   + "]");

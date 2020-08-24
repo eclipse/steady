@@ -20,6 +20,8 @@
 package com.sap.psr.vulas.patcha;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -73,7 +75,7 @@ public class PatchAnalyzer {
   private String bugDescription = null;
   private String bugLinks = null;
   private String search = null;
-  private URL url = null;
+  private URI url = null;
   private IVCSClient vcs = null;
   private Map<String, Set<ConstructChange>> changes = new HashMap<String, Set<ConstructChange>>();
   private FileAnalyzer sourceConstructs = null;
@@ -93,7 +95,7 @@ public class PatchAnalyzer {
     try {
       this.setRepoURL(_url);
       this.setBugId(_bugid);
-    } catch (MalformedURLException e) {
+    } catch (URISyntaxException | MalformedURLException e) {
       throw new IllegalArgumentException(e.getMessage(), e);
     }
   }
@@ -116,10 +118,11 @@ public class PatchAnalyzer {
    * @throws java.net.MalformedURLException if the given URL is invalid (previous results are kept)
    * @throws com.sap.psr.vulas.vcs.NoRepoClientException if no VCS client can be created for the given URL (previous results are kept)
    */
-  public void setRepoURL(String _url) throws MalformedURLException, NoRepoClientException {
-    final URL u = new URL(_url);
+  public void setRepoURL(String _url)
+      throws URISyntaxException, MalformedURLException, NoRepoClientException {
+    final URI u = new URI(_url);
     if (!u.equals(this.url)) {
-      final IVCSClient c = PatchAnalyzer.createVCSClient(u);
+      final IVCSClient c = PatchAnalyzer.createVCSClient(u.toURL());
       // Previous state will be dropped (only if above instantiation worked)
       this.vcs = c;
       this.url = u;
@@ -463,7 +466,7 @@ public class PatchAnalyzer {
       else {
         try {
 
-          String url = null, str = null, bugid = null, rev = null, refsList = null;
+          String url = null, str = null, bugid = null, rev = null;
           int max_rev = 5;
           if (cmd.hasOption("r")) url = cmd.getOptionValue("r");
           if (cmd.hasOption("s")) str = cmd.getOptionValue("s");

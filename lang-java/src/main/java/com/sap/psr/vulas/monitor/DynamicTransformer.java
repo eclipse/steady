@@ -61,7 +61,7 @@ public class DynamicTransformer implements ClassFileTransformer {
 
   // ====================================== INSTANCE MEMBERS
 
-  private String id = new Double(Math.random()).toString();
+  private String id = Double.toString(Math.random());
 
   private LoaderHierarchy loaderHierarchy = new LoaderHierarchy();
 
@@ -228,7 +228,7 @@ public class DynamicTransformer implements ClassFileTransformer {
                 cv.finalizeInstrumentation();
                 byteCode = cv.getBytecode();
                 this.instrControl.updateInstrumentationStatistics(
-                    cv.getJavaId(), new Boolean(true));
+                    cv.getJavaId(), Boolean.valueOf(true));
                 DynamicTransformer.log.debug("Class [" + dot_classname + "] now instrumented");
               } else {
                 this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), null);
@@ -241,11 +241,15 @@ public class DynamicTransformer implements ClassFileTransformer {
                     + dot_classname
                     + "]: "
                     + ioe.getMessage());
-            this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+            if (cv != null) {
+              this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), false);
+            }
           } catch (CannotCompileException cce) {
             DynamicTransformer.log.warn(
                 "Cannot compile instrumented class [" + dot_classname + "]: " + cce.getMessage());
-            this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+            if (cv != null) {
+              this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), false);
+            }
           }
           // Covers the following problems with Javassist and Java 8: "java.io.IOException: invalid
           // constant type: 15"
@@ -256,7 +260,9 @@ public class DynamicTransformer implements ClassFileTransformer {
                     + dot_classname
                     + "]: "
                     + e.getMessage());
-            this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), new Boolean(false));
+            if (cv != null) {
+              this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), false);
+            }
           }
         }
       }

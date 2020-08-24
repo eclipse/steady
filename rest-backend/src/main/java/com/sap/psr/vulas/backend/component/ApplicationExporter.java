@@ -350,7 +350,7 @@ public class ApplicationExporter {
 
     // Create sublists
     else {
-      final int size = new Double(Math.floor((double) _list.size() / (double) _num)).intValue();
+      final int size = (int) Math.floor((double) _list.size() / (double) _num);
       int i, min, max;
 
       // Create _partition_no -1 parts

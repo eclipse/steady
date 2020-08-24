@@ -198,16 +198,13 @@ public class UniqueNameNormalizer implements IUniqueNameNormalizer {
       String regex = "([^0-9]*)([0-9]+)([BDFL])(.*)";
       Pattern pattern = Pattern.compile(regex);
       Matcher matcher = pattern.matcher(_string);
-      String tmp = "";
+      final StringBuilder tmp = new StringBuilder();
       int i = 0;
       while (matcher.find()) {
-        String tmp2 = matcher.group(1);
-        tmp2 += matcher.group(2);
-        tmp2 += matcher.group(4);
-        tmp += tmp2;
+        tmp.append(matcher.group(1)).append(matcher.group(2)).append(matcher.group(4));
         i = matcher.end();
       }
-      return tmp;
+      return tmp.toString();
     } else {
       return _string;
     }

@@ -546,6 +546,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
       Library bundledDigest =
           this.libRepository.findById(((BigInteger) e[1]).longValue()).orElse(null);
+
       List<Bug> vulns_cc = this.bugRepository.findByLibrary(bundledDigest);
 
       for (Bug b : vulns_cc) {

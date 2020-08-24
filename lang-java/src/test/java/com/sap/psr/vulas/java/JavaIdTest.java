@@ -226,7 +226,7 @@ public class JavaIdTest {
   public void filterInputNotNull0Output0() {
 
     // Arrange
-    final HashSet _set = new HashSet();
+    final HashSet<ConstructId> _set = new HashSet<ConstructId>();
     final JavaId.Type[] _filter = {};
 
     // Act
@@ -241,7 +241,7 @@ public class JavaIdTest {
   public void filterInputNotNullNotNullOutput0() {
 
     // Arrange
-    final HashSet _set = new HashSet();
+    final HashSet<ConstructId> _set = new HashSet<ConstructId>();
     final String _filter = "";
 
     // Act
@@ -265,14 +265,15 @@ public class JavaIdTest {
       assertTrue(
           uj.toString().matches("^file:/.*/\\.m2/repository/junit/junit/.*/junit-.*\\.jar$"));
 
-      u =
+      // Java system classes are handled differently since Java 9
+      /*u =
           Class.forName("java.util.jar.JarFile")
               .getResource(
                   '/'
                       + "java.util.jar.JarFile".replace('.', '/')
                       + ".class"); // new URL("jar:file:/test/foo.jar!bar.class");
       uj = JavaId.getJarUrl(u);
-      assertTrue(uj != null);
+      assertTrue(uj != null);*/
 
       u =
           new URL(

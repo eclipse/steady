@@ -270,10 +270,10 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
       this.countPerContext.put(ctx, new HashMap<String, Integer>());
 
     if (this.countPerContext.get(ctx).get(_name) == null)
-      this.countPerContext.get(ctx).put(_name, new Integer(0));
+      this.countPerContext.get(ctx).put(_name, Integer.valueOf(0));
 
     int count = this.countPerContext.get(ctx).get(_name).intValue();
-    this.countPerContext.get(ctx).put(_name, new Integer(++count));
+    this.countPerContext.get(ctx).put(_name, Integer.valueOf(++count));
 
     if (count == 1) return _name;
     else return _name + "$" + count;
@@ -296,8 +296,8 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
    */
   public Construct getConstruct(com.sap.psr.vulas.shared.json.model.ConstructId _id)
       throws FileAnalysisException {
-    for (ConstructId cid : this.constructs.keySet())
-      if (ConstructId.toSharedType(cid).equals(_id)) return this.constructs.get(cid);
+    for (Map.Entry<ConstructId, Construct> e : this.constructs.entrySet())
+      if (ConstructId.toSharedType(e.getKey()).equals(_id)) return e.getValue();
     return null;
   }
 

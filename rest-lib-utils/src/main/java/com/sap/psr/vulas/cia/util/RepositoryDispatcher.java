@@ -150,7 +150,9 @@ public class RepositoryDispatcher implements RepositoryWrapper {
     final ServiceLoader<RepositoryWrapper> loader = ServiceLoader.load(RepositoryWrapper.class);
     for (RepositoryWrapper dv : loader) {
       if (dv.isConfigured()
-          && (lang == null || lang.equals("") || dv.getSupportedLanguages().contains(lang))) {
+          && (lang == null
+              || lang.toString().equals("")
+              || dv.getSupportedLanguages().contains(lang))) {
         try {
           result = dv.getArtifactVersion(group, artifact, version, classifier, packaging, null);
           if (result != null) break;

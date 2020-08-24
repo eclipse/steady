@@ -88,12 +88,11 @@ public class ASTConstructBodySignatureSerializer extends StdSerializer<ASTConstr
     // ).append(JsonBuilder.escape(n.getEntity().getUniqueName().toString())).append(","); ;
 
     jgen.writeObjectFieldStart("SourceCodeEntity");
-    jgen.writeStringField("Modifiers", new Integer(n.getEntity().getModifiers()).toString());
+    jgen.writeStringField("Modifiers", Integer.toString(n.getEntity().getModifiers()));
 
     jgen.writeObjectFieldStart("SourceRange");
-    jgen.writeStringField(
-        "Start", new Integer(n.getEntity().getSourceRange().getStart()).toString());
-    jgen.writeStringField("End", new Integer(n.getEntity().getSourceRange().getEnd()).toString());
+    jgen.writeStringField("Start", Integer.toString(n.getEntity().getSourceRange().getStart()));
+    jgen.writeStringField("End", Integer.toString(n.getEntity().getSourceRange().getEnd()));
     jgen.writeEndObject(); // SourceRange
 
     jgen.writeEndObject(); // SourceCodeEntity

@@ -435,6 +435,30 @@ public class Report {
     this.context.put("projects", modules);
     this.context.put("generatedAt", dateFormat.format(new Date()));
     this.context.put(
+        "generatedWith",
+        this.goalContext
+            .getVulasConfiguration()
+            .getConfiguration()
+            .getString(VulasConfiguration.VERSION, "unknown"));
+    this.context.put(
+        "buildTimestamp",
+        this.goalContext
+            .getVulasConfiguration()
+            .getConfiguration()
+            .getString(VulasConfiguration.BUILD_TIMESTAMP, "unknown"));
+    this.context.put(
+        "buildNumber",
+        this.goalContext
+            .getVulasConfiguration()
+            .getConfiguration()
+            .getString(VulasConfiguration.BUILD_NUMBER, "unknown"));
+    this.context.put(
+        "buildBranch",
+        this.goalContext
+            .getVulasConfiguration()
+            .getConfiguration()
+            .getString(VulasConfiguration.BUILD_BRANCH, "unknown"));
+    this.context.put(
         "vulas-shared-homepage",
         this.goalContext
             .getVulasConfiguration()

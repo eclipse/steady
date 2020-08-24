@@ -119,6 +119,7 @@ public class Dependency implements Serializable {
   @Column(columnDefinition = "text")
   private String path;
 
+
   @Column(length = 1024)
   private String relativePath;
 

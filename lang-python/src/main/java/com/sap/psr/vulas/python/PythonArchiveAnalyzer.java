@@ -48,7 +48,6 @@ import com.sap.psr.vulas.FileAnalyzer;
 import com.sap.psr.vulas.shared.enums.DigestAlgorithm;
 import com.sap.psr.vulas.shared.enums.ProgrammingLanguage;
 import com.sap.psr.vulas.shared.json.model.Library;
-import com.sap.psr.vulas.shared.json.model.LibraryId;
 import com.sap.psr.vulas.shared.util.FileUtil;
 import com.sap.psr.vulas.shared.util.StringUtil;
 
@@ -64,7 +63,7 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
 
   private File archive = null;
 
-  private LibraryId libraryId = null;
+  // private LibraryId libraryId = null;
 
   /** PythonArchiveAnalyzers to deal with nested archives. */
   private Set<FileAnalyzer> nestedAnalyzers = new HashSet<FileAnalyzer>();
@@ -79,8 +78,8 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
   @Override
   public boolean canAnalyze(File _file) {
     final String ext = FileUtil.getFileExtension(_file);
-    if (ext.equals("gz") && !_file.getAbsolutePath().endsWith("tar.gz")) return false;
     if (ext == null || ext.equals("")) return false;
+    if (ext.equals("gz") && !_file.getAbsolutePath().endsWith("tar.gz")) return false;
     for (String supported_ext : this.getSupportedFileExtensions()) {
       if (supported_ext.equalsIgnoreCase(ext)) return true;
     }
@@ -306,9 +305,7 @@ public class PythonArchiveAnalyzer implements FileAnalyzer {
    *
    * @param _id a {@link com.sap.psr.vulas.shared.json.model.LibraryId} object.
    */
-  public void setLibraryId(LibraryId _id) {
-    this.libraryId = _id;
-  }
+  // public void setLibraryId(LibraryId _id) { this.libraryId = _id; }
 
   /**
    * Returns a {@link Library} representing the analyzed Java archive.

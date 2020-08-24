@@ -111,7 +111,7 @@ public class PyPiVerifier implements DigestVerifier {
         || _lib.getLibraryId().getVersion() == null) return null;
 
     this.url =
-        new String("https://pypi.python.org/pypi/<name>/<version>/json")
+        "https://pypi.python.org/pypi/<name>/<version>/json"
             .replaceAll("<name>", _lib.getLibraryId().getMvnGroup())
             .replaceAll("<version>", _lib.getLibraryId().getVersion());
 

@@ -224,12 +224,12 @@ public class TouchPointCollector {
           // Create and collect the touch point
           else {
             final String callee_jar_path =
-                (_callee_url == null ? null : FileUtil.getJARFilePath(_callee_url.toString()));
+                (_callee_url == null ? null : FileUtil.getJarFilePath(_callee_url.toString()));
             JarAnalyzer callee_ja = null;
             if (callee_jar_path != null) callee_ja = tpi.getJarAnalyzerByPath(callee_jar_path);
 
             final String caller_jar_path =
-                (caller_url == null ? null : FileUtil.getJARFilePath(caller_url.toString()));
+                (caller_url == null ? null : FileUtil.getJarFilePath(caller_url.toString()));
             JarAnalyzer caller_ja = null;
             if (caller_jar_path != null) caller_ja = tpi.getJarAnalyzerByPath(caller_jar_path);
 
@@ -349,7 +349,7 @@ public class TouchPointCollector {
     private ConstructId caller = null;
     private ConstructId callee = null;
 
-    private Map<String, Serializable> calleeArgs = null;
+    // private Map<String, Serializable> calleeArgs = null;
 
     private JarAnalyzer callerJa = null;
     private JarAnalyzer calleeJa = null;
@@ -364,7 +364,7 @@ public class TouchPointCollector {
       this.direction = _direction;
       this.caller = _caller;
       this.callee = _callee;
-      this.calleeArgs = _callee_args;
+      // this.calleeArgs = _callee_args;
       this.callerJa = _caller_ja;
       this.calleeJa = _callee_ja;
     }

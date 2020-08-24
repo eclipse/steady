@@ -242,11 +242,11 @@ public class VulasAgentMojo extends AbstractVulasMojo {
       }
 
       // add my properties
-      for (final String key : this.agentOptions.keySet()) {
-        final String value = this.agentOptions.get(key);
+      for (Map.Entry<String, String> e : this.agentOptions.entrySet()) {
+        final String value = e.getValue();
         if (value != null && !value.isEmpty()) {
           Environment.Variable variable = new Environment.Variable();
-          variable.setKey(key);
+          variable.setKey(e.getKey());
           variable.setValue(value);
           commandlineJava.addSysproperty(variable);
         }

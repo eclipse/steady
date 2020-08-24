@@ -76,8 +76,6 @@ public class TraceCollector {
 
   // INSTANCE MEMBERS
 
-  private String id = new Double(Math.random()).toString();
-
   /**
    * The collected traces.
    */
@@ -320,7 +318,7 @@ public class TraceCollector {
     final String jar_path =
         (_url == null
             ? null
-            : FileUtil.getJARFilePath(_url.toString())); // The complete FS path pointing to the JAR
+            : FileUtil.getJarFilePath(_url.toString())); // The complete FS path pointing to the JAR
     final String jar_name = (jar_path == null ? null : FileUtil.getFileName(jar_path));
 
     // Ignore blacklisted JARs, cf. MONI_BLACKLIST_JARS
@@ -481,7 +479,7 @@ public class TraceCollector {
   /**
    * <p>awaitUpload.</p>
    */
-  public void awaitUpload() {
+  public synchronized void awaitUpload() {
     if (this.pool != null) {
       this.pool.shutdown();
       try {
@@ -579,15 +577,17 @@ public class TraceCollector {
         TraceCollector.getLog().error("Error while reading app bugs: " + e.getMessage(), e);
         change_lists = new HashMap<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>>();
       }
-      for (String b : change_lists.keySet()) {
-        if (change_lists.get(b).contains(ConstructId.toSharedType(cle))) {
-          if (!paths_per_bug.containsKey(b)) paths_per_bug.put(b, new ArrayList<List<PathNode>>());
-          paths_per_bug.get(b).add(path);
+      for (Map.Entry<String, Set<com.sap.psr.vulas.shared.json.model.ConstructId>> e :
+          change_lists.entrySet()) {
+        if (e.getValue().contains(ConstructId.toSharedType(cle))) {
+          if (!paths_per_bug.containsKey(e.getKey()))
+            paths_per_bug.put(e.getKey(), new ArrayList<List<PathNode>>());
+          paths_per_bug.get(e.getKey()).add(path);
           match = true;
           TraceCollector.getLog()
               .info(
                   "Path for bug ["
-                      + b
+                      + e.getKey()
                       + "]: length "
                       + path.size()
                       + ", change list element "
@@ -606,17 +606,17 @@ public class TraceCollector {
     JarAnalyzer ja = null;
     ClassPoolUpdater cpu = new ClassPoolUpdater();
     // Upload per bug (as in ReachabilityAnalyzer)
-    for (String bugid : paths_per_bug.keySet()) {
+    for (Map.Entry<String, List<List<PathNode>>> e : paths_per_bug.entrySet()) {
       json.delete(0, json.length());
       json.append("[");
       int n = 0;
 
       // Build JSON
-      for (List<PathNode> path1 : paths_per_bug.get(bugid)) {
+      for (List<PathNode> path1 : e.getValue()) {
         if ((n++) > 0) json.append(",");
         json.append("{");
         json.append("\"app\":").append(JacksonUtil.asJsonString(app_ctx)).append(",");
-        json.append("\"bug\":\"").append(bugid).append("\",");
+        json.append("\"bug\":\"").append(e.getKey()).append("\",");
         json.append("\"executionId\":\"").append(exe.getId()).append("\",");
         json.append("\"source\":\"").append(PathSource.X2C).append("\",");
         json.append("\"path\":[");
@@ -643,7 +643,7 @@ public class TraceCollector {
             	}
             }*/
 
-            jar_path = (jar_url == null ? null : FileUtil.getJARFilePath(jar_url.toString()));
+            jar_path = (jar_url == null ? null : FileUtil.getJarFilePath(jar_url.toString()));
             if (jar_path != null && this.jarFiles.containsKey(jar_path)) {
               ja = this.jarFiles.get(jar_path);
               json.append(",\"lib\":\"").append(ja.getSHA1()).append("\"");
@@ -668,15 +668,15 @@ public class TraceCollector {
 
       // Upload JSON
       TraceCollector.getLog()
-          .info("Upload [" + paths_per_bug.get(bugid).size() + "] path(s) for bug [" + bugid + "]");
+          .info("Upload [" + e.getValue().size() + "] path(s) for bug [" + e.getKey() + "]");
       try {
         BackendConnector.getInstance()
             .uploadPaths(
                 CoreConfiguration.buildGoalContextFromGlobalConfiguration(),
                 app_ctx,
                 json.toString());
-      } catch (BackendConnectionException e) {
-        TraceCollector.getLog().error("Error while uploading paths: " + e.getMessage(), e);
+      } catch (BackendConnectionException bce) {
+        TraceCollector.getLog().error("Error while uploading paths: " + bce.getMessage(), bce);
       }
     }
   }
@@ -793,9 +793,9 @@ public class TraceCollector {
    *
    * @return a {@link java.util.Map} object.
    */
-  public Map<String, Long> getStatistics() {
+  public synchronized Map<String, Long> getStatistics() {
     final Map<String, Long> stats = new HashMap<String, Long>();
-    stats.put("archivesAnalyzed", new Long(this.jarFiles.size()));
+    stats.put("archivesAnalyzed", Long.valueOf(this.jarFiles.size()));
     stats.put("tracesCollectedMethod", this.methodTraceCount);
     stats.put("tracesCollectedConstructor", this.constructorTraceCount);
     stats.put("tracesCollectedClinit", this.clinitTraceCount);

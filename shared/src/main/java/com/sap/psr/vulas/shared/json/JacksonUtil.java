@@ -26,6 +26,8 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Helper class for (de)serializing objects with Jackson.
  */
@@ -62,6 +64,9 @@ public class JacksonUtil {
    * @return a {@link java.lang.String} object.
    */
   @SuppressWarnings({"unchecked", "rawtypes"})
+  @SuppressFBWarnings(
+      value = "WMI_WRONG_MAP_ITERATOR",
+      justification = "Use of entrySet causes troubles with generics")
   public static String asJsonString(
       final Object _object,
       final Map<Class<?>, StdSerializer<?>> _custom_serializers,
@@ -115,6 +120,9 @@ public class JacksonUtil {
    * @return a {@link java.lang.Object} object.
    */
   @SuppressWarnings({"unchecked", "rawtypes"})
+  @SuppressFBWarnings(
+      value = "WMI_WRONG_MAP_ITERATOR",
+      justification = "Use of entrySet causes troubles with generics")
   public static Object asObject(
       final String _json,
       final Map<Class<?>, StdDeserializer<?>> _custom_deserializers,

@@ -39,12 +39,12 @@ import java.util.concurrent.Callable;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.logging.log4j.Logger;
-
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -72,6 +72,7 @@ import javassist.NotFoundException;
 /**
  * Analyzes a single Java archives as to identify (and potentially instrument) all its constructs.
  */
+@NotThreadSafe
 public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, FileAnalyzer {
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
@@ -131,7 +132,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 
   /** {@inheritDoc} */
   @Override
-  public void analyze(final File _file) throws FileAnalysisException {
+  public synchronized void analyze(final File _file) throws FileAnalysisException {
     try {
       this.jar = new JarFile(_file, false, java.util.zip.ZipFile.OPEN_READ);
       this.jarWriter = new JarWriter(_file.toPath());
@@ -523,7 +524,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
                   cv.finalizeInstrumentation();
                   this.instrumentedClasses.put(cv.getJavaId(), cv);
                   this.instrControl.updateInstrumentationStatistics(
-                      cv.getJavaId(), new Boolean(true));
+                      cv.getJavaId(), Boolean.valueOf(true));
                 } catch (IOException ioe) {
                   JarAnalyzer.log.error(
                       "I/O exception while instrumenting class ["
@@ -531,7 +532,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
                           + "]: "
                           + ioe.getMessage());
                   this.instrControl.updateInstrumentationStatistics(
-                      cv.getJavaId(), new Boolean(false));
+                      cv.getJavaId(), Boolean.valueOf(false));
                 } catch (CannotCompileException cce) {
                   JarAnalyzer.log.warn(
                       "Cannot compile instrumented class ["
@@ -539,7 +540,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
                           + "]: "
                           + cce.getMessage());
                   this.instrControl.updateInstrumentationStatistics(
-                      cv.getJavaId(), new Boolean(false));
+                      cv.getJavaId(), Boolean.valueOf(false));
                 } catch (Exception e) {
                   JarAnalyzer.log.error(
                       e.getClass().getName()
@@ -548,7 +549,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
                           + "]: "
                           + e.getMessage());
                   this.instrControl.updateInstrumentationStatistics(
-                      cv.getJavaId(), new Boolean(false));
+                      cv.getJavaId(), Boolean.valueOf(false));
                 }
               }
             }

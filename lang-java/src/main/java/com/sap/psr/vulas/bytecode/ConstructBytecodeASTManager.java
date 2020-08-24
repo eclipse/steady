@@ -35,7 +35,7 @@ import com.sap.psr.vulas.shared.json.model.LibraryId;
 public class ConstructBytecodeASTManager {
 
   String construct;
-  String path;
+  // String path; // Not used, commented out
 
   ConstructType type;
 
@@ -56,7 +56,7 @@ public class ConstructBytecodeASTManager {
   public ConstructBytecodeASTManager(GoalContext _gc, String _c, String _p, ConstructType _t) {
     this.goalContext = _gc;
     this.construct = _c;
-    this.path = _p;
+    // this.path = _p;
     this.type = _t;
     this.lidVulnBytecodeAST = new HashMap<LibraryId, String>();
     this.lidFixedBytecodeAST = new HashMap<LibraryId, String>();

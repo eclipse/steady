@@ -105,26 +105,26 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 
   private ClassDiffResult classDiffResult;
 
-  private ClassDifferences differences;
+  // private ClassDifferences differences;
 
-  private Collection<FeatureDifferences> removedFields = new TreeSet<FeatureDifferences>();
+  // private Collection<FeatureDifferences> removedFields = new TreeSet<FeatureDifferences>();
   private Collection<FeatureDifferences> removedConstructors = new TreeSet<FeatureDifferences>();
   private Collection<FeatureDifferences> removedMethods = new TreeSet<FeatureDifferences>();
 
-  private Collection<FeatureDifferences> deprecatedFields = new TreeSet<FeatureDifferences>();
+  // private Collection<FeatureDifferences> deprecatedFields = new TreeSet<FeatureDifferences>();
   private Collection<FeatureDifferences> deprecatedConstructors = new TreeSet<FeatureDifferences>();
   private Collection<FeatureDifferences> deprecatedMethods = new TreeSet<FeatureDifferences>();
 
-  private Collection<FieldDifferences> modifiedFields = new TreeSet<FieldDifferences>();
+  // private Collection<FieldDifferences> modifiedFields = new TreeSet<FieldDifferences>();
   private Collection<CodeDifferences> modifiedConstructors = new TreeSet<CodeDifferences>();
   private Collection<CodeDifferences> modifiedMethods = new TreeSet<CodeDifferences>();
 
-  private Collection<FeatureDifferences> undeprecatedFields = new TreeSet<FeatureDifferences>();
+  // private Collection<FeatureDifferences> undeprecatedFields = new TreeSet<FeatureDifferences>();
   private Collection<FeatureDifferences> undeprecatedConstructors =
       new TreeSet<FeatureDifferences>();
   private Collection<FeatureDifferences> undeprecatedMethods = new TreeSet<FeatureDifferences>();
 
-  private Collection<FeatureDifferences> newFields = new TreeSet<FeatureDifferences>();
+  // private Collection<FeatureDifferences> newFields = new TreeSet<FeatureDifferences>();
   private Collection<FeatureDifferences> newConstructors = new TreeSet<FeatureDifferences>();
   private Collection<FeatureDifferences> newMethods = new TreeSet<FeatureDifferences>();
 
@@ -187,7 +187,7 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 
   /** {@inheritDoc} */
   public void visitClassDifferences(ClassDifferences differences) {
-    this.differences = differences;
+    // this.differences = differences;
 
     for (Differences featureDifference : differences.getFeatureDifferences()) {
       featureDifference.accept(this);
@@ -196,7 +196,7 @@ public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.cla
 
   /** {@inheritDoc} */
   public void visitInterfaceDifferences(InterfaceDifferences differences) {
-    this.differences = differences;
+    // this.differences = differences;
 
     for (Differences featureDifference : differences.getFeatureDifferences()) {
       featureDifference.accept(this);

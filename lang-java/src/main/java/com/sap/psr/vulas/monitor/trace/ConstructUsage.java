@@ -195,7 +195,7 @@ public class ConstructUsage {
     final JsonBuilder jb = new JsonBuilder();
     jb.startObject();
     jb.appendObjectProperty("tracedAt", StringUtil.formatDate(this.t));
-    jb.appendObjectProperty("count", new Integer(this.counter));
+    jb.appendObjectProperty("count", Integer.valueOf(this.counter));
     jb.appendObjectProperty("executionId", this.executionId);
     if (this.appContext != null)
       jb.appendObjectProperty("app", JacksonUtil.asJsonString(this.appContext), false);

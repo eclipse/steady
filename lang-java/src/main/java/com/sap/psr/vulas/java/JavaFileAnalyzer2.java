@@ -260,7 +260,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
   @Override
   public void exitMethodDeclaration(
       com.sap.psr.vulas.java.antlr.JavaParser.MethodDeclarationContext ctx) {
-    final JavaId id = (JavaId) this.contextStack.pop().getConstructId();
+    this.contextStack.pop().getConstructId();
   }
 
   /** {@inheritDoc} */
@@ -283,7 +283,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
   @Override
   public void exitConstructorDeclaration(
       com.sap.psr.vulas.java.antlr.JavaParser.ConstructorDeclarationContext ctx) {
-    final JavaId id = (JavaId) this.contextStack.pop().getConstructId();
+    this.contextStack.pop().getConstructId();
   }
 
   /**

@@ -934,7 +934,8 @@ public class BugLibManager {
             boolean toUpload = true;
             if (!addnew) {
               for (Counter i : existingAffLib) {
-                if (i.getName().equals(e.getKey()) && i.getCount() == e.getValue().size()) {
+                if (i.getName().equals(e.getKey().toString())
+                    && i.getCount() == e.getValue().size()) {
                   toUpload = false;
                   BugLibManager.log.info(
                       "Patch Eval concluded for ["

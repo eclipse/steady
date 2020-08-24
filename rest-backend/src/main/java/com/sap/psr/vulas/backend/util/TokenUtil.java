@@ -37,7 +37,7 @@ public class TokenUtil {
    * @return a {@link java.lang.String} object.
    */
   public static String generateToken() {
-    long rnd = new Double(Math.abs(Math.random() * 100000000)).longValue();
+    long rnd = (long) Math.abs(Math.random() * 100000000);
     long ms = System.currentTimeMillis();
     return DigestUtil.getDigestAsString(
         rnd + "-" + ms, StandardCharsets.UTF_8, DigestAlgorithm.MD5);

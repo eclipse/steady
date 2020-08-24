@@ -108,13 +108,11 @@ import com.sap.psr.vulas.shared.json.model.metrics.Metrics;
 import com.sap.psr.vulas.shared.json.model.metrics.Ratio;
 import com.sap.psr.vulas.shared.util.Constants;
 import com.sap.psr.vulas.shared.util.StopWatch;
-import com.sap.psr.vulas.shared.util.StringUtil;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-;
 
 /**
  * RESTful interface for application information.
@@ -658,8 +656,7 @@ public class ApplicationController {
         response.setContentType(ExportFormat.TXT_PLAIN);
         final BufferedWriter writer =
             new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
-        writer.write(
-            "Result of request [" + req + "] will be sent to [" + StringUtil.join(to, ", ") + "]");
+        writer.write("Result of request will be sent by email to the specified recipients");
         writer.newLine();
         writer.flush();
         response.flushBuffer();
@@ -2259,7 +2256,7 @@ public class ApplicationController {
 
       if ((vulnDepOrigin.equals(VulnDepOrigin.BUNDLEDCC) && bundledLibrary == null)
           || (vulnDepOrigin.equals(VulnDepOrigin.BUNDLEDAFFLIBID)
-              && (bundledGroup == null || bundledGroup == null || bundledVersion == null)))
+              && (bundledGroup == null || bundledArtifact == null || bundledVersion == null)))
         return new ResponseEntity<VulnerableDependency>(HttpStatus.BAD_REQUEST);
 
       return new ResponseEntity<VulnerableDependency>(
