@@ -34,10 +34,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.config.SocketConfig;
@@ -45,7 +45,6 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.Logger;
-
 import com.sap.psr.vulas.backend.BackendConnectionException;
 import com.sap.psr.vulas.backend.HttpMethod;
 import com.sap.psr.vulas.backend.HttpResponse;
@@ -410,7 +409,8 @@ public class BasicHttpRequest extends AbstractHttpRequest {
     } else if (this.binPayload != null) {
       requestBuilder.setEntity(new InputStreamEntity(this.binPayload));
     }
-
+    RequestConfig config = RequestConfig.custom().setExpectContinueEnabled(true).build();
+    requestBuilder.setConfig(config);
     httpUriRequest = requestBuilder.build();
 
     try {
@@ -460,7 +460,6 @@ public class BasicHttpRequest extends AbstractHttpRequest {
         httpResponse = client.execute(httpUriRequest);
         response_code = httpResponse.getStatusLine().getStatusCode();
         response = new HttpResponse(response_code);
-
         // If the response body contains a JAR file, save it
         if (response.isOk()
             && httpResponse.getFirstHeader("Content-Type") != null
@@ -532,7 +531,9 @@ public class BasicHttpRequest extends AbstractHttpRequest {
           is_503 = true;
         }
         // 5xx: Throw exception
-        else if (response.isServerError() || response.getStatus() == 400) {
+        else if (response.isServerError()
+            || response.getStatus() == 400
+            || response.getStatus() == 403) {
           final BackendConnectionException bce =
               new BackendConnectionException(this.method, uri, response_code, null);
           throwBceException(httpResponse, bce);
