@@ -1,6 +1,6 @@
 <FindBugsFilter>
     <!-- Exclude ANTLR generated files -->
     <Match>
-        <Class name="~com\.sap\..*\.antlr\..*" />
+        <Class name="~org\.eclipse\..*\.antlr\..*" />
     </Match>
 </FindBugsFilter>

@@ -1,0 +1,5 @@
+org.eclipse.steady.java.JarAnalyzer
+org.eclipse.steady.java.AarAnalyzer
+org.eclipse.steady.java.WarAnalyzer
+org.eclipse.steady.java.ClassFileAnalyzer
+org.eclipse.steady.java.JavaFileAnalyzer2

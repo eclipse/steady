@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-import com.sap.psr.vulas.java.JavaFileAnalyzer2;
+import org.eclipse.steady.java.JavaFileAnalyzer2;
 
 /**
  * Test class for {@link JavaFileAnalyzer2}.

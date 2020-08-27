@@ -30,18 +30,18 @@ import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.steady.cg.CallgraphConstructException;
+import org.eclipse.steady.cg.spi.ICallgraphConstructor;
+import org.eclipse.steady.java.JavaConstructorId;
+import org.eclipse.steady.java.JavaId;
+import org.eclipse.steady.java.JavaMethodId;
+import org.eclipse.steady.java.monitor.ClassVisitor;
+import org.eclipse.steady.shared.json.model.Application;
+import org.eclipse.steady.shared.util.StringUtil;
+import org.eclipse.steady.shared.util.VulasConfiguration;
 
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
-import com.sap.psr.vulas.cg.CallgraphConstructException;
-import com.sap.psr.vulas.cg.spi.ICallgraphConstructor;
-import com.sap.psr.vulas.java.JavaConstructorId;
-import com.sap.psr.vulas.java.JavaId;
-import com.sap.psr.vulas.java.JavaMethodId;
-import com.sap.psr.vulas.monitor.ClassVisitor;
-import com.sap.psr.vulas.shared.json.model.Application;
-import com.sap.psr.vulas.shared.util.StringUtil;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 import soot.G;
 import soot.MethodOrMethodContext;
@@ -83,7 +83,7 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
 
   private String appClasspath = null;
   protected final List<SootMethod> entrypoints = new ArrayList<>();
-  private final Set<com.sap.psr.vulas.shared.json.model.ConstructId> filteredEP = new HashSet<>();
+  private final Set<org.eclipse.steady.shared.json.model.ConstructId> filteredEP = new HashSet<>();
 
   private CallGraph callgraph = null;
 
@@ -104,7 +104,7 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
   /**
    * <p>Getter for the field <code>appContext</code>.</p>
    *
-   * @return a {@link com.sap.psr.vulas.shared.json.model.Application} object.
+   * @return a {@link org.eclipse.steady.shared.json.model.Application} object.
    */
   public Application getAppContext() {
     return this.appContext;
@@ -244,10 +244,10 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
    * Gets the SootMethod that correspond to the given constructs
    *
    * @param _constructs a {@link java.util.Set} object.
-   * @throws com.sap.psr.vulas.cg.CallgraphConstructException
+   * @throws org.eclipse.steady.cg.CallgraphConstructException
    */
   protected void sootMethods4entrypoints(
-      Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs)
+      Set<org.eclipse.steady.shared.json.model.ConstructId> _constructs)
       throws CallgraphConstructException {
 
     SootMethod method = null;
@@ -280,12 +280,12 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
     else {
 
       Iterator<SootMethod> iter = null;
-      for (com.sap.psr.vulas.shared.json.model.ConstructId cid : _constructs) {
+      for (org.eclipse.steady.shared.json.model.ConstructId cid : _constructs) {
 
         final JavaId jcid = (JavaId) JavaId.toCoreType(cid);
 
         // when it's a java method
-        if (jcid instanceof com.sap.psr.vulas.java.JavaMethodId) {
+        if (jcid instanceof org.eclipse.steady.java.JavaMethodId) {
           JavaMethodId mid = (JavaMethodId) jcid;
           try {
             ep = Scene.v().getSootClass(mid.getDefinitionContext().getQualifiedName());
@@ -309,7 +309,7 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
           }
         }
         // when it's a java object constructor
-        else if (jcid instanceof com.sap.psr.vulas.java.JavaConstructorId) {
+        else if (jcid instanceof org.eclipse.steady.java.JavaConstructorId) {
           JavaConstructorId jconsid = (JavaConstructorId) jcid;
           try {
             ep = Scene.v().getSootClass(jconsid.getDefinitionContext().getQualifiedName());
@@ -340,7 +340,7 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
    *
    * Filter and find all entrypoints in Scene
    */
-  public void setEntrypoints(Set<com.sap.psr.vulas.shared.json.model.ConstructId> _constructs)
+  public void setEntrypoints(Set<org.eclipse.steady.shared.json.model.ConstructId> _constructs)
       throws CallgraphConstructException {
 
     start_nanos = System.nanoTime();
@@ -489,9 +489,9 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
    * @param _method the {@link soot.SootMethod} to compute the ConstructId for
    * @return computed ConstructId
    */
-  private static com.sap.psr.vulas.shared.json.model.ConstructId getCid(SootMethod _method) {
+  private static org.eclipse.steady.shared.json.model.ConstructId getCid(SootMethod _method) {
     String qname = null;
-    com.sap.psr.vulas.shared.json.model.ConstructId cid = null;
+    org.eclipse.steady.shared.json.model.ConstructId cid = null;
     String signature = _method.getSignature();
     if (_method.getName().equals("<clinit>")) {
       qname = signature.substring(1, _method.getSignature().indexOf(":"));
@@ -513,13 +513,13 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
    *
    * @return a {@link com.ibm.wala.util.graph.Graph} object.
    */
-  public Graph<com.sap.psr.vulas.shared.json.model.ConstructId> getCallgraph() {
-    final Graph<com.sap.psr.vulas.shared.json.model.ConstructId> graph =
+  public Graph<org.eclipse.steady.shared.json.model.ConstructId> getCallgraph() {
+    final Graph<org.eclipse.steady.shared.json.model.ConstructId> graph =
         SlowSparseNumberedGraph.make();
 
     if (this.callgraph != null) {
       int edges_no = 0;
-      com.sap.psr.vulas.shared.json.model.ConstructId src_cid = null, tgt_cid = null;
+      org.eclipse.steady.shared.json.model.ConstructId src_cid = null, tgt_cid = null;
       MethodOrMethodContext src_node = null;
       Iterator<Edge> edges = null;
 
@@ -560,7 +560,7 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
    *
    * @return a {@link java.util.Set} object.
    */
-  public Set<com.sap.psr.vulas.shared.json.model.ConstructId> getEntrypoints() {
+  public Set<org.eclipse.steady.shared.json.model.ConstructId> getEntrypoints() {
     return this.filteredEP;
   }
 
