@@ -80,7 +80,8 @@ public class SmtpClient {
    * @param _msg a {@link org.eclipse.steady.backend.util.Message} object.
    * @throws javax.mail.MessagingException if any.
    */
-  public void send(@NotNull org.eclipse.steady.backend.util.Message _msg) throws MessagingException {
+  public void send(@NotNull org.eclipse.steady.backend.util.Message _msg)
+      throws MessagingException {
     if (_msg.hasAttachment()) this.sendWithAttachement(_msg);
     else log.error("Messages without attachment are not supported");
   }

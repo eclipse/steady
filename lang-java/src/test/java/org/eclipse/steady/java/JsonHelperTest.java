@@ -27,7 +27,6 @@ import java.nio.file.Path;
 
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.FileAnalysisException;
-import org.eclipse.steady.java.JarAnalyzer;
 import org.eclipse.steady.shared.json.JacksonUtil;
 import org.eclipse.steady.shared.util.FileUtil;
 import org.junit.Test;

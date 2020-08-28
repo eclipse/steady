@@ -31,7 +31,6 @@ import static com.xebialabs.restito.semantics.Condition.uri;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-import org.eclipse.steady.backend.cve.CveReader2;
 import org.eclipse.steady.shared.connectivity.Service;
 import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.shared.util.VulasConfiguration;

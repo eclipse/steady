@@ -49,8 +49,6 @@ import org.eclipse.steady.backend.repo.GoalExecutionRepository;
 import org.eclipse.steady.backend.repo.LibraryRepository;
 import org.eclipse.steady.backend.repo.SpaceRepository;
 import org.eclipse.steady.backend.repo.TenantRepository;
-import org.eclipse.steady.backend.rest.HubIntegrationController;
-import org.eclipse.steady.backend.rest.MainController;
 import org.eclipse.steady.shared.enums.ExportConfiguration;
 import org.eclipse.steady.shared.enums.Scope;
 import org.eclipse.steady.shared.json.JacksonUtil;

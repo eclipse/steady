@@ -31,7 +31,6 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-import org.eclipse.steady.cia.rest.MainController;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
 import org.eclipse.steady.shared.json.model.Artifact;
 import org.junit.After;

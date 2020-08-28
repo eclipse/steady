@@ -109,7 +109,8 @@ public class ReachabilityAnalyzer implements Runnable {
 
   // private String bugid = null;
 
-  private Map<String, Set<org.eclipse.steady.shared.json.model.ConstructId>> targetConstructs = null;
+  private Map<String, Set<org.eclipse.steady.shared.json.model.ConstructId>> targetConstructs =
+      null;
 
   /**
    * All the packages to be excluded during callgraph construction

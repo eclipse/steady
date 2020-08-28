@@ -28,7 +28,6 @@ import java.util.Set;
 
 import org.eclipse.steady.ConstructChange;
 import org.eclipse.steady.FileAnalysisException;
-import org.eclipse.steady.patcha.FileComparator;
 import org.junit.Test;
 
 public class FileComparatorTest {

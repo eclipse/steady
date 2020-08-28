@@ -175,8 +175,8 @@ public class CallgraphPathSearch implements Runnable {
         if (reachable_target_points.contains(cid)) {
 
           // Path(s) found in the call graph
-          Map<org.eclipse.steady.shared.json.model.ConstructId, LinkedList<Integer>> searched_paths =
-              null;
+          Map<org.eclipse.steady.shared.json.model.ConstructId, LinkedList<Integer>>
+              searched_paths = null;
 
           // Search shortest or first path to cid
           if (this.shortestPaths) {

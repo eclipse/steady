@@ -43,7 +43,6 @@ import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.java.JavaClassId;
 import org.eclipse.steady.java.JavaConstructorId;
 import org.eclipse.steady.java.JavaId;
-import org.eclipse.steady.java.monitor.ClassVisitor;
 import org.eclipse.steady.shared.connectivity.PathBuilder;
 import org.eclipse.steady.shared.json.model.Application;
 import org.eclipse.steady.shared.util.FileUtil;

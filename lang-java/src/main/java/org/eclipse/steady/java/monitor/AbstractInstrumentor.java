@@ -86,7 +86,8 @@ public abstract class AbstractInstrumentor implements IInstrumentor {
       // should inherit from Object).
       // The lack of the method causes a compile exception, which can be avoided by checking for its
       // presence.
-      // Example: [pool-2-thread-1] INFO  org.eclipse.steady.java.monitor.ClassVisitor  - Exception while
+      // Example: [pool-2-thread-1] INFO  org.eclipse.steady.java.monitor.ClassVisitor  - Exception
+      // while
       // instrumenting JAVA METH
       // [org.apache.struts2.views.jsp.ParamTag.getBean(ValueStack,HttpServletRequest,HttpServletResponse)]: [source error] getClass() not found in org.apache.struts2.views.jsp.ParamTag
       if (this.hasGetClassMethod(_behavior.getDeclaringClass()))

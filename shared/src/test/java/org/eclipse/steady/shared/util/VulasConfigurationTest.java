@@ -36,7 +36,6 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.eclipse.steady.shared.connectivity.Service;
 import org.eclipse.steady.shared.json.model.KeyValue;
-import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.junit.Test;
 
 public class VulasConfigurationTest {

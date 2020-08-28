@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import org.apache.commons.cli.Options;
-import org.eclipse.steady.kb.command.Command;
-import org.eclipse.steady.kb.command.Import;
 import org.eclipse.steady.kb.exception.ValidationException;
 import org.junit.Test;
 

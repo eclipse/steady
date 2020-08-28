@@ -30,7 +30,6 @@ import java.util.Set;
 import org.eclipse.steady.FileAnalysisException;
 import org.eclipse.steady.python.ProcessWrapperException;
 import org.eclipse.steady.python.pip.PipInstalledPackage;
-import org.eclipse.steady.python.virtualenv.VirtualenvWrapper;
 import org.eclipse.steady.shared.categories.Slow;
 import org.eclipse.steady.shared.json.model.ConstructId;
 import org.eclipse.steady.shared.util.FileUtil;

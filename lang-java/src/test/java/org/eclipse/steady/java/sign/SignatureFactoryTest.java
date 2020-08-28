@@ -23,8 +23,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import org.eclipse.steady.java.sign.ASTConstructBodySignature;
-import org.eclipse.steady.java.sign.JavaSignatureFactory;
 import org.eclipse.steady.shared.enums.ConstructType;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
 import org.eclipse.steady.shared.json.model.ConstructId;

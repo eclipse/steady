@@ -25,8 +25,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.util.Set;
 
-import org.eclipse.steady.malice.MaliciousnessAnalysisResult;
-import org.eclipse.steady.malice.MaliciousnessAnalyzerLoop;
 import org.junit.Test;
 
 public class MaliciousnessAnalyzerLoopTest {

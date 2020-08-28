@@ -31,8 +31,6 @@ import java.nio.file.Paths;
 import java.util.Set;
 
 import org.eclipse.steady.shared.enums.DigestAlgorithm;
-import org.eclipse.steady.shared.util.FileUtil;
-import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.junit.Test;
 
 public class FileUtilTest {

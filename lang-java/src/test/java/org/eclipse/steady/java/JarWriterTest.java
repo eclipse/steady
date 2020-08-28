@@ -31,9 +31,6 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 
 import org.eclipse.steady.core.util.CoreConfiguration;
-import org.eclipse.steady.java.JarAnalysisException;
-import org.eclipse.steady.java.JarEntryWriter;
-import org.eclipse.steady.java.JarWriter;
 import org.eclipse.steady.shared.util.StringUtil;
 import org.junit.Before;
 import org.junit.Test;

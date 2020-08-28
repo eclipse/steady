@@ -25,7 +25,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 
-import org.eclipse.steady.shared.util.DirWithFileSearch;
 import org.junit.Test;
 
 public class TestDirWithFileSearch {

@@ -22,9 +22,6 @@ package org.eclipse.steady.shared.cache;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.steady.shared.cache.Cache;
-import org.eclipse.steady.shared.cache.CacheException;
-import org.eclipse.steady.shared.cache.ObjectFetcher;
 import org.junit.Test;
 
 public class CacheTest {

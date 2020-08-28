@@ -20,7 +20,6 @@
 package org.eclipse.steady.backend.util;
 
 import org.apache.http.client.config.RequestConfig;
-import org.eclipse.steady.backend.util.ConnectionUtil;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 

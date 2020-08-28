@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import org.apache.commons.cli.Options;
-import org.eclipse.steady.kb.command.CommandParser;
 import org.eclipse.steady.kb.exception.CommandLineParserException;
 import org.junit.Test;
 

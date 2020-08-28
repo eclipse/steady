@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import org.eclipse.steady.backend.util.PyPiVerifier;
 import org.eclipse.steady.shared.util.FileUtil;
 import org.junit.Test;
 

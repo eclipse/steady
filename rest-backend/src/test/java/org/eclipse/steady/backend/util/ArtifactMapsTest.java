@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.eclipse.steady.backend.model.LibraryId;
-import org.eclipse.steady.backend.util.ArtifactMaps;
 import org.junit.Test;
 
 public class ArtifactMapsTest {

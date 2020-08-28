@@ -31,8 +31,6 @@ import org.eclipse.steady.ConstructId;
 import org.eclipse.steady.FileAnalysisException;
 import org.eclipse.steady.FileAnalyzer;
 import org.eclipse.steady.FileAnalyzerFactory;
-import org.eclipse.steady.python.PythonFileAnalyzer;
-import org.eclipse.steady.python.PythonId;
 import org.junit.Test;
 
 public class PythonFileAnalyzerTest {

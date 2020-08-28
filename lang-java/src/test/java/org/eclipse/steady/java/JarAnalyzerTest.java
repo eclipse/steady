@@ -28,10 +28,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.eclipse.steady.ConstructId;
-import org.eclipse.steady.java.JarAnalyzer;
-import org.eclipse.steady.java.JavaClassId;
-import org.eclipse.steady.java.JavaConstructorId;
-import org.eclipse.steady.java.JavaId;
 import org.eclipse.steady.java.monitor.ClassVisitor;
 import org.eclipse.steady.shared.json.model.Application;
 import org.eclipse.steady.shared.json.model.LibraryId;

@@ -25,8 +25,6 @@ import static org.junit.Assert.assertTrue;
 import java.nio.file.Paths;
 import java.util.Set;
 
-import org.eclipse.steady.java.ArchiveAnalysisManager;
-import org.eclipse.steady.java.JarAnalyzer;
 import org.eclipse.steady.shared.categories.Slow;
 import org.eclipse.steady.shared.util.FileSearch;
 import org.junit.Test;

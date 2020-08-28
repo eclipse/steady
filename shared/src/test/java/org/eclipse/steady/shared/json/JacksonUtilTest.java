@@ -30,7 +30,6 @@ import org.eclipse.steady.shared.enums.DigestAlgorithm;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
 import org.eclipse.steady.shared.enums.PropertySource;
 import org.eclipse.steady.shared.enums.Scope;
-import org.eclipse.steady.shared.json.JacksonUtil;
 import org.eclipse.steady.shared.json.model.Application;
 import org.eclipse.steady.shared.json.model.ConstructId;
 import org.eclipse.steady.shared.json.model.Dependency;

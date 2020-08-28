@@ -26,7 +26,6 @@ import java.util.Set;
 
 import org.eclipse.steady.ConstructId;
 import org.eclipse.steady.FileAnalysisException;
-import org.eclipse.steady.java.AarAnalyzer;
 import org.junit.Test;
 
 public class AarAnalyzerTest {

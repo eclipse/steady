@@ -25,8 +25,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.eclipse.steady.shared.enums.DigestAlgorithm;
-import org.eclipse.steady.shared.util.DigestUtil;
-import org.eclipse.steady.shared.util.FileUtil;
 import org.junit.Test;
 
 public class DigestUtilTest {

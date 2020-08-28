@@ -23,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.nio.file.Paths;
 
-import org.eclipse.steady.shared.util.FileSearch;
 import org.junit.Test;
 
 public class FileSearchTest {

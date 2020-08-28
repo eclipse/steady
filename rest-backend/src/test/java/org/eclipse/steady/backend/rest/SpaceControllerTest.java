@@ -42,7 +42,6 @@ import org.eclipse.steady.backend.model.Space;
 import org.eclipse.steady.backend.model.Tenant;
 import org.eclipse.steady.backend.repo.SpaceRepository;
 import org.eclipse.steady.backend.repo.TenantRepository;
-import org.eclipse.steady.backend.rest.MainController;
 import org.eclipse.steady.shared.enums.ExportConfiguration;
 import org.eclipse.steady.shared.enums.PropertySource;
 import org.eclipse.steady.shared.json.JacksonUtil;

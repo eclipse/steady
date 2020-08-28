@@ -35,7 +35,6 @@ import javax.persistence.EntityNotFoundException;
 
 import org.eclipse.steady.backend.model.Tenant;
 import org.eclipse.steady.backend.repo.TenantRepository;
-import org.eclipse.steady.backend.rest.MainController;
 import org.eclipse.steady.shared.json.JacksonUtil;
 import org.junit.After;
 import org.junit.Assert;

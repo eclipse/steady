@@ -38,7 +38,6 @@ import java.util.function.Predicate;
 import org.eclipse.steady.backend.model.Library;
 import org.eclipse.steady.backend.model.LibraryId;
 import org.eclipse.steady.backend.repo.LibraryRepository;
-import org.eclipse.steady.backend.rest.MainController;
 import org.eclipse.steady.shared.categories.RequiresNetwork;
 import org.eclipse.steady.shared.enums.DigestAlgorithm;
 import org.eclipse.steady.shared.json.JacksonUtil;

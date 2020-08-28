@@ -59,7 +59,6 @@ import org.eclipse.steady.backend.repo.ConstructChangeRepository;
 import org.eclipse.steady.backend.repo.ConstructIdRepository;
 import org.eclipse.steady.backend.repo.LibraryIdRepository;
 import org.eclipse.steady.backend.repo.LibraryRepository;
-import org.eclipse.steady.backend.rest.MainController;
 import org.eclipse.steady.shared.enums.AffectedVersionSource;
 import org.eclipse.steady.shared.enums.BugOrigin;
 import org.eclipse.steady.shared.enums.ConstructType;

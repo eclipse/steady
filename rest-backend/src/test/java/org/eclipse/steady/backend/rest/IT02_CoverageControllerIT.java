@@ -25,7 +25,6 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-import org.eclipse.steady.backend.rest.MainController;
 import org.eclipse.steady.shared.connectivity.Service;
 import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.junit.After;

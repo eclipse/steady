@@ -40,8 +40,8 @@ public class CallgraphConstructorFactoryTest {
         CallgraphConstructorFactory.buildCallgraphConstructor("dummy", null, true);
     assertEquals(callgraphConstructor.getFramework(), "dummy");
     assertEquals(
-        callgraphConstructor.getClass().getName(),
-        "com.sap.psr.vulas.cg.DummyCallgraphConstructor");
+        "org.eclipse.steady.cg.DummyCallgraphConstructor",
+        callgraphConstructor.getClass().getName());
     assertTrue(callgraphConstructor instanceof ICallgraphConstructor);
   }
 

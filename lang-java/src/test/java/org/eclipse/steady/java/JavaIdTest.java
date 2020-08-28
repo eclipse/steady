@@ -28,10 +28,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.steady.ConstructId;
-import org.eclipse.steady.java.JavaClassId;
-import org.eclipse.steady.java.JavaId;
-import org.eclipse.steady.java.JavaMethodId;
-import org.eclipse.steady.java.JavaPackageId;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

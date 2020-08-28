@@ -21,8 +21,6 @@ package org.eclipse.steady.shared.util;
 
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.steady.shared.util.StopWatch;
-import org.eclipse.steady.shared.util.StringUtil;
 import org.junit.Test;
 
 public class StopWatchTest {

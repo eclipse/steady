@@ -29,7 +29,6 @@ import java.util.Set;
 import org.eclipse.steady.ConstructId;
 import org.eclipse.steady.FileAnalyzer;
 import org.eclipse.steady.core.util.CoreConfiguration;
-import org.eclipse.steady.java.WarAnalyzer;
 import org.eclipse.steady.shared.categories.Slow;
 import org.eclipse.steady.shared.json.model.Application;
 import org.eclipse.steady.shared.util.VulasConfiguration;

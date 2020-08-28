@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import org.eclipse.steady.kb.model.Commit;
 import org.eclipse.steady.kb.model.Vulnerability;
-import org.eclipse.steady.kb.util.Metadata;
 import org.junit.Test;
 import com.google.gson.JsonSyntaxException;
 

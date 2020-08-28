@@ -27,7 +27,6 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.steady.shared.util.DirUtil;
 import org.junit.Test;
 
 public class DirUtilTest {

@@ -46,7 +46,6 @@ import org.eclipse.steady.goals.AbstractGoalTest;
 import org.eclipse.steady.goals.GoalConfigurationException;
 import org.eclipse.steady.goals.GoalContext;
 import org.eclipse.steady.goals.GoalExecutionException;
-import org.eclipse.steady.report.Report;
 import org.eclipse.steady.shared.connectivity.PathBuilder;
 import org.eclipse.steady.shared.json.JacksonUtil;
 import org.eclipse.steady.shared.json.model.Application;

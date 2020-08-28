@@ -21,7 +21,6 @@ package org.eclipse.steady.backend.cve;
 
 import static org.junit.Assert.assertEquals;
 
-import org.eclipse.steady.backend.cve.Cve;
 import org.junit.Test;
 
 public class CveTest {

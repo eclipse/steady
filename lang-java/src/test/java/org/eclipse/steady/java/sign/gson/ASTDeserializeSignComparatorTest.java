@@ -32,7 +32,6 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.java.sign.ASTConstructBodySignature;
 import org.eclipse.steady.java.sign.ASTSignatureChange;
 import org.eclipse.steady.java.sign.ASTSignatureComparator;
-import org.eclipse.steady.java.sign.gson.GsonHelper;
 import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.sign.Signature;
 import org.eclipse.steady.sign.SignatureChange;

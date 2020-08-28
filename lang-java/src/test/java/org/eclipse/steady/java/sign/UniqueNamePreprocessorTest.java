@@ -26,7 +26,6 @@ import java.io.IOException;
 
 import org.eclipse.steady.FileAnalysisException;
 import org.eclipse.steady.java.JarAnalyzer;
-import org.eclipse.steady.java.sign.UniqueNameNormalizer;
 import org.junit.Test;
 
 public class UniqueNamePreprocessorTest {

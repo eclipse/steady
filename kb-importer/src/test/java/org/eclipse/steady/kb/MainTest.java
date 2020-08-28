@@ -1,6 +1,5 @@
 package org.eclipse.steady.kb;
 
-import org.eclipse.steady.kb.Main;
 import org.junit.Test;
 
 public class MainTest {

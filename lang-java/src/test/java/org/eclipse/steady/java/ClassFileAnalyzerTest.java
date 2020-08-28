@@ -28,10 +28,6 @@ import org.eclipse.steady.Construct;
 import org.eclipse.steady.ConstructId;
 import org.eclipse.steady.FileAnalysisException;
 import org.eclipse.steady.FileAnalyzerFactory;
-import org.eclipse.steady.java.ClassFileAnalyzer;
-import org.eclipse.steady.java.JavaConstructorId;
-import org.eclipse.steady.java.JavaId;
-import org.eclipse.steady.java.JavaMethodId;
 import org.junit.Test;
 
 public class ClassFileAnalyzerTest {

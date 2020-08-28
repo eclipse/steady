@@ -23,8 +23,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import org.eclipse.steady.java.monitor.Loader;
-import org.eclipse.steady.java.monitor.LoaderHierarchy;
 import org.eclipse.steady.java.monitor.trace.PathNode;
 import org.eclipse.steady.java.monitor.trace.StackTraceUtil;
 import org.junit.Test;

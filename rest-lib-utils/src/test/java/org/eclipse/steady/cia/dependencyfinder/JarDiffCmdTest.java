@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.eclipse.steady.cia.dependencyfinder.JarDiffCmd;
 import org.eclipse.steady.shared.json.JacksonUtil;
 import org.eclipse.steady.shared.json.model.Artifact;
 import org.eclipse.steady.shared.json.model.diff.JarDiffResult;

@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.apache.logging.log4j.Logger;
-import org.eclipse.steady.shared.json.JacksonUtil;
 import org.eclipse.steady.shared.json.model.ConstructChangeInDependency;
 import org.eclipse.steady.shared.json.model.VulnerableDependency;
 import org.junit.Assert;

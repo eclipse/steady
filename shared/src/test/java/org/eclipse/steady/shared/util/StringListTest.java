@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.steady.shared.util.StringList;
 import org.eclipse.steady.shared.util.StringList.CaseSensitivity;
 import org.eclipse.steady.shared.util.StringList.ComparisonMode;
 import org.junit.Test;

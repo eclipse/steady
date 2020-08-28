@@ -40,6 +40,8 @@ import org.eclipse.steady.shared.json.model.Artifact;
 import org.eclipse.steady.shared.json.model.Bug;
 import org.eclipse.steady.shared.json.model.ConstructId;
 import org.eclipse.steady.shared.util.VulasConfiguration;
+import org.eclispse.steady.patcheval.BugLibAnalyzer;
+import org.eclispse.steady.patcheval.LibraryAnalyzerThread2;
 import org.eclispse.steady.patcheval.representation.ConstructPathLibResult2;
 import org.eclispse.steady.patcheval.representation.OverallConstructChange;
 import org.eclispse.steady.patcheval.utils.PEConfiguration;

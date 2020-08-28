@@ -27,8 +27,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import org.eclipse.steady.backend.cve.Cve;
-import org.eclipse.steady.backend.cve.CveReader2;
 import org.eclipse.steady.shared.cache.CacheException;
 import org.junit.Test;
 

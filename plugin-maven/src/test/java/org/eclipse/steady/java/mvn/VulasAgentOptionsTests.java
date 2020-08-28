@@ -20,7 +20,6 @@
 package org.eclipse.steady.java.mvn;
 
 import org.apache.maven.plugin.testing.MojoRule;
-import org.eclipse.steady.java.mvn.VulasAgentMojo;
 import org.junit.Rule;
 import org.junit.Test;
 

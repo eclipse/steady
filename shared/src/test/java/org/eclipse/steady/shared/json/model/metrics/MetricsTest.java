@@ -22,9 +22,6 @@ package org.eclipse.steady.shared.json.model.metrics;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.steady.shared.json.JacksonUtil;
-import org.eclipse.steady.shared.json.model.metrics.Metrics;
-import org.eclipse.steady.shared.json.model.metrics.Percentage;
-import org.eclipse.steady.shared.json.model.metrics.Ratio;
 import org.junit.Test;
 
 public class MetricsTest {

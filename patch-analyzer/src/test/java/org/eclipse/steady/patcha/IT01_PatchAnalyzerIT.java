@@ -27,7 +27,6 @@ import java.util.Set;
 
 import org.eclipse.steady.ConstructChange;
 import org.eclipse.steady.core.util.CoreConfiguration;
-import org.eclipse.steady.patcha.PatchAnalyzer;
 import org.eclipse.steady.shared.categories.RequiresNetwork;
 import org.eclipse.steady.shared.categories.Slow;
 import org.eclipse.steady.shared.util.VulasConfiguration;

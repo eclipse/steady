@@ -23,9 +23,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 
-import org.eclipse.steady.malice.MaliciousnessAnalysisResult;
-import org.eclipse.steady.malice.MaliciousnessAnalyzer;
-import org.eclipse.steady.malice.ZipSlipAnalyzer;
 import org.junit.Test;
 
 public class ZipSlipAnalyzerTest {

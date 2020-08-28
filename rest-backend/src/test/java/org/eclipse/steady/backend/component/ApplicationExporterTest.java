@@ -26,7 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.steady.backend.component.ApplicationExporter;
 import org.junit.Test;
 
 public class ApplicationExporterTest {

@@ -29,8 +29,6 @@ import java.util.regex.Matcher;
 
 import org.eclipse.steady.FileAnalysisException;
 import org.eclipse.steady.python.ProcessWrapperException;
-import org.eclipse.steady.python.pip.PipInstalledPackage;
-import org.eclipse.steady.python.pip.PipWrapper;
 import org.eclipse.steady.python.pip.PipWrapper.PipPackageJson;
 import org.eclipse.steady.shared.categories.Slow;
 import org.eclipse.steady.shared.json.JacksonUtil;

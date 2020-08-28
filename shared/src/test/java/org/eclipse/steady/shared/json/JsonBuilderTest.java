@@ -21,7 +21,6 @@ package org.eclipse.steady.shared.json;
 
 import static org.junit.Assert.assertEquals;
 
-import org.eclipse.steady.shared.json.JsonBuilder;
 import org.junit.Test;
 
 public class JsonBuilderTest {

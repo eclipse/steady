@@ -21,8 +21,6 @@ package org.eclipse.steady.python;
 
 import java.nio.file.Paths;
 
-import org.eclipse.steady.python.ProcessWrapper;
-import org.eclipse.steady.python.ProcessWrapperException;
 import org.junit.Test;
 
 public class ProcessWrapperTest {

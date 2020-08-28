@@ -29,10 +29,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.eclipse.steady.cg.AbstractGetPaths;
-import org.eclipse.steady.cg.Callgraph;
-import org.eclipse.steady.cg.DepthFirstGetPaths;
-import org.eclipse.steady.cg.PrunedGraphGetPaths;
 import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.goals.GoalContext;
 import org.eclipse.steady.java.JarAnalyzer;

@@ -32,10 +32,6 @@ import static com.xebialabs.restito.semantics.Condition.post;
 import static com.xebialabs.restito.semantics.Condition.uri;
 
 import org.eclipse.steady.core.util.CoreConfiguration;
-import org.eclipse.steady.goals.AbstractGoal;
-import org.eclipse.steady.goals.GoalConfigurationException;
-import org.eclipse.steady.goals.GoalExecutionException;
-import org.eclipse.steady.goals.GoalFactory;
 import org.eclipse.steady.shared.connectivity.PathBuilder;
 import org.eclipse.steady.shared.enums.GoalClient;
 import org.eclipse.steady.shared.enums.GoalType;

@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Set;
 
-import org.eclipse.steady.shared.enums.Scope;
 import org.junit.Test;
 
 public class ScopeTest {

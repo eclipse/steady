@@ -514,10 +514,12 @@ public class StackTraceUtil {
 
     // Print if no constructor was found (wrong line number in stacktrace?)
     // 2 examples from commons-compress 1.4:
-    // [main] WARN  org.eclipse.steady.java.monitor.StackTraceUtil  - None of the constructors at line
+    // [main] WARN  org.eclipse.steady.java.monitor.StackTraceUtil  - None of the constructors at
+    // line
     // numbers [132,144,159] matched the stack trace element
     // [org.apache.commons.compress.archivers.zip.ZipArchiveInputStream.<init>(ZipArchiveInputStream.java:87)], return constructor with smallest line number
-    // [main] WARN  org.eclipse.steady.java.monitor.StackTraceUtil  - None of the constructors at line
+    // [main] WARN  org.eclipse.steady.java.monitor.StackTraceUtil  - None of the constructors at
+    // line
     // numbers [97,111,136,145,158] matched the stack trace element
     // [org.apache.commons.compress.archivers.zip.ZipArchiveEntry.<init>(ZipArchiveEntry.java:86)],
     // return constructor with smallest line number

@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.steady.java.mvn.MvnPluginReport;
 import org.eclipse.steady.shared.json.model.LibraryId;
 import org.junit.Test;
 

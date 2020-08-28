@@ -26,8 +26,6 @@ import java.util.Set;
 
 import javax.mail.MessagingException;
 
-import org.eclipse.steady.backend.util.Message;
-import org.eclipse.steady.backend.util.SmtpClient;
 import org.junit.Test;
 
 public class SmtpClientTest {

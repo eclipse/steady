@@ -34,14 +34,6 @@ import org.eclipse.steady.ConstructId;
 import org.eclipse.steady.FileAnalysisException;
 import org.eclipse.steady.FileAnalyzer;
 import org.eclipse.steady.FileAnalyzerFactory;
-import org.eclipse.steady.java.ClassFileAnalyzer;
-import org.eclipse.steady.java.JavaClassId;
-import org.eclipse.steady.java.JavaConstructorId;
-import org.eclipse.steady.java.JavaEnumId;
-import org.eclipse.steady.java.JavaFileAnalyzer2;
-import org.eclipse.steady.java.JavaId;
-import org.eclipse.steady.java.JavaMethodId;
-import org.eclipse.steady.java.JavaPackageId;
 import org.eclipse.steady.shared.util.FileSearch;
 import org.junit.Test;
 
@@ -400,7 +392,8 @@ public class JavaFileAnalyzer2Test {
 
       final JavaClassId cl3 =
           JavaId.parseClassQName(
-              "org.eclipse.steady.java.test.NestedDeclarations$DoSomethingElse$DoThis$1"); // line 16
+              "org.eclipse.steady.java.test.NestedDeclarations$DoSomethingElse$DoThis$1"); // line
+      // 16
       final JavaMethodId cl3_m =
           JavaId.parseMethodQName(
               "org.eclipse.steady.java.test.NestedDeclarations$DoSomethingElse$DoThis$1.doThat()"); // line 17
