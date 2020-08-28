@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package com.sap.psr.vulas.cg.soot;
+package org.eclipse.steady.cg.soot;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
