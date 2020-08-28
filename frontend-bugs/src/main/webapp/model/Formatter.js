@@ -358,6 +358,9 @@ model.Formatter = {
             	return "";
         },
         
+        showImageKaybee : function(affected){
+            return model.Formatter.showImagePE(null, affected);
+        },
         tooltipPEFormatter : function (ff,lv,fi,ti,c,pc){
             var s = "";
             

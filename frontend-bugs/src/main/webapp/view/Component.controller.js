@@ -190,9 +190,6 @@ sap.ui.controller(
 												case "CHECK_VERSION":
 													lib.checkvers = affectedVersions[x].affected;
 													break;
-												case "PRE_COMMIT_POM":
-													lib.precommitpom = affectedVersions[x].affected;
-													break;
 												case "AST_EQUALITY":
 												case "MINOR_EQUALITY":
 												case "MAJOR_EQUALITY":
@@ -216,6 +213,9 @@ sap.ui.controller(
 												case "TO_REVIEW":
 													lib.sourcesAvailable=affectedVersions[x].sourcesAvailable;
 													lib.patcheval = affectedVersions[x].source;
+													break;
+												case "KAYBEE":
+													lib.kaybee = affectedVersions[x].affected;
 													break;
 												}	
 												newlibraries.splice(u, 1, lib);
