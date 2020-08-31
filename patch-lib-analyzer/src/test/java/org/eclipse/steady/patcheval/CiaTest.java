@@ -34,8 +34,6 @@ import java.util.concurrent.Future;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.backend.BackendConnector;
 import org.eclipse.steady.core.util.CoreConfiguration;
-import org.eclipse.steady.patcheval.BugLibAnalyzer;
-import org.eclipse.steady.patcheval.LibraryAnalyzerThread2;
 import org.eclipse.steady.patcheval.representation.ConstructPathLibResult2;
 import org.eclipse.steady.patcheval.representation.OverallConstructChange;
 import org.eclipse.steady.patcheval.utils.PEConfiguration;
