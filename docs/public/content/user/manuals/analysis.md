@@ -303,17 +303,18 @@ mvn -Dvulas vulas:prepare-vulas-agent test vulas:upload
 # Byte code instrumentor(s) to be used (multiple ones to be separated by comma)
 #
 # Possible values:
-#   com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor: Collects exactly one timestamp for every invoked vulnerable method (no call stack)
-#   com.sap.psr.vulas.monitor.trace.SingleStackTraceInstrumentor: Collects at most "vulas.core.instr.maxStacktraces" call stack for every invoked vulnerable method
-#   com.sap.psr.vulas.monitor.trace.StackTraceInstrumentor:  Collects all call stacks for every invoked vulnerable method
-#   com.sap.psr.vulas.monitor.touch.TouchPointInstrumentor: Collects so-called touch points, i.e., calls from an app method to a library method
+#   org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor: Collects exactly one timestamp for every invoked vulnerable method (no call stack)
+#   org.eclipse.steady.java.monitor.trace.SingleStackTraceInstrumentor: Collects at most "vulas.core.instr.maxStacktraces" call stack for every invoked vulnerable method
+#   org.eclipse.steady.java.monitor.trace.StackTraceInstrumentor:  Collects all call stacks for every invoked vulnerable method
+#   org.eclipse.steady.java.monitor.touch.TouchPointInstrumentor: Collects so-called touch points, i.e., calls from an app method to a library method
+#   org.eclipse.steady.java.monitor.slice.SliceInstrumentor: Modifies executable constructs such that, upon execution, a warning will be printed to stderr. The execution can be entirely prevented using a configuration setting
 #
-# Default: com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
+# Default: org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor
 #
 # Note:
 #   The above list of possible values is ordered ascending after performance impact and memory consumption,
 #   i.e., the SingleTraceInstrumentor has the least impact on performance and memory consumption
-vulas.core.instr.instrumentorsChoosen = com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
+vulas.core.instr.instrumentorsChoosen = org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor
 
 # Max. number of stacktraces collected per instrumented vulnerable method
 # Default: 10
