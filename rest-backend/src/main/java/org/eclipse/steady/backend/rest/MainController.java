@@ -98,7 +98,7 @@ public class MainController extends SpringBootServletInitializer {
 
   /**
    * Used by custom repository methods to replace nested transient entities by managed ones.
-   * See, for instance, {@link BugRepositoryImpl#customSave(com.sap.psr.vulas.backend.model.Bug)}.
+   * See, for instance, {@link BugRepositoryImpl#customSave(org.eclipse.steady.backend.model.Bug)}.
    * @return
    */
   @Bean

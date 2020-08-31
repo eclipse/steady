@@ -1769,8 +1769,8 @@ public class ApplicationController {
           new org.eclipse.steady.shared.json.model.metrics.Metrics();
       final DependencyUpdate depUpdate =
           new DependencyUpdate(dep.getLib().getLibraryId(), otherVersion);
-      //			final com.sap.psr.vulas.backend.model.DependencyUpdate depUpdate = new
-      // com.sap.psr.vulas.backend.model.DependencyUpdate(
+      //			final org.eclipse.steady.backend.model.DependencyUpdate depUpdate = new
+      // org.eclipse.steady.backend.model.DependencyUpdate(
       //																							new
       // com.sap.psr.vulas.shared.json.model.LibraryId(dep.getLib().getLibraryId().getMvnGroup(),dep.getLib().getLibraryId().getArtifact(),dep.getLib().getLibraryId().getVersion()),
       //																									new

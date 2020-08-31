@@ -133,7 +133,7 @@ public interface DependencyRepository
    * @return a {@link java.util.List} object.
    */
   @Query(
-      "SELECT   new com.sap.psr.vulas.backend.model.DependencyIntersection(d1, d2, COUNT(lc1))"
+      "SELECT   new org.eclipse.steady.backend.model.DependencyIntersection(d1, d2, COUNT(lc1))"
           + " FROM 	    Dependency d1      JOIN      d1.app a1 	    JOIN      d1.lib l1     JOIN  "
           + "    l1.constructs lc1, 	    Dependency d2      JOIN      d2.app a2 	    JOIN     "
           + " d2.lib l2     JOIN      l2.constructs lc2 	  WHERE a1.mvnGroup"

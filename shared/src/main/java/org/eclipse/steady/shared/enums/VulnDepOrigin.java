@@ -25,7 +25,7 @@ import java.util.Set;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Use in com.sap.psr.vulas.backend.model.VulnerableDependency and com.sap.psr.vulas.shared.json.model.VulnerableDependency
+ * Use in org.eclipse.steady.backend.model.VulnerableDependency and com.sap.psr.vulas.shared.json.model.VulnerableDependency
  */
 public enum VulnDepOrigin {
   CC,

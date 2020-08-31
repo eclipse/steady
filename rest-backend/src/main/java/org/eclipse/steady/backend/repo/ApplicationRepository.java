@@ -272,7 +272,7 @@ public interface ApplicationRepository
    */
   @Query(
       "SELECT"
-          + "   DISTINCT new com.sap.psr.vulas.backend.model.VulnerableDependency(d,b) FROM"
+          + "   DISTINCT new org.eclipse.steady.backend.model.VulnerableDependency(d,b) FROM"
           + "	  Dependency d "
           + "   JOIN "
           + "   d.app a "
@@ -310,7 +310,7 @@ public interface ApplicationRepository
    */
   @Query(
       "SELECT"
-          + "   DISTINCT new com.sap.psr.vulas.backend.model.VulnerableDependency(d,b) FROM"
+          + "   DISTINCT new org.eclipse.steady.backend.model.VulnerableDependency(d,b) FROM"
           + "	  Dependency d "
           + "   JOIN "
           + "   d.app a "
@@ -427,7 +427,7 @@ public interface ApplicationRepository
    */
   @Query(
       "SELECT"
-          + "   DISTINCT new com.sap.psr.vulas.backend.model.ConstructSearchResult(d, lc) FROM"
+          + "   DISTINCT new org.eclipse.steady.backend.model.ConstructSearchResult(d, lc) FROM"
           + "	    Dependency d "
           + "     JOIN "
           + "     d.app a "
@@ -513,7 +513,7 @@ public interface ApplicationRepository
    */
   @Query(
       "SELECT"
-          + "   DISTINCT new com.sap.psr.vulas.backend.model.VulnerableDependency(d,b) FROM"
+          + "   DISTINCT new org.eclipse.steady.backend.model.VulnerableDependency(d,b) FROM"
           + "	  Dependency d "
           + "   JOIN "
           + "   d.app a "
@@ -529,7 +529,7 @@ public interface ApplicationRepository
   TreeSet<VulnerableDependency> findJPQLVulnerableDependencies();
 
   /*@Query("SELECT"
-  	+ "   DISTINCT new com.sap.psr.vulas.backend.model.VulnerableDependency(vd.dep,vd.bug) FROM"
+  	+ "   DISTINCT new org.eclipse.steady.backend.model.VulnerableDependency(vd.dep,vd.bug) FROM"
   	+ "	  VulnerableDependencyView vd "
   	+ "	  WHERE vd.mvnGroup = :mvnGroup "
   	+ "   AND vd.artifact = :artifact "

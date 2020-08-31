@@ -25,7 +25,7 @@ import java.util.Set;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Use in com.sap.psr.vulas.backend.model.Dependency and com.sap.psr.vulas.shared.json.model.Dependency.
+ * Use in org.eclipse.steady.backend.model.Dependency and com.sap.psr.vulas.shared.json.model.Dependency.
  */
 public enum Scope {
   COMPILE,
