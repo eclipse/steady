@@ -63,9 +63,9 @@ public class InstrumentorFactory {
     if ("com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor".equals(_name)) {
       _name = "org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor";
     } else if ("com.sap.psr.vulas.monitor.trace.SingleStackTraceInstrumentor".equals(_name)) {
-      _name = "org.eclipse.steady.java.trace.SingleStackTraceInstrumentor";
+      _name = "org.eclipse.steady.java.monitor.trace.SingleStackTraceInstrumentor";
     } else if ("com.sap.psr.vulas.monitor.trace.StackTraceInstrumentor".equals(_name)) {
-      _name = "org.eclipse.steady.java.trace.StackTraceInstrumentor";
+      _name = "org.eclipse.steady.java.monitor.trace.StackTraceInstrumentor";
     } else if ("com.sap.psr.vulas.monitor.touch.TouchPointInstrumentor".equals(_name)) {
       _name = "org.eclipse.steady.java.monitor.touch.TouchPointInstrumentor";
     } else if ("com.sap.psr.vulas.monitor.slice.SliceInstrumentor".equals(_name)) {
