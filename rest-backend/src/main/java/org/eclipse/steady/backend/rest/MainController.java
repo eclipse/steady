@@ -66,17 +66,17 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @ComponentScan({
-  "com.sap.psr.vulas.backend.component,com.sap.psr.vulas.backend.rest,com.sap.psr.vulas.backend.util"
+  "org.eclipse.steady.backend.component,org.eclipse.steady.backend.rest,org.eclipse.steady.backend.util"
 })
 @EnableAutoConfiguration
 // @EnableWebMvc
 // @SpringBootApplication
 @EnableCaching
 @EntityScan({
-  "com.sap.psr.vulas.backend.model"
+  "org.eclipse.steady.backend.model"
 }) // So that managed entities in the model package are discovered
 @EnableJpaRepositories({
-  "com.sap.psr.vulas.backend.repo"
+  "org.eclipse.steady.backend.repo"
 }) // So that repos in the repo package are discovered
 @EnableSwagger2
 public class MainController extends SpringBootServletInitializer {
@@ -112,8 +112,8 @@ public class MainController extends SpringBootServletInitializer {
    */
   private final ApiInfo getApiInfo() {
     return new ApiInfoBuilder()
-        .title("Vulas REST API")
-        .description("This is the REST API of Vulas")
+        .title("Eclipse Steady")
+        .description("RESTful API for managing applications and vulnerabilities")
         .version(VulasConfiguration.getGlobal().getConfiguration().getString("shared.version"))
         .build();
   }

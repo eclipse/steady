@@ -35,8 +35,7 @@ import org.eclipse.steady.java.sign.gson.ASTSignatureChangeSerializer;
 import org.eclipse.steady.python.sign.PythonConstructDigest;
 import org.eclipse.steady.python.sign.PythonConstructDigestSerializer;
 import org.eclipse.steady.shared.util.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -74,12 +73,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  *
  */
 @Configuration
-@ComponentScan({"com.sap.psr.vulas.cia.util,com.sap.psr.vulas.cia.rest"})
+@ComponentScan({"org.eclipse.steady.cia.util,org.eclipse.steady.cia.rest"})
 @EnableAutoConfiguration
 @EnableSwagger2
 public class MainController extends SpringBootServletInitializer {
-
-  private static Logger log = LoggerFactory.getLogger(MainController.class);
 
   /**
    * <p>backendApi.</p>
@@ -96,9 +93,9 @@ public class MainController extends SpringBootServletInitializer {
         .pathMapping("/")
         .apiInfo(
             new springfox.documentation.service.ApiInfo(
-                "Vulas CIA",
-                "RESTful API for discovering and analyzing alternative Maven artifacts",
-                "1.1.0-SNAPSHOT",
+                "Eclipse Steady",
+                "RESTful API for discovering and analyzing artifacts of package repositories",
+                VulasConfiguration.getGlobal().getConfiguration().getString("shared.version"),
                 "SAP",
                 null,
                 "commercial",
