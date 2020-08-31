@@ -87,7 +87,7 @@
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
-										<Main-Class>com.sap.psr.vulas.kb.Main</Main-Class>
+										<Main-Class>org.eclipse.steady.kb.Main</Main-Class>
 										<Implementation-Version>${project.version}</Implementation-Version>
 										>
 									</manifestEntries>

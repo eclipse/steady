@@ -22,7 +22,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.eclispse.steady.patcheval.utils;
+package org.eclipse.steady.patcheval.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -37,11 +37,11 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.logging.log4j.Logger;
+import org.eclipse.steady.patcheval.representation.ArtifactResult2;
+import org.eclipse.steady.patcheval.representation.ConstructPathAssessment2;
+import org.eclipse.steady.patcheval.representation.ConstructPathLibResult2;
 import org.eclipse.steady.shared.json.model.LibraryId;
 import org.eclipse.steady.shared.util.FileUtil;
-import org.eclispse.steady.patcheval.representation.ArtifactResult2;
-import org.eclispse.steady.patcheval.representation.ConstructPathAssessment2;
-import org.eclispse.steady.patcheval.representation.ConstructPathLibResult2;
 
 /**
  * Helper class for writing results to file.
@@ -339,7 +339,7 @@ public class CSVHelper2 {
    * This method rewrites the csv file including the results of the bytecode comparison
    *
    * @param bugId a {@link java.lang.String} object.
-   * @param r a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
+   * @param r a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
    */
   public static synchronized void rewriteLineInCSV(String bugId, ArtifactResult2 r) {
 

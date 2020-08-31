@@ -22,7 +22,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.eclispse.steady.patcheval.representation;
+package org.eclipse.steady.patcheval.representation;
 
 import org.eclipse.steady.shared.enums.ConstructChangeType;
 import org.eclipse.steady.shared.json.model.ConstructId;

@@ -112,7 +112,7 @@
 							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 						</manifest>
 						<manifestEntries>
-							<Main-Class>com.sap.psr.vulas.cli.VulasCli</Main-Class>
+							<Main-Class>org.eclipse.steady.cli.VulasCli</Main-Class>
 						</manifestEntries>
 						<addMavenDescriptor>false</addMavenDescriptor>
 					</archive>
@@ -146,7 +146,7 @@
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
-										<Main-Class>com.sap.psr.vulas.cli.VulasCli</Main-Class>
+										<Main-Class>org.eclipse.steady.cli.VulasCli</Main-Class>
 										<Specification-Title>${project.name}</Specification-Title>
 			                            <Specification-Version>${project.version}</Specification-Version>
 			                            <Implementation-Title>${project.name}</Implementation-Title>

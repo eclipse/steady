@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package org.eclispse.steady.patcheval;
+package org.eclipse.steady.patcheval;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,12 +39,12 @@ import org.eclipse.steady.backend.BackendConnector;
 import org.eclipse.steady.backend.EntityNotFoundInBackendException;
 import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.java.bytecode.BytecodeComparator;
+import org.eclipse.steady.patcheval.utils.PEConfiguration;
 import org.eclipse.steady.shared.json.JacksonUtil;
 import org.eclipse.steady.shared.json.model.Bug;
 import org.eclipse.steady.shared.json.model.Library;
 import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.shared.util.VulasConfiguration;
-import org.eclispse.steady.patcheval.utils.PEConfiguration;
 
 /**
  * <p>DigestAnalyzer class.</p>

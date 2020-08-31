@@ -20,7 +20,7 @@ package org.eclipse.steady.patcheval;
  */
 import static org.junit.Assert.assertTrue;
 
-import org.eclispse.steady.patcheval.representation.ArtifactResult2;
+import org.eclipse.steady.patcheval.representation.ArtifactResult2;
 import org.junit.Test;
 
 public class VersionTest {

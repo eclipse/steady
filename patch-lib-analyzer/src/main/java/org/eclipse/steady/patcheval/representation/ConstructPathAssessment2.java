@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package org.eclispse.steady.patcheval.representation;
+package org.eclipse.steady.patcheval.representation;
 
 import java.util.ArrayList;
 import java.util.List;

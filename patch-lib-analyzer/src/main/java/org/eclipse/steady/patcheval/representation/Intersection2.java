@@ -22,7 +22,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.eclispse.steady.patcheval.representation;
+package org.eclipse.steady.patcheval.representation;
 
 /**
  * Represents the intersection between distances to vulnerable and to fixed (for a certain construct) among different libraries.
@@ -35,8 +35,8 @@ public class Intersection2 {
   /**
    * <p>Constructor for Intersection2.</p>
    *
-   * @param from a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
-   * @param to a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
+   * @param from a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
+   * @param to a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
    * @param o a int.
    * @param d a {@link java.lang.Double} object.
    */
@@ -50,7 +50,7 @@ public class Intersection2 {
   /**
    * <p>Getter for the field <code>from</code>.</p>
    *
-   * @return a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
+   * @return a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
    */
   public ArtifactResult2 getFrom() {
     return from;
@@ -59,7 +59,7 @@ public class Intersection2 {
   /**
    * <p>Setter for the field <code>from</code>.</p>
    *
-   * @param from a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
+   * @param from a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
    */
   public void setFrom(ArtifactResult2 from) {
     this.from = from;
@@ -68,7 +68,7 @@ public class Intersection2 {
   /**
    * <p>Getter for the field <code>to</code>.</p>
    *
-   * @return a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
+   * @return a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
    */
   public ArtifactResult2 getTo() {
     return to;
@@ -77,7 +77,7 @@ public class Intersection2 {
   /**
    * <p>Setter for the field <code>to</code>.</p>
    *
-   * @param to a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
+   * @param to a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
    */
   public void setTo(ArtifactResult2 to) {
     this.to = to;

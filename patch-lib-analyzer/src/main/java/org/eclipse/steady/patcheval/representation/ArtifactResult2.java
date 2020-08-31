@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package org.eclispse.steady.patcheval.representation;
+package org.eclipse.steady.patcheval.representation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +86,7 @@ public class ArtifactResult2 implements Comparable<ArtifactResult2> {
   /**
    * <p>addConstructPathAssessment.</p>
    *
-   * @param constructPathAssessment2 a {@link org.eclispse.steady.patcheval.representation.ConstructPathAssessment2} object.
+   * @param constructPathAssessment2 a {@link org.eclipse.steady.patcheval.representation.ConstructPathAssessment2} object.
    */
   public void addConstructPathAssessment(ConstructPathAssessment2 constructPathAssessment2) {
     this.constructPathAssessments.add(constructPathAssessment2);
@@ -552,7 +552,7 @@ public class ArtifactResult2 implements Comparable<ArtifactResult2> {
    * 2) compare timestamp (of latest update in maven central)
    * 3) alphanumerical comparison
    *
-   * @param other a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
+   * @param other a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
    * @return a int.
    */
   public int compareVersion(ArtifactResult2 other) {

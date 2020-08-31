@@ -22,7 +22,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.eclispse.steady.patcheval.representation;
+package org.eclipse.steady.patcheval.representation;
 
 /**
  * Helper  class for deserialization of all versions of artifacts returned from CIA, respect to a certain group,artifact.

@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package org.eclispse.steady.patcheval.representation;
+package org.eclipse.steady.patcheval.representation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ public class ReleaseTree {
   /**
    * <p>Constructor for ReleaseTree.</p>
    *
-   * @param n a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
+   * @param n a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
    */
   public ReleaseTree(ArtifactResult2 n) {
     this.node = n;
@@ -74,7 +74,7 @@ public class ReleaseTree {
    * 2) compare timestap (of publication in maven central)
    * 3) alphanumerical version comparison
    *
-   * @param r a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
+   * @param r a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
    */
   public void add(ArtifactResult2 r) {
     if (this.node.compareVersion(r) > 0) {
@@ -100,7 +100,7 @@ public class ReleaseTree {
   /**
    * <p>getMaintainance.</p>
    *
-   * @return a {@link org.eclispse.steady.patcheval.representation.ReleaseTree} object.
+   * @return a {@link org.eclipse.steady.patcheval.representation.ReleaseTree} object.
    */
   public ReleaseTree getMaintainance() {
     return maintenance;
@@ -109,7 +109,7 @@ public class ReleaseTree {
   /**
    * <p>setMaintainance.</p>
    *
-   * @param maintainance a {@link org.eclispse.steady.patcheval.representation.ReleaseTree} object.
+   * @param maintainance a {@link org.eclipse.steady.patcheval.representation.ReleaseTree} object.
    */
   public void setMaintainance(ReleaseTree maintainance) {
     this.maintenance = maintainance;
@@ -118,7 +118,7 @@ public class ReleaseTree {
   /**
    * <p>Getter for the field <code>build</code>.</p>
    *
-   * @return a {@link org.eclispse.steady.patcheval.representation.ReleaseTree} object.
+   * @return a {@link org.eclipse.steady.patcheval.representation.ReleaseTree} object.
    */
   public ReleaseTree getBuild() {
     return build;
@@ -127,7 +127,7 @@ public class ReleaseTree {
   /**
    * <p>Setter for the field <code>build</code>.</p>
    *
-   * @param build a {@link org.eclispse.steady.patcheval.representation.ReleaseTree} object.
+   * @param build a {@link org.eclipse.steady.patcheval.representation.ReleaseTree} object.
    */
   public void setBuild(ReleaseTree build) {
     this.build = build;
@@ -136,7 +136,7 @@ public class ReleaseTree {
   /**
    * <p>Getter for the field <code>node</code>.</p>
    *
-   * @return a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
+   * @return a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
    */
   public ArtifactResult2 getNode() {
     return node;
@@ -145,7 +145,7 @@ public class ReleaseTree {
   /**
    * <p>Setter for the field <code>node</code>.</p>
    *
-   * @param node a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
+   * @param node a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
    */
   public void setNode(ArtifactResult2 node) {
     this.node = node;
@@ -536,7 +536,7 @@ public class ReleaseTree {
   /**
    * <p>getISLastFirstFixed.</p>
    *
-   * @return a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
+   * @return a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
    */
   public ArtifactResult2 getISLastFirstFixed() {
     ArtifactResult2 lastV = this.getLV();
@@ -550,7 +550,7 @@ public class ReleaseTree {
   /**
    * <p>getLastFirstFixed.</p>
    *
-   * @return a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
+   * @return a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
    */
   public ArtifactResult2 getLastFirstFixed() {
     if (this.isFF() != null

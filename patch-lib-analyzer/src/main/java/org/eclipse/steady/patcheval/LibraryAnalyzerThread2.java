@@ -22,7 +22,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.eclispse.steady.patcheval;
+package org.eclipse.steady.patcheval;
 
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
@@ -38,6 +38,9 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.backend.BackendConnector;
 import org.eclipse.steady.java.sign.ASTSignatureChange;
 import org.eclipse.steady.java.sign.gson.ASTSignatureChangeDeserializer;
+import org.eclipse.steady.patcheval.representation.ConstructPathLibResult2;
+import org.eclipse.steady.patcheval.representation.LidResult2;
+import org.eclipse.steady.patcheval.representation.OverallConstructChange;
 import org.eclipse.steady.python.sign.PythonConstructDigest;
 import org.eclipse.steady.shared.enums.ConstructChangeType;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
@@ -45,9 +48,6 @@ import org.eclipse.steady.shared.json.JacksonUtil;
 import org.eclipse.steady.shared.json.model.Artifact;
 import org.eclipse.steady.shared.json.model.ConstructId;
 import org.eclipse.steady.shared.json.model.LibraryId;
-import org.eclispse.steady.patcheval.representation.ConstructPathLibResult2;
-import org.eclispse.steady.patcheval.representation.LidResult2;
-import org.eclispse.steady.patcheval.representation.OverallConstructChange;
 
 /**
  * Thread to analyze for the set of received libraries using CIA service.

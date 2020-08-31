@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package org.eclispse.steady.patcheval;
+package org.eclipse.steady.patcheval;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -46,6 +46,11 @@ import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.backend.BackendConnector;
 import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.java.bytecode.ConstructBytecodeASTManager;
+import org.eclipse.steady.patcheval.representation.ArtifactResult2;
+import org.eclipse.steady.patcheval.representation.ConstructPathAssessment2;
+import org.eclipse.steady.patcheval.representation.Intersection2;
+import org.eclipse.steady.patcheval.representation.ReleaseTree;
+import org.eclipse.steady.patcheval.utils.PEConfiguration;
 import org.eclipse.steady.shared.enums.AffectedVersionSource;
 import org.eclipse.steady.shared.enums.ConstructChangeType;
 import org.eclipse.steady.shared.enums.ConstructType;
@@ -60,11 +65,6 @@ import org.eclipse.steady.shared.json.model.Version;
 import org.eclipse.steady.shared.json.model.metrics.Counter;
 import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.shared.util.VulasConfiguration;
-import org.eclispse.steady.patcheval.representation.ArtifactResult2;
-import org.eclispse.steady.patcheval.representation.ConstructPathAssessment2;
-import org.eclispse.steady.patcheval.representation.Intersection2;
-import org.eclispse.steady.patcheval.representation.ReleaseTree;
-import org.eclispse.steady.patcheval.utils.PEConfiguration;
 
 /**
  * This class analyzes all bugs (or the configured one) to determine the affected libraries.

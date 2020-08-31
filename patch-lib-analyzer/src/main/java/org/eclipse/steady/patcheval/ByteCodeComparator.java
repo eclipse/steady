@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package org.eclispse.steady.patcheval;
+package org.eclipse.steady.patcheval;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,12 +29,12 @@ import org.eclipse.steady.backend.BackendConnector;
 import org.eclipse.steady.java.bytecode.ConstructBytecodeASTManager;
 import org.eclipse.steady.java.sign.ASTSignatureChange;
 import org.eclipse.steady.java.sign.gson.ASTSignatureChangeDeserializer;
+import org.eclipse.steady.patcheval.representation.ArtifactResult2;
+import org.eclipse.steady.patcheval.representation.ConstructPathAssessment2;
+import org.eclipse.steady.patcheval.utils.CSVHelper2;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
 import org.eclipse.steady.shared.json.JacksonUtil;
 import org.eclipse.steady.shared.json.model.LibraryId;
-import org.eclispse.steady.patcheval.representation.ArtifactResult2;
-import org.eclispse.steady.patcheval.representation.ConstructPathAssessment2;
-import org.eclispse.steady.patcheval.utils.CSVHelper2;
 
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
@@ -54,7 +54,7 @@ public class ByteCodeComparator implements Runnable {
   /**
    * <p>Constructor for ByteCodeComparator.</p>
    *
-   * @param ar a {@link org.eclispse.steady.patcheval.representation.ArtifactResult2} object.
+   * @param ar a {@link org.eclipse.steady.patcheval.representation.ArtifactResult2} object.
    * @param _b a {@link java.lang.String} object.
    */
   public ByteCodeComparator(ArtifactResult2 ar, String _b) {

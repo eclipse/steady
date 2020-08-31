@@ -105,7 +105,7 @@
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
-										<Main-Class>com.sap.psr.vulas.patcha.PatchAnalyzer</Main-Class>
+										<Main-Class>org.eclipse.steady.patcha.PatchAnalyzer</Main-Class>
 									</manifestEntries>
 								</transformer>
 							</transformers>

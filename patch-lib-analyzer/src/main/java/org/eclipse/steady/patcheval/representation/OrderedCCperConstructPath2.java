@@ -22,7 +22,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.eclispse.steady.patcheval.representation;
+package org.eclipse.steady.patcheval.representation;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -193,7 +193,7 @@ public class OrderedCCperConstructPath2 {
    * If the overall change type is MOD(ified), the method returns the signature change considering
    * all commits. In the other cases, it returns null.
    *
-   * @return a {@link org.eclispse.steady.patcheval.representation.OverallConstructChange} object.
+   * @return a {@link org.eclipse.steady.patcheval.representation.OverallConstructChange} object.
    */
   public OverallConstructChange getOverallCC() {
 

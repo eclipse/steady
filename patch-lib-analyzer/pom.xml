@@ -84,7 +84,7 @@
 							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 						</manifest>
 						<manifestEntries>
-							<Main-Class>com.sap.psr.vulas.patcheval2.Main</Main-Class>
+							<Main-Class>org.eclipse.steady.patcheval.Main</Main-Class>
 						</manifestEntries>
 						<addMavenDescriptor>false</addMavenDescriptor>
 					</archive>

@@ -22,7 +22,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.eclispse.steady.patcheval;
+package org.eclipse.steady.patcheval;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +45,11 @@ import java.util.concurrent.Future;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.backend.BackendConnector;
+import org.eclipse.steady.patcheval.representation.ConstructPathLibResult2;
+import org.eclipse.steady.patcheval.representation.OrderedCCperConstructPath2;
+import org.eclipse.steady.patcheval.representation.OverallConstructChange;
+import org.eclipse.steady.patcheval.utils.CSVHelper2;
+import org.eclipse.steady.patcheval.utils.PEConfiguration;
 import org.eclipse.steady.shared.enums.ConstructChangeType;
 import org.eclipse.steady.shared.enums.ConstructType;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
@@ -55,11 +60,6 @@ import org.eclipse.steady.shared.json.model.ConstructId;
 import org.eclipse.steady.shared.json.model.Library;
 import org.eclipse.steady.shared.json.model.LibraryId;
 import org.eclipse.steady.shared.util.VulasConfiguration;
-import org.eclispse.steady.patcheval.representation.ConstructPathLibResult2;
-import org.eclispse.steady.patcheval.representation.OrderedCCperConstructPath2;
-import org.eclispse.steady.patcheval.representation.OverallConstructChange;
-import org.eclispse.steady.patcheval.utils.CSVHelper2;
-import org.eclispse.steady.patcheval.utils.PEConfiguration;
 
 /**
  * Given a bug, this class analyzes all versions (retrieved from Maven central) of JARs containing vulnerable code produces a csv file.

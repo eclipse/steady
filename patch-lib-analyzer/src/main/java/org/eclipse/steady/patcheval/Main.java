@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package org.eclispse.steady.patcheval;
+package org.eclipse.steady.patcheval;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -30,8 +30,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.steady.patcheval.utils.PEConfiguration;
 import org.eclipse.steady.shared.util.VulasConfiguration;
-import org.eclispse.steady.patcheval.utils.PEConfiguration;
 
 /**
  * <p>Main class.</p>

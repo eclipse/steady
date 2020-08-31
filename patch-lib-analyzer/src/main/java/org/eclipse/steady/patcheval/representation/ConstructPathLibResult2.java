@@ -22,7 +22,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.eclispse.steady.patcheval.representation;
+package org.eclipse.steady.patcheval.representation;
 
 import org.eclipse.steady.shared.enums.ConstructChangeType;
 
@@ -43,7 +43,7 @@ public class ConstructPathLibResult2 {
    * @param _qname a {@link java.lang.String} object.
    * @param _path a {@link java.lang.String} object.
    * @param constructChangeType a {@link org.eclipse.steady.shared.enums.ConstructChangeType} object.
-   * @param _lidres a {@link org.eclispse.steady.patcheval.representation.LidResult2} object.
+   * @param _lidres a {@link org.eclipse.steady.patcheval.representation.LidResult2} object.
    * @param _v a {@link java.lang.String} object.
    * @param _f a {@link java.lang.String} object.
    */
@@ -155,7 +155,7 @@ public class ConstructPathLibResult2 {
   /**
    * <p>Getter for the field <code>lidResult</code>.</p>
    *
-   * @return a {@link org.eclispse.steady.patcheval.representation.LidResult2} object.
+   * @return a {@link org.eclipse.steady.patcheval.representation.LidResult2} object.
    */
   public LidResult2 getLidResult() {
     return lidResult;
@@ -164,7 +164,7 @@ public class ConstructPathLibResult2 {
   /**
    * <p>Setter for the field <code>lidResult</code>.</p>
    *
-   * @param lidResult a {@link org.eclispse.steady.patcheval.representation.LidResult2} object.
+   * @param lidResult a {@link org.eclipse.steady.patcheval.representation.LidResult2} object.
    */
   public void setLidResult(LidResult2 lidResult) {
     this.lidResult = lidResult;

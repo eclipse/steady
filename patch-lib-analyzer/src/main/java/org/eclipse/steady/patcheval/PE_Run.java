@@ -17,7 +17,7 @@
  *
  * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-package org.eclispse.steady.patcheval;
+package org.eclipse.steady.patcheval;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,12 +27,12 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.backend.BackendConnector;
+import org.eclipse.steady.patcheval.utils.PEConfiguration;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
 import org.eclipse.steady.shared.json.JacksonUtil;
 import org.eclipse.steady.shared.json.model.Bug;
 import org.eclipse.steady.shared.json.model.VulnerableDependency;
 import org.eclipse.steady.shared.util.VulasConfiguration;
-import org.eclispse.steady.patcheval.utils.PEConfiguration;
 
 /**
  * <p>PE_Run class.</p>
