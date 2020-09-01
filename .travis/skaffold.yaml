@@ -38,7 +38,7 @@ build:
         project: patch-lib-analyzer
         args:
         - -DskipTests=true
-        - -Djib.container.mainClass=com.sap.psr.vulas.patcheval2.Main
+        - -Djib.container.mainClass=org.eclipse.steady.patcheval.Main
 
 profiles:
   - name: prod

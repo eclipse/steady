@@ -27,19 +27,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.steady.cg.ReachabilityAnalyzer;
+import org.eclipse.steady.cg.soot.SootCallgraphConstructor;
+import org.eclipse.steady.cg.spi.CallgraphConstructorFactory;
+import org.eclipse.steady.cg.spi.ICallgraphConstructor;
+import org.eclipse.steady.core.util.CoreConfiguration;
+import org.eclipse.steady.goals.GoalContext;
+import org.eclipse.steady.java.JavaId;
+import org.eclipse.steady.shared.enums.PathSource;
+import org.eclipse.steady.shared.json.model.Application;
+import org.eclipse.steady.shared.json.model.ConstructId;
+import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.junit.Test;
-
-import com.sap.psr.vulas.cg.ReachabilityAnalyzer;
-import com.sap.psr.vulas.cg.soot.SootCallgraphConstructor;
-import com.sap.psr.vulas.cg.spi.CallgraphConstructorFactory;
-import com.sap.psr.vulas.cg.spi.ICallgraphConstructor;
-import com.sap.psr.vulas.core.util.CoreConfiguration;
-import com.sap.psr.vulas.goals.GoalContext;
-import com.sap.psr.vulas.java.JavaId;
-import com.sap.psr.vulas.shared.enums.PathSource;
-import com.sap.psr.vulas.shared.json.model.Application;
-import com.sap.psr.vulas.shared.json.model.ConstructId;
-import com.sap.psr.vulas.shared.util.VulasConfiguration;
 
 public class SootCallGraphTest {
 
@@ -95,8 +94,8 @@ public class SootCallGraphTest {
     try {
       ReachabilityAnalyzer.startAnalysis(ra, 600000);
     } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
+      assertTrue(false);
     }
   }
 
@@ -130,7 +129,7 @@ public class SootCallGraphTest {
     VulasConfiguration.getGlobal()
         .setProperty(
             "vulas.reach.soot.entrypointGenerator",
-            "com.sap.psr.vulas.cg.soot.CustomEntryPointCreator");
+            "org.eclipse.steady.cg.soot.CustomEntryPointCreator");
     runSootAnalysis();
   }
 }
