@@ -42,3 +42,11 @@ License: MIT
 Files: .gitattributes
 Copyright: 2015 Alexander Karatarakis
 License: MIT
+
+Files: lang-java/src/main/antlr4/org/eclipse/steady/java/antlr/JavaLexer.g4 lang-java/src/main/antlr4/org/eclipse/steady/java/antlr/JavaParser.g4
+Copyright: 2013 Terence Parr, Sam Harwell; 2017 Ivan Kochurkin (upgrade to Java 8)
+License: BSD-3-Clause
+
+Files: lang-python/src/main/antlr4/org/eclipse/steady/python/antlr/python3/Python3.g4 lang-python/src/main/antlr4/org/eclipse/steady/python/antlr/python335/Python335.g4
+Copyright: 2014 by Bart Kiers
+License: MIT
