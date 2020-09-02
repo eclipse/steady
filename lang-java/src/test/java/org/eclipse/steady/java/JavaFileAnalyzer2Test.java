@@ -557,22 +557,6 @@ public class JavaFileAnalyzer2Test {
   }
 
   /**
-   * See Jira VULAS-739
-   */
-  @Test
-  public void testSunClass() {
-    try {
-      final File file = new File("./src/test/resources/Collector.java");
-      final FileAnalyzer fa = (JavaFileAnalyzer2) FileAnalyzerFactory.buildFileAnalyzer(file);
-      final Map<ConstructId, Construct> constructs = fa.getConstructs();
-      assertEquals(2, constructs.size());
-    } catch (FileAnalysisException e) {
-      System.err.println(e.getMessage());
-      assertTrue(false);
-    }
-  }
-
-  /**
    * Tests whether the constructs extracted from a Java file correspond to the ones obtained from the compiled file.
    */
   @Test
