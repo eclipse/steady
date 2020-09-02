@@ -413,6 +413,7 @@
 			</plugin>
 			
 			<!-- Run with 'mvn -Dproject.name="Eclipse Steady" license:format -P gradle' -->
+			<!-- https://mycila.mathieu.photography/license-maven-plugin/reports/3.0/format-mojo.html -->
 			<plugin>
 			    <groupId>com.mycila</groupId>
 			    <artifactId>license-maven-plugin</artifactId>
