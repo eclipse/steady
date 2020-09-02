@@ -260,18 +260,16 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
     // (required to mark FP entries for the outer library)
     Boolean rebundled = (_vd.getDep().getLib().equals(_lib)) ? false : true;
     Boolean avForRebundled = null;
-    if (rebundled && _vd.getDep().getLib().getLibraryId() != null) {
+    if (rebundled) {
       avForRebundled =
-          this.affLibRepository.isBugLibIdAffected(
-              _vd.getBug().getBugId(), _vd.getDep().getLib().getLibraryId());
+          this.affLibRepository.isBugLibAffected(
+              _vd.getBug().getBugId(), _vd.getDep().getLib().getDigest());
+      if (avForRebundled == null && _vd.getDep().getLib().getLibraryId() != null) {
+        avForRebundled =
+            this.affLibRepository.isBugLibIdAffected(
+                _vd.getBug().getBugId(), _vd.getDep().getLib().getLibraryId());
+      }
     }
-    // TODO: the code below should be used to check whether an affectedLIbrary for the outer libs
-    // exists using the digest (in case the libid is null)
-    // it still needs to be tested
-    //		else if (rebundled){
-    //			avForRebundled = this.affLibRepository.isBugLibAffected(_vd.getBug().getBugId(),
-    // _vd.getDep().getLib().getDigest());
-    //		}
 
     if (avForRebundled != null) {
       _vd.setAffectedVersion((avForRebundled) ? 1 : 0);
