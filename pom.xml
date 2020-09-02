@@ -418,9 +418,12 @@
 			    <artifactId>license-maven-plugin</artifactId>
 			    <version>3.0</version>
 			    <configuration>
-			        <header>Apache-2-Header-Template.txt</header>
+                    <inlineHeader>SPDX-FileCopyrightText: 2018-2020 ${owner}
+
+SPDX-License-Identifier: Apache-2.0
+                    </inlineHeader>
 			        <properties>
-            			<owner>SAP SE or an SAP affiliate company</owner>
+            			<owner>SAP SE or an SAP affiliate company and Eclipse Steady contributors</owner>
                     </properties>
 			        <excludes>
 			            <exclude>**/.dockerignore</exclude>
