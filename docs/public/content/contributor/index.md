@@ -135,9 +135,9 @@ To keep the code readable and maintainable, please follow these rules, even if y
 **TODO: Complete guidelines, see [here](https://github.com/SAP/openui5/blob/master/docs/guidelines.md) for a comprehensive example**
 -->
 
-### Developer Certificate of Origin (DCO)
+### Eclipse Contributor Agreement (ECA)
 
-Due to legal reasons, contributors will be asked to accept a DCO before they submit the first pull request to this projects, this happens in an automated fashion during the submission process. SAP uses [the standard DCO text of the Linux Foundation](https://developercertificate.org/).
+Due to legal reasons, contributors will be asked to accept the ECA before they submit the first pull request to this projects, this happens in an automated fashion during the submission process. Please see the [Eclipse Contributor Agreement](https://www.eclipse.org/legal/ECA.php) for more information.
 
 ### Contribution Content Guidelines
 
