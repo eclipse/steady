@@ -65,6 +65,7 @@ nav:
     - Tutorial: vuln_db/tutorials/vuln_db_tutorial.md
     - Manual:
       - 'Intro': vuln_db/manuals/index.md
+      - 'KB Importer': vuln_db/manuals/kb_importer.md
       - 'Patch Analyzer' : vuln_db/manuals/patch_analyzer.md
       - 'Patch Lib Analyzer' : vuln_db/manuals/patch_lib_analyzer.md
       - 'Manual Assessment' : vuln_db/manuals/manual_assessment.md
