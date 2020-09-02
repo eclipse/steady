@@ -17,8 +17,6 @@
  */
 package org.eclipse.steady.kb.command;
 
-import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,7 +25,6 @@ import java.util.ServiceLoader;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.steady.kb.Main;
 import org.eclipse.steady.kb.exception.CommandLineParserException;
 import org.eclipse.steady.kb.exception.ValidationException;
 
@@ -120,18 +117,9 @@ public class CommandExecutor {
    * get directory absolute path if it is relative
    *
    * @param rootDir
-   * @return
+   * @return absolute path
    */
   private String getAbsolutePath(String rootDir) {
-    Path p = Paths.get(rootDir);
-    if (p.isAbsolute()) {
-      return rootDir;
-    } else {
-      String jarPath =
-          new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath())
-              .getParentFile()
-              .getAbsolutePath();
-      return (jarPath + File.separator + rootDir);
-    }
+    return Paths.get(rootDir).toAbsolutePath().normalize().toString();
   }
 }
