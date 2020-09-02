@@ -5,7 +5,7 @@
 </p>
 
 # Eclipse Steady (Incubator Project)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![Build Status](https://travis-ci.org/eclipse/steady.svg?branch=master)](https://travis-ci.org/eclipse/steady) [![Release](https://img.shields.io/github/release/eclipse/steady.svg)](https://github.com/eclipse/steady/releases) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4202/badge)](https://bestpractices.coreinfrastructure.org/projects/4202)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![Build Status](https://travis-ci.org/eclipse/steady.svg?branch=master)](https://travis-ci.org/eclipse/steady) [![Release](https://img.shields.io/github/release/eclipse/steady.svg)](https://github.com/eclipse/steady/releases) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4202/badge)](https://bestpractices.coreinfrastructure.org/projects/4202) [![REUSE status](https://api.reuse.software/badge/github.com/eclipse/steady)](https://api.reuse.software/info/github.com/eclipse/steady)
 
 **Discover, assess and mitigate known vulnerabilities in your Java and Python projects**
 
