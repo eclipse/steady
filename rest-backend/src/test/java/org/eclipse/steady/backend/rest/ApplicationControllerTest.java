@@ -937,7 +937,7 @@ public class ApplicationControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(contentTypeJson))
         .andExpect(jsonPath("$[0].vulnDepOrigin", is("BUNDLEDCC")))
-        .andExpect(jsonPath("$[0].affected", is(true)))
+        .andExpect(jsonPath("$[0].affected_version", is(1)))
         .andExpect(
             jsonPath("$[0].bundledLib.digest", is("3490508379D065FE3FCB80042B62F630F7588606")));
 
@@ -977,15 +977,16 @@ public class ApplicationControllerTest {
                     + "/"
                     + "0.0."
                     + APP_VERSION
-                    + "/vulndeps")
+                    + "/vulndeps?includeHistorical=true")
                 .header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
                 .header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
         .andExpect(status().isOk())
         .andExpect(content().contentType(contentTypeJson))
         .andExpect(jsonPath("$[0].vulnDepOrigin", is("BUNDLEDCC")))
-        .andExpect(jsonPath("$[0].affected", is(false)))
+        .andExpect(jsonPath("$[0].affected_version", is(0)))
         .andExpect(
             jsonPath("$[0].bundledLib.digest", is("3490508379D065FE3FCB80042B62F630F7588606")));
+    
   }
 
   @Test
