@@ -920,7 +920,7 @@ public class ApplicationControllerTest {
         assertTrue(bundledLibIds.size() == 1);
       else assertTrue(bundledLibIds.size() == 3);
     }
-    
+
     // Read vulndeps
     mockMvc
         .perform(
@@ -986,7 +986,6 @@ public class ApplicationControllerTest {
         .andExpect(jsonPath("$[0].affected_version", is(0)))
         .andExpect(
             jsonPath("$[0].bundledLib.digest", is("3490508379D065FE3FCB80042B62F630F7588606")));
-    
   }
 
   @Test
