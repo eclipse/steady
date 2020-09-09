@@ -71,3 +71,7 @@ Files: lang-java/src/main/antlr4/org/eclipse/steady/java/antlr/JavaLexer.g4 lang
 Files: lang-python/src/main/antlr4/org/eclipse/steady/python/antlr/python3/Python3.g4 lang-python/src/main/antlr4/org/eclipse/steady/python/antlr/python335/Python335.g4
  * Copyright: 2014 by Bart Kiers
  * License: MIT
+
+Files: frontend-bugs/src/main/webapp/d3.v3.min.js
+ * Copyright: 2020 Mike Bostock
+ * License: BSD-3-Clause
