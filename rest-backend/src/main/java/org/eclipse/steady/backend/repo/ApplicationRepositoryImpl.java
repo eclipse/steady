@@ -586,8 +586,9 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
             this.affLibRepository.isBugLibAffected(
                 b.getBugId(), depWithBundledLibId.getLib().getDigest());
         if (rebundlingAffected == null)
-          this.affLibRepository.isBugLibIdAffected(
-              b.getBugId(), depWithBundledLibId.getLib().getLibraryId());
+          rebundlingAffected =
+              this.affLibRepository.isBugLibIdAffected(
+                  b.getBugId(), depWithBundledLibId.getLib().getLibraryId());
         if (rebundlingAffected != null && !rebundlingAffected) vulndep.setAffectedVersion(0);
         else vulndep.setAffectedVersion(1);
         vulndep.setAffectedVersionConfirmed(1);
