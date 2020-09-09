@@ -219,7 +219,7 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>2.9.10.5</version>
+				<version>2.9.10.6</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
@@ -274,7 +274,14 @@
 				<artifactId>log4j-core</artifactId>
 				<version>2.13.3</version>
 			</dependency>
-
+			
+			<!--  Fix dependency on vulnerable versions of snakeyaml (CVE-2017-18640) -->
+			<dependency>
+			  <groupId>org.yaml</groupId>
+			  <artifactId>snakeyaml</artifactId>
+			  <version>1.26</version>
+			</dependency>
+			
 		</dependencies>
 	</dependencyManagement>
 
