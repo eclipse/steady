@@ -937,6 +937,7 @@ public class ApplicationControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(contentTypeJson))
         .andExpect(jsonPath("$[0].vulnDepOrigin", is("BUNDLEDCC")))
+        .andExpect(jsonPath("$[0].affected_version", is(1)))
         .andExpect(
             jsonPath("$[0].bundledLib.digest", is("3490508379D065FE3FCB80042B62F630F7588606")));
 
@@ -959,6 +960,32 @@ public class ApplicationControllerTest {
         .andExpect(content().contentType(contentTypeJson))
         .andExpect(jsonPath("$.constructList", hasSize(2)))
         .andExpect(jsonPath("$.constructList[0].inArchive", is(true)));
+
+    lib = new Library("3490508379D065FE3FCB80042B62F630F7588606");
+    AffectedLibrary afflib = new AffectedLibrary(bug, null, false, lib, null, null);
+    afflib.setSource(AffectedVersionSource.MANUAL);
+    AffectedLibrary[] afflibs = new AffectedLibrary[1];
+    afflibs[0] = afflib;
+    affLibRepository.customSave(bug, afflibs);
+
+    mockMvc
+        .perform(
+            get("/apps/"
+                    + APP_GROUP
+                    + "/"
+                    + APP_ARTIFACT
+                    + "/"
+                    + "0.0."
+                    + APP_VERSION
+                    + "/vulndeps?includeHistorical=true")
+                .header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
+                .header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentTypeJson))
+        .andExpect(jsonPath("$[0].vulnDepOrigin", is("BUNDLEDCC")))
+        .andExpect(jsonPath("$[0].affected_version", is(0)))
+        .andExpect(
+            jsonPath("$[0].bundledLib.digest", is("3490508379D065FE3FCB80042B62F630F7588606")));
   }
 
   @Test
