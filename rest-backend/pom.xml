@@ -473,9 +473,9 @@
 			    <artifactId>license-maven-plugin</artifactId>
 			    <version>3.0</version>
 			    <configuration>
-			        <header>Apache-2-Header-Template.txt</header>
+                    <header>copyright-license-header-template.txt</header>
 			        <properties>
-            			<owner>SAP SE or an SAP affiliate company</owner>
+            			<owner>SAP SE or an SAP affiliate company and Eclipse Steady contributors</owner>
                     </properties>
 			        <excludes>
 			            <exclude>**/.dockerignore</exclude>
