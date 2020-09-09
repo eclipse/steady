@@ -863,7 +863,7 @@ public class ApplicationControllerTest {
 
     Library outerFoo = new Library("outerFoo");
     outerFoo.setDigestAlgorithm(DigestAlgorithm.SHA1);
-    outerFoo.setLibraryId(new LibraryId("outerFoo","outerFoo","1"));
+    outerFoo.setLibraryId(new LibraryId("outerFoo", "outerFoo", "1"));
     List<LibraryId> bundled = new ArrayList<LibraryId>();
     bundled.add(libFoo);
     outerFoo.setBundledLibraryIds(bundled);
@@ -873,19 +873,13 @@ public class ApplicationControllerTest {
 
     // Dependencies
     final Set<Dependency> app_dependency = new HashSet<Dependency>();
-    app_dependency.add(
-        new Dependency(
-            app,
-            outerFoo,
-            Scope.COMPILE,
-            false,
-            "outerFoo.jar"));
+    app_dependency.add(new Dependency(app, outerFoo, Scope.COMPILE, false, "outerFoo.jar"));
     app.setSpace(spaceRepository.getDefaultSpace(null));
     app.setDependencies(app_dependency);
     Application a = this.appRepository.customSave(app);
-    
+
     // Read vulndeps
-   mockMvc
+    mockMvc
         .perform(
             get("/apps/"
                     + APP_GROUP
@@ -901,87 +895,81 @@ public class ApplicationControllerTest {
         .andExpect(content().contentType(contentTypeJson))
         .andExpect(jsonPath("$[0].vulnDepOrigin", is("BUNDLEDAFFLIBID")))
         .andExpect(jsonPath("$[0].affected_version", is(1)))
-        .andExpect(
-                jsonPath("$[0].bundledLibId.group", is("foo")));
+        .andExpect(jsonPath("$[0].bundledLibId.group", is("foo")));
 
     AffectedLibrary afflibOuter = new AffectedLibrary(bugNocc, null, false, outerFoo, null, null);
     afflibOuter.setSource(AffectedVersionSource.MANUAL);
     AffectedLibrary[] afflibsOuter = new AffectedLibrary[1];
     afflibsOuter[0] = afflibOuter;
     List<AffectedLibrary> managedOuterAffLib = affLibRepository.customSave(bugNocc, afflibsOuter);
- 
-    mockMvc
-    .perform(
-        get("/apps/"
-                + APP_GROUP
-                + "/"
-                + APP_ARTIFACT
-                + "/"
-                + "0.0."
-                + APP_VERSION
-                + "/vulndeps?includeHistorical=true")
-            .header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
-            .header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
-    .andExpect(status().isOk())
-    .andExpect(content().contentType(contentTypeJson))
-    .andExpect(jsonPath("$[0].vulnDepOrigin", is("BUNDLEDAFFLIBID")))
-    .andExpect(jsonPath("$[0].affected_version", is(0)))
-    .andExpect(
-            jsonPath("$[0].bundledLibId.group", is("foo")));
-    
-    assertTrue(this.affLibRepository.count()==2);
-    
-    this.affLibRepository.delete(managedOuterAffLib);
-    
-    assertTrue(this.affLibRepository.count()==1);
-    
 
     mockMvc
-    .perform(
-        get("/apps/"
-                + APP_GROUP
-                + "/"
-                + APP_ARTIFACT
-                + "/"
-                + "0.0."
-                + APP_VERSION
-                + "/vulndeps?includeHistorical=true")
-            .header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
-            .header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
-    .andExpect(status().isOk())
-    .andExpect(content().contentType(contentTypeJson))
-    .andExpect(jsonPath("$[0].vulnDepOrigin", is("BUNDLEDAFFLIBID")))
-    .andExpect(jsonPath("$[0].affected_version", is(1)))
-    .andExpect(
-            jsonPath("$[0].bundledLibId.group", is("foo")));
-    
-    AffectedLibrary afflibIdOuter = new AffectedLibrary(bugNocc, outerFoo.getLibraryId(), false, null, null, null);
+        .perform(
+            get("/apps/"
+                    + APP_GROUP
+                    + "/"
+                    + APP_ARTIFACT
+                    + "/"
+                    + "0.0."
+                    + APP_VERSION
+                    + "/vulndeps?includeHistorical=true")
+                .header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
+                .header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentTypeJson))
+        .andExpect(jsonPath("$[0].vulnDepOrigin", is("BUNDLEDAFFLIBID")))
+        .andExpect(jsonPath("$[0].affected_version", is(0)))
+        .andExpect(jsonPath("$[0].bundledLibId.group", is("foo")));
+
+    assertTrue(this.affLibRepository.count() == 2);
+
+    this.affLibRepository.delete(managedOuterAffLib);
+
+    assertTrue(this.affLibRepository.count() == 1);
+
+    mockMvc
+        .perform(
+            get("/apps/"
+                    + APP_GROUP
+                    + "/"
+                    + APP_ARTIFACT
+                    + "/"
+                    + "0.0."
+                    + APP_VERSION
+                    + "/vulndeps?includeHistorical=true")
+                .header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
+                .header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentTypeJson))
+        .andExpect(jsonPath("$[0].vulnDepOrigin", is("BUNDLEDAFFLIBID")))
+        .andExpect(jsonPath("$[0].affected_version", is(1)))
+        .andExpect(jsonPath("$[0].bundledLibId.group", is("foo")));
+
+    AffectedLibrary afflibIdOuter =
+        new AffectedLibrary(bugNocc, outerFoo.getLibraryId(), false, null, null, null);
     afflibIdOuter.setSource(AffectedVersionSource.MANUAL);
     AffectedLibrary[] afflibsIdOuter = new AffectedLibrary[1];
     afflibsIdOuter[0] = afflibIdOuter;
     affLibRepository.customSave(bugNocc, afflibsIdOuter);
- 
 
     mockMvc
-    .perform(
-        get("/apps/"
-                + APP_GROUP
-                + "/"
-                + APP_ARTIFACT
-                + "/"
-                + "0.0."
-                + APP_VERSION
-                + "/vulndeps?includeHistorical=true")
-            .header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
-            .header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
-    .andExpect(status().isOk())
-    .andExpect(content().contentType(contentTypeJson))
-    .andExpect(jsonPath("$[0].vulnDepOrigin", is("BUNDLEDAFFLIBID")))
-    .andExpect(jsonPath("$[0].affected_version", is(0)))
-    .andExpect(
-            jsonPath("$[0].bundledLibId.group", is("foo")));
+        .perform(
+            get("/apps/"
+                    + APP_GROUP
+                    + "/"
+                    + APP_ARTIFACT
+                    + "/"
+                    + "0.0."
+                    + APP_VERSION
+                    + "/vulndeps?includeHistorical=true")
+                .header(Constants.HTTP_TENANT_HEADER, TEST_DEFAULT_TENANT)
+                .header(Constants.HTTP_SPACE_HEADER, TEST_DEFAULT_SPACE))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentTypeJson))
+        .andExpect(jsonPath("$[0].vulnDepOrigin", is("BUNDLEDAFFLIBID")))
+        .andExpect(jsonPath("$[0].affected_version", is(0)))
+        .andExpect(jsonPath("$[0].bundledLibId.group", is("foo")));
   }
-  
 
   @Test
   public void testGetAppVulnerabilitiesForBundledLibs() throws Exception {
