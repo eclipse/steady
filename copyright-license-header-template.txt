@@ -13,5 +13,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-
-Copyright (c) ${project.inceptionYear} ${owner}. All rights reserved.
+SPDX-FileCopyrightText: Copyright (c) 2018-2020 ${owner}

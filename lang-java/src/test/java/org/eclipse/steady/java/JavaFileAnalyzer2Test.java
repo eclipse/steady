@@ -14,8 +14,7 @@
  * limitations under the License.
  *
  * SPDX-License-Identifier: Apache-2.0
- *
- * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
  */
 package org.eclipse.steady.java;
 
@@ -550,22 +549,6 @@ public class JavaFileAnalyzer2Test {
       final FileAnalyzer fa = (JavaFileAnalyzer2) FileAnalyzerFactory.buildFileAnalyzer(file);
       final Map<ConstructId, Construct> constructs = fa.getConstructs();
       assertEquals(13, constructs.size());
-    } catch (FileAnalysisException e) {
-      System.err.println(e.getMessage());
-      assertTrue(false);
-    }
-  }
-
-  /**
-   * See Jira VULAS-739
-   */
-  @Test
-  public void testSunClass() {
-    try {
-      final File file = new File("./src/test/resources/Collector.java");
-      final FileAnalyzer fa = (JavaFileAnalyzer2) FileAnalyzerFactory.buildFileAnalyzer(file);
-      final Map<ConstructId, Construct> constructs = fa.getConstructs();
-      assertEquals(2, constructs.size());
     } catch (FileAnalysisException e) {
       System.err.println(e.getMessage());
       assertTrue(false);
