@@ -33,7 +33,7 @@ The plugin for Maven can be used with or without adding a Vulas profile to the `
     - In case of aggregated, multi-module Maven projects with modules inheriting from their parent, it is sufficient to include the profile in the top-level (parent) `pom.xml`. If a module does not inherit from the parent, the profile has to be added to its POM file.
     - Also note that he profile contains a configuration for the maven-surefire-plugin. If you use this module already with specific settings in your default profile, you need to add those settings, e.g., the `<argLine>`, also to its configuration in the Vulas profile.
 
-- **Without Vulas profile**, the execution of goals requires the use of the plugin's fully qualified name, e.g., `mvn compile com.sap.research.security.vulas:plugin-maven:<latest>:app`. Moreover, the [analysis goal](Goals.md) _test_ cannot be executed (because mandatory Vulas settings cannot be passed to the maven-surefire-plugin). Additionally, you need to specify the following mandatory configuration settings. As described [here](Configuration.md), there are several ways of doing so, however, a file as follows is very common:
+- **Without Vulas profile**, the execution of goals requires the use of the plugin's fully qualified name, e.g., `mvn compile org.eclipse.steady:plugin-maven:<latest>:app`. Moreover, the [analysis goal](Goals.md) _test_ cannot be executed (because mandatory Vulas settings cannot be passed to the maven-surefire-plugin). Additionally, you need to specify the following mandatory configuration settings. As described [here](Configuration.md), there are several ways of doing so, however, a file as follows is very common:
 
 **vulas-custom.properties**
 

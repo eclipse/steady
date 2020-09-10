@@ -41,7 +41,7 @@ You may want to replace `localhost` with the host name of your vulas backend as 
                             <configuration>
                                 <artifactItems>
                                     <artifactItem>
-                                        <groupId>com.sap.research.security.vulas</groupId>
+                                        <groupId>org.eclipse.steady</groupId>
                                         <artifactId>lang-java</artifactId>
                                         <version>${vulas.version}</version>
                                         <type>jar</type>
@@ -50,7 +50,7 @@ You may want to replace `localhost` with the host name of your vulas backend as 
                                         <destFileName>vulas-core-latest-jar-with-dependencies.jar</destFileName>
                                     </artifactItem>
                                     <artifactItem>
-                                        <groupId>com.sap.research.security.vulas</groupId>
+                                        <groupId>org.eclipse.steady</groupId>
                                         <artifactId>lang-java</artifactId>
                                         <version>${vulas.version}</version>
                                         <type>jar</type>
@@ -118,7 +118,7 @@ You may want to replace `localhost` with the host name of your vulas backend as 
                 </plugin>
                 
                 <plugin>
-                    <groupId>com.sap.research.security.vulas</groupId>
+                    <groupId>org.eclipse.steady</groupId>
                     <artifactId>plugin-maven</artifactId>
                     <version>${vulas.version}</version>
                     <configuration>

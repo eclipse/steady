@@ -85,7 +85,7 @@ The plugin for Maven can be used with or without adding a `<profile>` section to
 
 * **With profile**, the execution of goals is more concise (readable), e.g., `mvn -Dvulas compile vulas:app`. A sample profile can be found [here](../../tutorials/java_maven/#setup), just copy&paste it into the `<profiles>` section of your `pom.xml`. In case of aggregated, multi-module Maven projects with modules inheriting from their parent, it is sufficient to include the profile in the top-level (parent) `pom.xml`. If a module does not inherit from the parent, the profile has to be added to its POM file. Once added, run `mvn -Dvulas versions:display-property-updates` every now and then to check whether there are new plugin versions available. If so, manually update the property `vulas.version` in the @@PROJECT_NAME@@ profile.
 
-* **Without profile**, the execution of goals requires the use of the plugin's fully qualified name, e.g., `mvn compile com.sap.research.security.vulas:plugin-maven:@@PROJECT_VERSION@@:app`. Moreover, you need to specify the following mandatory configuration settings. As described [here](#configuration), there are several ways of doing so, however, a file as follows is very common:
+* **Without profile**, the execution of goals requires the use of the plugin's fully qualified name, e.g., `mvn compile org.eclipse.steady:plugin-maven:@@PROJECT_VERSION@@:app`. Moreover, you need to specify the following mandatory configuration settings. As described [here](#configuration), there are several ways of doing so, however, a file as follows is very common:
 
     **vulas-custom.properties**
 
@@ -131,7 +131,7 @@ The plugin for Gradle requires changes of the following files:
         }
 
         dependencies {
-            classpath('com.sap.research.security.vulas:plugin-gradle:@@PROJECT_VERSION@@') { changing = true }
+            classpath('org.eclipse.steady:plugin-gradle:@@PROJECT_VERSION@@') { changing = true }
         }
     }
 
