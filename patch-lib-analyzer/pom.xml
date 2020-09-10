@@ -84,6 +84,7 @@
 						</manifest>
 						<manifestEntries>
 							<Main-Class>org.eclipse.steady.patcheval.Main</Main-Class>
+							<Multi-Release>true</Multi-Release>
 						</manifestEntries>
 						<addMavenDescriptor>false</addMavenDescriptor>
 					</archive>

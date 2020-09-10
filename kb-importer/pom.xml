@@ -109,7 +109,7 @@
 									<manifestEntries>
 										<Main-Class>org.eclipse.steady.kb.Main</Main-Class>
 										<Implementation-Version>${project.version}</Implementation-Version>
-										>
+									        <Multi-Release>true</Multi-Release>
 									</manifestEntries>
 								</transformer>
 							</transformers>
