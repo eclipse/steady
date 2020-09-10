@@ -49,8 +49,7 @@ public class MvnPluginInstr extends AbstractVulasMojo {
   @Parameter(property = "plugin.artifactMap", required = true, readonly = true)
   private Map<String, Artifact> pluginArtifactMap;
 
-  private static final String VULAS_AGENT_ARTIFACT_NAME =
-      "org.eclipse.steady:lang-java";
+  private static final String VULAS_AGENT_ARTIFACT_NAME = "org.eclipse.steady:lang-java";
   private static final String VULAS_AGENT_ARTIFACT_CLASSIFIER = "jar-with-dependencies";
 
   /** {@inheritDoc} */
