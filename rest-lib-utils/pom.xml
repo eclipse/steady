@@ -40,7 +40,7 @@
 		Provides RESTful APIs to discover, analyze and difference Maven artifacts, Java archives
 		as well as Java source and byte code.
 	</description>
-	<url>https://sap.github.io/vulnerability-assessment-tool/</url>
+	<url>https://eclipse.github.io/steady</url>
 	<inceptionYear>2018</inceptionYear>
 
 	<properties>

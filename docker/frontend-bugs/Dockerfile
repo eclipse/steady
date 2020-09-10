@@ -1,6 +1,6 @@
 FROM jetty:alpine
 
-LABEL maintainer="Vulas vulas-dev@listserv.sap.com"
+LABEL maintainer="steady-dev@eclipse.org"
 
 ARG VULAS_RELEASE
 

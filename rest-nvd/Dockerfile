@@ -19,7 +19,7 @@
 
 FROM tiangolo/meinheld-gunicorn-flask:python3.7
 
-LABEL maintainer="Vulas vulas-dev@listserv.sap.com"
+LABEL maintainer="steady-dev@eclipse.org"
 
 WORKDIR /app
 
