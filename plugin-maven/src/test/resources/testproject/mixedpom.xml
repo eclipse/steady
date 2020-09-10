@@ -50,7 +50,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>com.sap.research.security.vulas</groupId>
+                                    <groupId>org.eclipse.steady</groupId>
                                     <artifactId>lang-java</artifactId>
                                     <version>${vulas.version}</version>
                                     <type>jar</type>
@@ -59,7 +59,7 @@
                                     <destFileName>vulas-core-latest-jar-with-dependencies.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>com.sap.research.security.vulas</groupId>
+                                    <groupId>org.eclipse.steady</groupId>
                                     <artifactId>lang-java</artifactId>
                                     <version>${vulas.version}</version>
                                     <type>jar</type>
@@ -103,7 +103,7 @@
 
 
             <plugin>
-                <groupId>com.sap.research.security.vulas</groupId>
+                <groupId>org.eclipse.steady</groupId>
                 <artifactId>plugin-maven</artifactId>
                 <version>3.0.10-SNAPSHOT</version>
                 <executions>

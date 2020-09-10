@@ -24,7 +24,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.sap.research.security.vulas</groupId>
+		<groupId>org.eclipse.steady</groupId>
 		<artifactId>root</artifactId>
 		<version>3.1.14-SNAPSHOT</version>
 	</parent>
@@ -37,7 +37,7 @@
 	<dependencies>
 		<!-- Only basic lang classes should be used at compile time -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
@@ -45,7 +45,7 @@
 		
 		<!-- Runtime dependencies, to avoid compile time dependency on lang-specific classes -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang-java-reach</artifactId>
 			<version>${project.version}</version>
 			<scope>runtime</scope>
@@ -53,20 +53,20 @@
 
         <!-- Frameworks for call graph construction -->
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java-reach-wala</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java-reach-soot</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
 
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang-python</artifactId>
 			<version>${project.version}</version>
 			<scope>runtime</scope>
@@ -74,7 +74,7 @@
 		
 		<!-- Test dependencies -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>shared</artifactId>
 			<classifier>tests</classifier> <!-- type=test-jar does not seem to work here, use classifier instead -->
 			<version>${project.version}</version>

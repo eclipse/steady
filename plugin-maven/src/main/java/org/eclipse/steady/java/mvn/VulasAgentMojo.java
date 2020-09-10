@@ -65,7 +65,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
   private static final String ECLIPSE_TEST_PLUGIN = "eclipse-test-plugin";
 
   private static final String VULAS_AGENT_ARTIFACT_NAME =
-      "com.sap.research.security.vulas:lang-java";
+      "org.eclipse.steady:lang-java";
   private static final String VULAS_AGENT_ARTIFACT_CLASSIFIER = "jar-with-dependencies";
 
   /**

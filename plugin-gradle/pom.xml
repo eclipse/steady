@@ -23,7 +23,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.sap.research.security.vulas</groupId>
+        <groupId>org.eclipse.steady</groupId>
         <artifactId>root</artifactId>
         <version>3.1.14-SNAPSHOT</version>
     </parent>
@@ -38,25 +38,25 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java-reach</artifactId>
             <version>${project.version}</version>
         </dependency>
         
         <!-- Frameworks for call graph construction -->
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java-reach-wala</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java-reach-soot</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>

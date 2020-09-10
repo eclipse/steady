@@ -48,7 +48,7 @@
             </plugin>
 
             <plugin>
-                <groupId>com.sap.research.security.vulas</groupId>
+                <groupId>org.eclipse.steady</groupId>
                 <artifactId>plugin-maven</artifactId>
                 <version>3.0.10-SNAPSHOT</version>
                 <executions>

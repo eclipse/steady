@@ -30,7 +30,7 @@
 		<relativePath />
 	</parent>
 
-	<groupId>com.sap.research.security.vulas</groupId>
+	<groupId>org.eclipse.steady</groupId>
 	<artifactId>rest-backend</artifactId>
 	<version>3.1.14-SNAPSHOT</version>
 	<packaging>${packaging.type}</packaging>
@@ -66,7 +66,7 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>shared</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -148,7 +148,7 @@
 
 		<!-- Test dependencies -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>shared</artifactId>
 			<classifier>tests</classifier> <!-- type=test-jar does not seem to work here, use classifier instead -->
 			<version>${project.version}</version>

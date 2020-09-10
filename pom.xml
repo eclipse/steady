@@ -23,7 +23,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.sap.research.security.vulas</groupId>
+	<groupId>org.eclipse.steady</groupId>
 	<artifactId>root</artifactId>
 	<version>3.1.14-SNAPSHOT</version>
 	<packaging>pom</packaging>
