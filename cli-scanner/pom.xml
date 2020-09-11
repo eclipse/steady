@@ -147,10 +147,11 @@
 									<manifestEntries>
 										<Main-Class>org.eclipse.steady.cli.VulasCli</Main-Class>
 										<Specification-Title>${project.name}</Specification-Title>
-			                            <Specification-Version>${project.version}</Specification-Version>
-			                            <Implementation-Title>${project.name}</Implementation-Title>
-			                            <Implementation-Version>${project.version}</Implementation-Version>
-			                            <Implementation-Vendor-Id>${project.groupId}</Implementation-Vendor-Id>
+										<Specification-Version>${project.version}</Specification-Version>
+										<Implementation-Title>${project.name}</Implementation-Title>
+										<Implementation-Version>${project.version}</Implementation-Version>
+			                            				<Implementation-Vendor-Id>${project.groupId}</Implementation-Vendor-Id>
+										<Multi-Release>true</Multi-Release>
 									</manifestEntries>
 								</transformer>
 							</transformers>
