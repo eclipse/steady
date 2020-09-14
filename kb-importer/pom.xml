@@ -67,6 +67,12 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.sap.research.security.vulas</groupId>
+			<artifactId>lang-python</artifactId>
+			<version>${project.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.github.package-url</groupId>
 			<artifactId>packageurl-java</artifactId>
 			<version>1.1.1</version>
