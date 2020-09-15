@@ -305,14 +305,21 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
                             ProgrammingLanguage.PY);
                 PythonConstructDigest pythonConstructDigest =
                     (PythonConstructDigest)
-                        JacksonUtil.asObject(ast_lid, custom_deserializers, PythonConstructDigest.class);
+                        JacksonUtil.asObject(
+                            ast_lid, custom_deserializers, PythonConstructDigest.class);
                 if (pythonConstructDigest != null) {
                   PythonConstructDigest vulnConstructDigest =
                       (PythonConstructDigest)
-                          JacksonUtil.asObject(mcCC.getBuggyBody(),custom_deserializers, PythonConstructDigest.class);
+                          JacksonUtil.asObject(
+                              mcCC.getBuggyBody(),
+                              custom_deserializers,
+                              PythonConstructDigest.class);
                   PythonConstructDigest fixedConstructDigest =
                       (PythonConstructDigest)
-                          JacksonUtil.asObject(mcCC.getFixedBody(),custom_deserializers, PythonConstructDigest.class);
+                          JacksonUtil.asObject(
+                              mcCC.getFixedBody(),
+                              custom_deserializers,
+                              PythonConstructDigest.class);
                   if (pythonConstructDigest.getDigest() != null
                       && vulnConstructDigest.getDigest() != null
                       && pythonConstructDigest

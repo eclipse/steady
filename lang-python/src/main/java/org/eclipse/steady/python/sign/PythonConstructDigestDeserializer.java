@@ -1,8 +1,6 @@
 package org.eclipse.steady.python.sign;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map.Entry;
 
 import org.eclipse.steady.python.sign.PythonConstructDigest.ComputedFromType;
 import org.eclipse.steady.shared.enums.DigestAlgorithm;
@@ -40,7 +38,8 @@ public class PythonConstructDigestDeserializer extends StdDeserializer<PythonCon
     ComputedFromType computedFromType =
         ComputedFromType.valueOf(json_root.findValue("computedFromType").asText());
     String digest = json_root.findValue("digest").asText();
-    DigestAlgorithm digestAlgorithm = DigestAlgorithm.fromString(json_root.findValue("digestAlgorithm").asText());
+    DigestAlgorithm digestAlgorithm =
+        DigestAlgorithm.fromString(json_root.findValue("digestAlgorithm").asText());
 
     PythonConstructDigest pythonConstructDigest =
         new PythonConstructDigest(digest, digestAlgorithm);

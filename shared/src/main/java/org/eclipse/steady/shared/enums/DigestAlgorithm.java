@@ -49,11 +49,11 @@ public enum DigestAlgorithm {
     else if (this.value == 30) return "MD5";
     else throw new IllegalArgumentException("[" + this.value + "] is not a valid digest algorithm");
   }
-  
+
   public static DigestAlgorithm fromString(String _s) {
-	  if(_s.equals("SHA1")) return DigestAlgorithm.SHA1;
-	  if(_s.equals("SHA256")) return DigestAlgorithm.SHA256;
-	  if(_s.equals("MD5")) return DigestAlgorithm.MD5;
-	  else throw new IllegalArgumentException("[" + _s + "] is not a valid digest algorithm");
+    if (_s.equals("SHA1")) return DigestAlgorithm.SHA1;
+    if (_s.equals("SHA256")) return DigestAlgorithm.SHA256;
+    if (_s.equals("MD5")) return DigestAlgorithm.MD5;
+    else throw new IllegalArgumentException("[" + _s + "] is not a valid digest algorithm");
   }
 }
