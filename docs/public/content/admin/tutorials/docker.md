@@ -22,10 +22,10 @@ In this tutorial you will be guided through the necessary steps to set-up the @@
 
 ### Setup
 
-Clone locally the `vulnerability-assessment-tool` repository
+Clone locally the `Steady` repository
 
 ```sh
-git clone https://github.com/SAP/vulnerability-assessment-tool
+git clone https://github.com/eclipse/steady.git
 ```
 
 Customize the file `docker/.env` to match your needs, make sure you set the version you want to run in VULAS_RELEASE.

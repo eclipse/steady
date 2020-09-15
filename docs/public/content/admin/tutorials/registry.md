@@ -23,7 +23,7 @@ vulnerability-assessment-tool-frontend-apps      @@PROJECT_VERSION@@ 191ce235c42
 
 ## Push the images to a registry
 
-A script was created to push the images to a local Docker registry running inside your organization. [This script](https://github.com/SAP/vulnerability-assessment-tool/blob/master/docker/push-images.sh) simply tags the images and pushes them towards the registry.
+A script was created to push the images to a local Docker registry running inside your organization. [This script](https://github.com/eclipse/steady/blob/master/docker/push-images.sh) simply tags the images and pushes them towards the registry.
 
 To use the script you will need:
 
