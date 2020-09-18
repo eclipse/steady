@@ -56,7 +56,7 @@ public class PythonConstructDigestSerializer extends StdSerializer<PythonConstru
     jgen.writeStringField("computedFrom", value.getComputedFrom());
     jgen.writeStringField("computedFromType", value.getComputedFromType().toString());
     jgen.writeStringField("digest", value.getDigest());
-    jgen.writeStringField("digestAlgorihtm", value.getDigestAlgorithm().toString());
+    jgen.writeStringField("digestAlgorithm", value.getDigestAlgorithm().toString());
     jgen.writeEndObject();
   }
 }

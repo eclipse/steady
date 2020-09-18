@@ -31,6 +31,8 @@ import org.eclipse.steady.java.sign.gson.ASTSignatureChangeDeserializer;
 import org.eclipse.steady.patcheval.representation.ArtifactResult2;
 import org.eclipse.steady.patcheval.representation.ConstructPathAssessment2;
 import org.eclipse.steady.patcheval.utils.CSVHelper2;
+import org.eclipse.steady.python.sign.PythonConstructDigest;
+import org.eclipse.steady.python.sign.PythonConstructDigestDeserializer;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
 import org.eclipse.steady.shared.json.JacksonUtil;
 import org.eclipse.steady.shared.json.model.LibraryId;
@@ -60,6 +62,7 @@ public class ByteCodeComparator implements Runnable {
     this.ar = ar;
     this.bugId = _b;
     custom_deserializers.put(ASTSignatureChange.class, new ASTSignatureChangeDeserializer());
+    custom_deserializers.put(PythonConstructDigest.class, new PythonConstructDigestDeserializer());
   }
 
   /** {@inheritDoc} */
