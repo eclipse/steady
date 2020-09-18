@@ -46,9 +46,9 @@ Eclipse Steady has a distributed architecture composed of a couple of Spring Boo
 To build/test the entire project, the following tools are needed:
 
 - **[JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/index.html)**
-- **[Maven 3.3+](https://maven.apache.org/download.cgi)** for the analysis of Maven projects using [`plugin-maven`](https://github.com/SAP/vulnerability-assessment-tool/tree/master/plugin-maven)
-- **[Python 3](https://www.python.org/downloads/)** as well as the packages `pip`, `virtualenv` and `setuptools` (`pip install -r requirements.txt`) for the analysis of Python applications using [`cli-scanner`](https://github.com/SAP/vulnerability-assessment-tool/tree/master/cli-scanner)
-- **[Gradle 4](https://gradle.org/install/)** for the analysis of Gradle projects using [`plugin-gradle`](https://github.com/SAP/vulnerability-assessment-tool/tree/master/plugin-gradle).
+- **[Maven 3.3+](https://maven.apache.org/download.cgi)** for the analysis of Maven projects using [`plugin-maven`](https://github.com/eclipse/steady/tree/master/plugin-maven)
+- **[Python 3](https://www.python.org/downloads/)** as well as the packages `pip`, `virtualenv` and `setuptools` (`pip install -r requirements.txt`) for the analysis of Python applications using [`cli-scanner`](https://github.com/eclipse/steady/tree/master/cli-scanner)
+- **[Gradle 4](https://gradle.org/install/)** for the analysis of Gradle projects using [`plugin-gradle`](https://github.com/eclipse/steady/tree/master/plugin-gradle).
 
 ## Build and Test
 

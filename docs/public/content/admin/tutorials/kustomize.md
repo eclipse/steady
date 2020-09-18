@@ -17,8 +17,8 @@ In this tutorial you will be guided through the necessary steps to set-up the @@
 Clone locally `vulnerability-assessment-tool` repository and change the directory to Kustomize's folder
 
 ```sh
-git clone https://github.com/SAP/vulnerability-assessment-tool
-cd vulnerability-assessment-tool/kubernetes/kustomize
+git clone https://github.com/eclipse/steady.git
+cd steady/kubernetes/kustomize
 ```
 
 Make a copy of the files in `kubernetes/kustomize/secrets` and edit them to match your needs.

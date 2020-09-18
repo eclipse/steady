@@ -26,8 +26,8 @@ This repository contains three charts:
 Clone locally `vulnerability-assessment-tool` repository and change the directory to the Helm chart's folder
 
 ```sh
-git clone https://github.com/SAP/vulnerability-assessment-tool
-cd vulnerability-assessment-tool/kubernetes/helm
+git clone https://github.com/eclipse/steady.git
+cd steady/kubernetes/helm
 ```
 
 Modify the `values.yaml` files and edit them to match your needs.
@@ -53,7 +53,7 @@ helm install vulnerability-assessment-tool-core/ --name ReleaseName
 helm install vulnerability-assessment-tool-core ReleaseName
 ```
 
-The above command will create a `Namespace` called `vulnerability-assessment-tool-core` (which can be specified in the [vulnerability-assessment-tool-core/values.yaml](https://github.com/SAP/vulnerability-assessment-tool/blob/master/kubernetes/helm/vulnerability-assessment-tool-core/values.yaml)) and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command `kubectl get pods -n vulnerability-assessment-tool-core`. The deployment will request a couple `PersistentVolumeClaims` which could need some time to be created depending on the cloud provider you are running on.
+The above command will create a `Namespace` called `vulnerability-assessment-tool-core` (which can be specified in the [vulnerability-assessment-tool-core/values.yaml](https://github.com/eclipse/steady/blob/master/kubernetes/helm/vulnerability-assessment-tool-core/values.yaml)) and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command `kubectl get pods -n vulnerability-assessment-tool-core`. The deployment will request a couple `PersistentVolumeClaims` which could need some time to be created depending on the cloud provider you are running on.
 
 
 ### Vulnerability-assessment-tool-monitoring chart
@@ -66,7 +66,7 @@ helm install vulnerability-assessment-tool-monitoring/ --name ReleaseName
 helm install vulnerability-assessment-tool-monitoring ReleaseName
 ```
 
-The above command will create a `Namespace` called `vulnerability-assessment-tool-monitoring` (which can be specified in the [vulnerability-assessment-tool-monitoring/values.yaml](https://github.com/SAP/vulnerability-assessment-tool/blob/master/kubernetes/helm/vulnerability-assessment-tool-monitoring/values.yaml)) and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command `kubectl get pods -n vulnerability-assessment-tool-monitoring`. The deployment will request a couple `PersistentVolumeClaims` which could need some time to be created depending on the cloud provider you are running on.
+The above command will create a `Namespace` called `vulnerability-assessment-tool-monitoring` (which can be specified in the [vulnerability-assessment-tool-monitoring/values.yaml](https://github.com/eclipse/steady/blob/master/kubernetes/helm/vulnerability-assessment-tool-monitoring/values.yaml)) and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command `kubectl get pods -n vulnerability-assessment-tool-monitoring`. The deployment will request a couple `PersistentVolumeClaims` which could need some time to be created depending on the cloud provider you are running on.
 
 !!! info "Monitoring scope"
 
@@ -82,7 +82,7 @@ helm install vulnerability-assessment-tool-admin/ --name ReleaseName
 helm install vulnerability-assessment-tool-admin ReleaseName
 ```
 
-The above command will create a `Namespace` called `vulnerability-assessment-tool-admin` (which can be specified in the [vulnerability-assessment-tool-admin/values.yaml](https://github.com/SAP/vulnerability-assessment-tool/blob/master/kubernetes/helm/vulnerability-assessment-tool-admin/values.yaml)) and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command `kubectl get pods -n vulnerability-assessment-tool-admin`. The deployment will request a `LoadBalancer` which could need some time to be created depending on the cloud provider you are running on.
+The above command will create a `Namespace` called `vulnerability-assessment-tool-admin` (which can be specified in the [vulnerability-assessment-tool-admin/values.yaml](https://github.com/eclipse/steady/blob/master/kubernetes/helm/vulnerability-assessment-tool-admin/values.yaml)) and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command `kubectl get pods -n vulnerability-assessment-tool-admin`. The deployment will request a `LoadBalancer` which could need some time to be created depending on the cloud provider you are running on.
 
 !!! warning "Reaching @@PROJECT_NAME@@ from the Internet"
 
