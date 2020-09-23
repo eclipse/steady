@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:11-jre-slim
 
 LABEL maintainer="Vulas vulas-dev@listserv.sap.com"
 
