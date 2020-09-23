@@ -10,6 +10,6 @@ An up-to-date list of all vulnerabilities currently comprised in the database ca
 
 Detailed information for a given vulnerability can be obtained using the following link, whereby `<foo>` has to be replaced by the vulnerability identifier:  `@@ADDRESS@@/backend/bugs/<foo>`
 
-The [Patch Analyzer](../../vuln_db/manuals/patch_analyzer/) module can be used to add vulnerabilities to the knowledge base.
+The [Patch Analyzer](../../vuln_db/manuals/patch_analyzer/) and [KB Importer](../../vuln_db/manuals/kb_importer/)  module can be used to add vulnerabilities to the knowledge base.
 
 In the current implementation, the vulnerability detection is based on the containment of the fully-qualified name of a construct changed to fix a vulnerability in a library. The information whether the library contains the vulnerable or fixed version of the construct is computed asynchronously by the [Patch Lib Analyzer](../../vuln_db/manuals/patch_lib_analyzer/).
