@@ -40,7 +40,7 @@
     
     
       
-        <title>Build JAVA archives/Docker images - Eclipse Steady 3.1.13 (Incubator Project)</title>
+        <title>Build JAVA archives/Docker images - Eclipse Steady 3.1.14 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.13 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.13 (Incubator Project)
+              Eclipse Steady 3.1.14 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.13 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.13 (Incubator Project)
+    Eclipse Steady 3.1.14 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1066,6 +1066,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../../vuln_db/manuals/kb_importer/" title="KB Importer" class="md-nav__link">
+      KB Importer
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../../vuln_db/manuals/patch_analyzer/" title="Patch Analyzer" class="md-nav__link">
       Patch Analyzer
     </a>
@@ -1219,7 +1231,7 @@
 <h2 id="customization">Customization<a class="headerlink" href="#customization" title="Permanent link">&para;</a></h2>
 <p>All the following commands are supposed to be executed from the root folder of the project.</p>
 <p>If you want to build images specific to a version you can checkout a stable version of Vulas. Usually the <code>master</code> branch holds a <code>-SNAPSHOT</code> version.</p>
-<div class="codehilite"><pre><span></span>git checkout tags/3.1.13
+<div class="codehilite"><pre><span></span>git checkout tags/3.1.14
 </pre></div>
 
 <p>Make a copy of the sample configuration:</p>
@@ -1232,13 +1244,13 @@
 </blockquote>
 <h2 id="generate-java-archives">Generate JAVA archives<a class="headerlink" href="#generate-java-archives" title="Permanent link">&para;</a></h2>
 <p>At this point, you are ready to build the JAR/WAR artifacts with the following command:</p>
-<div class="codehilite"><pre><span></span>docker build --tag vulnerability-assessment-tool-generator:3.1.13 -f docker/Dockerfile .
-docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span>-DskipTests vulnerability-assessment-tool-generator:3.1.13
+<div class="codehilite"><pre><span></span>docker build --tag vulnerability-assessment-tool-generator:3.1.14 -f docker/Dockerfile .
+docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span>-DskipTests vulnerability-assessment-tool-generator:3.1.14
 </pre></div>
 
 <blockquote>
 <p>If the command above fails, add <code>-DreuseForks=False</code> flag to <code>mvn_flags</code>. As shown in the example below.</p>
-<div class="codehilite"><pre><span></span>docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span><span class="s1">&#39;-DskipTests -DreuseForks=False&#39;</span> vulnerability-assessment-tool-generator:3.1.13
+<div class="codehilite"><pre><span></span>docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span><span class="s1">&#39;-DskipTests -DreuseForks=False&#39;</span> vulnerability-assessment-tool-generator:3.1.14
 </pre></div>
 
 <p>In case you are running behind a proxy you need to configure it in the <code>--build-arg</code> arguments. Check the <a href="https://docs.docker.com/engine/reference/builder/#predefined-args">predefined <code>ARG</code>s</a> documentation to know more.</p>
