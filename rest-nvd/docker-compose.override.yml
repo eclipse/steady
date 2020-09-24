@@ -17,7 +17,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
 #
 
-version: "2"
+version: "2.4"
 
 services:
  rest-nvd:
