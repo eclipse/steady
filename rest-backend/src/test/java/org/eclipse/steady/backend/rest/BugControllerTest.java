@@ -78,6 +78,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -681,6 +682,56 @@ public class BugControllerTest {
         .andExpect(jsonPath("$.length()", is(2)));
   }
 
+  
+  @Test
+  public void testGetResolvedAffectedLibrary() throws Exception {
+    final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
+    this.bugRepository.customSave(bug, true);
+
+    LibraryId lid1 = new LibraryId("com.foo", "bar", "1.0");
+    libIdRepository.save(lid1);
+
+    LibraryId lid2 = new LibraryId("com.foo", "bar", "1.0-copy");
+    libIdRepository.save(lid2);
+
+    AffectedLibrary afflib1 =
+        new AffectedLibrary(
+            bug,
+            lid1,
+            true,
+            null,
+            null,
+            null);
+    afflib1.setSource(AffectedVersionSource.AST_EQUALITY);
+
+    AffectedLibrary afflib2 = new AffectedLibrary(bug, lid2, true, null, null, null);
+    afflib2.setSource(AffectedVersionSource.MANUAL);
+
+    AffectedLibrary afflib2_ast = new AffectedLibrary(bug, lid2, false, null, null, null);
+    afflib2_ast.setSource(AffectedVersionSource.AST_EQUALITY);
+    
+    AffectedLibrary[] afflibs = new AffectedLibrary[3];
+    afflibs[0] = afflib1;
+    afflibs[1] = afflib2;
+    afflibs[2] = afflib2_ast;
+    afflibRepository.customSave(bug, afflibs);
+
+    final MockHttpServletRequestBuilder get_builder =
+        get("/bugs/" + bug.getBugId() + "/affectedLibIds?resolved=true");
+    mockMvc
+        .perform(get_builder)
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType))
+        .andExpect(jsonPath("$.length()", is(2)));
+
+    mockMvc
+        .perform(get("/bugs/" + bug.getBugId() + "/affectedLibIds"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType))
+        .andExpect(jsonPath("$.length()", is(3)));
+  }
+
+  
   /*@Test
   public void postSingleBug() throws Exception {
   	//https://shdhumale.wordpress.com/2011/07/07/code-to-compress-and-decompress-json-object/

@@ -409,7 +409,7 @@ public class BugController {
   }
 
   /**
-   * Creates a set of {@link AffectedLibrary}s for the given {@link Bug} and {@link AffectedVersionSource}.
+   * Creates a set of {@link AffectedLibrary}s for the given {@link Bug} and {@link AffectedVersionSource}. If the resolved flag is true, the source flag is ignored and for each {@link LibraryId} only the {@link AffectedLibrary} with the highest priority is returned.
    * Note that {@link AffectedLibrary}s cannot be created, modified or deleted individually, but always as bulk for a given {@link AffectedVersionSource}.
    *
    * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
@@ -423,6 +423,7 @@ public class BugController {
   @JsonView(Views.BugAffLibs.class)
   public ResponseEntity<List<AffectedLibrary>> getAllAffectedLibraries(
       @PathVariable String bugid,
+      @RequestParam(value = "resolved", required = false, defaultValue = "false") Boolean resolved,
       @RequestParam(value = "source", required = false) AffectedVersionSource source,
       @RequestParam(value = "onlyWellKnown", required = false, defaultValue = "false")
           Boolean onlyWellknown) {
@@ -432,8 +433,12 @@ public class BugController {
     } catch (EntityNotFoundException e) {
       return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.NOT_FOUND);
     }
-    return new ResponseEntity<List<AffectedLibrary>>(
-        this.afflibRepository.getAffectedLibraries(bug, source, onlyWellknown), HttpStatus.OK);
+    if(!resolved)
+    	return new ResponseEntity<List<AffectedLibrary>>(
+    			this.afflibRepository.getAffectedLibraries(bug, source, onlyWellknown), HttpStatus.OK);
+    else
+    	return new ResponseEntity<List<AffectedLibrary>>(
+    			this.afflibRepository.getResolvedAffectedLibraries(bug, onlyWellknown), HttpStatus.OK);
   }
 
   /**
