@@ -200,7 +200,7 @@ public class PythonFileAnalyzer implements FileAnalyzer {
 
 	/**
 	 * Reads the input stream line by line in order to decide which {@link FileAnalyzer} to take.
-	 * Defaults to {@link PythonAnalyzer335}.
+	 * Defaults to {@link Python335FileAnalyzer}.
 	 *
 	 * @param _is a {@link java.io.InputStream} object.
 	 * @return a {@link com.sap.psr.vulas.FileAnalyzer} object.

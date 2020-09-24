@@ -33,7 +33,9 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  * To that end, it uses a couple of blacklists and whitelists read from the configuration.
  * Moreover, it maintains statistics to report on the overall number of classes and constructs instrumented.
  *
- * @see {@link DynamicTransformer}, {@link JarAnalyzer} and {@link WarAnalyzer}.
+ * @see DynamicTransformer
+ * @see JarAnalyzer
+ * @see WarAnalyzer
  */
 public class InstrumentationControl {
 

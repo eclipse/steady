@@ -30,7 +30,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  * There exist different types of goals, e.g., {@link GoalType#CLEAN} or {@link GoalType#A2C}.
  *
  * Goal executions can be started and stopped manually using the methods {@link AbstractGoal#start()},
- * {@link AbstractGoal#stop()}, {@link AbstractGoal#stop(Exception)} and {@link AbstractGoal#upload()}.
+ * {@link AbstractGoal#stop()}, {@link AbstractGoal#stop(Exception)} and {@link AbstractGoal#upload(boolean)}.
  *
  * Goal executions can also be executed automatically using the methods
  * {@link AbstractGoal#executeSync()} or {@link AbstractGoal#executeAsync()}, which results in the sequential

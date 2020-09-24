@@ -60,7 +60,7 @@ import com.sap.psr.vulas.sign.SignatureChange;
  *		 -  fUniqueName : String  //same information as fValue above
  *		 -  fType : EntityType    //same information ast fLabel above
  *		 -  fModifiers : int	 // this is always zero (Not sure if i should have it in the json object)
- *		 -  fAssociatedEntities : List<SourceCodeEntity>
+ *		 -  fAssociatedEntities : List&lt;SourceCodeEntity&gt;
  *		 -  SourceRange fRange : SourceRange
  *				- end : int
  *				- start : int
@@ -79,7 +79,6 @@ import com.sap.psr.vulas.sign.SignatureChange;
  *		private SourceCodeEntity r
  *	}
  *
- * @return JSON representation of the diff between two ASTs
  *
  *  A Source code change has this JSON object format
  *  {

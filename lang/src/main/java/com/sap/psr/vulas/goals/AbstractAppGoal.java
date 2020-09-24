@@ -52,7 +52,7 @@ public abstract class AbstractAppGoal extends AbstractGoal {
 	/**
 	 * Returns known {@link Dependency}s.
 	 *
-	 * @see {@link AbstractAppGoal#setKnownDependencies(Map)}
+	 * @see AbstractAppGoal#setKnownDependencies(Map)
 	 * @return a {@link java.util.Map} object.
 	 */
 	public Map<Path, Dependency> getKnownDependencies() {

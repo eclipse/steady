@@ -241,8 +241,8 @@ public class CoreConfiguration {
 	/**
 	 * Reads configuration settings in order to instantiate an {@link Application}.
 	 *
-	 * @return an {@link Application)
-	 * @throws org.apache.commons.configuration.ConfigurationException if the instantiation fails
+	 * @return an {@link Application}
+	 * @throws org.apache.commons.configuration.ConfigurationException if the instantiation fails.
 	 */
 	public static Application getAppContext() throws ConfigurationException {
 		return getAppContext(VulasConfiguration.getGlobal());
@@ -271,7 +271,7 @@ public class CoreConfiguration {
 	/**
 	 * Reads the global configuration in order to instantiate a {@link GoalContext}.
 	 *
-	 * @return a {@link GoalContext) built from the global configuration
+	 * @return a {@link GoalContext} built from the global configuration
 	 */
 	public static final GoalContext buildGoalContextFromGlobalConfiguration() {
 		return buildGoalContextFromConfiguration(VulasConfiguration.getGlobal());
@@ -280,7 +280,7 @@ public class CoreConfiguration {
 	/**
 	 * Reads the global configuration in order to instantiate a {@link GoalContext}.
 	 *
-	 * @return a {@link GoalContext) built from the global configuration
+	 * @return a {@link GoalContext} built from the global configuration
 	 * @param _c a {@link com.sap.psr.vulas.shared.util.VulasConfiguration} object.
 	 */
 	public static final GoalContext buildGoalContextFromConfiguration(VulasConfiguration _c) {

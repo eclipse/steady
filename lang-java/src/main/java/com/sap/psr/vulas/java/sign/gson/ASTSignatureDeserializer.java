@@ -37,11 +37,11 @@ import com.sap.psr.vulas.sign.Signature;
  *		 -  fUniqueName : String  //same information as fValue above
  *		 -  fType : EntityType    //same information ast fLabel above
  *		 -  fModifiers : int	 // this is always zero (Not sure if i should have it in the json object)
- *		 -  fAssociatedEntities : List<SourceCodeEntity>
+ *		 -  fAssociatedEntities : List&lt;SourceCodeEntity&gt;
  *		 -  SourceRange fRange : SourceRange
  *				- end : int
  *				- start : int
- *    -  fAssociatedNodes : List<Node>
+ *    -  fAssociatedNodes : List&lt;Node&gt;
  */
 public class ASTSignatureDeserializer implements JsonDeserializer<Signature> {
 

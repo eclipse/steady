@@ -1,0 +1,17 @@
+{
+  "name": "test-anon-constructs",
+  "version": "1.0.0",
+  "description": "(lang-nodejs) testing",
+  "main": "index.js",
+  "dependencies": {
+    "jquery": "3.4.1",
+    "ws": "7.1.2",
+    "socket.io": "2.2.0",
+    "express": "4.17.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

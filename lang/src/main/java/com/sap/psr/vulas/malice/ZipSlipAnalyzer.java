@@ -27,7 +27,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
  * - ZIP and derivates JAR, WAR, EAR, AAR
  * - TAR and TAR.GZ
  *
- * @see https://github.com/snyk/zip-slip-vulnerability
+ * See https://github.com/snyk/zip-slip-vulnerability
  */
 public class ZipSlipAnalyzer implements MaliciousnessAnalyzer {
 

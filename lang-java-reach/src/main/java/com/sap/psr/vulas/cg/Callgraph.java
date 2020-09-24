@@ -312,9 +312,9 @@ public class Callgraph {
 	 * The method internally performs a back search, starting from the target node.
 	 *
 	 * @param _tgt a {@link com.sap.psr.vulas.shared.json.model.ConstructId} object.
-	 * @return a map of shortest paths from constructs (= keys of the map) to the target node
-	 * @see Callgraph#computeShortestPath(Integer, Map)
 	 * @param _stop_if_path_found a {@link java.util.Set} object.
+	 * @return a map of shortest paths from constructs (= keys of the map) to the target node
+	 * @see Callgraph#computeShortestPath(Integer, Map, Set)
 	 */
 	public Map<com.sap.psr.vulas.shared.json.model.ConstructId, LinkedList<Integer>> getShortestPath(com.sap.psr.vulas.shared.json.model.ConstructId _tgt, final Set<com.sap.psr.vulas.shared.json.model.ConstructId> _stop_if_path_found) {
 

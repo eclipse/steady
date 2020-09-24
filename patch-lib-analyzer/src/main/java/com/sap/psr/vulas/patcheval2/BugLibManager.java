@@ -809,10 +809,9 @@ public class BugLibManager {
      * <p>analyze.</p>
      *
      * @param bugsToAnalyze a {@link java.util.List} object.
-     * @throws com.sap.psr.vulas.backend.BackendConnectionException if any.
      * @throws java.lang.InterruptedException if any.
      */
-    public static void analyze(List<Bug> bugsToAnalyze) throws BackendConnectionException, InterruptedException{
+    public static void analyze(List<Bug> bugsToAnalyze) throws InterruptedException{
         
     	//necessary read_write as the ast_diff is done using POST
 		VulasConfiguration.getGlobal().setProperty(CoreConfiguration.BACKEND_CONNECT, CoreConfiguration.ConnectType.READ_WRITE.toString());
@@ -902,19 +901,26 @@ public class BugLibManager {
 	        			bm.computeAndUploadPropagateResults();    	     
 	        		}
 	        	}
-	            log.info("###################################################################");
-	            log.info("*******************************************************************");
-	            log.info("BUG [" + bug.getBugId() + "] analyzed.");
-	            log.info("Status: " + (count+1)+ "/" + bugsToAnalyze.size());
-	            log.info("*******************************************************************");
-	            log.info("###################################################################");
-			    count++;
+	           
 	        } catch (FileNotFoundException e) {
 				BugLibManager.log.error("CSV file not found : " + e);
 			} catch (IOException e) {
 				BugLibManager.log.error("Error reasding CSV file" + e);
 			
+			} catch (BackendConnectionException bce){
+				if(bce.getHttpResponseStatus()==503)
+					log.error("Service still unavailable (503) after 1h, could not analyze bugs");
+				else
+					BugLibManager.log.error("Cannot analyze bug [" +bug.getBugId()+ "], exception occurred. Cause : " + bce.getCause() );
+				Thread.sleep(10000);
 			}
+        	log.info("###################################################################");
+            log.info("*******************************************************************");
+            log.info("BUG [" + bug.getBugId() + "] completed.");
+            log.info("Status: " + (count+1)+ "/" + bugsToAnalyze.size());
+            log.info("*******************************************************************");
+            log.info("###################################################################");
+		    count++;
         }
 
         

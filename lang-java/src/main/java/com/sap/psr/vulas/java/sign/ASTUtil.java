@@ -145,7 +145,7 @@ public class ASTUtil {
 	}
 
 	/**
-	 *  Maps <<String Representation of ChangeType>> to <<SourceCode ChangeType enumeration>>
+	 *  Maps string representation of {@link ChangeType} to the corresponding enumeration value.
 	 *
 	 * @param changeType - String representation of changeType
 	 * @return instance of ChangeType corresponding to the SourceCodeChange EntityType

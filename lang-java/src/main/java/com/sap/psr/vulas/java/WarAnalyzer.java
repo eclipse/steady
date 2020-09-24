@@ -350,7 +350,7 @@ public class WarAnalyzer extends JarAnalyzer {
 	 *
 	 * In case the archive is rewritten, this method is used to rewrite certain {@link JarEntry}s
 	 * (rather than taking the file from the original archive).
-	 * The callback registration takes place in {@link #createInstrumentedJar()}.
+	 * The callback registration takes place in {@link #createInstrumentedArchive()}.
 	 */
 	@Override
 	public InputStream getInputStream(String _regex, JarEntry _entry) {

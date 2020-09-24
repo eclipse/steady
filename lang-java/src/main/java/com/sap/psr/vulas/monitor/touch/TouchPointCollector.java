@@ -99,7 +99,7 @@ public class TouchPointCollector {
 
 	/**
 	 * Adds the given touch point to the list of touch points collected during the tests. This method is called by the
-	 * callback method {@link TouchPointCollector#callback(Direction, String, String, URL, ConstructId, URL, String, String, String, Map)}.
+	 * callback method {@link TouchPointCollector#callback(String, String, ClassLoader, URL, boolean, StackTraceElement[], String, String, String, Map)}.
 	 *
 	 * @param _tp a {@link com.sap.psr.vulas.monitor.touch.TouchPointCollector.TouchPoint} object.
 	 */
@@ -200,7 +200,7 @@ public class TouchPointCollector {
 	}
 
 	/**
-	 * The instrumentation code created by {@link TouchPointInstrumentor#instrument(JavaId, CtBehavior, ClassVisitor)} will
+	 * The instrumentation code created by {@link TouchPointInstrumentor#instrument(StringBuffer, JavaId, CtBehavior, ClassVisitor)} will
 	 * call this callback method if it is possible to determine the caller (through stack trace analysis).
 	 *
 	 * @param _exe a {@link com.sap.psr.vulas.goals.AbstractGoal} object.

@@ -15,11 +15,11 @@ public class PythonId extends ConstructId {
 	/** Supported Python construct types. */
 	public static enum Type { PACKAGE, MODULE, CLASS, CONSTRUCTOR, METHOD, FUNCTION };
 	
-	/** Constant <code>SCRIPT_NAME="<script>"</code> */
+	/** Constant &lt;script&gt;. */
 	public static final String SCRIPT_NAME = "<script>";
 	
 	/**
-	 * Transforms the shared type {@link ConstructType} into the corresponding local type {@link PythonId#Type}.
+	 * Transforms the shared type {@link ConstructType} into the corresponding local type {@link PythonId.Type}.
 	 *
 	 * @param _type a {@link com.sap.psr.vulas.python.PythonId.Type} object.
 	 * @return a {@link com.sap.psr.vulas.shared.enums.ConstructType} object.

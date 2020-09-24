@@ -66,7 +66,7 @@ public class MethodNameFilter {
 	 * (meaning not of my application). To define the domain of the application we use
 	 * the entries on which we built the graph.
 	 *
-	 * @param app_entries Entry methods that we used to define the app domain. Use {@link BackendConnector#getApplicationConstructIds(MavenId)} to get them.
+	 * @param app_entries Entry methods that we used to define the app domain. Use {@link BackendConnector#getAppConstructIds(com.sap.psr.vulas.goals.GoalContext, com.sap.psr.vulas.shared.json.model.Application)} to get them.
 	 * @param value a string representing the complete name of a method
 	 * @return a boolean value stating if value is part of a library or not
 	 */
@@ -79,7 +79,7 @@ public class MethodNameFilter {
 	 * (meaning not of an external library). To define the domain of the application we use
 	 * the entries on which we built the graph.
 	 *
-	 * @param app_entries Entry methods that we used to define the app domain. Use {@link BackendConnector#getApplicationConstructIds(MavenId)} to get them.
+	 * @param app_entries Entry methods that we used to define the app domain. Use {@link BackendConnector#getAppConstructIds(com.sap.psr.vulas.goals.GoalContext, com.sap.psr.vulas.shared.json.model.Application)} to get them.
 	 * @param value  a string representing the complete name of a method
 	 * @return a boolean value stating if value is part of the application or not
 	 */

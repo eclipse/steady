@@ -88,10 +88,6 @@ public class PE_Run implements Runnable {
 
 		try {
 			BugLibManager.analyze(bugsToAnalyze);
-		} catch (BackendConnectionException e) {
-			if(e.getHttpResponseStatus()==503)
-				log.error("Service still unavailable (503) after 1h, could not analyze bugs");
-			e.printStackTrace();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

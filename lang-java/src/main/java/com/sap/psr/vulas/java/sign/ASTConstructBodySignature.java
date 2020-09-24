@@ -64,8 +64,7 @@ public class ASTConstructBodySignature extends ASTSignature {
 		}
 
 	   /**
-	    * Returns the generated {@link JavaCompilation} from the file identified by the given filename. This method assumes
-	    * that the filename is relative to <code>{@value #TEST_DATA_BASE_DIR}</code>.
+	    * Returns the generated {@link JavaCompilation} from the file identified by the given filename.
 	    *
 	    * @param _file a {@link java.lang.String} object.
 	    */

@@ -62,4 +62,29 @@ public class FileComparatorTest {
 			assertTrue(false);
 		}
 	}
+
+	/**
+	 * Compares two files from lodash, related to CVE-2019-10744
+	 * The fix consisted of modifying one function.
+	 * Note that this is only the example from one file.
+	 * Altogether, there should be 4 changes, including module, class and outer function.
+	 */
+	@Test
+	public void testFileComparatorOnJs() {
+		// Create instance of FileComparator
+		try {
+			final FileComparator c = new FileComparator(new File("./src/test/resources/lodash-lodash-e42cd97/lodash/lodash.js"),
+					new File("./src/test/resources/lodash-lodash-1f8ea07/lodash/lodash.js"), null, null, null, null);
+			final Set<ConstructChange> changes = c.identifyChanges();
+			for(ConstructChange chg : changes)
+				System.out.println(chg);
+			assertEquals(4, changes.size());
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+			assertTrue(false);
+		} catch (FileAnalysisException e) {
+			System.err.println(e.getMessage());
+			assertTrue(false);
+		}
+	}
 }

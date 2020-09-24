@@ -76,8 +76,10 @@ public class BomGoal extends AbstractAppGoal {
 		final MaliciousnessAnalyzerLoop loop = new MaliciousnessAnalyzerLoop();
 		
 		// Get a clean set of dependencies
-		final Set<Dependency> no_dupl_deps = DependencyUtil.removeDuplicateLibraryDependencies(a.getDependencies());
-		a.setDependencies(no_dupl_deps);
+		// The removal of dependencies on the same digest is not done here any longer to be able to set parents on the dependencies that will not be removed
+		// Once we add the usage of relativePath to distinguish among dependencies, the removal can be done at this step again.
+	//	final Set<Dependency> no_dupl_deps = DependencyUtil.removeDuplicateLibraryDependencies(a.getDependencies());
+	//	a.setDependencies(no_dupl_deps);
 
 		// Upload libraries and binaries (if requested)
 		if(a.getDependencies()!=null) {

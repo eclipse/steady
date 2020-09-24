@@ -24,7 +24,7 @@ A typical Jenkins job configuration using the @@PROJECT_NAME@@ plugin for Maven 
 
 1. Build step for a **quick scan** or **deep scan**, depending on the expected run frequency.
 2. Build step `-Dvulas vulas:report` to create result reports (per default in folder `target/vulas/result`).
-3. Post-build action with [HTML Publisher Plugin](https://wiki.jenkins-ci.org/display/JENKINS/HTML+Publisher+Plugin) to copy the Html report created by `report` into the Jenkins dashboard. As such, @@PROJECT_NAME@@ results can be consumed w/o the need to scroll through the verbose console output.
+3. Post-build action with [HTML Publisher Plugin](https://wiki.jenkins.io/display/JENKINS/HTML+Publisher+Plugin) to copy the Html report created by `report` into the Jenkins dashboard. As such, @@PROJECT_NAME@@ results can be consumed w/o the need to scroll through the verbose console output.
 
 Additional notes:
 

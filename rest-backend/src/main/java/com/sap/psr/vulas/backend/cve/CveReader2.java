@@ -26,7 +26,7 @@ import com.sap.psr.vulas.shared.util.VulasConfiguration;
 import net.minidev.json.JSONArray;
 
 /**
- * Reads {@link CVE} information from a service configured with {@link #CVE_SERVICE_URL}.
+ * Reads {@link Cve} information from a service configured with {@link #CVE_SERVICE_URL}.
  */
 public class CveReader2 implements ObjectFetcher<String, Cve> {
 	

@@ -79,6 +79,17 @@ Fixing the library means to create a fix for the vulnerability within the source
 
 If you take that road, make sure to create a pull request so that the original open-source developers check and integrate the fix in the standard. If not, you will need to maintain your fix in the forked version of the library, and any further enhancements of the library will need to be merged into this fork.
 
+!!! warning "Special case: Uber JARs"
+    So-called Uber JARs are one example where the removal or update of a vulnerable dependency is not easily possible. Such Java archives do not only contain the Java classes of the respective component, but also contain (rebundle) the Java classes of its dependencies. Uber JARs enable the distribution of self-contained "all-in-one" Java archives.
+
+    In order to fix such Uber JARs, one has to clone the source code repository of the respective open source component, fix the version of the dependency whose classes will be included in the Uber JAR, and build the component in order to produce a new, fixed Uber JAR of the component containing the non-vulnerable classes of its dependency.
+
+    Example: The Java component [`org.springframework.cloud:spring-cloud-cloudfoundry-connector`](https://search.maven.org/artifact/org.springframework.cloud/spring-cloud-cloudfoundry-connector/2.0.6.RELEASE/jar) rebundles `jackson-databind`. In case the latest version of `spring-cloud-cloudfoundry-connector` contains a vulnerable version of `jackson-databind`, one has to clone `https://github.com/spring-cloud/spring-cloud-connectors/tree/master/spring-cloud-cloudfoundry-connector`, edit `build.gradle` in order to update the version of `jackson-databind`, and build a fixed Uber JAR to be used by the application.
+
+    **Important**:
+    
+    - If you create a fix yourself, make sure to contribute such fixes to the original open source project.
+
 ### Fixing the application (exceptional)
 
 !!! warning "Best practice"

@@ -71,6 +71,21 @@ public class IT01_ArtifactControllerTest {
 	}
 	
 	@Test
+	public void getAllVersionsNpmTest(){
+		
+		RepositoryDispatcher r = new RepositoryDispatcher();
+		try {
+			Set<Artifact> response = r.getAllArtifactVersions("lodash", "lodash", null, null);
+			
+			assertTrue(response.size()>=3);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
 	public void getLatestVersionPythonTest(){
 		
 		RepositoryDispatcher r = new RepositoryDispatcher();

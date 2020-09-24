@@ -2,6 +2,8 @@ package com.sap.psr.vulas.shared.json.model;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -247,6 +249,26 @@ public class Library implements Serializable {
 				return false;
 		} else if (!digest.equals(other.digest))
 			return false;
+		if (properties != null && other.properties != null) {
+			final Set<Property> _prop = (HashSet<Property>) properties;
+			final Set<Property> _other_prop = (HashSet<Property>) other.properties;
+			String location = null;
+			String other_location = null;
+			for(Property p : _prop) {
+				if(p.getName().equalsIgnoreCase("location")) {
+					location = p.getValue();
+					break;
+				}
+			}
+			for(Property p : _other_prop) {
+				if(p.getName().equalsIgnoreCase("location")) {
+					other_location = p.getValue();
+					break;
+				}
+			}
+			if(location != null && other_location != null && !location.equalsIgnoreCase(other_location))
+				return false;
+		}
 		return true;
 	}
 

@@ -172,4 +172,24 @@ public class VulasCliTest extends AbstractGoalTest {
 				method(Method.POST),
 				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
 	}
+
+	@Test
+    public void testNodejsAppGoal() throws GoalConfigurationException, GoalExecutionException {
+		System.setProperty(CoreConfiguration.APP_DIRS, "./src/test/resources/js-app");
+
+		// Mock REST services
+		this.configureBackendServiceUrl(server);
+		this.setupMockServices(this.testApp);
+
+		final String[] args = new String[] { "-goal", "app" };
+		VulasCli.main(args);
+
+		// Check the HTTP calls made
+		verifyHttp(server).times(1,
+				method(Method.PUT),
+				uri("/backend" + PathBuilder.app(this.testApp)));
+		verifyHttp(server).times(2,
+				method(Method.POST),
+				uri("/backend" + PathBuilder.goalExcecutions(null, null, this.testApp)));
+	}
 }

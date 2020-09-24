@@ -504,7 +504,7 @@ public class ClassVisitor {
 	/**
 	 * Removes package information (if any) from method and constructor parameters.
 	 * Previously, a string tokenizer split the given {@link String} at every comma,
-	 * which led to problems in case of Map parameters (e.g., Map<String,Object>).
+	 * which led to problems in case of Map parameters (e.g., Map&lt;String,Object&gt;).
 	 * The current implementation uses the regular expression {@link ClassVisitor#QUALIFIED_TYPE_PATTERN}.
 	 *
 	 * @param _string a String with qualified parameter types
