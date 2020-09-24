@@ -1,14 +1,22 @@
 <p align="center">
-    <a href="https://sap.github.io/vulnerability-assessment-tool/">
-        <img height="64" src="docs/public/content/images/vulas.png">
+    <a href="https://eclipse.github.io/steady/">
+        <img height="64" src="docs/public/content/images/ES-logo-152-transparent.png">
     </a>
 </p>
 
-# Open-source vulnerability assessment tool [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![Build Status](https://travis-ci.org/SAP/vulnerability-assessment-tool.svg?branch=master)](https://travis-ci.org/SAP/vulnerability-assessment-tool) [![Release](https://img.shields.io/github/release/SAP/vulnerability-assessment-tool.svg)](https://github.com/SAP/vulnerability-assessment-tool/releases)
+# Eclipse Steady (Incubator Project)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Build Status](https://travis-ci.org/eclipse/steady.svg?branch=master)](https://travis-ci.org/eclipse/steady)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.sap.research.security.vulas/plugin-maven/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.sap.research.security.vulas/plugin-maven)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4202/badge)](https://bestpractices.coreinfrastructure.org/projects/4202)
+[![REUSE status](https://api.reuse.software/badge/github.com/eclipse/steady)](https://api.reuse.software/info/github.com/eclipse/steady)
+
+**Note**: This is a work in progress repository for **Node.js JavaScript** application analysis.
 
 **Discover, assess and mitigate known vulnerabilities in your Java and Python projects**
 
-The open-source vulnerability assessment tool supports software development organizations in regards to the secure use of open-source components during application development. The tool analyzes **Java** and **Python** applications in order to:
+Eclipse Steady supports software development organizations in regards to the secure use of open-source components during application development. The tool analyzes **Java** and **Python** applications in order to:
 
 - detect whether they depend on open-source components with known vulnerabilities,
 - collect evidence regarding the execution of vulnerable code in a given application context (through the combination of static and dynamic analysis techniques), and
@@ -18,7 +26,8 @@ As such, it addresses the OWASP Top 10 security risk A9, [Using Components with 
 
 In comparison to other tools, the detection is code-centric and usage-based, which allows for more accurate detection and assessment than tools relying on meta-data.  It is a collection of client-side scan tools, microservices and rich [OpenUI5](https://openui5.hana.ondemand.com/) Web frontends.
 
-Read more in our [**Docs**](https://sap.github.io/vulnerability-assessment-tool/)
+
+Read more in our [**Docs**](https://eclipse.github.io/steady/)
 
 ## History
 
@@ -28,6 +37,7 @@ The tool approach is best described in the following scientific papers, please c
 
 - [Serena Ponta](https://scholar.google.com/citations?hl=en&user=DFVwF6sAAAAJ), [Henrik Plate](https://scholar.google.com/citations?user=Kaleo5YAAAAJ&hl=en), [Antonino Sabetta](https://scholar.google.com/citations?hl=en&user=BhcceV8AAAAJ), [**Beyond Metadata: Code-centric and Usage-based Analysis of Known Vulnerabilities in Open-source Software**](https://arxiv.org/abs/1806.05893), 34th International Conference on Software Maintenance and Evolution (ICSME), 2018
 - [Henrik Plate](https://scholar.google.com/citations?user=Kaleo5YAAAAJ&hl=en), [Serena Ponta](https://scholar.google.com/citations?hl=en&user=DFVwF6sAAAAJ), [Antonino Sabetta](https://scholar.google.com/citations?hl=en&user=BhcceV8AAAAJ), [**Impact Assessment for Vulnerabilities in Open-Source Software Libraries**](https://arxiv.org/pdf/1504.04971.pdf), 31st International Conference on Software Maintenance and Evolution (ICSME), 2015
+- [Bodin Chinthanet](https://scholar.google.com/citations?user=YE8OoZIAAAAJ&hl=en), [Serena Ponta](https://scholar.google.com/citations?hl=en&user=DFVwF6sAAAAJ),[Henrik Plate](https://scholar.google.com/citations?user=Kaleo5YAAAAJ&hl=en),  [Antonino Sabetta](https://scholar.google.com/citations?hl=en&user=BhcceV8AAAAJ), [Raula Gaikovina Kula](https://scholar.google.com/citations?user=BxUrdQEAAAAJ&hl=en), [Takashi Ishio](https://scholar.google.com/citations?user=yCAxs-0AAAAJ&hl=en), [Kenichi Matsumoto](https://scholar.google.com/citations?user=-DfBligAAAAJ&hl=en), [**Code-based Vulnerability Detection in Node. js Applications: How far are we?**](https://arxiv.org/pdf/2008.04568.pdf), 35th International Conference on Automated Software Engineering (ASE), 2020
 
 ## Features
 
@@ -40,18 +50,18 @@ The tool approach is best described in the following scientific papers, please c
 
 ## Requirements
 
-The open-source vulnerability assessment tool has a distributed architecture composed of a couple of Spring Boot microservices, two Web frontends and a number of client-side scanners/plugins, which perform the actual analysis of application and dependency code on build systems or developer workstations.
+Eclipse Steady has a distributed architecture composed of a couple of Spring Boot microservices, two Web frontends and a number of client-side scanners/plugins, which perform the actual analysis of application and dependency code on build systems or developer workstations.
 
 To build/test the entire project, the following tools are needed:
 
 - **[JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/index.html)**
-- **[Maven 3.3+](https://maven.apache.org/download.cgi)** for the analysis of Maven projects using [`plugin-maven`](https://github.com/SAP/vulnerability-assessment-tool/tree/master/plugin-maven)
-- **[Python 3](https://www.python.org/downloads/)** as well as the packages `pip`, `virtualenv` and `setuptools` (`pip install -r requirements.txt`) for the analysis of Python applications using [`cli-scanner`](https://github.com/SAP/vulnerability-assessment-tool/tree/master/cli-scanner)
-- **[Gradle 4](https://gradle.org/install/)** for the analysis of Gradle projects using [`plugin-gradle`](https://github.com/SAP/vulnerability-assessment-tool/tree/master/plugin-gradle).
+- **[Maven 3.3+](https://maven.apache.org/download.cgi)** for the analysis of Maven projects using [`plugin-maven`](https://github.com/eclipse/steady/tree/master/plugin-maven)
+- **[Python 3](https://www.python.org/downloads/)** as well as the packages `pip`, `virtualenv` and `setuptools` (`pip install -r requirements.txt`) for the analysis of Python applications using [`cli-scanner`](https://github.com/eclipse/steady/tree/master/cli-scanner)
+- **[Gradle 4](https://gradle.org/install/)** for the analysis of Gradle projects using [`plugin-gradle`](https://github.com/eclipse/steady/tree/master/plugin-gradle).
 
 ## Build and Test
 
-vulnerability-assessment-tool is built with Maven. To enable the support for Gradle the profile `gradle` needs to be activated (`-P gradle`)
+Eclipse Steady is built with Maven. To enable the support for Gradle the profile `gradle` needs to be activated (`-P gradle`)
 
 ```sh
 mvn clean install
@@ -77,16 +87,4 @@ The following is a subset of pending feature requests:
 - Support of JavaScript (client- and server-side)
 - UI dashboards for workspaces
 
-[**Documentation**](https://sap.github.io/vulnerability-assessment-tool/user/) · [**Support**](https://sap.github.io/vulnerability-assessment-tool/user/support/) · [**Contributing**](https://sap.github.io/vulnerability-assessment-tool/contributor/) · [**Deploy guide**](https://sap.github.io/vulnerability-assessment-tool/admin/tutorials/docker/) · [**Scan guide**](https://sap.github.io/vulnerability-assessment-tool/user/tutorials/) · [**Vulnerability database**](https://sap.github.io/vulnerability-assessment-tool/vuln_db/) · [**Blog**](https://blogs.sap.com/tag/vulas/) · [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2605/badge)](https://bestpractices.coreinfrastructure.org/projects/2605)
-
-## License
-
-Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
-
-This project is licensed under the Apache Software License, v.2 except as noted otherwise in the [LICENSE file](LICENSE.txt).
-
----
-
-<p align="center">
-    Developed with ☕️ by <strong>SAP Security Research and Testing teams</strong>
-</p>
+[**Documentation**](https://eclipse.github.io/steady/user/) · [**Support**](https://eclipse.github.io/steady/user/support/) · [**Contributing**](https://eclipse.github.io/steady/contributor/) · [**Deploy guide**](https://eclipse.github.io/steady/admin/tutorials/docker/) · [**Scan guide**](https://eclipse.github.io/steady/user/tutorials/) · [**Vulnerability database**](https://eclipse.github.io/steady/vuln_db/) · [**Blog**](https://blogs.sap.com/tag/vulas/)
