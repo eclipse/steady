@@ -151,7 +151,6 @@
 										<Implementation-Title>${project.name}</Implementation-Title>
 										<Implementation-Version>${project.version}</Implementation-Version>
 			                            				<Implementation-Vendor-Id>${project.groupId}</Implementation-Vendor-Id>
-										<Multi-Release>true</Multi-Release>
 									</manifestEntries>
 								</transformer>
 							</transformers>
