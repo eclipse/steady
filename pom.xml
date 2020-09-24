@@ -387,7 +387,18 @@
 
 	<build>
 		<plugins>
-
+			<!-- Add support for multi release jar. This change is done for log4j, as new log4j supports multi release jar --> 
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-jar-plugin</artifactId>
+			    <configuration>
+				<archive>
+				    <manifestEntries>
+					<Multi-Release>true</Multi-Release>
+				    </manifestEntries>
+				</archive>
+			    </configuration>
+			</plugin>
 			<!-- Show whether there are newer versions available, run fully-qualified
 				with 'mvn -DallowMajorUpdates=false -DprocessDependencyManagement=false org.codehaus.mojo:versions-maven-plugin:2.7:display-dependency-updates' -->
 			<plugin>
