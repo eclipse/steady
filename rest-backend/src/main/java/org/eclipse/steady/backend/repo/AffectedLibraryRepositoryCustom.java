@@ -67,13 +67,12 @@ public interface AffectedLibraryRepositoryCustom {
   public List<AffectedLibrary> getAffectedLibraries(
       Bug _bug, AffectedVersionSource _source, Boolean _onlyWellknown);
 
-  
   /**
    * <p>Get affected libraries with highest priority for each {@link LibraryId}.</p>
-   * 
- * @param bug
- * @param onlyWellknown
- * @return
- */
-public List<AffectedLibrary> getResolvedAffectedLibraries(Bug bug, Boolean onlyWellknown);
+   *
+   * @param bug
+   * @param onlyWellknown
+   * @return
+   */
+  public List<AffectedLibrary> getResolvedAffectedLibraries(Bug bug, Boolean onlyWellknown);
 }

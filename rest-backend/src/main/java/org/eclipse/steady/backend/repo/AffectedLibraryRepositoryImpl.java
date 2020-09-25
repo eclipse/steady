@@ -321,26 +321,22 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
       return this.affLibRepository.findWellKnownByBugAndSource(_bug, _source);
     else return this.affLibRepository.findWellKnownByBug(_bug);
   }
-  
+
   /** {@inheritDoc} */
-  public List<AffectedLibrary> getResolvedAffectedLibraries(Bug _bug, Boolean _onlyWellknown){
-	  List<AffectedLibrary> al_list=null;
-	  if(_onlyWellknown)
-		  al_list = this.affLibRepository.findWellKnownByBug(_bug);
-	  else 
-		  al_list = this.affLibRepository.findByBug(_bug);
-	  Set<LibraryId> llist = new  HashSet<LibraryId>();
-	  for(AffectedLibrary al: al_list) {
-		  if(al.getSource()!=AffectedVersionSource.TO_REVIEW && al.getLibraryId()!=null) {
-			  llist.add(al.getLibraryId());
-		  }
-	  }
-	  al_list = new ArrayList<AffectedLibrary>();
-	  for(LibraryId l:llist) {
-		  al_list.add(this.affLibRepository.findResolvedAffectedLibrary(_bug.getBugId(), l));
-	  }
-	  return al_list;
+  public List<AffectedLibrary> getResolvedAffectedLibraries(Bug _bug, Boolean _onlyWellknown) {
+    List<AffectedLibrary> al_list = null;
+    if (_onlyWellknown) al_list = this.affLibRepository.findWellKnownByBug(_bug);
+    else al_list = this.affLibRepository.findByBug(_bug);
+    Set<LibraryId> llist = new HashSet<LibraryId>();
+    for (AffectedLibrary al : al_list) {
+      if (al.getSource() != AffectedVersionSource.TO_REVIEW && al.getLibraryId() != null) {
+        llist.add(al.getLibraryId());
+      }
+    }
+    al_list = new ArrayList<AffectedLibrary>();
+    for (LibraryId l : llist) {
+      al_list.add(this.affLibRepository.findResolvedAffectedLibrary(_bug.getBugId(), l));
+    }
+    return al_list;
   }
-  
 }
-	  

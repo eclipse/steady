@@ -433,12 +433,12 @@ public class BugController {
     } catch (EntityNotFoundException e) {
       return new ResponseEntity<List<AffectedLibrary>>(HttpStatus.NOT_FOUND);
     }
-    if(!resolved)
-    	return new ResponseEntity<List<AffectedLibrary>>(
-    			this.afflibRepository.getAffectedLibraries(bug, source, onlyWellknown), HttpStatus.OK);
+    if (!resolved)
+      return new ResponseEntity<List<AffectedLibrary>>(
+          this.afflibRepository.getAffectedLibraries(bug, source, onlyWellknown), HttpStatus.OK);
     else
-    	return new ResponseEntity<List<AffectedLibrary>>(
-    			this.afflibRepository.getResolvedAffectedLibraries(bug, onlyWellknown), HttpStatus.OK);
+      return new ResponseEntity<List<AffectedLibrary>>(
+          this.afflibRepository.getResolvedAffectedLibraries(bug, onlyWellknown), HttpStatus.OK);
   }
 
   /**
