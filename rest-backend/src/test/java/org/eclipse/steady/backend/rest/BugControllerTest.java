@@ -693,7 +693,7 @@ public class BugControllerTest {
 
     LibraryId lid2 = new LibraryId("com.foo", "bar", "1.0-copy");
     libIdRepository.save(lid2);
-    
+
     LibraryId lid3 = new LibraryId("com.bar", "foo", "1.1");
     libIdRepository.save(lid3);
 
@@ -705,7 +705,7 @@ public class BugControllerTest {
 
     AffectedLibrary afflib2_ast = new AffectedLibrary(bug, lid2, false, null, null, null);
     afflib2_ast.setSource(AffectedVersionSource.AST_EQUALITY);
-    
+
     AffectedLibrary afflib3 = new AffectedLibrary(bug, lid3, null, null, null, null);
     afflib3.setSource(AffectedVersionSource.TO_REVIEW);
 
