@@ -26,7 +26,7 @@
 	<parent>
 		<groupId>com.sap.research.security.vulas</groupId>
 		<artifactId>root</artifactId>
-		<version>3.1.15-SNAPSHOT</version>
+		<version>3.1.16-SNAPSHOT</version>
 	</parent>
 	<artifactId>patch-analyzer</artifactId>
 
@@ -105,7 +105,6 @@
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
 										<Main-Class>org.eclipse.steady.patcha.PatchAnalyzer</Main-Class>
-										<Multi-Release>true</Multi-Release>
 									</manifestEntries>
 								</transformer>
 							</transformers>

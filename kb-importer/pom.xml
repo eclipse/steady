@@ -26,7 +26,7 @@
 	<parent>
 		<artifactId>root</artifactId>
 		<groupId>com.sap.research.security.vulas</groupId>
-		<version>3.1.15-SNAPSHOT</version>
+		<version>3.1.16-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>kb-importer</artifactId>
@@ -115,7 +115,6 @@
 									<manifestEntries>
 										<Main-Class>org.eclipse.steady.kb.Main</Main-Class>
 										<Implementation-Version>${project.version}</Implementation-Version>
-									        <Multi-Release>true</Multi-Release>
 									</manifestEntries>
 								</transformer>
 							</transformers>
