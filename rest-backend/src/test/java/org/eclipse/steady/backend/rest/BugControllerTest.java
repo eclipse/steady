@@ -136,6 +136,8 @@ public class BugControllerTest {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
     this.afflibRepository.deleteAll();
     this.bugRepository.deleteAll();
+    this.libRepository.deleteAll();
+    this.libIdRepository.deleteAll();
   }
 
   /**
