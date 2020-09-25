@@ -329,7 +329,7 @@ public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryC
     else al_list = this.affLibRepository.findByBug(_bug);
     Set<LibraryId> llist = new HashSet<LibraryId>();
     for (AffectedLibrary al : al_list) {
-      if (al.getSource() != AffectedVersionSource.TO_REVIEW && al.getLibraryId() != null) {
+      if (!al.getSource().equals(AffectedVersionSource.TO_REVIEW) && al.getLibraryId() != null) {
         llist.add(al.getLibraryId());
       }
     }

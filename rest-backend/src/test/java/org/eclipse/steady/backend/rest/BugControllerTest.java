@@ -693,6 +693,9 @@ public class BugControllerTest {
 
     LibraryId lid2 = new LibraryId("com.foo", "bar", "1.0-copy");
     libIdRepository.save(lid2);
+    
+    LibraryId lid3 = new LibraryId("com.bar", "foo", "1.1");
+    libIdRepository.save(lid3);
 
     AffectedLibrary afflib1 = new AffectedLibrary(bug, lid1, true, null, null, null);
     afflib1.setSource(AffectedVersionSource.AST_EQUALITY);
@@ -702,11 +705,15 @@ public class BugControllerTest {
 
     AffectedLibrary afflib2_ast = new AffectedLibrary(bug, lid2, false, null, null, null);
     afflib2_ast.setSource(AffectedVersionSource.AST_EQUALITY);
+    
+    AffectedLibrary afflib3 = new AffectedLibrary(bug, lid3, null, null, null, null);
+    afflib3.setSource(AffectedVersionSource.TO_REVIEW);
 
-    AffectedLibrary[] afflibs = new AffectedLibrary[3];
+    AffectedLibrary[] afflibs = new AffectedLibrary[4];
     afflibs[0] = afflib1;
     afflibs[1] = afflib2;
     afflibs[2] = afflib2_ast;
+    afflibs[3] = afflib3;
     afflibRepository.customSave(bug, afflibs);
 
     final MockHttpServletRequestBuilder get_builder =
@@ -721,7 +728,7 @@ public class BugControllerTest {
         .perform(get("/bugs/" + bug.getBugId() + "/affectedLibIds"))
         .andExpect(status().isOk())
         .andExpect(content().contentType(contentType))
-        .andExpect(jsonPath("$.length()", is(3)));
+        .andExpect(jsonPath("$.length()", is(4)));
   }
 
   /*@Test
