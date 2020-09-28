@@ -5,7 +5,7 @@
 #
 # To run this script you should have already generated the JARs and be logged in the registry
 # Use `docker login` to login to the registry
-# Read more here: https://github.com/SAP/vulnerability-assessment-tool/blob/master/docker/README.md
+# Read more here: https://eclipse.github.io/steady/admin
 
 RELEASE_PATTERN="([0-9]+\.[0-9]+\.[0-9]+(.*)?)|latest"
 

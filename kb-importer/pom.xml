@@ -26,7 +26,7 @@
 	<parent>
 		<artifactId>root</artifactId>
 		<groupId>org.eclipse.steady</groupId>
-		<version>3.1.14-SNAPSHOT</version>
+		<version>3.1.15</version>
 	</parent>
 
 	<artifactId>kb-importer</artifactId>
@@ -63,6 +63,12 @@
 		<dependency>
 			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang-java</artifactId>
+			<version>${project.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sap.research.security.vulas</groupId>
+			<artifactId>lang-python</artifactId>
 			<version>${project.version}</version>
 			<scope>runtime</scope>
 		</dependency>
@@ -109,7 +115,6 @@
 									<manifestEntries>
 										<Main-Class>org.eclipse.steady.kb.Main</Main-Class>
 										<Implementation-Version>${project.version}</Implementation-Version>
-										>
 									</manifestEntries>
 								</transformer>
 							</transformers>

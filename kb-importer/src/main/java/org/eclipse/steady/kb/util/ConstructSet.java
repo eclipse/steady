@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.ConstructChange;
@@ -136,8 +135,8 @@ public class ConstructSet {
     for (File file : beforeFiles) {
       if (file.isFile()) {
         String filePathWithDir = file.getAbsolutePath();
-        String filePath = filePathWithDir.split(File.separator + BEFORE_FOLDER)[1];
-        String afterFilePath = _path + File.separator + AFTER_FOLDER + filePath;
+        String filePath = filePathWithDir.split(BEFORE_FOLDER + File.separator)[1];
+        String afterFilePath = _path + File.separator + AFTER_FOLDER + File.separator + filePath;
         if (Files.exists(Paths.get(afterFilePath))) {
           filesChanged.add(
               new FileChange(_url, filePath, new File(filePathWithDir), new File(afterFilePath)));
@@ -159,7 +158,7 @@ public class ConstructSet {
     for (File file : afterFiles) {
       if (file.isFile()) {
         String filePathWithDir = file.getAbsolutePath();
-        String filePath = filePathWithDir.split(File.separator + AFTER_FOLDER)[1];
+        String filePath = filePathWithDir.split(AFTER_FOLDER + File.separator)[1];
         if (!filesModifiedOrDeleted.contains(filePath)) {
           filesChanged.add(new FileChange(_url, filePath, null, new File(filePathWithDir)));
         }

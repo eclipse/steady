@@ -41,6 +41,7 @@ import org.eclipse.steady.patcheval.representation.ConstructPathLibResult2;
 import org.eclipse.steady.patcheval.representation.LidResult2;
 import org.eclipse.steady.patcheval.representation.OverallConstructChange;
 import org.eclipse.steady.python.sign.PythonConstructDigest;
+import org.eclipse.steady.python.sign.PythonConstructDigestDeserializer;
 import org.eclipse.steady.shared.enums.ConstructChangeType;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
 import org.eclipse.steady.shared.json.JacksonUtil;
@@ -82,6 +83,7 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
     this.tid = _id;
 
     custom_deserializers.put(ASTSignatureChange.class, new ASTSignatureChangeDeserializer());
+    custom_deserializers.put(PythonConstructDigest.class, new PythonConstructDigestDeserializer());
 
     this.singleMethsConsCC = methsConsMOD;
     this.addedDelMethsConsCC = methsConsAD;
@@ -303,14 +305,21 @@ public class LibraryAnalyzerThread2 implements Callable<List<ConstructPathLibRes
                             ProgrammingLanguage.PY);
                 PythonConstructDigest pythonConstructDigest =
                     (PythonConstructDigest)
-                        JacksonUtil.asObject(ast_lid, PythonConstructDigest.class);
+                        JacksonUtil.asObject(
+                            ast_lid, custom_deserializers, PythonConstructDigest.class);
                 if (pythonConstructDigest != null) {
                   PythonConstructDigest vulnConstructDigest =
                       (PythonConstructDigest)
-                          JacksonUtil.asObject(mcCC.getBuggyBody(), PythonConstructDigest.class);
+                          JacksonUtil.asObject(
+                              mcCC.getBuggyBody(),
+                              custom_deserializers,
+                              PythonConstructDigest.class);
                   PythonConstructDigest fixedConstructDigest =
                       (PythonConstructDigest)
-                          JacksonUtil.asObject(mcCC.getFixedBody(), PythonConstructDigest.class);
+                          JacksonUtil.asObject(
+                              mcCC.getFixedBody(),
+                              custom_deserializers,
+                              PythonConstructDigest.class);
                   if (pythonConstructDigest.getDigest() != null
                       && vulnConstructDigest.getDigest() != null
                       && pythonConstructDigest
