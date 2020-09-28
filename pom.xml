@@ -386,8 +386,9 @@
 	</issueManagement>
 
 	<build>
+	
 		<plugins>
-			<!-- Add support for multi release jar. This change is done for log4j, as new log4j supports multi release jar --> 
+			<!-- Add support for multi release JARs (required by log4j2) --> 
 			<plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
 			    <artifactId>maven-jar-plugin</artifactId>
@@ -399,6 +400,40 @@
 				</archive>
 			    </configuration>
 			</plugin>
+
+			<!-- Include LICENSE and NOTICE in all JARs (ESF requirement) -->
+
+			<!-- Problem: Symlink LICENSE.txt to be created with WSL (not Cygwin) and copied with plugin version 2.7, cf.
+			https://issues.apache.org/jira/browse/MRESOURCES-237
+			https://stackoverflow.com/questions/40346225/maven-resources-plugin-symbolic-link-handling -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.outputDirectory}/META-INF</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/..</directory>
+							        <includes>
+							          <include>LICENSE</include>
+							          <include>NOTICE</include>
+							        </includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
 			<!-- Show whether there are newer versions available, run fully-qualified
 				with 'mvn -DallowMajorUpdates=false -DprocessDependencyManagement=false org.codehaus.mojo:versions-maven-plugin:2.7:display-dependency-updates' -->
 			<plugin>
