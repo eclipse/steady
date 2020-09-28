@@ -422,16 +422,64 @@
 	</profiles>
 	<build>
 		<plugins>
+			<!-- Add support for multi release JARs (required by log4j2) --> 
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-jar-plugin</artifactId>
+			    <configuration>
+				<archive>
+				    <manifestEntries>
+						<Multi-Release>true</Multi-Release>
+				    </manifestEntries>
+				</archive>
+			    </configuration>
+			</plugin>
+
+			<!-- Include LICENSE and NOTICE in all JARs (ESF requirement) -->
+
+			<!-- Note: Symlink LICENSE to be created with WSL (not Cygwin) and copied with plugin version 2.7, cf.
+			https://issues.apache.org/jira/browse/MRESOURCES-237
+			https://stackoverflow.com/questions/40346225/maven-resources-plugin-symbolic-link-handling -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.outputDirectory}/META-INF</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/..</directory>
+							        <includes>
+							          <include>LICENSE</include>
+							          <include>NOTICE</include>
+							        </includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>1.7.0</version>
 				<extensions>true</extensions>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			
 			<!-- Run with 'mvn -Dproject.name="Eclipse Steady" license:format -P gradle' -->
 			<plugin>
 			    <groupId>com.mycila</groupId>

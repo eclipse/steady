@@ -395,7 +395,7 @@
 			    <configuration>
 				<archive>
 				    <manifestEntries>
-					<Multi-Release>true</Multi-Release>
+						<Multi-Release>true</Multi-Release>
 				    </manifestEntries>
 				</archive>
 			    </configuration>
@@ -403,7 +403,7 @@
 
 			<!-- Include LICENSE and NOTICE in all JARs (ESF requirement) -->
 
-			<!-- Problem: Symlink LICENSE.txt to be created with WSL (not Cygwin) and copied with plugin version 2.7, cf.
+			<!-- Note: Symlink LICENSE to be created with WSL (not Cygwin) and copied with plugin version 2.7, cf.
 			https://issues.apache.org/jira/browse/MRESOURCES-237
 			https://stackoverflow.com/questions/40346225/maven-resources-plugin-symbolic-link-handling -->
 
