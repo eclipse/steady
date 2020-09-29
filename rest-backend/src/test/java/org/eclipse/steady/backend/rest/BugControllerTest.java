@@ -135,6 +135,8 @@ public class BugControllerTest {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
     this.afflibRepository.deleteAll();
     this.bugRepository.deleteAll();
+    this.libRepository.deleteAll();
+    this.libIdRepository.deleteAll();
   }
 
   /**
@@ -679,6 +681,54 @@ public class BugControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(contentType))
         .andExpect(jsonPath("$.length()", is(2)));
+  }
+
+  @Test
+  public void testGetResolvedAffectedLibrary() throws Exception {
+    final Bug bug = this.createExampleBug(BUG_ID, BUG_DESCR);
+    this.bugRepository.customSave(bug, true);
+
+    LibraryId lid1 = new LibraryId("com.foo", "bar", "1.0");
+    libIdRepository.save(lid1);
+
+    LibraryId lid2 = new LibraryId("com.foo", "bar", "1.0-copy");
+    libIdRepository.save(lid2);
+
+    LibraryId lid3 = new LibraryId("com.bar", "foo", "1.1");
+    libIdRepository.save(lid3);
+
+    AffectedLibrary afflib1 = new AffectedLibrary(bug, lid1, true, null, null, null);
+    afflib1.setSource(AffectedVersionSource.AST_EQUALITY);
+
+    AffectedLibrary afflib2 = new AffectedLibrary(bug, lid2, true, null, null, null);
+    afflib2.setSource(AffectedVersionSource.MANUAL);
+
+    AffectedLibrary afflib2_ast = new AffectedLibrary(bug, lid2, false, null, null, null);
+    afflib2_ast.setSource(AffectedVersionSource.AST_EQUALITY);
+
+    AffectedLibrary afflib3 = new AffectedLibrary(bug, lid3, null, null, null, null);
+    afflib3.setSource(AffectedVersionSource.TO_REVIEW);
+
+    AffectedLibrary[] afflibs = new AffectedLibrary[4];
+    afflibs[0] = afflib1;
+    afflibs[1] = afflib2;
+    afflibs[2] = afflib2_ast;
+    afflibs[3] = afflib3;
+    afflibRepository.customSave(bug, afflibs);
+
+    final MockHttpServletRequestBuilder get_builder =
+        get("/bugs/" + bug.getBugId() + "/affectedLibIds?resolved=true");
+    mockMvc
+        .perform(get_builder)
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType))
+        .andExpect(jsonPath("$.length()", is(2)));
+
+    mockMvc
+        .perform(get("/bugs/" + bug.getBugId() + "/affectedLibIds"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType))
+        .andExpect(jsonPath("$.length()", is(4)));
   }
 
   /*@Test
