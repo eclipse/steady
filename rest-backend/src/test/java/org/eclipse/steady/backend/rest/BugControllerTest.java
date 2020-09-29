@@ -705,7 +705,7 @@ public class BugControllerTest {
 
     AffectedLibrary afflib2_ast = new AffectedLibrary(bug, lid2, false, null, null, null);
     afflib2_ast.setSource(AffectedVersionSource.AST_EQUALITY);
-    
+
     AffectedLibrary afflib2_intersection = new AffectedLibrary(bug, lid2, true, null, null, null);
     afflib2_intersection.setSource(AffectedVersionSource.INTERSECTION);
 

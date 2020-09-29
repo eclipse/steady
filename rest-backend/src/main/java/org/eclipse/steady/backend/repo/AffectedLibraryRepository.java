@@ -433,26 +433,24 @@ public interface AffectedLibraryRepository
    */
   @Query(
       value =
-          " select * from  (select distinct * from"
-              + " bug_affected_library where source='MANUAL'  and lib is null  UNION  select"
-              + " distinct * from bug_affected_library as al1"
-              + " where al1.lib is null and (al1.source='KAYBEE')   and not exists (select 1 from"
+          " select * from  (select distinct * from bug_affected_library where source='MANUAL'  and"
+              + " lib is null  UNION  select distinct * from bug_affected_library as al1 where"
+              + " al1.lib is null and (al1.source='KAYBEE')   and not exists (select 1 from"
               + " bug_affected_library as al2 where al2.source='MANUAL' and al1.bug_id=al2.bug_id"
-              + " and al1.library_id=al2.library_id) UNION  select distinct"
-              + " * from bug_affected_library as al1 where"
-              + " al1.lib is null and (al1.source='CHECK_CODE')   and not exists (select 1 from"
-              + " bug_affected_library as al2 where (al2.source='MANUAL' or al2.source='KAYBEE')"
-              + " and al1.bug_id=al2.bug_id and al1.library_id=al2.library_id) UNION  select"
-              + " distinct * from bug_affected_library as al1"
-              + " where al1.lib is null and (al1.source='AST_EQUALITY' OR"
-              + " al1.source='MINOR_EQUALITY'OR al1.source='MAJOR_EQUALITY' OR"
+              + " and al1.library_id=al2.library_id) UNION  select distinct * from"
+              + " bug_affected_library as al1 where al1.lib is null and (al1.source='CHECK_CODE') "
+              + "  and not exists (select 1 from bug_affected_library as al2 where"
+              + " (al2.source='MANUAL' or al2.source='KAYBEE') and al1.bug_id=al2.bug_id and"
+              + " al1.library_id=al2.library_id) UNION  select distinct * from"
+              + " bug_affected_library as al1 where al1.lib is null and (al1.source='AST_EQUALITY'"
+              + " OR al1.source='MINOR_EQUALITY'OR al1.source='MAJOR_EQUALITY' OR"
               + " al1.source='GREATER_RELEASE' OR al1.source='INTERSECTION' OR"
-              + " al1.source='PROPAGATE_MANUAL')  and al1.created_at=(select max(created_at) from bug_affected_library where bug_id=:bug_id and library_id=:library_id and not source='TO_REVIEW')"
-              + " and not exists (select 1 from"
-              + " bug_affected_library as al2 where (al2.source='MANUAL' OR"
-              + " al2.source='CHECK_CODE' OR al2.source='KAYBEE') and al1.bug_id=al2.bug_id and"
-              + " al1.library_id=al2.library_id)) as a  where a.bug_id=:bug_id and"
-              + " a.library_id=:library_id",
+              + " al1.source='PROPAGATE_MANUAL')  and al1.created_at=(select max(created_at) from"
+              + " bug_affected_library where bug_id=:bug_id and library_id=:library_id and not"
+              + " source='TO_REVIEW') and not exists (select 1 from bug_affected_library as al2"
+              + " where (al2.source='MANUAL' OR al2.source='CHECK_CODE' OR al2.source='KAYBEE')"
+              + " and al1.bug_id=al2.bug_id and al1.library_id=al2.library_id)) as a  where"
+              + " a.bug_id=:bug_id and a.library_id=:library_id",
       nativeQuery = true)
   AffectedLibrary findResolvedAffectedLibrary(
       @Param("bug_id") String bug_id, @Param("library_id") LibraryId library_id);
