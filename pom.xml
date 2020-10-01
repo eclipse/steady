@@ -126,7 +126,10 @@
 			as system property (-D) (no defaults) -->
 		<snapshots.repo></snapshots.repo>
 		<releases.repo></releases.repo>
-
+		
+		<snapshots.repo.id>build.snapshots.repo</snapshots.repo.id>
+		<releases.repo.id>build.releases.repo</releases.repo.id>
+		
 		<!-- Repos used for resolving dependencies, specify as system property
 			(-D) to change the defaults -->
 		<gradle.repo>https://maven.google.com/</gradle.repo>
@@ -221,21 +224,22 @@
 	</profiles>
 
 	<distributionManagement>
-		<!-- To deploy snaphots to Sonatype, call deploy w/o profiles javadoc and release, but with -Dsnapshots.repo=https://oss.sonatype.org/content/repositories/snapshots -->
+		<!-- To deploy snaphots to Maven Central, call deploy w/o profiles javadoc and release, but with -Dsnapshots.repo=https://oss.sonatype.org/content/repositories/snapshots -->
+		<!-- To deploy to https://repo.eclipse.org/, call deploy w/o profiles javadoc and release, but with -D<snapshots|releases>.repo.id=repo.eclipse.org -D<snapshots|releases>.repo=https://repo.eclipse.org/content/repositories/steady-<snapshots|releases>/ -->
 		<snapshotRepository>
 			<uniqueVersion>false</uniqueVersion>
-			<id>build.snapshots.repo</id>
+			<id>${snapshots.repo.id}</id>
 			<name>snapshots</name>
 			<url>${snapshots.repo}</url>
 		</snapshotRepository>
 		<repository>
-			<id>build.releases.repo</id>
+			<id>${releases.repo.id}</id>
 			<name>releases</name>
 			<url>${releases.repo}</url>
 		</repository>
 		<site>
 			<id>vulas.website</id>
-			<name>Vulas Documentation</name>
+			<name>Steady Documentation</name>
 			<url>file:${project.basedir}/docs/site</url>
 		</site>
 	</distributionManagement>
