@@ -124,19 +124,23 @@
 		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 		<maven.compiler.skipMultiThreadWarning>true</maven.compiler.skipMultiThreadWarning>
+		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<!-- Repos to which Vulas artifacts will be deployed, must be provided
-			as system property (-D) (no defaults) -->
-		<snapshots.repo></snapshots.repo>
-		<releases.repo></releases.repo>
+		<!-- Deployment to Maven Central is configured in release profile,
+			other deployment targets must be provided as system property (-D) (no defaults) -->
 		<snapshots.repo.id>build.snapshots.repo</snapshots.repo.id>
 		<releases.repo.id>build.releases.repo</releases.repo.id>
+		<snapshots.repo></snapshots.repo>
+		<releases.repo></releases.repo>
 		
 		<!-- Repos used for resolving dependencies, specify as system property
 			(-D) to change the defaults -->
 		<gradle.repo>https://maven.google.com/</gradle.repo>
+		
+		<!-- Skipped by default, activate for all childs to be deployed -->
+		<maven.deploy.skip>true</maven.deploy.skip>
 	</properties>
 
 	<profiles>
@@ -270,7 +274,7 @@
 		<dependency>
   			<groupId>com.github.spotbugs</groupId>
   			<artifactId>spotbugs-annotations</artifactId>
-  			<version>4.1.1</version>
+  			<version>4.1.3</version>
 		</dependency>
 		
 	</dependencies>
@@ -419,48 +423,18 @@
 				</executions>
 			</plugin>
 		
-			<!-- Add support for multi release JARs (required by log4j2) --> 
-			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-jar-plugin</artifactId>
-			    <configuration>
-				<archive>
-				    <manifestEntries>
-						<Multi-Release>true</Multi-Release>
-				    </manifestEntries>
-				</archive>
-			    </configuration>
-			</plugin>
-
-			<!-- Include LICENSE and NOTICE in all JARs (ESF requirement) -->
-
-			<!-- Note: Symlink LICENSE must NOT to be created with Cygwin, and can only be copied with plugin versions <= 2.7, cf.
-			https://issues.apache.org/jira/browse/MRESOURCES-237
-			https://stackoverflow.com/questions/40346225/maven-resources-plugin-symbolic-link-handling -->
-
+			<!-- Skip for parent project, cf. pluginManagement section -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.7</version>
+				<inherited>false</inherited>
 				<executions>
 					<execution>
 						<id>copy-resources</id>
-						<phase>validate</phase>
+						<phase>none</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
-						<configuration>
-							<outputDirectory>${project.build.outputDirectory}/META-INF</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${project.basedir}</directory>
-							        <includes>
-							          <include>LICENSE</include>
-							          <include>NOTICE</include>
-							        </includes>
-								</resource>
-							</resources>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -652,6 +626,59 @@
 
 		<pluginManagement>
 			<plugins>
+				<!-- Add support for multi release JARs (required by log4j2) --> 
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.1.0</version>
+					<configuration>
+						<archive>
+							<manifestEntries>
+								<Multi-Release>true</Multi-Release>
+							</manifestEntries>
+						</archive>
+					</configuration>
+				</plugin>
+
+				<!-- Include LICENSE and NOTICE in all JARs (ESF requirement)
+					Note: Symlink LICENSE must NOT to be created with Cygwin, and can only be copied with plugin versions <= 2.7, cf.
+					https://issues.apache.org/jira/browse/MRESOURCES-237
+					https://stackoverflow.com/questions/40346225/maven-resources-plugin-symbolic-link-handling -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.7</version>
+					<executions>
+						<execution>
+							<id>copy-resources</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.outputDirectory}/META-INF</outputDirectory>
+								<resources>
+									<resource>
+										<!-- Note: Only works for 1st level childs of this parent -->
+										<directory>${project.basedir}/..</directory>
+										<includes>
+											<include>LICENSE</include>
+											<include>NOTICE</include>
+										</includes>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				
+				<!-- Actual 3rd party libs configured in *-init modules -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				
 				<plugin>
 			        <groupId>com.google.cloud.tools</groupId>
 			        <artifactId>jib-maven-plugin</artifactId>
@@ -681,11 +708,6 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.1.0</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>2.6</version>
 				</plugin>
@@ -703,6 +725,14 @@
 					<groupId>org.antlr</groupId>
 					<artifactId>antlr4-maven-plugin</artifactId>
 					<version>4.7.2</version>
+					<executions>
+						<execution>
+							<id>generate-antlr4</id>
+							<goals>
+								<goal>antlr4</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -712,77 +742,4 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
-	<!-- Run with 'mvn spotbugs:spotbugs site' -->
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>3.7.1</version>
-				<!--configuration> <outputDirectory>${project.basedir}/docs/site</outputDirectory>
-					</configuration -->
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.9</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.0.1</version>
-				<configuration>
-					<failOnError>false</failOnError>
-					<noindex>false</noindex>
-					<show>public</show>
-					<links>
-						<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
-					</links>
-				</configuration>
-				<reportSets>
-					<reportSet>
-						<id>aggregate</id>
-						<inherited>false</inherited>
-						<reports>
-							<report>aggregate</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<plugin>
-				<groupId>com.github.spotbugs</groupId>
-				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.12.2</version>
-				<configuration>
-					<failOnError>false</failOnError>
-					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
-					<omitVisitors></omitVisitors>
-				</configuration>
-				<reportSets>
-					<reportSet>
-						<id>aggregate</id>
-						<inherited>false</inherited>
-						<reports>
-							<report>spotbugs</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.0.0</version>
-				<reportSets>
-					<reportSet>
-						<id>aggregate</id>
-						<inherited>false</inherited>
-						<reports>
-							<report>checkstyle</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-		</plugins>
-	</reporting>
 </project>

@@ -5,7 +5,8 @@
 **/.settings
 **/.project
 **/dependency-reduced-pom.xml
-**/.flattened-pom.xml
+.flattened-pom.xml
+.factorypath
 tags
 *.classpath
 *.project

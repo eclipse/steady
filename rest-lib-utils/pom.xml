@@ -42,6 +42,13 @@
 	</description>
 	<url>https://eclipse.github.io/steady</url>
 	<inceptionYear>2018</inceptionYear>
+	
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
 
 	<properties>
 		<maven.compiler.source>1.7</maven.compiler.source>
@@ -422,8 +429,8 @@
 				</plugins>
 			</build>
 		</profile>
-
 	</profiles>
+
 	<build>
 		<plugins>
 			<!-- Flattens the pom.xml files included in artifacts,

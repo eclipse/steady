@@ -39,6 +39,10 @@
 		consistency across modules.
 	</description>
 	
+	<properties>
+		<maven.deploy.skip>false</maven.deploy.skip>
+	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -70,6 +74,11 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			
 			<!-- Used to provide version information in "vulas-version.properties" -->
 			<plugin>
 				<groupId>com.google.code.maven-replacer-plugin</groupId>

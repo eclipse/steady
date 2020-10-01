@@ -40,6 +40,13 @@
 	<url>https://eclipse.github.io/steady</url>
 	<inceptionYear>2018</inceptionYear>
 	
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -438,6 +445,7 @@
 			</build>
 		</profile>
 	</profiles>
+	
 	<build>
 		<plugins>
 			<!-- Flattens the pom.xml files included in artifacts,

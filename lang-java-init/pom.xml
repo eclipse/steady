@@ -40,23 +40,22 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
-				<version>2.4</version>
 				<executions>
 					<execution>
-						<id>install-changedistiller</id>
+						<id>install-3rd-party</id>
 						<phase>validate</phase>
 						<goals>
 							<goal>install-file</goal>
 						</goals>
-						<configuration>
-							<groupId>ch.uzh.ifi.seal</groupId>
-							<artifactId>changedistiller</artifactId>
-							<version>0.0.4</version>
-							<packaging>jar</packaging>
-							<file>${basedir}/lib/changedistiller-0.0.4-SNAPSHOT.jar</file>
-						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<groupId>ch.uzh.ifi.seal</groupId>
+					<artifactId>changedistiller</artifactId>
+					<version>0.0.4</version>
+					<packaging>jar</packaging>
+					<file>${basedir}/lib/changedistiller-0.0.4-SNAPSHOT.jar</file>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

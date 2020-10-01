@@ -31,8 +31,11 @@
 
     <artifactId>lang-java-reach-wala</artifactId>
     <name>Java - Wala call graph constructor service</name>
-    <description>Default call graph constructor service for Java</description>
-
+    <description></description>
+    
+    <properties>
+		<maven.deploy.skip>false</maven.deploy.skip>
+	</properties>
 
     <dependencies>
         <dependency>
@@ -42,4 +45,13 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+    
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 </project>

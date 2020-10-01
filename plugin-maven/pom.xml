@@ -34,6 +34,10 @@
 
     <name>Plugin for Maven</name>
     <description></description>
+    
+    <properties>
+    	<maven.deploy.skip>false</maven.deploy.skip>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -150,6 +154,10 @@
 
     <build>
         <plugins>
+        	<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
             <!-- Create plugin descriptor and help -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -168,7 +176,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 

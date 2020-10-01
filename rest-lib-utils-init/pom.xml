@@ -40,24 +40,23 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
-				<version>2.4</version>
 				<executions>
-					<!-- https://github.com/jeantessier/dependency-finder, BSD-license @ https://github.com/jeantessier/dependency-finder/blob/master/license.txt -->
 					<execution>
-						<id>install-dependency-finder</id>
+						<id>install-3rd-party</id>
 						<phase>validate</phase>
 						<goals>
 							<goal>install-file</goal>
 						</goals>
-						<configuration>
-							<groupId>com.jeantessier</groupId>
-							<artifactId>dependency-finder</artifactId>
-							<version>1.2.1-beta5</version>
-							<packaging>jar</packaging>
-							<file>${basedir}/lib/dependency-finder-1.2.1-beta5.jar</file>
-						</configuration>
 					</execution>
 				</executions>
+				<!-- https://github.com/jeantessier/dependency-finder, BSD-license @ https://github.com/jeantessier/dependency-finder/blob/master/license.txt -->
+				<configuration>
+					<groupId>com.jeantessier</groupId>
+					<artifactId>dependency-finder</artifactId>
+					<version>1.2.1-beta5</version>
+					<packaging>jar</packaging>
+					<file>${basedir}/lib/dependency-finder-1.2.1-beta5.jar</file>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

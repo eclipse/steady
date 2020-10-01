@@ -34,6 +34,10 @@
 	<name>Java - Core classes and SPI for Java reachability analysis</name>
 	<description>Performs static analysis of application and OSS source code in order to analyze the reachability of vulnerable Java constructs</description>
 
+	<properties>
+		<maven.deploy.skip>false</maven.deploy.skip>
+	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.steady</groupId>
@@ -72,6 +76,11 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			
 			<!-- Increase memory for Junit test case execution -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
