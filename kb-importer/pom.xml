@@ -67,7 +67,7 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang-python</artifactId>
 			<version>${project.version}</version>
 			<scope>runtime</scope>
