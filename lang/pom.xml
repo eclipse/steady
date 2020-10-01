@@ -35,7 +35,7 @@
 	<properties>
 		<!-- Exclude ANTLR-generated files from Sonar reports -->
 		<sonar.exclusions>src/main/java/com/sap/psr/vulas/java/antlr/*.java</sonar.exclusions>
-		<maven.deploy.skip>false</maven.deploy.skip>
+		<skip.install.deploy>false</skip.install.deploy>
 	</properties>
 
 	<dependencies>

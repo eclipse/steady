@@ -38,7 +38,7 @@
         <gradle.distribution.url>https://services.gradle.org/distributions/gradle-5.0-bin.zip</gradle.distribution.url>
         <gradle.executable>./gradlew</gradle.executable>
         <gradle.task>build</gradle.task>
-        <maven.deploy.skip>false</maven.deploy.skip>
+        <skip.install.deploy>false</skip.install.deploy>
     </properties>
     
     <dependencies>

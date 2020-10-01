@@ -40,7 +40,7 @@
 	</description>
 	
 	<properties>
-		<maven.deploy.skip>false</maven.deploy.skip>
+		<skip.install.deploy>false</skip.install.deploy>
 	</properties>
 	
 	<dependencies>

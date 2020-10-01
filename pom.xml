@@ -139,8 +139,11 @@
 			(-D) to change the defaults -->
 		<gradle.repo>https://maven.google.com/</gradle.repo>
 		
-		<!-- Skipped by default, activate for all childs to be deployed -->
-		<maven.deploy.skip>true</maven.deploy.skip>
+		<!-- Skip certain plugins by default, change for all childs to be installed & deployed -->
+		<skip.install.deploy>true</skip.install.deploy>
+		<maven.resources.skip>${skip.install.deploy}</maven.resources.skip><!-- Only as of 3.0.0, but kept nevertheless -->
+		<maven.install.skip>${skip.install.deploy}</maven.install.skip>
+		<maven.deploy.skip>${skip.install.deploy}</maven.deploy.skip>
 	</properties>
 
 	<profiles>
@@ -276,7 +279,6 @@
   			<artifactId>spotbugs-annotations</artifactId>
   			<version>4.1.3</version>
 		</dependency>
-		
 	</dependencies>
 
 	<!-- Use the same versions across all child projects -->
@@ -393,7 +395,6 @@
 	</issueManagement>
 
 	<build>
-	
 		<plugins>
 		
 			<!-- Flattens the pom.xml files included in artifacts,
