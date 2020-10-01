@@ -36,8 +36,6 @@ Issue report checklist:
 
 ### Requirements for a bug report
 
-<!--   * issues caused by the usage of non-public UI5 methods. Only the public methods listed in the API documentation may be used.-->
-
 These eight requirements are the mandatory base of a good bug report:
 
 1. **Only real bugs**: please do your best to make sure to only report real bugs! Do not report:
@@ -72,14 +70,13 @@ When an issue is reported, a committer will look at it and either confirm it as 
 
 An issue that is about a real bug is closed as soon as the fix is committed. The closing comment explains which patch version(s) will contain the fix.
 
-<!--
 ### Reporting Security Issues
 
-If you find a security issue, please act responsibly and report it not in the public issue tracker, but directly to us, so we can fix it before it can be exploited:
-* SAP Customers: if the found security issue is not covered by a published security note, please report it by creating a customer message at https://service.sap.com/message.
- * Researchers/non-Customers: please send the related information to secure@sap.com using [PGP for e-mail encryption](http://global.sap.com/pc/security/keyblock.txt).
-Also refer to the general [SAP security information page](https://www.sap.com/corporate/en/company/security.html).
--->
+If you find a security issue, please act responsibly and do NOT report it in the public issue tracker.
+
+Instead, [open a ticket](https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Community&component=Vulnerability+Reports&keywords=security&groups=Security_Advisories) in the Eclipse Bugzilla instance.
+
+More information about Eclipse's vulnerability reporting guidelines can be found in the [Eclipse Project Handbook](https://www.eclipse.org/projects/handbook/#vulnerability-reporting).
 
 ### Usage of Labels
 
