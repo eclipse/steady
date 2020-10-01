@@ -453,7 +453,7 @@
 							<outputDirectory>${project.build.outputDirectory}/META-INF</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${project.basedir}/..</directory>
+									<directory>${project.basedir}</directory>
 							        <includes>
 							          <include>LICENSE</include>
 							          <include>NOTICE</include>
