@@ -39,14 +39,6 @@
 		consistency across modules.
 	</description>
 	
-	<distributionManagement>
-		<site>
-			<id>vulas.website</id>
-			<name>Vulas Documentation</name>
-			<url>file:${project.basedir}/docs/site</url>
-		</site>
-	</distributionManagement>
-
 	<dependencies>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

@@ -5,6 +5,7 @@
 **/.settings
 **/.project
 **/dependency-reduced-pom.xml
+**/.flattened-pom.xml
 tags
 *.classpath
 *.project
@@ -37,3 +38,4 @@ kubernetes/helm/vulnerability-assessment-tool-admin/charts/nginx-ingress/files/t
 !/kubernetes/kustomize/secrets/*.sample
 /docker/**/import_vulas_kb.sh
 google-java-format-*.jar
+
