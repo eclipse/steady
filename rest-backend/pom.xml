@@ -27,7 +27,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.22.RELEASE</version>
-		<relativePath />
+		<relativePath/>
 	</parent>
 
 	<groupId>org.eclipse.steady</groupId>
@@ -37,29 +37,72 @@
 
 	<name>REST service to manage scan results and bugs</name>
 	<description></description>
-	<url>https://eclipse.github.io/steady</url>
+
+	<!-- From url to distMgmt: Identical for root, rest-backend and rest-lib-utils -->
+	<url>https://eclipse.github.io/steady/</url>
 	<inceptionYear>2018</inceptionYear>
-	
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
 			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
-	
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<!-- Specify as system property (-D) -->
-		<snapshots.repo></snapshots.repo>
-		<releases.repo></releases.repo>
-		<snapshots.repo.id>build.snapshots.repo</snapshots.repo.id>
-		<releases.repo.id>build.releases.repo</releases.repo.id>
-	</properties>
-
+	<organization></organization>
+	<developers>
+		<developer>
+			<id>plate</id>
+			<name>Henrik Plate</name>
+			<email>henrik.plate@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
+		</developer>
+		<developer>
+			<id>ponta</id>
+			<name>Serena Elisa Ponta</name>
+			<email>serena.ponta@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
+		</developer>
+		<developer>
+			<id>sabetta</id>
+			<name>Antonino Sabetta</name>
+			<email>antonino.sabetta@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
+		</developer>
+		<developer>
+			<id>dangremont</id>
+			<name>Cedric Dangremont</name>
+			<email>cedric.dangremont@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
+		</developer>
+		<developer>
+			<id>pezze</id>
+			<name>Alessandro Pezze</name>
+		</developer>
+		<developer>
+			<id>patil</id>
+			<name>Sumeet Patil</name>
+			<email>sumeet.patil@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:git://github.com/eclipse/steady.git</connection>
+		<developerConnection>scm:git:ssh://github.com:sap/eclipse/steady.git</developerConnection>
+		<url>https://github.com/eclipse/steady/tree/master</url>
+	</scm>
+	<issueManagement>
+		<url>https://github.com/eclipse/steady/issues</url>
+		<system>GitHub</system>
+	</issueManagement>
+	<!-- To deploy snaphots to Maven Central: Call deploy w/o profiles javadoc 
+		and release, but with -Dsnapshots.repo=https://oss.sonatype.org/content/repositories/snapshots -->
+	<!-- To deploy to Eclipse's Nexus: Call deploy w/o profiles javadoc and 
+		release, but with -D<snapshots|releases>.repo.id=repo.eclipse.org -D<snapshots|releases>.repo=https://repo.eclipse.org/content/repositories/steady-<snapshots|releases>/ -->
 	<distributionManagement>
-		<!-- To deploy snaphots to Maven Central, call deploy w/o profiles javadoc and release, but with -Dsnapshots.repo=https://oss.sonatype.org/content/repositories/snapshots -->
-		<!-- To deploy to https://repo.eclipse.org/, call deploy w/o profiles javadoc and release, but with -D<snapshots|releases>.repo.id=repo.eclipse.org -D<snapshots|releases>.repo=https://repo.eclipse.org/content/repositories/steady-<snapshots|releases>/ -->
 		<snapshotRepository>
 			<uniqueVersion>false</uniqueVersion>
 			<id>${snapshots.repo.id}</id>
@@ -72,6 +115,19 @@
 			<url>${releases.repo}</url>
 		</repository>
 	</distributionManagement>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		
+		<!-- Deployment to Maven Central is configured in release profile, other 
+			deployment targets must be provided as system property (no defaults, see 
+			distributionProfile) -->
+		<snapshots.repo.id>build.snapshots.repo</snapshots.repo.id>
+		<releases.repo.id>build.releases.repo</releases.repo.id>
+		<snapshots.repo></snapshots.repo>
+		<releases.repo></releases.repo>
+	</properties>
 	
 	<dependencies>
 
