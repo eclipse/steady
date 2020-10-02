@@ -464,7 +464,7 @@
 							<goal>flatten</goal>
 						</goals>
 						<configuration>
-							<flattenMode>ossrh</flattenMode>
+							<flattenMode>clean</flattenMode>
 						</configuration>
 					</execution>
 					<execution>

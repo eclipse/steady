@@ -134,7 +134,6 @@
 		
 		<!-- Skip certain plugins by default, change for all childs to be installed & deployed -->
 		<skip.install.deploy>true</skip.install.deploy>
-		<maven.resources.skip>${skip.install.deploy}</maven.resources.skip><!-- Only as of 3.0.0, but kept nevertheless -->
 		<maven.install.skip>${skip.install.deploy}</maven.install.skip>
 		<maven.deploy.skip>${skip.install.deploy}</maven.deploy.skip>
 	</properties>
@@ -410,7 +409,7 @@
 							<goal>flatten</goal>
 						</goals>
 						<configuration>
-							<flattenMode>ossrh</flattenMode>
+							<flattenMode>clean</flattenMode>
 						</configuration>
 					</execution>
 					<execution>
