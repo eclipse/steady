@@ -98,35 +98,15 @@
 		<url>https://github.com/eclipse/steady/issues</url>
 		<system>GitHub</system>
 	</issueManagement>
-	<!-- To deploy snaphots to Maven Central: Call deploy w/o profiles javadoc 
-		and release, but with -Dsnapshots.repo=https://oss.sonatype.org/content/repositories/snapshots -->
-	<!-- To deploy to Eclipse's Nexus: Call deploy w/o profiles javadoc and 
-		release, but with -D<snapshots|releases>.repo.id=repo.eclipse.org -D<snapshots|releases>.repo=https://repo.eclipse.org/content/repositories/steady-<snapshots|releases>/ -->
-	<distributionManagement>
-		<snapshotRepository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>${snapshots.repo.id}</id>
-			<name>snapshots</name>
-			<url>${snapshots.repo}</url>
-		</snapshotRepository>
-		<repository>
-			<id>${releases.repo.id}</id>
-			<name>releases</name>
-			<url>${releases.repo}</url>
-		</repository>
-	</distributionManagement>
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		
-		<!-- Deployment to Maven Central is configured in release profile, other 
-			deployment targets must be provided as system property (no defaults, see 
-			distributionProfile) -->
-		<snapshots.repo.id>build.snapshots.repo</snapshots.repo.id>
-		<releases.repo.id>build.releases.repo</releases.repo.id>
-		<snapshots.repo></snapshots.repo>
-		<releases.repo></releases.repo>
+		<!-- Skip install and deploy -->
+		<skip.install.deploy>true</skip.install.deploy>
+		<maven.install.skip>${skip.install.deploy}</maven.install.skip>
+		<maven.deploy.skip>${skip.install.deploy}</maven.deploy.skip>
 	</properties>
 	
 	<dependencies>
@@ -484,18 +464,6 @@
 								</goals>
 							</execution>
 						</executions>
-					</plugin>
-					<!-- Deploy to the Central Repository according to https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release. -->
-					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.8</version>
-						<extensions>true</extensions>
-						<configuration>
-							<serverId>ossrh</serverId>
-							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>
