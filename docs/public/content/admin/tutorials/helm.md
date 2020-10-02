@@ -23,7 +23,7 @@ This repository contains three charts:
 -   **vulnerability-assessment-tool-admin**: which encapsulates all the cluster admin tools (namely the ingress controller to expose the service)  
 -   **vulnerability-assessment-tool-monitoring**: which is used to deploy the dedicated monitoring stack  
 
-Clone locally `vulnerability-assessment-tool` repository and change the directory to the Helm chart's folder
+Clone locally `Eclipse Steady` repository and change the directory to the Helm chart's folder
 
 ```sh
 git clone https://github.com/eclipse/steady.git

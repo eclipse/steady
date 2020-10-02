@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: rest-lib-utils
-          image: vulas/vulnerability-assessment-tool-rest-lib-utils:3.1.6-SNAPSHOT
+          image: eclipse/steady-rest-lib-utils:3.1.16-SNAPSHOT
           ports:
             - containerPort: 8092
           resources:

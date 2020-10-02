@@ -1,6 +1,6 @@
 # Loading dumps and migrating from existing database
 
-This guide is destined to those who want to migrate their old vulnerability-assessment-tool database to the Kubernetes deployment.
+This guide is destined to those who want to migrate their old Eclipse Steady database to the Kubernetes deployment.
 
 ## Preliminary
 
