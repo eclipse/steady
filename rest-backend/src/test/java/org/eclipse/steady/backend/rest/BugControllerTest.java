@@ -706,14 +706,18 @@ public class BugControllerTest {
     AffectedLibrary afflib2_ast = new AffectedLibrary(bug, lid2, false, null, null, null);
     afflib2_ast.setSource(AffectedVersionSource.AST_EQUALITY);
 
+    AffectedLibrary afflib2_intersection = new AffectedLibrary(bug, lid2, true, null, null, null);
+    afflib2_intersection.setSource(AffectedVersionSource.INTERSECTION);
+
     AffectedLibrary afflib3 = new AffectedLibrary(bug, lid3, null, null, null, null);
     afflib3.setSource(AffectedVersionSource.TO_REVIEW);
 
-    AffectedLibrary[] afflibs = new AffectedLibrary[4];
+    AffectedLibrary[] afflibs = new AffectedLibrary[5];
     afflibs[0] = afflib1;
     afflibs[1] = afflib2;
     afflibs[2] = afflib2_ast;
-    afflibs[3] = afflib3;
+    afflibs[3] = afflib2_intersection;
+    afflibs[4] = afflib3;
     afflibRepository.customSave(bug, afflibs);
 
     final MockHttpServletRequestBuilder get_builder =
@@ -728,7 +732,7 @@ public class BugControllerTest {
         .perform(get("/bugs/" + bug.getBugId() + "/affectedLibIds"))
         .andExpect(status().isOk())
         .andExpect(content().contentType(contentType))
-        .andExpect(jsonPath("$.length()", is(4)));
+        .andExpect(jsonPath("$.length()", is(5)));
   }
 
   /*@Test
