@@ -33,10 +33,6 @@
 
 	<name>Knowledge Base Importer</name>
 	<description></description>
-	
-	<properties>
-		<skip.install.deploy>false</skip.install.deploy>
-	</properties>
 
 	<dependencies>
 		<dependency>
