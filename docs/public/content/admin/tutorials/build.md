@@ -31,14 +31,14 @@ Customize the file `docker/.env` to match your needs, make sure you set the vers
 At this point, you are ready to build the JAR/WAR artifacts with the following command:
 
 ```sh
-docker build --tag vulnerability-assessment-tool-generator:@@PROJECT_VERSION@@ -f docker/Dockerfile .
-docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags=-DskipTests vulnerability-assessment-tool-generator:@@PROJECT_VERSION@@
+docker build --tag steady-generator:@@PROJECT_VERSION@@ -f docker/Dockerfile .
+docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags=-DskipTests steady-generator:@@PROJECT_VERSION@@
 ```
 
 > If the command above fails, add `-DreuseForks=False` flag to `mvn_flags`. As shown in the example below.
 >
 > ```sh
-> docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags='-DskipTests -DreuseForks=False' vulnerability-assessment-tool-generator:@@PROJECT_VERSION@@
+> docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_flags='-DskipTests -DreuseForks=False' steady-generator:@@PROJECT_VERSION@@
 > ```
 
 > In case you are running behind a proxy you need to configure it in the `--build-arg` arguments. Check the [predefined `ARG`s](https://docs.docker.com/engine/reference/builder/#predefined-args) documentation to know more.

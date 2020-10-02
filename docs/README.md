@@ -2,7 +2,7 @@
 
 ## Overview
 
-This folder contains the sources of the documentation of vulnerability-assessment-tool.
+This folder contains the sources of the documentation of Eclipse Steady.
 
 The documentation is generated with a script [docs.py](./docs.py) which is a wrapper on the build system that we use ([MkDocs](./mkdocs.yml)). With this script one can also generate custom documentations, we use this script to generate our internal documentation for SAP's employees.
 

@@ -1,7 +1,7 @@
 #!/bin/bash
-# Push vulnerability-assessment-tool images to a registry
+# Push steady images to a registry
 #
-# Usage: push.sh -r <registry> -p <project> -v <vulnerability-assessment-tool-version>
+# Usage: push.sh -r <registry> -p <project> -v <steady-version>
 #
 # To run this script you should have already generated the JARs and be logged in the registry
 # Use `docker login` to login to the registry
@@ -56,21 +56,21 @@ if [[ ! $VULAS_RELEASE =~ $RELEASE_PATTERN ]]; then
     exit 1
 fi
 
-SERVICES='frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils patch-analyzer rest-nvd'
+SERVICES='frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils rest-nvd'
 
 VULAS_RELEASE=${VULAS_RELEASE} docker-compose -f docker-compose.build.yml build
 
-if [[ "$(docker images -q vulnerability-assessment-tool-rest-backend:"$VULAS_RELEASE" 2> /dev/null)" == "" ]]; then
+if [[ "$(docker images -q steady-rest-backend:"$VULAS_RELEASE" 2> /dev/null)" == "" ]]; then
     echo "[-] There are no local images for release $VULAS_RELEASE"
     exit 1
 fi
 
 
 for service in $SERVICES ; do
-    IMAGE=${REGISTRY}/${PROJECT}/vulnerability-assessment-tool-${service}
-    docker tag vulnerability-assessment-tool-"${service}":"${VULAS_RELEASE}" "${IMAGE}:${VULAS_RELEASE}"
+    IMAGE=${REGISTRY}/${PROJECT}/steady-${service}
+    docker tag steady-"${service}":"${VULAS_RELEASE}" "${IMAGE}:${VULAS_RELEASE}"
     docker push "${IMAGE}:${VULAS_RELEASE}"
 
-    docker tag vulnerability-assessment-tool-"${service}":"${VULAS_RELEASE}" "${IMAGE}:latest"
+    docker tag steady-"${service}":"${VULAS_RELEASE}" "${IMAGE}:latest"
     docker push "${IMAGE}:latest"
 done
