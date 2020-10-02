@@ -147,7 +147,6 @@
 		<module>lang</module>
 
 		<!-- Language-specific analysis -->
-		<module>lang-java-init</module>
 		<module>lang-java</module>
 		<module>lang-java-reach</module>
 		<module>lang-java-reach-wala</module>
@@ -169,7 +168,6 @@
 		<module>frontend-bugs</module>
 
 		<!-- REST services -->
-		<module>rest-lib-utils-init</module>
 		<module>rest-lib-utils</module>
 		<module>rest-backend</module>
 	</modules>
@@ -412,7 +410,7 @@
 							<goal>flatten</goal>
 						</goals>
 						<configuration>
-							<flattenMode>bom</flattenMode>
+							<flattenMode>ossrh</flattenMode>
 						</configuration>
 					</execution>
 					<execution>
@@ -421,6 +419,44 @@
 						<goals>
 							<goal>clean</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- Install 3rd party not available on Maven Cenral, required by lang-java and rest-lib-utils -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<inherited>false</inherited>
+				<executions>
+					<execution>
+						<id>install-changedistiller</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>ch.uzh.ifi.seal</groupId>
+							<artifactId>changedistiller</artifactId>
+							<version>0.0.4</version>
+							<packaging>jar</packaging>
+							<file>${basedir}/lib/changedistiller-0.0.4-SNAPSHOT.jar</file>
+						</configuration>
+					</execution>
+					<execution>
+						<id>install-dependency-finder</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<!-- https://github.com/jeantessier/dependency-finder, BSD-license @ https://github.com/jeantessier/dependency-finder/blob/master/license.txt -->
+						<configuration>
+							<groupId>com.jeantessier</groupId>
+							<artifactId>dependency-finder</artifactId>
+							<version>1.2.1-beta5</version>
+							<packaging>jar</packaging>
+							<file>${basedir}/lib/dependency-finder-1.2.1-beta5.jar</file>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

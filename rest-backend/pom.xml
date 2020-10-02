@@ -518,7 +518,7 @@
 							<goal>flatten</goal>
 						</goals>
 						<configuration>
-							<flattenMode>bom</flattenMode>
+							<flattenMode>ossrh</flattenMode>
 						</configuration>
 					</execution>
 					<execution>

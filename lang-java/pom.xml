@@ -45,13 +45,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.steady</groupId>
-			<artifactId>lang-java-init</artifactId>
-			<version>${project.version}</version>
-			<type>pom</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.bitbucket.mstrobel</groupId>
 			<artifactId>procyon-compilertools</artifactId>
 			<version>0.5.36</version>
@@ -131,7 +124,7 @@
 				<executions>
 					<!-- Include changedistiller, which is not available on Maven Central -->
 					<execution>
-						<id>1</id>
+						<id>normal-jar</id>
 						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
@@ -155,7 +148,7 @@
 					<!-- For instrumentation with the -agent option, incl. a repackaged 
 						version of httpclient -->
 					<execution>
-						<id>2</id>
+						<id>self-contained-agent-jar</id>
 						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
@@ -193,6 +186,26 @@
 									<shadedPattern>org.eclipse.steady.repackaged.org.apache.http</shadedPattern>
 								</relocation>
 							</relocations>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Flatten a 2nd time after shade, in order to process the dependency-reduced-pom, see
+				https://stackoverflow.com/questions/52552329/use-maven-flatten-plugin-and-maven-shade-plugin-at-the-same-time
+				https://stackoverflow.com/questions/8243912/changing-the-order-of-maven-plugin-execution#8244173 --> 
+			<plugin>
+			    <groupId>org.codehaus.mojo</groupId>
+			    <artifactId>flatten-maven-plugin</artifactId>
+			    <version>1.2.2</version>
+			    <executions>
+			    	<execution>
+						<id>flatten-after-shade</id>
+						<phase>package</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+						<configuration>
+							<flattenMode>ossrh</flattenMode>
 						</configuration>
 					</execution>
 				</executions>

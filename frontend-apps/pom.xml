@@ -31,6 +31,11 @@
 	<artifactId>frontend-apps</artifactId>
 	<packaging>war</packaging>
 	<name>Frontend for analysis results</name>
+	
+	<properties>
+		<skip.install.deploy>false</skip.install.deploy>
+	</properties>
+	
 	<build>
 		<plugins>
 			<plugin>

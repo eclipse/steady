@@ -31,6 +31,11 @@
 	<artifactId>frontend-bugs</artifactId>
 	<packaging>war</packaging>
 	<name>Frontend for bug administration</name>
+	
+	<properties>
+		<skip.install.deploy>false</skip.install.deploy>
+	</properties>
+	
 	<build>
 		<plugins>
 			<plugin>
