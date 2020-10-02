@@ -5,34 +5,34 @@ build:
     envTemplate:
       template: "{{.IMAGE_NAME}}:{{.VULAS_RELEASE}}-jib"
   artifacts:
-    - image: vulas/vulnerability-assessment-tool-rest-backend
+    - image: eclipse/steady-rest-backend
       context: .
       jib:
         project: rest-backend
         args:
         - -DskipTests=true
 
-    - image: vulas/vulnerability-assessment-tool-frontend-apps
+    - image: eclipse/steady-frontend-apps
       context: .
       jib:
         project: frontend-apps
         args:
         - -DskipTests=true
         - -Djib.container.appRoot=/jetty/webapps/apps
-    - image: vulas/vulnerability-assessment-tool-frontend-bugs
+    - image: eclipse/steady-frontend-bugs
       context: .
       jib:
         project: frontend-bugs
         args:
         - -DskipTests=true
         - -Djib.container.appRoot=/jetty/webapps/bugs
-    - image: vulas/vulnerability-assessment-tool-rest-lib-utils
+    - image: eclipse/steady-rest-lib-utils
       context: .
       jib:
         project: rest-lib-utils
         args:
         - -DskipTests=true
-    - image: vulas/vulnerability-assessment-tool-patch-lib-analyzer
+    - image: eclipse/steady-patch-lib-analyzer
       context: .
       jib:
         project: patch-lib-analyzer

@@ -14,7 +14,7 @@ In this tutorial you will be guided through the necessary steps to set-up the @@
 
 ## Setup
 
-Clone locally `vulnerability-assessment-tool` repository and change the directory to Kustomize's folder
+Clone locally `Eclipse Steady` repository and change the directory to Kustomize's folder
 
 ```sh
 git clone https://github.com/eclipse/steady.git
