@@ -107,6 +107,9 @@
 		<skip.install.deploy>true</skip.install.deploy>
 		<maven.install.skip>${skip.install.deploy}</maven.install.skip>
 		<maven.deploy.skip>${skip.install.deploy}</maven.deploy.skip>
+		
+		<!-- Override from Spring Boot (CVE-2020-5421)-->
+		<spring.version>4.3.29.RELEASE</spring.version>
 	</properties>
 	
 	<dependencies>
@@ -322,13 +325,6 @@
 			  <groupId>org.yaml</groupId>
 			  <artifactId>snakeyaml</artifactId>
 			  <version>1.26</version>
-			</dependency>
-			
-			<!--  Fix dependency on vulnerable versions of spring-core (CVE-2020-5421) -->
-			<dependency>
-			  <groupId>org.springframework</groupId>
-			  <artifactId>spring-core</artifactId>
-			  <version>4.3.29.RELEASE</version>
 			</dependency>
 			
 		</dependencies>
