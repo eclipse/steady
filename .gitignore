@@ -36,3 +36,4 @@ kubernetes/helm/vulnerability-assessment-tool-admin/charts/nginx-ingress/files/t
 /kubernetes/kustomize/secrets/*
 !/kubernetes/kustomize/secrets/*.sample
 /docker/**/import_vulas_kb.sh
+google-java-format-*.jar

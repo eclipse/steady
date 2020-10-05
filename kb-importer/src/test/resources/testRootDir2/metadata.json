@@ -1,0 +1,45 @@
+{
+    "api_version": "v1",
+    "aliases": [
+        "TEST-1234",
+        "SOME-OTHER-ID-1234"
+    ],
+    "affected_artifacts": [
+        {
+            "id": "pkg:maven/org.apache.commons/commons-collections4@4.0",
+            "affected": true,
+            "reason": "Test"
+        },
+        {
+            "id": "pkg:maven/org.apache.commons/commons-collections4@4.0.1-SNAPSHOT",
+            "affected": true,
+            "reason": "Test"
+        },
+        {
+            "id": "pkg:maven/org.apache.commons/commons-collections4@4.1",
+            "affected": false,
+            "reason": "Test"
+        }
+    ],
+    "notes": [
+        {
+            "links": [
+                "https://issues.apache.org/jira/browse/COLLECTIONS-580"
+            ],
+            "text": "Arbitrary remote code execution with InvokerTransformer"
+        },
+        {
+            "links": [
+                "https://issues.apache.org/jira/browse/COLLECTIONS-580",
+                "https://github.com/apache/commons-collections/commit/b2b8f4adc557e4ef1ee2fe5e0ab46866c06ec55b"
+            ],
+            "text": "With InvokerTransformer serializable collections can be build that execute arbitrary Java code."
+        },
+        {
+            "links": [
+                "https://issues.apache.org/jira/browse/COLLECTIONS-580"
+            ],
+            "text": "With InvokerTransformer serializable collections can be build that execute arbitrary Java code."
+        }
+    ]
+}

@@ -1,0 +1,55 @@
+{
+	"vulnerability_id": "CVE-2007-5712",
+	"aliases": [],
+	"affected_artifacts": [
+		{
+			"id": "pkg:maven/Django/Django@1.5.7",
+			"reason": "Manual review(frontend)",
+			"affected": false
+		},
+		{
+			"id": "pkg:maven/Django/Django@2.0.1",
+			"reason": "Manual review(frontend)",
+			"affected": false
+		},
+		{
+			"id": "pkg:maven/Django/Django@2.2.3",
+			"reason": "Manual review(frontend)",
+			"affected": false
+		},
+		{
+			"id": "pkg:maven/Django/Django@2.2.4",
+			"reason": "Manual review(frontend)",
+			"affected": false
+		},
+		{
+			"id": "pkg:maven/Django/Django@2.0.4",
+			"reason": "Manual review(frontend)",
+			"affected": false
+		},
+		{
+			"id": "pkg:maven/Django/Django@2.0.6",
+			"reason": "Manual review(frontend)",
+			"affected": false
+		},
+		{
+			"id": "pkg:maven/Django/Django@2.2.2",
+			"reason": "Manual review(frontend)",
+			"affected": false
+		},
+		{
+			"id": "pkg:maven/Django/Django@2.2.8",
+			"reason": "Manual review(frontend)",
+			"affected": false
+		}
+	],
+	"notes": [
+		{
+			"links": [
+				"https://snyk.io/vuln/SNYK-PYTHON-DJANGO-42158",
+				"https://www.djangoproject.com/weblog/2007/oct/26/security-fix/"
+			],
+			"text": "The internationalization (i18n) framework in Django 0.91, 0.95, 0.95.1, and 0.96, and as used in other products such as PyLucid, when the USE_I18N option and the i18n component are enabled, allows remote attackers to cause a denial of service (memory consumption) via many HTTP requests with large Accept-Language headers."
+		}
+	]
+}

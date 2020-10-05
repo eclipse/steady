@@ -12,7 +12,7 @@ If you run into troubles, have a look at
 ## Bug reports
 
 If you encounter a bug while using @@PROJECT_NAME@@, you are welcome to
-[open an issue on GitHub](https://github.com/SAP/vulnerability-assessment-tool/issues/new?template=bug_report.md)
+[open an issue on GitHub](https://github.com/eclipse/steady/issues/new?template=bug_report.md)
 giving a detailed description of what happened so that we can diagnose and resolve the problem (please, do search among the currently open issues to check if someone else has already reported the same problem).
 
 ## Receive news

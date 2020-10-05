@@ -16,8 +16,7 @@
     limitations under the License.
 
     SPDX-License-Identifier: Apache-2.0
-
-    Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+    SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -26,7 +25,7 @@
     <parent>
         <groupId>com.sap.research.security.vulas</groupId>
         <artifactId>root</artifactId>
-        <version>3.1.14-SNAPSHOT</version>
+        <version>3.1.16-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

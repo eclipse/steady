@@ -14,8 +14,7 @@
  * limitations under the License.
  *
  * SPDX-License-Identifier: Apache-2.0
- *
- * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
  */
 import com.sap.psr.vulas.shared.connectivity.Service;
 import com.sap.psr.vulas.shared.util.VulasConfiguration;

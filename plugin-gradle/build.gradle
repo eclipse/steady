@@ -5,7 +5,7 @@ gradlePlugin {
     plugins {
         vulas {
             id = 'vulas'
-            implementationClass = 'com.sap.vulas.gradle.VulasPlugin'
+            implementationClass = 'org.eclipse.steady.java.gradle.VulasPlugin'
         }
     }
 }

@@ -15,8 +15,7 @@
     limitations under the License.
 
     SPDX-License-Identifier: Apache-2.0
-
-    Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+    SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
 
 -->
 <mvc:View controllerName="view.Component" xmlns="sap.m" xmlns:ce="sap.ui.codeeditor"
@@ -214,7 +213,7 @@
                                 </Column>
                                 <Column xmlns="sap.ui.table" width="10%" mergeDuplicates="false" 
                                         sorted="true" sortProperty="manual" >
-                                    <Label text="Assessment (Manual)" xmlns="sap.ui.commons" />
+                                    <Label text="Assessment (Manual)" tooltip="Assessment done Manually" xmlns="sap.ui.commons" />
                                     <template>
                                         <!--<FlexBox xmlns="sap.m" alignItems="Start" justifyContent="SpaceBetween">
                                         <items>
@@ -247,8 +246,16 @@
                                         </SegmentedButton>
                                     </template>
                                 </Column>
-                                <Column xmlns="sap.ui.table" width="10%" mergeDuplicates="false">
-                                    <Label text="Patch eval" 
+                                <Column xmlns="sap.ui.table" width="7%" mergeDuplicates="false">
+                                  <Label text="Assessment (Kaybee)" tooltip= "Assessment done with Kaybee Importer" xmlns="sap.ui.commons" />
+                                  <template>
+                                    <Image xmlns="sap.m" decorative="true" src="{ path:'kaybee', width:'15%', formatter: 'model.Formatter.showImageKaybee' }">
+                                    </Image>
+                                  </template>
+                                </Column>
+                                <Column xmlns="sap.ui.table" width="7%" mergeDuplicates="false">
+                                    <Label text="Assessment (Patch eval)"
+                                           tooltip= "Assessment done with Patch Library Analyzer"
                                         xmlns="sap.ui.commons" />
                                     <template>
                                         <m:MatrixLayout columns="1">
@@ -289,9 +296,9 @@
 <!-- 										</template> -->
 <!--                                 </Column> -->
                                 
-                                <Column xmlns="sap.ui.table" width="3%" mergeDuplicates="false" 
+                                <Column xmlns="sap.ui.table" width="7%" mergeDuplicates="false"
                                         sorted="true" sortProperty="checkvers">
-                                    <Label text="Assessment (Code)" xmlns="sap.ui.commons" />
+                                    <Label text="Assessment (Code)" xmlns="sap.ui.commons" tooltip= "Assessment done with Check Code"  />
                                     <template>
                                         <l:HorizontalLayout>
                                             <Image xmlns="sap.ui.commons" src="img/linkimage.png"
@@ -301,16 +308,6 @@
                                                 semanticColor="{path: 'checkvers', formatter: 'model.Formatter.rowColorForArchives'}"/>  
                                         </l:HorizontalLayout> 
                                     </template>
-                                </Column>
-                                <Column xmlns="sap.ui.table" width="1%" mergeDuplicates="false" 
-                                        sorted="true" sortProperty="precommitpom">
-                                    <Label text="Pre commit pom" xmlns="sap.ui.commons" />
-                                        <template>
-                                            <TextView xmlns="sap.ui.commons" wrapping="true"
-                                                text="{precommitpom}"
-                                                semanticColor="{path: 'precommitpom', formatter: 'model.Formatter.rowColorForArchives'}">
-                                            </TextView>
-                                        </template>
                                 </Column>
                             </columns>
                         </Table>   

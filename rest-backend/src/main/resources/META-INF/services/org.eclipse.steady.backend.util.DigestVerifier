@@ -1,0 +1,2 @@
+org.eclipse.steady.backend.util.MavenCentralVerifier
+org.eclipse.steady.backend.util.PyPiVerifier

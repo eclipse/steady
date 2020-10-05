@@ -124,7 +124,7 @@ You are welcome to contribute code in order to fix bugs or to implement new feat
 
 There are three important things to know:
 
-1. You must be aware of the Apache License (which describes contributions) and **agree to the Contributors License Agreement**. This is common practice in all major Open Source projects. To make this process as simple as possible, we are using *[CLA assistant](https://cla-assistant.io/)* for individual contributions. CLA assistant is an open source tool that integrates with GitHub very well and enables a one-click-experience for accepting the CLA. For company contributors special rules apply. See the respective section below for details.
+1. You must be aware of the Apache License (which describes contributions) and **agree to the Eclipse Contributor Agreement** (see below).
 2. There are **several requirements regarding code style, quality, and product standards** which need to be met (we also have to follow them). The respective section below gives more details on the coding guidelines.
 3. **Not all proposed contributions can be accepted**. Some features may e.g. just fit a third-party add-on better. The code must fit the overall direction of the open-source vulnerability assessment tool and really improve it, so there should be some "bang for the byte". For most bug fixes this is a given, but major feature implementation first need to be discussed with one of the @@PROJECT_NAME@@ committers <!--(the top 20 or more of the [Contributors List](https://github.com/SAP/openui5/graphs/contributors))-->, possibly one who touched the related code recently. The more effort you invest, the better you should clarify in advance whether the contribution fits: the best way would be to just open an enhancement ticket in the issue tracker to discuss the feature you plan to implement (make it clear you intend to contribute). We will then forward the proposal to the respective code owner, this avoids disappointment.
 
@@ -135,26 +135,9 @@ To keep the code readable and maintainable, please follow these rules, even if y
 **TODO: Complete guidelines, see [here](https://github.com/SAP/openui5/blob/master/docs/guidelines.md) for a comprehensive example**
 -->
 
-### Contributor License Agreement
+### Eclipse Contributor Agreement (ECA)
 
-When you contribute (code, documentation, or anything else), you have to be aware that your contribution is covered by the same [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0) that is applied to the open-source vulnerability assessment tool itself.
-In particular you need to agree to the Individual Contributor License Agreement,
-which can be [found here](https://gist.github.com/CLAassistant/bd1ea8ec8aa0357414e8).
-
-(This applies to all contributors, including those contributing on behalf of a company). If you agree to its content, you simply have to click on the link posted by the CLA assistant as a comment to the pull request. Click it to check the CLA, then accept it on the following screen if you agree to it. CLA assistant will save this decision for upcoming contributions and will notify you if there is any change to the CLA in the meantime.
-
-#### Company Contributors
-
-If employees of a company contribute code, in **addition** to the individual agreement above, there needs to be one company agreement submitted. This is mainly for the protection of the contributing employees.
-
-A company representative authorized to do so needs to download, fill, and print
-the [Corporate Contributor License Agreement](../../../pdfs/SAP%20Corporate%20Contributor%20License%20Agreement.pdf) form. Then either:
-
-- Scan it and e-mail it to [opensource@sap.com](mailto:opensource@sap.com) and [henrik.plate@sap.com](mailto:henrik.plate@sap.com)
-- Fax it to: +49 6227 78-45813
-- Send it by traditional letter to: *Industry Standards & Open Source Team, Dietmar-Hopp-Allee 16, 69190 Walldorf, Germany*
-
-The form contains a list of employees who are authorized to contribute on behalf of your company. When this list changes, please let us know.
+Due to legal reasons, contributors will be asked to accept the ECA before they submit the first pull request to this projects, this happens in an automated fashion during the submission process. Please see the [Eclipse Contributor Agreement](https://www.eclipse.org/legal/ECA.php) for more information.
 
 ### Contribution Content Guidelines
 
@@ -196,7 +179,7 @@ If this list sounds lengthy and hard to achieve - well, that's what WE have to c
     - Do NOT add a colon after "Fixes" - this prevents automatic closing.
 	- When your pull request number is known (e.g. because you enhance a pull request after a code review), you can also add the line `Closes @@PROJECT_URL@@/pull/(pullRequestNumber)`
 6. Create a Pull Request to @@PROJECT_URL@@
-7. Follow the link posted by the CLA assistant to your pull request and accept it, as described in detail above.
+7. If necessary, sign the Eclipse Contributor Agreement
 8. Wait for our code review and approval, possibly enhancing your change on request
     - Note that @@PROJECT_NAME@@ developers also have their regular duties, so depending on the required effort for reviewing, testing and clarification this may take a while
 

@@ -14,8 +14,7 @@
  * limitations under the License.
  *
  * SPDX-License-Identifier: Apache-2.0
- *
- * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
  */
 var groupId = "";
 var artifactId = "";
@@ -190,9 +189,6 @@ sap.ui.controller(
 												case "CHECK_VERSION":
 													lib.checkvers = affectedVersions[x].affected;
 													break;
-												case "PRE_COMMIT_POM":
-													lib.precommitpom = affectedVersions[x].affected;
-													break;
 												case "AST_EQUALITY":
 												case "MINOR_EQUALITY":
 												case "MAJOR_EQUALITY":
@@ -216,6 +212,9 @@ sap.ui.controller(
 												case "TO_REVIEW":
 													lib.sourcesAvailable=affectedVersions[x].sourcesAvailable;
 													lib.patcheval = affectedVersions[x].source;
+													break;
+												case "KAYBEE":
+													lib.kaybee = affectedVersions[x].affected;
 													break;
 												}	
 												newlibraries.splice(u, 1, lib);
