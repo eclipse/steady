@@ -11,14 +11,14 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  *
-<<<<<<< HEAD:rest-backend/src/main/java/com/sap/psr/vulas/backend/model/Dependency.java
+ * <<<<<<< HEAD:rest-backend/src/main/java/com/sap/psr/vulas/backend/model/Dependency.java
  * <p>SPDX-License-Identifier: Apache-2.0
  *
  * <p>Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
-=======
+ * =======
  * SPDX-License-Identifier: Apache-2.0
  * SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
->>>>>>> master:rest-backend/src/main/java/org/eclipse/steady/backend/model/Dependency.java
+ * >>>>>>> master:rest-backend/src/main/java/org/eclipse/steady/backend/model/Dependency.java
  */
 package org.eclipse.steady.backend.model;
 

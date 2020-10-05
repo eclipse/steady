@@ -18,7 +18,6 @@
  */
 package org.eclipse.steady.backend.rest;
 
-
 import org.springdoc.core.GroupedOpenApi;
 
 import org.springframework.boot.SpringApplication;
