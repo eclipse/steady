@@ -40,7 +40,10 @@
 			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
-	<organization></organization>
+	<organization>
+		<name>Eclipse Steady</name>
+		<url>https://projects.eclipse.org/projects/technology.steady</url>
+	</organization>
 	<developers>
 		<developer>
 			<id>plate</id>

@@ -72,7 +72,7 @@ nav:
   - Blog:
     - https://blogs.sap.com/tag/vulas/
 
-copyright: 'Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.'
+copyright: 'Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors'
 
 markdown_extensions:
   - markdown.extensions.admonition
