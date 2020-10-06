@@ -3,7 +3,7 @@ Upstream-Name: steady
 Upstream-Contact: Henrik Plate
 Source: https://github.com/eclipse/steady
 
-Files: .github/* .travis/* cli-scanner/* docker/* docs/* frontend-apps/* frontend-bugs/* kb-importer/* kubernetes/* lang/* lang-java/* lang-java-reach/* lang-java-reach-soot/* lang-java-reach-wala/* lang-python/* patch-analyzer/* patch-lib-analyzer/* plugin-gradle/* plugin-maven/* repo-client/* rest-backend/* rest-lib-utils/* rest-nvd/* shared/* .dockerignore .gitignore .travis.yml CONTRIBUTING.md CONTRIBUTORS.md findbugs-exclude.xml findbugs-include.xml README.md requirements.txt
+Files: .github/* .travis/* cli-scanner/* docker/* docs/* frontend-apps/* frontend-bugs/* kb-importer/* kubernetes/* lang/* lang-java/* lang-java-reach/* lang-java-reach-soot/* lang-java-reach-wala/* lang-python/* patch-analyzer/* patch-lib-analyzer/* plugin-gradle/* plugin-maven/* repo-client/* rest-backend/* rest-lib-utils/* rest-nvd/* shared/* .dockerignore .gitignore .travis.yml CONTRIBUTING.md CONTRIBUTORS.md findbugs-exclude.xml findbugs-include.xml README.md requirements.txt SECURITY.md
 Copyright: 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
 License: Apache-2.0
 
