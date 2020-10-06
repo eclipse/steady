@@ -477,6 +477,9 @@
             			<owner>SAP SE or an SAP affiliate company and Eclipse Steady contributors</owner>
                     </properties>
 			        <excludes>
+			            <exclude>LICENSES/**</exclude>
+			            <exclude>.reuse/**</exclude>
+			            <exclude>**/.pydevproject</exclude>
 			            <exclude>**/.dockerignore</exclude>
 			            <exclude>**/.gitattributes</exclude>
 			            <exclude>**/.xsaccess</exclude>
@@ -488,6 +491,7 @@
 			            <exclude>**/CONTRIBUTING.md</exclude>
 			            <exclude>**/CONTRIBUTORS.md</exclude>
 			            <exclude>**/findbugs-exclude.xml</exclude>
+			            <exclude>**/findbugs-include.xml</exclude>
 			            <exclude>**/src/test/resources/**</exclude>
 			            <exclude>**/log4j.properties</exclude>
 			            <exclude>**/*.g4</exclude>
@@ -504,6 +508,17 @@
 			            <exclude>**/*.gradle</exclude>
 			            <exclude>**/gradlew.bat</exclude>
 			            <exclude>**/gradlew</exclude>
+			            <exclude>**/src/it/settings.xml</exclude>
+			            <exclude>**/src/main/webapp/helpers/pqueue.js</exclude>
+			            <exclude>**/src/main/webapp/helpers/transpiled/pqueueES5.js</exclude>
+			            <exclude>**/src/main/resources/db/migration/*.sql</exclude>
+			            <exclude>rest-nvd/VERSION</exclude>
+			            <exclude>rest-nvd/.editorconfig</exclude>
+			            <exclude>rest-nvd/tox.ini</exclude>
+			            <exclude>rest-nvd/Pipfile*</exclude>
+			            <exclude>rest-nvd/requirements_dev.txt</exclude>
+			            <exclude>rest-nvd/setup.cfg</exclude>
+			            <exclude>rest-nvd/Makefile</exclude>
 			        </excludes>
 			    </configuration>
 			</plugin>
