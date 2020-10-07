@@ -136,9 +136,7 @@
 		<gradle.repo>https://maven.google.com/</gradle.repo>
 		
 		<!-- Skip certain plugins by default, change for all childs to be installed & deployed -->
-		<skip.install.deploy>true</skip.install.deploy>
-		<maven.install.skip>${skip.install.deploy}</maven.install.skip>
-		<maven.deploy.skip>${skip.install.deploy}</maven.deploy.skip>
+		<maven.deploy.skip>true</maven.deploy.skip>
 	</properties>
 
 	<modules>
