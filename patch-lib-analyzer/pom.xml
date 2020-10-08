@@ -64,10 +64,9 @@
 	<build>
 		<plugins>
 			<plugin>
-        		<groupId>com.google.cloud.tools</groupId>
-        		<artifactId>jib-maven-plugin</artifactId>
-				<extensions>true</extensions>
-      		</plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -98,6 +97,11 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+        		<groupId>com.google.cloud.tools</groupId>
+        		<artifactId>jib-maven-plugin</artifactId>
+				<extensions>true</extensions>
+      		</plugin>
 		</plugins>
 	</build>
 </project>
