@@ -24,9 +24,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.sap.research.security.vulas</groupId>
+        <groupId>org.eclipse.steady</groupId>
         <artifactId>root</artifactId>
-        <version>3.1.16-SNAPSHOT</version>
+        <version>3.2.0-SNAPSHOT</version>
     </parent>
      <!-- NOTE: This plugin name violates the Maven naming convention, which results in a warning during build. -->
     <artifactId>plugin-maven</artifactId>
@@ -34,16 +34,20 @@
 
     <name>Plugin for Maven</name>
     <description></description>
+    
+    <properties>
+    	<maven.deploy.skip>false</maven.deploy.skip>
+    </properties>
 
     <dependencies>
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java-reach</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope> <!-- Compile until all goals and the signature creation is service-enabled -->
@@ -51,13 +55,13 @@
         
         <!-- Frameworks for call graph construction -->
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java-reach-wala</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java-reach-soot</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
@@ -92,12 +96,12 @@
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
-            <version>1.10.8</version>
+            <version>1.10.9</version>
         </dependency>
 
         <!--instrumentation agent dependency -->
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java</artifactId>
             <version>${project.version}</version>
             <classifier>jar-with-dependencies</classifier>
@@ -150,6 +154,10 @@
 
     <build>
         <plugins>
+        	<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
             <!-- Create plugin descriptor and help -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -168,7 +176,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 

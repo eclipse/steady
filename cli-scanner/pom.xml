@@ -24,20 +24,24 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.sap.research.security.vulas</groupId>
+		<groupId>org.eclipse.steady</groupId>
 		<artifactId>root</artifactId>
-		<version>3.1.16-SNAPSHOT</version>
+		<version>3.2.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>cli-scanner</artifactId>
 	<packaging>jar</packaging>
 
 	<name>Command Line Interface</name>
 	<description></description>
+	
+	<properties>
+		<maven.deploy.skip>false</maven.deploy.skip>
+	</properties>
 
 	<dependencies>
 		<!-- Only basic lang classes should be used at compile time -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
@@ -45,7 +49,7 @@
 		
 		<!-- Runtime dependencies, to avoid compile time dependency on lang-specific classes -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang-java-reach</artifactId>
 			<version>${project.version}</version>
 			<scope>runtime</scope>
@@ -53,20 +57,20 @@
 
         <!-- Frameworks for call graph construction -->
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java-reach-wala</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java-reach-soot</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
 
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang-python</artifactId>
 			<version>${project.version}</version>
 			<scope>runtime</scope>
@@ -74,7 +78,7 @@
 		
 		<!-- Test dependencies -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>shared</artifactId>
 			<classifier>tests</classifier> <!-- type=test-jar does not seem to work here, use classifier instead -->
 			<version>${project.version}</version>
@@ -95,41 +99,15 @@
 	</dependencies>
 
 	<build>
-		<plugins>
-			<!-- plugin>
+		<plugins>			
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.5.3</version>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<index>true</index>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-						</manifest>
-						<manifestEntries>
-							<Main-Class>org.eclipse.steady.cli.VulasCli</Main-Class>
-						</manifestEntries>
-						<addMavenDescriptor>false</addMavenDescriptor>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin-->
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.1.0</version>
 				<executions>
 					<execution>
 						<id>make-shade</id>
@@ -150,7 +128,7 @@
 										<Specification-Version>${project.version}</Specification-Version>
 										<Implementation-Title>${project.name}</Implementation-Title>
 										<Implementation-Version>${project.version}</Implementation-Version>
-			                            				<Implementation-Vendor-Id>${project.groupId}</Implementation-Vendor-Id>
+			                            <Implementation-Vendor-Id>${project.groupId}</Implementation-Vendor-Id>
 									</manifestEntries>
 								</transformer>
 							</transformers>

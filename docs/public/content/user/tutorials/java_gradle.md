@@ -23,7 +23,7 @@ The plugin for Gradle requires changes of the following two files:
         }
 
         dependencies {
-            classpath('com.sap.research.security.vulas:plugin-gradle:@@PROJECT_VERSION@@') { changing = true }
+            classpath('org.eclipse.steady:plugin-gradle:@@PROJECT_VERSION@@') { changing = true }
         }
     }
 

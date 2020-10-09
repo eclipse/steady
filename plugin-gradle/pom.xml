@@ -23,40 +23,45 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.sap.research.security.vulas</groupId>
+        <groupId>org.eclipse.steady</groupId>
         <artifactId>root</artifactId>
-        <version>3.1.16-SNAPSHOT</version>
+        <version>3.2.0-SNAPSHOT</version>
     </parent>
+    
     <artifactId>plugin-gradle</artifactId>
     <packaging>pom</packaging>
+    
     <name>Plugin for Gradle</name>
     <description></description>
+    
     <properties>
         <gradle.distribution.url>https://services.gradle.org/distributions/gradle-5.0-bin.zip</gradle.distribution.url>
         <gradle.executable>./gradlew</gradle.executable>
         <gradle.task>build</gradle.task>
+        <maven.deploy.skip>false</maven.deploy.skip>
     </properties>
+    
     <dependencies>
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java-reach</artifactId>
             <version>${project.version}</version>
         </dependency>
         
         <!-- Frameworks for call graph construction -->
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java-reach-wala</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java-reach-soot</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
@@ -79,6 +84,11 @@
     </dependencies>
     <build>
         <plugins>
+        	<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -114,8 +124,7 @@
                              usetimestamp="true"/>
                     </target>
                 </configuration>
-            </plugin>
-            
+            </plugin>            
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     This file is part of Eclipse Steady.
@@ -18,14 +19,15 @@
     SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.sap.research.security.vulas</groupId>
+		<groupId>org.eclipse.steady</groupId>
 		<artifactId>root</artifactId>
-		<version>3.1.16-SNAPSHOT</version>
+		<version>3.2.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>lang</artifactId>
 
@@ -35,13 +37,12 @@
 	<properties>
 		<!-- Exclude ANTLR-generated files from Sonar reports -->
 		<sonar.exclusions>src/main/java/com/sap/psr/vulas/java/antlr/*.java</sonar.exclusions>
-
-		<spring.version>1.5.6.RELEASE</spring.version>
+		<maven.deploy.skip>false</maven.deploy.skip>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>shared</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -86,7 +87,7 @@
 
 		<!-- Test dependencies -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>shared</artifactId>
 			<classifier>tests</classifier> <!-- type=test-jar does not seem to work here, use classifier instead -->
 			<version>${project.version}</version>
@@ -127,6 +128,10 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
 			
 			<!-- Used to provide version information in "vulas-tenant.properties" -->
 			<plugin>
@@ -167,32 +172,6 @@
 					<addMavenDescriptor>false</addMavenDescriptor>
 				</configuration>
 			</plugin>
-
-			<!-- Debug with -Dmaven.failsafe.debug="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Xnoagent -Djava.compiler=NONE" -->
-			<!-- HP, 29.05.2018: Integration tests implemented as JUnit with Restito -->
-			<!-- plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<configuration>
-					<runOrder>alphabetical</runOrder>
-					<systemPropertyVariables>
-					</systemPropertyVariables>
-				</configuration>
-				<executions>
-					<execution>
-						<id>integration-test</id>
-						<goals>
-							<goal>integration-test</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>verify</id>
-						<goals>
-							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin -->
 		</plugins>
 	</build>
 </project>

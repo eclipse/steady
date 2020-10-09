@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: patch-lib-analyzer
-          image: vulas/vulnerability-assessment-tool-patch-lib-analyzer:3.1.6-SNAPSHOT
+          image: eclipse/steady-patch-lib-analyzer:3.2.0-SNAPSHOT
           ports:
             - containerPort: 8080
           env:

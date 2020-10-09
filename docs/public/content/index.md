@@ -1,4 +1,8 @@
-# @@PROJECT_NAME@@ (Incubator Project)
+<center class='expandable'>
+<img alt="Eclipse Incubator" width="150" src="./images/eclipse-incubation.png"/>
+</center>
+
+# @@PROJECT_NAME@@
 
 **General**
 

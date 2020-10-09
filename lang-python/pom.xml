@@ -25,18 +25,22 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.sap.research.security.vulas</groupId>
+		<groupId>org.eclipse.steady</groupId>
 		<artifactId>root</artifactId>
-		<version>3.1.16-SNAPSHOT</version>
+		<version>3.2.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>lang-python</artifactId>
 
 	<name>Python - Core classes for Python analysis</name>
 	<description></description>
+	
+	<properties>
+		<maven.deploy.skip>false</maven.deploy.skip>
+	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -47,7 +51,7 @@
 
 		<!-- Test -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>shared</artifactId>
 			<classifier>tests</classifier> <!-- type=test-jar does not seem to work here, use classifier instead -->
 			<version>${project.version}</version>
@@ -58,19 +62,16 @@
 	<build>
 		<plugins>			
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			<plugin>
 				<groupId>org.antlr</groupId>
 				<artifactId>antlr4-maven-plugin</artifactId>
 				<configuration>
 					<visitor>false</visitor>
 					<listener>true</listener>
 				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>antlr4</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

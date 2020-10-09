@@ -27,46 +27,105 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.22.RELEASE</version>
-		<relativePath />
+		<relativePath/>
 	</parent>
 
-	<groupId>com.sap.research.security.vulas</groupId>
+	<groupId>org.eclipse.steady</groupId>
 	<artifactId>rest-backend</artifactId>
-	<version>3.1.16-SNAPSHOT</version>
+	<version>3.2.0-SNAPSHOT</version>
 	<packaging>${packaging.type}</packaging>
 
 	<name>REST service to manage scan results and bugs</name>
 	<description></description>
-	<url>https://sap.github.io/vulnerability-assessment-tool/</url>
+
+	<!-- From url to distMgmt: Identical for root, rest-backend and rest-lib-utils -->
+	<url>https://eclipse.github.io/steady/</url>
 	<inceptionYear>2018</inceptionYear>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<organization>
+		<name>Eclipse Steady</name>
+		<url>https://projects.eclipse.org/projects/technology.steady</url>
+	</organization>
+	<developers>
+		<developer>
+			<id>plate</id>
+			<name>Henrik Plate</name>
+			<email>henrik.plate@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
+		</developer>
+		<developer>
+			<id>ponta</id>
+			<name>Serena Elisa Ponta</name>
+			<email>serena.ponta@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
+		</developer>
+		<developer>
+			<id>sabetta</id>
+			<name>Antonino Sabetta</name>
+			<email>antonino.sabetta@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
+		</developer>
+		<developer>
+			<id>dangremont</id>
+			<name>Cedric Dangremont</name>
+			<email>cedric.dangremont@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
+		</developer>
+		<developer>
+			<id>pezze</id>
+			<name>Alessandro Pezze</name>
+		</developer>
+		<developer>
+			<id>patil</id>
+			<name>Sumeet Patil</name>
+			<email>sumeet.patil@sap.com</email>
+			<organization>SAP SE</organization>
+			<organizationUrl>http://www.sap.com</organizationUrl>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:git://github.com/eclipse/steady.git</connection>
+		<developerConnection>scm:git:ssh://github.com:sap/eclipse/steady.git</developerConnection>
+		<url>https://github.com/eclipse/steady/tree/master</url>
+	</scm>
+	<issueManagement>
+		<url>https://github.com/eclipse/steady/issues</url>
+		<system>GitHub</system>
+	</issueManagement>
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<!-- Specify as system property (-D) -->
-		<snapshots.repo></snapshots.repo>
-		<releases.repo></releases.repo>
+		
+		<!-- Skip install and deploy -->
+		<skip.install.deploy>true</skip.install.deploy>
+		<maven.install.skip>${skip.install.deploy}</maven.install.skip>
+		<maven.deploy.skip>${skip.install.deploy}</maven.deploy.skip>
+		
+		<!-- Fix vulnerable dependencies in spring-boot-dependencies -->
+		<commons-beanutils.version>1.9.4</commons-beanutils.version><!-- from 1.9.3 -->
+		<hibernate.version>5.4.18.Final</hibernate.version><!-- from 5.0.12.Final, which includes vulnerable dom4j 1.6.1  -->
+		<jackson.version>2.9.10.20200824</jackson.version><!-- from 2.8.11.20181123 -->
+		<logback.version>1.2.3</logback.version><!--  from 1.1.11 -->
+		<log4j2.version>2.13.3</log4j2.version><!-- from 2.7 -->
+		<snakeyaml.version>1.26</snakeyaml.version><!-- from 1.17 -->
+		<spring.version>4.3.29.RELEASE</spring.version><!-- from 4.3.25.RELEASE -->
+		<tomcat.version>8.5.58</tomcat.version><!-- from 8.5.43 -->
 	</properties>
-
-	<distributionManagement>
-		<!-- To deploy snaphots to Sonatype, call deploy w/o profiles javadoc and release, but with -Dsnapshots.repo=https://oss.sonatype.org/content/repositories/snapshots -->
-		<snapshotRepository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>build.snapshots.repo</id>
-			<name>snapshots</name>
-			<url>${snapshots.repo}</url>
-		</snapshotRepository>
-		<repository>
-			<id>build.releases.repo</id>
-			<name>releases</name>
-			<url>${releases.repo}</url>
-		</repository>
-	</distributionManagement>
-
+	
 	<dependencies>
 
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>shared</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -148,7 +207,7 @@
 
 		<!-- Test dependencies -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>shared</artifactId>
 			<classifier>tests</classifier> <!-- type=test-jar does not seem to work here, use classifier instead -->
 			<version>${project.version}</version>
@@ -187,99 +246,7 @@
 		    <artifactId>javax.interceptor-api</artifactId>
 		    <version>1.2.2</version>
 		</dependency>
-
 	</dependencies>
-
-	<dependencyManagement>
-		<dependencies>
-
-			<!-- Fix Spring Boot's dependency on vulnerable release (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-core</artifactId>
-				<version>2.9.10</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>2.9.10.6</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-annotations</artifactId>
-				<version>2.9.10</version>
-			</dependency>
-
-			<!-- Fix Spring Boot's dependency on vulnerable dom4j 1.6.1, inherited
-				from hibernate-core and hibernate-entitymanager 5.0.12.Final (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-core</artifactId>
-				<version>5.4.18.Final</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-entitymanager</artifactId>
-				<version>5.4.18.Final</version>
-			</dependency>
-
-			<!-- Fix Spring Boot's dependency on vulnerable logback 1.1.11 (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-classic</artifactId>
-				<version>1.2.3</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-core</artifactId>
-				<version>1.2.3</version>
-			</dependency>
-
-			<!--  Fix dependency on vulnerable commons-beanutils 1.9.3 -->
-			<dependency>
-				<groupId>commons-beanutils</groupId>
-				<artifactId>commons-beanutils</artifactId>
-				<version>1.9.4</version>
-			</dependency>
-			
-			<!--  Fix dependency on vulnerable versions of tomcat-embed-core -->
-			<dependency>
-				<groupId>org.apache.tomcat.embed</groupId>
-				<artifactId>tomcat-embed-core</artifactId>
-				<version>8.5.57</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.tomcat.embed</groupId>
-				<artifactId>tomcat-embed-el</artifactId>
-				<version>8.5.57</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.tomcat.embed</groupId>
-				<artifactId>tomcat-embed-websocket</artifactId>
-				<version>8.5.57</version>
-			</dependency>
-			
-			<!--  Fix dependency on vulnerable versions of log4j2 -->
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-api</artifactId>
-				<version>2.13.3</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-core</artifactId>
-				<version>2.13.3</version>
-			</dependency>
-			
-			<!--  Fix dependency on vulnerable versions of snakeyaml (CVE-2017-18640) -->
-			<dependency>
-			  <groupId>org.yaml</groupId>
-			  <artifactId>snakeyaml</artifactId>
-			  <version>1.26</version>
-			</dependency>
-			
-		</dependencies>
-	</dependencyManagement>
 
 	<profiles>
 		<!-- To start locally with H2 and Hibernate, run
@@ -419,34 +386,98 @@
 							</execution>
 						</executions>
 					</plugin>
-					<!-- Deploy to the Central Repository according to https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release. -->
-					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.8</version>
-						<extensions>true</extensions>
-						<configuration>
-							<serverId>ossrh</serverId>
-							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose>
-						</configuration>
-					</plugin>
 				</plugins>
 			</build>
 		</profile>
 	</profiles>
+	
 	<build>
 		<plugins>
+			<!-- Flattens the pom.xml files included in artifacts,
+			cf. https://www.mojohaus.org/flatten-maven-plugin/plugin-info.html --> 
+			<plugin>
+			    <groupId>org.codehaus.mojo</groupId>
+			    <artifactId>flatten-maven-plugin</artifactId>
+			    <version>1.2.2</version>
+			    <executions>
+			    	<execution>
+						<id>flatten</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+						<configuration>
+							<flattenMode>clean</flattenMode>
+						</configuration>
+					</execution>
+					<execution>
+						<id>flatten.clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		
+			<!-- Add support for multi release JARs (required by log4j2) --> 
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-jar-plugin</artifactId>
+			    <configuration>
+				<archive>
+				    <manifestEntries>
+						<Multi-Release>true</Multi-Release>
+				    </manifestEntries>
+				</archive>
+			    </configuration>
+			</plugin>
+
+			<!-- Include LICENSE and NOTICE in all JARs (ESF requirement) -->
+
+			<!-- Note: Symlink LICENSE to be created with WSL (not Cygwin) and copied with plugin version 2.7, cf.
+			https://issues.apache.org/jira/browse/MRESOURCES-237
+			https://stackoverflow.com/questions/40346225/maven-resources-plugin-symbolic-link-handling -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.outputDirectory}/META-INF</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/..</directory>
+							        <includes>
+							          <include>LICENSE</include>
+							          <include>NOTICE</include>
+							        </includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>1.7.0</version>
 				<extensions>true</extensions>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
@@ -473,6 +504,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			
 			<!-- Run with 'mvn -Dproject.name="Eclipse Steady" license:format -P gradle' -->
 			<plugin>
 			    <groupId>com.mycila</groupId>
@@ -484,6 +516,9 @@
             			<owner>SAP SE or an SAP affiliate company and Eclipse Steady contributors</owner>
                     </properties>
 			        <excludes>
+			            <exclude>LICENSES/**</exclude>
+			            <exclude>.reuse/**</exclude>
+			            <exclude>**/.pydevproject</exclude>
 			            <exclude>**/.dockerignore</exclude>
 			            <exclude>**/.gitattributes</exclude>
 			            <exclude>**/.xsaccess</exclude>
@@ -495,6 +530,7 @@
 			            <exclude>**/CONTRIBUTING.md</exclude>
 			            <exclude>**/CONTRIBUTORS.md</exclude>
 			            <exclude>**/findbugs-exclude.xml</exclude>
+			            <exclude>**/findbugs-include.xml</exclude>
 			            <exclude>**/src/test/resources/**</exclude>
 			            <exclude>**/log4j.properties</exclude>
 			            <exclude>**/*.g4</exclude>
@@ -511,7 +547,17 @@
 			            <exclude>**/*.gradle</exclude>
 			            <exclude>**/gradlew.bat</exclude>
 			            <exclude>**/gradlew</exclude>
+			            <exclude>**/src/it/settings.xml</exclude>
+			            <exclude>**/src/main/webapp/helpers/pqueue.js</exclude>
+			            <exclude>**/src/main/webapp/helpers/transpiled/pqueueES5.js</exclude>
 			            <exclude>**/src/main/resources/db/migration/*.sql</exclude>
+			            <exclude>rest-nvd/VERSION</exclude>
+			            <exclude>rest-nvd/.editorconfig</exclude>
+			            <exclude>rest-nvd/tox.ini</exclude>
+			            <exclude>rest-nvd/Pipfile*</exclude>
+			            <exclude>rest-nvd/requirements_dev.txt</exclude>
+			            <exclude>rest-nvd/setup.cfg</exclude>
+			            <exclude>rest-nvd/Makefile</exclude>
 			        </excludes>
 			    </configuration>
 			</plugin>

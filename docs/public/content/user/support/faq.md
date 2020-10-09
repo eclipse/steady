@@ -42,8 +42,8 @@ Not a single HTTP connection can be established, which becomes obvious if even t
 [INFO] Deleting C:\My Documents\com.at.example.spring-01\target
 [INFO]
 [INFO] --- maven-dependency-plugin:2.10:copy (copy-vulas) @ com.at.example.spring-01 ---
-[INFO] Configured Artifact: com.sap.research.security.vulas:vulas-core:jar-with-dependencies:1.1.0-SNAPSHOT:jar
-[INFO] Configured Artifact: com.sap.research.security.vulas:vulas-core:jar-with-dependencies:1.1.0-SNAPSHOT:jar
+[INFO] Configured Artifact: org.eclipse.steady:vulas-core:jar-with-dependencies:1.1.0-SNAPSHOT:jar
+[INFO] Configured Artifact: org.eclipse.steady:vulas-core:jar-with-dependencies:1.1.0-SNAPSHOT:jar
 [INFO] Copying vulas-core-1.1.0-SNAPSHOT-jar-with-dependencies.jar to C:\My Documents\com.at.example.spring-01\target\vulas\lib\vulas-core-1.1.0-SNAPSHOT-jar-with-dependencies.jar
 [INFO] Copying vulas-core-1.1.0-SNAPSHOT-jar-with-dependencies.jar to C:\My Documents\com.at.example.spring-01\target\vulas\include\vulas-core-1.1.0-SNAPSHOT-jar-with-dependencies.jar
 [INFO]
@@ -93,7 +93,7 @@ When executing a vulas goal, your workspace is not filled with the results of th
 You are running the execution of a maven goal and are facing an error similar to the following one:
 
 ```text
-[ERROR] Plugin com.sap.research.security.vulas:vulas-maven-plugin:3.0.8 or one of its dependencies could not be resolved: Could not find artifact com.sap.research.security.vulas:vulas-maven-plugin:jar:3.0.8 in mirror1 (url) -> [Help 1]
+[ERROR] Plugin org.eclipse.steady:vulas-maven-plugin:3.0.8 or one of its dependencies could not be resolved: Could not find artifact org.eclipse.steady:vulas-maven-plugin:jar:3.0.8 in mirror1 (url) -> [Help 1]
 ```
 
 You most probably updated your settings to use Maven 3.x instead of Maven 2.x. The @@PROJECT_NAME@@ plugin was renamed with @@PROJECT_NAME@@ 3.x: it was changed from `vulas-maven-plugin` to `plugin-maven`. You may need to update your settings accordingly (click [here](../../tutorials/java_maven/#setup) for more details on how to update your settings).
@@ -171,7 +171,7 @@ Explanation: This can happen if multiple processes (on the same computer or remo
 Problem: The goal execution breaks with a `java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters` as viewable here below.
 
 ```text
-[ERROR] Failed to execute goal com.sap.research.security.vulas:plugin-maven:@@PROJECT_VERSION@@:app (default-cli) on project xxxxx: java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters: shapeless/$tilde$qmark$greater$?.class
+[ERROR] Failed to execute goal org.eclipse.steady:plugin-maven:@@PROJECT_VERSION@@:app (default-cli) on project xxxxx: java.nio.file.InvalidPathException: Malformed input or input contains unmappable characters: shapeless/$tilde$qmark$greater$?.class
 ```
 
 Explanation : the exception  is often due to an encoding problem.

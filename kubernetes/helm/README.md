@@ -1,6 +1,6 @@
 # Vulnerability assessment tool helm chart
 
-This readme is meant to give an overall view of the vulnerability-assessment-tool deployment to a Kubernetes cluster and does not go into detail about helm chart values.
+This readme is meant to give an overall view of the Eclipse Steady deployment to a Kubernetes cluster and does not go into detail about helm chart values.
 For more detailed configuration see:
 -   [vulnerability-assessment-tool-core chart](vulnerability-assessment-tool-core/README.md)
 -   [vulnerability-assessment-tool-admin chart](vulnerability-assessment-tool-admin/README.md)

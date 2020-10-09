@@ -37,7 +37,7 @@ import org.eclipse.steady.shared.util.FileUtil;
  * Those are then uploaded to a remote service for further analysis (test coverage, vulnerability assessments, archive integrity).
  * The plugin can be executed for Eclipse projects through 'Run As' &gt; 'Maven build...' &gt; Goal 'vulas:instr'.
  *
- * help:describe -Dplugin=com.sap.research.security.vulas:vulas-maven-plugin
+ * help:describe -Dplugin=org.eclipse.steady:vulas-maven-plugin
  */
 @Mojo(
     name = "instr",
@@ -49,8 +49,7 @@ public class MvnPluginInstr extends AbstractVulasMojo {
   @Parameter(property = "plugin.artifactMap", required = true, readonly = true)
   private Map<String, Artifact> pluginArtifactMap;
 
-  private static final String VULAS_AGENT_ARTIFACT_NAME =
-      "com.sap.research.security.vulas:lang-java";
+  private static final String VULAS_AGENT_ARTIFACT_NAME = "org.eclipse.steady:lang-java";
   private static final String VULAS_AGENT_ARTIFACT_CLASSIFIER = "jar-with-dependencies";
 
   /** {@inheritDoc} */

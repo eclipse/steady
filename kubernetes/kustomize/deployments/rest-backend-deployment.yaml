@@ -19,7 +19,7 @@ spec:
             do echo waiting for database; sleep 2; done;']
       containers:
         - name: rest-backend
-          image: vulas/vulnerability-assessment-tool-rest-backend:3.1.6-SNAPSHOT
+          image: eclipse/steady-rest-backend:3.2.0-SNAPSHOT
           ports:
             - containerPort: 8091
           env:

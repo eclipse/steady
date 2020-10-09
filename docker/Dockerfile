@@ -1,6 +1,6 @@
 FROM maven:3-jdk-8-alpine
 
-LABEL maintainer="Vulas vulas-dev@listserv.sap.com"
+LABEL maintainer="steady-dev@eclipse.org"
 
 WORKDIR /vulas
 

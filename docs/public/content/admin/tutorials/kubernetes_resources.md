@@ -1,7 +1,7 @@
 
 # Operational requirements
 
-The following document is meant to summarize the vulnerability-assessment-tool requirements when it comes to running it on the Kubernetes architecture. This will detail its operational cost for a couple of scenarios:
+The following document is meant to summarize the Eclipse Steady requirements when it comes to running it on the Kubernetes architecture. This will detail its operational cost for a couple of scenarios:
 
 -   **Lightweight** : the cluster is instantiated with no prior scan and data, then, the bugs are loaded using the patch-analyzer. This deployment is not destined for high availability or resilience (therefore with less replicas, no auto-scaling) and is optimal for small testing environments with a 6 month usage buffer.
 
@@ -11,12 +11,12 @@ The following document is meant to summarize the vulnerability-assessment-tool r
 
 -   **Medium Load HA** : same as the above but with the sufficient amount of replicas that will ensure high availability and resilience.
 
--   **Production Load** : the cluster is loaded with the latest dump of the internal SAP vulnerability-assessment-tool database (which at the time of this document creation is around 249GB). This deployment is not destined for high availability or
+-   **Production Load** : the cluster is loaded with the latest dump of the internal SAP Eclipse Steady database (which at the time of this document creation is around 249GB). This deployment is not destined for high availability or
 resilience and is optimal for production environments with a 3-5 year usage buffer. This data load includes app specific data (once those are removed, the database size is around 150GB in our current setup)
 
 -   **Production Load HA** : same as the above but with the sufficient amount of replicas that will ensure high availability and resilience.
 
--   **Extra PVC** : this use case is destined towards optimizing certain components of the vulnerability-assessment-tool which require read write many volumes (in particular `rest-lib-utils`)
+-   **Extra PVC** : this use case is destined towards optimizing certain components of the Eclipse Steady which require read write many volumes (in particular `rest-lib-utils`)
 
 -   **Hosted DB** : for using a pre-existing database (for cloud providers such as GCP, AWS, Azure, etc...) which require lower resources as the database are no longer self managed.
 

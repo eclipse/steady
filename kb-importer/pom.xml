@@ -25,8 +25,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>root</artifactId>
-		<groupId>com.sap.research.security.vulas</groupId>
-		<version>3.1.16-SNAPSHOT</version>
+		<groupId>org.eclipse.steady</groupId>
+		<version>3.2.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>kb-importer</artifactId>
@@ -45,14 +45,14 @@
 		</dependency>
 		<!-- Only basic lang classes should be used at compile time -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- Test dependencies -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>shared</artifactId>
 			<classifier>tests</classifier>
 			<version>${project.version}</version>
@@ -61,13 +61,13 @@
 		<!-- Runtime dependencies, to avoid compile time dependency on lang-specific 
 			classes -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang-java</artifactId>
 			<version>${project.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang-python</artifactId>
 			<version>${project.version}</version>
 			<scope>runtime</scope>
@@ -88,6 +88,11 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<executions>
 					<execution>
@@ -97,7 +102,6 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-
 							<archive>
 								<manifest>
 									<addDefaultImplementationEntries>true</addDefaultImplementationEntries>

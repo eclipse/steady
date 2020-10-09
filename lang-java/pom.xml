@@ -25,27 +25,24 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.sap.research.security.vulas</groupId>
+		<groupId>org.eclipse.steady</groupId>
 		<artifactId>root</artifactId>
-		<version>3.1.16-SNAPSHOT</version>
+		<version>3.2.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>lang-java</artifactId>
 
 	<name>Java - Core classes for Java analysis</name>
 	<description></description>
+	
+	<properties>
+		<maven.deploy.skip>false</maven.deploy.skip>
+	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
-			<artifactId>lang-java-init</artifactId>
-			<version>${project.version}</version>
-			<type>pom</type>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.bitbucket.mstrobel</groupId>
@@ -81,7 +78,7 @@
 
 		<!-- Test dependencies -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>shared</artifactId>
 			<classifier>tests</classifier> <!-- type=test-jar does not seem to work here, use classifier instead -->
 			<version>${project.version}</version>
@@ -111,13 +108,23 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4-maven-plugin</artifactId>
+				<configuration>
+					<visitor>true</visitor>
+					<listener>true</listener>
+				</configuration>
+			</plugin>	
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<executions>
-
-
 					<!-- Include changedistiller, which is not available on Maven Central -->
 					<execution>
-						<id>1</id>
+						<id>normal-jar</id>
 						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
@@ -138,12 +145,10 @@
 							</filters>
 						</configuration>
 					</execution>
-
-
 					<!-- For instrumentation with the -agent option, incl. a repackaged 
 						version of httpclient -->
 					<execution>
-						<id>2</id>
+						<id>self-contained-agent-jar</id>
 						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
@@ -185,19 +190,23 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			<!-- Flatten a 2nd time after shade, in order to process the dependency-reduced-pom, see
+				https://stackoverflow.com/questions/52552329/use-maven-flatten-plugin-and-maven-shade-plugin-at-the-same-time
+				https://stackoverflow.com/questions/8243912/changing-the-order-of-maven-plugin-execution#8244173 --> 
 			<plugin>
-				<groupId>org.antlr</groupId>
-				<artifactId>antlr4-maven-plugin</artifactId>
-				<configuration>
-					<visitor>true</visitor>
-					<listener>true</listener>
-				</configuration>
-				<executions>
-					<execution>
+			    <groupId>org.codehaus.mojo</groupId>
+			    <artifactId>flatten-maven-plugin</artifactId>
+			    <version>1.2.2</version>
+			    <executions>
+			    	<execution>
+						<id>flatten-after-shade</id>
+						<phase>package</phase>
 						<goals>
-							<goal>antlr4</goal>
+							<goal>flatten</goal>
 						</goals>
+						<configuration>
+							<flattenMode>clean</flattenMode>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

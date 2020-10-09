@@ -10,9 +10,9 @@ if [ "$VULAS_RELEASE" != "$TRAVIS_TAG" ]; then
   exit 1
 fi
 
-echo "$DOCKER_HUB_NARAMSIM_PASSWORD" | docker login -u "$DOCKER_HUB_NARAMSIM_USERNAME" --password-stdin
+echo "$DOCKER_HUB_SUMEET_PASSWORD" | docker login -u "$DOCKER_HUB_SUMEET_USERNAME" --password-stdin
 if [ -z "$JIB" ]; then
-  (cd docker && bash push-images.sh -r docker.io -p vulas -v "$TRAVIS_TAG")
+  (cd docker && bash push-images.sh -r docker.io -p eclipse -v "$TRAVIS_TAG")
 else
   ./.travis/skaffold build -f ./.travis/skaffold.yaml
 fi

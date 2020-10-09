@@ -25,9 +25,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.sap.research.security.vulas</groupId>
+		<groupId>org.eclipse.steady</groupId>
 		<artifactId>root</artifactId>
-		<version>3.1.16-SNAPSHOT</version>
+		<version>3.2.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>shared</artifactId>
 
@@ -39,14 +39,10 @@
 		consistency across modules.
 	</description>
 	
-	<distributionManagement>
-		<site>
-			<id>vulas.website</id>
-			<name>Vulas Documentation</name>
-			<url>file:${project.basedir}/docs/site</url>
-		</site>
-	</distributionManagement>
-
+	<properties>
+		<maven.deploy.skip>false</maven.deploy.skip>
+	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -78,6 +74,11 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			
 			<!-- Used to provide version information in "vulas-version.properties" -->
 			<plugin>
 				<groupId>com.google.code.maven-replacer-plugin</groupId>

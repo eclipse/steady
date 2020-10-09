@@ -23,9 +23,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.sap.research.security.vulas</groupId>
+		<groupId>org.eclipse.steady</groupId>
 		<artifactId>root</artifactId>
-		<version>3.1.16-SNAPSHOT</version>
+		<version>3.2.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>patch-lib-analyzer</artifactId>
@@ -41,19 +41,19 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang-java</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>lang-python</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		
 		<!-- Test -->
 		<dependency>
-			<groupId>com.sap.research.security.vulas</groupId>
+			<groupId>org.eclipse.steady</groupId>
 			<artifactId>shared</artifactId>
 			<classifier>tests</classifier> <!-- type=test-jar does not seem to work here, use classifier instead -->
 			<version>${project.version}</version>
@@ -64,10 +64,9 @@
 	<build>
 		<plugins>
 			<plugin>
-        		<groupId>com.google.cloud.tools</groupId>
-        		<artifactId>jib-maven-plugin</artifactId>
-				<extensions>true</extensions>
-      		</plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -98,6 +97,11 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+        		<groupId>com.google.cloud.tools</groupId>
+        		<artifactId>jib-maven-plugin</artifactId>
+				<extensions>true</extensions>
+      		</plugin>
 		</plugins>
 	</build>
 </project>

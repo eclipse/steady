@@ -184,7 +184,7 @@ public class CallgraphTest {
 
   //	@Test
   //	public void getChangesTest () {
-  //		MavenId app = new MavenId("com.sap.research.security.vulas", "vulas-testapp",
+  //		MavenId app = new MavenId("org.eclipse.steady", "vulas-testapp",
   // "0.0.2-SNAPSHOT");
   //		ReachabilityAnalyzer ra = new ReachabilityAnalyzer(app, null);
   //		Map<String, Set<ConstructId>> changes = Collector.getInstance().getChangeList(app, null,

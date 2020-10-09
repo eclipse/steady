@@ -23,23 +23,35 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.sap.research.security.vulas</groupId>
+        <groupId>org.eclipse.steady</groupId>
         <artifactId>root</artifactId>
-        <version>3.1.16-SNAPSHOT</version>
+        <version>3.2.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>lang-java-reach-wala</artifactId>
     <name>Java - Wala call graph constructor service</name>
-    <description>Default call graph constructor service for Java</description>
-
+    <description></description>
+    
+    <properties>
+		<maven.deploy.skip>false</maven.deploy.skip>
+	</properties>
 
     <dependencies>
         <dependency>
-            <groupId>com.sap.research.security.vulas</groupId>
+            <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java-reach</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
+    
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 </project>

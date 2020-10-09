@@ -2,9 +2,9 @@ version: '2'
 
 services:
   frontend-apps:
-    container_name: vulnerability-assessment-tool-frontend-apps
+    container_name: steady-frontend-apps
     hostname: frontend-apps
-    image: vulas/vulnerability-assessment-tool-frontend-apps:${VULAS_RELEASE}
+    image: eclipse/steady-frontend-apps:${VULAS_RELEASE}
     expose:
       - "8080"
     security_opt:
@@ -12,9 +12,9 @@ services:
     restart: always
 
   frontend-bugs:
-    container_name: vulnerability-assessment-tool-frontend-bugs
+    container_name: steady-frontend-bugs
     hostname: frontend-bugs
-    image: vulas/vulnerability-assessment-tool-frontend-bugs:${VULAS_RELEASE}
+    image: eclipse/steady-frontend-bugs:${VULAS_RELEASE}
     expose:
       - "8080"
     security_opt:
@@ -22,7 +22,7 @@ services:
     restart: always
 
   haproxy:
-    container_name: vulnerability-assessment-tool-haproxy
+    container_name: steady-haproxy
     hostname: haproxy
     env_file: .env
     image: haproxy:alpine
@@ -43,9 +43,9 @@ services:
     restart: always
 
   patch-lib-analyzer:
-    container_name: vulnerability-assessment-tool-patch-lib-analyzer
+    container_name: steady-patch-lib-analyzer
     hostname: patch-lib-analyzer
-    image: vulas/vulnerability-assessment-tool-patch-lib-analyzer:${VULAS_RELEASE}
+    image: eclipse/steady-patch-lib-analyzer:${VULAS_RELEASE}
     expose:
       - "8080"
     volumes:
@@ -65,7 +65,7 @@ services:
     restart: always
   
   postgresql:
-    container_name: vulnerability-assessment-tool-postgresql
+    container_name: steady-postgresql
     hostname: postgresql
     image: postgres:11-alpine
     environment:
@@ -83,12 +83,12 @@ services:
     restart: always
 
   rest-backend:
-    container_name: vulnerability-assessment-tool-rest-backend
+    container_name: steady-rest-backend
     hostname: rest-backend
     env_file: 
       - .env
       - ./rest-backend/conf/restbackend.properties
-    image: vulas/vulnerability-assessment-tool-rest-backend:${VULAS_RELEASE}
+    image: eclipse/steady-rest-backend:${VULAS_RELEASE}
     expose:
       - "8091"
     environment:
@@ -109,9 +109,9 @@ services:
     restart: always
 
   rest-lib-utils:
-    container_name: vulnerability-assessment-tool-rest-lib-utils
+    container_name: steady-rest-lib-utils
     hostname: rest-lib-utils
-    image: vulas/vulnerability-assessment-tool-rest-lib-utils:${VULAS_RELEASE}
+    image: eclipse/steady-rest-lib-utils:${VULAS_RELEASE}
     expose:
         - "8092"
     volumes:
@@ -124,9 +124,9 @@ services:
     extends:
      file: ../rest-nvd/docker-compose.yml
      service: rest-nvd
-    container_name: vulnerability-assessment-tool-rest-nvd
+    container_name: steady-rest-nvd
     hostname: rest-nvd
-    image: vulas/vulnerability-assessment-tool-rest-nvd:${VULAS_RELEASE}
+    image: eclipse/steady-rest-nvd:${VULAS_RELEASE}
     expose:
       - "80"
     security_opt:
@@ -134,7 +134,7 @@ services:
     restart: always
 
   cache:
-    container_name: vulnerability-assessment-tool-cache
+    container_name: steady-cache
     hostname: cache
     image: nginx:alpine
     expose:

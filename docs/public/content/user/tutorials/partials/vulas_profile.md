@@ -17,7 +17,7 @@
         <build>
             <plugins>
                 <plugin>
-                    <groupId>com.sap.research.security.vulas</groupId>
+                    <groupId>org.eclipse.steady</groupId>
                     <artifactId>plugin-maven</artifactId>
                     <version>${vulas.version}</version>
                     <configuration>

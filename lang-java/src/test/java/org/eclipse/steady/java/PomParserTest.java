@@ -43,7 +43,7 @@ public class PomParserTest {
       final XMLReader xmlReader = saxParser.getXMLReader();
       xmlReader.setContentHandler(pp);
       xmlReader.parse(new InputSource(new FileReader(new File("pom.xml"))));
-      assertEquals("com.sap.research.security.vulas", pp.getLibraryId().getMvnGroup());
+      assertEquals("org.eclipse.steady", pp.getLibraryId().getMvnGroup());
       assertEquals("lang-java", pp.getLibraryId().getArtifact());
     } catch (Exception e) {
       e.printStackTrace();
