@@ -47,7 +47,7 @@ public class Help implements Command {
   }
 
   @Override
-  public String getCommandName() {
-    return "help";
+  public Command.NAME getCommandName() {
+    return Command.NAME.HELP;
   }
 }

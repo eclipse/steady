@@ -53,7 +53,7 @@ public class Version implements Command {
   }
 
   @Override
-  public String getCommandName() {
-    return "version";
+  public Command.NAME getCommandName() {
+    return Command.NAME.VERSION;
   }
 }
