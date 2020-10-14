@@ -1,27 +1,26 @@
 /**
  * This file is part of Eclipse Steady.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * SPDX-License-Identifier: Apache-2.0
- * SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
+ * <p>SPDX-License-Identifier: Apache-2.0 SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or
+ * an SAP affiliate company and Eclipse Steady contributors
  */
 package org.eclipse.steady.kb.util;
 
 import java.io.File;
-import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,6 +29,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.ConstructChange;
@@ -39,17 +39,16 @@ import org.eclipse.steady.kb.model.Commit;
 import org.eclipse.steady.shared.enums.ConstructType;
 import org.eclipse.steady.shared.json.model.FileChange;
 
-/**
- * Identifying all the constructs
- */
+/** Identifying all the constructs */
 public class ConstructSet {
   private static final String BEFORE_FOLDER = "before";
   private static final String AFTER_FOLDER = "after";
+  private static final Set<String> SOURCE_EXTS =
+      new HashSet<String>(Arrays.asList(new String[] {"java", "py"}));
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
   /**
-   *
    * Identifies all constructs that have been changed in the given revision. Getting the changed
    * sets of before and after commit, and afterwards compared according to the syntax of the
    * respective programming language.
@@ -76,7 +75,8 @@ public class ConstructSet {
       for (FileChange c : file_changes) {
         try {
           // Check if the file ext is supported
-          if (FileAnalyzerFactory.isSupportedFileExtension(c.getFileExtension())) {
+          if (SOURCE_EXTS.contains(c.getFileExtension())
+              && FileAnalyzerFactory.isSupportedFileExtension(c.getFileExtension())) {
             final FileComparator comparator = new FileComparator(c, commitId, timeStamp);
             ch.addAll(comparator.identifyChanges());
           }
@@ -120,47 +120,45 @@ public class ConstructSet {
    * @return a {@link java.util.Set} object.
    */
   private static Set<FileChange> getFileChanges(final String _path, String _url) {
-    final Set<FileChange> filesChanged = new HashSet<>();
+    final Path beforePath = Paths.get(_path, BEFORE_FOLDER);
+    final Path afterPath = Paths.get(_path, AFTER_FOLDER);
 
-    final List<String> filesModifiedOrDeleted = new ArrayList<>();
-
-    String beforePath = _path + File.separator + BEFORE_FOLDER;
-    File beforeFile = new File(beforePath);
-    if (!beforeFile.exists()) {
-      ConstructSet.log.error("Path - {} does not exists", beforePath);
+    // Ensure that before and after folders exist
+    if (!beforePath.toFile().exists()) {
+      ConstructSet.log.error("Path with pre-commit files [{}] does not exists", beforePath);
+      return Collections.emptySet();
+    } else if (!afterPath.toFile().exists()) {
+      ConstructSet.log.error("Path with post-commit files [{}] does not exists", afterPath);
       return Collections.emptySet();
     }
 
-    Collection<File> beforeFiles = FileUtils.listFiles(beforeFile, null, true);
+    final Set<FileChange> filesChanged = new HashSet<>();
+    final List<String> filesModifiedOrDeleted = new ArrayList<>();
+
+    // Search for files that were changed or deleted by the commit
+    final Collection<File> beforeFiles = FileUtils.listFiles(beforePath.toFile(), null, true);
     for (File file : beforeFiles) {
       if (file.isFile()) {
-        String filePathWithDir = file.getAbsolutePath();
-        String filePath = filePathWithDir.split(BEFORE_FOLDER + File.separator)[1];
-        String afterFilePath = _path + File.separator + AFTER_FOLDER + File.separator + filePath;
-        if (Files.exists(Paths.get(afterFilePath))) {
-          filesChanged.add(
-              new FileChange(_url, filePath, new File(filePathWithDir), new File(afterFilePath)));
+        final Path rel_path = beforePath.relativize(file.toPath());
+        final Path afterFile = afterPath.resolve(rel_path);
+        if (afterFile.toFile().exists()) {
+          filesChanged.add(new FileChange(_url, rel_path.toString(), file, afterFile.toFile()));
         } else {
-          filesChanged.add(new FileChange(_url, filePath, new File(filePathWithDir), null));
+          filesChanged.add(
+              new FileChange(_url, rel_path.toString().replace('\\', '/'), file, null));
         }
-        filesModifiedOrDeleted.add(filePath);
+        filesModifiedOrDeleted.add(rel_path.toString());
       }
     }
 
-    String afterPath = _path + File.separator + AFTER_FOLDER;
-    File afterFile = new File(afterPath);
-    if (!afterFile.exists()) {
-      ConstructSet.log.error("Path - {} does not exists", afterPath);
-      return Collections.emptySet();
-    }
-
-    Collection<File> afterFiles = FileUtils.listFiles(afterFile, null, true);
+    // Search for files that were added by the commit
+    final Collection<File> afterFiles = FileUtils.listFiles(afterPath.toFile(), null, true);
     for (File file : afterFiles) {
       if (file.isFile()) {
-        String filePathWithDir = file.getAbsolutePath();
-        String filePath = filePathWithDir.split(AFTER_FOLDER + File.separator)[1];
-        if (!filesModifiedOrDeleted.contains(filePath)) {
-          filesChanged.add(new FileChange(_url, filePath, null, new File(filePathWithDir)));
+        final Path rel_path = afterPath.relativize(file.toPath());
+        if (!filesModifiedOrDeleted.contains(rel_path.toString())) {
+          filesChanged.add(
+              new FileChange(_url, rel_path.toString().replace('\\', '/'), null, file));
         }
       }
     }
