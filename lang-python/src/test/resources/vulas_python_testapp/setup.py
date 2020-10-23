@@ -12,7 +12,7 @@ setup(
         'Intended Audience :: Developers',
         'Programming Language :: Python :: 2.7',
     ],
-    install_requires = [ 'django==1.8.1' ],
+    install_requires = [ 'django==1.11.29' ],
     include_package_data = True,
     packages=find_packages(),
     entry_points = {
