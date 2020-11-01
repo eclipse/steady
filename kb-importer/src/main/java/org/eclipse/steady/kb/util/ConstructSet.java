@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.ConstructChange;
@@ -41,6 +40,7 @@ import org.eclipse.steady.shared.json.model.FileChange;
 
 /** Identifying all the constructs */
 public class ConstructSet {
+  private static final String COMMIT_BRANCH_SPLIT = ":";
   private static final String BEFORE_FOLDER = "before";
   private static final String AFTER_FOLDER = "after";
   private static final Set<String> SOURCE_EXTS =
@@ -63,15 +63,13 @@ public class ConstructSet {
     String branch = _commit.getBranch();
     String timeStamp = _commit.getTimestamp();
     String repoUrl = _commit.getRepoUrl();
-    String commitDir = _commit.getDirectory();
-
     String rev = commitId + branch;
     Set<ConstructChange> ch = _changes.get(rev);
     if (ch == null) {
       ch = new TreeSet<ConstructChange>();
 
       // Get and loop over all changed files
-      final Set<FileChange> file_changes = getFileChanges(commitDir, repoUrl);
+      final Set<FileChange> file_changes = getFileChanges(_commit, repoUrl);
       for (FileChange c : file_changes) {
         try {
           // Check if the file ext is supported
@@ -114,14 +112,15 @@ public class ConstructSet {
   /**
    * get file changes for a commit
    *
-   * @param _path a {@link java.lang.String} object.
+   * @param _commit a {@link org.eclipse.steady.kb.model.Commit} object.
    * @param _rev a {@link java.lang.String} object.
    * @param _url a {@link java.lang.String} object.
    * @return a {@link java.util.Set} object.
    */
-  private static Set<FileChange> getFileChanges(final String _path, String _url) {
-    final Path beforePath = Paths.get(_path, BEFORE_FOLDER);
-    final Path afterPath = Paths.get(_path, AFTER_FOLDER);
+  private static Set<FileChange> getFileChanges(final Commit _commit, String _url) {
+    String directory = _commit.getDirectory();
+    final Path beforePath = Paths.get(directory, BEFORE_FOLDER);
+    final Path afterPath = Paths.get(directory, AFTER_FOLDER);
 
     // Ensure that before and after folders exist
     if (!beforePath.toFile().exists()) {
@@ -137,12 +136,18 @@ public class ConstructSet {
 
     // Search for files that were changed or deleted by the commit
     final Collection<File> beforeFiles = FileUtils.listFiles(beforePath.toFile(), null, true);
+    String branch = _commit.getBranch();
     for (File file : beforeFiles) {
       if (file.isFile()) {
         final Path rel_path = beforePath.relativize(file.toPath());
         final Path afterFile = afterPath.resolve(rel_path);
         if (afterFile.toFile().exists()) {
-          filesChanged.add(new FileChange(_url, rel_path.toString(), file, afterFile.toFile()));
+          filesChanged.add(
+              new FileChange(
+                  _url,
+                  branch + COMMIT_BRANCH_SPLIT + rel_path.toString(),
+                  file,
+                  afterFile.toFile()));
         } else {
           filesChanged.add(
               new FileChange(_url, rel_path.toString().replace('\\', '/'), file, null));
@@ -158,7 +163,11 @@ public class ConstructSet {
         final Path rel_path = afterPath.relativize(file.toPath());
         if (!filesModifiedOrDeleted.contains(rel_path.toString())) {
           filesChanged.add(
-              new FileChange(_url, rel_path.toString().replace('\\', '/'), null, file));
+              new FileChange(
+                  _url,
+                  branch + COMMIT_BRANCH_SPLIT + rel_path.toString().replace('\\', '/'),
+                  null,
+                  file));
         }
       }
     }
