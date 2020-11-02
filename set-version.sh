@@ -27,9 +27,6 @@ new_timestamp=`date --utc --iso-8601=seconds`
 
 # Maven
 find . -name pom.xml -exec sed -i "0,/${old}/s//${new}/" {} \;
-
-exit 0
-
 sed -i "s/${old_timestamp}/${new_timestamp}/" pom.xml
 
 # Travis
