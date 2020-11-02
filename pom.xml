@@ -138,7 +138,7 @@
 		<!-- Skip certain plugins by default, change for all childs to be installed & deployed -->
 		<maven.deploy.skip>true</maven.deploy.skip>
 		
-		<!-- Reproducible -->
+		<!-- Used by several plugins, to make builds reproducible -->
 		<project.build.outputTimestamp>2020-11-02T12:14:00Z</project.build.outputTimestamp>
 	</properties>
 
