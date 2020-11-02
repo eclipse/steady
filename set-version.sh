@@ -16,9 +16,9 @@ old_doc=`less docs/public.properties | grep -m 1 "PROJECT_VERSION=" | sed -n "s/
 echo $new | grep -qE "\-SNAPSHOT$"
 if [ $? -eq 0 ]; then
   is_snap=true
-  printf "Version identifier used by Maven and Travis will be updated to [%s], the one used by mkdocs is kept at [%s]\n" $new $old_doc
+  printf "Version identifier used by Maven and Travis will be updated from [%s] to [%s], the one used by mkdocs is kept at [%s]\n" $old $new $old_doc
 else
-  printf "Version identifier used by Maven, Travis and mkdocs will be updated to [%s]\n" $new
+  printf "Version identifier used by Maven, Travis and mkdocs will be updated from [%s] to [%s]\n" $old $new
 fi
 
 # Build timestamp
