@@ -137,6 +137,9 @@
 
 		<!-- Skip certain plugins by default, change for all childs to be installed & deployed -->
 		<maven.deploy.skip>true</maven.deploy.skip>
+		
+		<!-- Used by several plugins, to make builds reproducible -->
+		<project.build.outputTimestamp>2020-11-02T12:14:00Z</project.build.outputTimestamp>
 	</properties>
 
 	<modules>
@@ -194,7 +197,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>2.2.1</version>
+						<version>3.2.0</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -209,7 +212,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.1.1</version>
+						<version>3.2.0</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -668,7 +671,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>3.2.0</version>
 					<configuration>
 						<archive>
 							<manifestEntries>
@@ -741,13 +744,18 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>3.3.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>3.2.4</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.6</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
