@@ -36,7 +36,7 @@ public class CommandExecutor {
 
   private static final String DIRECTORY_OPTION = "d";
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
-  private Map<String, Command> commands = new HashMap<>();
+  private Map<Command.NAME, Command> commands = new HashMap<>();
   private static CommandExecutor commandExecutor;
 
   private CommandExecutor() {
@@ -70,9 +70,13 @@ public class CommandExecutor {
       return;
     }
 
-    Command command = commands.get(_args[0]);
+    Command command = null;
+    try {
+      command = commands.get(Command.NAME.valueOf(_args[0].toUpperCase()));
+    } catch (IllegalArgumentException e) {
+      // skip when an unknown command name is passed. Default to import
+    }
 
-    // if unknown command name is passed then set default command as import
     if (command == null) {
       command = new Import();
     }
@@ -98,6 +102,7 @@ public class CommandExecutor {
       command.validate(mapCommandOptionValues);
     } catch (ValidationException e) {
       log.error(e.getMessage());
+      return;
     }
 
     command.run(mapCommandOptionValues);

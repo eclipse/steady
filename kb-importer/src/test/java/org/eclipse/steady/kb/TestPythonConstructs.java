@@ -75,7 +75,7 @@ public class TestPythonConstructs {
     }
     assertEquals("1447974481000", constructChangeToValidate.getCommittedAt());
     assertEquals("https://github.com/django/django", constructChangeToValidate.getRepo());
-    assertEquals("django/contrib/admin/options.py", constructChangeToValidate.getRepoPath());
+    assertEquals("master:django/contrib/admin/options.py", constructChangeToValidate.getRepoPath());
     assertNotNull(constructChangeToValidate.getConstruct().getDigest());
     assertNotNull(constructChangeToValidate.getConstruct().getContent());
     assertEquals("options", constructChangeToValidate.getConstruct().getId().getName());

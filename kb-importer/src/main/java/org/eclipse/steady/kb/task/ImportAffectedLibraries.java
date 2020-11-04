@@ -21,18 +21,18 @@ package org.eclipse.steady.kb.task;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.backend.BackendConnector;
+import org.eclipse.steady.kb.command.Command;
 import org.eclipse.steady.kb.model.Artifact;
 import org.eclipse.steady.kb.model.Vulnerability;
 import org.eclipse.steady.shared.enums.AffectedVersionSource;
 import org.eclipse.steady.shared.json.model.AffectedConstructChange;
 import org.eclipse.steady.shared.json.model.AffectedLibrary;
 import org.eclipse.steady.shared.json.model.LibraryId;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.packageurl.MalformedPackageURLException;
@@ -44,41 +44,33 @@ import com.github.packageurl.PackageURL;
  * TODO: Handle regex for the purls given in the json
  * </p>
  */
-public class ImportAffectedLibraries {
-  private Vulnerability vuln;
-  private HashMap<String, Object> args;
+public class ImportAffectedLibraries implements Task {
   private static final String OVERWRITE_OPTION = "o";
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
-  public ImportAffectedLibraries(Vulnerability vuln, HashMap<String, Object> args) {
-    this.vuln = vuln;
-    this.args = args;
-  }
-
-  public void execute()
+  public void execute(
+      Vulnerability vuln, HashMap<String, Object> args, BackendConnector backendConnector)
       throws MalformedPackageURLException, BackendConnectionException, JsonProcessingException {
     List<Artifact> artifacts = vuln.getArtifacts();
     if (artifacts == null || artifacts.isEmpty()) {
       return;
     }
 
-    Boolean overwrite = (Boolean) args.get(OVERWRITE_OPTION);
-
     List<AffectedLibrary> affectedLibsToUpsert = new ArrayList<AffectedLibrary>();
+    HashSet<org.eclipse.steady.shared.json.model.Artifact> ciaArtifactsCache = new HashSet<>();
 
     for (Artifact artifact : artifacts) {
       PackageURL purl = new PackageURL(artifact.getId());
 
+      String purlGroup = purl.getNamespace();
+      String purlArtifact = purl.getName();
+      String purlVersion = purl.getVersion();
       AffectedLibrary[] affectedLibs =
-          BackendConnector.getInstance()
-              .getBugAffectedLibraries(
-                  vuln.getVulnId(),
-                  purl.getNamespace(),
-                  purl.getName(),
-                  purl.getVersion(),
-                  AffectedVersionSource.KAYBEE);
+          backendConnector.getBugAffectedLibraries(
+              vuln.getVulnId(), purlGroup, purlArtifact, purlVersion, AffectedVersionSource.KAYBEE);
       if (affectedLibs != null && affectedLibs.length > 0) {
         AffectedLibrary affectedLibrary = affectedLibs[0];
+        Boolean overwrite = (Boolean) args.get(OVERWRITE_OPTION);
         if (overwrite || affectedLibrary.getAffected() == null) {
           setAfftectedLib(artifact, affectedLibrary);
           affectedLibsToUpsert.add(affectedLibrary);
@@ -89,17 +81,37 @@ public class ImportAffectedLibraries {
               artifact.getId());
         }
       } else {
-        org.eclipse.steady.shared.json.model.Artifact ciaArtifact =
-            BackendConnector.getInstance()
-                .getArtifact(purl.getNamespace(), purl.getName(), purl.getVersion());
 
-        if (ciaArtifact == null) {
-          continue;
+        if (!ciaArtifactsCache.contains(
+            new org.eclipse.steady.shared.json.model.Artifact(
+                purlGroup, purlArtifact, purlVersion))) {
+          org.eclipse.steady.shared.json.model.Artifact[] ciaArtifactsArr =
+              backendConnector.getAllArtifactsGroupArtifact(purlGroup, purlArtifact);
+
+          if (ciaArtifactsArr == null) {
+            log.warn(
+                "Affected version {} is not part of the configured repository.", artifact.getId());
+            continue;
+          }
+
+          for (org.eclipse.steady.shared.json.model.Artifact ciaArtifact : ciaArtifactsArr) {
+            LibraryId libId = ciaArtifact.getLibId();
+            ciaArtifactsCache.add(
+                new org.eclipse.steady.shared.json.model.Artifact(
+                    libId.getMvnGroup(), libId.getArtifact(), libId.getVersion()));
+          }
+
+          if (!ciaArtifactsCache.contains(
+              new org.eclipse.steady.shared.json.model.Artifact(
+                  purlGroup, purlArtifact, purlVersion))) {
+            log.warn(
+                "Affected version {} is not part of the configured repository.", artifact.getId());
+            continue;
+          }
         }
 
         AffectedLibrary affectedLibrary = new AffectedLibrary();
-        affectedLibrary.setLibraryId(
-            new LibraryId(purl.getNamespace(), purl.getName(), purl.getVersion()));
+        affectedLibrary.setLibraryId(new LibraryId(purlGroup, purlArtifact, purlVersion));
         setAfftectedLib(artifact, affectedLibrary);
         affectedLibsToUpsert.add(affectedLibrary);
       }
@@ -109,8 +121,8 @@ public class ImportAffectedLibraries {
       ObjectMapper mapper = new ObjectMapper();
       String json = mapper.writeValueAsString(affectedLibsToUpsert.toArray());
 
-      BackendConnector.getInstance()
-          .uploadBugAffectedLibraries(null, vuln.getVulnId(), json, AffectedVersionSource.KAYBEE);
+      backendConnector.uploadBugAffectedLibraries(
+          null, vuln.getVulnId(), json, AffectedVersionSource.KAYBEE);
     }
   }
 
@@ -119,5 +131,10 @@ public class ImportAffectedLibraries {
     affectedLibrary.setExplanation(artifact.getReason());
     affectedLibrary.setAffectedcc(Collections.<AffectedConstructChange>emptyList());
     affectedLibrary.setSource(AffectedVersionSource.KAYBEE);
+  }
+
+  @Override
+  public Command.NAME getCommandName() {
+    return Command.NAME.IMPORT;
   }
 }

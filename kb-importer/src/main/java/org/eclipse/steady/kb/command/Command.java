@@ -26,12 +26,19 @@ import org.eclipse.steady.kb.exception.ValidationException;
  * Command Interface
  */
 public interface Command {
+
+  enum NAME {
+    HELP,
+    VERSION,
+    IMPORT;
+  }
+
   /**
    * get the command name
    *
    * @return a {@link java.lang.String}
    */
-  String getCommandName();
+  Command.NAME getCommandName();
 
   /**
    * run a command. logic to execute a command with arguments
