@@ -2,7 +2,7 @@ version: '2'
 
 services:
   frontend-apps:
-    build: 
+    build:
       context: ./frontend-apps
       dockerfile: ./Dockerfile
       args:
@@ -10,7 +10,7 @@ services:
     image: steady-frontend-apps:${VULAS_RELEASE}
 
   frontend-bugs:
-    build: 
+    build:
       context: ./frontend-bugs
       dockerfile: ./Dockerfile
       args:
@@ -18,7 +18,7 @@ services:
     image: steady-frontend-bugs:${VULAS_RELEASE}
 
   patch-lib-analyzer:
-    build: 
+    build:
       context: ./patch-lib-analyzer
       dockerfile: ./Dockerfile
       args:
@@ -26,24 +26,24 @@ services:
     image: steady-patch-lib-analyzer:${VULAS_RELEASE}
 
   rest-backend:
-    build: 
-      context: ./rest-backend    
+    build:
+      context: ./rest-backend
       dockerfile: ./Dockerfile
       args:
         - VULAS_RELEASE=${VULAS_RELEASE}
     image: steady-rest-backend:${VULAS_RELEASE}
 
   rest-lib-utils:
-    build: 
-      context: ./rest-lib-utils 
+    build:
+      context: ./rest-lib-utils
       dockerfile: ./Dockerfile
       args:
         - VULAS_RELEASE=${VULAS_RELEASE}
     image: steady-rest-lib-utils:${VULAS_RELEASE}
 
   patch-analyzer:
-    build: 
-      context: ./patch-analyzer 
+    build:
+      context: ./patch-analyzer
       dockerfile: ./Dockerfile
       args:
         - VULAS_RELEASE=${VULAS_RELEASE}
@@ -58,3 +58,11 @@ services:
       args:
         - VULAS_RELEASE=${VULAS_RELEASE}
     image: steady-rest-nvd:${VULAS_RELEASE}
+
+  kb-importer:
+    build:
+      context: ./kb-importer
+      dockerfile: ./Dockerfile
+      args:
+        - VULAS_RELEASE=${VULAS_RELEASE}
+    image: steady-kb-importer:${VULAS_RELEASE}
