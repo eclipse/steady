@@ -11,13 +11,13 @@ echo -e "\n[+] Building new archives"
 ( set -x; mvn -U -e -Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_PORT} -Dhttps.proxyHost=${HTTPS_PROXY_HOST} -Dhttps.proxyPort=${HTTPS_PROXY_PORT} ${mvn_flags} clean install)
 
 if [ $? -ne 0 ]; then
-	echo -e "\n[!] Couldn't build new archives"
-	exit 1
+ echo -e "\n[!] Couldn't build new archives"
+ exit 1
 fi
 
-VULAS_JAVA_PACKAGES="frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils patch-analyzer"
-VULAS_JAVA_CLIENT_COMPONENTS="patch-analyzer cli-scanner plugin-maven"
-VULAS_JAVA_COMPONENTS="cli-scanner frontend-apps frontend-bugs lang-java-reach-wala lang-java-reach lang-java lang-python lang patch-analyzer patch-lib-analyzer plugin-maven repo-client rest-backend rest-lib-utils shared"
+VULAS_JAVA_PACKAGES="frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils patch-analyzer kb-importer"
+VULAS_JAVA_CLIENT_COMPONENTS="patch-analyzer cli-scanner plugin-maven kb-importer"
+VULAS_JAVA_COMPONENTS="cli-scanner frontend-apps frontend-bugs lang-java-reach-wala lang-java-reach lang-java lang-python lang patch-analyzer patch-lib-analyzer plugin-maven repo-client rest-backend rest-lib-utils shared kb-importer"
 
 echo -e '\n[+] Copying new archives'
 

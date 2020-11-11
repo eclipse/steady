@@ -1,0 +1,219 @@
+apiVersion: "v1"
+
+# List of sources from which statements are pulled
+# Ranks: smaller value means higher rank (higher priority)
+sources:
+  - repo: https://github.com/sap/project-kb
+    branch: vulnerability-data
+    rank: 10
+
+# Edit this to point to your Eclipse Steady server (optional)
+backend: "https://your.steady.server.here/backend"
+
+policies:
+  - strict
+#  - soft
+
+#exportdenylist:
+#  # SVN
+#  - COLLECTIONS-580
+#  - CVE-2005-3164
+#  - CVE-2005-4838
+#  - CVE-2007-0450
+
+export:
+  # - target: csv
+  #   filename: vulnerabilities.csv
+  #   pre:
+  #   each: |
+  #     {{ if .Fixes }} {{ .VulnerabilityID}},{{ (index (index .Fixes 0).Commits 0).RepositoryURL }}{{end}}
+  #   post:
+  - target: steady
+    filename: steady.sh
+    pre: |
+      #!/bin/bash
+
+      # ------------------------------------------------
+      #  Import script for Eclipse Steady
+      # ------------------------------------------------
+
+      ##-------- E D I T   T H I S  S E C T I O N --------
+      ##
+      ## COMMENT OUT THE NEXT LINE AND EDIT THE FOLLOWING LINES
+      #echo "Please configure the necessary variables in the script and try again" && exit 1
+
+      # Your user token (required to upload vulnerability data to Steady backend)
+      USER_TOKEN=$BACKEND_BUGS_TOKEN
+
+      # Backend URL of your Steady instance
+      BACKEND_URL=$BACKEND_SERVICE_URL
+
+      # URL of the CIA service of your Steady instance
+      CIA_URL=$CIA_SERVICE_URL
+
+      # This must be the absolute path to the kb-importer jar file
+      KB_IMPORTER_PATH="/kb-importer/data/kb-importer.jar"
+      ##---------------------- E N D --------------------
+
+      ANALYZER_CMD="java -Dvulas.shared.backend.header.X-Vulas-Client-Token=$USER_TOKEN -Dvulas.shared.cia.serviceUrl=$CIA_URL -Dvulas.shared.backend.serviceUrl=$BACKEND_URL -jar $KB_IMPORTER_PATH  -u"
+      LOCAL_CLONES_DIR="/tmp"
+
+      folder_for_repo(){
+        X=$1
+
+        # remove trailing slash
+        X=${X%/}
+
+        # remove everything until '://' is matched
+        X=${X#*:\/\/}
+
+        # replace _ for .
+        X=${X//./_}
+
+        # replace _ for /
+        X=${X//\//_}
+        echo ${LOCAL_CLONES_DIR}/$X
+      }
+
+      clone_once(){
+        DIR=$(folder_for_repo $1)
+
+        if [ -d $DIR ];
+        then
+            echo "Folder $DIR exists, skipping git clone"
+        else
+            echo "Cloning $1 to folder $DIR"
+            git clone $1 $DIR
+        fi
+      }
+
+      #make_vuln_metadata(){
+      #  vulnerability_id="$1"
+      #  description="$2"
+      #  links="$3"
+      #
+      #  [ -d $vulnerability_id ] || mkdir ./$vulnerability_id
+      #  > $vulnerability_id/meta.properties
+      #  echo "vulnerability_id=$vulnerability_id" >> $vulnerability_id/meta.properties
+      #  echo "description=$description" >> $vulnerability_id/meta.properties
+      #  echo "links=$links" >> $vulnerability_id/meta.properties
+      #}
+
+      checkout_commit(){
+        repo_url=$1
+        commit_id=$2
+        branch=$3
+        vulnerability_id=$4
+        source_path=$5
+
+        if [ -f $vulnerability_id/$commit_id/metadata.json ]
+        then
+          return
+        fi
+
+        [ -d $vulnerability_id/$commit_id ] || mkdir -p $vulnerability_id/$commit_id
+        if [ -f $source_path/changed-source-code.tar.gz ]
+        then
+          timestamp=`cat $vulnerability_id/$commit_id/timestamp`
+          echo "{" > $vulnerability_id/$commit_id/metadata.json
+          echo "  \"repository\" : \"$repo_url\"," >> $vulnerability_id/$commit_id/metadata.json
+          echo "  \"branch\" : \"$branch\"," >> $vulnerability_id/$commit_id/metadata.json
+          echo "  \"timestamp\" : \"$timestamp\"," >> $vulnerability_id/$commit_id/metadata.json
+          echo "  \"commit_id\" : \"$commit_id\"" >> $vulnerability_id/$commit_id/metadata.json
+          echo "}" >> $vulnerability_id/$commit_id/metadata.json
+          rm $vulnerability_id/$commit_id/timestamp
+          return
+        fi
+
+        clone_once $repo_url
+        repo_dir=$(folder_for_repo $repo_url)
+
+        timestamp=$(git -C $repo_dir show --no-patch --no-notes --pretty='%at' $commit_id)
+
+        echo "{" > $vulnerability_id/$commit_id/metadata.json
+        echo "  \"repository\" : \"$repo_url\"," >> $vulnerability_id/$commit_id/metadata.json
+        echo "  \"branch\" : \"$branch\"," >> $vulnerability_id/$commit_id/metadata.json
+        echo "  \"timestamp\" : \"$timestamp\"," >> $vulnerability_id/$commit_id/metadata.json
+        echo "  \"commit_id\" : \"$commit_id\"" >> $vulnerability_id/$commit_id/metadata.json
+        echo "}" >> $vulnerability_id/$commit_id/metadata.json
+
+        echo "dir=$repo_dir"
+        echo "pwd=`pwd`"
+
+        # cd repository
+        for F in $(git -C $repo_dir diff  --name-only  $commit_id^..$commit_id);
+        do
+
+          echo "repo_dir=$repo_dir"
+          echo "pwd=`pwd`"
+
+          echo "Extracting file: $F"
+          [ -d $vulnerability_id/$commit_id/before/$(dirname $F) ] || mkdir -p $vulnerability_id/$commit_id/before/$(dirname $F)
+          [ -d $vulnerability_id/$commit_id/after/$(dirname $F) ] || mkdir -p $vulnerability_id/$commit_id/after/$(dirname $F)
+
+          if ( git -C $repo_dir cat-file -e $commit_id~1:$F &> /dev/null )
+          then
+            git -C $repo_dir show $commit_id~1:$F > $vulnerability_id/$commit_id/before/$F
+          fi
+
+          if ( git -C $repo_dir cat-file -e $commit_id:$F &> /dev/null )
+          then
+            git -C $repo_dir show $commit_id:$F > $vulnerability_id/$commit_id/after/$F
+          fi
+        done
+      }
+
+    each: |+
+      # -----------------------------------------------
+      #  Analyzing vulnerability {{ .VulnerabilityID}}
+      # -----------------------------------------------
+      {{ if .VulnerabilityID }}
+      [ -d ./{{ .VulnerabilityID }} ] || mkdir ./{{ .VulnerabilityID }}
+      {{ $source_path := .Metadata.LocalPath }}
+      [ -f {{ $source_path }}/changed-source-code.tar.gz ] && tar -xf {{ $source_path }}/changed-source-code.tar.gz -C ./{{ .VulnerabilityID }}
+
+      cat << 'EOM' > ./{{ .VulnerabilityID }}/metadata.json
+      {{ .ToJSON }}
+      EOM
+      {{ if .Fixes}}{{ $description :=  or ((index .Notes 0).Text) "" }}
+      #make_vuln_metadata {{ .VulnerabilityID }} '{{ JoinNotes . }}' {{ LinksAsCSV . }}
+      {{ $vuln := .VulnerabilityID}}{{ $repo := (index (index .Fixes 0).Commits 0).RepositoryURL }}
+      {{ range $f := .Fixes  }}{{ range .Commits }}checkout_commit {{$repo}} {{.ID}} {{$f.ID}} {{ $vuln }} {{ $source_path }}
+      {{end}}{{end}}
+      {{else}}
+      # This vulnerability has no fix-commits
+      {{end}}
+      {{end}}
+
+    post: |-
+      $ANALYZER_CMD -d .
+      # ------------------------------------------------
+      # This script was generated with KayBee
+      # ------------------------------------------------
+  - target: xml
+    filename: vulnerabilities.xml
+    pre:  |
+      <xml>
+        <Vulnerabilities>
+
+    each: |
+      <Vulnerability id="{{ .VulnerabilityID}}">
+        <fixes>
+        {{range .Fixes }}
+            <fix id="{{ .ID }}">
+            {{range .Commits }}
+              <commit hash="{{ .ID }}" repository="{{ .RepositoryURL }}" />{{end}}
+            </fix>
+          </fixes>{{end}}
+          <notes>
+        {{range .Notes }}
+            <note>
+              {{range $link := .Links }}<link url="{{ $link }}" />
+              {{end}}
+              {{ if .Text }}<text>{{ .Text }}</text>{{ end }}
+            </note>{{end}}
+          </notes>
+      </VulnerabilityID>
+    post: |
+      </Vulnerabilities>
+      </xml>
