@@ -120,7 +120,7 @@
 		<!-- Fix vulnerable dependencies in spring-boot-dependencies -->
 		<commons-beanutils.version>1.9.4</commons-beanutils.version><!-- from 1.9.3 -->
 		<hibernate.version>5.4.18.Final</hibernate.version><!-- from 5.0.12.Final, which includes vulnerable dom4j 1.6.1  -->
-		<jackson.version>2.9.10.20201202</jackson.version><!-- from 2.8.11.20181123 -->
+		<jackson.version>2.9.10.20210106</jackson.version><!-- from 2.8.11.20181123 -->
 		<logback.version>1.2.3</logback.version><!--  from 1.1.11 -->
 		<log4j2.version>2.13.3</log4j2.version><!-- from 2.7 -->
 		<snakeyaml.version>1.26</snakeyaml.version><!-- from 1.17 -->
