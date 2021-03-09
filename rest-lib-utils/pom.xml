@@ -125,7 +125,7 @@
 		<log4j2.version>2.13.3</log4j2.version><!-- from 2.7 -->
 		<snakeyaml.version>1.26</snakeyaml.version><!-- from 1.17 -->
 		<spring.version>4.3.29.RELEASE</spring.version><!-- from 4.3.25.RELEASE -->
-		<tomcat.version>8.5.61</tomcat.version><!-- from 8.5.43 -->
+		<tomcat.version>8.5.63</tomcat.version><!-- from 8.5.43 -->
 	</properties>
 	
 	<dependencies>
