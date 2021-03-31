@@ -83,4 +83,8 @@ The following is a subset of pending feature requests:
 - Support of JavaScript (client- and server-side)
 - UI dashboards for workspaces
 
+## Acknowledgement 
+
+This work is partly funded by the EU under the H2020 research project [SPARTA](https://sparta.eu/) (Grant No.830892).
+
 [**Documentation**](https://eclipse.github.io/steady/user/) · [**Support**](https://eclipse.github.io/steady/user/support/) · [**Contributing**](https://eclipse.github.io/steady/contributor/) · [**Deploy guide**](https://eclipse.github.io/steady/admin/tutorials/docker/) · [**Scan guide**](https://eclipse.github.io/steady/user/tutorials/) · [**Vulnerability database**](https://eclipse.github.io/steady/vuln_db/) · [**Blog**](https://blogs.sap.com/tag/vulas/)
