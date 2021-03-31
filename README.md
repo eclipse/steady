@@ -32,6 +32,7 @@ Read more in our [**Docs**](https://eclipse.github.io/steady/)
 
 The tool approach is best described in the following scientific papers, please cite these if you use the tool for your research work:
 
+- [Serena Ponta](https://scholar.google.com/citations?hl=en&user=DFVwF6sAAAAJ), [Henrik Plate](https://scholar.google.com/citations?user=Kaleo5YAAAAJ&hl=en), [Antonino Sabetta](https://scholar.google.com/citations?hl=en&user=BhcceV8AAAAJ), [**Detection, assessment and mitigation of vulnerabilities in open source dependencies**](https://link.springer.com/article/10.1007/s10664-020-09830-x), Empirical Software Engineering, volume 25, pages 3175–3215 (2020)
 - [Serena Ponta](https://scholar.google.com/citations?hl=en&user=DFVwF6sAAAAJ), [Henrik Plate](https://scholar.google.com/citations?user=Kaleo5YAAAAJ&hl=en), [Antonino Sabetta](https://scholar.google.com/citations?hl=en&user=BhcceV8AAAAJ), [**Beyond Metadata: Code-centric and Usage-based Analysis of Known Vulnerabilities in Open-source Software**](https://arxiv.org/abs/1806.05893), 34th International Conference on Software Maintenance and Evolution (ICSME), 2018
 - [Henrik Plate](https://scholar.google.com/citations?user=Kaleo5YAAAAJ&hl=en), [Serena Ponta](https://scholar.google.com/citations?hl=en&user=DFVwF6sAAAAJ), [Antonino Sabetta](https://scholar.google.com/citations?hl=en&user=BhcceV8AAAAJ), [**Impact Assessment for Vulnerabilities in Open-Source Software Libraries**](https://arxiv.org/pdf/1504.04971.pdf), 31st International Conference on Software Maintenance and Evolution (ICSME), 2015
 
