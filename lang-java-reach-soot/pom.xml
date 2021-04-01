@@ -78,11 +78,11 @@
 			</exclusions>
 		</dependency>
 
-		<!-- Fix Soot's dependency on Guava 18.0 (CVE-2018-10237) -->
+		<!-- Fix Soot's dependency on Guava 18.0 (CVE-2018-10237, CVE-2020-8908) -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>27.1-jre</version>
+			<version>30.1.1-jre</version>
 		</dependency>
 	</dependencies>
 	
