@@ -8,7 +8,7 @@ kind: Pod
 spec:
   containers:
   - name: maven
-    image: 3-adoptopenjdk-8
+    image: maven:3-adoptopenjdk-8
     command:
     - cat
     tty: true
