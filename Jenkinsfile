@@ -1,14 +1,28 @@
 pipeline {
   agent {
-    docker {
-        image 'maven:3-jdk-8-alpine'
-        args '-v $HOME/.m2:/var/maven/.m2:z -e MAVEN_CONFIG=/var/maven/.m2 -e MAVEN_OPTS="-Duser.home=/var/maven"'
+    kubernetes {
+      label 'my-agent-pod'
+      yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: maven
+    image: maven:3-jdk-8-alpine
+    command:
+    - cat
+    tty: true
+"""
     }
   }
   stages {
     stage('Compile') {
       steps {
-        sh 'mvn -P gradle clean compile'
+        container('maven') {
+          sh 'whoami'
+          sh 'ls ~'
+          sh 'mvn -P gradle clean compile'
+        }
       }
     }
   }
