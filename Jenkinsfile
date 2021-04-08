@@ -14,7 +14,9 @@ spec:
     tty: true
     env:
     - name: "MAVEN_OPTS"
-      value: "-Duser.home=/home/jenkins -Xmx4096m -Xms4096m -XX:MaxPermSize=1024m"
+      value: "-Duser.home=/home/jenkins -Xmx4096m -Xms4096m"
+    - name: "MAVEN_CONFIG"
+      value: "/home/jenkins/.m2"
     volumeMounts:
     - name: settings-xml
       mountPath: /home/jenkins/.m2/settings.xml
@@ -38,7 +40,6 @@ spec:
     stage('Compile') {
       steps {
         container('maven') {
-          sh 'export MAVEN_CONFIG=/home/jenkins/.m2'
           sh 'mvn -P gradle clean compile'
         }
       }
