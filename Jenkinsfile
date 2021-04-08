@@ -24,6 +24,13 @@ spec:
       readOnly: true
     - name: m2-repo
       mountPath: /home/jenkins/.m2/repository
+    resources:
+      limits:
+        memory: "2Gi"
+        cpu: "1"
+      requests:
+        memory: "2Gi"
+        cpu: "1"
   volumes:
   - name: settings-xml
     secret:
