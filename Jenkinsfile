@@ -24,8 +24,8 @@ spec:
           sh 'pwd'
           sh 'printenv'
           sh 'ls -la /home'
-          sh 'mkdir -p /var/maven/.m2'
-          sh 'export MAVEN_CONFIG=/var/maven/.m2'
+          sh 'mkdir -p /home/jenkins/.m2'
+          sh 'export MAVEN_CONFIG=/home/jenkins/.m2'
           sh 'mvn -Duser.home=/var/maven -P gradle clean compile'
         }
       }
