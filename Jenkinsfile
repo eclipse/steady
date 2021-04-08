@@ -21,6 +21,8 @@ spec:
         container('maven') {
           sh 'whoami'
           sh 'ls ~'
+          sh 'pwd'
+          sh 'printenv'
           sh 'mvn -P gradle clean compile'
         }
       }
