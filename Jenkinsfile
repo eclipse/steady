@@ -20,12 +20,12 @@ spec:
       steps {
         container('maven') {
           sh 'whoami'
-          sh 'ls ~'
+          sh 'll ~'
           sh 'pwd'
           sh 'printenv'
-          sh 'ls /home'
-          sh 'ls /var/maven'
-          sh 'mvn -Duser.home=/var/maven -P gradle clean compile'
+          sh 'll /home'
+          sh 'll /root'
+          sh 'mvn -Duser.home=/ -P gradle clean compile'
         }
       }
     }
