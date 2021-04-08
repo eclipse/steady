@@ -47,6 +47,7 @@ spec:
     stage('Compile') {
       steps {
         container('maven') {
+          sh 'apt-get update && apt-get install -y python3'
           sh 'mvn -P gradle clean compile'
         }
       }
