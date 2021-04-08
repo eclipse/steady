@@ -23,7 +23,9 @@ spec:
           sh 'ls ~'
           sh 'pwd'
           sh 'printenv'
-          sh 'mvn -P gradle clean compile'
+          sh 'ls /home'
+          sh 'ls /var/maven'
+          sh 'mvn -Duser.home=/var/maven -P gradle clean compile'
         }
       }
     }
