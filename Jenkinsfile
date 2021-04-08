@@ -24,9 +24,9 @@ spec:
           sh 'pwd'
           sh 'printenv'
           sh 'ls -la /home'
-          sh 'mkdir -p /home/jenkins/.m2'
-          sh 'export MAVEN_CONFIG=/home/jenkins/.m2'
-          sh 'mvn -Duser.home=/var/maven -P gradle clean compile'
+          sh 'mkdir -p /home/jenkins/agent/workspace/.m2'
+          sh 'export MAVEN_CONFIG=/home/jenkins/agent/workspace/.m2'
+          sh 'mvn -Duser.home=/home/jenkins/agent/workspace -P gradle clean compile'
         }
       }
     }
