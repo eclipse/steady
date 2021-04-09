@@ -1,0 +1,1 @@
+This Dockerfile is used for building and releasing Steady on Eclipse CI/CD infrastructure.
