@@ -11,4 +11,5 @@ RUN chmod +x kaybee
 COPY kb-importer-$VULAS_RELEASE-jar-with-dependencies.jar kb-importer.jar
 RUN chmod +x kb-importer.jar
 COPY kb-importer.sh start.sh /kb-importer/
+RUN chmod +x /kb-importer/kb-importer.sh /kb-importer/start.sh
 ENTRYPOINT ["sh","/kb-importer/start.sh"]
