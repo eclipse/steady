@@ -8,7 +8,7 @@ kind: Pod
 spec:
   containers:
   - name: maven
-    image: eclipse/steady-pipeline
+    image: eclipse/steady-pipeline:latest
     command:
     - cat
     tty: true
@@ -53,7 +53,7 @@ spec:
         }
       }
     }
-    
+
     stage('Test') {
       steps {
         container('maven') {
