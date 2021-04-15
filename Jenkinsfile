@@ -44,10 +44,20 @@ spec:
     }
   }
   stages {
-    stage('Compile') {
+    stage('Check') {
       steps {
         container('maven') {
-          sh 'mvn -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone -Dit.test="!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase" -DfailIfNoTests=false clean test'
+          sh 'mvn -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
+              -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.includeFilterFile=findbugs-include.xml \
+              -Dspotbugs.failOnError=true -DskipTests clean install com.github.spotbugs:spotbugs-maven-plugin:4.0.4:check'
+        }
+      }
+    },
+    stage('Test') {
+      steps {
+        container('maven') {
+          sh 'mvn -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
+              -Dit.test="!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase" -DfailIfNoTests=false clean test'
         }
       }
     }
