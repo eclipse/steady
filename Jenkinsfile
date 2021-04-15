@@ -47,7 +47,7 @@ spec:
     stage('Compile') {
       steps {
         container('maven') {
-          sh 'mvn -P gradle -Dvulas.shared.m2Dir=/home/jenkins/.m2 -Dspring.standalone -Dit.test="!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase" -DfailIfNoTests=false clean test'
+          sh 'mvn -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone -Dit.test="!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase" -DfailIfNoTests=false clean test'
         }
       }
     }
