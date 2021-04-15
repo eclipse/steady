@@ -126,6 +126,7 @@ public class HubIntegrationControllerTest {
     this.gexeRepository.deleteAll();
     this.appRepository.deleteAll();
     this.libRepository.deleteAll();
+    this.bugRepository.deleteAll();
     this.cidRepository.deleteAll();
 
     createTenantAndSpace(DEFAULT_TENANT, DEFAULT_SPACE, true);
