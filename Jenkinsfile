@@ -47,7 +47,7 @@ spec:
     stage('Compile') {
       steps {
         container('maven') {
-          sh 'mvn -P gradle clean test'
+          sh 'mvn -P gradle -Dspring.standalone -Dit.test='!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase' -DfailIfNoTests=false clean test'
         }
       }
     }
