@@ -47,7 +47,7 @@ spec:
     stage('Compile') {
       steps {
         container('maven') {
-          sh 'mvn -P gradle clean compile'
+          sh 'mvn -P gradle clean test'
         }
       }
     }
