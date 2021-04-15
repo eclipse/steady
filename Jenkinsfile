@@ -8,7 +8,7 @@ kind: Pod
 spec:
   containers:
   - name: maven
-    image: eclipse/steady-pipeline
+    image: eclipse/steady-pipeline:3.2.0-SNAPSHOT
     command:
     - cat
     tty: true
