@@ -52,7 +52,8 @@ spec:
               -Dspotbugs.failOnError=true -DskipTests clean install com.github.spotbugs:spotbugs-maven-plugin:4.0.4:check'
         }
       }
-    },
+    }
+    
     stage('Test') {
       steps {
         container('maven') {
