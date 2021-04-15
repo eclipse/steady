@@ -26,11 +26,11 @@ spec:
       mountPath: /home/jenkins/.m2/repository
     resources:
       limits:
-        memory: "2Gi"
-        cpu: "1"
+        memory: "4Gi"
+        cpu: "2"
       requests:
-        memory: "2Gi"
-        cpu: "1"
+        memory: "4Gi"
+        cpu: "2"
   volumes:
   - name: settings-xml
     secret:
