@@ -8,7 +8,7 @@ kind: Pod
 spec:
   containers:
   - name: maven
-    image: maven:3-adoptopenjdk-8
+    image: eclipse/steady-pipeline
     command:
     - cat
     tty: true
