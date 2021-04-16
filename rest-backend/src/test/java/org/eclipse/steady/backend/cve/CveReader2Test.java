@@ -73,8 +73,7 @@ public class CveReader2Test {
               + " crafted user input to commands at the local diagnostic shell CLI. Successful"
               + " exploitation could allow the attacker to overwrite system files that should be"
               + " restricted. Cisco Bug IDs: CSCvg41950.",
-          cve_2018_0123
-              .getSummary());
+          cve_2018_0123.getSummary());
       publ.setTime(format.parse("2018-02-08T07:29Z"));
       assertEquals(publ, cve_2018_0123.getPublished());
       modi.setTime(format.parse("2018-03-13T13:53Z"));
