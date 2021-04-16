@@ -76,7 +76,7 @@ public class CveReader2Test {
           cve_2018_0123.getSummary());
       publ.setTime(format.parse("2018-02-08T07:29Z"));
       assertEquals(publ, cve_2018_0123.getPublished());
-      modi.setTime(format.parse("2018-03-13T13:53Z"));
+      modi.setTime(format.parse("2019-10-09T23:31Z"));
       assertEquals(modi, cve_2018_0123.getModified());
 
       final Cve cve_2018_1000865 = CveReader2.read("CVE-2018-1000865");
