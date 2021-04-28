@@ -70,11 +70,15 @@ matrix:
     - docker -v
     - docker-compose -v
     - cp .travis/.env docker/.env
+    - set -a; source docker/.env; set +a;
+    - echo "VULAS_RELEASE=${VULAS_RELEASE}"
     install:
     - docker build --tag steady-generator -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
     - docker run -it --rm -v ${PWD}/docker:/exporter -v ${PWD}/.travis/settings.xml:/settings.xml --env-file ./docker/.env -e mvn_flags='-q -P gradle -Dit.test=!IT01_PatchAnalyzerIT,IT*,*IT,*ITCase -DfailIfNoTests=false --settings /settings.xml' steady-generator
     script:
-    - "(cd docker && docker-compose -f docker-compose.yml -f docker-compose.build.yml up -d --build)"
+    - ( cd docker && docker-compose -f docker-compose.yml -f docker-compose.build.yml up -d --build )
+    - ( cd docker && docker build -t steady-pipeline:${VULAS_RELEASE} pipeline )
+    - docker run -d steady-pipeline:${VULAS_RELEASE}
     - sh .travis/check.sh
     after_failure:
     - docker images

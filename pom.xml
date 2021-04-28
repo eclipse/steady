@@ -274,18 +274,18 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
+			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<version>2.13.3</version>
+			<version>2.14.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.13.3</version>
+			<version>2.14.1</version>
 		</dependency>
 		<dependency>
   			<groupId>com.github.spotbugs</groupId>
@@ -340,12 +340,12 @@
 			<dependency>
 				<groupId>org.javassist</groupId>
 				<artifactId>javassist</artifactId>
-				<version>3.26.0-GA</version>
+				<version>3.27.0-GA</version>
 			</dependency>
 			<dependency>
 				<groupId>org.antlr</groupId>
 				<artifactId>antlr4-runtime</artifactId>
-				<version>4.7.2</version>
+				<version>4.9.2</version>
 			</dependency>
 
 			<!-- Versions of 'com.fasterxml.jackson.core' artifacts should be identical -->
