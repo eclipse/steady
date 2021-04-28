@@ -92,7 +92,7 @@ public class CveReader2Test {
           cve_2018_1000865.getSummary());
       publ.setTime(format.parse("2018-12-10T14:29Z"));
       assertEquals(publ, cve_2018_1000865.getPublished());
-      modi.setTime(format.parse("2019-02-06T19:02Z"));
+      modi.setTime(format.parse("2019-10-03T00:03Z"));
       assertEquals(modi, cve_2018_1000865.getModified());
 
       // Check CVSS version is properly read (3.1)
