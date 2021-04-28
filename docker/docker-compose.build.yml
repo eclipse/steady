@@ -50,15 +50,6 @@ services:
     image: steady-patch-analyzer:${VULAS_RELEASE}
     entrypoint: /bin/sleep 1
 
-  rest-nvd:
-    extends:
-      file: ../rest-nvd/docker-compose.yml
-      service: rest-nvd
-    build:
-      args:
-        - VULAS_RELEASE=${VULAS_RELEASE}
-    image: steady-rest-nvd:${VULAS_RELEASE}
-
   kb-importer:
     build:
       context: ./kb-importer

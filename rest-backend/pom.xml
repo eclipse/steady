@@ -551,13 +551,6 @@
 			            <exclude>**/src/main/webapp/helpers/pqueue.js</exclude>
 			            <exclude>**/src/main/webapp/helpers/transpiled/pqueueES5.js</exclude>
 			            <exclude>**/src/main/resources/db/migration/*.sql</exclude>
-			            <exclude>rest-nvd/VERSION</exclude>
-			            <exclude>rest-nvd/.editorconfig</exclude>
-			            <exclude>rest-nvd/tox.ini</exclude>
-			            <exclude>rest-nvd/Pipfile*</exclude>
-			            <exclude>rest-nvd/requirements_dev.txt</exclude>
-			            <exclude>rest-nvd/setup.cfg</exclude>
-			            <exclude>rest-nvd/Makefile</exclude>
 			        </excludes>
 			    </configuration>
 			</plugin>
