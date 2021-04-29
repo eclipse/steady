@@ -18,11 +18,11 @@ then
   echo `date` " Running Initial Kaybee Import"
   #wait for the backend to start
   sleep 120
-  ./kaybee pull -c ../conf/kaybeeconf-initial.yaml
+  ./kaybee pull -c ../conf/kaybeeconf.yaml
   echo `date` " Running Kaybee Merge"
-  ./kaybee merge -c ../conf/kaybeeconf-initial.yaml
+  ./kaybee merge -c ../conf/kaybeeconf.yaml
   echo `date` " Kaybee Merge Done"
-  ./kaybee export -t steady -c ../conf/kaybeeconf-initial.yaml
+  ./kaybee export -t steady -c ../conf/kaybeeconf.yaml
   chmod +x steady.sh
   sh steady.sh
   touch /kb-importer/data/init
