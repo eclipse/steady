@@ -154,7 +154,9 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
 
     // Take first english description
     final JSONArray descriptions =
-        JsonPath.read(document, "$.cve.description.description_data[?(@.lang=='en')].value");
+        JsonPath.read(
+            document,
+            "$.result.CVE_Items[0].cve.description.description_data[?(@.lang=='en')].value");
     if (descriptions == null || descriptions.size() == 0) {
       log.warn("No english description found for CVE [" + _id + "]");
       cve.setSummary("Not available");
@@ -162,12 +164,12 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
       cve.setSummary(descriptions.get(0).toString());
     }
 
-    final String published = JsonPath.read(document, "$.publishedDate");
+    final String published = JsonPath.read(document, "$.result.CVE_Items[0].publishedDate");
     final Calendar publ = new GregorianCalendar();
     publ.setTime(format.parse(published));
     cve.setPublished(publ);
 
-    final String modified = JsonPath.read(document, "$.lastModifiedDate");
+    final String modified = JsonPath.read(document, "$.result.CVE_Items[0].lastModifiedDate");
     final Calendar modi = new GregorianCalendar();
     modi.setTime(format.parse(modified));
     cve.setModified(modi);
@@ -176,9 +178,12 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
     Double cvss3_score = null;
     String cvss3_vector = null;
     try {
-      cvss3_version = JsonPath.read(document, "$.impact.baseMetricV3.cvssV3.version");
-      cvss3_score = JsonPath.read(document, "$.impact.baseMetricV3.cvssV3.baseScore");
-      cvss3_vector = JsonPath.read(document, "$.impact.baseMetricV3.cvssV3.vectorString");
+      cvss3_version =
+          JsonPath.read(document, "$.result.CVE_Items[0].impact.baseMetricV3.cvssV3.version");
+      cvss3_score =
+          JsonPath.read(document, "$.result.CVE_Items[0].impact.baseMetricV3.cvssV3.baseScore");
+      cvss3_vector =
+          JsonPath.read(document, "$.result.CVE_Items[0].impact.baseMetricV3.cvssV3.vectorString");
     } catch (Exception e) {
       log.warn(
           "Exception when reading CVSS v3 information for CVE [" + _id + "]: " + e.getMessage());
@@ -188,9 +193,12 @@ public class CveReader2 implements ObjectFetcher<String, Cve> {
     Double cvss2_score = null;
     String cvss2_vector = null;
     try {
-      cvss2_version = JsonPath.read(document, "$.impact.baseMetricV2.cvssV2.version");
-      cvss2_score = JsonPath.read(document, "$.impact.baseMetricV2.cvssV2.baseScore");
-      cvss2_vector = JsonPath.read(document, "$.impact.baseMetricV2.cvssV2.vectorString");
+      cvss2_version =
+          JsonPath.read(document, "$.result.CVE_Items[0].impact.baseMetricV2.cvssV2.version");
+      cvss2_score =
+          JsonPath.read(document, "$.result.CVE_Items[0].impact.baseMetricV2.cvssV2.baseScore");
+      cvss2_vector =
+          JsonPath.read(document, "$.result.CVE_Items[0].impact.baseMetricV2.cvssV2.vectorString");
     } catch (Exception e) {
       log.warn(
           "Exception when reading CVSS v2 information for CVE [" + _id + "]: " + e.getMessage());

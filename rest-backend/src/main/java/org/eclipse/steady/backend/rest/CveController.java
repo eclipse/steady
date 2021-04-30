@@ -134,9 +134,13 @@ public class CveController {
   public ResponseEntity<Cve> getCve(@PathVariable String id) {
     try {
       final Cve cve = CveReader2.read(id);
-      return new ResponseEntity<Cve>(cve, HttpStatus.OK);
+      if (cve != null) {
+        return new ResponseEntity<Cve>(cve, HttpStatus.OK);
+      } else {
+        return new ResponseEntity<Cve>(HttpStatus.NOT_FOUND);
+      }
     } catch (Exception enfe) {
-      return new ResponseEntity<Cve>(HttpStatus.NOT_FOUND);
+      return new ResponseEntity<Cve>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

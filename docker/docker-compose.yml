@@ -37,7 +37,6 @@ services:
       - frontend-bugs
       - rest-backend
       - rest-lib-utils
-      - rest-nvd
     security_opt:
       - no-new-privileges
     restart: always
@@ -94,7 +93,6 @@ services:
     environment:
       - DELAY_STARTUP=5
       - vulas.shared.cia.serviceUrl=http://cia:8092/cia
-      - vulas.shared.cve.serviceUrl=http://rest-nvd:80/nvd/vulnerabilities/<ID>
       - spring.datasource.username=${POSTGRES_USER}
       - spring.datasource.password=${POSTGRES_PASSWORD}
     links:
@@ -116,19 +114,6 @@ services:
         - "8092"
     volumes:
       - "./data/rest-lib-utils:/root/"
-    security_opt:
-      - no-new-privileges
-    restart: always
-
-  rest-nvd:
-    extends:
-     file: ../rest-nvd/docker-compose.yml
-     service: rest-nvd
-    container_name: steady-rest-nvd
-    hostname: rest-nvd
-    image: eclipse/steady-rest-nvd:${VULAS_RELEASE}
-    expose:
-      - "80"
     security_opt:
       - no-new-privileges
     restart: always

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SERVICES='frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils rest-nvd'
+SERVICES='frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils'
 ERROR=false
 FAILED=""
 

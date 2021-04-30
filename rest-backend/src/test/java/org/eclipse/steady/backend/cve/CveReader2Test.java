@@ -63,12 +63,20 @@ public class CveReader2Test {
       assertEquals("3.0", cve_2018_0123.getCvssVersion());
       assertEquals("CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N", cve_2018_0123.getCvssVector());
       assertEquals(
-          "Not available",
-          cve_2018_0123
-              .getSummary()); // lang was changed to 'de', thus, no english description is found
+          "A Path Traversal vulnerability in the diagnostic shell for Cisco IOS and IOS XE"
+              + " Software could allow an authenticated, local attacker to use certain diagnostic"
+              + " shell commands that can overwrite system files. These system files may be"
+              + " sensitive and should not be able to be overwritten by a user of the diagnostic"
+              + " shell. The vulnerability is due to lack of proper input validation for certain"
+              + " diagnostic shell commands. An attacker could exploit this vulnerability by"
+              + " authenticating to the device, entering the diagnostic shell, and providing"
+              + " crafted user input to commands at the local diagnostic shell CLI. Successful"
+              + " exploitation could allow the attacker to overwrite system files that should be"
+              + " restricted. Cisco Bug IDs: CSCvg41950.",
+          cve_2018_0123.getSummary());
       publ.setTime(format.parse("2018-02-08T07:29Z"));
       assertEquals(publ, cve_2018_0123.getPublished());
-      modi.setTime(format.parse("2018-03-13T13:53Z"));
+      modi.setTime(format.parse("2019-10-09T23:31Z"));
       assertEquals(modi, cve_2018_0123.getModified());
 
       final Cve cve_2018_1000865 = CveReader2.read("CVE-2018-1000865");
@@ -84,7 +92,7 @@ public class CveReader2Test {
           cve_2018_1000865.getSummary());
       publ.setTime(format.parse("2018-12-10T14:29Z"));
       assertEquals(publ, cve_2018_1000865.getPublished());
-      modi.setTime(format.parse("2019-02-06T19:02Z"));
+      modi.setTime(format.parse("2019-10-03T00:03Z"));
       assertEquals(modi, cve_2018_1000865.getModified());
 
       // Check CVSS version is properly read (3.1)
