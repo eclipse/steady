@@ -38,9 +38,6 @@ public interface LibraryIdRepository extends CrudRepository<LibraryId, Long> {
   /** Constant <code>FILTER</code> */
   public static final ResultSetFilter<LibraryId> FILTER = new ResultSetFilter<LibraryId>();
 
-  @Query("SELECT l FROM LibraryId l WHERE l.id=:id")
-  List<LibraryId> findById(@Param("id") Long id);
-
   /**
    * <p>findBySecondaryKey.</p>
    *

@@ -248,7 +248,9 @@ public class SpaceControllerTest {
   }
 
   /**
-   * Check presence of spaces.
+   * Check presence of spaces. <<<<<<< HEAD =======
+   *
+   * <p>>>>>>>> master
    *
    * @throws Exception
    */
@@ -279,7 +281,9 @@ public class SpaceControllerTest {
   }
 
   /**
-   * Check space creation and deletion.
+   * Check space creation and deletion. <<<<<<< HEAD =======
+   *
+   * <p>>>>>>>> master
    *
    * @throws Exception
    */
@@ -335,7 +339,9 @@ public class SpaceControllerTest {
   }
 
   /**
-   * Test modification of read-only space.
+   * Test modification of read-only space. <<<<<<< HEAD =======
+   *
+   * <p>>>>>>>> master
    *
    * @throws Exception
    */
@@ -373,7 +379,9 @@ public class SpaceControllerTest {
   }
 
   /**
-   * Creates a workspace and searches for it.
+   * Creates a workspace and searches for it. <<<<<<< HEAD =======
+   *
+   * <p>>>>>>>> master
    *
    * @throws Exception
    */
