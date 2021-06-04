@@ -26,7 +26,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.4.RELEASE</version>
+		<version>2.5.0</version>
 		<relativePath/>
 	</parent>
 
@@ -118,14 +118,13 @@
 		<maven.deploy.skip>${skip.install.deploy}</maven.deploy.skip>
 		
 		<!-- Fix vulnerable dependencies in spring-boot-dependencies -->
-		<commons-beanutils.version>1.9.4</commons-beanutils.version><!-- from 1.9.3 -->
-		<hibernate.version>5.4.18.Final</hibernate.version><!-- from 5.0.12.Final, which includes vulnerable dom4j 1.6.1  -->
-		<jackson.version>2.9.10.20210106</jackson.version><!-- from 2.8.11.20181123 -->
-		<logback.version>1.2.3</logback.version><!--  from 1.1.11 -->
-		<log4j2.version>2.13.3</log4j2.version><!-- from 2.7 -->
-		<snakeyaml.version>1.26</snakeyaml.version><!-- from 1.17 -->
-		<spring.version>4.3.29.RELEASE</spring.version><!-- from 4.3.25.RELEASE -->
-		<tomcat.version>9.0.46</tomcat.version><!-- from 9.0.30 -->
+<!-- 		<hibernate.version>5.4.25.Final</hibernate.version> using spring boot managed version 5.4.31  -->
+<!-- 		<jackson.version>2.12.3</jackson.version> using spring boot managed version 2.12.3 -->
+<!-- 		<logback.version>1.2.3</logback.version> using spring boot managed version 1.2.3 -->
+<!-- 		<log4j2.version>2.14.1</log4j2.version> using spring boot managed version 2.14.1 -->
+<!-- 		<snakeyaml.version>1.28</snakeyaml.version> using spring boot managed version 1.28 -->
+<!-- 		<spring.version>5.3.7</spring.version> using spring boot managed version 5.3.7 -->
+<!-- 		<tomcat.version>9.0.46</tomcat.version --> <!-- using spring boot managed version 9.0.46 -->
 	</properties>
 	
 	<dependencies>
@@ -244,6 +243,19 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
+		</dependency>
+		
+		<!-- to allow tests written with JUnit 4 to be run by JUnit 5, see https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.4-Release-Notes#junit-5s-vintage-engine-removed-from-spring-boot-starter-test -->
+		<dependency>
+    		<groupId>org.junit.vintage</groupId>
+    		<artifactId>junit-vintage-engine</artifactId>
+    		<scope>test</scope>
+    		<exclusions>
+        		<exclusion>
+            		<groupId>org.hamcrest</groupId>
+            		<artifactId>hamcrest-core</artifactId>
+        		</exclusion>
+    		</exclusions>
 		</dependency>
 	</dependencies>
 
