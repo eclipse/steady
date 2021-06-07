@@ -120,7 +120,7 @@ The first objective supports the risk assessment for a given vulnerability, whil
 #### Limitations
 
 - Python is not supported
-- Java 9 and later versions are not supported by the underlying frameworks
+- Java 9 and later versions are only supported when using Soot as call graph construction framework
 
 #### Result
 
@@ -157,7 +157,7 @@ vulas.reach.bugs =
 
 # Analysis framework to be used
 # Possible values: wala, soot
-vulas.reach.fwk = wala
+vulas.reach.fwk = soot
 
 # Regex to filter entry points (semicolon separated)
 vulas.reach.constructFilter =
