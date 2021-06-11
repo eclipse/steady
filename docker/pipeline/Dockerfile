@@ -1,4 +1,4 @@
-FROM maven:3-adoptopenjdk-8
+FROM maven:3-adoptopenjdk-11
 
 LABEL maintainer="steady-dev@eclipse.org"
 
