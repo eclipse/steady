@@ -44,7 +44,7 @@ spec:
     }
   }
   stages {
-    stage('Check') {
+    stage('Findbugs') {
       steps {
         container('maven') {
           sh 'mvn -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
@@ -53,8 +53,14 @@ spec:
         }
       }
     }
-
-    stage('Test') {
+    stage('Codestyle') {
+      steps {
+        container('maven') {
+          sh 'bash .travis/check_code_style.sh'
+        }
+      }
+    }
+    stage('Tests') {
       steps {
         container('maven') {
           sh 'mvn -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
