@@ -393,10 +393,10 @@
 
 						<h2>Links: </h2>
 						<div class="target-summary">
-							<span><a href="$vulas-shared-homepage/user/manuals" target="_blank">Docs - User Manual</a></span><br>
-							<span><a href="$vulas-shared-homepage/user/manuals/assess_and_mitigate" target="_blank">Docs - Assess and Mitigate</a></span><br>
-							<span><a href="$vulas-shared-homepage/user/support" target="_blank">Docs - Getting Help</a></span><br>
-							<span><a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()" target="_blank">Web Frontend</a></span><br>
+							<span><a href="$vulasSharedHomepage/user/manuals" target="_blank">Docs - User Manual</a></span><br>
+							<span><a href="$vulasSharedHomepage/user/manuals/assess_and_mitigate" target="_blank">Docs - Assess and Mitigate</a></span><br>
+							<span><a href="$vulasSharedHomepage/user/support" target="_blank">Docs - Getting Help</a></span><br>
+							<span><a href="$vulasBackendServiceUrl/../apps/#/$space.getSpaceToken()" target="_blank">Web Frontend</a></span><br>
 						</div>
 					</td>
 					<td valign="top" width="75%">
@@ -544,7 +544,7 @@
 														#foreach( $analysis in $vul.analyses )
 														<li>
 															<div class="tooltip">
-																<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
+																<a href="$vulasBackendServiceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 																#if($exceptionThreshold=='dependsOn' && $analysis.isThrowsException()) style="color: #e94f37; font-weight: bold;"
 																#elseif($exceptionThreshold=='dependsOn' && $analysis.isThrowsExceptionExcluded()) style="color: #a5b452; font-weight: bold;"
 																#else style="color: #393e41; font-weight: bold"
@@ -585,7 +585,7 @@
 														#if( !$analysis.isNoneAffectedVersion())
 														<li>
 															<div class="tooltip">
-															<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
+															<a href="$vulasBackendServiceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 															#if( $exceptionThreshold=='potentiallyExecutes' && $analysis.isThrowsException()) style="color: #e94f37; font-weight: bold;"
 															#elseif($exceptionThreshold=='potentiallyExecutes' && $analysis.isThrowsExceptionExcluded()) style="color: #a5b452; font-weight: bold;"
 															#else style="color: #393e41; font-weight: bold"
@@ -627,7 +627,7 @@
 														#if( !$analysis.isNoneAffectedVersion())
 														<li>
 															<div class="tooltip">
-																<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
+																<a href="$vulasBackendServiceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 																#if( $exceptionThreshold=='actuallyExecutes' && $analysis.isThrowsException()) style="color: #e94f37; font-weight: bold;"
 																#elseif($exceptionThreshold=='actuallyExecutes' && $analysis.isThrowsExceptionExcluded()) style="color: #a5b452; font-weight: bold;"
 																#else style="color: #393e41; font-weight: bold"
@@ -747,7 +747,7 @@
 														#foreach( $analysis in $vul.analyses )
 														<li>
 															<div class="tooltip">
-																<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
+																<a href="$vulasBackendServiceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 																#if($exceptionThreshold=='dependsOn' && $analysis.isThrowsException()) style="color: #e94f37; font-weight: bold;"
 																#elseif($exceptionThreshold=='dependsOn' && $analysis.isThrowsExceptionExcluded()) style="color: #e94f37; font-weight: bold;"
 																#else style="color: #393e41; font-weight: bold"
@@ -789,7 +789,7 @@
 														#if( !$analysis.isNoneAffectedVersion())
 														<li>
 															<div class="tooltip">
-															<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
+															<a href="$vulasBackendServiceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 															#if( $exceptionThreshold=='potentiallyExecutes' && $analysis.isThrowsException()) style="color: #e94f37; font-weight: bold;"
 															#elseif($exceptionThreshold=='potentiallyExecutes' && $analysis.isThrowsExceptionExcluded()) style="color: #e94f37; font-weight: bold;"
 															#else style="color: #393e41; font-weight: bold"
@@ -831,7 +831,7 @@
 														#if( !$analysis.isNoneAffectedVersion())
 														<li>
 															<div class="tooltip">
-																<a href="$vulas-backend-serviceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
+																<a href="$vulasBackendServiceUrl/../apps/#/$space.getSpaceToken()/$analysis.getApp().getMvnGroup()/$analysis.getApp().getArtifact()/$analysis.getApp().getVersion()"
 																#if( $exceptionThreshold=='actuallyExecutes' && $analysis.isThrowsException()) style="color: #e94f37; font-weight: bold;"
 																#elseif($exceptionThreshold=='actuallyExecutes' && $analysis.isThrowsExceptionExcluded()) style="color: #e94f37; font-weight: bold;"
 																#else style="color: #393e41; font-weight: bold"
