@@ -91,6 +91,8 @@ public class JavaFileAnalyzer2Test {
 
       // The parsing should produce the following 5 elements:
       final JavaPackageId p = new JavaPackageId("org.eclipse.steady.java.test");
+      final JavaInterfaceId itf =
+          JavaId.parseInterfaceQName("org.eclipse.steady.java.test.ConfigurationKey");
       final JavaClassId anon1 =
           JavaId.parseClassQName("org.eclipse.steady.java.test.ConfigurationKey$1");
       final JavaMethodId anon1_m =
@@ -103,8 +105,9 @@ public class JavaFileAnalyzer2Test {
               "org.eclipse.steady.java.test.ConfigurationKey$2.compare(ConfigurationKey,ConfigurationKey)");
 
       // Assertions
-      assertEquals(5, constructs.size());
+      assertEquals(6, constructs.size());
       assertTrue(constructs.containsKey(p));
+      assertTrue(constructs.containsKey(itf));
       assertTrue(constructs.containsKey(anon1));
       assertTrue(constructs.containsKey(anon1_m));
       assertTrue(constructs.containsKey(anon2));
@@ -128,8 +131,10 @@ public class JavaFileAnalyzer2Test {
                       "./src/test/java/org/eclipse/steady/java/test/HttpRequestCompletionLog.java"));
       final Map<ConstructId, Construct> constructs = jfa.getConstructs();
 
-      // The parsing should produce the following 5 elements:
+      // The parsing should produce the following elements:
       final JavaPackageId p = new JavaPackageId("org.eclipse.steady.java.test");
+      final JavaInterfaceId itf =
+          JavaId.parseInterfaceQName("org.eclipse.steady.java.test.HttpRequestCompletionLog");
 
       // Named inner class
       final JavaClassId named_class =
@@ -200,8 +205,9 @@ public class JavaFileAnalyzer2Test {
               "org.eclipse.steady.java.test.HttpRequestCompletionLog$Builder$1.getResponseContentType()");
 
       // Assertions
-      assertEquals(23, constructs.size());
+      assertEquals(24, constructs.size());
       assertTrue(constructs.containsKey(p));
+      assertTrue(constructs.containsKey(itf));
 
       assertTrue(constructs.containsKey(named_class));
       assertTrue(constructs.containsKey(named_class_cons));
@@ -373,8 +379,9 @@ public class JavaFileAnalyzer2Test {
       final FileAnalyzer fa = FileAnalyzerFactory.buildFileAnalyzer(file);
       final Map<ConstructId, Construct> constructs = fa.getConstructs();
 
-      // The parsing should produce the following 5 elements:
+      // The parsing should produce the following elements:
       final JavaPackageId p = new JavaPackageId("org.eclipse.steady.java.test");
+      final JavaInterfaceId itf = JavaId.parseInterfaceQName("org.eclipse.steady.java.test.DoSomethingElse");
 
       final JavaClassId cl1 =
           JavaId.parseClassQName("org.eclipse.steady.java.test.NestedDeclarations"); // line 5
@@ -457,9 +464,9 @@ public class JavaFileAnalyzer2Test {
           JavaId.parseMethodQName(
               "org.eclipse.steady.java.test.NestedDeclarations$Foo$1DoThis$1.doThat()"); // line 72
 
-      // Assertions
-      assertEquals(25, constructs.size());
+      assertEquals(26, constructs.size());
       assertTrue(constructs.containsKey(p));
+      assertTrue(constructs.containsKey(itf));
       assertTrue(constructs.containsKey(cl1));
       assertTrue(constructs.containsKey(cl1_m));
 

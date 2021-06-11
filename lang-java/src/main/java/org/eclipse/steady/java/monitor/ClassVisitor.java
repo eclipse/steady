@@ -108,8 +108,7 @@ public class ClassVisitor {
    */
   public ClassVisitor(CtClass _c) {
     // Build the JavaId
-    if (_c.isInterface())
-      throw new IllegalArgumentException("[" + _c.getName() + "]: Interfaces are not supported");
+    if (_c.isInterface()) this.javaId = JavaId.parseInterfaceQName(_c.getName());
     else if (_c.isEnum()) this.javaId = JavaId.parseEnumQName(_c.getName());
     else this.javaId = JavaId.parseClassQName(_c.getName());
 

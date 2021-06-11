@@ -30,6 +30,9 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.ConstructId;
 import org.eclipse.steady.java.monitor.ClassPoolUpdater;
@@ -37,9 +40,6 @@ import org.eclipse.steady.java.monitor.ClassVisitor;
 import org.eclipse.steady.shared.enums.ConstructType;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
 import org.eclipse.steady.shared.json.JsonBuilder;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 /**
  * <p>Abstract JavaId class.</p>
@@ -381,7 +381,7 @@ public abstract class JavaId extends ConstructId {
       class_name = _s.substring(i + 1);
     }
 
-    // Create Java class id (for regular or nested class)
+    // Create Java enum id (for regular or nested class)
     int j = 0, k = 0;
     do {
       // HP, 12.09.2015: $ is also permitted in class names, i.e., it can also exist w/o a class
@@ -453,6 +453,53 @@ public abstract class JavaId extends ConstructId {
   }
 
   /**
+   * <p>parseInterfaceQName.</p>
+   *
+   * @param _s a {@link java.lang.String} object.
+   * @return a {@link org.eclipse.steady.java.JavaInterfaceId} object.
+   */
+  public static JavaInterfaceId parseInterfaceQName(@NotNull String _s) {
+    if (_s == null || _s.equals("")) throw new IllegalArgumentException("String null or empty");
+
+    final int i = _s.lastIndexOf('.');
+    String class_name = null;
+    JavaPackageId pid = null;
+    JavaInterfaceId cid = null;
+
+    // Create Java package id
+    if (i != -1) {
+      pid = new JavaPackageId(_s.substring(0, i));
+      class_name = _s.substring(i + 1);
+    } else {
+      pid = JavaPackageId.DEFAULT_PACKAGE;
+      class_name = _s.substring(i + 1);
+    }
+
+    // Create Java interface id (for regular or nested class)
+    int j = 0, k = 0;
+    do {
+      // HP, 12.09.2015: $ is also permitted in class names, i.e., it can also exist w/o a class
+      // context
+      j = class_name.indexOf("$", k);
+      if (j != -1) {
+        if (cid == null) cid = new JavaInterfaceId(pid, class_name.substring(k, j));
+        else cid = new JavaInterfaceId(cid, class_name.substring(k, j));
+        k = j + 1;
+      } else {
+        if (cid == null) cid = new JavaInterfaceId(pid, class_name.substring(k));
+        else cid = new JavaInterfaceId(cid, class_name.substring(k));
+        k = j + 1;
+      }
+    } while (j != -1);
+    //		if(j!=-1)
+    //			cid = new JavaClassId(new JavaClassId(pid, class_name.substring(0, j)),
+    // class_name.substring(j+1));
+    //		else
+    //			cid = new JavaClassId(pid, class_name);
+    return cid;
+  }
+
+  /**
    * Creates a {@link JavaMethodId} from the given string, whereby the definition context is defaulted to
    * type {@link JavaId.Type#CLASS}.
    *
@@ -475,9 +522,9 @@ public abstract class JavaId extends ConstructId {
 
     if (_s == null || _s.equals("")) throw new IllegalArgumentException("String null or empty");
     if (_ctx_type == null
-        || (!_ctx_type.equals(JavaId.Type.CLASS) && !_ctx_type.equals(JavaId.Type.ENUM)))
+        || (!_ctx_type.equals(JavaId.Type.CLASS) && !_ctx_type.equals(JavaId.Type.ENUM) && !_ctx_type.equals(JavaId.Type.INTERFACE)))
       throw new IllegalArgumentException(
-          "Accepts context types CLASS or ENUM, got [" + _ctx_type + "]");
+          "Accepts context types CLASS, ENUM and INTERFACE, got [" + _ctx_type + "]");
 
     final int i = _s.indexOf('(');
     if (i == -1 || !_s.endsWith(")"))
@@ -535,9 +582,9 @@ public abstract class JavaId extends ConstructId {
 
     if (_s == null || _s.equals("")) throw new IllegalArgumentException("String null or empty");
     if (_ctx_type == null
-        || (!_ctx_type.equals(JavaId.Type.CLASS) && !_ctx_type.equals(JavaId.Type.ENUM)))
+      || (!_ctx_type.equals(JavaId.Type.CLASS) && !_ctx_type.equals(JavaId.Type.ENUM) && !_ctx_type.equals(JavaId.Type.INTERFACE)))
       throw new IllegalArgumentException(
-          "Accepts context types CLASS or ENUM, got [" + _ctx_type + "]");
+          "Accepts context types CLASS, ENUM and INTERFACE, got [" + _ctx_type + "]");
 
     final int i = _s.indexOf('(');
     if (i == -1 || !_s.endsWith(")"))

@@ -18,14 +18,14 @@
  */
 package org.eclipse.steady.java;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,14 +49,13 @@ import org.eclipse.steady.Construct;
 import org.eclipse.steady.ConstructId;
 import org.eclipse.steady.FileAnalysisException;
 import org.eclipse.steady.FileAnalyzer;
-import org.eclipse.steady.shared.util.FileUtil;
-
 import org.eclipse.steady.java.antlr.JavaLexer;
 import org.eclipse.steady.java.antlr.JavaParser;
 import org.eclipse.steady.java.antlr.JavaParser.CompilationUnitContext;
 import org.eclipse.steady.java.antlr.JavaParser.FormalParameterContext;
 import org.eclipse.steady.java.antlr.JavaParser.TypeTypeContext;
 import org.eclipse.steady.java.antlr.JavaParserBaseListener;
+import org.eclipse.steady.shared.util.FileUtil;
 
 /**
  * Analyzes java source files using ANTLR.
@@ -179,7 +178,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
   /**
    * {@inheritDoc}
    *
-   * Interfaces are not added to {@link #constructs}.
+   * Interfaces are added to {@link #constructs}.
    */
   @Override
   public void enterInterfaceDeclaration(@NotNull JavaParser.InterfaceDeclarationContext ctx) {
@@ -189,6 +188,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
         (cse == null ? JavaPackageId.DEFAULT_PACKAGE : (JavaId) cse.getConstructId());
     final JavaId id = new JavaInterfaceId(decl_ctx, ctx.IDENTIFIER().getText());
     this.contextStack.push(id);
+    this.saveConstruct(id, this.getConstructContent(ctx));
   }
 
   /** {@inheritDoc} */
