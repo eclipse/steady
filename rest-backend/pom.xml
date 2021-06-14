@@ -243,6 +243,7 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
+			<version>6.5.7</version> <!-- overriding managed version 7.7.3 to avoid 1 migration checksum mismatch -->
 		</dependency>
 		
 		<!-- To prevent javadoc error "class file for javax.interceptor.InterceptorBinding not found" -->
