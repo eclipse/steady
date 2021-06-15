@@ -22,7 +22,6 @@ import org.eclipse.steady.shared.enums.GoalType;
 
 /**
  * <p>TestGoal class.</p>
- *
  */
 public class TestGoal extends AbstractAppGoal {
 

@@ -23,7 +23,6 @@ import java.io.InputStream;
 
 /**
  * <p>MaliciousnessAnalyzer interface.</p>
- *
  */
 public interface MaliciousnessAnalyzer {
 

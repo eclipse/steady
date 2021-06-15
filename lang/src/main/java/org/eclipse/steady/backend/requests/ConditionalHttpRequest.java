@@ -33,7 +33,6 @@ import org.eclipse.steady.goals.GoalContext;
 
 /**
  * <p>ConditionalHttpRequest class.</p>
- *
  */
 public class ConditionalHttpRequest extends BasicHttpRequest {
 

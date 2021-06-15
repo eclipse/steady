@@ -35,7 +35,6 @@ import org.eclipse.steady.tasks.BomTask;
 
 /**
  * <p>BomGoal class.</p>
- *
  */
 public class BomGoal extends AbstractAppGoal {
 

@@ -31,7 +31,6 @@ import org.eclipse.steady.shared.util.FileUtil;
 
 /**
  * <p>ReportGoal class.</p>
- *
  */
 public class ReportGoal extends AbstractAppGoal {
 

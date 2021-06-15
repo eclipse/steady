@@ -29,7 +29,6 @@ import org.eclipse.steady.shared.enums.GoalType;
 
 /**
  * <p>SequenceGoal class.</p>
- *
  */
 public class SequenceGoal extends AbstractAppGoal {
 

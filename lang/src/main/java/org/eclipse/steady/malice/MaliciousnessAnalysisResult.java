@@ -20,7 +20,6 @@ package org.eclipse.steady.malice;
 
 /**
  * <p>MaliciousnessAnalysisResult class.</p>
- *
  */
 public class MaliciousnessAnalysisResult {
 

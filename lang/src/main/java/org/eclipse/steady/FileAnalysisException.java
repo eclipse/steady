@@ -20,7 +20,6 @@ package org.eclipse.steady;
 
 /**
  * <p>FileAnalysisException class.</p>
- *
  */
 public class FileAnalysisException extends Exception {
   /**

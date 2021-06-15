@@ -22,7 +22,6 @@ import java.net.URI;
 
 /**
  * <p>BackendConnectionException class.</p>
- *
  */
 public class BackendConnectionException extends Exception {
   private int httpResponseStatus;
