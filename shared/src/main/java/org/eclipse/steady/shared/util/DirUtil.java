@@ -40,7 +40,6 @@ import org.eclipse.steady.shared.enums.DigestAlgorithm;
 
 /**
  * <p>DirUtil class.</p>
- *
  */
 public class DirUtil {
 

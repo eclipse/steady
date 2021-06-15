@@ -20,7 +20,6 @@ package org.eclipse.steady.shared.cache;
 
 /**
  * <p>CacheException class.</p>
- *
  */
 public class CacheException extends Exception {
 

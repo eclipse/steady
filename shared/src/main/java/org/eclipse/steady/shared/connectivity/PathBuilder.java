@@ -610,7 +610,6 @@ public class PathBuilder {
    * vulas-backend:/bugs/{bugId}/libraries
    *
    * @param _bugId a {@link java.lang.String} object.
-   * @param _bugId a {@link java.lang.String} object.
    * @return a {@link java.lang.String} object.
    */
   public static final String bugLibraryVersions(@NotNull String _bugId) {
@@ -712,8 +711,8 @@ public class PathBuilder {
   /**
    * backend:/nvdrest/vulnerabilities/bug_id
    *
-   * @param _bugId
-   * @return
+   * @param _bugId a {@link java.lang.String} object
+   * @return a {@link java.lang.String} object
    */
   public static final String nvdRest(@NotNull String _bugId) {
     final StringBuilder sb = new StringBuilder();

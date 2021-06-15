@@ -18,13 +18,17 @@
  */
 package org.eclipse.steady.shared.json.model;
 
+/**
+ * <p>IExemption interface.</p>
+ *
+ */
 public interface IExemption {
 
   /**
    * Returns true if the given {@link VulnerableDependency} is exempted, false otherwise.
    *
-   * @param the vulnerable dependency to be checked
    * @return true if the vulnerable dependency is exemption, false otherwise
+   * @param _vd a {@link org.eclipse.steady.shared.json.model.VulnerableDependency} object
    */
   public boolean isExempted(VulnerableDependency _vd);
 
@@ -37,6 +41,8 @@ public interface IExemption {
 
   /**
    * Returns a short representation of the exemption.
+   *
+   * @return a {@link java.lang.String} object
    */
   public String toShortString();
 }

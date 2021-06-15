@@ -32,7 +32,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * <p>Dependency class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(
@@ -136,6 +135,11 @@ public class Dependency implements Serializable, Comparable<Dependency> {
     this.app = app;
   }
 
+  /**
+   * <p>setAppRecursively.</p>
+   *
+   * @param app a {@link org.eclipse.steady.shared.json.model.Application} object
+   */
   public void setAppRecursively(Application app) {
     this.app = app;
     if (this.parent != null) this.parent.setAppRecursively(app);

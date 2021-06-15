@@ -66,9 +66,9 @@ public class ExemptionBug implements IExemption {
   /**
    * Creates a new exemption, whereby parameters equal to null will be interpreted as star (*).
    *
-   * @param _bug_id
-   * @param _library
-   * @param _reason
+   * @param _bug_id a {@link java.lang.String} object
+   * @param _library a {@link java.lang.String} object
+   * @param _reason a {@link java.lang.String} object
    */
   public ExemptionBug(String _bug_id, String _library, String _reason) {
     this.bugId = (_bug_id == null ? ALL : _bug_id);
@@ -76,19 +76,31 @@ public class ExemptionBug implements IExemption {
     this.reason = _reason;
   }
 
+  /**
+   * <p>Getter for the field <code>bugId</code>.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String getBugId() {
     return bugId;
   }
 
+  /**
+   * <p>Getter for the field <code>library</code>.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String getLibrary() {
     return library;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getReason() {
     return reason;
   }
 
+  /** {@inheritDoc} */
   @Override
   public boolean isExempted(VulnerableDependency _vd) {
     // Bug ID
@@ -137,7 +149,9 @@ public class ExemptionBug implements IExemption {
   /**
    * Creates an instance of {@link AffectedLibrary}, which can be used to mark libraries as non-vulnerable with regards to
    * a given vulnerability.
-   * @return
+   *
+   * @param _vd a {@link org.eclipse.steady.shared.json.model.VulnerableDependency} object
+   * @return a {@link org.eclipse.steady.shared.json.model.AffectedLibrary} object
    */
   public AffectedLibrary createAffectedLibrary(VulnerableDependency _vd) {
     AffectedLibrary al = null;
@@ -201,8 +215,8 @@ public class ExemptionBug implements IExemption {
    * Reads all {@link Configuration} settings starting with {@link ExemptionBug#CFG_PREFIX} in order to create {@link ExemptionBug}s.
    * Also considers the deprecated settings {@link ExemptionBug#DEPRECATED_CFG_PREFIX} and {@link ExemptionBug#CFG_PREFIX_EXEMPTED_SCOPES} for backward compatibility.
    *
-   * @param _cfg
-   * @return
+   * @param _cfg a {@link org.apache.commons.configuration.Configuration} object
+   * @return a {@link org.eclipse.steady.shared.json.model.ExemptionSet} object
    */
   public static ExemptionSet readFromConfiguration(Configuration _cfg) {
     final ExemptionSet exempts = new ExemptionSet();
@@ -259,8 +273,8 @@ public class ExemptionBug implements IExemption {
    * Reads all {@link Configuration} settings starting with {@link ExemptionBug#CFG_PREFIX} in order to create {@link ExemptionBug}s.
    * Also considers the deprecated settings {@link ExemptionBug#DEPRECATED_CFG_PREFIX} and {@link ExemptionBug#CFG_PREFIX_EXEMPTED_SCOPES} for backward compatibility.
    *
-   * @param _map
-   * @return
+   * @param _map a {@link java.util.Map} object
+   * @return a {@link org.eclipse.steady.shared.json.model.ExemptionSet} object
    */
   public static ExemptionSet readFromConfiguration(Map<String, String> _map) {
     final ExemptionSet exempts = new ExemptionSet();
@@ -334,9 +348,9 @@ public class ExemptionBug implements IExemption {
    * namespace and name, and URLs of type 'pypi' require a name. All other types are not supported and
    * will result in a {@link MalformedPackageURLException}.
    *
-   * @param _url
-   * @return
-   * @throws MalformedPackageURLException
+   * @param _url a {@link java.lang.String} object
+   * @throws com.github.packageurl.MalformedPackageURLException
+   * @return a {@link com.github.packageurl.PackageURL} object
    */
   public static final PackageURL createPackageUrl(String _url) throws MalformedPackageURLException {
     final PackageURL purl = new PackageURL(_url);
@@ -373,15 +387,22 @@ public class ExemptionBug implements IExemption {
     return purl;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     return "[bug=" + this.bugId + ", libs=" + this.library + "]";
   }
 
+  /**
+   * <p>toShortString.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String toShortString() {
     return this.bugId + " (" + this.library + ")";
   }
 
+  /** {@inheritDoc} */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -392,6 +413,7 @@ public class ExemptionBug implements IExemption {
     return result;
   }
 
+  /** {@inheritDoc} */
   @Override
   public boolean equals(Object obj) {
     if (this == obj) return true;

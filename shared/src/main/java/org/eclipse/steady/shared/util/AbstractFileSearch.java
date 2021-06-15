@@ -33,7 +33,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * <p>AbstractFileSearch class.</p>
- *
  */
 public class AbstractFileSearch extends SimpleFileVisitor<Path> {
 

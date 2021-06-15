@@ -20,7 +20,6 @@ package org.eclipse.steady.shared.enums;
 
 /**
  * <p>AffectedVersionSource class.</p>
- *
  */
 public enum AffectedVersionSource {
   MANUAL, // created by frontend-bugs

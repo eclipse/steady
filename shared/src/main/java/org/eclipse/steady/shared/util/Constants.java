@@ -20,7 +20,6 @@ package org.eclipse.steady.shared.util;
 
 /**
  * <p>Constants interface.</p>
- *
  */
 public interface Constants {
 

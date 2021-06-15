@@ -27,7 +27,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * <p>AffectedConstructChange class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)

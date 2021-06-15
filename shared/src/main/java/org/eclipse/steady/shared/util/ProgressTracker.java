@@ -20,7 +20,6 @@ package org.eclipse.steady.shared.util;
 
 /**
  * <p>ProgressTracker class.</p>
- *
  */
 public class ProgressTracker {
 

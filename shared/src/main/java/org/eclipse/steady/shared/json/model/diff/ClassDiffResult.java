@@ -33,7 +33,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * <p>ClassDiffResult class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -34,7 +34,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * <p>Bug class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(

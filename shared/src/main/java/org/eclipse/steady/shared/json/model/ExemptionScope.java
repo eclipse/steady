@@ -23,6 +23,10 @@ import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.steady.shared.enums.Scope;
 
+/**
+ * <p>ExemptionScope class.</p>
+ *
+ */
 public class ExemptionScope implements IExemption {
 
   /**
@@ -40,16 +44,23 @@ public class ExemptionScope implements IExemption {
 
   private Scope scope = null;
 
+  /**
+   * <p>Constructor for ExemptionScope.</p>
+   *
+   * @param _scope a {@link org.eclipse.steady.shared.enums.Scope} object
+   */
   public ExemptionScope(Scope _scope) {
     this.scope = _scope;
   }
 
+  /** {@inheritDoc} */
   @Override
   public boolean isExempted(VulnerableDependency _vd) {
     final boolean is_exempted = this.scope.equals(_vd.getDep().getScope());
     return is_exempted;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getReason() {
     return "Vulnerable dependencies with scope ["
@@ -65,8 +76,8 @@ public class ExemptionScope implements IExemption {
    * Reads the {@link Configuration} setting {@link #CFG} (if any) in order to create one or more {@link ExemptionScope}s.
    * Also considers the deprecated setting {@link #DEPRECATED_CFG}.
    *
-   * @param _map
-   * @return
+   * @param _map a {@link org.apache.commons.configuration.Configuration} object
+   * @return a {@link org.eclipse.steady.shared.json.model.ExemptionSet} object
    */
   public static ExemptionSet readFromConfiguration(Configuration _map) {
     final ExemptionSet exempts = new ExemptionSet();
@@ -93,8 +104,8 @@ public class ExemptionScope implements IExemption {
   /**
    * Reads the configuration setting {@link #DEPRECATED_CFG} and {@link #CFG} (if any) in order to create one or more {@link ExemptionScope}s.
    *
-   * @param _cfg
-   * @return
+   * @param _map a {@link java.util.Map} object
+   * @return a {@link org.eclipse.steady.shared.json.model.ExemptionSet} object
    */
   public static ExemptionSet readFromConfiguration(Map<String, String> _map) {
     final ExemptionSet exempts = new ExemptionSet();
@@ -133,15 +144,22 @@ public class ExemptionScope implements IExemption {
     return exempts;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     return "Exemption [scope=" + this.scope + "]";
   }
 
+  /**
+   * <p>toShortString.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String toShortString() {
     return this.scope.toString();
   }
 
+  /** {@inheritDoc} */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -150,6 +168,7 @@ public class ExemptionScope implements IExemption {
     return result;
   }
 
+  /** {@inheritDoc} */
   @Override
   public boolean equals(Object obj) {
     if (this == obj) return true;

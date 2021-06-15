@@ -29,7 +29,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * <p>KeyValue class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class KeyValue {

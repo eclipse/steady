@@ -32,7 +32,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>Library class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(
