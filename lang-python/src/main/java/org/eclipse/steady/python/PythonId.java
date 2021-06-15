@@ -27,7 +27,6 @@ import com.google.gson.JsonObject;
 
 /**
  * <p>PythonId class.</p>
- *
  */
 public class PythonId extends ConstructId {
 

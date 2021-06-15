@@ -32,7 +32,6 @@ import org.eclipse.steady.shared.util.StringUtil;
 
 /**
  * <p>ProcessWrapper class.</p>
- *
  */
 public class ProcessWrapper implements Runnable {
 

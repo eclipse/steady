@@ -41,7 +41,6 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>VirtualenvWrapper class.</p>
- *
  */
 public class VirtualenvWrapper {
 
