@@ -41,7 +41,6 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 /**
  * <p>ByteCodeComparator class.</p>
- *
  */
 public class ByteCodeComparator implements Runnable {
 
