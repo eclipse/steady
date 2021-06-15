@@ -69,12 +69,6 @@ public class CoverageController {
 
   private final BugRepository bugRepository;
 
-  /**
-   * <p>dispatcherServlet.</p>
-   *
-   * @return a {@link org.springframework.web.servlet.DispatcherServlet} object.
-   */
-
   @Autowired
   CoverageController(BugRepository bugRepository) {
     this.bugRepository = bugRepository;

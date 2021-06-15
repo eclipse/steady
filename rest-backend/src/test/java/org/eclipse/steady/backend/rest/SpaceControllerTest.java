@@ -248,9 +248,7 @@ public class SpaceControllerTest {
   }
 
   /**
-   * Check presence of spaces. <<<<<<< HEAD =======
-   *
-   * <p>>>>>>>> master
+   * Check presence of spaces.
    *
    * @throws Exception
    */

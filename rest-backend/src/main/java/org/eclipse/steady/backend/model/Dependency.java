@@ -171,7 +171,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Constructor for Dependency.
+   * <p>Constructor for Dependency.</p>
    *
    * @param app a {@link org.eclipse.steady.backend.model.Application} object.
    * @param lib a {@link org.eclipse.steady.backend.model.Library} object.
@@ -517,7 +517,7 @@ public class Dependency implements Serializable {
     return touchPoints;
   }
   /**
-   * <p>Setter for the field <code>touchPoints</code>.
+   * <p>Setter for the field <code>touchPoints</code>.</p>
    *
    * @param touchPoints a {@link java.util.Set} object.
    */
@@ -534,7 +534,9 @@ public class Dependency implements Serializable {
     else this.getTouchPoints().addAll(touchPoints);
   }
 
-  /** <p>prePersist.</p> */
+  /**
+   * <p>prePersist.</p>
+   */
   @PrePersist
   public void prePersist() {
     if (this.getTraced() == null) {
@@ -597,7 +599,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * <p>equalLibParentRelPath.
+   * <p>equalLibParentRelPath.</p>
    *
    * @param obj a {@link java.lang.Object} object.
    * @return a boolean.
