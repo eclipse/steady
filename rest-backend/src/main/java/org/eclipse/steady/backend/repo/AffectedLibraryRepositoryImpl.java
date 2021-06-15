@@ -45,7 +45,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <p>AffectedLibraryRepositoryImpl class.</p>
- *
  */
 public class AffectedLibraryRepositoryImpl implements AffectedLibraryRepositoryCustom {
 

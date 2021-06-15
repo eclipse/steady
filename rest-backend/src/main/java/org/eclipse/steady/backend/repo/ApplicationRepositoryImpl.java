@@ -66,7 +66,6 @@ import com.google.common.collect.Lists;
 
 /**
  * <p>ApplicationRepositoryImpl class.</p>
- *
  */
 public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 

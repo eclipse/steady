@@ -46,7 +46,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * <p>Path class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(

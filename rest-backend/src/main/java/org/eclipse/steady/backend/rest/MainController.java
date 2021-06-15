@@ -61,7 +61,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * <p>MainController class.</p>
- *
  */
 @Configuration
 @ComponentScan({

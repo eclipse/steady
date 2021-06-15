@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * <p>PackageStatistics class.</p>
- *
  */
 public class PackageStatistics {
 

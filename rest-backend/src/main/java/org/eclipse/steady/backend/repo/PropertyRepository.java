@@ -30,7 +30,6 @@ import org.springframework.stereotype.Repository;
 
 /**
  * <p>PropertyRepository interface.</p>
- *
  */
 @Repository
 public interface PropertyRepository extends CrudRepository<Property, Long> {

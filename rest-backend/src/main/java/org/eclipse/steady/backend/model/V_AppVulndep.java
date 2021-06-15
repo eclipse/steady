@@ -32,7 +32,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * <p>V_AppVulndep class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)

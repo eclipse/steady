@@ -56,7 +56,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>Dependency class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(
@@ -640,6 +639,7 @@ public class Dependency implements Serializable {
     this.reachExecConstructsCounter = countReachableExecConstructLibrary;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     final StringBuffer b = new StringBuffer();

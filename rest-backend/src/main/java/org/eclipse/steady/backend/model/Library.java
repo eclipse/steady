@@ -70,7 +70,6 @@ import com.jayway.jsonpath.JsonPath;
 
 /**
  * <p>Library class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -561,7 +560,6 @@ public class Library implements Serializable {
    * verifiers (e.g. maven central, pypi). If the digests is well known and the
    * provided libraryId is NOT among those returned by the verifiers, it sets the
    * LibraryId with the (first) value returned by the verifier.
-   *
    */
   public void verifyDigest() {
     try {

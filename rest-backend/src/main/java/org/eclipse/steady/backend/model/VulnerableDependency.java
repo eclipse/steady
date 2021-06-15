@@ -34,7 +34,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>VulnerableDependency class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -412,7 +411,7 @@ public class VulnerableDependency implements Serializable, Comparable<Vulnerable
   /**
    * Returns true if the an exemption has been set before, false otherwise.
    *
-   * @return
+   * @return a {@link java.lang.Boolean} object
    */
   public Boolean isExempted() {
     return this.exemption != null;

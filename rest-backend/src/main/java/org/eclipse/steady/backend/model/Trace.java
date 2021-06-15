@@ -42,7 +42,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * <p>Trace class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(

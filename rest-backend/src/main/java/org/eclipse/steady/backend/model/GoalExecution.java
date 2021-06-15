@@ -58,7 +58,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>GoalExecution class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(

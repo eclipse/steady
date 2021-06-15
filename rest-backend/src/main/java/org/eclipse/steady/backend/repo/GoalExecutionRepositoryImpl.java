@@ -40,7 +40,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <p>GoalExecutionRepositoryImpl class.</p>
- *
  */
 public class GoalExecutionRepositoryImpl implements GoalExecutionRepositoryCustom {
 

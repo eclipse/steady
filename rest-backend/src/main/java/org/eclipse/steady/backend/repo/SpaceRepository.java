@@ -30,7 +30,6 @@ import org.springframework.stereotype.Repository;
 
 /**
  * <p>SpaceRepository interface.</p>
- *
  */
 @Repository
 public interface SpaceRepository extends CrudRepository<Space, Long>, SpaceRepositoryCustom {

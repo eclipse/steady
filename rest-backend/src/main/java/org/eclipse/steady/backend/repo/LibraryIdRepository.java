@@ -30,7 +30,6 @@ import org.springframework.stereotype.Repository;
 
 /**
  * <p>LibraryIdRepository interface.</p>
- *
  */
 @Repository
 public interface LibraryIdRepository extends CrudRepository<LibraryId, Long> {
@@ -38,6 +37,12 @@ public interface LibraryIdRepository extends CrudRepository<LibraryId, Long> {
   /** Constant <code>FILTER</code> */
   public static final ResultSetFilter<LibraryId> FILTER = new ResultSetFilter<LibraryId>();
 
+  /**
+   * <p>findById.</p>
+   *
+   * @param id a {@link java.lang.Long} object
+   * @return a {@link java.util.List} object
+   */
   @Query("SELECT l FROM LibraryId l WHERE l.id=:id")
   List<LibraryId> findById(@Param("id") Long id);
 
@@ -88,6 +93,12 @@ public interface LibraryIdRepository extends CrudRepository<LibraryId, Long> {
   @Query("SELECT distinct libid FROM LibraryId AS libid where not libid.mvnGroup LIKE 'com.sap%'")
   List<LibraryId> findAllLibIdsOSSI();
 
+  /**
+   * <p>findBundledLibIdByApp.</p>
+   *
+   * @param app a {@link org.eclipse.steady.backend.model.Application} object
+   * @return a {@link java.util.List} object
+   */
   @Query(
       value =
           "select distinct d.id as dep_id, bl.bundled_library_ids_id as boundled_lid_id "
@@ -98,6 +109,13 @@ public interface LibraryIdRepository extends CrudRepository<LibraryId, Long> {
       nativeQuery = true)
   List<Object[]> findBundledLibIdByApp(@Param("app") Application app);
 
+  /**
+   * <p>findBundledLibIdByGA.</p>
+   *
+   * @param mvnGroup a {@link java.lang.String} object
+   * @param artifact a {@link java.lang.String} object
+   * @return a {@link java.util.List} object
+   */
   @Query(
       value =
           "select lid.id, bl.bundled_library_ids_id as boundled_lid_id    from library_id lid   "

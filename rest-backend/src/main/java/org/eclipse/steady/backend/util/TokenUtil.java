@@ -25,7 +25,6 @@ import org.eclipse.steady.shared.util.DigestUtil;
 
 /**
  * <p>TokenUtil class.</p>
- *
  */
 public class TokenUtil {
 

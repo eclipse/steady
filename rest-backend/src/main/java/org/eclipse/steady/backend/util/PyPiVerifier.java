@@ -45,7 +45,6 @@ import com.jayway.jsonpath.JsonPath;
 
 /**
  * <p>PyPiVerifier class.</p>
- *
  */
 public class PyPiVerifier implements DigestVerifier {
 

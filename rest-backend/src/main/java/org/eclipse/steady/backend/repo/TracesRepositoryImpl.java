@@ -38,7 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <p>TracesRepositoryImpl class.</p>
- *
  */
 public class TracesRepositoryImpl implements TracesRepositoryCustom {
 

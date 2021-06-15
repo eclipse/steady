@@ -24,7 +24,6 @@ import org.eclipse.steady.shared.enums.GoalType;
 
 /**
  * <p>GoalExecutionRepositoryCustom interface.</p>
- *
  */
 public interface GoalExecutionRepositoryCustom {
 

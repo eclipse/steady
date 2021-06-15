@@ -266,7 +266,6 @@ public interface ApplicationRepository
    * @param artifact a {@link java.lang.String} object.
    * @param version a {@link java.lang.String} object.
    * @param space a {@link org.eclipse.steady.backend.model.Space} object.
-   * @param affected a {@link java.lang.Boolean} object.
    * @return a {@link java.util.TreeSet} object.
    */
   @Query(

@@ -63,7 +63,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>Application class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -366,7 +365,6 @@ public class Application implements Serializable, Comparable {
 
   /**
    * <p>Orders the collection <code>dependencies</code> from the shallowest (i.e., direct dependencies that do not have any parent) to the deepest (i.e., the dependencies having the longest chain of parents).</p>
-   *
    */
   public void orderDependenciesByDepth() {
     // order dependencies by length of parents

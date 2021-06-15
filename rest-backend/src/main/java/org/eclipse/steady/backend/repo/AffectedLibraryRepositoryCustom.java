@@ -70,9 +70,9 @@ public interface AffectedLibraryRepositoryCustom {
   /**
    * <p>Get affected libraries with highest priority for each {@link LibraryId}.</p>
    *
-   * @param bug
-   * @param onlyWellknown
-   * @return
+   * @param bug a {@link org.eclipse.steady.backend.model.Bug} object
+   * @param onlyWellknown a {@link java.lang.Boolean} object
+   * @return a {@link java.util.List} object
    */
   public List<AffectedLibrary> getResolvedAffectedLibraries(Bug bug, Boolean onlyWellknown);
 }

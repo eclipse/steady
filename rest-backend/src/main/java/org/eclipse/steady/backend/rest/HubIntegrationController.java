@@ -129,7 +129,6 @@ public class HubIntegrationController {
    *
    * @return sorted set of all items for which data can be exported
    * @param skipEmpty a {@link java.lang.Boolean} object.
-   * @param separator a {@link java.lang.String} object.
    * @param max a {@link java.lang.Integer} object.
    * @param asOfTimestamp a {@link java.lang.String} object.
    * @param aggregate a {@link java.lang.Boolean} object.

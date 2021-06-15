@@ -53,7 +53,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * <p>Space class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(

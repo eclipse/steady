@@ -40,7 +40,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * <p>ConstructId class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)

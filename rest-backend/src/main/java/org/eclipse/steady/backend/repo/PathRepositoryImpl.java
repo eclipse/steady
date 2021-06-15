@@ -35,7 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <p>PathRepositoryImpl class.</p>
- *
  */
 public class PathRepositoryImpl implements PathRepositoryCustom {
 

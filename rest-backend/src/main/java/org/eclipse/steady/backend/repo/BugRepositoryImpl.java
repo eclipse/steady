@@ -38,7 +38,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>BugRepositoryImpl class.</p>
- *
  */
 public class BugRepositoryImpl implements BugRepositoryCustom {
 
@@ -165,12 +164,11 @@ public class BugRepositoryImpl implements BugRepositoryCustom {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Checks whether the database has a description, CVSS score and version for the given {@link Bug}.
    * If not, or in case the parameter _force is true, the CVE data for the given {@link Bug} is read using the {@link CveReader2},
    * and the database is updated if the CVE's summary, CVSS score, version or vector is empty or outdated.
-   *
-   * @param _b the {@link Bug} whose CVE data is read
-   * @param _force
    */
   @Override
   public boolean updateCachedCveData(Bug _b, boolean _force) {

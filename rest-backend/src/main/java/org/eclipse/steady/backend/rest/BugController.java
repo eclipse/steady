@@ -54,7 +54,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>BugController class.</p>
- *
  */
 @RestController
 @CrossOrigin(origins = "*")
@@ -415,6 +414,8 @@ public class BugController {
    * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
    * @param bugid a {@link java.lang.String} object.
    * @param source a {@link org.eclipse.steady.shared.enums.AffectedVersionSource} object.
+   * @param resolved a {@link java.lang.Boolean} object
+   * @param onlyWellknown a {@link java.lang.Boolean} object
    */
   @RequestMapping(
       value = "/{bugid}/affectedLibIds",

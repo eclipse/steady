@@ -29,7 +29,6 @@ import org.springframework.stereotype.Repository;
 
 /**
  * <p>TenantRepository interface.</p>
- *
  */
 @Repository
 public interface TenantRepository extends CrudRepository<Tenant, Long>, TenantRepositoryCustom {

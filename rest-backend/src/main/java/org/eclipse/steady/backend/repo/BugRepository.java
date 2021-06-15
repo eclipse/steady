@@ -34,7 +34,6 @@ import org.springframework.stereotype.Repository;
 
 /**
  * <p>BugRepository interface.</p>
- *
  */
 @Repository
 // @RepositoryRestResource(collectionResourceRel = "bugss", path = "bugss")

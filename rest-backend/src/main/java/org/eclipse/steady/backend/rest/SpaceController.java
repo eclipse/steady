@@ -67,7 +67,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * <p>SpaceController class.</p>
- *
  */
 @RestController
 @CrossOrigin("*")

@@ -40,8 +40,9 @@ import org.springframework.stereotype.Repository;
  *
  */
 /**
- * @author I059406
+ * <p>AffectedLibraryRepository interface.</p>
  *
+ * @author I059406
  */
 @Repository
 public interface AffectedLibraryRepository
@@ -167,7 +168,6 @@ public interface AffectedLibraryRepository
    * Find all entries for a given {@link Bug}.
    *
    * @param bug a {@link org.eclipse.steady.backend.model.Bug} object.
-   * @param bug a {@link org.eclipse.steady.backend.model.Bug} object.
    * @return a {@link java.util.List} object.
    */
   @Query("SELECT afflib FROM AffectedLibrary AS afflib WHERE afflib.bugId = :bug")
@@ -177,7 +177,6 @@ public interface AffectedLibraryRepository
    * For a given {@link Bug} and {@link AffectedVersionSource}, find all entries that are linked to a library whose digest is well known.
    *
    * @param bug a {@link org.eclipse.steady.backend.model.Bug} object.
-   * @param source a {@link org.eclipse.steady.shared.enums.AffectedVersionSource} object.
    * @return a {@link java.util.List} object.
    */
   @Query(
@@ -429,7 +428,6 @@ public interface AffectedLibraryRepository
    * @param bug_id a {@link java.lang.String} object.
    * @param library_id a {@link org.eclipse.steady.backend.model.LibraryId} object.
    * @return a {@link java.lang.Boolean} object.
-   *
    */
   @Query(
       value =

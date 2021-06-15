@@ -56,7 +56,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>ApplicationExporter class.</p>
- *
  */
 @Component
 public class ApplicationExporter {

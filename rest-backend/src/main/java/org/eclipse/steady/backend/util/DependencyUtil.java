@@ -29,7 +29,6 @@ import org.eclipse.steady.backend.model.Library;
 
 /**
  * <p>DependencyUtil class.</p>
- *
  */
 public class DependencyUtil {
 
