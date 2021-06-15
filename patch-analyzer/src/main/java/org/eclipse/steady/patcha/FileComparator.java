@@ -33,7 +33,6 @@ import org.eclipse.steady.vcs.FileChange;
 
 /**
  * <p>FileComparator class.</p>
- *
  */
 public class FileComparator {
 
