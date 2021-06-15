@@ -21,14 +21,14 @@ package org.eclipse.steady.java.sign;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+
 import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
 import org.eclipse.jdt.internal.compiler.lookup.ClassScope;
 import org.eclipse.steady.Construct;
 import org.eclipse.steady.java.sign.gson.ASTConstructBodySignatureSerializer;
 import org.eclipse.steady.shared.json.JacksonUtil;
 import org.eclipse.steady.sign.Signature;
-
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import ch.uzh.ifi.seal.changedistiller.ast.java.JavaCompilation;
 import ch.uzh.ifi.seal.changedistiller.ast.java.JavaMethodBodyConverter;
@@ -40,7 +40,6 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 
 /**
  * <p>ASTConstructBodySignature class.</p>
- *
  */
 public class ASTConstructBodySignature extends ASTSignature {
 

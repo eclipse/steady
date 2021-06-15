@@ -44,7 +44,6 @@ import com.google.gson.JsonSerializer;
 
 /**
  * <p>GsonHelper class.</p>
- *
  */
 public class GsonHelper {
 

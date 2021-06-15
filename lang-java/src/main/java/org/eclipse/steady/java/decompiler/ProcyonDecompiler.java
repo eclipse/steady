@@ -33,7 +33,6 @@ import com.strobel.decompiler.PlainTextOutput;
 
 /**
  * <p>ProcyonDecompiler class.</p>
- *
  */
 public class ProcyonDecompiler implements IDecompiler {
 

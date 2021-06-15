@@ -28,7 +28,6 @@ import java.util.jar.JarEntry;
  */
 /**
  * <p>JarEntryWriter interface.</p>
- *
  */
 public interface JarEntryWriter {
 

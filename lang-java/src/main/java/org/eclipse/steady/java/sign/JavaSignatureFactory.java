@@ -113,7 +113,6 @@ public class JavaSignatureFactory implements SignatureFactory {
    * {@inheritDoc}
    *
    * Creates the construct signature on the basis of a given Java source file.
-   *
    * @see JavaSignatureFactory#createFromSourceCache(ConstructId)
    */
   @Override

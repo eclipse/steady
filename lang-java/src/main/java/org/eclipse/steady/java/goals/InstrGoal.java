@@ -37,7 +37,6 @@ import org.eclipse.steady.shared.util.ThreadUtil;
 
 /**
  * <p>InstrGoal class.</p>
- *
  */
 public class InstrGoal extends AbstractAppGoal {
 

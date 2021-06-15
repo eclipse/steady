@@ -29,7 +29,6 @@ import org.eclipse.steady.shared.json.model.LibraryId;
 
 /**
  * <p>ConstructBytecodeASTManager class.</p>
- *
  */
 public class ConstructBytecodeASTManager {
 
@@ -47,6 +46,7 @@ public class ConstructBytecodeASTManager {
 
   /**
    * <p>Constructor for ConstructBytecodeASTManager.</p>
+   *
    * @param _gc TODO
    * @param _c a {@link java.lang.String} object.
    * @param _p a {@link java.lang.String} object.

@@ -52,7 +52,6 @@ import javassist.CtBehavior;
 
 /**
  * <p>TouchPointCollector class.</p>
- *
  */
 public class TouchPointCollector {
 

@@ -25,7 +25,6 @@ import org.eclipse.steady.shared.enums.Scope;
 
 /**
  * <p>ExemptionScope class.</p>
- *
  */
 public class ExemptionScope implements IExemption {
 

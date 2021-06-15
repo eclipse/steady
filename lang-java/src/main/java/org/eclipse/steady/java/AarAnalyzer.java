@@ -31,7 +31,6 @@ import org.eclipse.steady.shared.util.FileUtil;
 
 /**
  * <p>AarAnalyzer class.</p>
- *
  */
 @NotThreadSafe
 public class AarAnalyzer extends JarAnalyzer {

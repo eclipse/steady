@@ -22,16 +22,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.Logger;
-import org.eclipse.steady.java.sign.ASTSignatureChange;
-import org.eclipse.steady.java.sign.ASTUtil;
-import org.eclipse.steady.sign.SignatureChange;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+
+import org.apache.logging.log4j.Logger;
+import org.eclipse.steady.java.sign.ASTSignatureChange;
+import org.eclipse.steady.java.sign.ASTUtil;
+import org.eclipse.steady.sign.SignatureChange;
 
 import ch.uzh.ifi.seal.changedistiller.model.classifiers.ChangeType;
 import ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType;
@@ -51,9 +51,6 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.Update;
  */
 
 /**
- *
- * /**
- *
  * JSON representation of ASTSignatureChange:
  *
  * public class ASTSignatureChange extends DistillerUtil implements
@@ -194,6 +191,7 @@ public class ASTSignatureChangeDeserializer extends StdDeserializer<SignatureCha
     return srcCodeEntity;
   }
 
+  /** {@inheritDoc} */
   @Override
   public SignatureChange deserialize(JsonParser p, DeserializationContext ctxt)
       throws IOException, JsonProcessingException {

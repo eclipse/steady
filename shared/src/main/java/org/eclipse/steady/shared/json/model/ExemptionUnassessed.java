@@ -25,7 +25,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * <p>ExemptionUnassessed class.</p>
- *
  */
 public class ExemptionUnassessed implements IExemption {
 

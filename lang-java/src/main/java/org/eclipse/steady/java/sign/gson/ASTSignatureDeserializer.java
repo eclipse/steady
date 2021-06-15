@@ -20,6 +20,13 @@ package org.eclipse.steady.java.sign.gson;
 
 import java.lang.reflect.Type;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+
 import org.eclipse.steady.java.sign.ASTConstructBodySignature;
 import org.eclipse.steady.java.sign.ASTUtil;
 import org.eclipse.steady.sign.Signature;
@@ -29,18 +36,10 @@ import ch.uzh.ifi.seal.changedistiller.model.classifiers.SourceRange;
 import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-
 /**
  *  This class is used to deserialize an AST JSON representation of a construct body object into its corresponding
  *  java Signatures object
- * /**
- *
+ * 
  *JSON representation of ASTConstructBodySignature:
  *
  *Node:

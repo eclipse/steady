@@ -43,7 +43,6 @@ import com.google.gson.JsonObject;
 
 /**
  * <p>Abstract JavaId class.</p>
- *
  */
 public abstract class JavaId extends ConstructId {
 
@@ -853,9 +852,10 @@ public abstract class JavaId extends ConstructId {
   }
 
   /**
+   * <p>getCompilationUnit.</p>
    *
-   * @param _jid
-   * @return
+   * @param _jid a {@link org.eclipse.steady.java.JavaId} object
+   * @return a {@link org.eclipse.steady.java.JavaId} object
    */
   public static JavaId getCompilationUnit(JavaId _jid) {
     // Got it --> return provided object
@@ -868,6 +868,13 @@ public abstract class JavaId extends ConstructId {
     }
   }
 
+  /**
+   * <p>getJavaId.</p>
+   *
+   * @param _type a {@link java.lang.String} object
+   * @param _qname a {@link java.lang.String} object
+   * @return a {@link org.eclipse.steady.java.JavaId} object
+   */
   public static JavaId getJavaId(String _type, String _qname) {
     JavaId.Type type = JavaId.typeFromString(_type);
 

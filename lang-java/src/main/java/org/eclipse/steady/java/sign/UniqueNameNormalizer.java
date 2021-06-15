@@ -38,7 +38,6 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
 /**
  * <p>UniqueNameNormalizer class.</p>
- *
  */
 public class UniqueNameNormalizer implements IUniqueNameNormalizer {
 

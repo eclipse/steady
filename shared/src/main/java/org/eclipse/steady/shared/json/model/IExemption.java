@@ -20,7 +20,6 @@ package org.eclipse.steady.shared.json.model;
 
 /**
  * <p>IExemption interface.</p>
- *
  */
 public interface IExemption {
 
