@@ -73,6 +73,8 @@ spec:
         }
       }
     }
+    // Validates the JavaDoc documentation by enabling the javadoc profile
+    // contained in pom.xml, rest-backend/pom.xml and rest-lib-utils/pom.xml.
     stage('JavaDoc') {
       steps {
         container('maven') {
@@ -88,6 +90,7 @@ spec:
         }
       }
     }
+    // Validates code conventions (requires Java 11).
     stage('Codestyle') {
       steps {
         container('maven') {
@@ -95,6 +98,5 @@ spec:
         }
       }
     }
-    
   }
 }
