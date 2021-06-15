@@ -22,7 +22,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>NexusArtifact class.</p>
- *
  */
 @XmlRootElement(name = "artifact")
 public class NexusArtifact {

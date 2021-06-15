@@ -69,7 +69,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * <p>MainController class.</p>
- *
  */
 @Configuration
 @ComponentScan({"org.eclipse.steady.cia.util,org.eclipse.steady.cia.rest"})

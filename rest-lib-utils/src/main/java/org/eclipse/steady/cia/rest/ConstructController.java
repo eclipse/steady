@@ -60,7 +60,6 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
 /**
  * <p>ConstructController class.</p>
- *
  */
 @RestController
 @CrossOrigin("*")

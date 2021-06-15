@@ -22,7 +22,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>NexusArtifactInfoResourceResponse class.</p>
- *
  */
 @XmlRootElement(name = "org.sonatype.nexus.rest.model.ArtifactInfoResourceResponse")
 public class NexusArtifactInfoResourceResponse {

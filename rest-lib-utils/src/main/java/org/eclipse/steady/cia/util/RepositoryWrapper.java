@@ -26,7 +26,6 @@ import org.eclipse.steady.shared.json.model.Artifact;
 
 /**
  * <p>RepositoryWrapper interface.</p>
- *
  */
 public interface RepositoryWrapper {
 

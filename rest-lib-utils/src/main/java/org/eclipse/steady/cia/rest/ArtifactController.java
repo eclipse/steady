@@ -65,7 +65,6 @@ import com.jeantessier.dependencyfinder.cli.JarJarDiff;
 
 /**
  * <p>ArtifactController class.</p>
- *
  */
 @RestController
 @CrossOrigin("*")

@@ -45,7 +45,6 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * <p>MavenCentralWrapper class.</p>
- *
  */
 public class MavenCentralWrapper implements RepositoryWrapper {
 

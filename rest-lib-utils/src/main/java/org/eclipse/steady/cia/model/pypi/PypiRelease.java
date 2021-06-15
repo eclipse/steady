@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * <p>PypiRelease class.</p>
- *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PypiRelease {
