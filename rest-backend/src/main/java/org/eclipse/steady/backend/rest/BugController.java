@@ -24,6 +24,8 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import org.eclipse.steady.backend.model.AffectedLibrary;
 import org.eclipse.steady.backend.model.Bug;
 import org.eclipse.steady.backend.model.Library;
@@ -49,8 +51,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>BugController class.</p>
@@ -254,9 +254,10 @@ public class BugController {
    * Re-creates the {@link Bug} with a given bug ID (e.g., CVE identifier).
    *
    * @param bug a {@link org.eclipse.steady.backend.model.Bug} object.
-   * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given bug ID does not exist,
-   * 		   422 {@link HttpStatus.UNPROCESSABLE_ENTITY} if the value of path variable (bug ID) does not equal the corresponding field in the body
-   * 		   200 {@link HttpStatus#OK} if the bug was successfully re-created
+   * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given bug ID does not
+   *       exist, 422 {@link HttpStatus#UNPROCESSABLE_ENTITY} if the value of
+   *       path variable (bug ID) does not equal the corresponding field in the
+   *       body, 200 {@link HttpStatus#OK} if the bug was successfully re-created
    * @param bugid a {@link java.lang.String} object.
    */
   @RequestMapping(
@@ -281,9 +282,11 @@ public class BugController {
   }
 
   /**
-   * Deletes the {@link Bug} with the given external ID. This ID is provided by the user when creating a bug, e.g., a CVE identifier.
+   * Deletes the {@link Bug} with the given external ID. This ID is provided by
+   * the user when creating a bug, e.g., a CVE identifier.
    *
-   * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given bug ID does not exist, 200 {@link HttpStatus#OK} if the bug was successfully deleted
+   * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given bug ID does not
+   * exist, 200 {@link HttpStatus#OK} if the bug was successfully deleted
    * @param bugid a {@link java.lang.String} object.
    */
   @RequestMapping(value = "/{bugid}", method = RequestMethod.DELETE)
@@ -408,12 +411,19 @@ public class BugController {
   }
 
   /**
-   * Creates a set of {@link AffectedLibrary}s for the given {@link Bug} and {@link AffectedVersionSource}. If the resolved flag is true, the source flag is ignored and for each {@link LibraryId} only the {@link AffectedLibrary} with the highest priority is returned.
-   * Note that {@link AffectedLibrary}s cannot be created, modified or deleted individually, but always as bulk for a given {@link AffectedVersionSource}.
+   * Creates a set of {@link AffectedLibrary}s for the given {@link Bug} and
+   * {@link AffectedVersionSource}. If the resolved flag is true, the source
+   * flag is ignored and for each
+   * {@link org.eclipse.steady.backend.model.LibraryId} only the
+   * {@link AffectedLibrary} with the highest priority is returned. Note that
+   * {@link AffectedLibrary}s cannot be created, modified or deleted
+   * individually, but always as bulk for a given {@link AffectedVersionSource}.
    *
-   * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
+   * @return 409 {@link HttpStatus#CONFLICT} if bug with given bug ID already
+   * exists, 201 {@link HttpStatus#CREATED} if the bug was successfully created
    * @param bugid a {@link java.lang.String} object.
-   * @param source a {@link org.eclipse.steady.shared.enums.AffectedVersionSource} object.
+   * @param source a
+   * {@link org.eclipse.steady.shared.enums.AffectedVersionSource} object.
    * @param resolved a {@link java.lang.Boolean} object
    * @param onlyWellknown a {@link java.lang.Boolean} object
    */

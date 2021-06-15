@@ -29,8 +29,10 @@ import org.eclipse.steady.shared.util.DigestUtil;
 public class TokenUtil {
 
   /**
-   * Returns a random 64-char long token (MD5 hash generated over a randum number and the current time milliseconds).
-   * Used for generating {@link Tenant} and {@link Space} tokens.
+   * Returns a random 64-char long token (MD5 hash generated over a randum
+   * number and the current time milliseconds). Used for generating
+   * {@link org.eclipse.steady.backend.model.Tenant} and
+   * {@link org.eclipse.steady.backend.model.Space} tokens.
    *
    * @return a {@link java.lang.String} object.
    */

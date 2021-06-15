@@ -57,7 +57,7 @@ public class FileComparator {
    * @param _c the FileChange holding the old and new file to be compared (+ the relative repo
    *        path)
    * @param _rev the revision in which the file was changed
-   * @throws java.io.IOException
+   * @throws java.io.IOException if any.
    * @param _time_stamp a {@link java.lang.String} object.
    * @throws org.eclipse.steady.FileAnalysisException if any.
    */
@@ -74,7 +74,7 @@ public class FileComparator {
    * @param _fix a {@link java.io.File} object.
    * @param _rev a {@link java.lang.String} object.
    * @param _repo_path a {@link java.lang.String} object.
-   * @throws java.io.IOException
+   * @throws java.io.IOException if any.
    * @param _repo a {@link java.lang.String} object.
    * @param _time_stamp a {@link java.lang.String} object.
    * @throws org.eclipse.steady.FileAnalysisException if any.

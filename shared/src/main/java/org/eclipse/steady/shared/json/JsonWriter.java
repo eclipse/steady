@@ -27,7 +27,7 @@ import org.eclipse.steady.shared.util.FileUtil;
 /**
  * Serializes a given object and writes it to disk.
  *
- * @param <T>
+ * @param <T> type of objects handled by the writer.
  */
 public class JsonWriter<T> {
 

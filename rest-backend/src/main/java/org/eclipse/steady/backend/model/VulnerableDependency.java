@@ -21,16 +21,16 @@ package org.eclipse.steady.backend.model;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import org.eclipse.steady.backend.model.view.Views;
 import org.eclipse.steady.backend.repo.ApplicationRepositoryCustom;
 import org.eclipse.steady.shared.enums.AffectedVersionSource;
 import org.eclipse.steady.shared.enums.VulnDepOrigin;
 import org.eclipse.steady.shared.json.model.IExemption;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>VulnerableDependency class.</p>
@@ -313,7 +313,7 @@ public class VulnerableDependency implements Serializable, Comparable<Vulnerable
   }
 
   /**
-   * Called by {@link ApplicationRepositoryCustom#updateFlags(VulnerableDependency)}.
+   * Called by {@link ApplicationRepositoryCustom#updateFlags(VulnerableDependency, Boolean)}.
    *
    * @param i a int.
    */
@@ -362,7 +362,7 @@ public class VulnerableDependency implements Serializable, Comparable<Vulnerable
   }
 
   /**
-   * Called by {@link ApplicationRepositoryCustom#updateFlags(VulnerableDependency)}.
+   * Called by {@link ApplicationRepositoryCustom#updateFlags(VulnerableDependency, Boolean)}.
    *
    * @param i a int.
    */
@@ -373,7 +373,6 @@ public class VulnerableDependency implements Serializable, Comparable<Vulnerable
   /**
    * Returns true if at least one construct of the {@link Dependency} has been traced, false otherwise.
    *
-   * @see {@link VulnerableDependency#getTracedConfirmed()}
    * @return a boolean.
    */
   public boolean isTracedConfirmed() {
@@ -393,7 +392,7 @@ public class VulnerableDependency implements Serializable, Comparable<Vulnerable
   /**
    * <p>Getter for the field <code>exemption</code>.</p>
    *
-   * @return a {@link Exemption} object.
+   * @return a {@link IExemption} object.
    */
   public IExemption getExemption() {
     return this.exemption;
@@ -402,7 +401,7 @@ public class VulnerableDependency implements Serializable, Comparable<Vulnerable
   /**
    * <p>Setter for the field <code>exemption</code>.</p>
    *
-   * @param _e a {@link Exemption} object.
+   * @param _e a {@link IExemption} object.
    */
   public void setExemption(IExemption _e) {
     this.exemption = _e;

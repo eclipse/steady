@@ -95,7 +95,7 @@ public class ExemptionSet extends HashSet<IExemption> {
   }
 
   /**
-   * Creates a set of {@link IExemption}s by reading the settings from the given {@link Map<String,String>}.
+   * Creates a set of {@link IExemption}s by reading the settings from the given {@link Map}.
    *
    * @param _map a {@link java.util.Map} object
    * @return a {@link org.eclipse.steady.shared.json.model.ExemptionSet} object

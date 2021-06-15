@@ -19,6 +19,7 @@
 package org.eclipse.steady.kb.command;
 
 import java.util.HashMap;
+
 import org.apache.commons.cli.Options;
 import org.eclipse.steady.kb.exception.ValidationException;
 
@@ -59,8 +60,8 @@ public interface Command {
   /**
    * validate command with command arguments. Throw a validation exception on any validation error
    *
-   * @param args a {@link java.util.Map
-   * @throws org.eclipse.steady.kb.exception.ValidationException
+   * @param args a {@link java.util.Map}
+   * @throws org.eclipse.steady.kb.exception.ValidationException if any.
    */
   void validate(HashMap<String, Object> args) throws ValidationException;
 }

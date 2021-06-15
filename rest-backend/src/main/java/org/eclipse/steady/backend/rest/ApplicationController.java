@@ -38,9 +38,11 @@ import java.util.TreeSet;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
+import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.Filter;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 import org.eclipse.steady.backend.component.ApplicationExporter;
 import org.eclipse.steady.backend.model.Application;
@@ -94,8 +96,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.DispatcherServletAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -106,8 +108,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.DispatcherServlet;
-
-import com.fasterxml.jackson.annotation.JsonView;
 
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -259,9 +259,11 @@ public class ApplicationController {
   /**
    * Deletes multiple {@link Application} versions at once.
    *
-   * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given digest does not exist,
-   * 		   422 {@link HttpStatus.UNPROCESSABLE_ENTITY} if the value of path variable (digest) does not equal the corresponding field in the body
-   * 		   200 {@link HttpStatus#OK} if the library was successfully re-created
+   * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given digest does not
+   *       exist, 422 {@link HttpStatus#UNPROCESSABLE_ENTITY} if the value of
+   *       path variable (digest) does not equal the corresponding field in the
+   *       body, 200 {@link HttpStatus#OK} if the library was successfully
+   *       re-created
    * @param mvnGroup a {@link java.lang.String} object.
    * @param artifact a {@link java.lang.String} object.
    * @param keep a {@link java.lang.Integer} object.
@@ -409,8 +411,8 @@ public class ApplicationController {
    * Re-creates the {@link Application} with a given GAV.
    *
    * @return 404 {@link HttpStatus#NOT_FOUND} if bug with given digest does not exist,
-   * 		   422 {@link HttpStatus.UNPROCESSABLE_ENTITY} if the value of path variable (digest) does not equal the corresponding field in the body
-   *		   400 {@link HttpStatus.BAD_REQUEST} if the set of application dependencies is not valid (contains duplicated entries or the parent are not listed in the main set)
+   * 		   422 {@link HttpStatus#UNPROCESSABLE_ENTITY} if the value of path variable (digest) does not equal the corresponding field in the body
+   *		   400 {@link HttpStatus#BAD_REQUEST} if the set of application dependencies is not valid (contains duplicated entries or the parent are not listed in the main set)
    * 		   200 {@link HttpStatus#OK} if the library was successfully re-created
    * @param mvnGroup a {@link java.lang.String} object.
    * @param artifact a {@link java.lang.String} object.
@@ -1160,7 +1162,8 @@ public class ApplicationController {
   }
 
   /**
-   * Returns the {@link GoalExceution} for the given {@link Application} and having the given identifier.
+   * Returns the {@link GoalExecution} for the given {@link Application} and
+   * having the given identifier.
    *
    * @param mvnGroup a {@link java.lang.String} object.
    * @param artifact a {@link java.lang.String} object.
@@ -1206,7 +1209,8 @@ public class ApplicationController {
   }
 
   /**
-   * Returns the latest {@link GoalExceution} for the given {@link Application} and having the given {@link GoalType}.
+   * Returns the latest {@link GoalExecution} for the given {@link Application}
+   * and having the given {@link GoalType}.
    *
    * @param mvnGroup a {@link java.lang.String} object.
    * @param artifact a {@link java.lang.String} object.

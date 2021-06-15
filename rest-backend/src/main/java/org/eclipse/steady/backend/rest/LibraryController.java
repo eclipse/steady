@@ -34,6 +34,8 @@ import java.util.TreeSet;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import org.eclipse.steady.backend.model.AffectedConstructChange;
 import org.eclipse.steady.backend.model.Application;
 import org.eclipse.steady.backend.model.Bug;
@@ -63,8 +65,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>LibraryController class.</p>
@@ -215,9 +215,11 @@ public class LibraryController {
    * Re-creates the {@link Library} with a given digest.
    *
    * @param digest a {@link java.lang.String} object.
-   * @return 404 {@link HttpStatus#NOT_FOUND} if library with given digest does not exist,
-   * 		   422 {@link HttpStatus.UNPROCESSABLE_ENTITY} if the value of path variable (digest) is not equal to the corresponding field in the body
-   * 		   200 {@link HttpStatus#OK} if the library was successfully re-created
+   * @return 404 {@link HttpStatus#NOT_FOUND} if library with given digest does
+   *       not exist, 422 {@link HttpStatus#UNPROCESSABLE_ENTITY} if the value
+   *       of path variable (digest) is not equal to the corresponding field in
+   *       the body, 200 {@link HttpStatus#OK} if the library was successfully
+   *       re-created
    * @param library a {@link org.eclipse.steady.backend.model.Library} object.
    * @param skipResponseBody a {@link java.lang.Boolean} object.
    */

@@ -31,6 +31,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import org.eclipse.steady.backend.model.Application;
 import org.eclipse.steady.backend.model.GoalExecution;
 import org.eclipse.steady.backend.model.Space;
@@ -63,12 +69,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.DispatcherServlet;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * RESTful interface for application information.
@@ -124,8 +124,8 @@ public class HubIntegrationController {
   /**
    * Returns a sorted set of item identifiers. Items can correspond to either {@link Space}s or {@link Application}s, depending on the value of {@link Space#getExportConfiguration()}.
    * The identifiers looks as follows:
-   * <space-name> (<space-token>)
-   * <space-name> (<space-token>) <separator><group><separator><artifact><separator><version>
+   * &lt;space-name&gt; (&lt;space-token&gt;)
+   * &lt;space-name&gt; (&lt;space-token&gt;) &lt;separator&gt;&lt;group&gt;&lt;separator&gt;&lt;artifact&gt;&lt;separator&gt;&lt;version&gt;
    *
    * @return sorted set of all items for which data can be exported
    * @param skipEmpty a {@link java.lang.Boolean} object.
@@ -207,8 +207,8 @@ public class HubIntegrationController {
   /**
    * Returns a sorted set of item identifiers. Items can correspond to either {@link Space}s or {@link Application}s, depending on the value of {@link Space#getExportConfiguration()}.
    * The identifiers looks as follows:
-   * <space-name> (<space-token>)
-   * <space-name> (<space-token>) <separator><group><separator><artifact><separator><version>
+   * &lt;space-name&gt; (&lt;space-token&gt;)
+   * &lt;space-name&gt; (&lt;space-token&gt;) &lt;separator&gt;&lt;group&gt;&lt;separator&gt;&lt;artifact&gt;&lt;separator&gt;&lt;version&gt;
    *
    * @return sorted set of all items for which data can be exported
    * @param skipEmpty a {@link java.lang.Boolean} object.
@@ -711,7 +711,8 @@ public class HubIntegrationController {
     }
 
     /**
-     * Delegates the comparison to {@link Application#compareTo(Application)} and {@link VulnerableDependency#compareTo(VulnerableDependency)}.
+     * Delegates the comparison to {@link Application#compareTo(Object)} and
+     * {@link VulnerableDependency#compareTo(VulnerableDependency)}.
      */
     @Override
     public int compareTo(VulnerableItemDependency _other) {

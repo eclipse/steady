@@ -314,7 +314,7 @@ public class VulasConfiguration {
    * @param _map a {@link java.util.Map} object.
    * @param _ignore_value if specified, elements will only be added if the value's string representation from this argument
    * @param _ignore_null whether or not null values shall be ignored
-   * @throws java.lang.IllegalArgumentException
+   * @throws java.lang.IllegalArgumentException if any.
    * @param _layer_name a {@link java.lang.String} object.
    */
   public void addLayerAfterSysProps(
@@ -609,7 +609,8 @@ public class VulasConfiguration {
   /**
    * Checks mandatory and optional settings and, where provided, the format.
    *
-   * @throws org.apache.commons.configuration.ConfigurationException
+   * @throws org.apache.commons.configuration.ConfigurationException if
+   * mandatory settings are not provided or expected formats are not met.
    */
   public void checkSettings() throws ConfigurationException {
 
@@ -932,7 +933,8 @@ public class VulasConfiguration {
   /**
    * Returns the path to the m2 repository.
    *
-   * @throws java.lang.IllegalStateException
+   * @throws java.lang.IllegalStateException if the m2 directory cannot be
+   * created or is not writable.
    * @return a {@link java.nio.file.Path} object.
    */
   public Path getLocalM2Repository() throws IllegalStateException {

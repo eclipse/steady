@@ -21,14 +21,14 @@ package org.eclipse.steady.kb.util;
 import java.io.File;
 import java.io.IOException;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.kb.model.Commit;
 import org.eclipse.steady.kb.model.Vulnerability;
 import org.eclipse.steady.shared.util.FileUtil;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 /**
  * Metadata
@@ -44,8 +44,8 @@ public class Metadata {
    *
    * @param commitDir a {@link java.lang.String} object.
    * @return _commit a {@link org.eclipse.steady.kb.model.Commit} object.
-   * @throws java.io.IOException
-   * @throws com.google.gson.JsonSyntaxException
+   * @throws java.io.IOException if any.
+   * @throws com.google.gson.JsonSyntaxException if any.
    */
   public static Commit getCommitMetadata(String commitDir) throws JsonSyntaxException, IOException {
     String filePath = commitDir + File.separator + META_PROPERTIES_FILE;
@@ -69,8 +69,8 @@ public class Metadata {
    *
    * @param rootDir a {@link java.lang.String} object.
    * @return _commit a {@link org.eclipse.steady.kb.model.Vulnerability} object.
-   * @throws java.io.IOException
-   * @throws com.google.gson.JsonSyntaxException
+   * @throws java.io.IOException if any.
+   * @throws com.google.gson.JsonSyntaxException if any.
    */
   public static Vulnerability getVulnerabilityMetadata(String rootDir)
       throws JsonSyntaxException, IOException {

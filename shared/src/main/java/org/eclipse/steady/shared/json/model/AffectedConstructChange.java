@@ -81,8 +81,8 @@ public class AffectedConstructChange implements Serializable {
   /**
    * <p>Constructor for AffectedConstructChange.</p>
    *
-   * @param _cc a {@link org.eclipse.steady.backend.model.ConstructChange} object.
-   * @param _af a {@link org.eclipse.steady.backend.model.AffectedLibrary} object.
+   * @param _cc a {@link org.eclipse.steady.shared.json.model.ConstructChange} object.
+   * @param _af a {@link org.eclipse.steady.shared.json.model.AffectedLibrary} object.
    * @param _affected a {@link java.lang.Boolean} object.
    * @param _inArch a {@link java.lang.Boolean} object.
    * @param _classinArch a {@link java.lang.Boolean} object.
@@ -160,7 +160,7 @@ public class AffectedConstructChange implements Serializable {
   /**
    * <p>Getter for the field <code>cc</code>.</p>
    *
-   * @return a {@link org.eclipse.steady.backend.model.ConstructChange} object.
+   * @return a {@link org.eclipse.steady.shared.json.model.ConstructChange} object.
    */
   public ConstructChange getCc() {
     return cc;
@@ -168,7 +168,7 @@ public class AffectedConstructChange implements Serializable {
   /**
    * <p>Setter for the field <code>cc</code>.</p>
    *
-   * @param _cc a {@link org.eclipse.steady.backend.model.ConstructChange} object.
+   * @param _cc a {@link org.eclipse.steady.shared.json.model.ConstructChange} object.
    */
   public void setCc(ConstructChange _cc) {
     this.cc = _cc;
@@ -177,7 +177,7 @@ public class AffectedConstructChange implements Serializable {
   /**
    * <p>Getter for the field <code>affectedLib</code>.</p>
    *
-   * @return a {@link org.eclipse.steady.backend.model.AffectedLibrary} object.
+   * @return a {@link org.eclipse.steady.shared.json.model.AffectedLibrary} object.
    */
   public AffectedLibrary getAffectedLib() {
     return affectedLib;
@@ -185,7 +185,7 @@ public class AffectedConstructChange implements Serializable {
   /**
    * <p>Setter for the field <code>affectedLib</code>.</p>
    *
-   * @param _al a {@link org.eclipse.steady.backend.model.AffectedLibrary} object.
+   * @param _al a {@link org.eclipse.steady.shared.json.model.AffectedLibrary} object.
    */
   public void setAffectedLib(AffectedLibrary _al) {
     this.affectedLib = _al;
@@ -299,7 +299,7 @@ public class AffectedConstructChange implements Serializable {
   /**
    * <p>Getter for the field <code>overall_chg</code>.</p>
    *
-   * @return a {@link org.eclipse.steady.backend.model.AffectedConstructChange.ChangeType} object.
+   * @return a {@link org.eclipse.steady.shared.json.model.AffectedConstructChange.ChangeType} object.
    */
   public ChangeType getOverall_chg() {
     return overall_chg;
@@ -307,7 +307,7 @@ public class AffectedConstructChange implements Serializable {
   /**
    * <p>Setter for the field <code>overall_chg</code>.</p>
    *
-   * @param _c a {@link org.eclipse.steady.backend.model.AffectedConstructChange.ChangeType} object.
+   * @param _c a {@link org.eclipse.steady.shared.json.model.AffectedConstructChange.ChangeType} object.
    */
   public void setOverall_chg(ChangeType _c) {
     this.overall_chg = _c;

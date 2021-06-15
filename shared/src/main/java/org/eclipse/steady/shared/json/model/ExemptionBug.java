@@ -21,12 +21,12 @@ package org.eclipse.steady.shared.json.model;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.github.packageurl.MalformedPackageURLException;
+import com.github.packageurl.PackageURL;
+
 import org.apache.commons.configuration.Configuration;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.shared.enums.AffectedVersionSource;
-
-import com.github.packageurl.MalformedPackageURLException;
-import com.github.packageurl.PackageURL;
 
 /**
  * Exemptions are used to prevent that {@link VulnerableDependency}s result in build exceptions during the execution of the report goal.
@@ -212,8 +212,11 @@ public class ExemptionBug implements IExemption {
   }
 
   /**
-   * Reads all {@link Configuration} settings starting with {@link ExemptionBug#CFG_PREFIX} in order to create {@link ExemptionBug}s.
-   * Also considers the deprecated settings {@link ExemptionBug#DEPRECATED_CFG_PREFIX} and {@link ExemptionBug#CFG_PREFIX_EXEMPTED_SCOPES} for backward compatibility.
+   * Reads all {@link Configuration} settings starting with
+   * {@link ExemptionBug#CFG_PREFIX} in order to create {@link ExemptionBug}s.
+   * Also considers the deprecated setting
+   * {@link org.eclipse.steady.shared.json.model.ExemptionBug#DEPRECATED_CFG_PREFIX}
+   * for backward compatibility.
    *
    * @param _cfg a {@link org.apache.commons.configuration.Configuration} object
    * @return a {@link org.eclipse.steady.shared.json.model.ExemptionSet} object
@@ -271,7 +274,7 @@ public class ExemptionBug implements IExemption {
 
   /**
    * Reads all {@link Configuration} settings starting with {@link ExemptionBug#CFG_PREFIX} in order to create {@link ExemptionBug}s.
-   * Also considers the deprecated settings {@link ExemptionBug#DEPRECATED_CFG_PREFIX} and {@link ExemptionBug#CFG_PREFIX_EXEMPTED_SCOPES} for backward compatibility.
+   * Also considers the deprecated setting {@link ExemptionBug#DEPRECATED_CFG_PREFIX}.
    *
    * @param _map a {@link java.util.Map} object
    * @return a {@link org.eclipse.steady.shared.json.model.ExemptionSet} object
@@ -344,12 +347,15 @@ public class ExemptionBug implements IExemption {
   }
 
   /**
-   * Creates a {@link PackageURL} from the given {@link String}, whereby URLs of type 'maven' require
-   * namespace and name, and URLs of type 'pypi' require a name. All other types are not supported and
-   * will result in a {@link MalformedPackageURLException}.
+   * Creates a {@link PackageURL} from the given {@link String}, whereby URLs of
+   * type 'maven' require namespace and name, and URLs of type 'pypi' require a
+   * name. All other types are not supported and will result in a
+   * {@link MalformedPackageURLException}.
    *
    * @param _url a {@link java.lang.String} object
-   * @throws com.github.packageurl.MalformedPackageURLException
+   * @throws com.github.packageurl.MalformedPackageURLException if PURL types
+   * other than 'maven' or 'pypi' are given or name and namespace are not
+   * specified as required.
    * @return a {@link com.github.packageurl.PackageURL} object
    */
   public static final PackageURL createPackageUrl(String _url) throws MalformedPackageURLException {

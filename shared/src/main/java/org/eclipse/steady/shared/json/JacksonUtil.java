@@ -148,7 +148,7 @@ public class JacksonUtil {
    * Transforms the given {@link Object} into an instance of the given {@link Class}.
    *
    * This is done by serialiazing the object into JSON with {@link #asJsonString(Object, Map, Class)},
-   * followed by deserializing with {@link #asObject(String, Class).
+   * followed by deserializing with {@link #asObject(String, Class)}.
    *
    * @param _from a {@link java.lang.Object} object
    * @param _to a {@link java.lang.Class} object
