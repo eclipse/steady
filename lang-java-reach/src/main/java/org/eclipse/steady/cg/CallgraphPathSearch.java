@@ -30,7 +30,6 @@ import org.eclipse.steady.shared.util.StopWatch;
 
 /**
  * <p>CallgraphPathSearch class.</p>
- *
  */
 public class CallgraphPathSearch implements Runnable {
 

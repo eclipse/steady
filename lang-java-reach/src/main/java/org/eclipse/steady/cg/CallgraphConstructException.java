@@ -20,7 +20,6 @@ package org.eclipse.steady.cg;
 
 /**
  * <p>CallgraphConstructException class.</p>
- *
  */
 public class CallgraphConstructException extends Exception {
   /**

@@ -38,7 +38,6 @@ import org.eclipse.steady.shared.util.StringList.ComparisonMode;
 
 /**
  * <p>Abstract AbstractReachGoal class.</p>
- *
  */
 public abstract class AbstractReachGoal extends AbstractAppGoal {
 
