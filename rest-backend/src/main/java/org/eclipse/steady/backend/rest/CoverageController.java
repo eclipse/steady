@@ -74,12 +74,6 @@ public class CoverageController {
    *
    * @return a {@link org.springframework.web.servlet.DispatcherServlet} object.
    */
-  //	@Bean(name = DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
-  //	public DispatcherServlet dispatcherServlet() {
-  //		DispatcherServlet dispatcherServlet = new DispatcherServlet();
-  //		dispatcherServlet.setDispatchOptionsRequest(true);
-  //		return dispatcherServlet;
-  //	}
 
   @Autowired
   CoverageController(BugRepository bugRepository) {

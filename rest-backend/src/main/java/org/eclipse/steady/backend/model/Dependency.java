@@ -54,7 +54,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
-/** Dependency class. */
+/**
+ * <p>Dependency class.</p>
+ *
+ */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(
     ignoreUnknown = true,
@@ -160,7 +163,9 @@ public class Dependency implements Serializable {
   @JsonView(Views.Default.class)
   private Integer reachExecConstructsCounter;
 
-  /** Constructor for Dependency. */
+  /**
+   * <p>Constructor for Dependency.</p>
+   */
   public Dependency() {
     super();
   }
@@ -187,7 +192,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Getter for the field <code>id</code>.
+   * <p>Getter for the field <code>id</code>.</p>
    *
    * @return a {@link java.lang.Long} object.
    */
@@ -195,7 +200,7 @@ public class Dependency implements Serializable {
     return id;
   }
   /**
-   * Setter for the field <code>id</code>.
+   * <p>Setter for the field <code>id</code>.</p>
    *
    * @param id a {@link java.lang.Long} object.
    */
@@ -204,7 +209,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Getter for the field <code>app</code>.
+   * <p>Getter for the field <code>app</code>.</p>
    *
    * @return a {@link org.eclipse.steady.backend.model.Application} object.
    */
@@ -212,7 +217,7 @@ public class Dependency implements Serializable {
     return app;
   }
   /**
-   * Setter for the field <code>app</code>.
+   * <p>Setter for the field <code>app</code>.</p>
    *
    * @param app a {@link org.eclipse.steady.backend.model.Application} object.
    */
@@ -221,7 +226,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Getter for the field <code>lib</code>.
+   * <p>Getter for the field <code>lib</code>.</p>
    *
    * @return a {@link org.eclipse.steady.backend.model.Library} object.
    */
@@ -230,7 +235,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * setAppRecursively.
+   * <p>setAppRecursively.</p>
    *
    * @param app a {@link org.eclipse.steady.backend.model.Application} object.
    */
@@ -240,7 +245,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Setter for the field <code>lib</code>.
+   * <p>Setter for the field <code>lib</code>.</p>
    *
    * @param lib a {@link org.eclipse.steady.backend.model.Library} object.
    */
@@ -249,7 +254,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Getter for the field <code>parent</code>.
+   * <p>Getter for the field <code>parent</code>.</p>
    *
    * @return a {@link org.eclipse.steady.backend.model.Dependency} object.
    */
@@ -257,7 +262,7 @@ public class Dependency implements Serializable {
     return parent;
   }
   /**
-   * Setter for the field <code>parent</code>.
+   * <p>Setter for the field <code>parent</code>.</p>
    *
    * @param parent a {@link org.eclipse.steady.backend.model.Dependency} object.
    */
@@ -266,7 +271,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Getter for the field <code>origin</code>.
+   * <p>Getter for the field <code>origin</code>.</p>
    *
    * @return a {@link org.eclipse.steady.shared.enums.DependencyOrigin} object.
    */
@@ -274,7 +279,7 @@ public class Dependency implements Serializable {
     return origin;
   }
   /**
-   * Setter for the field <code>origin</code>.
+   * <p>Setter for the field <code>origin</code>.</p>
    *
    * @param origin a {@link org.eclipse.steady.shared.enums.DependencyOrigin} object.
    */
@@ -283,7 +288,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Getter for the field <code>scope</code>.
+   * <p>Getter for the field <code>scope</code>.</p>
    *
    * @return a {@link org.eclipse.steady.shared.enums.Scope} object.
    */
@@ -291,7 +296,7 @@ public class Dependency implements Serializable {
     return scope;
   }
   /**
-   * Setter for the field <code>scope</code>.
+   * <p>Setter for the field <code>scope</code>.</p>
    *
    * @param scope a {@link org.eclipse.steady.shared.enums.Scope} object.
    */
@@ -300,7 +305,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Getter for the field <code>transitive</code>.
+   * <p>Getter for the field <code>transitive</code>.</p>
    *
    * @return a {@link java.lang.Boolean} object.
    */
@@ -308,7 +313,7 @@ public class Dependency implements Serializable {
     return transitive;
   }
   /**
-   * Setter for the field <code>transitive</code>.
+   * <p>Setter for the field <code>transitive</code>.</p>
    *
    * @param transitive a {@link java.lang.Boolean} object.
    */
@@ -317,7 +322,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Getter for the field <code>filename</code>.
+   * <p>Getter for the field <code>filename</code>.</p>
    *
    * @return a {@link java.lang.String} object.
    */
@@ -325,7 +330,7 @@ public class Dependency implements Serializable {
     return filename;
   }
   /**
-   * Setter for the field <code>filename</code>.
+   * <p>Setter for the field <code>filename</code>.</p>
    *
    * @param filename a {@link java.lang.String} object.
    */
@@ -334,7 +339,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Getter for the field <code>declared</code>.
+   * <p>Getter for the field <code>declared</code>.</p>
    *
    * @return a {@link java.lang.Boolean} object.
    */
@@ -342,7 +347,7 @@ public class Dependency implements Serializable {
     return declared;
   }
   /**
-   * Setter for the field <code>declared</code>.
+   * <p>Setter for the field <code>declared</code>.</p>
    *
    * @param declared a {@link java.lang.Boolean} object.
    */
@@ -351,7 +356,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Getter for the field <code>path</code>.
+   * <p>Getter for the field <code>path</code>.</p>
    *
    * @return a {@link java.lang.String} object.
    */
@@ -359,7 +364,7 @@ public class Dependency implements Serializable {
     return path;
   }
   /**
-   * Setter for the field <code>path</code>.
+   * <p>Setter for the field <code>path</code>.</p>
    *
    * @param path a {@link java.lang.String} object.
    */
@@ -368,7 +373,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Getter for the field <code>relativePath</code>.
+   * <p>Getter for the field <code>relativePath</code>.</p>
    *
    * @return a {@link java.lang.String} object.
    */
@@ -376,7 +381,7 @@ public class Dependency implements Serializable {
     return relativePath;
   }
   /**
-   * Setter for the field <code>relativePath</code>.
+   * <p>Setter for the field <code>relativePath</code>.</p>
    *
    * @param relativePath a {@link java.lang.String} object.
    */
@@ -413,7 +418,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Getter for the field <code>reachableConstructIds</code>.
+   * <p>Getter for the field <code>reachableConstructIds</code>.</p>
    *
    * @return a {@link java.util.Set} object.
    */
@@ -422,7 +427,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Setter for the field <code>reachableConstructIds</code>.
+   * <p>Setter for the field <code>reachableConstructIds</code>.</p>
    *
    * @param reachableConstructIds a {@link java.util.Set} object.
    */
@@ -431,7 +436,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * addReachableConstructIds.
+   * <p>addReachableConstructIds.</p>
    *
    * @param reachableConstructIds a {@link java.util.Set} object.
    */
@@ -442,7 +447,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * countReachableConstructTypes.
+   * <p>countReachableConstructTypes.</p>
    *
    * @return a {@link org.eclipse.steady.backend.model.ConstructIdFilter} object.
    */
@@ -455,7 +460,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Getter for the field <code>traces</code>.
+   * <p>Getter for the field <code>traces</code>.</p>
    *
    * @return a {@link java.util.Collection} object.
    */
@@ -465,7 +470,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Setter for the field <code>traces</code>.
+   * <p>Setter for the field <code>traces</code>.</p>
    *
    * @param traces a {@link java.util.Collection} object.
    */
@@ -475,7 +480,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * countTracedConstructTypes.
+   * <p>countTracedConstructTypes.</p>
    *
    * @return a {@link org.eclipse.steady.backend.model.ConstructIdFilter} object.
    */
@@ -491,7 +496,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * getTracedConstructs.
+   * <p>getTracedConstructs.</p>
    *
    * @return a {@link java.util.Set} object.
    */
@@ -504,7 +509,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * Getter for the field <code>touchPoints</code>.
+   * <p>Getter for the field <code>touchPoints</code>.</p>
    *
    * @return a {@link java.util.Collection} object.
    */
@@ -512,7 +517,7 @@ public class Dependency implements Serializable {
     return touchPoints;
   }
   /**
-   * Setter for the field <code>touchPoints</code>.
+   * <p>Setter for the field <code>touchPoints</code>.
    *
    * @param touchPoints a {@link java.util.Set} object.
    */
@@ -520,7 +525,7 @@ public class Dependency implements Serializable {
     this.touchPoints = touchPoints;
   }
   /**
-   * addTouchPoints.
+   * <p>addTouchPoints.</p>
    *
    * @param touchPoints a {@link java.util.Set} object.
    */
@@ -529,7 +534,7 @@ public class Dependency implements Serializable {
     else this.getTouchPoints().addAll(touchPoints);
   }
 
-  /** prePersist. */
+  /** <p>prePersist.</p> */
   @PrePersist
   public void prePersist() {
     if (this.getTraced() == null) {
@@ -592,7 +597,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * equalLibParentRelPath.
+   * <p>equalLibParentRelPath.
    *
    * @param obj a {@link java.lang.Object} object.
    * @return a boolean.
@@ -617,7 +622,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * setTotalTracedExecConstructCount.
+   * <p>setTotalTracedExecConstructCount.</p>
    *
    * @param countTracesOfConstructorsLibrary a {@link java.lang.Integer} object.
    */
@@ -626,7 +631,7 @@ public class Dependency implements Serializable {
   }
 
   /**
-   * setTotalReachExecConstructCount.
+   * <p>setTotalReachExecConstructCount.</p>
    *
    * @param countReachableExecConstructLibrary a {@link java.lang.Integer} object.
    */
