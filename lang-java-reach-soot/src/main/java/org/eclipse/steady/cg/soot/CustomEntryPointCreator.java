@@ -32,7 +32,6 @@ import java.util.*;
 
 /**
  * <p>CustomEntryPointCreator class.</p>
- *
  */
 public class CustomEntryPointCreator extends DefaultEntryPointCreator {
 
