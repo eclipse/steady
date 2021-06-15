@@ -8,7 +8,6 @@ import org.eclipse.steady.kb.command.Command;
 
 /**
  * <p>TaskProvider class.</p>
- *
  */
 public class TaskProvider {
   private static TaskProvider instance = null;

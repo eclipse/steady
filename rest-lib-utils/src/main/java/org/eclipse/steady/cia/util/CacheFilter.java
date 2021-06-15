@@ -39,9 +39,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CacheFilter implements Filter {
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public void destroy() {
     // Nothing
@@ -64,9 +62,7 @@ public class CacheFilter implements Filter {
     chain.doFilter(request, response);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
     // Nothing

@@ -20,7 +20,6 @@ package org.eclipse.steady.kb.model;
 
 /**
  * <p>Artifact class.</p>
- *
  */
 public class Artifact {
   private String id;

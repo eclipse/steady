@@ -60,7 +60,6 @@ import org.tmatesoft.svn.core.wc2.SvnTarget;
 
 /**
  * <p>SvnClient class.</p>
- *
  */
 public class SvnClient implements IVCSClient {
 

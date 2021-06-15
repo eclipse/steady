@@ -39,7 +39,7 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 /**
  *  This class is used to deserialize an AST JSON representation of a construct body object into its corresponding
  *  java Signatures object
- * 
+ *
  *JSON representation of ASTConstructBodySignature:
  *
  *Node:

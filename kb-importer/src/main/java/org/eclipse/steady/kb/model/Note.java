@@ -22,7 +22,6 @@ import java.util.List;
 
 /**
  * <p>Note class.</p>
- *
  */
 public class Note {
   private List<String> links;

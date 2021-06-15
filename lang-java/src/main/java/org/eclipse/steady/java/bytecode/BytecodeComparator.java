@@ -60,7 +60,6 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 /**
  * <p>BytecodeComparator class.</p>
- *
  */
 public class BytecodeComparator {
 

@@ -22,7 +22,6 @@ import org.eclipse.steady.kb.command.CommandExecutor;
 
 /**
  * <p>Main class.</p>
- *
  */
 public class Main {
   /**
