@@ -55,11 +55,13 @@ public class Import implements Command {
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
+  /** {@inheritDoc} */
   @Override
   public Command.NAME getCommandName() {
     return Command.NAME.IMPORT;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void run(HashMap<String, Object> args) {
     String dirPath = (String) args.get(DIRECTORY_OPTION);
@@ -125,6 +127,7 @@ public class Import implements Command {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public Options getOptions() {
     Options options = new Options();
@@ -146,6 +149,7 @@ public class Import implements Command {
     return options;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void validate(HashMap<String, Object> args) throws ValidationException {
     String dir = (String) args.get(DIRECTORY_OPTION);

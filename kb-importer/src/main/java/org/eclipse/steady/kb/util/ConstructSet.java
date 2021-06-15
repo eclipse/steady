@@ -40,7 +40,9 @@ import org.eclipse.steady.kb.model.Commit;
 import org.eclipse.steady.shared.enums.ConstructType;
 import org.eclipse.steady.shared.json.model.FileChange;
 
-/** Identifying all the constructs */
+/**
+ * Identifying all the constructs
+ */
 public class ConstructSet {
   private static final String COMMIT_BRANCH_SPLIT = ":";
   private static final String BEFORE_FOLDER = "before";
@@ -182,6 +184,8 @@ public class ConstructSet {
    * revisions will be returned. If an empty array is passed, an empty set will be returned.
    *
    * @return a {@link java.util.Set} object.
+   * @param _revs a {@link java.util.List} object
+   * @param _changes a {@link java.util.Map} object
    */
   public static Set<ConstructChange> getConsolidatedChanges(
       List<Commit> _revs, Map<String, Set<ConstructChange>> _changes) {

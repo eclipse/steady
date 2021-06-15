@@ -44,8 +44,8 @@ public class Metadata {
    *
    * @param commitDir a {@link java.lang.String} object.
    * @return _commit a {@link org.eclipse.steady.kb.model.Commit} object.
-   * @throws IOException
-   * @throws JsonSyntaxException
+   * @throws java.io.IOException
+   * @throws com.google.gson.JsonSyntaxException
    */
   public static Commit getCommitMetadata(String commitDir) throws JsonSyntaxException, IOException {
     String filePath = commitDir + File.separator + META_PROPERTIES_FILE;
@@ -69,8 +69,8 @@ public class Metadata {
    *
    * @param rootDir a {@link java.lang.String} object.
    * @return _commit a {@link org.eclipse.steady.kb.model.Vulnerability} object.
-   * @throws IOException
-   * @throws JsonSyntaxException
+   * @throws java.io.IOException
+   * @throws com.google.gson.JsonSyntaxException
    */
   public static Vulnerability getVulnerabilityMetadata(String rootDir)
       throws JsonSyntaxException, IOException {

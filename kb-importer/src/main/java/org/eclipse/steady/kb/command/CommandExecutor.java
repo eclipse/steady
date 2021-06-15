@@ -43,6 +43,11 @@ public class CommandExecutor {
     init();
   }
 
+  /**
+   * <p>getInstance.</p>
+   *
+   * @return a {@link org.eclipse.steady.kb.command.CommandExecutor} object
+   */
   public static synchronized CommandExecutor getInstance() {
     if (commandExecutor == null) {
       commandExecutor = new CommandExecutor();

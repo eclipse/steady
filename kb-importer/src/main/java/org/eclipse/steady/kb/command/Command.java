@@ -60,7 +60,7 @@ public interface Command {
    * validate command with command arguments. Throw a validation exception on any validation error
    *
    * @param args a {@link java.util.Map
-   * @throws ValidationException
+   * @throws org.eclipse.steady.kb.exception.ValidationException
    */
   void validate(HashMap<String, Object> args) throws ValidationException;
 }

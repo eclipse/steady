@@ -37,51 +37,102 @@ public class Commit {
 
   private String directory;
 
+  /**
+   * <p>Getter for the field <code>timestamp</code>.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String getTimestamp() {
     return timestamp;
   }
 
+  /**
+   * <p>Setter for the field <code>timestamp</code>.</p>
+   *
+   * @param timestamp a {@link java.lang.String} object
+   */
   public void setTimestamp(String timestamp) {
     if (timestamp == null) return;
     this.timestamp = timestamp.trim();
   }
 
+  /**
+   * <p>Getter for the field <code>commitId</code>.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String getCommitId() {
     return commitId;
   }
 
+  /**
+   * <p>Setter for the field <code>commitId</code>.</p>
+   *
+   * @param commitId a {@link java.lang.String} object
+   */
   public void setCommitId(String commitId) {
     if (commitId == null) return;
     this.commitId = commitId.trim();
   }
 
+  /**
+   * <p>Getter for the field <code>branch</code>.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String getBranch() {
     return branch;
   }
 
+  /**
+   * <p>Setter for the field <code>branch</code>.</p>
+   *
+   * @param branch a {@link java.lang.String} object
+   */
   public void setBranch(String branch) {
     if (branch == null) return;
     this.branch = branch.trim();
   }
 
+  /**
+   * <p>Getter for the field <code>repoUrl</code>.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String getRepoUrl() {
     return repoUrl;
   }
 
+  /**
+   * <p>Setter for the field <code>repoUrl</code>.</p>
+   *
+   * @param repoUrl a {@link java.lang.String} object
+   */
   public void setRepoUrl(String repoUrl) {
     if (repoUrl == null) return;
     this.repoUrl = repoUrl.trim();
   }
 
+  /**
+   * <p>Getter for the field <code>directory</code>.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String getDirectory() {
     return directory;
   }
 
+  /**
+   * <p>Setter for the field <code>directory</code>.</p>
+   *
+   * @param directory a {@link java.lang.String} object
+   */
   public void setDirectory(String directory) {
     if (directory == null) return;
     this.directory = directory.trim();
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     return "Commit [timestamp="

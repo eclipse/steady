@@ -18,31 +18,65 @@
  */
 package org.eclipse.steady.kb.model;
 
+/**
+ * <p>Artifact class.</p>
+ *
+ */
 public class Artifact {
   private String id;
   private Boolean affected;
   private String reason;
 
+  /**
+   * <p>Getter for the field <code>id</code>.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String getId() {
     return id;
   }
 
+  /**
+   * <p>Setter for the field <code>id</code>.</p>
+   *
+   * @param id a {@link java.lang.String} object
+   */
   public void setId(String id) {
     this.id = id;
   }
 
+  /**
+   * <p>Getter for the field <code>affected</code>.</p>
+   *
+   * @return a {@link java.lang.Boolean} object
+   */
   public Boolean getAffected() {
     return affected;
   }
 
+  /**
+   * <p>Setter for the field <code>affected</code>.</p>
+   *
+   * @param affected a {@link java.lang.Boolean} object
+   */
   public void setAffected(Boolean affected) {
     this.affected = affected;
   }
 
+  /**
+   * <p>Getter for the field <code>reason</code>.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String getReason() {
     return reason;
   }
 
+  /**
+   * <p>Setter for the field <code>reason</code>.</p>
+   *
+   * @param reason a {@link java.lang.String} object
+   */
   public void setReason(String reason) {
     this.reason = reason;
   }

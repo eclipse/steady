@@ -36,9 +36,9 @@ public class CommandParser {
    * parse a command
    *
    * @param _args array of {@link java.lang.String}
-   * @param options
-   * @return
-   * @throws CommandLineParserException
+   * @param options a {@link org.apache.commons.cli.Options} object
+   * @throws org.eclipse.steady.kb.exception.CommandLineParserException
+   * @return a {@link java.util.HashMap} object
    */
   public static HashMap<String, Object> parse(String[] _args, Options options)
       throws CommandLineParserException {
