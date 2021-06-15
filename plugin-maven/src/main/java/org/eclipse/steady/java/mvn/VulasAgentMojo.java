@@ -48,7 +48,6 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>VulasAgentMojo class.</p>
- *
  */
 @Mojo(
     name = "prepare-vulas-agent",

@@ -57,7 +57,6 @@ import org.eclipse.steady.shared.util.StringList.ComparisonMode;
 
 /**
  * <p>Abstract AbstractVulasMojo class.</p>
- *
  */
 public abstract class AbstractVulasMojo extends AbstractMojo {
 
@@ -443,7 +442,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
   /**
    * Parses one element of the {@link Artifact}'s dependency trail, which is a {@link String} comprising groupId, artifactId, type and version.
    *
-   * @param _string
+   * @param _string a {@link java.lang.String} object
    * @return a {@link LibraryId} created from groupId, artifactId and version (or null if the given String does not have the expected format)
    */
   protected final LibraryId parseGAPV(@NotNull String _string) {

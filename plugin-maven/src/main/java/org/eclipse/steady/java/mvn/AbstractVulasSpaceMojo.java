@@ -37,7 +37,6 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>Abstract AbstractVulasSpaceMojo class.</p>
- *
  */
 public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
 
