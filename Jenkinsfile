@@ -73,13 +73,6 @@ spec:
         }
       }
     }
-    stage('Codestyle') {
-      steps {
-        container('maven') {
-          sh 'bash .travis/check_code_style.sh'
-        }
-      }
-    }
     stage('JavaDoc') {
       steps {
         container('maven') {
@@ -95,5 +88,13 @@ spec:
         }
       }
     }
+    stage('Codestyle') {
+      steps {
+        container('maven') {
+          sh 'bash .travis/check_code_style.sh'
+        }
+      }
+    }
+    
   }
 }
