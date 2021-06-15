@@ -207,12 +207,12 @@
 							</execution>
 						</executions>
 					</plugin>
-					<!--  Run the following to fix all JavaDoc: "mvn -DdefaultAuthor=SAP -X -DfixTags=param,return,throws -P gradle clean compile org.apache.maven.plugins:maven-javadoc-plugin:3.1.1:fix"
+					<!--  Run the following to fix all JavaDoc: "mvn -DdefaultAuthor=SAP -X -DfixTags=param,return,throws -DignoreClirr=true -P gradle clean compile org.apache.maven.plugins:maven-javadoc-plugin:3.3.0:fix"
 					The tag 'links' results in an exception in module lang-java.-->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.2.0</version>
+						<version>3.3.0</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -430,6 +430,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
+				<version>2.4</version>
 				<inherited>false</inherited>
 				<executions>
 					<execution>
@@ -705,14 +706,6 @@
 						</execution>
 					</executions>
 				</plugin>
-
-				<!-- Actual 3rd party libs configured in *-init modules -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-install-plugin</artifactId>
-					<version>2.4</version>
-				</plugin>
-
 				<plugin>
 			        <groupId>com.google.cloud.tools</groupId>
 			        <artifactId>jib-maven-plugin</artifactId>
@@ -759,6 +752,11 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-failsafe-plugin</artifactId>
 					<version>2.22.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.antlr</groupId>
