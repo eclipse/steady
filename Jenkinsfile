@@ -17,8 +17,6 @@ spec:
       value: "-Duser.home=/home/jenkins -Xmx4096m -Xms4096m"
     - name: "MAVEN_CONFIG"
       value: "/home/jenkins/.m2"
-    - name: "GNUPGHOME"
-      value: "/home/jenkins/.gnupg"
     volumeMounts:
     - name: settings-xml
       mountPath: /home/jenkins/.m2/settings.xml
@@ -34,8 +32,6 @@ spec:
       readOnly: true
     - name: m2-repo
       mountPath: /home/jenkins/.m2/repository
-    - name: gnupg_vol
-      mountPath: /home/jenkins/.gnupg
     resources:
       limits:
         memory: "4Gi"
@@ -64,7 +60,7 @@ spec:
         path: settings-security.xml
   - name: m2-repo
     emptyDir: {}
-  - name: gnupg_vol
+  - name: gnupg-vol
     emptyDir: {}
 """
     }
