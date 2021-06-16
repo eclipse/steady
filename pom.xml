@@ -397,6 +397,7 @@
 	</dependencyManagement>
 
 	<build>
+		<testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
 		<plugins>
 
 			<!-- Flattens the pom.xml files included in artifacts,

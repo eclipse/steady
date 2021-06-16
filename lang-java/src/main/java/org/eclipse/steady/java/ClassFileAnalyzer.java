@@ -107,18 +107,15 @@ public class ClassFileAnalyzer implements FileAnalyzer {
         // TODO HP, 4.4.16: This does not yet seem to work
         ClassPoolUpdater.getInstance().updateClasspath(ctclass, this.file);
 
-        // Only add constructs of ctclass is either a class or enum (no interfaces)
-        if (ctclass.isInterface()) {
-          ClassFileAnalyzer.log.debug("Interface [" + ctclass.getName() + "] skipped");
-        } else {
-          // Use a class visitor to get all constructs from the class file
-          final ClassVisitor cv = new ClassVisitor(ctclass);
-          final Set<ConstructId> temp_constructs = cv.getConstructs();
+        // Use a class visitor to get all constructs from the class file
+        final ClassVisitor cv = new ClassVisitor(ctclass);
+        final Set<ConstructId> temp_constructs = cv.getConstructs();
 
-          // Add all constructs with a "" body
-          // TODO: Change Construct so that string (for source files) and binary bodies (file
-          // compiled classes) can be covered
-          for (ConstructId c : temp_constructs) this.constructs.put(c, new Construct(c, ""));
+        // Add all constructs with a "" body
+        // TODO: Change Construct so that string (for source files) and binary bodies (file
+        // compiled classes) can be covered
+        for (ConstructId c : temp_constructs) {
+          this.constructs.put(c, new Construct(c, ""));
         }
       } catch (FileNotFoundException e) {
         throw new FileAnalysisException(e.getMessage(), e);

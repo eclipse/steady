@@ -229,6 +229,22 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
     this.constructIdBuilder.resetCurrentDeclarationContext();
   }
 
+  @Override public void enterInterfaceMemberDeclaration(JavaParser.InterfaceMemberDeclarationContext ctx) {
+    if(ctx.interfaceMethodDeclaration()!=null) {
+      // Peek JavaId and ensure it is an interface
+      final JavaId class_ctx = (JavaId) this.contextStack.peek().getConstructId();
+      this.isOfExpectedType(class_ctx, new JavaId.Type[] {JavaId.Type.INTERFACE}, true);
+
+      // Build the identifier
+      final JavaMethodId id =
+          new JavaMethodId(
+              (JavaId) class_ctx,
+              ctx.interfaceMethodDeclaration().IDENTIFIER().getText(),
+              this.getParameters(ctx.interfaceMethodDeclaration().formalParameters().formalParameterList()));
+      this.saveConstruct(id, this.getConstructContent(ctx));
+    }
+  }
+
   /** {@inheritDoc} */
   @Override
   public void exitClassBody(@NotNull JavaParser.ClassBodyContext ctx) {
@@ -242,7 +258,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
   public void enterMethodDeclaration(@NotNull JavaParser.MethodDeclarationContext ctx) {
     // Peek JavaId and ensure it is a class or enum
     final JavaId class_ctx = (JavaId) this.contextStack.peek().getConstructId();
-    this.isOfExpectedType(class_ctx, new JavaId.Type[] {JavaId.Type.CLASS, JavaId.Type.ENUM}, true);
+    this.isOfExpectedType(class_ctx, new JavaId.Type[] {JavaId.Type.CLASS, JavaId.Type.ENUM, JavaId.Type.INTERFACE}, true);
 
     // Build the identifier
     final JavaMethodId id =

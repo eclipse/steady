@@ -539,9 +539,15 @@ public abstract class JavaId extends ConstructId {
     JavaId def_ctx = null;
     JavaMethodId mid = null;
     try {
-      if (_ctx_type.equals(JavaId.Type.CLASS)) def_ctx = JavaId.parseClassQName(_s.substring(0, j));
-      else if (_ctx_type.equals(JavaId.Type.ENUM))
+      if (_ctx_type.equals(JavaId.Type.CLASS)) {
+        def_ctx = JavaId.parseClassQName(_s.substring(0, j));
+      }
+      else if (_ctx_type.equals(JavaId.Type.ENUM)) {
         def_ctx = JavaId.parseEnumQName(_s.substring(0, j));
+      }
+      else if (_ctx_type.equals(JavaId.Type.INTERFACE)) {
+        def_ctx = JavaId.parseInterfaceQName(_s.substring(0, j));
+      }
 
       mid =
           new JavaMethodId(

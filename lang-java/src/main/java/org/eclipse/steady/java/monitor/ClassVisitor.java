@@ -108,9 +108,15 @@ public class ClassVisitor {
    */
   public ClassVisitor(CtClass _c) {
     // Build the JavaId
-    if (_c.isInterface()) this.javaId = JavaId.parseInterfaceQName(_c.getName());
-    else if (_c.isEnum()) this.javaId = JavaId.parseEnumQName(_c.getName());
-    else this.javaId = JavaId.parseClassQName(_c.getName());
+    if (_c.isInterface()) {
+      this.javaId = JavaId.parseInterfaceQName(_c.getName());
+    }
+    else if (_c.isEnum()) {
+      this.javaId = JavaId.parseEnumQName(_c.getName());
+    }
+    else {
+      this.javaId = JavaId.parseClassQName(_c.getName());
+    }
 
     this.qname = this.javaId.getQualifiedName();
     this.c = _c;

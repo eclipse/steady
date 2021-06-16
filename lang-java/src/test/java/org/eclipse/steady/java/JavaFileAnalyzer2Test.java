@@ -91,8 +91,19 @@ public class JavaFileAnalyzer2Test {
 
       // The parsing should produce the following 5 elements:
       final JavaPackageId p = new JavaPackageId("org.eclipse.steady.java.test");
+      
       final JavaInterfaceId itf =
           JavaId.parseInterfaceQName("org.eclipse.steady.java.test.ConfigurationKey");
+      final JavaMethodId itf_m1 =
+          JavaId.parseMethodQName(
+              "org.eclipse.steady.java.test.ConfigurationKey.getType(String,int)");
+      final JavaMethodId itf_m2 =
+              JavaId.parseMethodQName(
+                  "org.eclipse.steady.java.test.ConfigurationKey.getKey()");
+      final JavaMethodId itf_m3 =
+                  JavaId.parseMethodQName(
+                      "org.eclipse.steady.java.test.ConfigurationKey.getDefaultValue()");
+
       final JavaClassId anon1 =
           JavaId.parseClassQName("org.eclipse.steady.java.test.ConfigurationKey$1");
       final JavaMethodId anon1_m =
@@ -105,9 +116,12 @@ public class JavaFileAnalyzer2Test {
               "org.eclipse.steady.java.test.ConfigurationKey$2.compare(ConfigurationKey,ConfigurationKey)");
 
       // Assertions
-      assertEquals(6, constructs.size());
+      assertEquals(9, constructs.size());
       assertTrue(constructs.containsKey(p));
       assertTrue(constructs.containsKey(itf));
+      assertTrue(constructs.containsKey(itf_m1));
+      assertTrue(constructs.containsKey(itf_m2));
+      assertTrue(constructs.containsKey(itf_m3));
       assertTrue(constructs.containsKey(anon1));
       assertTrue(constructs.containsKey(anon1_m));
       assertTrue(constructs.containsKey(anon2));
@@ -205,7 +219,7 @@ public class JavaFileAnalyzer2Test {
               "org.eclipse.steady.java.test.HttpRequestCompletionLog$Builder$1.getResponseContentType()");
 
       // Assertions
-      assertEquals(24, constructs.size());
+      assertEquals(33, constructs.size());
       assertTrue(constructs.containsKey(p));
       assertTrue(constructs.containsKey(itf));
 
@@ -381,7 +395,9 @@ public class JavaFileAnalyzer2Test {
 
       // The parsing should produce the following elements:
       final JavaPackageId p = new JavaPackageId("org.eclipse.steady.java.test");
-      final JavaInterfaceId itf = JavaId.parseInterfaceQName("org.eclipse.steady.java.test.DoSomethingElse");
+
+      final JavaInterfaceId itf = JavaId.parseInterfaceQName("org.eclipse.steady.java.test.NestedDeclarations$DoSomethingElse");
+      final JavaMethodId itf_m = JavaId.parseMethodQName("org.eclipse.steady.java.test.NestedDeclarations$DoSomethingElse.doSomethingElse()");
 
       final JavaClassId cl1 =
           JavaId.parseClassQName("org.eclipse.steady.java.test.NestedDeclarations"); // line 5
@@ -464,9 +480,12 @@ public class JavaFileAnalyzer2Test {
           JavaId.parseMethodQName(
               "org.eclipse.steady.java.test.NestedDeclarations$Foo$1DoThis$1.doThat()"); // line 72
 
-      assertEquals(26, constructs.size());
+      assertEquals(27, constructs.size());
       assertTrue(constructs.containsKey(p));
+
       assertTrue(constructs.containsKey(itf));
+      assertTrue(constructs.containsKey(itf_m));
+      
       assertTrue(constructs.containsKey(cl1));
       assertTrue(constructs.containsKey(cl1_m));
 
@@ -563,7 +582,8 @@ public class JavaFileAnalyzer2Test {
   }
 
   /**
-   * Tests whether the constructs extracted from a Java file correspond to the ones obtained from the compiled file.
+   * Tests whether the constructs extracted from a Java file correspond to the
+   * ones obtained from the compiled file.
    */
   @Test
   public void testCompareConstructCreation() {
