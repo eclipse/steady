@@ -541,12 +541,11 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
 
     for (Object[] e : bundledDigests) {
       Dependency depWithBundledLibId =
-          DependencyRepository.FILTER.findOne(
-              this.depRepository.findById(((BigInteger) e[0]).longValue()));
+          this.depRepository.findById(((BigInteger) e[0]).longValue()).orElse(null);
 
       Library bundledDigest =
-          LibraryRepository.FILTER.findOne(
-              this.libRepository.findById(((BigInteger) e[1]).longValue()));
+          this.libRepository.findById(((BigInteger) e[1]).longValue()).orElse(null);
+
       List<Bug> vulns_cc = this.bugRepository.findByLibrary(bundledDigest);
 
       for (Bug b : vulns_cc) {
@@ -570,12 +569,10 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
     for (Object[] e : bundledLibIds) {
 
       Dependency depWithBundledLibId =
-          DependencyRepository.FILTER.findOne(
-              this.depRepository.findById(((BigInteger) e[0]).longValue()));
+          this.depRepository.findById(((BigInteger) e[0]).longValue()).orElse(null);
 
       LibraryId bundledLibId =
-          LibraryIdRepository.FILTER.findOne(
-              this.libIdRepository.findById(((BigInteger) e[1]).longValue()));
+          this.libIdRepository.findById(((BigInteger) e[1]).longValue()).orElse(null);
 
       List<Bug> vulns_av_true = this.bugRepository.findByLibId(bundledLibId, true);
 

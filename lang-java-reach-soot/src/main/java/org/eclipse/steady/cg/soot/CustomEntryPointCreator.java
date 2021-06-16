@@ -309,7 +309,7 @@ public class CustomEntryPointCreator extends DefaultEntryPointCreator {
     return generatedMethod;
   }
 
-  private Type getSimpleTypeFromType(Type type) {
+  protected Type getSimpleTypeFromType(Type type) {
     if (type.toString().equals("java.lang.String")) {
       assert type instanceof RefType;
 

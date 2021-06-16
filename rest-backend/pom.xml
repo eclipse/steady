@@ -26,8 +26,8 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.22.RELEASE</version>
-		<relativePath/>
+		<version>2.5.1</version>
+		<relativePath />
 	</parent>
 
 	<groupId>org.eclipse.steady</groupId>
@@ -111,19 +111,9 @@
 		<maven.install.skip>${skip.install.deploy}</maven.install.skip>
 		<maven.deploy.skip>${skip.install.deploy}</maven.deploy.skip>
 		
-		<!-- Fix vulnerable dependencies in spring-boot-dependencies -->
-		<commons-beanutils.version>1.9.4</commons-beanutils.version><!-- from 1.9.3 -->
-		<hibernate.version>5.4.25.Final</hibernate.version><!-- from 5.0.12.Final, which includes vulnerable dom4j 1.6.1  -->
-		<jackson.version>2.9.10.20210106</jackson.version><!-- from 2.8.11.20181123 -->
-		<logback.version>1.2.3</logback.version><!--  from 1.1.11 -->
-		<log4j2.version>2.13.3</log4j2.version><!-- from 2.7 -->
-		<snakeyaml.version>1.26</snakeyaml.version><!-- from 1.17 -->
-		<spring.version>4.3.29.RELEASE</spring.version><!-- from 4.3.25.RELEASE -->
-		<tomcat.version>8.5.63</tomcat.version><!-- from 8.5.43 -->
 	</properties>
 	
 	<dependencies>
-
 		<dependency>
 			<groupId>org.eclipse.steady</groupId>
 			<artifactId>shared</artifactId>
@@ -168,31 +158,14 @@
 			<artifactId>json-path</artifactId>
 			<version>2.4.0</version>
 		</dependency>
-
-		<!-- Swagger core dependencies -->
+		
+		<!-- Swagger dependencies -->		
 		<dependency>
-			<groupId>io.swagger</groupId>
-			<artifactId>swagger-annotations</artifactId>
-			<version>1.5.22</version>
-		</dependency>
-		<dependency>
-			<groupId>io.swagger</groupId>
-			<artifactId>swagger-core</artifactId>
-			<version>1.5.22</version>
-		</dependency>
-
-		<!-- SpringFox dependencies -->
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-
+			<groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.2.32</version>
+        </dependency>
+		
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
@@ -203,6 +176,12 @@
 			<groupId>javax.activation</groupId>
 			<artifactId>javax.activation-api</artifactId>
 			<version>1.2.0</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.google.guava</groupId>
+		    <artifactId>guava</artifactId>
+		    <version>28.2-jre</version>
 		</dependency>
 
 		<!-- Test dependencies -->
@@ -218,6 +197,25 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-mock</artifactId>
+			<version>2.0.8</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- to allow tests written with JUnit 4 to be run by JUnit 5, see https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.4-Release-Notes#junit-5s-vintage-engine-removed-from-spring-boot-starter-test -->
+		<dependency>
+    		<groupId>org.junit.vintage</groupId>
+    		<artifactId>junit-vintage-engine</artifactId>
+    		<scope>test</scope>
+    		<exclusions>
+        		<exclusion>
+            		<groupId>org.hamcrest</groupId>
+            		<artifactId>hamcrest-core</artifactId>
+        		</exclusion>
+    		</exclusions>
+		</dependency>
+		
 
 		<!-- Used to mock REST services -->
 		<dependency>
@@ -237,9 +235,9 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
-			<version>5.0.7</version>
+			<version>6.5.7</version> <!-- overriding managed version 7.7.3 to avoid 1 migration checksum mismatch -->
 		</dependency>
-
+		
 		<!-- To prevent javadoc error "class file for javax.interceptor.InterceptorBinding not found" -->
 		<dependency>
 		    <groupId>javax.interceptor</groupId>

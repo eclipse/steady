@@ -119,7 +119,7 @@ public class Dependency implements Serializable {
   @Column(columnDefinition = "text")
   private String path;
 
-  @Column(columnDefinition = "text")
+  @Column(length = 1024)
   private String relativePath;
 
   @ManyToMany(
@@ -134,22 +134,23 @@ public class Dependency implements Serializable {
   private Set<TouchPoint> touchPoints;
 
   /**
-   * Only set when single dependencies are returned by {@link ApplicationController#getDependency(String, String, String, String)}.
-   * TODO: Maybe check if they can always bet set (depending on performance and memory).
+   * Only set when single dependencies are returned by {@link
+   * ApplicationController#getDependency(String, String, String, String)}. TODO: Maybe check if they
+   * can always bet set (depending on performance and memory).
    */
   @Transient private Collection<Trace> traces;
 
   /**
-   * Contains collections of reachable dependency constructs per {@link ConstructType}.
-   * It MUST be a subset of what can be obtained from the library via {@link Library#countConstructTypes()}.
+   * Contains collections of reachable dependency constructs per {@link ConstructType}. It MUST be a
+   * subset of what can be obtained from the library via {@link Library#countConstructTypes()}.
    */
   @Transient private ConstructIdFilter reachableFilter = null;
 
   /**
-   * Contains collections of traced dependency constructs per {@link ConstructType}.
-   * It MUST be a subset of what can be obtained from the library via {@link Library#countConstructTypes()}.
-   * Depending on the quality of the reachability analysis, it SHOULD be a subset of what can be obtained
-   * via {@link Dependency#countReachableConstructTypes()}.
+   * Contains collections of traced dependency constructs per {@link ConstructType}. It MUST be a
+   * subset of what can be obtained from the library via {@link Library#countConstructTypes()}.
+   * Depending on the quality of the reachability analysis, it SHOULD be a subset of what can be
+   * obtained via {@link Dependency#countReachableConstructTypes()}.
    */
   @Transient private ConstructIdFilter tracedFilter = null;
 

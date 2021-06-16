@@ -26,7 +26,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.22.RELEASE</version>
+		<version>2.5.1</version>
 		<relativePath/>
 	</parent>
 
@@ -117,15 +117,6 @@
 		<maven.install.skip>${skip.install.deploy}</maven.install.skip>
 		<maven.deploy.skip>${skip.install.deploy}</maven.deploy.skip>
 		
-		<!-- Fix vulnerable dependencies in spring-boot-dependencies -->
-		<commons-beanutils.version>1.9.4</commons-beanutils.version><!-- from 1.9.3 -->
-		<hibernate.version>5.4.18.Final</hibernate.version><!-- from 5.0.12.Final, which includes vulnerable dom4j 1.6.1  -->
-		<jackson.version>2.9.10.20210106</jackson.version><!-- from 2.8.11.20181123 -->
-		<logback.version>1.2.3</logback.version><!--  from 1.1.11 -->
-		<log4j2.version>2.13.3</log4j2.version><!-- from 2.7 -->
-		<snakeyaml.version>1.26</snakeyaml.version><!-- from 1.17 -->
-		<spring.version>4.3.29.RELEASE</spring.version><!-- from 4.3.25.RELEASE -->
-		<tomcat.version>8.5.63</tomcat.version><!-- from 8.5.43 -->
 	</properties>
 	
 	<dependencies>
@@ -176,30 +167,13 @@
 			<version>2.7</version>
 		</dependency>
 
-		<!-- Swagger core dependencies -->
+		<!-- Swagger dependencies -->
 		<dependency>
-			<groupId>io.swagger</groupId>
-			<artifactId>swagger-annotations</artifactId>
-			<version>1.5.22</version>
-		</dependency>
-		<dependency>
-			<groupId>io.swagger</groupId>
-			<artifactId>swagger-core</artifactId>
-			<version>1.5.22</version>
-		</dependency>
-
-		<!-- SpringFox dependencies -->
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-
+	      <groupId>org.springdoc</groupId>
+	      <artifactId>springdoc-openapi-ui</artifactId>
+	      <version>1.2.32</version>
+	   </dependency>
+        
 		<!-- Test dependencies -->
 		<dependency>
 			<groupId>org.eclipse.steady</groupId>
@@ -227,10 +201,11 @@
 			<version>1.2.1-beta5</version>
 		</dependency>
 
-		<!-- The following are the dependencies of dependency-finder They have
-			been pasted here from the dependency-finder pom.xml.
-			log4j:log4j:1.2.17 is not needed, as another logging impl is present
-			in the context of Spring Boot. ant:ant has been replaced by org.apache.ant:ant. -->
+	<!-- The following are the dependencies of dependency-finder They have been 
+		pasted here from the dependency-finder pom.xml. log4j:log4j:1.2.17 is still 
+		needed, since spring-boot-starter-logging:2.x updated the dependency on 
+		org.slf4j:log4j-over-slf4j:jar:1.x to org.apache.logging.log4j:log4j-to-slf4j:2.x. 
+		ant:ant has been replaced by org.apache.ant:ant. -->
 		<dependency>
 			<groupId>oro</groupId>
 			<artifactId>oro</artifactId>
@@ -247,6 +222,11 @@
 			<version>1.2</version>
 		</dependency>
 		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant</artifactId>
 			<version>1.10.9</version>
@@ -255,6 +235,19 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
+		</dependency>
+		
+		<!-- to allow tests written with JUnit 4 to be run by JUnit 5, see https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.4-Release-Notes#junit-5s-vintage-engine-removed-from-spring-boot-starter-test -->
+		<dependency>
+    		<groupId>org.junit.vintage</groupId>
+    		<artifactId>junit-vintage-engine</artifactId>
+    		<scope>test</scope>
+    		<exclusions>
+        		<exclusion>
+            		<groupId>org.hamcrest</groupId>
+            		<artifactId>hamcrest-core</artifactId>
+        		</exclusion>
+    		</exclusions>
 		</dependency>
 	</dependencies>
 

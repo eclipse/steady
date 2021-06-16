@@ -36,7 +36,6 @@ import java.util.TreeSet;
 import javax.validation.constraints.NotNull;
 
 import org.apache.logging.log4j.Logger;
-
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -426,7 +425,7 @@ public class Report {
 
     // Basic info
     this.context.put(
-        "vulas-backend-serviceUrl",
+        "vulasBackendServiceUrl",
         this.goalContext.getVulasConfiguration().getServiceUrl(Service.BACKEND));
     this.context.put("app", app);
     this.context.put("space", this.goalContext.getSpace());
@@ -457,7 +456,7 @@ public class Report {
             .getConfiguration()
             .getString(VulasConfiguration.BUILD_BRANCH, "unknown"));
     this.context.put(
-        "vulas-shared-homepage",
+        "vulasSharedHomepage",
         this.goalContext
             .getVulasConfiguration()
             .getConfiguration()
