@@ -1221,7 +1221,7 @@ public class ApplicationController {
 
     // Ensure that goal execution exists
     final GoalExecution gexe = this.gexeRepository.findById(id).orElse(null);
-    if (gexe != null) return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
+    if (gexe == null) return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
 
     return new ResponseEntity<GoalExecution>(gexe, HttpStatus.OK);
   }
