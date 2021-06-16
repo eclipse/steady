@@ -72,44 +72,44 @@ spec:
     }
   }
   stages {
-    // // More info on Steady's use of Spotbugs at
-    // // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines
-    // stage('Spotbugs') {
-    //   steps {
-    //     container('maven') {
-    //       sh 'mvn -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
-    //           -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.includeFilterFile=findbugs-include.xml \
-    //           -Dspotbugs.failOnError=true -DskipTests clean install com.github.spotbugs:spotbugs-maven-plugin:4.2.3:check'
-    //     }
-    //   }
-    // }
-    // // Validates the JavaDoc documentation by enabling the javadoc profile
-    // // contained in pom.xml, rest-backend/pom.xml and rest-lib-utils/pom.xml.
-    // stage('JavaDoc') {
-    //   steps {
-    //     container('maven') {
-    //       sh 'mvn -e -P gradle,javadoc -Dspring.standalone -DskipTests clean package'
-    //     }
-    //   }
-    // }
-    // // Runs all tests except for expensive patch analyses (IT01_PatchAnalyzerIT)
-    // stage('Tests') {
-    //   steps {
-    //     container('maven') {
-    //       sh 'mvn -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
-    //           -Dit.test="!IT01_PatchAnalyzerIT,IT*,*IT" -DfailIfNoTests=false clean test'
-    //     }
-    //   }
-    // }
-    // // Validates code against Google's Java Style Guide, more info at
-    // // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines
-    // stage('Codestyle') {
-    //   steps {
-    //     container('maven') {
-    //       sh 'bash .travis/check_code_style.sh'
-    //     }
-    //   }
-    // }
+    // More info on Steady's use of Spotbugs at
+    // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines
+    stage('Spotbugs') {
+      steps {
+        container('maven') {
+          sh 'mvn -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
+              -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.includeFilterFile=findbugs-include.xml \
+              -Dspotbugs.failOnError=true -DskipTests clean install com.github.spotbugs:spotbugs-maven-plugin:4.2.3:check'
+        }
+      }
+    }
+    // Validates the JavaDoc documentation by enabling the javadoc profile
+    // contained in pom.xml, rest-backend/pom.xml and rest-lib-utils/pom.xml.
+    stage('JavaDoc') {
+      steps {
+        container('maven') {
+          sh 'mvn -e -P gradle,javadoc -Dspring.standalone -DskipTests clean package'
+        }
+      }
+    }
+    // Runs all tests except for expensive patch analyses (IT01_PatchAnalyzerIT)
+    stage('Tests') {
+      steps {
+        container('maven') {
+          sh 'mvn -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
+              -Dit.test="!IT01_PatchAnalyzerIT,IT*,*IT" -DfailIfNoTests=false clean test'
+        }
+      }
+    }
+    // Validates code against Google's Java Style Guide, more info at
+    // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines
+    stage('Codestyle') {
+      steps {
+        container('maven') {
+          sh 'bash .travis/check_code_style.sh'
+        }
+      }
+    }
     // GPG signs all artifacts
     stage('Sign') {
       steps {
