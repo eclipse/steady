@@ -274,7 +274,7 @@ public class JavaFileAnalyzer2Test {
           JavaId.parseConstructorQName(
               "org.eclipse.steady.java.test.ConfigKey(Class,String,String)");
       final JavaMethodId enum_m1 =
-          JavaId.parseMethodQName("org.eclipse.steady.java.test.ConfigKey.getType()");
+          JavaId.parseMethodQName("org.eclipse.steady.java.test.ConfigKey.getType(String,int)");
       final JavaMethodId enum_m2 =
           JavaId.parseMethodQName("org.eclipse.steady.java.test.ConfigKey.getKey()");
       final JavaMethodId enum_m3 =

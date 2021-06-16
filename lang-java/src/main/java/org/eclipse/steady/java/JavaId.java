@@ -301,6 +301,8 @@ public abstract class JavaId extends ConstructId {
         return ConstructType.ENUM;
       case CLASS:
         return ConstructType.CLAS;
+      case INTERFACE:
+        return ConstructType.INTF;
       default:
         throw new IllegalArgumentException("Unknown type [" + _core_type + "]");
     }
