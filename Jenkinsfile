@@ -64,6 +64,8 @@ spec:
     }
   }
   stages {
+    // More info on Steady's use of Spotbugs at
+    // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines
     stage('Spotbugs') {
       steps {
         container('maven') {
@@ -82,15 +84,17 @@ spec:
         }
       }
     }
+    // Runs all tests except for expensive patch analyses (IT01_PatchAnalyzerIT)
     stage('Tests') {
       steps {
         container('maven') {
           sh 'mvn -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
-              -Dit.test="!IT01_PatchAnalyzerIT, IT*, *IT, *ITCase" -DfailIfNoTests=false clean test'
+              -Dit.test="!IT01_PatchAnalyzerIT,IT*,*IT" -DfailIfNoTests=false clean test'
         }
       }
     }
-    // Validates code conventions (requires Java 11).
+    // Validates code against Google's Java Style Guide, more info at
+    // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines
     stage('Codestyle') {
       steps {
         container('maven') {
