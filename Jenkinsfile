@@ -17,8 +17,6 @@ spec:
       value: "-Duser.home=/home/jenkins -Xmx4096m -Xms4096m"
     - name: "MAVEN_CONFIG"
       value: "/home/jenkins/.m2"
-    - name: "HOME"
-      value: "/home/jenkins"
     - name: "GNUPGHOME"
       value: "/home/jenkins/.gnupg"
     volumeMounts:
