@@ -36,7 +36,7 @@ spec:
       readOnly: true
     - name: m2-repo
       mountPath: /home/jenkins/.m2/repository
-    - name: gnupg_dir
+    - name: gnupg_vol
       mountPath: /home/jenkins/.gnupg
     resources:
       limits:
@@ -66,9 +66,8 @@ spec:
         path: settings-security.xml
   - name: m2-repo
     emptyDir: {}
-  - name: gnupg_dir
-    configMap:
-      name: gnupg_dir
+  - name: gnupg_vol
+    emptyDir: {}
 """
     }
   }
