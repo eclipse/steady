@@ -67,6 +67,7 @@ public class ASTSignatureChangeSerializer extends StdSerializer<ASTSignatureChan
     jgen.writeObjectFieldStart(_property_name);
     jgen.writeStringField("UniqueName", _entity.getUniqueName().toString());
     jgen.writeStringField("EntityType", _entity.getType().toString());
+
     jgen.writeStringField("Modifiers", Integer.toString(_entity.getModifiers()));
     jgen.writeObjectFieldStart("SourceCodeRange");
     jgen.writeStringField("Start", Integer.toString(_entity.getSourceRange().getStart()));
