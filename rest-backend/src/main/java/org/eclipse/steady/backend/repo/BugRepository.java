@@ -43,15 +43,6 @@ public interface BugRepository extends CrudRepository<Bug, Long>, BugRepositoryC
   public static final ResultSetFilter<Bug> FILTER = new ResultSetFilter<Bug>();
 
   /**
-   * <p>findById.</p>
-   *
-   * @param id a {@link java.lang.Long} object.
-   * @return a {@link java.util.List} object.
-   */
-  @Query("SELECT b FROM Bug b JOIN FETCH b.constructChanges WHERE b.id=:id")
-  List<Bug> findById(@Param("id") Long id);
-
-  /**
    * <p>findByBugId.</p>
    *
    * @param bugid a {@link java.lang.String} object.

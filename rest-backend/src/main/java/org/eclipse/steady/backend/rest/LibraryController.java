@@ -54,7 +54,9 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
+// hateos.Resource was renamed into EntityModel (see
+// https://docs.spring.io/spring-hateoas/docs/current/reference/html/#migrate-to-1.0)
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -145,7 +147,8 @@ public class LibraryController {
   @RequestMapping(
       value = "",
       method = RequestMethod.POST,
-      consumes = {"application/json;charset=UTF-8"})
+      consumes = {"application/json;charset=UTF-8"},
+      produces = {"application/json;charset=UTF-8"})
   @JsonView(Views.LibDetails.class)
   public ResponseEntity<Library> createLibrary(
       @RequestBody Library library,
@@ -226,7 +229,8 @@ public class LibraryController {
   @RequestMapping(
       value = "/{digest}",
       method = RequestMethod.PUT,
-      consumes = {"application/json;charset=UTF-8"})
+      consumes = {"application/json;charset=UTF-8"},
+      produces = {"application/json;charset=UTF-8"})
   @JsonView(Views.LibDetails.class)
   public ResponseEntity<Library> updateLibrary(
       @PathVariable String digest,
@@ -260,7 +264,8 @@ public class LibraryController {
   @RequestMapping(
       value = "/{digest}/updateMetadata",
       method = RequestMethod.PUT,
-      consumes = {"application/json;charset=UTF-8"})
+      consumes = {"application/json;charset=UTF-8"},
+      produces = {"application/json;charset=UTF-8"})
   @JsonView(Views.LibDetails.class)
   public ResponseEntity<Library> updateLibraryMetaData(
       @PathVariable String digest,
@@ -306,13 +311,13 @@ public class LibraryController {
       value = "/{digest}",
       method = RequestMethod.DELETE,
       produces = {"application/json;charset=UTF-8"})
-  public ResponseEntity<Resource<Library>> deleteLibrary(@PathVariable String digest) {
+  public ResponseEntity<EntityModel<Library>> deleteLibrary(@PathVariable String digest) {
     try {
       final Library lib = LibraryRepository.FILTER.findOne(this.libRepository.findByDigest(digest));
       this.libRepository.delete(lib);
-      return new ResponseEntity<Resource<Library>>(HttpStatus.OK);
+      return new ResponseEntity<EntityModel<Library>>(HttpStatus.OK);
     } catch (EntityNotFoundException enfe) {
-      return new ResponseEntity<Resource<Library>>(HttpStatus.NOT_FOUND);
+      return new ResponseEntity<EntityModel<Library>>(HttpStatus.NOT_FOUND);
     }
   }
 

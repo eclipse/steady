@@ -63,7 +63,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import springfox.documentation.annotations.ApiIgnore;
+import io.swagger.v3.oas.annotations.Parameter;
 
 /**
  * <p>SpaceController class.</p>
@@ -116,7 +116,8 @@ public class SpaceController {
       method = RequestMethod.GET,
       produces = {"application/json;charset=UTF-8"})
   public ResponseEntity<Collection<Space>> getAllSpaces(
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
           String tenant) {
 
     // Check whether tenant exists or retrieve default
@@ -149,7 +150,8 @@ public class SpaceController {
       method = RequestMethod.GET,
       produces = {"application/json;charset=UTF-8"})
   public ResponseEntity<Space> getDefaultSpace(
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
           String tenant) {
 
     // Check whether tenant exists or retrieve default
@@ -192,7 +194,8 @@ public class SpaceController {
       @RequestParam(value = "caseSensitivity", required = false, defaultValue = "CASE_SENSITIVE")
           CaseSensitivity caseSensitivity,
       @RequestParam(value = "value", required = true) String[] value,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
           String tenant) {
 
     // Check whether tenant exists or retrieve default
@@ -232,7 +235,8 @@ public class SpaceController {
   @RequestMapping(value = "/{token:.+}", method = RequestMethod.OPTIONS)
   public ResponseEntity<Space> isSpaceExisting(
       @PathVariable String token,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
           String tenant) {
     // Check whether tenant exists or retrieve default
     Tenant t = null;
@@ -258,10 +262,14 @@ public class SpaceController {
    * @return 404 {@link HttpStatus#NOT_FOUND} if space with given token does not exist, 200 {@link HttpStatus#OK} if the space is found
    * @param tenant a {@link java.lang.String} object.
    */
-  @RequestMapping(value = "/{token:.+}", method = RequestMethod.GET)
+  @RequestMapping(
+      value = "/{token:.+}",
+      method = RequestMethod.GET,
+      produces = {"application/json;charset=UTF-8"})
   public ResponseEntity<Space> getSpace(
       @PathVariable String token,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
           String tenant) {
     // Check whether tenant exists or retrieve default
     Tenant t = null;
@@ -295,7 +303,8 @@ public class SpaceController {
       produces = {"application/json;charset=UTF-8"})
   public ResponseEntity<Space> createSpace(
       @RequestBody Space space,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
           String tenant) {
     final StopWatch sw =
         new StopWatch(
@@ -369,7 +378,8 @@ public class SpaceController {
   public ResponseEntity<Space> modifySpace(
       @PathVariable String token,
       @RequestBody Space new_space,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
           String tenant) {
     try {
       // Check arguments
@@ -459,7 +469,8 @@ public class SpaceController {
   public ResponseEntity<Space> cleanSpace(
       @PathVariable String token,
       @RequestParam(value = "clean", required = true) Boolean clean,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
           String tenant) {
     try {
 
@@ -552,7 +563,8 @@ public class SpaceController {
   @RequestMapping(value = "/{token:.+}", method = RequestMethod.DELETE)
   public ResponseEntity<Space> deleteSpace(
       @PathVariable String token,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_TENANT_HEADER, required = false)
           String tenant) {
     try {
 

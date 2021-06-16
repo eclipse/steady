@@ -185,6 +185,10 @@
 									<pattern>org.apache.http</pattern>
 									<shadedPattern>org.eclipse.steady.repackaged.org.apache.http</shadedPattern>
 								</relocation>
+								<relocation>
+									<pattern>javassist</pattern>
+									<shadedPattern>org.eclipse.steady.repackaged.javassist</shadedPattern>
+								</relocation>
 							</relocations>
 						</configuration>
 					</execution>

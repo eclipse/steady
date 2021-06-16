@@ -18,22 +18,13 @@
  */
 package org.eclipse.steady.backend.rest;
 
-import static com.google.common.base.Predicates.or;
-import static com.google.common.collect.Lists.newArrayList;
-import static springfox.documentation.builders.PathSelectors.regex;
+import org.springdoc.core.GroupedOpenApi;
 
-import java.util.ArrayList;
-
-import org.eclipse.steady.backend.repo.BugRepositoryImpl;
-import org.eclipse.steady.backend.util.ReferenceUpdater;
-import org.eclipse.steady.shared.util.Constants;
-import org.eclipse.steady.shared.util.VulasConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -41,23 +32,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
-import com.fasterxml.classmate.TypeResolver;
-import com.google.common.base.Predicate;
+import org.eclipse.steady.backend.repo.BugRepositoryImpl;
+import org.eclipse.steady.backend.util.ReferenceUpdater;
+import org.eclipse.steady.shared.util.Constants;
+import org.eclipse.steady.shared.util.VulasConfiguration;
 
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.AuthorizationScopeBuilder;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.BasicAuth;
-import springfox.documentation.service.SecurityReference;
-import springfox.documentation.service.SecurityScheme;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.SecurityContext;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger.web.ApiKeyVehicle;
-import springfox.documentation.swagger.web.SecurityConfiguration;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.security.SecurityScheme.In;
 
 /**
  * <p>MainController class.</p>
@@ -67,8 +51,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
   "org.eclipse.steady.backend.component,org.eclipse.steady.backend.rest,org.eclipse.steady.backend.util"
 })
 @EnableAutoConfiguration
-// @EnableWebMvc
-// @SpringBootApplication
 @EnableCaching
 @EntityScan({
   "org.eclipse.steady.backend.model"
@@ -76,7 +58,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableJpaRepositories({
   "org.eclipse.steady.backend.repo"
 }) // So that repos in the repo package are discovered
-@EnableSwagger2
 public class MainController extends SpringBootServletInitializer {
 
   /**
@@ -108,170 +89,63 @@ public class MainController extends SpringBootServletInitializer {
    * Returns the API info for Swagger.
    * @return
    */
-  private final ApiInfo getApiInfo() {
-    return new ApiInfoBuilder()
-        .title("Eclipse Steady")
-        .description("RESTful API for managing applications and vulnerabilities")
-        .version(VulasConfiguration.getGlobal().getConfiguration().getString("shared.version"))
-        .build();
-  }
-
-  /**
-   * Paths related to vulnerabilities.
-   * @return
-   */
-  @SuppressWarnings("unchecked")
-  private Predicate<String> bugPaths() {
-    return or(regex("/bugs.*"), regex("/coverage.*"), regex("/cves.*"));
-  }
-
-  /**
-   * Paths that require tenant selection.
-   * @return
-   */
-  @SuppressWarnings("unchecked")
-  private Predicate<String> userPaths() {
-    return or(
-        regex("/apps.*"),
-        regex("/hubIntegration.*"),
-        regex("/libs.*"),
-        regex("/libids.*"),
-        regex("/spaces.*"));
-  }
-
-  /**
-   * Paths related to configuration and tenant management.
-   * @return
-   */
-  private Predicate<String> configPaths() {
-    return or(regex("/configuration.*"), regex("/tenants.*"));
+  @Bean
+  public OpenAPI customOpenAPI() {
+    return new OpenAPI()
+        .components(
+            new Components()
+                .addSecuritySchemes(
+                    "tenant",
+                    new SecurityScheme()
+                        .type(SecurityScheme.Type.APIKEY)
+                        .in(In.HEADER)
+                        .name(Constants.HTTP_TENANT_HEADER))
+                .addSecuritySchemes(
+                    "space",
+                    new SecurityScheme()
+                        .type(SecurityScheme.Type.APIKEY)
+                        .in(In.HEADER)
+                        .name(Constants.HTTP_SPACE_HEADER)))
+        .info(
+            new Info()
+                .title("Vulas REST API")
+                .description("This is the REST API of Vulas")
+                .version(
+                    VulasConfiguration.getGlobal().getConfiguration().getString("shared.version")));
   }
 
   /**
    * <p>bugApi.</p>
    *
-   * @return a {@link springfox.documentation.spring.web.plugins.Docket} object.
+   * @return a {@link org.springdoc.core.GroupedOpenApi} object.
    */
   @Bean
-  public Docket bugApi() {
-    return new Docket(DocumentationType.SWAGGER_2)
-        .groupName("bug-api")
-        .apiInfo(this.getApiInfo())
-        .select()
-        // .apis(RequestHandlerSelectors.any())
-        .paths(this.bugPaths())
-        .build()
-    // .pathMapping("/")
-    ;
+  public GroupedOpenApi bugApi() {
+    String paths[] = {"/bugs/**", "/coverage/**", "/cves/**"};
+    return GroupedOpenApi.builder().setGroup("bug-api").pathsToMatch(paths).build();
   }
 
   /**
    * <p>userApi.</p>
    *
-   * @return a {@link springfox.documentation.spring.web.plugins.Docket} object.
+   * @return a {@link org.springdoc.core.GroupedOpenApi} object.
    */
   @Bean
-  public Docket userApi() {
-    AuthorizationScope[] authScopes = new AuthorizationScope[1];
-
-    authScopes[0] =
-        new AuthorizationScopeBuilder().scope("read").description("read access").build();
-
-    SecurityReference securityReference1 =
-        SecurityReference.builder().reference("tenant").scopes(authScopes).build();
-
-    SecurityReference securityReference2 =
-        SecurityReference.builder().reference("space").scopes(authScopes).build();
-
-    ArrayList<SecurityContext> securityContexts =
-        newArrayList(
-            SecurityContext.builder()
-                .securityReferences(newArrayList(securityReference1, securityReference2))
-                .build());
-
-    return new Docket(DocumentationType.SWAGGER_2)
-        .groupName("user-api")
-        .apiInfo(this.getApiInfo())
-        .select()
-        // .apis(RequestHandlerSelectors.any())
-        .paths(this.userPaths())
-        .build()
-        // .pathMapping("/")
-        .securitySchemes(newArrayList(this.tenantKey(), this.spaceKey()))
-        .securityContexts(securityContexts);
+  public GroupedOpenApi userApi() {
+    String paths[] = {"/apps/**", "/hubIntegration/**", "/libs/**", "/libids/**", "/spaces/**"};
+    return GroupedOpenApi.builder().setGroup("user-api").pathsToMatch(paths).build();
   }
 
   /**
    * <p>adminApi.</p>
    *
-   * @return a {@link springfox.documentation.spring.web.plugins.Docket} object.
+   * @return a {@link org.springdoc.core.GroupedOpenApi} object.
    */
   @Bean
-  public Docket adminApi() {
-    AuthorizationScope[] authScopes = new AuthorizationScope[1];
-
-    authScopes[0] =
-        new AuthorizationScopeBuilder().scope("read").description("read access").build();
-
-    SecurityReference securityReference =
-        SecurityReference.builder().reference("test").scopes(authScopes).build();
-
-    ArrayList<SecurityContext> securityContexts =
-        newArrayList(
-            SecurityContext.builder().securityReferences(newArrayList(securityReference)).build());
-
-    return new Docket(DocumentationType.SWAGGER_2)
-        .apiInfo(this.getApiInfo())
-        .groupName("config-api")
-        .select()
-        // .apis(RequestHandlerSelectors.any())
-        .paths(this.configPaths())
-        .build()
-        // .pathMapping("/")
-        .securitySchemes(newArrayList(new BasicAuth("test")))
-        .securityContexts(securityContexts);
-
-    /*.directModelSubstitute(LocalDate.class, String.class).genericModelSubstitutes(ResponseEntity.class)
-    .alternateTypeRules(newRule(typeResolver.resolve(DeferredResult.class, typeResolver.resolve(ResponseEntity.class, WildcardType.class)), typeResolver.resolve(WildcardType.class)))
-    .useDefaultResponseMessages(false)
-    .globalResponseMessage(RequestMethod.GET, newArrayList(new ResponseMessageBuilder().code(500).message("500 message").responseModel(new ModelRef("Error")).build()))
-    .securitySchemes(newArrayList(this.tenantKey())).securityContexts(newArrayList(securityContext()));*/
+  public GroupedOpenApi adminApi() {
+    String paths[] = {"/configuration/**", "/tenants/**"};
+    return GroupedOpenApi.builder().setGroup("admin-api").pathsToMatch(paths).build();
   }
-
-  @Autowired private TypeResolver typeResolver;
-
-  @Bean
-  SecurityScheme tenantKey() {
-    return new ApiKey("tenant", Constants.HTTP_TENANT_HEADER, "header");
-  }
-
-  @Bean
-  SecurityScheme spaceKey() {
-    return new ApiKey("space", Constants.HTTP_SPACE_HEADER, "header");
-  }
-
-  /**
-   * <p>securityInfo.</p>
-   *
-   * @return a {@link springfox.documentation.swagger.web.SecurityConfiguration} object.
-   */
-  @Bean
-  public SecurityConfiguration securityInfo() {
-    return new SecurityConfiguration(
-        "abc",
-        "123",
-        "pets",
-        "petstore",
-        Constants.HTTP_TENANT_HEADER,
-        ApiKeyVehicle.HEADER,
-        "",
-        ",");
-  }
-
-  //	@Bean
-  //	UiConfiguration uiConfig() {
-  //		return new UiConfiguration("validatorUrl");
-  //	}
 
   /**
    * Can be used to do some initialization at application startup, but does not do anything right now.

@@ -45,15 +45,6 @@ public interface LibraryRepository extends CrudRepository<Library, Long>, Librar
   public static final ResultSetFilter<Library> FILTER = new ResultSetFilter<Library>();
 
   /**
-   * <p>findById.</p>
-   *
-   * @param id a {@link java.lang.Long} object.
-   * @return a {@link java.util.List} object.
-   */
-  @Query("SELECT l FROM Library l LEFT OUTER JOIN FETCH l.libraryId WHERE l.id=:id")
-  List<Library> findById(@Param("id") Long id);
-
-  /**
    * <p>findByDigest.</p>
    *
    * @param digest a {@link java.lang.String} object.

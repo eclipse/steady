@@ -42,15 +42,6 @@ public interface DependencyRepository
   public static final ResultSetFilter<Dependency> FILTER = new ResultSetFilter<Dependency>();
 
   /**
-   * <p>findById.</p>
-   *
-   * @param id a {@link java.lang.Long} object.
-   * @return a {@link java.util.List} object.
-   */
-  @Query("SELECT dep FROM Dependency dep JOIN FETCH dep.lib l WHERE dep.id = :id")
-  List<Dependency> findById(@Param("id") Long id);
-
-  /**
    * <p>findByDigest.</p>
    *
    * @param lib a {@link java.lang.String} object.

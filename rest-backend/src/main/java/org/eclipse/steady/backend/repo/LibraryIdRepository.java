@@ -38,15 +38,6 @@ public interface LibraryIdRepository extends CrudRepository<LibraryId, Long> {
   public static final ResultSetFilter<LibraryId> FILTER = new ResultSetFilter<LibraryId>();
 
   /**
-   * <p>findById.</p>
-   *
-   * @param id a {@link java.lang.Long} object
-   * @return a {@link java.util.List} object
-   */
-  @Query("SELECT l FROM LibraryId l WHERE l.id=:id")
-  List<LibraryId> findById(@Param("id") Long id);
-
-  /**
    * <p>findBySecondaryKey.</p>
    *
    * @param mvnGroup a {@link java.lang.String} object.

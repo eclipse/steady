@@ -543,6 +543,7 @@ public class JarWriter {
         }
 
         // Add additional files
+
         for (Map.Entry<String, Path> e : this.additionalFiles.entrySet()) {
           if (e.getValue().toFile().exists()) {
             new_entry = new JarEntry(e.getKey());

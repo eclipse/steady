@@ -37,14 +37,6 @@ public interface TenantRepository extends CrudRepository<Tenant, Long>, TenantRe
   public static final ResultSetFilter<Tenant> FILTER = new ResultSetFilter<Tenant>();
 
   /**
-   * <p>findById.</p>
-   *
-   * @param id a {@link java.lang.Long} object.
-   * @return a {@link java.util.List} object.
-   */
-  List<Tenant> findById(@Param("id") Long id);
-
-  /**
    * <p>findBySecondaryKey.</p>
    *
    * @param token a {@link java.lang.String} object.

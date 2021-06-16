@@ -94,7 +94,7 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.DispatcherServletAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -109,7 +109,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import springfox.documentation.annotations.ApiIgnore;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 /**
  * RESTful interface for application information.
@@ -117,6 +119,8 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping(path = "/apps")
+@OpenAPIDefinition(
+    security = {@SecurityRequirement(name = "tenant"), @SecurityRequirement(name = "space")})
 public class ApplicationController {
 
   private static Logger log = LoggerFactory.getLogger(ApplicationController.class);
@@ -218,7 +222,8 @@ public class ApplicationController {
       @RequestBody Application application,
       @RequestParam(value = "skipResponseBody", required = false, defaultValue = "false")
           Boolean skipResponseBody,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -270,14 +275,18 @@ public class ApplicationController {
    * @param mode a {@link java.lang.String} object.
    * @param space a {@link java.lang.String} object.
    */
-  @RequestMapping(value = "/{mvnGroup:.+}/{artifact:.+}", method = RequestMethod.DELETE)
+  @RequestMapping(
+      value = "/{mvnGroup:.+}/{artifact:.+}",
+      method = RequestMethod.DELETE,
+      produces = {"application/json;charset=UTF-8"})
   @JsonView(Views.Default.class)
   public ResponseEntity<List<Application>> purgeApplicationVersions(
       @PathVariable String mvnGroup,
       @PathVariable String artifact,
       @RequestParam(value = "keep", required = false, defaultValue = "3") Integer keep,
       @RequestParam(value = "mode", required = false, defaultValue = "versions") String mode,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -434,7 +443,8 @@ public class ApplicationController {
       @RequestBody Application application,
       @RequestParam(value = "skipResponseBody", required = false, defaultValue = "false")
           Boolean skipResponseBody,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -507,7 +517,8 @@ public class ApplicationController {
       @RequestParam(value = "artifact", required = false, defaultValue = "*") String a,
       @RequestParam(value = "version", required = false, defaultValue = "*") String v,
       @RequestParam(value = "asOf", required = false, defaultValue = "0") String asOfTimestamp,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -742,7 +753,8 @@ public class ApplicationController {
       @RequestParam(value = "clean", required = true) Boolean clean,
       @RequestParam(value = "cleanGoalHistory", required = false, defaultValue = "false")
           Boolean cleanGoalHistory,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -792,7 +804,8 @@ public class ApplicationController {
    */
   @RequestMapping(
       value = "/{mvnGroup:.+}/{artifact:.+}/{version:.+}/search",
-      method = RequestMethod.GET)
+      method = RequestMethod.GET,
+      produces = {"application/json;charset=UTF-8"})
   @JsonView(Views.Default.class)
   public ResponseEntity<Set<ConstructSearchResult>> searchConstructsInAppDependencies(
       @PathVariable String mvnGroup,
@@ -803,7 +816,8 @@ public class ApplicationController {
           ConstructType[] constructTypes,
       @RequestParam(value = "wildcardSearch", required = false, defaultValue = "true")
           boolean wildcardSearch,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -882,7 +896,8 @@ public class ApplicationController {
       @PathVariable String mvnGroup,
       @PathVariable String artifact,
       @PathVariable String version,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -923,7 +938,8 @@ public class ApplicationController {
       @PathVariable String version,
       @RequestParam(value = "inclTraces", required = false, defaultValue = "true")
           Boolean inclTraces,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -970,7 +986,8 @@ public class ApplicationController {
       @PathVariable String mvnGroup,
       @PathVariable String artifact,
       @PathVariable String version,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -1017,7 +1034,8 @@ public class ApplicationController {
       @RequestBody GoalExecution goalExecution,
       @RequestParam(value = "skipResponseBody", required = false, defaultValue = "false")
           Boolean skipResponseBody,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -1083,7 +1101,8 @@ public class ApplicationController {
       @RequestBody GoalExecution goalExecution,
       @RequestParam(value = "skipResponseBody", required = false, defaultValue = "false")
           Boolean skipResponseBody,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -1133,7 +1152,8 @@ public class ApplicationController {
       @PathVariable String artifact,
       @PathVariable String version,
       @PathVariable String executionId,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -1182,7 +1202,8 @@ public class ApplicationController {
       @PathVariable String artifact,
       @PathVariable String version,
       @PathVariable Long id,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -1202,7 +1223,7 @@ public class ApplicationController {
     }
 
     // Ensure that goal execution exists
-    final GoalExecution gexe = this.gexeRepository.findOne(id);
+    final GoalExecution gexe = this.gexeRepository.findById(id).orElse(null);
     if (gexe == null) return new ResponseEntity<GoalExecution>(HttpStatus.NOT_FOUND);
 
     return new ResponseEntity<GoalExecution>(gexe, HttpStatus.OK);
@@ -1229,7 +1250,8 @@ public class ApplicationController {
       @PathVariable String artifact,
       @PathVariable String version,
       @RequestParam(value = "type", required = false, defaultValue = "") String type,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -1281,7 +1303,8 @@ public class ApplicationController {
       @PathVariable String mvnGroup,
       @PathVariable String artifact,
       @PathVariable String version,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -1322,7 +1345,8 @@ public class ApplicationController {
       @PathVariable String mvnGroup,
       @PathVariable String artifact,
       @PathVariable String version,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -1375,7 +1399,8 @@ public class ApplicationController {
       @PathVariable String version,
       @RequestParam(value = "historical", required = false, defaultValue = "false")
           Boolean historical,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -1426,7 +1451,8 @@ public class ApplicationController {
       @PathVariable String mvnGroup,
       @PathVariable String artifact,
       @PathVariable String version,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -1481,7 +1507,8 @@ public class ApplicationController {
       @PathVariable String mvnGroup,
       @PathVariable String artifact,
       @PathVariable String version,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -1538,7 +1565,8 @@ public class ApplicationController {
       @PathVariable String artifact,
       @PathVariable String version,
       @PathVariable String digest,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -1593,7 +1621,8 @@ public class ApplicationController {
       @PathVariable String version,
       @RequestParam(value = "excludedScopes", required = false, defaultValue = "")
           Scope[] excludedScopes,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -1725,7 +1754,8 @@ public class ApplicationController {
       @PathVariable String version,
       @PathVariable String digest,
       @RequestBody LibraryId otherVersion,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -1945,7 +1975,8 @@ public class ApplicationController {
       @PathVariable String version,
       @PathVariable String digest,
       @RequestBody LibraryId otherVersion,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -2063,7 +2094,8 @@ public class ApplicationController {
       // "vulas.report.exceptionExcludeBugs"
       @RequestParam(value = "lastChange", required = false, defaultValue = "")
           String lastChange, // a timestamp identifier which is used to cache the response or not
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -2139,8 +2171,7 @@ public class ApplicationController {
         try {
           VulnerableDependency vd =
               new VulnerableDependency(
-                  DependencyRepository.FILTER.findOne(
-                      this.depRepository.findById(entry.getKey().longValue())),
+                  this.depRepository.findById(entry.getKey().longValue()).orElse(null),
                   BugRepository.FILTER.findOne(this.bugRepository.findByBugId(entry.getValue())));
           vd_list.add(vd);
         } catch (EntityNotFoundException e) {
@@ -2209,7 +2240,8 @@ public class ApplicationController {
           String bundledVersion,
       @RequestParam(value = "bundledLibrary", required = false, defaultValue = "")
           String bundledLibrary,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -2270,7 +2302,8 @@ public class ApplicationController {
       @RequestBody Trace[] traces,
       @RequestParam(value = "skipResponseBody", required = false, defaultValue = "false")
           Boolean skipResponseBody,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -2323,7 +2356,8 @@ public class ApplicationController {
       @PathVariable String mvnGroup,
       @PathVariable String artifact,
       @PathVariable String version,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -2365,7 +2399,8 @@ public class ApplicationController {
       @PathVariable String mvnGroup,
       @PathVariable String artifact,
       @PathVariable String version,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -2413,7 +2448,8 @@ public class ApplicationController {
       @RequestBody Path[] paths,
       @RequestParam(value = "skipResponseBody", required = false, defaultValue = "false")
           Boolean skipResponseBody,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -2466,7 +2502,8 @@ public class ApplicationController {
       @PathVariable String mvnGroup,
       @PathVariable String artifact,
       @PathVariable String version,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -2512,7 +2549,8 @@ public class ApplicationController {
       @PathVariable String version,
       @PathVariable String digest,
       @PathVariable String bugId,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -2583,7 +2621,8 @@ public class ApplicationController {
       @PathVariable String digest,
       @PathVariable String bugId,
       @PathVariable String qname,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -2681,7 +2720,8 @@ public class ApplicationController {
       @PathVariable String version,
       @PathVariable String digest,
       @RequestBody ConstructId[] constructIds,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;
@@ -2758,7 +2798,8 @@ public class ApplicationController {
       @RequestBody TouchPoint[] touchPoints,
       @RequestParam(value = "skipResponseBody", required = false, defaultValue = "false")
           Boolean skipResponseBody,
-      @ApiIgnore @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
+      @Parameter(hidden = true)
+          @RequestHeader(value = Constants.HTTP_SPACE_HEADER, required = false)
           String space) {
 
     Space s = null;

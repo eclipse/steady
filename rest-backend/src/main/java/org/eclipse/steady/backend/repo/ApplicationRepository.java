@@ -57,14 +57,6 @@ public interface ApplicationRepository
   public static final ResultSetFilter<Application> FILTER = new ResultSetFilter<Application>();
 
   /**
-   * <p>findById.</p>
-   *
-   * @param id a {@link java.lang.Long} object.
-   * @return a {@link java.util.List} object.
-   */
-  List<Application> findById(@Param("id") Long id);
-
-  /**
    * <p>findByGA.</p>
    *
    * @param group a {@link java.lang.String} object.

@@ -120,7 +120,7 @@ The first objective supports the risk assessment for a given vulnerability, whil
 #### Limitations
 
 - Python is not supported
-- Java 9 and later versions are not supported by the underlying frameworks
+- Java 9 and later versions are only supported when using Soot as call graph construction framework
 
 #### Result
 
@@ -157,7 +157,7 @@ vulas.reach.bugs =
 
 # Analysis framework to be used
 # Possible values: wala, soot
-vulas.reach.fwk = wala
+vulas.reach.fwk = soot
 
 # Regex to filter entry points (semicolon separated)
 vulas.reach.constructFilter =
@@ -268,7 +268,7 @@ vulas.reach.soot.spark.rta     = false
 # | none (default)                                                      | no 'DummyMainMethod' is generated (default)                                                          |
 # | soot.jimple.infoflow.entryPointCreators.SequentialEntryPointCreator | a 'DummyMainMethod' that invokes all entrypoints is generated                                        |
 # | soot.jimple.infoflow.entryPointCreators.DefaultEntryPointCreator    | a 'DummyMainMethod' in which all entrypoints are generated (random order)                            |
-# | com.sap.psr.vulas.cg.soot.CustomEntryPointCreator                   | same as DefaultEntryPointCreated + for abstract classes/interface a dummy implementation is generated |
+# | org.eclipse.steady.cg.soot.CustomEntryPointCreator                   | same as DefaultEntryPointCreated + for abstract classes/interface a dummy implementation is generated |
 vulas.reach.soot.entrypointGenerator = none
 ```
 
