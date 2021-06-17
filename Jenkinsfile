@@ -70,8 +70,8 @@ spec:
     }
   }
   stages {
-    // More info on Steady's use of Spotbugs at
-    // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines
+    // Verifies that no Spotbugs checks fails (cf.
+    // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines).
     stage('Spotbugs') {
       steps {
         container('maven') {
@@ -81,8 +81,8 @@ spec:
         }
       }
     }
-    // Validates the JavaDoc documentation by enabling the javadoc profile
-    // contained in pom.xml, rest-backend/pom.xml and rest-lib-utils/pom.xml.
+    // Verifies that the Javadoc documentation can be generated (by enabling the
+    // javadoc profile contained in several pom.xml files).
     stage('JavaDoc') {
       steps {
         container('maven') {
@@ -90,7 +90,7 @@ spec:
         }
       }
     }
-    // Runs all tests except for expensive patch analyses (IT01_PatchAnalyzerIT)
+    // Verifies that all tests pass (except for expensive patch analyses).
     stage('Tests') {
       steps {
         container('maven') {
@@ -99,8 +99,8 @@ spec:
         }
       }
     }
-    // Validates code against Google's Java Style Guide, more info at
-    // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines
+    // Verifies compliance with Google's Java Style Guide (cf.
+    // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines).
     stage('Codestyle') {
       steps {
         container('maven') {
@@ -108,7 +108,8 @@ spec:
         }
       }
     }
-    // GPG signs all artifacts
+    // Verifies that artifacts can be signed with GPG (required for releases on Maven Central).
+    // TODO: Complete in separate PR.
     stage('Sign') {
       steps {
         container('maven') {
