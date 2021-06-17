@@ -21,8 +21,17 @@ package org.eclipse.steady.cia.rest;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springdoc.core.GroupedOpenApi;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
 
+import org.eclipse.steady.java.sign.ASTConstructBodySignature;
+import org.eclipse.steady.java.sign.ASTSignatureChange;
+import org.eclipse.steady.java.sign.gson.ASTConstructBodySignatureDeserializer;
+import org.eclipse.steady.java.sign.gson.ASTConstructBodySignatureSerializer;
+import org.eclipse.steady.java.sign.gson.ASTSignatureChangeSerializer;
+import org.eclipse.steady.python.sign.PythonConstructDigest;
+import org.eclipse.steady.python.sign.PythonConstructDigestSerializer;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -31,16 +40,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import org.eclipse.steady.java.sign.ASTConstructBodySignature;
-import org.eclipse.steady.java.sign.ASTSignatureChange;
-import org.eclipse.steady.java.sign.gson.ASTConstructBodySignatureDeserializer;
-import org.eclipse.steady.java.sign.gson.ASTConstructBodySignatureSerializer;
-import org.eclipse.steady.java.sign.gson.ASTSignatureChangeSerializer;
-import org.eclipse.steady.python.sign.PythonConstructDigest;
-import org.eclipse.steady.python.sign.PythonConstructDigestSerializer;
 
 /**
  * <p>MainController class.</p>
@@ -53,7 +52,7 @@ public class MainController extends SpringBootServletInitializer {
   /**
    * <p>backendApi.</p>
    *
-   * @return a {@link springfox.documentation.spring.web.plugins.Docket} object.
+   * @return a {@link org.springdoc.core.GroupedOpenApi} object.
    */
   @Bean
   public GroupedOpenApi publicApi() {

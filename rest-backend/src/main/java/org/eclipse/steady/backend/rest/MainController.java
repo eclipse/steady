@@ -18,8 +18,11 @@
  */
 package org.eclipse.steady.backend.rest;
 
+import org.eclipse.steady.backend.repo.BugRepositoryImpl;
+import org.eclipse.steady.backend.util.ReferenceUpdater;
+import org.eclipse.steady.shared.util.Constants;
+import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.springdoc.core.GroupedOpenApi;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -31,11 +34,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-
-import org.eclipse.steady.backend.repo.BugRepositoryImpl;
-import org.eclipse.steady.backend.util.ReferenceUpdater;
-import org.eclipse.steady.shared.util.Constants;
-import org.eclipse.steady.shared.util.VulasConfiguration;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -87,7 +85,7 @@ public class MainController extends SpringBootServletInitializer {
 
   /**
    * Returns the API info for Swagger.
-   * @return
+   * @return a {@link io.swagger.v3.oas.models.OpenAPI} object.
    */
   @Bean
   public OpenAPI customOpenAPI() {
