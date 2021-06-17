@@ -73,6 +73,7 @@ matrix:
     - set -a; source docker/.env; set +a;
     - echo "VULAS_RELEASE=${VULAS_RELEASE}"
     install:
+    - echo "$DOCKER_HUB_SUMEET_PASSWORD" | docker login -u "$DOCKER_HUB_SUMEET_USERNAME" --password-stdin
     - docker build --tag steady-generator -f docker/Dockerfile --build-arg http_proxy= --build-arg https_proxy= .
     - docker run -it --rm -v ${PWD}/docker:/exporter -v ${PWD}/.travis/settings.xml:/settings.xml --env-file ./docker/.env -e mvn_flags='-q -P gradle -Dit.test=!IT01_PatchAnalyzerIT,IT*,*IT,*ITCase -DfailIfNoTests=false --settings /settings.xml' steady-generator
     script:
