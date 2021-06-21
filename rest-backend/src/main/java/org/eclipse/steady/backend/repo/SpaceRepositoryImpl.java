@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <p>SpaceRepositoryImpl class.</p>
- *
  */
 public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 

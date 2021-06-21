@@ -38,7 +38,6 @@ import org.eclipse.steady.java.sign.ASTUtil;
 
 /**
  * <p>ASTConstructBodySignatureDeserializer class.</p>
- *
  */
 public class ASTConstructBodySignatureDeserializer
     extends StdDeserializer<ASTConstructBodySignature> {

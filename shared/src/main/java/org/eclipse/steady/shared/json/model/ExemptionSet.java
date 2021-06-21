@@ -40,9 +40,8 @@ public class ExemptionSet extends HashSet<IExemption> {
    * Loops over the exemptions to find one that exempts the given {@link VulnerableDependency}.
    * If such an exemption is found, it is returned. Otherwise, the method returns null.
    *
-   * @param _s
-   * @param _vd
-   * @return
+   * @param _vd a {@link org.eclipse.steady.shared.json.model.VulnerableDependency} object
+   * @return a {@link org.eclipse.steady.shared.json.model.IExemption} object
    */
   public IExemption getApplicableExemption(VulnerableDependency _vd) {
     if (!this.isEmpty()) {
@@ -55,6 +54,9 @@ public class ExemptionSet extends HashSet<IExemption> {
 
   /**
    * Returns the subset of {@link IExemption}s that are of the given {@link Class}(es).
+   *
+   * @param _class a {@link java.lang.Class} object
+   * @return a {@link org.eclipse.steady.shared.json.model.ExemptionSet} object
    */
   public ExemptionSet subset(Class<? extends IExemption> _class) {
     final ExemptionSet subset = new ExemptionSet();
@@ -67,6 +69,7 @@ public class ExemptionSet extends HashSet<IExemption> {
     return subset;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     final StringBuffer b = new StringBuffer();
@@ -80,8 +83,8 @@ public class ExemptionSet extends HashSet<IExemption> {
   /**
    * Creates a set of {@link IExemption}s by reading the settings from the given {@link Configuration}.
    *
-   * @param _cfg
-   * @return
+   * @param _cfg a {@link org.apache.commons.configuration.Configuration} object
+   * @return a {@link org.eclipse.steady.shared.json.model.ExemptionSet} object
    */
   public static ExemptionSet createFromConfiguration(Configuration _cfg) {
     final ExemptionSet set = new ExemptionSet();
@@ -92,10 +95,10 @@ public class ExemptionSet extends HashSet<IExemption> {
   }
 
   /**
-   * Creates a set of {@link IExemption}s by reading the settings from the given {@link Map<String,String>}.
+   * Creates a set of {@link IExemption}s by reading the settings from the given {@link Map}.
    *
-   * @param _cfg
-   * @return
+   * @param _map a {@link java.util.Map} object
+   * @return a {@link org.eclipse.steady.shared.json.model.ExemptionSet} object
    */
   public static ExemptionSet createFromMap(Map<String, String> _map) {
     final ExemptionSet set = new ExemptionSet();

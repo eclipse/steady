@@ -46,7 +46,6 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * <p>PypiWrapper class.</p>
- *
  */
 public class PypiWrapper implements RepositoryWrapper {
 

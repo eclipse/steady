@@ -20,7 +20,6 @@ package org.eclipse.steady.java.monitor;
 
 /**
  * <p>LoaderFilter interface.</p>
- *
  */
 public interface LoaderFilter {
 

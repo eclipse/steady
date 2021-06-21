@@ -34,7 +34,6 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>Main class.</p>
- *
  */
 public class Main {
 

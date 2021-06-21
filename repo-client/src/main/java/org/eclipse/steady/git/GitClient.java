@@ -68,7 +68,6 @@ import org.eclipse.steady.vcs.RepoMismatchException;
 
 /**
  * <p>GitClient class.</p>
- *
  */
 public class GitClient implements IVCSClient {
 

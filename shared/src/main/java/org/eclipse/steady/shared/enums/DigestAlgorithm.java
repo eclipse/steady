@@ -50,6 +50,12 @@ public enum DigestAlgorithm {
     else throw new IllegalArgumentException("[" + this.value + "] is not a valid digest algorithm");
   }
 
+  /**
+   * <p>fromString.</p>
+   *
+   * @param _s a {@link java.lang.String} object
+   * @return a {@link org.eclipse.steady.shared.enums.DigestAlgorithm} object
+   */
   public static DigestAlgorithm fromString(String _s) {
     if (_s.equals("SHA1")) return DigestAlgorithm.SHA1;
     if (_s.equals("SHA256")) return DigestAlgorithm.SHA256;

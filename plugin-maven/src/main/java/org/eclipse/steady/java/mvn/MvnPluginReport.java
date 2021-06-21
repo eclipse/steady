@@ -32,7 +32,6 @@ import org.eclipse.steady.shared.json.model.Application;
 
 /**
  * <p>MvnPluginReport class.</p>
- *
  */
 @Mojo(name = "report", defaultPhase = LifecyclePhase.VERIFY, requiresOnline = true)
 public class MvnPluginReport extends AbstractVulasMojo {

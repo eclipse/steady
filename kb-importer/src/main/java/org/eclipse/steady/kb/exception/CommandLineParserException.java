@@ -24,14 +24,30 @@ package org.eclipse.steady.kb.exception;
 public class CommandLineParserException extends Exception {
   private static final long serialVersionUID = -4923677968243017658L;
 
+  /**
+   * <p>Constructor for CommandLineParserException.</p>
+   *
+   * @param message a {@link java.lang.String} object
+   */
   public CommandLineParserException(String message) {
     super(message);
   }
 
+  /**
+   * <p>Constructor for CommandLineParserException.</p>
+   *
+   * @param message a {@link java.lang.String} object
+   * @param throwable a {@link java.lang.Throwable} object
+   */
   public CommandLineParserException(String message, Throwable throwable) {
     super(message, throwable);
   }
 
+  /**
+   * <p>Constructor for CommandLineParserException.</p>
+   *
+   * @param throwable a {@link java.lang.Throwable} object
+   */
   public CommandLineParserException(Throwable throwable) {
     super(throwable);
   }

@@ -22,7 +22,6 @@ import org.eclipse.steady.ConstructId;
 
 /**
  * <p>JavaClassInit class.</p>
- *
  */
 public class JavaClassInit extends JavaId {
 

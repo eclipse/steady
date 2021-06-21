@@ -20,7 +20,6 @@ package org.eclipse.steady.shared.json;
 
 /**
  * <p>JsonSyntaxException class.</p>
- *
  */
 public class JsonSyntaxException extends Exception {
 

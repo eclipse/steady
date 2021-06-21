@@ -20,6 +20,5 @@ package org.eclipse.steady.tasks;
 
 /**
  * <p>ReachTask interface.</p>
- *
  */
 public interface ReachTask {}

@@ -33,14 +33,14 @@ import java.io.IOException;
 
 /**
  * <p>CacheFilter class.</p>
- *
  */
 @Component
 public class CacheFilter implements Filter {
 
   /**
+   * {@inheritDoc}
+   *
    * Default destroy
-   * @return void
    */
   @Override
   public void destroy() {
@@ -48,11 +48,9 @@ public class CacheFilter implements Filter {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Appends to the response a X-Accel-Expires header equal to two hours if cache=true is present in the querystring of the request
-   * @param  request  an incoming HTTP request
-   * @param  response the HTTP resonse to return
-   * @param  chain the chain of filters
-   * @return void
    */
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -67,9 +65,9 @@ public class CacheFilter implements Filter {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * Default init
-   * @param  filterConfig the configuration of the filter
-   * @return void
    */
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {

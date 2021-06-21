@@ -35,7 +35,6 @@ import org.eclipse.steady.java.monitor.ClassVisitor;
 
 /**
  * <p>ConstructIdUtil class.</p>
- *
  */
 public class ConstructIdUtil {
 

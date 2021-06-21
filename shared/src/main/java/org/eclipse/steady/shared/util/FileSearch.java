@@ -49,7 +49,7 @@ public class FileSearch extends AbstractFileSearch {
    * <p>Constructor for FileSearch.</p>
    *
    * @param _s an array with accepted file extensions
-   * @param _size maximum accepted file size (no limit, if a value <= 0 is provided)
+   * @param _size maximum accepted file size (no limit, if a value &lt;= 0 is provided)
    * @throws java.lang.IllegalArgumentException if any.
    */
   public FileSearch(String[] _s, long _size) throws IllegalArgumentException {

@@ -70,7 +70,6 @@ public class JavaEnumId extends JavaId {
    *
    * Returns a class name that is unique within the package in which the class is defined.
    * In case of nested classes, the names of parent classes will be included (e.g., OuterClass$InnerClass).
-   * @return the class name including the names of parent classes (if any)
    */
   @Override
   public String getName() {
@@ -86,7 +85,6 @@ public class JavaEnumId extends JavaId {
    * {@inheritDoc}
    *
    * Returns the class name without considering any context.
-   * @return the simple class name w/o context information
    */
   @Override
   public String getSimpleName() {
@@ -97,7 +95,6 @@ public class JavaEnumId extends JavaId {
    * {@inheritDoc}
    *
    * Returns the name of the Java package in which the class or nested class is defined. Returns null if a class is defined outside of a package.
-   * @return a Java package name
    */
   @Override
   public ConstructId getDefinitionContext() {

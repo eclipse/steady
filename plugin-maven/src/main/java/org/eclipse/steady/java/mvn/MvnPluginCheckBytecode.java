@@ -25,7 +25,6 @@ import org.eclipse.steady.java.goals.CheckBytecodeGoal;
 
 /**
  * <p>MvnPluginCheckBytecode class.</p>
- *
  */
 @Mojo(
     name = "checkcode",

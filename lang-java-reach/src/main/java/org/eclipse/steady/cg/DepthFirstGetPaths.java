@@ -30,7 +30,6 @@ import com.ibm.wala.util.graph.Graph;
 
 /**
  * <p>DepthFirstGetPaths class.</p>
- *
  */
 public class DepthFirstGetPaths extends AbstractGetPaths {
 

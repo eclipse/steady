@@ -35,7 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <p>DependencyRepositoryImpl class.</p>
- *
  */
 public class DependencyRepositoryImpl implements DependencyRepositoryCustom {
 

@@ -20,7 +20,6 @@ package org.eclipse.steady.goals;
 
 /**
  * <p>ExecutionObserver interface.</p>
- *
  */
 public interface ExecutionObserver {
 

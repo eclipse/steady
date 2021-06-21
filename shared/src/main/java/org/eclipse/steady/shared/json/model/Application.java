@@ -38,7 +38,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * <p>Application class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(

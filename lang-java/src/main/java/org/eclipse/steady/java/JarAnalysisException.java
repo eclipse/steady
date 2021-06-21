@@ -20,7 +20,6 @@ package org.eclipse.steady.java;
 
 /**
  * <p>JarAnalysisException class.</p>
- *
  */
 public class JarAnalysisException extends Exception {
   private static final long serialVersionUID = 1L;

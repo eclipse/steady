@@ -47,7 +47,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>Tenant class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(
@@ -203,6 +202,7 @@ public class Tenant {
    * Returns true if the given space is part of this tenant, false otherwise.
    *
    * @param _space a {@link org.eclipse.steady.backend.model.Space} object.
+   * @return a boolean
    */
   public boolean hasSpace(Space _space) {
     return this.getSpaces() != null && this.getSpaces().contains(_space);

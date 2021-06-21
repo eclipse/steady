@@ -38,7 +38,6 @@ import org.springframework.stereotype.Repository;
 
 /**
  * <p>PathRepository interface.</p>
- *
  */
 @Repository
 public interface PathRepository extends CrudRepository<Path, Long>, PathRepositoryCustom {

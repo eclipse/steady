@@ -33,7 +33,6 @@ import org.eclipse.steady.sign.SignatureAnalysis;
 
 /**
  * <p>CheckverGoal class.</p>
- *
  */
 public class CheckverGoal extends AbstractAppGoal {
 

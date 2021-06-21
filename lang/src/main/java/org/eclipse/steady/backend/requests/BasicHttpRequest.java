@@ -58,7 +58,6 @@ import org.eclipse.steady.shared.util.StringUtil;
 
 /**
  * <p>BasicHttpRequest class.</p>
- *
  */
 public class BasicHttpRequest extends AbstractHttpRequest {
 
@@ -288,6 +287,8 @@ public class BasicHttpRequest extends AbstractHttpRequest {
 
   /**
    * Returns the payload size (or -1 if there's no payload).
+   *
+   * @return a long
    */
   public long getPayloadSize() {
     if (this.payload != null) return this.payload.getBytes(StandardCharsets.UTF_8).length;

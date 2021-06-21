@@ -24,7 +24,6 @@ import org.eclipse.steady.backend.HttpResponse;
 
 /**
  * <p>ResponseCondition interface.</p>
- *
  */
 public interface ResponseCondition extends Serializable {
 

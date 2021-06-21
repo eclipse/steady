@@ -28,7 +28,6 @@ import org.eclipse.steady.shared.util.ConstructIdUtil;
 
 /**
  * <p>T2CGoal class.</p>
- *
  */
 public class T2CGoal extends AbstractReachGoal {
 

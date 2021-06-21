@@ -35,7 +35,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * <p>Abstract ASTSignature class.</p>
- *
  */
 public abstract class ASTSignature extends Node implements Signature {
 

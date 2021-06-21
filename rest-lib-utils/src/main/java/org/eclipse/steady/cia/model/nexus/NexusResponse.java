@@ -24,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * <p>NexusResponse class.</p>
- *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NexusResponse {

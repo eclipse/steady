@@ -20,7 +20,6 @@ package org.eclipse.steady.shared.json.model.metrics;
 
 /**
  * <p>Abstract AbstractMetric class.</p>
- *
  */
 public abstract class AbstractMetric implements Comparable {
 

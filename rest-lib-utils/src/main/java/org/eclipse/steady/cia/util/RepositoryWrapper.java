@@ -26,7 +26,6 @@ import org.eclipse.steady.shared.json.model.Artifact;
 
 /**
  * <p>RepositoryWrapper interface.</p>
- *
  */
 public interface RepositoryWrapper {
 
@@ -69,7 +68,7 @@ public interface RepositoryWrapper {
    * @param classifier (optional) to filter on all versions having a certain classifier
    * @param packaging (optional) to filter on all versions having a certain packaging
    * @return all versions greater than the one provided in argument greaterThanVersion
-   * @throws java.lang.Exception
+   * @throws java.lang.Exception if any.
    */
   public Set<Artifact> getGreaterArtifactVersions(
       String group, String artifact, String greaterThanVersion, String classifier, String packaging)
@@ -115,7 +114,7 @@ public interface RepositoryWrapper {
    * Downloads the artifact a and returns the path where it stores it (null otherwise).
    *
    * @param a a {@link org.eclipse.steady.shared.json.model.Artifact} object.
-   * @throws java.lang.Exception
+   * @throws java.lang.Exception if any.
    * @return a {@link java.nio.file.Path} object.
    */
   public Path downloadArtifact(Artifact a) throws Exception;
@@ -124,8 +123,8 @@ public interface RepositoryWrapper {
    * Returns the artifact having the digest d
    *
    * @param digest a {@link java.lang.String} object.
-   * @throws org.eclipse.steady.cia.util.RepoException
-   * @throws java.lang.InterruptedException
+   * @throws org.eclipse.steady.cia.util.RepoException if any.
+   * @throws java.lang.InterruptedException if any.
    * @return a {@link org.eclipse.steady.shared.json.model.Artifact} object.
    */
   public Artifact getArtifactForDigest(String digest) throws RepoException, InterruptedException;

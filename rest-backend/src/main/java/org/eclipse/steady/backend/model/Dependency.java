@@ -41,12 +41,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import org.eclipse.steady.backend.model.view.Views;
-import org.eclipse.steady.backend.rest.ApplicationController;
-import org.eclipse.steady.shared.enums.ConstructType;
-import org.eclipse.steady.shared.enums.DependencyOrigin;
-import org.eclipse.steady.shared.enums.Scope;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -54,9 +48,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import org.eclipse.steady.backend.model.view.Views;
+import org.eclipse.steady.backend.rest.ApplicationController;
+import org.eclipse.steady.shared.enums.ConstructType;
+import org.eclipse.steady.shared.enums.DependencyOrigin;
+import org.eclipse.steady.shared.enums.Scope;
+
 /**
  * <p>Dependency class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(
@@ -134,9 +133,10 @@ public class Dependency implements Serializable {
   private Set<TouchPoint> touchPoints;
 
   /**
-   * Only set when single dependencies are returned by {@link
-   * ApplicationController#getDependency(String, String, String, String)}. TODO: Maybe check if they
-   * can always bet set (depending on performance and memory).
+   * Only set when single dependencies are returned by
+   * {@link ApplicationController#getDependency(String, String, String, String, String)}.
+   * TODO: Maybe check if they can always bet set (depending on performance and
+   * memory).
    */
   @Transient private Collection<Trace> traces;
 
@@ -641,6 +641,7 @@ public class Dependency implements Serializable {
     this.reachExecConstructsCounter = countReachableExecConstructLibrary;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     final StringBuffer b = new StringBuffer();

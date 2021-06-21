@@ -62,7 +62,6 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>Report class.</p>
- *
  */
 public class Report {
 
@@ -168,10 +167,20 @@ public class Report {
     Report.log.info("Exception threshold: " + this.exceptionThreshold);
   }
 
+  /**
+   * <p>isCreateAffectedLibraries.</p>
+   *
+   * @return a boolean
+   */
   public boolean isCreateAffectedLibraries() {
     return createAffectedLibraries;
   }
 
+  /**
+   * <p>Setter for the field <code>createAffectedLibraries</code>.</p>
+   *
+   * @param createAffectedLibraries a boolean
+   */
   public void setCreateAffectedLibraries(boolean createAffectedLibraries) {
     this.createAffectedLibraries = createAffectedLibraries;
   }

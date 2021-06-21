@@ -25,7 +25,6 @@ import org.eclipse.steady.shared.enums.GoalType;
 
 /**
  * <p>GoalFactory class.</p>
- *
  */
 public class GoalFactory {
 

@@ -45,7 +45,6 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * <p>NexusWrapper class.</p>
- *
  */
 public class NexusWrapper implements RepositoryWrapper {
 

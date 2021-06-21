@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>ConfigurationController class.</p>
- *
  */
 @RestController
 @CrossOrigin("*")

@@ -32,7 +32,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 // TODO: Make read-only, as construct ids should only be created by other APIs
 /**
  * <p>ConstructChangeRepository interface.</p>
- *
  */
 @RepositoryRestResource(collectionResourceRel = "constructChanges", path = "constructChanges")
 public interface ConstructChangeRepository

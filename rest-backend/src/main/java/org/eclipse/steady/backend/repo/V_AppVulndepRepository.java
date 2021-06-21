@@ -31,7 +31,6 @@ import org.springframework.stereotype.Repository;
 
 /**
  * <p>V_AppVulndepRepository interface.</p>
- *
  */
 @Repository
 public interface V_AppVulndepRepository

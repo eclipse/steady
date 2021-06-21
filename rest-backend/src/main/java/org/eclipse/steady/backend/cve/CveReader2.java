@@ -24,6 +24,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -40,13 +43,10 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.JsonPath;
-
 import net.minidev.json.JSONArray;
 
 /**
- * Reads {@link Cve} information from a service configured with {@link #CVE_SERVICE_URL}.
+ * Reads {@link Cve} information from the {@link Service#CVE}.
  */
 public class CveReader2 implements ObjectFetcher<String, Cve> {
 

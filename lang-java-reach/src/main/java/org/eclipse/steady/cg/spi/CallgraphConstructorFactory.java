@@ -36,7 +36,6 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>CallgraphConstructorFactory class.</p>
- *
  */
 public class CallgraphConstructorFactory {
 

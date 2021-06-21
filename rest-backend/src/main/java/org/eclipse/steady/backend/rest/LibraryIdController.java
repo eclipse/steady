@@ -53,7 +53,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>LibraryIdController class.</p>
- *
  */
 @RestController
 @CrossOrigin(origins = "*")

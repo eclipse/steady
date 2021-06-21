@@ -58,6 +58,9 @@ import org.eclipse.steady.sign.SignatureFactory;
 
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
+/**
+ * <p>BytecodeComparator class.</p>
+ */
 public class BytecodeComparator {
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
@@ -66,15 +69,32 @@ public class BytecodeComparator {
   private Map<Class<?>, StdDeserializer<?>> custom_deserializers =
       new HashMap<Class<?>, StdDeserializer<?>>();
 
+  /**
+   * <p>Constructor for BytecodeComparator.</p>
+   */
   public BytecodeComparator() {
     this(null);
   }
 
+  /**
+   * <p>Constructor for BytecodeComparator.</p>
+   *
+   * @param _g a {@link org.eclipse.steady.goals.GoalContext} object
+   */
   public BytecodeComparator(GoalContext _g) {
     custom_deserializers.put(ASTSignatureChange.class, new ASTSignatureChangeDeserializer());
     context = _g;
   }
 
+  /**
+   * <p>compareLibForBug.</p>
+   *
+   * @param _l a {@link org.eclipse.steady.shared.json.model.Library} object
+   * @param _bug_id a {@link java.lang.String} object
+   * @param _p a {@link java.nio.file.Path} object
+   * @throws org.eclipse.steady.backend.BackendConnectionException if any.
+   * @throws java.io.IOException if any.
+   */
   public void compareLibForBug(Library _l, String _bug_id, Path _p)
       throws BackendConnectionException, IOException {
     boolean vuln = false;

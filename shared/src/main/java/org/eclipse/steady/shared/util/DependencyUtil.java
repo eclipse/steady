@@ -31,7 +31,6 @@ import org.eclipse.steady.shared.json.model.Library;
 
 /**
  * <p>DependencyUtil class.</p>
- *
  */
 public class DependencyUtil {
 

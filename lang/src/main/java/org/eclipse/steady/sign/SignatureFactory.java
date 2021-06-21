@@ -25,7 +25,6 @@ import org.eclipse.steady.shared.json.model.ConstructId;
 
 /**
  * <p>SignatureFactory interface.</p>
- *
  */
 public interface SignatureFactory {
 

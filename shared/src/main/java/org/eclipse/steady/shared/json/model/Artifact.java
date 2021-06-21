@@ -32,7 +32,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * <p>Artifact class.</p>
- *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Artifact implements Serializable, Comparable<Object> {

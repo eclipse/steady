@@ -96,7 +96,7 @@
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
-            <version>1.10.9</version>
+            <version>1.10.10</version>
         </dependency>
 
         <!--instrumentation agent dependency -->
@@ -208,7 +208,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.22.1</version>
                         <executions>
                             <execution>
                                 <goals>

@@ -33,7 +33,6 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>Task interface.</p>
- *
  */
 public interface Task {
 

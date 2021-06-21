@@ -24,7 +24,6 @@ import org.eclipse.steady.shared.json.model.Library;
 
 /**
  * <p>PutLibraryCondition class.</p>
- *
  */
 public class PutLibraryCondition implements ResponseCondition {
 

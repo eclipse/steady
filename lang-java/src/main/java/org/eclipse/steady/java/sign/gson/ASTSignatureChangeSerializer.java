@@ -36,7 +36,6 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.Update;
 
 /**
  * <p>ASTSignatureChangeSerializer class.</p>
- *
  */
 public class ASTSignatureChangeSerializer extends StdSerializer<ASTSignatureChange> {
 

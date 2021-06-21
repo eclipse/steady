@@ -45,7 +45,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>ClassController class.</p>
- *
  */
 @RestController
 @CrossOrigin("*")

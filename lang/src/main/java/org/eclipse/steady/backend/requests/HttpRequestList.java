@@ -29,7 +29,6 @@ import org.eclipse.steady.goals.GoalContext;
 
 /**
  * <p>HttpRequestList class.</p>
- *
  */
 public class HttpRequestList extends AbstractHttpRequest {
 

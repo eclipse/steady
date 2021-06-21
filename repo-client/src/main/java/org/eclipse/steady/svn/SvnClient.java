@@ -58,6 +58,9 @@ import org.tmatesoft.svn.core.wc2.SvnCheckout;
 import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
 import org.tmatesoft.svn.core.wc2.SvnTarget;
 
+/**
+ * <p>SvnClient class.</p>
+ */
 public class SvnClient implements IVCSClient {
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
@@ -77,14 +80,23 @@ public class SvnClient implements IVCSClient {
 
   private Configuration cfg = null;
 
+  /**
+   * <p>getType.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String getType() {
     return SvnClient.TYPE;
   }
 
+  /**
+   * <p>Constructor for SvnClient.</p>
+   */
   public SvnClient() {
     this.cfg = VulasConfiguration.getGlobal().getConfiguration();
   }
 
+  /** {@inheritDoc} */
   public void setRepoUrl(URL _u) throws RepoMismatchException {
     if (_u == null) throw new IllegalArgumentException("Invalid url: " + _u);
     this.url = _u;
@@ -102,6 +114,7 @@ public class SvnClient implements IVCSClient {
     this.rootRepo = this.setupRepo(null);
   }
 
+  /** {@inheritDoc} */
   public void setWorkDir(Path _dir) {
     if (_dir != null) this.workDir = _dir;
     else {
@@ -163,8 +176,9 @@ public class SvnClient implements IVCSClient {
   }
 
   /**
-   * Performs a search in the repository root.
+   * {@inheritDoc}
    *
+   * Performs a search in the repository root.
    */
   public Map<String, String> searchCommitLog(String _str, Date _asOf) {
     final Map<String, String> hits = new HashMap<String, String>();
@@ -186,6 +200,7 @@ public class SvnClient implements IVCSClient {
     return hits;
   }
 
+  /** {@inheritDoc} */
   public Map<String, String> getCommitLogEntries(Set<String> _revs) { // String[] _ids) {
     final Map<String, String> hits = new HashMap<String, String>();
     try {
@@ -219,6 +234,7 @@ public class SvnClient implements IVCSClient {
     return e;
   }
 
+  /** {@inheritDoc} */
   public Path checkout(String _rev) throws Exception {
     if (_rev.contains(":")) {
       throw new Exception(
@@ -250,6 +266,7 @@ public class SvnClient implements IVCSClient {
     return rev_dir;
   }
 
+  /** {@inheritDoc} */
   public Map<String, String> listEntries(String _path, String _asof, String _until) {
     Map<String, String> l = new HashMap<String, String>();
     // String rel_path = url.toString().replace(rootRepo.getDir("", -1, null,
@@ -295,6 +312,7 @@ public class SvnClient implements IVCSClient {
     return l;
   }
 
+  /** {@inheritDoc} */
   public File checkoutFile(String _rev, String _rel_path) {
     final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
     File f = null;
@@ -365,6 +383,7 @@ public class SvnClient implements IVCSClient {
     return Paths.get(this.workDir.toString(), _rev, _rel_path).toFile();
   }
 
+  /** {@inheritDoc} */
   public Set<FileChange> getFileChanges(String _rev) {
     final Set<FileChange> changes = new HashSet<FileChange>();
     try {
@@ -418,6 +437,11 @@ public class SvnClient implements IVCSClient {
     return changes;
   }
 
+  /**
+   * <p>getRepoRelativePath.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String getRepoRelativePath() {
     /*
     String rel_path = null;
@@ -440,6 +464,7 @@ public class SvnClient implements IVCSClient {
   //		return rootRepo.getDir(path, -1, null,(Collection<SVNDirEntry>) null);
   //	}
 
+  /** {@inheritDoc} */
   public long getRevisionTimeStamp(String revision) {
     long revisionTimeStampMilliSecond = 0;
 

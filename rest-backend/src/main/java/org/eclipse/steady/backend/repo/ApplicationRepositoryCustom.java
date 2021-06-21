@@ -31,7 +31,6 @@ import org.eclipse.steady.shared.enums.VulnDepOrigin;
 
 /**
  * <p>ApplicationRepositoryCustom interface.</p>
- *
  */
 public interface ApplicationRepositoryCustom {
 

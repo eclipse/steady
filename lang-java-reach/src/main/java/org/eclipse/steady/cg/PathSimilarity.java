@@ -28,7 +28,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * <p>PathSimilarity class.</p>
- *
  */
 public class PathSimilarity {
 

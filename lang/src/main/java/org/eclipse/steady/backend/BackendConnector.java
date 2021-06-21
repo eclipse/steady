@@ -1076,6 +1076,8 @@ public class BackendConnector {
    * @param _source a {@link java.lang.String} object.
    * @return an array of {@link org.eclipse.steady.shared.json.model.AffectedLibrary} objects.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
+   * @param _g a {@link org.eclipse.steady.goals.GoalContext} object
+   * @param _onlyWellKnown a {@link java.lang.Boolean} object
    */
   public AffectedLibrary[] getBugAffectedLibraries(
       GoalContext _g, String _bugId, String _source, Boolean _onlyWellKnown)
@@ -1115,6 +1117,7 @@ public class BackendConnector {
    * @param _json a {@link java.lang.String} object.
    * @param _source a {@link org.eclipse.steady.shared.enums.AffectedVersionSource} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
+   * @param _g a {@link org.eclipse.steady.goals.GoalContext} object
    */
   public void uploadBugAffectedLibraries(
       GoalContext _g, String _bugId, String _json, AffectedVersionSource _source)
@@ -1232,6 +1235,7 @@ public class BackendConnector {
    * @param _bugId a {@link java.lang.String} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException
    * @return a {@link org.eclipse.steady.shared.json.model.Bug} object.
+   * @param _g a {@link org.eclipse.steady.goals.GoalContext} object
    */
   public Bug getBug(GoalContext _g, String _bugId) throws BackendConnectionException {
     BasicHttpRequest request = new BasicHttpRequest(HttpMethod.GET, PathBuilder.bug(_bugId), null);
@@ -1271,11 +1275,11 @@ public class BackendConnector {
 
   /**
    * <p>getAstForQnameInLib.</p>
+   *
    * @param _gc TODO
    * @param _qname a {@link java.lang.String} object.
    * @param _sources a {@link java.lang.Boolean} object.
    * @param _lang a {@link org.eclipse.steady.shared.enums.ProgrammingLanguage} object.
-   *
    * @return a {@link java.lang.String} object.
    */
   public synchronized String getAstForQnameInLib(
@@ -1380,6 +1384,7 @@ public class BackendConnector {
    *
    * @param _json a {@link java.lang.String} object.
    * @return a {@link java.lang.String} object.
+   * @param _g a {@link org.eclipse.steady.goals.GoalContext} object
    */
   public synchronized String getAstDiff(GoalContext _g, String _json) {
     String json = null;
@@ -1616,9 +1621,9 @@ public class BackendConnector {
    * get CVE description
    * </p>
    *
-   * @param _bugId
+   * @param _bugId a {@link java.lang.String} object
    * @return String
-   * @throws BackendConnectionException
+   * @throws org.eclipse.steady.backend.BackendConnectionException
    */
   public String getCVE(String _bugId) throws BackendConnectionException {
     return new BasicHttpRequest(HttpMethod.GET, PathBuilder.nvdRest(_bugId), null).send().getBody();

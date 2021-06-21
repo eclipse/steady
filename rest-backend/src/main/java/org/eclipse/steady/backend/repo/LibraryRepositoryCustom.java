@@ -22,7 +22,6 @@ import org.eclipse.steady.backend.model.Library;
 
 /**
  * <p>LibraryRepositoryCustom interface.</p>
- *
  */
 public interface LibraryRepositoryCustom {
 

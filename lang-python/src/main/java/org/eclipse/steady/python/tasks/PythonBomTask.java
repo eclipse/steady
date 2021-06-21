@@ -52,7 +52,6 @@ import org.eclipse.steady.tasks.AbstractBomTask;
 
 /**
  * <p>PythonBomTask class.</p>
- *
  */
 public class PythonBomTask extends AbstractBomTask {
 

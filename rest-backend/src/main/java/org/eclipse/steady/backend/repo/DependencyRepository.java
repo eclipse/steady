@@ -33,7 +33,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 // TODO: Make read-only, as construct ids should only be created by other APIs
 /**
  * <p>DependencyRepository interface.</p>
- *
  */
 @RepositoryRestResource(collectionResourceRel = "dependencies", path = "dependencies")
 public interface DependencyRepository

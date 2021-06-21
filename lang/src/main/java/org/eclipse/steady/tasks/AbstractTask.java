@@ -31,7 +31,6 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>Abstract AbstractTask class.</p>
- *
  */
 public abstract class AbstractTask implements Task {
 

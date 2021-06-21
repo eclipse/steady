@@ -25,7 +25,6 @@ import org.eclipse.steady.backend.HttpResponse;
 
 /**
  * <p>ContentCondition class.</p>
- *
  */
 public class ContentCondition implements ResponseCondition {
 

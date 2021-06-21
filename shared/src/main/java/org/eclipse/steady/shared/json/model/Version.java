@@ -114,6 +114,7 @@ public class Version implements Comparable<Version> {
    * This method compares versions that only contains numbers. It returns 0 if they are equal or contains letters
    *
    * @return a int.
+   * @param other a {@link org.eclipse.steady.shared.json.model.Version} object
    */
   public int compareNumberVersion(Version other) {
 

@@ -20,7 +20,6 @@ package org.eclipse.steady.cg.soot;
 
 /**
  * <p>SootConfiguration class.</p>
- *
  */
 public class SootConfiguration {
   /** Constant <code>SOOT_CONFIGURATION_SETTINGS="vulas.reach.soot"</code> */

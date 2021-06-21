@@ -28,8 +28,8 @@ import org.eclipse.steady.shared.util.StopWatch;
 /**
  * Simple cache.
  *
- * @param <S>
- * @param <T>
+ * @param <S> key type
+ * @param <T> value type
  */
 public class Cache<S, T> {
 

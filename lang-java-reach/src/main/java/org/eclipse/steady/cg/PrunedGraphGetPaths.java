@@ -32,7 +32,6 @@ import com.ibm.wala.util.graph.Graph;
 
 /**
  * <p>PrunedGraphGetPaths class.</p>
- *
  */
 public class PrunedGraphGetPaths extends AbstractGetPaths {
 

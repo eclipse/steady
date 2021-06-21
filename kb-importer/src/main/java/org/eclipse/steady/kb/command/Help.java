@@ -28,6 +28,7 @@ import org.eclipse.steady.kb.exception.ValidationException;
  */
 public class Help implements Command {
 
+  /** {@inheritDoc} */
   @Override
   public void run(HashMap<String, Object> args) {
     // Showing help of import command
@@ -36,16 +37,19 @@ public class Help implements Command {
     formatter.printHelp("java -jar <jar> <options>", command.getOptions());
   }
 
+  /** {@inheritDoc} */
   @Override
   public Options getOptions() {
     return new Options();
   }
 
+  /** {@inheritDoc} */
   @Override
   public void validate(HashMap<String, Object> args) throws ValidationException {
     // Nothing to validate as help does not have any args
   }
 
+  /** {@inheritDoc} */
   @Override
   public Command.NAME getCommandName() {
     return Command.NAME.HELP;

@@ -20,7 +20,6 @@ package org.eclipse.steady.goals;
 
 /**
  * <p>ReportException class.</p>
- *
  */
 public class ReportException extends GoalExecutionException {
   private String longMessage = null;

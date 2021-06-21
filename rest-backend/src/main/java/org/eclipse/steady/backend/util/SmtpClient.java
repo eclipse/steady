@@ -47,7 +47,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <p>SmtpClient class.</p>
- *
  */
 public class SmtpClient {
 
