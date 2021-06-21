@@ -72,52 +72,56 @@ spec:
   stages {
     // Verifies that no Spotbugs checks fails (cf.
     // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines).
-    stage('Spotbugs') {
+    stage('Verify Spotbugs') {
       steps {
         container('maven') {
-          sh 'mvn -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
+          sh 'mvn -B -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
               -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.includeFilterFile=findbugs-include.xml \
               -Dspotbugs.failOnError=true -DskipTests clean install com.github.spotbugs:spotbugs-maven-plugin:4.2.3:check'
         }
       }
     }
     // Verifies that the Javadoc documentation can be generated (by enabling the
-    // javadoc profile contained in several pom.xml files).
-    stage('JavaDoc') {
+    // javadoc profile contained in three pom.xml files).
+    stage('Verify JavaDoc') {
       steps {
         container('maven') {
-          sh 'mvn -e -P gradle,javadoc -Dspring.standalone -DskipTests clean package'
-        }
-      }
-    }
-    // Verifies that all tests pass (except for expensive patch analyses).
-    stage('Tests') {
-      steps {
-        container('maven') {
-          sh 'mvn -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
-              -Dit.test="!IT01_PatchAnalyzerIT,IT*,*IT" -DfailIfNoTests=false clean test'
+          sh 'mvn -B -e -P gradle,javadoc -Dspring.standalone -DskipTests clean package'
         }
       }
     }
     // Verifies compliance with Google's Java Style Guide (cf.
     // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines).
-    stage('Codestyle') {
+    stage('Verify Coding Style') {
       steps {
         container('maven') {
           sh 'bash .travis/check_code_style.sh'
         }
       }
     }
-    // Verifies that artifacts can be signed with GPG (required for releases on Maven Central).
-    // TODO: Complete in separate PR.
-    stage('Sign') {
+    // Verifies that all tests pass (except for expensive patch analyses).
+    stage('Test') {
       steps {
         container('maven') {
-          sh 'gpg --version'
+          sh 'mvn -B -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
+              -Dit.test="!IT01_PatchAnalyzerIT,IT*,*IT" -DfailIfNoTests=false clean test'
+        }
+      }
+    }
+    // GPG signs all artifacts and deploys them on Maven Central. See here for
+    // additional info: https://www.jenkins.io/doc/book/pipeline/syntax/,
+    // https://wiki.eclipse.org/Jenkins
+    stage('Release on Central') {
+      // when { branch "sign-releases" }
+      when { tag "release-*" }
+      steps {
+        container('maven') {
+          echo "Branch [${env.BRANCH_NAME}], tag [${env.TAG_NAME}]"
           withCredentials([file(credentialsId: 'secret-subkeys.asc', variable: 'KEYRING')]) {
             sh 'gpg --batch --import "${KEYRING}"'
             sh 'for fpr in $(gpg --list-keys --with-colons  | awk -F: \'/fpr:/ {print $10}\' | sort -u); do echo -e "5\ny\n" |  gpg --batch --command-fd 0 --expert --edit-key ${fpr} trust; done'
           }
+          sh 'mvn -B -e -Dspring.standalone -DskipTests -P gradle,javadoc,release clean deploy'
         }
       }
     }
