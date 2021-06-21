@@ -108,21 +108,20 @@ spec:
         }
       }
     }
-    // Verifies that artifacts can be signed with GPG (required for releases on Maven Central).
-    // https://www.jenkins.io/doc/book/pipeline/syntax/
+    // GPG signs all artifacts and deploys them on Maven Central. See here for
+    // additional info: https://www.jenkins.io/doc/book/pipeline/syntax/,
+    // https://wiki.eclipse.org/Jenkins
     stage('Release on Central') {
       // when { branch "sign-releases" }
-      // when { tag "release-*" }
+      when { tag "release-*" }
       steps {
         container('maven') {
-          echo "Environment: ${env.BRANCH_NAME}"
-          echo "Environment: ${env.TAG_NAME}"
-          sh 'gpg --version'
+          echo "Branch [${env.BRANCH_NAME}], tag [${env.TAG_NAME}]"
           withCredentials([file(credentialsId: 'secret-subkeys.asc', variable: 'KEYRING')]) {
             sh 'gpg --batch --import "${KEYRING}"'
             sh 'for fpr in $(gpg --list-keys --with-colons  | awk -F: \'/fpr:/ {print $10}\' | sort -u); do echo -e "5\ny\n" |  gpg --batch --command-fd 0 --expert --edit-key ${fpr} trust; done'
           }
-          sh 'mvn -B -e -Dspring.standalone -DskipTests -P gradle,javadoc,release clean verify'
+          sh 'mvn -B -e -Dspring.standalone -DskipTests -P gradle,javadoc,release clean deploy'
         }
       }
     }
