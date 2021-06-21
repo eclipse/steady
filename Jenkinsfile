@@ -75,7 +75,7 @@ spec:
     stage('Verify Spotbugs') {
       steps {
         container('maven') {
-          sh 'mvn -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
+          sh 'mvn -B -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
               -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.includeFilterFile=findbugs-include.xml \
               -Dspotbugs.failOnError=true -DskipTests clean install com.github.spotbugs:spotbugs-maven-plugin:4.2.3:check'
         }
@@ -86,7 +86,7 @@ spec:
     stage('Verify JavaDoc') {
       steps {
         container('maven') {
-          sh 'mvn -e -P gradle,javadoc -Dspring.standalone -DskipTests clean package'
+          sh 'mvn -B -e -P gradle,javadoc -Dspring.standalone -DskipTests clean package'
         }
       }
     }
@@ -103,7 +103,7 @@ spec:
     stage('Test') {
       steps {
         container('maven') {
-          sh 'mvn -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
+          sh 'mvn -B -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
               -Dit.test="!IT01_PatchAnalyzerIT,IT*,*IT" -DfailIfNoTests=false clean test'
         }
       }
@@ -111,11 +111,12 @@ spec:
     // Verifies that artifacts can be signed with GPG (required for releases on Maven Central).
     // https://www.jenkins.io/doc/book/pipeline/syntax/
     stage('Release on Central') {
-      //when { branch "sign-releases" }
+      // when { branch "sign-releases" }
       // when { tag "release-*" }
       steps {
         container('maven') {
-          echo "Environment: ${env}"
+          echo "Environment: ${env.BRANCH_NAME}"
+          echo "Environment: ${env.TAG_NAME}"
           sh 'gpg --version'
           withCredentials([file(credentialsId: 'secret-subkeys.asc', variable: 'KEYRING')]) {
             sh 'gpg --batch --import "${KEYRING}"'
