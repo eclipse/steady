@@ -111,10 +111,11 @@ spec:
     // Verifies that artifacts can be signed with GPG (required for releases on Maven Central).
     // https://www.jenkins.io/doc/book/pipeline/syntax/
     stage('Release on Central') {
-      when { branch "sign-releases" }
+      //when { branch "sign-releases" }
       // when { tag "release-*" }
       steps {
         container('maven') {
+          echo "Environment: ${env}"
           sh 'gpg --version'
           withCredentials([file(credentialsId: 'secret-subkeys.asc', variable: 'KEYRING')]) {
             sh 'gpg --batch --import "${KEYRING}"'
