@@ -72,7 +72,7 @@ spec:
   stages {
     // Verifies that no Spotbugs checks fails (cf.
     // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines).
-    stage('Spotbugs') {
+    stage('Verify Spotbugs') {
       steps {
         container('maven') {
           sh 'mvn -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
@@ -82,16 +82,25 @@ spec:
       }
     }
     // Verifies that the Javadoc documentation can be generated (by enabling the
-    // javadoc profile contained in several pom.xml files).
-    stage('JavaDoc') {
+    // javadoc profile contained in three pom.xml files).
+    stage('Verify JavaDoc') {
       steps {
         container('maven') {
           sh 'mvn -e -P gradle,javadoc -Dspring.standalone -DskipTests clean package'
         }
       }
     }
+    // Verifies compliance with Google's Java Style Guide (cf.
+    // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines).
+    stage('Verify Coding Style') {
+      steps {
+        container('maven') {
+          sh 'bash .travis/check_code_style.sh'
+        }
+      }
+    }
     // Verifies that all tests pass (except for expensive patch analyses).
-    stage('Tests') {
+    stage('Test') {
       steps {
         container('maven') {
           sh 'mvn -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
@@ -99,18 +108,11 @@ spec:
         }
       }
     }
-    // Verifies compliance with Google's Java Style Guide (cf.
-    // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines).
-    stage('Codestyle') {
-      steps {
-        container('maven') {
-          sh 'bash .travis/check_code_style.sh'
-        }
-      }
-    }
     // Verifies that artifacts can be signed with GPG (required for releases on Maven Central).
-    // TODO: Complete in separate PR.
-    stage('Sign') {
+    // https://www.jenkins.io/doc/book/pipeline/syntax/
+    stage('Release on Central') {
+      when { branch "sign-releases" }
+      // when { tag "release-*" }
       steps {
         container('maven') {
           sh 'gpg --version'
@@ -118,6 +120,7 @@ spec:
             sh 'gpg --batch --import "${KEYRING}"'
             sh 'for fpr in $(gpg --list-keys --with-colons  | awk -F: \'/fpr:/ {print $10}\' | sort -u); do echo -e "5\ny\n" |  gpg --batch --command-fd 0 --expert --edit-key ${fpr} trust; done'
           }
+          sh 'mvn -B -e -Dspring.standalone -DskipTests -P gradle,javadoc,release clean verify'
         }
       }
     }
