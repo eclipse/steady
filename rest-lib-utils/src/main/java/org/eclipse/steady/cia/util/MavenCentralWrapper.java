@@ -66,7 +66,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
   private static Set<ProgrammingLanguage> SUPP_LANG = new HashSet<ProgrammingLanguage>();
 
   private RestTemplate rest_template;
-  
+
   static {
     SUPP_LANG.add(ProgrammingLanguage.JAVA);
     MAVEN_CENTRAL_REPO =
@@ -87,11 +87,15 @@ public class MavenCentralWrapper implements RepositoryWrapper {
             .getInteger("vulas.lib-utils.mavencentral.retrycount", 3);
     if (MAVEN_CENTRAL_REPO != null && baseUrl != null) CONFIGURED = true;
   }
-  
-  public MavenCentralWrapper(){
-	  super();
-	  RestTemplateBuilder builder = new RestTemplateBuilder();
-	  this.rest_template = builder.setConnectTimeout(Duration.ofMillis(5000)).setReadTimeout(Duration.ofMillis(5000)).build();
+
+  public MavenCentralWrapper() {
+    super();
+    RestTemplateBuilder builder = new RestTemplateBuilder();
+    this.rest_template =
+        builder
+            .setConnectTimeout(Duration.ofMillis(5000))
+            .setReadTimeout(Duration.ofMillis(5000))
+            .build();
   }
 
   /** {@inheritDoc} */
@@ -112,7 +116,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 
   private MavenVersionsSearch getFromMavenCentral(Map<String, String> _params)
       throws InterruptedException {
-	
+
     ResponseEntity<MavenVersionsSearch> responseEntity = null;
 
     for (Integer i = 1; i < this.mavenCentralRetryCount + 1; i++) {
@@ -259,7 +263,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
     b.append(_doc.getM2Filename());
 
     // Make the query
-    
+
     Path result = null;
     try {
       rest_template.execute(
@@ -289,7 +293,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
       params.put("core", "gav");
 
       // Make the query
-      
+
       final MavenVersionsSearch search =
           rest_template.getForObject(baseUrl, MavenVersionsSearch.class, params);
 
