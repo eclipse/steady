@@ -25,7 +25,7 @@ services:
     container_name: steady-haproxy
     hostname: haproxy
     env_file: .env
-    image: haproxy:alpine
+    image: haproxy:2.3-alpine
     ports:
       - "8033:8080"
       - "8034:7070"
