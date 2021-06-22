@@ -416,6 +416,13 @@
 												<Text xmlns="sap.m" text="{name}" />
 											</template>
 										</Column>
+										<Column xmlns="sap.ui.table" width="15%" sortProperty="interfaces"
+											filterProperty="interfaces">
+											<Label text="{i18n>interfaces}" xmlns="sap.ui.commons" />
+											<template>
+												<Text xmlns="sap.m" text="{interfacesTested}	/	{interfaces}" />
+											</template>
+										</Column>
 										<Column xmlns="sap.ui.table" width="15%" sortProperty="constructors"
 											filterProperty="constructors">
 											<Label text="{i18n>constructors}" xmlns="sap.ui.commons" />
