@@ -19,6 +19,7 @@
 package org.eclipse.steady.cia.util;
 
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import org.eclipse.steady.shared.json.model.mavenCentral.ResponseDoc;
 import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
@@ -62,6 +64,8 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 
   private static Set<ProgrammingLanguage> SUPP_LANG = new HashSet<ProgrammingLanguage>();
 
+  private RestTemplate rest_template;
+
   static {
     SUPP_LANG.add(ProgrammingLanguage.JAVA);
     MAVEN_CENTRAL_REPO =
@@ -83,6 +87,16 @@ public class MavenCentralWrapper implements RepositoryWrapper {
     if (MAVEN_CENTRAL_REPO != null && baseUrl != null) CONFIGURED = true;
   }
 
+  public MavenCentralWrapper() {
+    super();
+    RestTemplateBuilder builder = new RestTemplateBuilder();
+    this.rest_template =
+        builder
+            .setConnectTimeout(Duration.ofMillis(5000))
+            .setReadTimeout(Duration.ofMillis(5000))
+            .build();
+  }
+
   /** {@inheritDoc} */
   @Override
   public Set<ProgrammingLanguage> getSupportedLanguages() {
@@ -101,7 +115,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
 
   private MavenVersionsSearch getFromMavenCentral(Map<String, String> _params)
       throws InterruptedException {
-    final RestTemplate rest_template = new RestTemplate();
+
     ResponseEntity<MavenVersionsSearch> responseEntity = null;
 
     for (Integer i = 1; i < this.mavenCentralRetryCount + 1; i++) {
@@ -248,7 +262,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
     b.append(_doc.getM2Filename());
 
     // Make the query
-    final RestTemplate rest_template = new RestTemplate();
+
     Path result = null;
     try {
       rest_template.execute(
@@ -278,7 +292,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
       params.put("core", "gav");
 
       // Make the query
-      final RestTemplate rest_template = new RestTemplate();
+
       final MavenVersionsSearch search =
           rest_template.getForObject(baseUrl, MavenVersionsSearch.class, params);
 
