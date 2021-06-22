@@ -110,11 +110,9 @@ public class ClassVisitor {
     // Build the JavaId
     if (_c.isInterface()) {
       this.javaId = JavaId.parseInterfaceQName(_c.getName());
-    }
-    else if (_c.isEnum()) {
+    } else if (_c.isEnum()) {
       this.javaId = JavaId.parseEnumQName(_c.getName());
-    }
-    else {
+    } else {
       this.javaId = JavaId.parseClassQName(_c.getName());
     }
 

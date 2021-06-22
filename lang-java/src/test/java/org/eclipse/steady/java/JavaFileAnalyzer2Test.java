@@ -91,18 +91,17 @@ public class JavaFileAnalyzer2Test {
 
       // The parsing should produce the following 5 elements:
       final JavaPackageId p = new JavaPackageId("org.eclipse.steady.java.test");
-      
+
       final JavaInterfaceId itf =
           JavaId.parseInterfaceQName("org.eclipse.steady.java.test.ConfigurationKey");
       final JavaMethodId itf_m1 =
           JavaId.parseMethodQName(
               "org.eclipse.steady.java.test.ConfigurationKey.getType(String,int)");
       final JavaMethodId itf_m2 =
-              JavaId.parseMethodQName(
-                  "org.eclipse.steady.java.test.ConfigurationKey.getKey()");
+          JavaId.parseMethodQName("org.eclipse.steady.java.test.ConfigurationKey.getKey()");
       final JavaMethodId itf_m3 =
-                  JavaId.parseMethodQName(
-                      "org.eclipse.steady.java.test.ConfigurationKey.getDefaultValue()");
+          JavaId.parseMethodQName(
+              "org.eclipse.steady.java.test.ConfigurationKey.getDefaultValue()");
 
       final JavaClassId anon1 =
           JavaId.parseClassQName("org.eclipse.steady.java.test.ConfigurationKey$1");
@@ -396,8 +395,12 @@ public class JavaFileAnalyzer2Test {
       // The parsing should produce the following elements:
       final JavaPackageId p = new JavaPackageId("org.eclipse.steady.java.test");
 
-      final JavaInterfaceId itf = JavaId.parseInterfaceQName("org.eclipse.steady.java.test.NestedDeclarations$DoSomethingElse");
-      final JavaMethodId itf_m = JavaId.parseMethodQName("org.eclipse.steady.java.test.NestedDeclarations$DoSomethingElse.doSomethingElse()");
+      final JavaInterfaceId itf =
+          JavaId.parseInterfaceQName(
+              "org.eclipse.steady.java.test.NestedDeclarations$DoSomethingElse");
+      final JavaMethodId itf_m =
+          JavaId.parseMethodQName(
+              "org.eclipse.steady.java.test.NestedDeclarations$DoSomethingElse.doSomethingElse()");
 
       final JavaClassId cl1 =
           JavaId.parseClassQName("org.eclipse.steady.java.test.NestedDeclarations"); // line 5
@@ -485,7 +488,7 @@ public class JavaFileAnalyzer2Test {
 
       assertTrue(constructs.containsKey(itf));
       assertTrue(constructs.containsKey(itf_m));
-      
+
       assertTrue(constructs.containsKey(cl1));
       assertTrue(constructs.containsKey(cl1_m));
 

@@ -331,7 +331,7 @@ public abstract class JavaId extends ConstructId {
       case CLAS:
         return JavaId.parseClassQName(_cid.getQname());
       case INTF:
-          return JavaId.parseInterfaceQName(_cid.getQname());
+        return JavaId.parseInterfaceQName(_cid.getQname());
       default:
         throw new IllegalArgumentException("Unknown type [" + _cid.getType() + "]");
     }
@@ -526,7 +526,9 @@ public abstract class JavaId extends ConstructId {
 
     if (_s == null || _s.equals("")) throw new IllegalArgumentException("String null or empty");
     if (_ctx_type == null
-        || (!_ctx_type.equals(JavaId.Type.CLASS) && !_ctx_type.equals(JavaId.Type.ENUM) && !_ctx_type.equals(JavaId.Type.INTERFACE)))
+        || (!_ctx_type.equals(JavaId.Type.CLASS)
+            && !_ctx_type.equals(JavaId.Type.ENUM)
+            && !_ctx_type.equals(JavaId.Type.INTERFACE)))
       throw new IllegalArgumentException(
           "Accepts context types CLASS, ENUM and INTERFACE, got [" + _ctx_type + "]");
 
@@ -545,11 +547,9 @@ public abstract class JavaId extends ConstructId {
     try {
       if (_ctx_type.equals(JavaId.Type.CLASS)) {
         def_ctx = JavaId.parseClassQName(_s.substring(0, j));
-      }
-      else if (_ctx_type.equals(JavaId.Type.ENUM)) {
+      } else if (_ctx_type.equals(JavaId.Type.ENUM)) {
         def_ctx = JavaId.parseEnumQName(_s.substring(0, j));
-      }
-      else if (_ctx_type.equals(JavaId.Type.INTERFACE)) {
+      } else if (_ctx_type.equals(JavaId.Type.INTERFACE)) {
         def_ctx = JavaId.parseInterfaceQName(_s.substring(0, j));
       }
 
@@ -592,7 +592,9 @@ public abstract class JavaId extends ConstructId {
 
     if (_s == null || _s.equals("")) throw new IllegalArgumentException("String null or empty");
     if (_ctx_type == null
-      || (!_ctx_type.equals(JavaId.Type.CLASS) && !_ctx_type.equals(JavaId.Type.ENUM) && !_ctx_type.equals(JavaId.Type.INTERFACE)))
+        || (!_ctx_type.equals(JavaId.Type.CLASS)
+            && !_ctx_type.equals(JavaId.Type.ENUM)
+            && !_ctx_type.equals(JavaId.Type.INTERFACE)))
       throw new IllegalArgumentException(
           "Accepts context types CLASS, ENUM and INTERFACE, got [" + _ctx_type + "]");
 

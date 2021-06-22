@@ -59,7 +59,7 @@ public class JsonHelperTest {
       assertEquals(json1, json2);
     } catch (Exception e) {
       e.printStackTrace();
-      assert(false);
+      assert (false);
     }
   }
 

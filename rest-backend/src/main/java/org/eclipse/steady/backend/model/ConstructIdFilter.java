@@ -93,7 +93,7 @@ public class ConstructIdFilter {
         ? this.constructIds.get(ConstructType.CLAS).size()
         : 0);
   }
-  
+
   /**
    * <p>countIntf.</p>
    *

@@ -546,7 +546,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
               }
             }
           }
-        
+
           if (!this.instrument) {
             // only detach if no static instrumentation (otherwise it will fail because the class
             // was modified)
