@@ -90,7 +90,7 @@ spec:
           sh 'mvn -B -e -P gradle,javadoc -Dspring.standalone -DskipTests clean install'
           sh 'mvn -B -e -P gradle,javadoc -Dspring.standalone -DskipTests -Dreference.repo=https://repo.maven.apache.org/maven2 clean verify'
           sh 'cat target/root-*.buildinfo.compare'
-          //sh 'grep ko=0 target/root-*.buildinfo.compare' // Fail if JARs are different
+          sh 'grep ko=0 target/root-*.buildinfo.compare' // Fail if JARs are different
         }
       }
     }
