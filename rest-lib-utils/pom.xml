@@ -198,7 +198,7 @@
 		<dependency>
 			<groupId>com.jeantessier</groupId>
 			<artifactId>dependency-finder</artifactId>
-			<version>1.2.1-beta5</version>
+			<version>1.2.1-beta5-log4j</version>
 		</dependency>
 
 	<!-- The following are the dependencies of dependency-finder They have been 
