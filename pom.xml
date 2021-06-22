@@ -449,6 +449,7 @@
 				<configuration>
 					<reproducible>false</reproducible>
 					<referenceCompareSave>true</referenceCompareSave>
+					<detectSkip>false</detectSkip>
 				</configuration>
 				<executions>
 					<execution>
