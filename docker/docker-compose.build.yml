@@ -41,15 +41,6 @@ services:
         - VULAS_RELEASE=${VULAS_RELEASE}
     image: steady-rest-lib-utils:${VULAS_RELEASE}
 
-  patch-analyzer:
-    build:
-      context: ./patch-analyzer
-      dockerfile: ./Dockerfile
-      args:
-        - VULAS_RELEASE=${VULAS_RELEASE}
-    image: steady-patch-analyzer:${VULAS_RELEASE}
-    entrypoint: /bin/sleep 1
-
   kb-importer:
     build:
       context: ./kb-importer
