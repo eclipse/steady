@@ -330,6 +330,8 @@ public abstract class JavaId extends ConstructId {
         return JavaId.parseEnumQName(_cid.getQname());
       case CLAS:
         return JavaId.parseClassQName(_cid.getQname());
+      case INTF:
+          return JavaId.parseInterfaceQName(_cid.getQname());
       default:
         throw new IllegalArgumentException("Unknown type [" + _cid.getType() + "]");
     }
