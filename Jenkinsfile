@@ -81,12 +81,16 @@ spec:
         }
       }
     }
-    // Verifies that the Javadoc documentation can be generated (by enabling the
-    // javadoc profile contained in three pom.xml files).
-    stage('Verify JavaDoc') {
+    // Verifies that the -javadoc and -sources artifacts can be generated (by enabling the
+    // javadoc profile contained in three pom.xml files). Also verifies that the build
+    // is reproducible.
+    stage('Verify JavaDoc, Source and Reproducibility') {
       steps {
         container('maven') {
-          sh 'mvn -B -e -P gradle,javadoc -Dspring.standalone -DskipTests clean package'
+          sh 'mvn -B -e -P gradle,javadoc -Dspring.standalone -DskipTests clean install'
+          sh 'mvn -B -e -P gradle,javadoc -Dspring.standalone -DskipTests -Dreference.repo=https://repo.maven.apache.org/maven2 clean verify'
+          sh 'cat target/root-*.buildinfo.compare'
+          //sh 'grep ko=0 target/root-*.buildinfo.compare' // Fail if JARs are different
         }
       }
     }

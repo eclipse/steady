@@ -139,7 +139,7 @@
 		<maven.deploy.skip>true</maven.deploy.skip>
 		
 		<!-- Used by several plugins, to make builds reproducible -->
-		<project.build.outputTimestamp>2020-11-02T12:14:00Z</project.build.outputTimestamp>
+		<project.build.outputTimestamp>2021-06-22T10:45:00Z</project.build.outputTimestamp>
 	</properties>
 
 	<modules>
@@ -226,7 +226,9 @@
 			</build>
 		</profile>
 
-		<!-- Activate when deploying to the Central Repo. Also see https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release -->
+		<!-- Activate when deploying to the Central Repo. Also see
+		https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release
+		-->
 		<profile>
 			<id>release</id>
 			<build>
@@ -252,7 +254,9 @@
 							</execution>
 						</executions>
 					</plugin>
-					<!-- Deploy to the Central Repository according to https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release. -->
+					<!-- Deploy to the Central Repository according to
+					https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release.
+					-->
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
@@ -428,6 +432,30 @@
 						<phase>clean</phase>
 						<goals>
 							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!--
+				See
+				https://maven.apache.org/guides/mini/guide-reproducible-builds.html,
+				https://maven.apache.org/plugins/maven-artifact-plugin/buildinfo-mojo.html#referenceRepo.
+			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-artifact-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<reproducible>false</reproducible>
+					<referenceCompareSave>true</referenceCompareSave>
+				</configuration>
+				<executions>
+					<execution>
+						<id>buildinfo</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>buildinfo</goal>
 						</goals>
 					</execution>
 				</executions>
