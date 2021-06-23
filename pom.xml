@@ -493,9 +493,9 @@
 						<configuration>
 							<groupId>com.jeantessier</groupId>
 							<artifactId>dependency-finder</artifactId>
-							<version>1.2.1-beta5</version>
+							<version>1.2.1-beta5-log4j</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/lib/dependency-finder-1.2.1-beta5.jar</file>
+							<file>${basedir}/lib/dependency-finder-1.2.1-beta5-log4j.jar</file>
 						</configuration>
 					</execution>
 				</executions>
