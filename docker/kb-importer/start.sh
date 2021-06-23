@@ -12,17 +12,17 @@ for cert in $certs; do
    keytool -import -alias $cert -storepass changeit -keystore /usr/lib/jvm/java-1.8-openjdk/jre/lib/security/cacerts -file /kb-importer/certs/$cert -noprompt
 done
 
-#run kaybee import for kaybeeconf-initial.yaml
+#run kaybee import for kaybeeconf.yaml
 if [ ! -f /kb-importer/data/init ]
 then
   echo `date` " Running Initial Kaybee Import"
   #wait for the backend to start
   sleep 120
-  ./kaybee pull -c ../conf/kaybeeconf-initial.yaml
+  ./kaybee pull -v -c ../conf/kaybeeconf.yaml
   echo `date` " Running Kaybee Merge"
-  ./kaybee merge -c ../conf/kaybeeconf-initial.yaml
+  ./kaybee merge -s -v -c ../conf/kaybeeconf.yaml
   echo `date` " Kaybee Merge Done"
-  ./kaybee export -t steady -c ../conf/kaybeeconf-initial.yaml
+  ./kaybee export -v -t steady -c ../conf/kaybeeconf.yaml
   chmod +x steady.sh
   sh steady.sh
   touch /kb-importer/data/init
