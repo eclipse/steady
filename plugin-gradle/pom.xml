@@ -35,7 +35,7 @@
     <description></description>
     
     <properties>
-        <gradle.distribution.url>https://services.gradle.org/distributions/gradle-5.0-bin.zip</gradle.distribution.url>
+        <gradle.distribution.url>https://services.gradle.org/distributions/gradle-6.8.3-bin.zip</gradle.distribution.url>
         <gradle.executable>./gradlew</gradle.executable>
         <gradle.task>build</gradle.task>
         <maven.deploy.skip>false</maven.deploy.skip>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>com.android.tools.build</groupId>
             <artifactId>gradle</artifactId>
-            <version>3.3.2</version>
+            <version>4.2.1</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -160,7 +160,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
+                <version>3.0.0</version>
                 <configuration>
                     <executable>${gradle.executable}</executable>
                     <arguments combine.children="append">
@@ -241,7 +241,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>attach-artifacts</id>

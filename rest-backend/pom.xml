@@ -111,6 +111,8 @@
 		<maven.install.skip>${skip.install.deploy}</maven.install.skip>
 		<maven.deploy.skip>${skip.install.deploy}</maven.deploy.skip>
 		
+		<!-- Used by several plugins, to make builds reproducible -->
+		<project.build.outputTimestamp>2021-06-22T10:45:00Z</project.build.outputTimestamp>
 	</properties>
 	
 	<dependencies>
@@ -428,6 +430,7 @@
 			<plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
 			    <artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
 			    <configuration>
 				<archive>
 				    <manifestEntries>
