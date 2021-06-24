@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.backend.requests.BasicHttpRequest;
 import org.eclipse.steady.backend.requests.ConditionalHttpRequest;
@@ -66,7 +67,6 @@ import org.eclipse.steady.shared.util.FileSearch;
 import org.eclipse.steady.shared.util.StringList;
 import org.eclipse.steady.shared.util.StringList.CaseSensitivity;
 import org.eclipse.steady.shared.util.StringList.ComparisonMode;
-import org.apache.http.HttpStatus;
 
 /**
  * To be used for interacting with the RESTful backend API.
@@ -1626,6 +1626,6 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException
    */
   public String getCVE(String _bugId) throws BackendConnectionException {
-    return new BasicHttpRequest(HttpMethod.GET, PathBuilder.nvdRest(_bugId), null).send().getBody();
+    return new BasicHttpRequest(HttpMethod.GET, PathBuilder.cve(_bugId), null).send().getBody();
   }
 }

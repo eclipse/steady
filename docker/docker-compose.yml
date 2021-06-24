@@ -93,6 +93,7 @@ services:
     environment:
       - DELAY_STARTUP=5
       - vulas.shared.cia.serviceUrl=http://cia:8092/cia
+      - vulas.shared.cve.serviceUrl=https://services.nvd.nist.gov/rest/json/cve/1.0/<ID>
       - spring.datasource.username=${POSTGRES_USER}
       - spring.datasource.password=${POSTGRES_PASSWORD}
     links:
