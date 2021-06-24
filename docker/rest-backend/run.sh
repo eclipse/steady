@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 FLYWAY_OPTS="-Dflyway.skipDefaultCallbacks=true" 
 
@@ -18,8 +18,6 @@ java \
 	-Dhttps.proxyPort=$HTTPS_PROXY_PORT \
     -Dvulas.jira.usr=$JIRA_USER \
     -Dvulas.jira.pwd=$JIRA_PASSWORD \
-    -Dspring.datasource.username=${POSTGRES_USER} \
-    -Dspring.datasource.password=${POSTGRES_PASSWORD} \
     $FLYWAY_OPTS \
     -Dspring.profiles.active=docker \
 	-jar /vulas/rest-backend.jar
