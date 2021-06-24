@@ -3,7 +3,7 @@
 #kaybee update
 mkdir -p /kb-importer/data
 cd /kb-importer/data
-mv /kb-importer/kb-importer.jar /kb-importer/kaybee /kb-importer/data
+cp /kb-importer/kb-importer.jar /kb-importer/kaybee /kb-importer/data
 ./kaybee update --force
 
 #Adding certs
