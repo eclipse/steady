@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 java \
 	-Dhttp.nonProxyHosts=$NON_PROXY_HOSTS \
