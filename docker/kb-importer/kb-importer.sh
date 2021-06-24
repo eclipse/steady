@@ -16,7 +16,7 @@ then
 #  echo `date` " Kaybee Merge Done" >> job.log 2>&1
   ./kaybee export -t steady -c ../conf/kaybeeconf.yaml -f .kaybee/repositories/github.com_sap.project-kb_vulnerability-data/statements/
   chmod +x steady.sh
-  sh steady.sh >> job.log 2>&1
+  ./steady.sh >> job.log 2>&1
   echo `date` " Kaybee Import Done" >> job.log 2>&1
   rm /kb-importer/data/running
 else
