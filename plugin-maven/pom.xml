@@ -164,7 +164,7 @@
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>3.5.2</version>
                 <configuration>
-                    <goalPrefix>vulas</goalPrefix>
+                    <goalPrefix>steady</goalPrefix>
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                 </configuration>
                 <executions>
