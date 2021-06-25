@@ -7,6 +7,9 @@ then
   mv /kb-importer/kb-importer.jar /kb-importer/kaybee /kb-importer/data
 fi
 
+#substitute env variables in kaybeeconf.yaml
+envsubst < ../conf/kaybeeconf.yaml > ../conf/kaybeeconf-eval.yaml
+
 ./kaybee update --force
 
 #Adding certs
