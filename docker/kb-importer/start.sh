@@ -10,6 +10,7 @@ fi
 #substitute env variables in kaybeeconf.yaml (for kaybee) and kb-importer.sh (for cron)
 envsubst < ../conf/kaybeeconf.yaml > ../conf/kaybeeconf-eval.yaml
 envsubst < ../kb-importer.sh > ../kb-importer-eval.sh
+chmod +x /kb-importer/kb-importer-eval.sh
 
 ./kaybee update --force
 
