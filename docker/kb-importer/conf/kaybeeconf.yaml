@@ -3,8 +3,8 @@ apiVersion: "v1"
 # List of sources from which statements are pulled
 # Ranks: smaller value means higher rank (higher priority)
 sources:
-  - repo: https://github.com/sap/project-kb
-    branch: vulnerability-data
+  - repo: $KB_IMPORTER_STATEMENTS_REPO
+    branch: $KB_IMPORTER_STATEMENTS_BRANCH
     rank: 10
 
 # Edit this to point to your Eclipse Steady server (optional)
