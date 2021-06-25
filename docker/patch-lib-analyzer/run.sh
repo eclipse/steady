@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#Wait for backend to start
+sleep 120
+
 java \
 	-Dhttp.nonProxyHosts=$NON_PROXY_HOSTS \
 	-Dhttp.proxyHost=$HTTP_PROXY_HOST \
