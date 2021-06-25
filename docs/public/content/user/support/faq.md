@@ -61,7 +61,7 @@ Run the @@PROJECT_NAME@@ Maven plugin with a different proxy than the default pr
 On the command line, run Maven as follows, whereby `<proxy>` can be `@@CUSTOM_PROXY_HOST@@` or simply `proxy`
 
 ```sh
-mvn -Dhttp.proxyHost=<proxy> -Dvulas vulas:app
+mvn -Dhttp.proxyHost=<proxy> -Dsteady steady:app
 ```
 
 In the Maven Surefire plugin, include the `-Dhttp.proxyHost` system property for the JVM spawned for JUnit tests:
@@ -158,7 +158,7 @@ Solution: Not yet known. For the time being, clarify who produced the respective
 
 Problem: The execution of the APP goal takes very long.
 
-Explanation: Whenever a JAR, identified by its SHA1, is unknown to the backend, all its method signatures are gathered and uploaded. As a result, the first execution(s) of `vulas:app` can take some time, as any yet unknown JAR need to be covered. Future executions will be significantly faster.
+Explanation: Whenever a JAR, identified by its SHA1, is unknown to the backend, all its method signatures are gathered and uploaded. As a result, the first execution(s) of `steady:app` can take some time, as any yet unknown JAR need to be covered. Future executions will be significantly faster.
 
 ### app : The goal execution breaks with a 5xx response code received from the backend
 
@@ -222,8 +222,8 @@ Problem: The execution of the reachability analysis causes a timeout, e.g.,
 
 Solution(s):
 
-- Increase the timeout by changing the configuration setting `vulas.reach.timeout`, e.g., `mvn -Dvulas.reach.timeout=600 -Dvulas compile vulas:a2c`
-- Decrease the precision of the call graph construction, e.g., by changing the system property `vulas.reach.wala.callgraph.reflection`. For instance, run the reachability analysis as follows: `mvn -Dvulas vulas:a2c -Dcallgraph.reflection=NONE`. See [manual/analysis#a2c](../../manuals/analysis/#reachable-from-app-a2c) for more configuration options.
+- Increase the timeout by changing the configuration setting `vulas.reach.timeout`, e.g., `mvn -Dvulas.reach.timeout=600 -Dsteady compile steady:a2c`
+- Decrease the precision of the call graph construction, e.g., by changing the system property `vulas.reach.wala.callgraph.reflection`. For instance, run the reachability analysis as follows: `mvn -Dsteady steady:a2c -Dcallgraph.reflection=NONE`. See [manual/analysis#a2c](../../manuals/analysis/#reachable-from-app-a2c) for more configuration options.
 
 ### a2c : java.io.FileNotFoundException?
 
@@ -308,18 +308,18 @@ Solution: Change the dependency of your application to a more recent release. In
 
 ### TEST : Not all @@PROJECT_NAME@@ analysis results are uploaded to the backend
 
-Problem: At the end of the JUnit test case execution (`mvn -Dvulas test`), not all the @@PROJECT_NAME@@ analysis results are uploaded to the the @@PROJECT_NAME@@ backend. The reason is that the Maven Surefire Plugin kills the JVM before @@PROJECT_NAME@@' shutdown hook uploaded all the data.
+Problem: At the end of the JUnit test case execution (`mvn -Dsteady test`), not all the @@PROJECT_NAME@@ analysis results are uploaded to the the @@PROJECT_NAME@@ backend. The reason is that the Maven Surefire Plugin kills the JVM before @@PROJECT_NAME@@' shutdown hook uploaded all the data.
 
-Solution: Disable the upload by changing the Surefire configuration in the POM file as follows. The analysis results will then be written in the folder `target/vulas/upload`. Afterwards, run the @@PROJECT_NAME@@ plugin goal "upload" in order to upload the JSON analysis results to the backend (`mvn -Dvulas vulas:upload`).
+Solution: Disable the upload by changing the Surefire configuration in the POM file as follows. The analysis results will then be written in the folder `target/vulas/upload`. Afterwards, run the @@PROJECT_NAME@@ plugin goal "upload" in order to upload the JSON analysis results to the backend (`mvn -Dsteady steady:upload`).
 
 ```xml
 <argLine>
     -Dvulas.upload=false
 ```
 
-### TEST : How to run `-Dvulas test` in projects using Mockito?
+### TEST : How to run `-Dsteady test` in projects using Mockito?
 
-**Problem**: when running  `mvn -Dvulas test`, tests fail with an error such as `org.mockito.exceptions.misusing.MissingMethodInvocationException`
+**Problem**: when running  `mvn -Dsteady test`, tests fail with an error such as `org.mockito.exceptions.misusing.MissingMethodInvocationException`
 
 **Solution**:
 
@@ -329,10 +329,10 @@ Solution: Disable the upload by changing the Surefire configuration in the POM f
     ```
 - Then run them again with @@PROJECT_NAME@@ enabled to perform reachability analysis:
     ```sh
-    mvn -Dmaven.test.failure.ignore=true -Dvulas test vulas:upload
+    mvn -Dmaven.test.failure.ignore=true -Dsteady test steady:upload
     ```
 
-**Alternative solutions (when running `mvn -Dvulas test`)**:
+**Alternative solutions (when running `mvn -Dsteady test`)**:
 
 - disable selectively the failing tests
 - ignore selected jars
@@ -405,8 +405,8 @@ This error seems to appear with certain versions of Maven. It should disappear w
 As an example in Jenkins environments you can use one of the following alternatives:
 
 - Make an upgrade request to your Jenkins administrator.
-- Install Maven "globaly": in this case you can continue using your former command ex: `mvn clean compile vulas:clean vulas:app install vulas:upload -Pvulas -Dskip.integration.tests` as it is and Jenkins will use the new version.
-- Install maven as new "Global Tool": you can do this in "Manage Jenkins" -> "Global Tool Configuration". Here you find the entry "Maven installations". Add there the new Maven installation "M360" (if you like to install maven 3.6.0) with the installer "Install from Apache" Version 3.6.0. As a consequence, you will need to change the command in your job/task so that the new Maven version is used instead of the global one (which is still the version including the bug) and your command should like like `/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/M360/bin/mvn clean compile vulas:clean vulas:app install vulas:upload -Pvulas -Dskip.integration.tests`
+- Install Maven "globaly": in this case you can continue using your former command ex: `mvn clean compile steady:clean steady:app install steady:upload -Pvulas -Dskip.integration.tests` as it is and Jenkins will use the new version.
+- Install maven as new "Global Tool": you can do this in "Manage Jenkins" -> "Global Tool Configuration". Here you find the entry "Maven installations". Add there the new Maven installation "M360" (if you like to install maven 3.6.0) with the installer "Install from Apache" Version 3.6.0. As a consequence, you will need to change the command in your job/task so that the new Maven version is used instead of the global one (which is still the version including the bug) and your command should like like `/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/M360/bin/mvn clean compile steady:clean steady:app install steady:upload -Pvulas -Dskip.integration.tests`
 
 ### JUnit tests using Powermock fail when using @@PROJECT_NAME@@
 

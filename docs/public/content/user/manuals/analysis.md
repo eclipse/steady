@@ -71,7 +71,7 @@ java -jar vulas-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal app
 ```
 
 ```sh tab="Maven"
-mvn -Dvulas compile vulas:app
+mvn -Dsteady compile steady:app
 ```
 
 ```sh tab="Gradle"
@@ -138,7 +138,7 @@ java -Xmx8g -Xms2g -jar vulas-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar 
 
 ```sh tab="Maven"
 export MAVEN_OPTS="-Xmx8g -Xms2g"
-mvn -Dvulas compile vulas:a2c
+mvn -Dsteady compile steady:a2c
 ```
 
 ```sh tab="Gradle"
@@ -172,7 +172,7 @@ vulas.reach.excludePackages =
 # Default: WebServicesAgent.jar (from Wily Introscope, an app perf monitoring tool that has invalid manifest header fields creating problems for Wala)
 vulas.reach.excludeJars = WebServicesAgent.jar
 
-# Dir to search for app source files (only vulas:a2c)
+# Dir to search for app source files (only steady:a2c)
 # If empty, they will be fetched from backend
 vulas.reach.sourceDir =
 
@@ -289,12 +289,12 @@ Collect method traces during the execution of JUnit tests. Information about tra
 
 #### How does it work
 
-@@PROJECT_NAME@@ collects runtime information during application execution, most importantly whether a vulnerable method has been called and the corresponding call stack. In order to collect this information, the byte code of the application and all its dependencies has to be changed, which can be achieved either dynamically or statically: In case of _dynamic instrumentation_, the byte code of a given Java class is changed at the time the class definition is loaded for the first time, e.g., during the execution of JUnit tests or integration tests. @@PROJECT_NAME@@ injects statements in order to save the timestamp of every method invocation as well as stack trace information. Per default, this information is saved in folder `target/vulas/upload` and uploaded using the goal `vulas:upload`. To that end, @@PROJECT_NAME@@ must be registered using the JVM option `-javaagent`. In case of JUnit tests, the agent is registered by the Maven goal `prepare-vulas-agent`. In case of _static instrumentation_, the byte code of classes residing in the file system is changed, e.g., the WAR file of a deployable Web application. This is done with help of the goal `vulas:instr` (see below).
+@@PROJECT_NAME@@ collects runtime information during application execution, most importantly whether a vulnerable method has been called and the corresponding call stack. In order to collect this information, the byte code of the application and all its dependencies has to be changed, which can be achieved either dynamically or statically: In case of _dynamic instrumentation_, the byte code of a given Java class is changed at the time the class definition is loaded for the first time, e.g., during the execution of JUnit tests or integration tests. @@PROJECT_NAME@@ injects statements in order to save the timestamp of every method invocation as well as stack trace information. Per default, this information is saved in folder `target/vulas/upload` and uploaded using the goal `steady:upload`. To that end, @@PROJECT_NAME@@ must be registered using the JVM option `-javaagent`. In case of JUnit tests, the agent is registered by the Maven goal `prepare-vulas-agent`. In case of _static instrumentation_, the byte code of classes residing in the file system is changed, e.g., the WAR file of a deployable Web application. This is done with help of the goal `steady:instr` (see below).
 
 #### Run as follows
 
 ```sh tab="Maven"
-mvn -Dvulas vulas:prepare-vulas-agent test vulas:upload
+mvn -Dsteady steady:prepare-vulas-agent test steady:upload
 ```
 
 #### Configure as follows
@@ -413,7 +413,7 @@ set "CATALINA_OPTS=-javaagent:lang-java-@@PROJECT_VERSION@@-jar-with-dependencie
 
 #### Objective
 
-Modify an existing JAR (WAR) created by `mvn package` so that traces will be collected once the JAR is executed (the WAR is deployed in a Web application container such as Tomcat). Note: In contrast to what is described in the previous section "Integration Tests", `vulas:instr` will not result in the collection of traces for Tomcat itself.
+Modify an existing JAR (WAR) created by `mvn package` so that traces will be collected once the JAR is executed (the WAR is deployed in a Web application container such as Tomcat). Note: In contrast to what is described in the previous section "Integration Tests", `steady:instr` will not result in the collection of traces for Tomcat itself.
 
 #### Prerequisite
 
@@ -435,7 +435,7 @@ The bytecode of all the Java classes found in the JAR (WAR) will be modified as 
 
 ```sh tab="Maven"
 mvn package
-mvn -Dvulas vulas:instr
+mvn -Dsteady steady:instr
 ```
 
 #### Troubleshooting
@@ -472,7 +472,7 @@ java -jar vulas-cli-jar-with-dependencies.jar -goal t2c
 ```
 
 ```sh tab="Maven"
-mvn -Dvulas vulas:t2c
+mvn -Dsteady steady:t2c
 ```
 
 #### Configure as follows
@@ -500,7 +500,7 @@ vulas.reach.excludePackages =
 # Default: WebServicesAgent.jar (from Wily Introscope, an app perf monitoring tool that has invalid manifest header fields creating problems for Wala)
 vulas.reach.excludeJars = WebServicesAgent.jar
 
-# Dir to search for app source files (only vulas:a2c)
+# Dir to search for app source files (only steady:a2c)
 # If empty, they will be fetched from backend
 vulas.reach.sourceDir =
 
@@ -539,7 +539,7 @@ java -jar vulas-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal checkcod
 ```
 
 ```sh tab="Maven"
-mvn -Dvulas vulas:checkcode
+mvn -Dsteady steady:checkcode
 ```
 
 ## Upload analysis files (upload)
@@ -568,7 +568,7 @@ java -Dvulas.core.appContext.group=<GROUP> -Dvulas.core.appContext.artifact=<ART
 ```
 
 ```sh tab="Maven"
-mvn -Dvulas vulas:upload
+mvn -Dsteady steady:upload
 ```
 
 ## Create result report (report)
@@ -579,7 +579,7 @@ Creates result reports in HTML, XML and JSON format (on the basis of analysis re
 
 #### Multi-module Maven projects
 
-The report goal should be called in a separate build step, e.g., `mvn -Dvulas vulas:report`. It must NOT be called together with other goals, e.g., `mvn -Dvulas compile vulas:app vulas:report`, because the build may fail before `app` and other goals are executed for all the modules. Alternatively, you can use the Maven option `--fail-at-end` (see [here](https://maven.apache.org/guides/mini/guide-multiple-modules.html) for more info).
+The report goal should be called in a separate build step, e.g., `mvn -Dsteady steady:report`. It must NOT be called together with other goals, e.g., `mvn -Dsteady compile steady:app steady:report`, because the build may fail before `app` and other goals are executed for all the modules. Alternatively, you can use the Maven option `--fail-at-end` (see [here](https://maven.apache.org/guides/mini/guide-multiple-modules.html) for more info).
 
 #### Result
 
@@ -650,7 +650,7 @@ java -Dvulas.core.appContext.group=<GROUP> -Dvulas.core.appContext.artifact=<ART
 ```
 
 ```sh tab="Maven"
-mvn -Dvulas vulas:report
+mvn -Dsteady steady:report
 ```
 
 ```sh tab="Gradle"
@@ -681,7 +681,7 @@ java -jar vulas-cli-jar-with-dependencies.jar -goal clean
 ```
 
 ```sh tab="Maven"
-mvn -Dvulas vulas:clean
+mvn -Dsteady steady:clean
 ```
 
 #### Configure as follows
@@ -715,7 +715,7 @@ java -Dvulas.core.clean.purgeVersions=true -Dvulas.core.clean.purgeVersions.keep
 ```
 
 ```sh tab="Maven"
-mvn -Dvulas -Dvulas.core.clean.purgeVersions=true -Dvulas.core.clean.purgeVersions.keepLast=0 vulas:clean
+mvn -Dsteady -Dvulas.core.clean.purgeVersions=true -Dvulas.core.clean.purgeVersions.keepLast=0 steady:clean
 ```
 
 #### Troubleshooting
@@ -739,5 +739,5 @@ java -jar vulas-cli-jar-with-dependencies.jar -goal cleanSpace
 ```
 
 ```sh tab="Maven"
-mvn -Dvulas vulas:cleanSpace
+mvn -Dsteady steady:cleanSpace
 ```
