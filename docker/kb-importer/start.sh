@@ -18,6 +18,9 @@ done
 #Wait for backend to start
 #sleep 120
 
+#Run initial importi
+./../kb-importer.sh
+
 #create a cron job kaybeeconf.yaml
 crontab -l > tmpcron
 if ! cat tmpcron | grep "kb-importer.sh"
