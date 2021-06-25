@@ -99,7 +99,7 @@
 								</replacement>
 								<replacement>
 									<token>$buildTimestamp$</token>
-									<value>${maven.build.timestamp}</value>
+									<value>${project.build.outputTimestamp}</value>
 								</replacement>
 								<replacement>
 									<token>$buildNumber$</token>

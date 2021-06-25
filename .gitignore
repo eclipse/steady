@@ -41,3 +41,4 @@ kubernetes/helm/vulnerability-assessment-tool-admin/charts/nginx-ingress/files/t
 google-java-format-*.jar
 .DS_Store
 docker/kb-importer/data/**
+**/*.buildinfo

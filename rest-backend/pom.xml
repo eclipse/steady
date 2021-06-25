@@ -111,6 +111,8 @@
 		<maven.install.skip>${skip.install.deploy}</maven.install.skip>
 		<maven.deploy.skip>${skip.install.deploy}</maven.deploy.skip>
 		
+		<!-- Used by several plugins, to make builds reproducible -->
+		<project.build.outputTimestamp>2021-06-22T10:45:00Z</project.build.outputTimestamp>
 	</properties>
 	
 	<dependencies>
@@ -195,12 +197,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-mock</artifactId>
-			<version>2.0.8</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- to allow tests written with JUnit 4 to be run by JUnit 5, see https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.4-Release-Notes#junit-5s-vintage-engine-removed-from-spring-boot-starter-test -->
@@ -428,6 +424,7 @@
 			<plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
 			    <artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
 			    <configuration>
 				<archive>
 				    <manifestEntries>
