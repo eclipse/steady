@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 mkdir -p /kb-importer/data
 cd /kb-importer/data
@@ -7,8 +7,9 @@ then
   mv /kb-importer/kb-importer.jar /kb-importer/kaybee /kb-importer/data
 fi
 
-#substitute env variables in kaybeeconf.yaml
+#substitute env variables in kaybeeconf.yaml (for kaybee) and kb-importer.sh (for cron)
 envsubst < ../conf/kaybeeconf.yaml > ../conf/kaybeeconf-eval.yaml
+envsubst < ../kb-importer.sh > ../kb-importer-eval.sh
 
 ./kaybee update --force
 
@@ -19,7 +20,7 @@ for cert in $certs; do
 done
 
 #Wait for backend to start
-#sleep 120
+sleep 120
 
 #Run initial importi
 ./../kb-importer.sh
@@ -30,9 +31,9 @@ if ! cat tmpcron | grep "kb-importer.sh"
 then
     if [ -z "$KB_IMPORTER_CRON" ]	
     then
-      echo "0 0 * * * PATH=$PATH BACKEND_SERVICE_URL=$BACKEND_SERVICE_URL /kb-importer/kb-importer.sh >> /kb-importer/cron.log 2>&1" >> tmpcron
+      echo "0 0 * * * PATH=$PATH BACKEND_SERVICE_URL=$BACKEND_SERVICE_URL /kb-importer/kb-importer-eval.sh >> /kb-importer/cron.log 2>&1" >> tmpcron
     else
-      echo "$KB_IMPORTER_CRON" " PATH=$PATH BACKEND_SERVICE_URL=$BACKEND_SERVICE_URL /kb-importer/kb-importer.sh  >> /kb-importer/cron.log 2>&1" >> tmpcron
+      echo "$KB_IMPORTER_CRON" " PATH=$PATH BACKEND_SERVICE_URL=$BACKEND_SERVICE_URL /kb-importer/kb-importer-eval.sh  >> /kb-importer/cron.log 2>&1" >> tmpcron
     fi
 fi
 crontab tmpcron
