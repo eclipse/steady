@@ -24,9 +24,9 @@ if ! cat tmpcron | grep "kb-importer.sh"
 then
     if [ -z "$KB_IMPORTER_CRON" ]	
     then
-      echo "0 0 * * * /kb-importer/kb-importer.sh >> /kb-importer/cron.log 2>&1" >> tmpcron
+      echo "0 0 * * * PATH=$PATH BACKEND_SERVICE_URL=$BACKEND_SERVICE_URL /kb-importer/kb-importer.sh >> /kb-importer/cron.log 2>&1" >> tmpcron
     else
-      echo "$KB_IMPORTER_CRON" " /kb-importer/kb-importer.sh  >> /kb-importer/cron.log 2>&1" >> tmpcron
+      echo "$KB_IMPORTER_CRON" " PATH=$PATH BACKEND_SERVICE_URL=$BACKEND_SERVICE_URL /kb-importer/kb-importer.sh  >> /kb-importer/cron.log 2>&1" >> tmpcron
     fi
 fi
 crontab tmpcron
