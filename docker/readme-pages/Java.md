@@ -158,7 +158,7 @@ mvn -Dvulas test vulas:upload
 
 * Tests terminate with a log message as follows: "The forked VM terminated without properly saying goodbye. VM crash or System.exit called?"
     * Solution 1: Increase JVM heap space by adding "-Xmx4096M -Xms2048M" (or more if possible) to the <argLine> argument of the Maven Surefire plugin
-    * Solution 2: Select an instrumentor that consumes less memory by adding "-Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor" to the <argLine> argument of the Maven Surefire plugin
+    * Solution 2: Select an instrumentor that consumes less memory by adding "-Dvulas.core.instr.instrumentorsChoosen=org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor" to the <argLine> argument of the Maven Surefire plugin
 * Tests terminate with the error message "App context incomplete: [group=, artifact=, version=]" and there exists a white space in any of the parent directories of the Maven project (e.g., "C:\My Documents\projects\foo").
     * Solution 1: Move the Maven project to a location without whitespaces in the names of any of the parent directories.
     * Solution 2: Open the POM file and replace the Maven variable ${project.build.directory} in the <argLine> configuration setting of the maven-surefire-plugin by the relative path of the respective directory, typically "target".
@@ -190,7 +190,7 @@ mvn -Dvulas test vulas:upload
 -Dvulas.core.appContext.group=<GROUP>
 -Dvulas.core.appContext.artifact=<ARTIFACT>
 -Dvulas.core.appContext.version=<VERSION>
--Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
+-Dvulas.core.instr.instrumentorsChoosen=org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor
 -Dvulas.core.space.token=<WORKSSPACE-TOKEN>
 -noverify
 ```
@@ -204,7 +204,7 @@ mvn -Dvulas test vulas:upload
 **Example:** In case of Tomcat 8.x, one needs to (1) copy <INSTR-JAR> into the folder "./bin" and (2) specify the variable CATALINA_OPTS as follows in the file "./bin/setenv.bat". Do not forget to specify values for the placeholders <INSTR-JAR>, <GROUP>, <ARTIFACT> and <VERSION>. Note: The use of "setenv.bat" does not work if Tomcat is run as Windows service.
 
 ```sh
-set "CATALINA_OPTS=-javaagent:<INSTR-JAR> -Dvulas.shared.backend.serviceUrl=http://<hostname>:8033/backend -Dvulas.shared.cia.serviceUrl=http://<hostname>:8033/cia -Dvulas.core.uploadEnabled=true -Dvulas.core.monitor.periodicUpload.enabled=true -Dvulas.core.appContext.group=<GROUP> -Dvulas.core.appContext.artifact=<ARTIFACT> -Dvulas.core.appContext.version=<VERSION> -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor -noverify"
+set "CATALINA_OPTS=-javaagent:<INSTR-JAR> -Dvulas.shared.backend.serviceUrl=http://<hostname>:8033/backend -Dvulas.shared.cia.serviceUrl=http://<hostname>:8033/cia -Dvulas.core.uploadEnabled=true -Dvulas.core.monitor.periodicUpload.enabled=true -Dvulas.core.appContext.group=<GROUP> -Dvulas.core.appContext.artifact=<ARTIFACT> -Dvulas.core.appContext.version=<VERSION> -Dvulas.core.instr.instrumentorsChoosen=org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor -noverify"
 ```
 
 ***

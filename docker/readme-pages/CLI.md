@@ -39,7 +39,7 @@ vulas.core.instr.sourceDir =
 vulas.core.instr.targetDir = vulas/target
 vulas.core.instr.includeDir = vulas/include
 vulas.core.instr.libDir = vulas/lib
-vulas.core.instr.instrumentorsChoosen = com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
+vulas.core.instr.instrumentorsChoosen = org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor
 vulas.core.instr.searchRecursive = true
 
 vulas.report.reportDir = vulas/report
@@ -98,7 +98,7 @@ In order to collect traces outside of the context of Gradle or Maven projects, o
     -Dvulas.core.appContext.group=<GROUP>
     -Dvulas.core.appContext.artifact=<ARTIFACT>
     -Dvulas.core.appContext.version=<VERSION>
-    -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
+    -Dvulas.core.instr.instrumentorsChoosen=org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor
     -noverify
 ```
 

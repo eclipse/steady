@@ -100,7 +100,7 @@ You may want to replace `localhost` with the host name of your vulas backend as 
                             -Dvulas.core.instr.writeCode=false
                             -Dvulas.core.instr.maxStacktraces=10
                             -Dvulas.core.space.token=${vulas.core.space.token}
-                            -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
+                            -Dvulas.core.instr.instrumentorsChoosen=org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor
                             -noverify
 
                             <!-- Uncomment to write the heap to disk in case of memory issues -->

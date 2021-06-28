@@ -18,14 +18,14 @@
  */
 package org.eclipse.steady.java.mvn;
 
-import org.apache.maven.plugin.testing.MojoRule;
-import org.junit.Rule;
-import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.apache.maven.plugin.testing.MojoRule;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  * Test for the AgentOptions standalone
@@ -38,7 +38,7 @@ public class VulasAgentOptionsTests {
 
     TestProjectStub stub = new TestProjectStub("/target/test-classes/unitTestPom/", "pom.xml");
 
-    VulasAgentMojo myMojo = (VulasAgentMojo) rule.lookupConfiguredMojo(stub, "prepare-vulas-agent");
+    VulasAgentMojo myMojo = (VulasAgentMojo) rule.lookupConfiguredMojo(stub, "prepare-agent");
     assertNotNull(myMojo);
 
     VulasAgentMojo.VulasAgentOptions vulasAgentOptions = myMojo.new VulasAgentOptions();
@@ -55,7 +55,7 @@ public class VulasAgentOptionsTests {
 
     TestProjectStub stub = new TestProjectStub("/target/test-classes/unitTestPom/", "pom2.xml");
 
-    VulasAgentMojo myMojo = (VulasAgentMojo) rule.lookupConfiguredMojo(stub, "prepare-vulas-agent");
+    VulasAgentMojo myMojo = (VulasAgentMojo) rule.lookupConfiguredMojo(stub, "prepare-agent");
     assertNotNull(myMojo);
 
     VulasAgentMojo.VulasAgentOptions vulasAgentOptions = myMojo.new VulasAgentOptions();
@@ -79,7 +79,7 @@ public class VulasAgentOptionsTests {
 
     TestProjectStub stub = new TestProjectStub("/target/test-classes/unitTestPom/", "pom2.xml");
 
-    VulasAgentMojo myMojo = (VulasAgentMojo) rule.lookupConfiguredMojo(stub, "prepare-vulas-agent");
+    VulasAgentMojo myMojo = (VulasAgentMojo) rule.lookupConfiguredMojo(stub, "prepare-agent");
     assertNotNull(myMojo);
 
     VulasAgentMojo.VulasAgentOptions vulasAgentOptions = myMojo.new VulasAgentOptions();
@@ -99,7 +99,7 @@ public class VulasAgentOptionsTests {
 
     TestProjectStub stub = new TestProjectStub("/target/test-classes/unitTestPom/", "pom2.xml");
 
-    VulasAgentMojo myMojo = (VulasAgentMojo) rule.lookupConfiguredMojo(stub, "prepare-vulas-agent");
+    VulasAgentMojo myMojo = (VulasAgentMojo) rule.lookupConfiguredMojo(stub, "prepare-agent");
     assertNotNull(myMojo);
 
     VulasAgentMojo.VulasAgentOptions vulasAgentOptions = myMojo.new VulasAgentOptions();

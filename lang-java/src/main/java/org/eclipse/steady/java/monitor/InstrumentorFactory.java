@@ -58,19 +58,6 @@ public class InstrumentorFactory {
   }
 
   private static AbstractInstrumentor getInstrumentor(String _name) {
-    // Ensure backward compatibility after changing packages to org.eclipse.steady
-    if ("com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor".equals(_name)) {
-      _name = "org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor";
-    } else if ("com.sap.psr.vulas.monitor.trace.SingleStackTraceInstrumentor".equals(_name)) {
-      _name = "org.eclipse.steady.java.monitor.trace.SingleStackTraceInstrumentor";
-    } else if ("com.sap.psr.vulas.monitor.trace.StackTraceInstrumentor".equals(_name)) {
-      _name = "org.eclipse.steady.java.monitor.trace.StackTraceInstrumentor";
-    } else if ("com.sap.psr.vulas.monitor.touch.TouchPointInstrumentor".equals(_name)) {
-      _name = "org.eclipse.steady.java.monitor.touch.TouchPointInstrumentor";
-    } else if ("com.sap.psr.vulas.monitor.slice.SliceInstrumentor".equals(_name)) {
-      _name = "org.eclipse.steady.java.monitor.slice.SliceInstrumentor";
-    }
-
     AbstractInstrumentor i = null;
     try {
       final Class cls = Class.forName(_name);

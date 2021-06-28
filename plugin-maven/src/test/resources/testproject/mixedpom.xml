@@ -110,7 +110,7 @@
                     <execution>
                         <id>pre-unit-test</id>
                         <goals>
-                            <goal>prepare-vulas-agent</goal>
+                            <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                 </executions>
