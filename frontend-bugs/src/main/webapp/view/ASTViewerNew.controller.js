@@ -340,13 +340,13 @@ sap.ui.controller("view.ASTViewerNew", {
 	    var bugDetailPage = this.getView().byId('idBugDetailPage');
 	    var data = bugDetailPage.getModel().getData();
 	    
-	    var emailText  = "Dear Vulas team,\n\nPlease note that the archive '" + data.archiveDetails.filename + "' (" + data.archiveid + ") is not affected by vulnerability " + data.cve.cve_id + " [1].\n\n";
-            var emailText2 = "Please mark this release as non-vulnerable so that Vulas does not raise an alert when discovering it.\n\n";
+	    var emailText  = "Dear team,\n\nPlease note that the archive '" + data.archiveDetails.filename + "' (" + data.archiveid + ") is not affected by vulnerability " + data.cve.cve_id + " [1].\n\n";
+            var emailText2 = "Please mark this release as non-vulnerable so that Steady does not raise an alert when discovering it.\n\n";
             var emailText3 = "[EXPLAIN HERE WHY THIS RELEASE IS NOT VULNERABLE, E.G., A LINK TO VENDOR INFORMATION ON AFFECTED RELEASES]\n\n";
             var emailText4 = "Kind regards, [XXX]\n\n";
             var emailUrl   = "[1] " + window.location.href + "\n";
-            var emailSubject = "[VULAS] Archive '" + data.archiveDetails.filename + "' not affected by vulnerability " + data.cve.cve_id;
-            sap.m.URLHelper.triggerEmail("DL VULAS", emailSubject, emailText + emailText2 + emailText3 + emailText4 + emailUrl);
+            var emailSubject = "[Steady] Archive '" + data.archiveDetails.filename + "' not affected by vulnerability " + data.cve.cve_id;
+            sap.m.URLHelper.triggerEmail("DL STEADY", emailSubject, emailText + emailText2 + emailText3 + emailText4 + emailUrl);
 	},
 	
 	
