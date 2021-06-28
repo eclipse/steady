@@ -22,7 +22,7 @@ vulas.core.instr.sourceDir =
 vulas.core.instr.targetDir = vulas/target
 vulas.core.instr.includeDir = vulas/include
 vulas.core.instr.libDir = vulas/lib
-vulas.core.instr.instrumentorsChoosen = com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
+vulas.core.instr.instrumentorsChoosen = org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor
 vulas.core.instr.searchRecursive = true
 
 vulas.report.reportDir = vulas/report

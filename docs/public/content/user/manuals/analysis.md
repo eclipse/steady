@@ -394,7 +394,7 @@ By registering a Java agent at JVM startup, @@PROJECT_NAME@@ changes the bytecod
 -Dvulas.core.appContext.group=<GROUP>
 -Dvulas.core.appContext.artifact=<ARTIFACT>
 -Dvulas.core.appContext.version=<VERSION>
--Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
+-Dvulas.core.instr.instrumentorsChoosen=org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor
 -Dvulas.core.space.token=<WORKSPACE-TOKEN>
 -noverify
 ```
@@ -406,7 +406,7 @@ By registering a Java agent at JVM startup, @@PROJECT_NAME@@ changes the bytecod
 In case of Tomcat 8.x, one needs to (1) copy `lang-java-@@PROJECT_VERSION@@-jar-with-dependencies.jar` into the folder `./bin` and (2) specify the variable `CATALINA_OPTS` as follows in the file `./bin/setenv.bat`. Do not forget to specify `<GROUP>`, `<ARTIFACT>`, `<VERSION>` and `<WORKSPACE-TOKEN>` for the application under analysis. Note: The use of `setenv.bat` does not work if Tomcat is run as Windows service.
 
 ```sh tab="CLI"
-set "CATALINA_OPTS=-javaagent:lang-java-@@PROJECT_VERSION@@-jar-with-dependencies.jar -Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend/-Dvulas.core.backendConnection=READ_WRITE -Dvulas.core.monitor.periodicUpload.enabled=true -Dvulas.core.appContext.group=<GROUP> -Dvulas.core.appContext.artifact=<ARTIFACT> -Dvulas.core.appContext.version=<VERSION> -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor -Dvulas.core.space.token=<WORKSPACE-TOKEN> -noverify"
+set "CATALINA_OPTS=-javaagent:lang-java-@@PROJECT_VERSION@@-jar-with-dependencies.jar -Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend/-Dvulas.core.backendConnection=READ_WRITE -Dvulas.core.monitor.periodicUpload.enabled=true -Dvulas.core.appContext.group=<GROUP> -Dvulas.core.appContext.artifact=<ARTIFACT> -Dvulas.core.appContext.version=<VERSION> -Dvulas.core.instr.instrumentorsChoosen=org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor -Dvulas.core.space.token=<WORKSPACE-TOKEN> -noverify"
 ```
 
 ## Static instrumentation (instr)

@@ -41,7 +41,7 @@
                             <vulas.core.instr.includeDir>${project.build.directory}/vulas/include</vulas.core.instr.includeDir>
                             <vulas.core.instr.libDir>${project.build.directory}/vulas/lib</vulas.core.instr.libDir>
                             <vulas.core.instr.writeCode>false</vulas.core.instr.writeCode>
-                            <vulas.core.instr.instrumentorsChoosen>com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor</vulas.core.instr.instrumentorsChoosen>
+                            <vulas.core.instr.instrumentorsChoosen>org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor</vulas.core.instr.instrumentorsChoosen>
                             <vulas.core.instr.searchRecursive>false</vulas.core.instr.searchRecursive>
                             <vulas.core.monitor.periodicUpload.enabled>false</vulas.core.monitor.periodicUpload.enabled>
                             <vulas.core.instr.maxStacktraces>10</vulas.core.instr.maxStacktraces>
