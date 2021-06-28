@@ -27,8 +27,8 @@ In case of bugs happening on the client (when performing scans):
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Vulas version**
-- Vulas version (release and commit)
+**Steady version**
+- Steady version (release and commit)
 
 **In case of bugs in a Web frontend**
 - Browser type and version [e.g. chrome, safari]
@@ -37,7 +37,7 @@ A clear and concise description of what you expected to happen.
 **In case of bugs happening on the client (when performing scans)**
 - OS/version
 - Java JVM/version or Python version
-- Vulas client (Maven plugin, Gradle plugin, CLI, setuptools plugin)
+- Steady client (Maven plugin, Gradle plugin, CLI, setuptools plugin)
 - Console log(s) (with confidential information removed)
 - URL of a public repo that can be used for reproducing (minimal example if possible)
 

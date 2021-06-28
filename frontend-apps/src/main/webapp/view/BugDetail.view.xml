@@ -77,7 +77,7 @@
 					</l:HorizontalLayout>
 					<l:HorizontalLayout width="100%" visible="true">
 						<l:content>
-							<Label design="Bold" text="Covered by Vulas since: " class="marginVerticalContent" />
+							<Label design="Bold" text="Covered by Steady since: " class="marginVerticalContent" />
 							<Label text="{cveModel>/createdAt}" class="marginVerticalContent" />
 						</l:content>
 					</l:HorizontalLayout>
