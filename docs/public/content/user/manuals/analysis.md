@@ -289,12 +289,12 @@ Collect method traces during the execution of JUnit tests. Information about tra
 
 #### How does it work
 
-@@PROJECT_NAME@@ collects runtime information during application execution, most importantly whether a vulnerable method has been called and the corresponding call stack. In order to collect this information, the byte code of the application and all its dependencies has to be changed, which can be achieved either dynamically or statically: In case of _dynamic instrumentation_, the byte code of a given Java class is changed at the time the class definition is loaded for the first time, e.g., during the execution of JUnit tests or integration tests. @@PROJECT_NAME@@ injects statements in order to save the timestamp of every method invocation as well as stack trace information. Per default, this information is saved in folder `target/vulas/upload` and uploaded using the goal `steady:upload`. To that end, @@PROJECT_NAME@@ must be registered using the JVM option `-javaagent`. In case of JUnit tests, the agent is registered by the Maven goal `prepare-vulas-agent`. In case of _static instrumentation_, the byte code of classes residing in the file system is changed, e.g., the WAR file of a deployable Web application. This is done with help of the goal `steady:instr` (see below).
+@@PROJECT_NAME@@ collects runtime information during application execution, most importantly whether a vulnerable method has been called and the corresponding call stack. In order to collect this information, the byte code of the application and all its dependencies has to be changed, which can be achieved either dynamically or statically: In case of _dynamic instrumentation_, the byte code of a given Java class is changed at the time the class definition is loaded for the first time, e.g., during the execution of JUnit tests or integration tests. @@PROJECT_NAME@@ injects statements in order to save the timestamp of every method invocation as well as stack trace information. Per default, this information is saved in folder `target/vulas/upload` and uploaded using the goal `steady:upload`. To that end, @@PROJECT_NAME@@ must be registered using the JVM option `-javaagent`. In case of JUnit tests, the agent is registered by the Maven goal `prepare-agent`. In case of _static instrumentation_, the byte code of classes residing in the file system is changed, e.g., the WAR file of a deployable Web application. This is done with help of the goal `steady:instr` (see below).
 
 #### Run as follows
 
 ```sh tab="Maven"
-mvn -Dsteady steady:prepare-vulas-agent test steady:upload
+mvn -Dsteady steady:prepare-agent test steady:upload
 ```
 
 #### Configure as follows

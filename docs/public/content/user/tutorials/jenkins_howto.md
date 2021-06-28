@@ -13,7 +13,7 @@ mvn -Dsteady clean compile steady:clean steady:app
 **Deep scans (with reachability analysis):** Scan jobs that run once a day or less can include analysis goals such as `a2c`, `test` and `t2c`. The static analysis goals `a2c` and `t2c`, in particular, can take a considerable amount of time until completion (up to several hours), depending on the complexity of the application project under analysis (number of modules, number of application constructs, etc.):
 
 ```Bash tab="Maven"
-mvn -Dsteady clean compile steady:clean steady:app steady:a2c steady:prepare-vulas-agent package steady:upload steady:t2c
+mvn -Dsteady clean compile steady:clean steady:app steady:a2c steady:prepare-agent package steady:upload steady:t2c
 ```
 
 See [here](../../manuals/analysis/) for more information on @@PROJECT_NAME@@ goals.

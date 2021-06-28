@@ -3,8 +3,8 @@ apply plugin: 'groovy'
 
 gradlePlugin {
     plugins {
-        vulas {
-            id = 'vulas'
+        steady {
+            id = 'steady'
             implementationClass = 'org.eclipse.steady.java.gradle.VulasPlugin'
         }
     }

@@ -21,7 +21,7 @@ This tutorial explains how to perform the static and dynamic analyses in order t
 
 ### test
 
-1. `mvn -Dsteady steady:prepare-vulas-agent test steady:upload`
+1. `mvn -Dsteady steady:prepare-agent test steady:upload`
 
 2. Connect to the apps Web frontend, then select your workspace and application.
 
