@@ -50,10 +50,10 @@ import org.eclipse.steady.shared.json.model.Library;
 import org.eclipse.steady.shared.json.model.LibraryId;
 import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.shared.util.StringList;
-import org.eclipse.steady.shared.util.StringUtil;
-import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.eclipse.steady.shared.util.StringList.CaseSensitivity;
 import org.eclipse.steady.shared.util.StringList.ComparisonMode;
+import org.eclipse.steady.shared.util.StringUtil;
+import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>Abstract AbstractVulasMojo class.</p>
@@ -205,7 +205,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     }
     // Every other exception results in a MojoExecutionException (= unexpected)
     catch (Exception e) {
-      throw new MojoExecutionException("Error during Vulas goal execution " + this.goal + ": ", e);
+      throw new MojoExecutionException("Error during goal execution " + this.goal + ": ", e);
     }
   }
 
