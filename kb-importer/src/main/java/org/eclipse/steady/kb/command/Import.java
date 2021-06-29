@@ -123,7 +123,14 @@ public class Import implements Command {
         args.put(DIRECTORY_OPTION, dirPath);
         task.execute(vuln, args, BackendConnector.getInstance());
       } catch (Exception e) {
-        log.error("Got [" + e.getClass().getName() + "] when importing vulnerability [" + vuln.getVulnId() + "]: " + e.getMessage(), e);
+        log.error(
+            "Got ["
+                + e.getClass().getName()
+                + "] when importing vulnerability ["
+                + vuln.getVulnId()
+                + "]: "
+                + e.getMessage(),
+            e);
       }
     }
   }
