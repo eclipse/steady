@@ -19,7 +19,7 @@ for cert in $certs; do
 done
 
 #Wait for backend to start
-sleep 120
+sleep 40
 
 #Run initial importi
 ./../kb-importer.sh
