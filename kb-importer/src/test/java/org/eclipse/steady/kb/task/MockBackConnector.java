@@ -72,16 +72,7 @@ public class MockBackConnector extends BackendConnector {
   @Override
   public String getCVE(String _bugId) throws BackendConnectionException {
     return "{\n"
-        + "  \"cve\": {\n"
-        + "    \"description\": {\n"
-        + "      \"description_data\": [\n"
-        + "        {\n"
-        + "          \"lang\": \"en\",\n"
-        + "          \"value\": \"Test Desc\"\n"
-        + "        }\n"
-        + "      ]\n"
-        + "    }\n"
-        + "  }\n"
+        + "  \"summary\": \"Test Desc\"\n"
         + "}";
   }
 
