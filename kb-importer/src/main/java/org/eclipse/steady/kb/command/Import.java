@@ -24,6 +24,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
+
+import com.google.gson.JsonSyntaxException;
+
 import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.backend.BackendConnector;
@@ -35,7 +38,6 @@ import org.eclipse.steady.kb.task.TaskProvider;
 import org.eclipse.steady.kb.util.Metadata;
 import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.shared.util.VulasConfiguration;
-import com.google.gson.JsonSyntaxException;
 
 /**
  * import command
@@ -121,8 +123,7 @@ public class Import implements Command {
         args.put(DIRECTORY_OPTION, dirPath);
         task.execute(vuln, args, BackendConnector.getInstance());
       } catch (Exception e) {
-        log.error(e.getMessage(), e);
-        break;
+        log.error("Got [" + e.getClass().getName() + "] when importing vulnerability [" + vuln.getVulnId() + "]: " + e.getMessage(), e);
       }
     }
   }
