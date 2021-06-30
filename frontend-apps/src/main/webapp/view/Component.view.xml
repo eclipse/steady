@@ -515,7 +515,7 @@
 											</template>
 										</Column>
 										<Column xmlns="sap.ui.table" width="10%" sortProperty="clientVersion" filterProperty="clientVersion">
-											<Label text="Vulas Release" xmlns="sap.ui.commons" />
+											<Label text="Steady Release" xmlns="sap.ui.commons" />
 											<template>
 												<Text xmlns="sap.m" text="{clientVersion}"></Text>
 											</template>

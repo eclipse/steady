@@ -25,7 +25,7 @@
 
 	<groupId>org.eclipse.steady</groupId>
 	<artifactId>root</artifactId>
-	<version>3.2.0-SNAPSHOT</version>
+	<version>3.2.0</version>
 	<packaging>pom</packaging>
 
 	<name>Eclipse Steady</name>
@@ -139,7 +139,7 @@
 		<maven.deploy.skip>true</maven.deploy.skip>
 		
 		<!-- Used by several plugins, to make builds reproducible -->
-		<project.build.outputTimestamp>2021-06-22T10:45:00Z</project.build.outputTimestamp>
+		<project.build.outputTimestamp>2021-06-29T16:47:05+00:00</project.build.outputTimestamp>
 	</properties>
 
 	<modules>
@@ -357,6 +357,11 @@
 				<groupId>org.antlr</groupId>
 				<artifactId>antlr4-runtime</artifactId>
 				<version>4.9.2</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.package-url</groupId>
+				<artifactId>packageurl-java</artifactId>
+				<version>1.3.0</version>
 			</dependency>
 
 			<!-- Versions of 'com.fasterxml.jackson.core' artifacts should be identical -->

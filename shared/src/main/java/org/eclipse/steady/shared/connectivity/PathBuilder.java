@@ -709,14 +709,14 @@ public class PathBuilder {
   }
 
   /**
-   * backend:/nvdrest/vulnerabilities/bug_id
+   * backend:/cves/bug_id
    *
    * @param _bugId a {@link java.lang.String} object
    * @return a {@link java.lang.String} object
    */
-  public static final String nvdRest(@NotNull String _bugId) {
+  public static final String cve(@NotNull String _bugId) {
     final StringBuilder sb = new StringBuilder();
-    sb.append("/nvdrest/vulnerabilities/");
+    sb.append("/cves/");
     sb.append(_bugId);
     return sb.toString();
   }

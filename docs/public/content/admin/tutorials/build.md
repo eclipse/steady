@@ -10,7 +10,7 @@
 
 All the following commands are supposed to be executed from the root folder of the project.
 
-If you want to build images specific to a version you can checkout a stable version of Vulas. Usually the `master` branch holds a `-SNAPSHOT` version.
+If you want to build images specific to a version you can checkout a stable version of Steady. Usually the `master` branch holds a `-SNAPSHOT` version.
 
 ```sh
 git checkout tags/@@PROJECT_VERSION@@

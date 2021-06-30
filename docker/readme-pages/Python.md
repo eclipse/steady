@@ -1,11 +1,11 @@
-Python applications can be analyzed either using the Vulas plugin for [Setuptools](https://setuptools.readthedocs.io/en/latest/) or using the Vulas CLI, both options are described below.
+Python applications can be analyzed either using the Steady plugin for [Setuptools](https://setuptools.readthedocs.io/en/latest/) or using the Steady CLI, both options are described below.
 
-# Vulas plugin for Setuptools
+# Steady plugin for Setuptools
 
 ## Prerequisites
 
 - The Python packages `pip` and `virtualenv` are installed
-- The token of a Vulas [workspace](Workspace.md) is known
+- The token of a Steady [workspace](Workspace.md) is known
 - `setup.py` is present
 - Java is installed
 
@@ -42,12 +42,12 @@ As of today, the plugin supports the _app_, _clean_ and _report_ goal. The stati
 ## Prerequisites
 
 - The Python package `pip` is installed and "knows" all application dependencies (check with `pip list`)
-- The token of a Vulas [workspace](Workspace.md) is known
+- The token of a Steady [workspace](Workspace.md) is known
 - Java is installed
 
 ## Setup
 
-1. Get the Vulas CLI from `<vulas-root>/cli-scanner/target/cli-scanner-<version>-jar-with-dependencies.jar`.
+1. Get the Steady CLI from `<vulas-root>/cli-scanner/target/cli-scanner-<version>-jar-with-dependencies.jar`.
 
 2. Create a file `vulas-custom.properties` in the same directory. It should contain at least the following configuration settings:
 
@@ -73,7 +73,7 @@ As of today, the plugin supports the _app_, _clean_ and _report_ goal. The stati
 
 Additional notes:
 * `vulas.core.appContext.group`, `artifact` and `version` uniquely identify your app in the given workspace.
-* `vulas.core.app.sourceDir` must point to one or more directories with the Python source files of your app (multiple directories must be separated by comma). Note that the Vulas CLI must not be contained in any of them, as it would be added as a dependency to your app.
+* `vulas.core.app.sourceDir` must point to one or more directories with the Python source files of your app (multiple directories must be separated by comma). Note that the Steady CLI must not be contained in any of them, as it would be added as a dependency to your app.
 * `vulas.core.bom.python.pip` must point to a `pip` binary (not the path in which the binary is located), either the global `pip` or one installed in a virtual environment. If set, `pip` will be used right away to determine the dependencies. If empty, any `setup.py` in the source dir(s) will be installed in a virtual environment in order to determine the app dependencies.
 
 ## Goal execution
@@ -98,7 +98,7 @@ Additional notes:
 
 ## Symptom: _app_ goal takes time
 
-Dependencies are analyzed by setting up a virtual environment for the respective application. The setup of such a virtualenv can take some time (no matter whether it is done in the context of Vulas or not). Moreover, whenever a Python library is found that is not yet known to the backend, its bill of material needs to be uploaded. The delay caused by this initial upload will not occur for subsequent scans.
+Dependencies are analyzed by setting up a virtual environment for the respective application. The setup of such a virtualenv can take some time (no matter whether it is done in the context of Steady or not). Moreover, whenever a Python library is found that is not yet known to the backend, its bill of material needs to be uploaded. The delay caused by this initial upload will not occur for subsequent scans.
 
 ## Symptom: Console log indicates problem related to virtualenv
 
