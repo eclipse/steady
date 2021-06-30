@@ -40,7 +40,7 @@
     
     
       
-        <title>Frontend - Eclipse Steady 3.1.14 (Incubator Project)</title>
+        <title>Frontend - Eclipse Steady 3.2.0 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.14 (Incubator Project)
+              Eclipse Steady 3.2.0 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.14 (Incubator Project)
+    Eclipse Steady 3.2.0 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1522,7 +1522,7 @@
 </table>
 <p><strong>Objective of table:</strong> same as objective of view</p>
 <p><strong>Data shown:</strong> Each row corresponds to a vulnerability in a dependency, e.g., multiple vulnerabilities in the same dependency appear in separate table rows. The three columns to the right show whether vulnerable code is included, whether it is potentially reachable or if it was actually reached (executed) at application runtime. Click on a row in order to open the <a href="#vulnerabilities-details">vulnerability details view</a></p>
-<p><strong>Data collected by goal(s):</strong> vulas:app (to populate the table rows), vulas:a2c and vulas:t2c to populate the column 'Static Analysis', JUnit and Integration tests to populate the column 'Dynamic Analysis'</p>
+<p><strong>Data collected by goal(s):</strong> steady:app (to populate the table rows), steady:a2c and steady:t2c to populate the column 'Static Analysis', JUnit and Integration tests to populate the column 'Dynamic Analysis'</p>
 <p><strong>Empty if:</strong> An application has no vulnerable dependencies or no dependencies at all</p>
 <table>
 <thead>
@@ -1550,7 +1550,7 @@
 </tr>
 <tr>
 <td>Static Analysis: Potential execution of vulnerable code</td>
-<td>Indicates whether vulnerable code (e.g., methods) are potentially reachable (executable) according to the results of the static source code analysis (performed during vulas:a2c and vulas:t2c).<p><p><p> <img alt="alt" src="../img/trace_alert.png" /> Vulnerable code is potentially reachable, i.e., the application can be executed in such a way that the vulnerable code is reached. <br> Note: In few cases, the vulnerable code of a given bug is not known. In those cases, this icon appears as soon as any code of the library is found reachable. <p><p><p> <img alt="alt" src="../img/trace_ok.png" /> Library code is reachable, i.e., part of the call graph, but none of the vulnerable code. <p><p><p> <img alt="alt" src="../img/transparent.png" /> No library reachable or reachability analysis not performed</td>
+<td>Indicates whether vulnerable code (e.g., methods) are potentially reachable (executable) according to the results of the static source code analysis (performed during steady:a2c and steady:t2c).<p><p><p> <img alt="alt" src="../img/trace_alert.png" /> Vulnerable code is potentially reachable, i.e., the application can be executed in such a way that the vulnerable code is reached. <br> Note: In few cases, the vulnerable code of a given bug is not known. In those cases, this icon appears as soon as any code of the library is found reachable. <p><p><p> <img alt="alt" src="../img/trace_ok.png" /> Library code is reachable, i.e., part of the call graph, but none of the vulnerable code. <p><p><p> <img alt="alt" src="../img/transparent.png" /> No library reachable or reachability analysis not performed</td>
 </tr>
 <tr>
 <td>Dynamic Analysis: Actual execution of vulnerable Code</td>
@@ -1597,8 +1597,8 @@
 </table>
 <p><strong>Objective of table:</strong> Provide information whether individual vulnerable constructs (methods or constructors) are contained in the respective library, and whether they are potentially or actually reachable.</p>
 <p><strong>Data shown:</strong> All constructs (methods or constructors) that have been added, modified or deleted by the developers of the Open-Source library in order to fix the respective vulnerability.</p>
-<p><strong>Data collected by goal(s):</strong> Table rows are taken from the bug database, which is maintained by the Eclipse Steady admin team. The three columns to the right are populated by vulas:app (column 'Contained'), vulas:a2c and vulas:t2c (column 'Reachable'), as well as through the execution of tests (column 'Traced')</p>
-<p><strong>Empty if:</strong> Vulnerabilities that have no known fix or whose fix concerns non-Java files, e.g., XML configuration files. The two right-most columns are empty if the goals vulas:a2c or vulas:t2c have not been executed, or if no tests have been performed</p>
+<p><strong>Data collected by goal(s):</strong> Table rows are taken from the bug database, which is maintained by the Eclipse Steady admin team. The three columns to the right are populated by steady:app (column 'Contained'), steady:a2c and steady:t2c (column 'Reachable'), as well as through the execution of tests (column 'Traced')</p>
+<p><strong>Empty if:</strong> Vulnerabilities that have no known fix or whose fix concerns non-Java files, e.g., XML configuration files. The two right-most columns are empty if the goals steady:a2c or steady:t2c have not been executed, or if no tests have been performed</p>
 <table>
 <thead>
 <tr>
@@ -1700,7 +1700,7 @@
 </center></p>
 <p><strong>Objective of table:</strong> Same as objective of view</p>
 <p><strong>Data shown:</strong> All dependencies of the application. Click on a dependency's filename in order to open the <a href="#dependencies-details">dependencies details view</a></p>
-<p><strong>Data collected by goal(s):</strong> vulas:app and test</p>
+<p><strong>Data collected by goal(s):</strong> steady:app and test</p>
 <p><strong>Empty if:</strong> An application has no dependencies at all</p>
 <p>The content of the table can be detailed as follow:</p>
 <table>
@@ -1870,7 +1870,7 @@
 <p>Below this picture, details of these interactions are described in a table.</p>
 <p><strong>Objective of Table::</strong> Shows the details of the interactions between an application and the dependency.</p>
 <p><strong>Data shown::</strong> Calls of a library method by an application method or vice versa.</p>
-<p><strong>Data collected by goal(s)::</strong> <code>vulas:a2c</code>, <code>vulas:t2c</code> and <code>test</code>.</p>
+<p><strong>Data collected by goal(s)::</strong> <code>steady:a2c</code>, <code>steady:t2c</code> and <code>test</code>.</p>
 <p><strong>Empty if:</strong> Application and library do not directly interact, e.g., as in case of transitive dependencies. None of the goals have been executed.</p>
 <table>
 <thead>
@@ -1894,7 +1894,7 @@
 </tr>
 <tr>
 <td>Potential</td>
-<td>True if the call has been found by static source analysis, false otherwise.<p>Note: If the call has not been found by static analyses but has been observed during tests, the false is highlighted in <span style="color: rgb(255,0,0);">red</span>. This can happen if either the static analysis goals <code>vulas:a2c</code> and <code>vulas:2tc</code> were not executed or the analysis failed to identify the call.</td>
+<td>True if the call has been found by static source analysis, false otherwise.<p>Note: If the call has not been found by static analyses but has been observed during tests, the false is highlighted in <span style="color: rgb(255,0,0);">red</span>. This can happen if either the static analysis goals <code>steady:a2c</code> and <code>steady:2tc</code> were not executed or the analysis failed to identify the call.</td>
 </tr>
 <tr>
 <td>Traced</td>
@@ -1905,7 +1905,7 @@
 <h3 id="library-size-and-application-specific-use">Library size and application-specific use<a class="headerlink" href="#library-size-and-application-specific-use" title="Permanent link">&para;</a></h3>
 <p><strong>Objective of Table:</strong> Show the degree of actual and potential use that the application makes of the dependency (independent of any vulnerabilities).</p>
 <p><strong>Data shown:</strong> The absolute number of constructs contains in the library (methods, constructors, etc.) and the number of constructs potentially or actually executable.</p>
-<p><strong>Data collected by goal(s):</strong> <code>vulas:a2c</code>, <code>vulas:t2c</code> and <code>test</code>.</p>
+<p><strong>Data collected by goal(s):</strong> <code>steady:a2c</code>, <code>steady:t2c</code> and <code>test</code>.</p>
 <p><strong>Empty if:</strong> The dependency is not at all used in the scope of an application or none of the goals have been executed.</p>
 <table>
 <thead>
@@ -1975,7 +1975,7 @@
 <h3 id="archive-properties">Archive Properties<a class="headerlink" href="#archive-properties" title="Permanent link">&para;</a></h3>
 <p><strong>Objective of Table::</strong> Provide meta-information about the dependency, e.g., its version.</p>
 <p><strong>Data shown::</strong> All entries of the Manifest file ('META-INF/MANIFEST.MF' in the JAR).</p>
-<p><strong>Data collected by goal(s)::</strong> <code>vulas:app</code>.</p>
+<p><strong>Data collected by goal(s)::</strong> <code>steady:app</code>.</p>
 <p><strong>Empty if:</strong> The dependency has no MANIFEST.MF file or it does not contain any entries.</p>
 <table>
 <thead>
@@ -2001,7 +2001,7 @@
 <a href="../img/frontend_callers_to_be_modified.png"><img alt="callers to be modified" src="../img/frontend_callers_to_be_modified.png" /></a>
 </center></p>
 <p><strong>Data shown:</strong> All application calls that require a modification because of the fact that a callee method is no more available in the selected library version.</p>
-<p><strong>Data collected by goal(s):</strong> <code>vulas:a2c</code>, <code>vulas:t2c</code> and <code>tests</code></p>
+<p><strong>Data collected by goal(s):</strong> <code>steady:a2c</code>, <code>steady:t2c</code> and <code>tests</code></p>
 <p><strong>Empty if:</strong> Either because there exist no direct method invocations from application to library or all of the callee methods still exist in the selected library version.</p>
 <p>On the top of the screen some metrics are provided:</p>
 <table>
@@ -2049,7 +2049,7 @@
 </tr>
 <tr>
 <td>Potential</td>
-<td>True if the call has been found by static source analysis, false otherwise.<p>Note: If the call has not been found by static analyses but has been observed during tests, the false is highlighted in <span style="color: rgb(255,0,0);">red</span>. This can happen if either the static analysis goals <code>vulas:a2c</code> and <code>vulas:2tc</code> were not executed or the analysis failed to identify the call.</td>
+<td>True if the call has been found by static source analysis, false otherwise.<p>Note: If the call has not been found by static analyses but has been observed during tests, the false is highlighted in <span style="color: rgb(255,0,0);">red</span>. This can happen if either the static analysis goals <code>steady:a2c</code> and <code>steady:2tc</code> were not executed or the analysis failed to identify the call.</td>
 </tr>
 <tr>
 <td>Traced</td>
@@ -2067,7 +2067,7 @@
 <a href="../img/frontend_statistics.png"><img alt="Application statistics" src="../img/frontend_statistics.png" /></a>
 </center></p>
 <p>Two tables are presented in this page:</p>
-<h4>Dependencies</h4>
+<h4 id="dependencies_1">Dependencies<a class="headerlink" href="#dependencies_1" title="Permanent link">&para;</a></h4>
 <p><strong>Objective of table:</strong> Show statistics about the constructs of the application and its dependencies (methods, functions, packages, classes...). Please notice that these information are excluding the dependencies in the scopes <code>TEST</code> and <code>PROVIDED</code>. In the header of the table user can see the total number of dependencies which were considered.</p>
 <table>
 <thead>
@@ -2095,7 +2095,7 @@
 </tr>
 </tbody>
 </table>
-<h4>Application</h4>
+<h4 id="application">Application<a class="headerlink" href="#application" title="Permanent link">&para;</a></h4>
 <p>The second section of this page presents 2 metrics and a table:</p>
 <table>
 <thead>
@@ -2235,7 +2235,7 @@
 <li>Goal configuration</li>
 <li>System information</li>
 </ul>
-<h4>Goal statistics</h4>
+<h4 id="goal-statistics">Goal statistics<a class="headerlink" href="#goal-statistics" title="Permanent link">&para;</a></h4>
 <p><strong>Data shown:</strong> Statistics collected at goal runtime.</p>
 <p><strong>Data collected by goal(s):</strong> All.</p>
 <p><strong>Empty if:</strong> Should never be empty.</p>
@@ -2257,7 +2257,7 @@
 </tr>
 </tbody>
 </table>
-<h4>Goal configuration</h4>
+<h4 id="goal-configuration">Goal configuration<a class="headerlink" href="#goal-configuration" title="Permanent link">&para;</a></h4>
 <p><strong>Data shown:</strong> Configuration settings used for the goal execution.</p>
 <p><strong>Data collected by goal(s):</strong> All.</p>
 <p><strong>Empty if:</strong> Should never be empty.</p>
@@ -2279,7 +2279,7 @@
 </tr>
 </tbody>
 </table>
-<h4>System information</p></h4>
+<h4 id="system-information">System information</p><a class="headerlink" href="#system-information" title="Permanent link">&para;</a></h4>
 <p><strong>Data shown:</strong> Java system properties and environment variables collected on the client during the goal execution. The configuration settings <code>vulas.shared.sys</code> and <code>vulas.shared.env</code> determine which information is collected:</p>
 <div class="codehilite"><pre><span></span># Comma-separated list of environment variables gathered during goal execution and transferred to the backend
 # A given environment variable is considered if its name equals one of the values (case-insensitive)
@@ -2304,7 +2304,6 @@ vulas.shared.sys = user., os., java., runtime., maven., sun.
 # Default: -
 #vulas.shared.sys.custom
 </pre></div>
-
 <p><strong>Data collected by goal(s):</strong> All.</p>
 <p><strong>Empty if:</strong> Should never be empty.</p>
 <table>
@@ -2341,7 +2340,7 @@ vulas.shared.sys = user., os., java., runtime., maven., sun.
 </center></p>
 <p><strong>Objective of table:</strong> Same as objective of view.</p>
 <p><strong>Data shown:</strong> Archives that have one or more known vulnerabilities, click on a row in order to see update proposals and metrics in the <a href="./#dependencies-details">dependencies details view</a>.</p>
-<p><strong>Data collected by goal(s):</strong> <code>vulas:app</code>.</p>
+<p><strong>Data collected by goal(s):</strong> <code>steady:app</code>.</p>
 <p><strong>Empty if:</strong> An application has no vulnerable dependencies.</p>
 <table>
 <thead>
@@ -2423,7 +2422,7 @@ vulas.shared.sys = user., os., java., runtime., maven., sun.
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+            Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
           </div>
         
         powered by

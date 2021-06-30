@@ -40,7 +40,7 @@
     
     
       
-        <title>Deploy on Kubernetes with Kustomize - Eclipse Steady 3.1.14 (Incubator Project)</title>
+        <title>Deploy on Kubernetes with Kustomize - Eclipse Steady 3.2.0 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.14 (Incubator Project)
+              Eclipse Steady 3.2.0 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.14 (Incubator Project)
+    Eclipse Steady 3.2.0 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1246,22 +1246,19 @@
 <li>a Kubernetes cluster</li>
 </ul>
 <h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
-<p>Clone locally <code>vulnerability-assessment-tool</code> repository and change the directory to Kustomize's folder</p>
+<p>Clone locally <code>Eclipse Steady</code> repository and change the directory to Kustomize's folder</p>
 <div class="codehilite"><pre><span></span>git clone https://github.com/eclipse/steady.git
 <span class="nb">cd</span> steady/kubernetes/kustomize
 </pre></div>
-
 <p>Make a copy of the files in <code>kubernetes/kustomize/secrets</code> and edit them to match your needs.</p>
 <div class="codehilite"><pre><span></span>cp secrets/.env.sample secrets/.env
 cp secrets/bugs-frontend-credentials.sample secrets/bugs-frontend-credentials
 <span class="c1"># edit the above files</span>
 </pre></div>
-
 <h2 id="run">Run<a class="headerlink" href="#run" title="Permanent link">&para;</a></h2>
 <p>You are now ready to deploy Eclipse Steady inside your Kubernetes cluster:</p>
 <div class="codehilite"><pre><span></span>kubectl apply -k .
 </pre></div>
-
 <p>The above command will create a <code>Namespace</code> called <code>vulnerability-assessment-tool</code> and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command <code>kubectl -n vulnerability-assessment-tool get pods -w</code>. The deployment will request two <code>PersistentVolumeClaims</code> and a <code>Service type:LoadBalancer</code> which could need some time to be created depending on the provider you are running on.</p>
 <div class="admonition warning">
 <p class="admonition-title">Reaching Eclipse Steady from the Internet</p>
@@ -1347,7 +1344,7 @@ cp secrets/bugs-frontend-credentials.sample secrets/bugs-frontend-credentials
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+            Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
           </div>
         
         powered by

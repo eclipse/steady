@@ -40,7 +40,7 @@
     
     
       
-        <title>Contribute - Eclipse Steady 3.1.14 (Incubator Project)</title>
+        <title>Contribute - Eclipse Steady 3.2.0 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.14 (Incubator Project)
+              Eclipse Steady 3.2.0 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.14 (Incubator Project)
+    Eclipse Steady 3.2.0 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -941,6 +941,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#reporting-security-issues" class="md-nav__link">
+    Reporting Security Issues
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#usage-of-labels" class="md-nav__link">
     Usage of Labels
   </a>
@@ -1284,6 +1291,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#reporting-security-issues" class="md-nav__link">
+    Reporting Security Issues
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#usage-of-labels" class="md-nav__link">
     Usage of Labels
   </a>
@@ -1397,8 +1411,6 @@ We can only handle well-reported, actual bugs, so please follow the guidelines b
 <li>Use the <a href="https://github.com/eclipse/steady/issues/new?template=bug_report.md">template</a></li>
 </ul>
 <h3 id="requirements-for-a-bug-report">Requirements for a bug report<a class="headerlink" href="#requirements-for-a-bug-report" title="Permanent link">&para;</a></h3>
-<!--   * issues caused by the usage of non-public UI5 methods. Only the public methods listed in the API documentation may be used.-->
-
 <p>These eight requirements are the mandatory base of a good bug report:</p>
 <ol>
 <li><strong>Only real bugs</strong>: please do your best to make sure to only report real bugs! Do not report:<ul>
@@ -1433,15 +1445,10 @@ We can only handle well-reported, actual bugs, so please follow the guidelines b
 <h3 id="issue-handling-process">Issue handling process<a class="headerlink" href="#issue-handling-process" title="Permanent link">&para;</a></h3>
 <p>When an issue is reported, a committer will look at it and either confirm it as a real issue (by giving the "approved" label), close it if it is not an issue, or ask for more details. Approved issues are then either assigned to a committer in GitHub, reported in our internal issue handling system, or left open as "contribution welcome" for easy or not urgent fixes.</p>
 <p>An issue that is about a real bug is closed as soon as the fix is committed. The closing comment explains which patch version(s) will contain the fix.</p>
-<!--
-### Reporting Security Issues
-
-If you find a security issue, please act responsibly and report it not in the public issue tracker, but directly to us, so we can fix it before it can be exploited:
-* SAP Customers: if the found security issue is not covered by a published security note, please report it by creating a customer message at https://service.sap.com/message.
- * Researchers/non-Customers: please send the related information to secure@sap.com using [PGP for e-mail encryption](http://global.sap.com/pc/security/keyblock.txt).
-Also refer to the general [SAP security information page](https://www.sap.com/corporate/en/company/security.html).
--->
-
+<h3 id="reporting-security-issues">Reporting Security Issues<a class="headerlink" href="#reporting-security-issues" title="Permanent link">&para;</a></h3>
+<p>If you find a security issue, please act responsibly and do NOT report it in the public issue tracker.</p>
+<p>Instead, <a href="https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Community&amp;component=Vulnerability+Reports&amp;keywords=security&amp;groups=Security_Advisories">open a ticket</a> in the Eclipse Bugzilla instance.</p>
+<p>More information about Eclipse's vulnerability reporting guidelines can be found in the <a href="https://www.eclipse.org/projects/handbook/#vulnerability-reporting">Eclipse Project Handbook</a>.</p>
 <h3 id="usage-of-labels">Usage of Labels<a class="headerlink" href="#usage-of-labels" title="Permanent link">&para;</a></h3>
 <p>Github offers labels to categorize issues. We defined the following labels so far:</p>
 <p>Labels for issue categories:</p>
@@ -1494,8 +1501,9 @@ To keep the code readable and maintainable, please follow these rules, even if y
 <li>is useful to improve Eclipse Steady (explained above)</li>
 <li>follows the applicable guidelines and standards</li>
 </ol>
-<p>The second requirement could be described in entire books and would still lack a 100%-clear definition, so you will get a committer's feedback if something is not right.
-<!--Extensive conventions and guidelines documentation is <a href="docs/guidelines.md">available here</a>.--></p>
+<p>The second requirement could be described in entire books and would still lack a 100%-clear definition, so you will get a committer's feedback if something is not right.</p>
+<!--Extensive conventions and guidelines documentation is [available here](docs/guidelines.md).-->
+
 <p>These are some of the most important rules to give you an initial impression:</p>
 <ul>
 <li>Check your Java code with <a href="https://spotbugs.github.io/">Spotbugs</a> by running <code>mvn -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.includeFilterFile=findbugs-include.xml -Dspotbugs.failOnError=true clean compile com.github.spotbugs:spotbugs-maven-plugin:4.0.4:check</code>. Code with MEDIUM or HIGH priority findings in one of the following categories will be rejected (see <code>findbugs-include.xml</code>): PERFORMANCE, SECURITY, CORRECTNESS, MALICIOUS_CODE, MT_CORRECTNESS</li>
@@ -1610,7 +1618,7 @@ To keep the code readable and maintainable, please follow these rules, even if y
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+            Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
           </div>
         
         powered by

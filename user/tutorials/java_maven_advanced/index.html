@@ -40,7 +40,7 @@
     
     
       
-        <title>Reachability analysis (Java/Maven) - Eclipse Steady 3.1.14 (Incubator Project)</title>
+        <title>Reachability analysis (Java/Maven) - Eclipse Steady 3.2.0 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.14 (Incubator Project)
+              Eclipse Steady 3.2.0 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.14 (Incubator Project)
+    Eclipse Steady 3.2.0 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1302,7 +1302,7 @@
 <h3 id="a2c">a2c<a class="headerlink" href="#a2c" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
-<p><code>mvn -Dvulas compile vulas:a2c</code></p>
+<p><code>mvn -Dsteady compile steady:a2c</code></p>
 </li>
 <li>
 <p>Connect to the apps Web frontend, then select your workspace and application. In the tab <a href="../../manuals/frontend/#vulnerabilities">Vulnerabilities</a>, the column <strong>Static Analysis</strong> is populated for all libraries subject to known vulnerabilities reachable from application code. By selecting a single row of this table and the one of the detailed page, one can get more information up until the paths of potential executions (if any).</p>
@@ -1311,7 +1311,7 @@
 <h3 id="test">test<a class="headerlink" href="#test" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
-<p><code>mvn -Dvulas vulas:prepare-vulas-agent test vulas:upload</code></p>
+<p><code>mvn -Dsteady steady:prepare-agent test steady:upload</code></p>
 </li>
 <li>
 <p>Connect to the apps Web frontend, then select your workspace and application.</p>
@@ -1324,7 +1324,7 @@
 <h3 id="t2c">t2c<a class="headerlink" href="#t2c" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
-<p><code>mvn -Dvulas compile vulas:t2c</code></p>
+<p><code>mvn -Dsteady compile steady:t2c</code></p>
 </li>
 <li>
 <p>Connect to the apps Web frontend, then select your workspace and application. In the tab <a href="../../manuals/frontend/#vulnerabilities">Vulnerabilities</a>, the column <strong>Static Analysis</strong> is populated for all libraries subject to known vulnerabilities reachable from code executed during tests. By selecting single row of this table and the one of the detailed page, one can get more information up until the paths of potential executions (if any).</p>
@@ -1333,7 +1333,7 @@
 <h3 id="report">report<a class="headerlink" href="#report" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
-<p><code>mvn -Dvulas vulas:report</code></p>
+<p><code>mvn -Dsteady steady:report</code></p>
 </li>
 <li>
 <p>A summary report is written to disk (in HTML, XML and JSON format), by default into folder <code>target/vulas/report</code>. By default a build exception is thrown if the application includes a library subject to known vulnerabilities.</p>
@@ -1346,7 +1346,7 @@
 <h3 id="clean">clean<a class="headerlink" href="#clean" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
-<p><code>mvn -Dvulas vulas:clean</code></p>
+<p><code>mvn -Dsteady steady:clean</code></p>
 </li>
 <li>
 <p>All application-specific data in the Eclipse Steady backend are deleted.</p>
@@ -1354,7 +1354,7 @@
 </ol>
 <div class="admonition info">
 <p class="admonition-title">Run clean whenever the application changes</p>
-<p>If you already scanned your project in the past, you should run the <code>vulas:clean</code> goal prior to new analyses in order to delete the old analysis results in the backend. Otherwise, old analysis results will be shown together with new results. For example, if you updated a dependency from a vulnerable to a non-vulnerable version, both versions will be shown in the apps Web frontend.</p>
+<p>If you already scanned your project in the past, you should run the <code>steady:clean</code> goal prior to new analyses in order to delete the old analysis results in the backend. Otherwise, old analysis results will be shown together with new results. For example, if you updated a dependency from a vulnerable to a non-vulnerable version, both versions will be shown in the apps Web frontend.</p>
 </div>
 <h2 id="useful-links">Useful links<a class="headerlink" href="#useful-links" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1421,7 +1421,7 @@
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+            Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
           </div>
         
         powered by

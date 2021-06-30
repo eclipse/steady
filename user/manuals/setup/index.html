@@ -40,7 +40,7 @@
     
     
       
-        <title>Configuration - Eclipse Steady 3.1.14 (Incubator Project)</title>
+        <title>Configuration - Eclipse Steady 3.2.0 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.14 (Incubator Project)
+              Eclipse Steady 3.2.0 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.14 (Incubator Project)
+    Eclipse Steady 3.2.0 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1523,15 +1523,14 @@ For single applications, call HTTP GET <code>http://localhost:8033/backend/hubIn
 <p>The plugin for Maven can be used with or without adding a <code>&lt;profile&gt;</code> section to the <code>pom.xml</code>.</p>
 <ul>
 <li>
-<p><strong>With profile</strong>, the execution of goals is more concise (readable), e.g., <code>mvn -Dvulas compile vulas:app</code>. A sample profile can be found <a href="../../tutorials/java_maven/#setup">here</a>, just copy&amp;paste it into the <code>&lt;profiles&gt;</code> section of your <code>pom.xml</code>. In case of aggregated, multi-module Maven projects with modules inheriting from their parent, it is sufficient to include the profile in the top-level (parent) <code>pom.xml</code>. If a module does not inherit from the parent, the profile has to be added to its POM file. Once added, run <code>mvn -Dvulas versions:display-property-updates</code> every now and then to check whether there are new plugin versions available. If so, manually update the property <code>vulas.version</code> in the Eclipse Steady profile.</p>
+<p><strong>With profile</strong>, the execution of goals is more concise (readable), e.g., <code>mvn -Dsteady compile steady:app</code>. A sample profile can be found <a href="../../tutorials/java_maven/#setup">here</a>, just copy&amp;paste it into the <code>&lt;profiles&gt;</code> section of your <code>pom.xml</code>. In case of aggregated, multi-module Maven projects with modules inheriting from their parent, it is sufficient to include the profile in the top-level (parent) <code>pom.xml</code>. If a module does not inherit from the parent, the profile has to be added to its POM file. Once added, run <code>mvn -Dsteady versions:display-property-updates</code> every now and then to check whether there are new plugin versions available. If so, manually update the property <code>vulas.version</code> in the Eclipse Steady profile.</p>
 </li>
 <li>
-<p><strong>Without profile</strong>, the execution of goals requires the use of the plugin's fully qualified name, e.g., <code>mvn compile com.sap.research.security.vulas:plugin-maven:3.1.14:app</code>. Moreover, you need to specify the following mandatory configuration settings. As described <a href="#configuration">here</a>, there are several ways of doing so, however, a file as follows is very common:</p>
+<p><strong>Without profile</strong>, the execution of goals requires the use of the plugin's fully qualified name, e.g., <code>mvn compile org.eclipse.steady:plugin-maven:3.2.0:app</code>. Moreover, you need to specify the following mandatory configuration settings. As described <a href="#configuration">here</a>, there are several ways of doing so, however, a file as follows is very common:</p>
 <p><strong>vulas-custom.properties</strong></p>
 <div class="codehilite"><pre><span></span>vulas.core.space.token = &lt;YOUR WORKSPACE TOKEN&gt;
 vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 </pre></div>
-
 </li>
 </ul>
 <p>It is possible to include/exclude modules of a multi-module Maven project using the following configuration parameters:</p>
@@ -1554,7 +1553,6 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 <span class="na">vulas.maven.excludes</span> <span class="o">=</span>
 <span class="na">vulas.maven.ignorePoms</span> <span class="o">=</span> <span class="s">false</span>
 </pre></div>
-
 <h3 id="gradle">Gradle<a class="headerlink" href="#gradle" title="Permanent link">&para;</a></h3>
 <p>The plugin for Gradle requires changes of the following files:</p>
 <p><strong>build.gradle</strong></p>
@@ -1565,7 +1563,7 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
         }
 
         dependencies {
-            classpath(&#39;com.sap.research.security.vulas:plugin-gradle:3.1.14&#39;) { changing = true }
+            classpath(&#39;org.eclipse.steady:plugin-gradle:3.2.0&#39;) { changing = true }
         }
     }
 
@@ -1573,7 +1571,6 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
         apply plugin: &quot;vulas&quot;
     }
 </pre></div>
-
 <p><strong>gradle.properties</strong></p>
 <div class="codehilite"><pre><span></span>    // Used to identify the scan in the apps Web frontend
     group = ### group - EDIT THIS ###
@@ -1584,16 +1581,14 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 
     vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 </pre></div>
-
 <p>Note: Rather than adding configuration settings to <code>gradle.properties</code>, they can also be passed as project properties in the command line, e.g., <code>-Pvulas.report.exceptionThreshold=noException</code>. The use of <code>-D</code> system properties for changing configuration settings is discouraged (because of the cache of the Gradle daemon).</p>
 <p>The configuration is correct if the analysis goals <code>vulasApp</code>, <code>vulasA2C</code> etc. are listed among "Other tasks" when running the following command:</p>
 <div class="codehilite"><pre><span></span>    ./gradlew tasks -all
 </pre></div>
-
 <p>The Gradle plugin only works with later releases of Gradle. How to upgrade is described <a href="https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:upgrading_wrapper">here</a>.</p>
 <h3 id="command-line-interface">Command-line interface<a class="headerlink" href="#command-line-interface" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Create a new folder, download the latest ZIP archive <code>vulas-cli-3.1.14.zip</code> from <a href="https://github.com/eclipse/steady/releases">Releases</a> and extract it into the newly created folder. This folder will then contain the following items:</li>
+<li>Create a new folder, download the latest ZIP archive <code>vulas-cli-3.2.0.zip</code> from <a href="https://github.com/eclipse/steady/releases">Releases</a> and extract it into the newly created folder. This folder will then contain the following items:</li>
 </ol>
 <table>
 <thead>
@@ -1628,7 +1623,6 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 <span class="c1"># Regex that identifies JARs with application code (multiple values to be separated by comma), only relevant for CLI</span>
 <span class="na">vulas.core.app.appJarNames</span> <span class="o">=</span>
 </pre></div>
-
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <h3 id="layered-configuration-principle">Layered configuration principle<a class="headerlink" href="#layered-configuration-principle" title="Permanent link">&para;</a></h3>
 <p>The client-side analysis tools can be configured in different ways. At runtime, the following layers are combined in order to establish the effective configuration (which is printed to console upon goal execution).</p>
@@ -1658,7 +1652,6 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 <div class="codehilite"><pre><span></span>[main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST [uri=http://localhost:8033/backend/apps/com.acme.foo/vulas-testapp-webapp/3.0.9-MVN/goals, size=23,50 KB, tenant=123456789, space=123456789]
 [main] INFO  com.sap.psr.vulas.backend.requests.BasicHttpRequest  - HTTP POST completed with response code [201] in [03.019 ms] (proxy=false)
 </pre></div>
-
 <p><strong>In the apps Web frontend</strong> at <code>http://localhost:8033/apps</code>, there are several tabs to be checked:</p>
 <ul>
 <li>On the <a href="../../manuals/frontend/#dependencies">Dependencies</a> tab, one should see all application dependencies. In particular, there should be no archives belonging to the application under analysis (which can happen if the CLI is not configured to properly separate application code and dependency code, see <a href="../../manuals/setup/#command-line-interface">here</a> for more information).</li>
@@ -1723,7 +1716,7 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+            Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
           </div>
         
         powered by

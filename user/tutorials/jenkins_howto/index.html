@@ -40,7 +40,7 @@
     
     
       
-        <title>Jenkins automation - Eclipse Steady 3.1.14 (Incubator Project)</title>
+        <title>Jenkins automation - Eclipse Steady 3.2.0 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.14 (Incubator Project)
+              Eclipse Steady 3.2.0 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.14 (Incubator Project)
+    Eclipse Steady 3.2.0 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1200,14 +1200,14 @@
 <div class="superfences-tabs">
 <input name="__tabs_1" type="radio" id="__tab_1_0" checked="checked" />
 <label for="__tab_1_0">Maven</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dvulas clean compile vulas:clean vulas:app
+<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dsteady clean compile steady:clean steady:app
 </pre></div></div>
 </div>
 <p><strong>Deep scans (with reachability analysis):</strong> Scan jobs that run once a day or less can include analysis goals such as <code>a2c</code>, <code>test</code> and <code>t2c</code>. The static analysis goals <code>a2c</code> and <code>t2c</code>, in particular, can take a considerable amount of time until completion (up to several hours), depending on the complexity of the application project under analysis (number of modules, number of application constructs, etc.):</p>
 <div class="superfences-tabs">
 <input name="__tabs_2" type="radio" id="__tab_2_0" checked="checked" />
 <label for="__tab_2_0">Maven</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dvulas clean compile vulas:clean vulas:app vulas:a2c vulas:prepare-vulas-agent package vulas:upload vulas:t2c
+<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dsteady clean compile steady:clean steady:app steady:a2c steady:prepare-agent package steady:upload steady:t2c
 </pre></div></div>
 </div>
 <p>See <a href="../../manuals/analysis/">here</a> for more information on Eclipse Steady goals.</p>
@@ -1215,7 +1215,7 @@
 <p>A typical Jenkins job configuration using the Eclipse Steady plugin for Maven comprises the following two build steps and one post-build action (see screenshot below):</p>
 <ol>
 <li>Build step for a <strong>quick scan</strong> or <strong>deep scan</strong>, depending on the expected run frequency.</li>
-<li>Build step <code>-Dvulas vulas:report</code> to create result reports (per default in folder <code>target/vulas/result</code>).</li>
+<li>Build step <code>-Dsteady steady:report</code> to create result reports (per default in folder <code>target/vulas/result</code>).</li>
 <li>Post-build action with <a href="https://wiki.jenkins.io/display/JENKINS/HTML+Publisher+Plugin">HTML Publisher Plugin</a> to copy the Html report created by <code>report</code> into the Jenkins dashboard. As such, Eclipse Steady results can be consumed w/o the need to scroll through the verbose console output.</li>
 </ol>
 <p>Additional notes:</p>
@@ -1287,7 +1287,7 @@
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+            Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
           </div>
         
         powered by

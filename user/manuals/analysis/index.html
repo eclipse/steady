@@ -40,7 +40,7 @@
     
     
       
-        <title>Analysis - Eclipse Steady 3.1.14 (Incubator Project)</title>
+        <title>Analysis - Eclipse Steady 3.2.0 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.14 (Incubator Project)
+              Eclipse Steady 3.2.0 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.14 (Incubator Project)
+    Eclipse Steady 3.2.0 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1381,28 +1381,28 @@
 <p>The reachability analysis (goals <code>a2c</code> and <code>t2c</code>) is not supported with Java 9, due to limitations of the  3<sup>rd</sup>-party analysis frameworks that Eclipse Steady relies upon.</p>
 </div>
 <h2 id="bill-of-material-analysis-app">Bill of material analysis (app)<a class="headerlink" href="#bill-of-material-analysis-app" title="Permanent link">&para;</a></h2>
-<h4>Objective</h4>
+<h4 id="objective">Objective<a class="headerlink" href="#objective" title="Permanent link">&para;</a></h4>
 <p>Create a complete bill of material (BOM) of the application and of all its dependencies (direct and transitive). Most importantly, the BOM comprises the signatures of all methods of the application and all dependencies, which is compared with a list of methods known to be vulnerable. Moreover, the BOM also comprises meta-info on archive level, e.g., the manifest file entries or the archive's digest (SHA1 in case of Java archives, MD5 in case of Python).</p>
-<h4>Result</h4>
+<h4 id="result">Result<a class="headerlink" href="#result" title="Permanent link">&para;</a></h4>
 <p>In the Eclipse Steady frontend, the table in tab "Dependencies" is populated. In case any of the dependencies has vulnerabilities, they are shown in tab "Vulnerabilities". The column "Inclusion of vulnerable code" indicates whether the version in use is known to be vulnerable or not (see tooltip for more information).</p>
-<h4>Important</h4>
+<h4 id="important">Important<a class="headerlink" href="#important" title="Permanent link">&para;</a></h4>
 <p>By default, the Maven plugin searches for application source and compiled code in the folders <code>src/main/java</code> and <code>target/classes</code>. If source or byte code is generated or modified during the build process, and stored in other folders than the ones mentioned, you need to add those directories using the parameter <code>vulas.core.app.sourceDir</code>. Otherwise, the respective code will not be recognized as application code, hence, ignored when performing the reachability analysis. Example: Suppose source code is generated into the folder <code>target/generated-sources</code>. If this code is compiled into the folder <code>target/classes</code>, you do not need to do anything. If it is compiled into a different folder, you would need to add this folder to entries of <code>vulas.core.app.sourceDir</code>.</p>
-<h4>Run as follows</h4>
+<h4 id="run-as-follows">Run as follows<a class="headerlink" href="#run-as-follows" title="Permanent link">&para;</a></h4>
 <div class="superfences-tabs">
 <input name="__tabs_1" type="radio" id="__tab_1_0" checked="checked" />
 <label for="__tab_1_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>java -jar vulas-cli-3.1.14-jar-with-dependencies.jar -goal app
+<div class="superfences-content"><div class="codehilite"><pre><span></span>java -jar vulas-cli-3.2.0-jar-with-dependencies.jar -goal app
 </pre></div></div>
 <input name="__tabs_1" type="radio" id="__tab_1_1" />
 <label for="__tab_1_1">Maven</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dvulas compile vulas:app
+<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dsteady compile steady:app
 </pre></div></div>
 <input name="__tabs_1" type="radio" id="__tab_1_2" />
 <label for="__tab_1_2">Gradle</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span>./gradlew assemble vulasApp
 </pre></div></div>
 </div>
-<h4>Configure as follows</h4>
+<h4 id="configure-as-follows">Configure as follows<a class="headerlink" href="#configure-as-follows" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span><span class="c1"># Where application source or bytecode and application dependencies (JAR and/or WAR files) are located</span>
 <span class="c1"># Relative or absolute paths, multiple values to be separated by comma</span>
 <span class="na">vulas.core.app.sourceDir</span> <span class="o">=</span>
@@ -1428,41 +1428,40 @@
 <span class="c1"># Note: Ignored when running the Maven plugin. In all other cases it avoids the separation of application and dependency JARs into distinct folders</span>
 <span class="na">vulas.core.app.appJarNames</span> <span class="o">=</span>
 </pre></div>
-
 <h2 id="reachable-from-app-a2c">Reachable from app (a2c)<a class="headerlink" href="#reachable-from-app-a2c" title="Permanent link">&para;</a></h2>
-<h4>Objectives</h4>
+<h4 id="objectives">Objectives<a class="headerlink" href="#objectives" title="Permanent link">&para;</a></h4>
 <ul>
 <li>Check whether vulnerable methods are reachable, i.e., whether the application can be run in a way that a vulnerable method is executed.</li>
 <li>Identify all so-called touch points, which are direct calls from an application method to a library method.</li>
 <li>Collect all reachable methods for every dependency of the application.</li>
 </ul>
 <p>The first objective supports the risk assessment for a given vulnerability, while the second and third objectives primarily support the mitigation. Depending on the size of the application, the reachability analysis can consume a considerable amount of resources (time and memory). It is not seldom that it runs for several hours.</p>
-<h4>Limitations</h4>
+<h4 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">&para;</a></h4>
 <ul>
 <li>Python is not supported</li>
-<li>Java 9 and later versions are not supported by the underlying frameworks</li>
+<li>Java 9 and later versions are only supported when using Soot as call graph construction framework</li>
 </ul>
-<h4>Result</h4>
+<h4 id="result_1">Result<a class="headerlink" href="#result_1" title="Permanent link">&para;</a></h4>
 <p>In the Eclipse Steady frontend, tab "Vulnerabilities", the column "Static Analysis" is populated for all libraries subject to known vulnerabilities. By selecting single row of this table and the one of the detailed page, one can get more information up until the paths of potential executions (if any).</p>
-<h4>How does it work</h4>
+<h4 id="how-does-it-work">How does it work<a class="headerlink" href="#how-does-it-work" title="Permanent link">&para;</a></h4>
 <p>Eclipse Steady uses <a href="http://wala.sourceforge.net/wiki/index.php/Main_Page">Wala</a> or <a href="https://soot-oss.github.io/soot/">Soot</a>, both static analysis frameworks for Java, in order to construct a call graph representing all possible program executions starting from application methods. This graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.</p>
-<h4>Run as follows</h4>
+<h4 id="run-as-follows_1">Run as follows<a class="headerlink" href="#run-as-follows_1" title="Permanent link">&para;</a></h4>
 <div class="superfences-tabs">
 <input name="__tabs_2" type="radio" id="__tab_2_0" checked="checked" />
 <label for="__tab_2_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>java -Xmx8g -Xms2g -jar vulas-cli-3.1.14-jar-with-dependencies.jar -goal a2c
+<div class="superfences-content"><div class="codehilite"><pre><span></span>java -Xmx8g -Xms2g -jar vulas-cli-3.2.0-jar-with-dependencies.jar -goal a2c
 </pre></div></div>
 <input name="__tabs_2" type="radio" id="__tab_2_1" />
 <label for="__tab_2_1">Maven</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nb">export</span> <span class="nv">MAVEN_OPTS</span><span class="o">=</span><span class="s2">&quot;-Xmx8g -Xms2g&quot;</span>
-mvn -Dvulas compile vulas:a2c
+mvn -Dsteady compile steady:a2c
 </pre></div></div>
 <input name="__tabs_2" type="radio" id="__tab_2_2" />
 <label for="__tab_2_2">Gradle</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span>./gradlew assemble vulasA2C
 </pre></div></div>
 </div>
-<h4>Configure as follows</h4>
+<h4 id="configure-as-follows_1">Configure as follows<a class="headerlink" href="#configure-as-follows_1" title="Permanent link">&para;</a></h4>
 <p>The following configuration options apply to the reachability analysis no matter which call graph construction framework is used. See below for framework-specific configuration options.</p>
 <div class="codehilite"><pre><span></span><span class="c1"># Limits the analysis to certain bugs (multiple values separated by comma)</span>
 <span class="c1"># If empty, all relevant bugs retrieved from backend will be considered</span>
@@ -1471,7 +1470,7 @@ mvn -Dvulas compile vulas:a2c
 
 <span class="c1"># Analysis framework to be used</span>
 <span class="c1"># Possible values: wala, soot</span>
-<span class="na">vulas.reach.fwk</span> <span class="o">=</span> <span class="s">wala</span>
+<span class="na">vulas.reach.fwk</span> <span class="o">=</span> <span class="s">soot</span>
 
 <span class="c1"># Regex to filter entry points (semicolon separated)</span>
 <span class="na">vulas.reach.constructFilter</span> <span class="o">=</span>
@@ -1486,7 +1485,7 @@ mvn -Dvulas compile vulas:a2c
 <span class="c1"># Default: WebServicesAgent.jar (from Wily Introscope, an app perf monitoring tool that has invalid manifest header fields creating problems for Wala)</span>
 <span class="na">vulas.reach.excludeJars</span> <span class="o">=</span> <span class="s">WebServicesAgent.jar</span>
 
-<span class="c1"># Dir to search for app source files (only vulas:a2c)</span>
+<span class="c1"># Dir to search for app source files (only steady:a2c)</span>
 <span class="c1"># If empty, they will be fetched from backend</span>
 <span class="na">vulas.reach.sourceDir</span> <span class="o">=</span>
 
@@ -1505,19 +1504,16 @@ mvn -Dvulas compile vulas:a2c
 <span class="c1"># Default: true</span>
 <span class="na">vulas.reach.searchShortest</span> <span class="o">=</span> <span class="s">true</span>
 </pre></div>
-
-<h4>Call graph construction framework</h4>
+<h4 id="call-graph-construction-framework">Call graph construction framework<a class="headerlink" href="#call-graph-construction-framework" title="Permanent link">&para;</a></h4>
 <p>Behind the scene, a source code analysis framework is used to construct the call graph, either starting from application methods (<code>a2c</code>) or from traced methods (<code>t2c</code>). Right now, the two frameworks <a href="https://github.com/wala/WALA/wiki">Wala</a> and <a href="https://soot-oss.github.io/soot/">Soot</a> are supported and can be configured with <code>vulas.reach.fwk</code>. Both offer several configuration options to influence the accuracy of the call graph and its construction time. Once the call graph has been constructed, its size (in terms of nodes and edges) is printed to the console, which is useful for comparing the impact of the different configuration options, e.g.</p>
 <div class="codehilite"><pre><span></span>[vulas-reach-1] INFO  com.sap.psr.vulas.cg.wala.WalaCallgraphConstructor  - Normalized call graph has [167639 nodes] (with distinct ConstructId) and [1279495 edges]
 </pre></div>
-
-<h5>WALA</h5>
+<h5 id="wala">WALA<a class="headerlink" href="#wala" title="Permanent link">&para;</a></h5>
 <p>The setting <code>vulas.reach.wala.callgraph.algorithm</code> determines the construction algorithm to be used. From <code>RTA</code> (Rapid Type Analysis) to <code>0-1-ctn-CFA</code>, the call graph  becomes more accurate, but the construction takes more time. A more accurate call graph means that it contains less false-positives, i.e., method invocations that cannot happen during actual program execution. As a rule of thumb, a call graph constructed with <code>RTA</code> contains more nodes and edges than one constructed with <code>0-1-ctn-CFA</code>. Note the following before choosing a more simple algorithm: The increase of nodes and edges resulting from, for instance, the choice of RTA, has a negative impact on the performance of the later analysis phases. As such, it may be worth to spend more time on the graph construction. See <a href="https://ben-holland.com/call-graph-construction-algorithms-explained/">here</a>, <a href="http://wala.sourceforge.net/wiki/index.php/UserGuide:CallGraph">there</a> and <a href="http://wala.sourceforge.net/wiki/index.php/UserGuide:PointerAnalysis">there</a> for more information regarding the difference of call graph construction algorithms.</p>
 <div class="codehilite"><pre><span></span><span class="c1"># Possible values: 0-CFA; 0-ctn-CFA; vanilla-0-1-CFA; 0-1-CFA; 0-1-ctn-CFA</span>
 <span class="c1"># Default algorithm: 0-1-CFA</span>
 <span class="na">vulas.reach.wala.callgraph.algorithm</span> <span class="o">=</span> <span class="s">0-1-CFA</span>
 </pre></div>
-
 <p>The setting <code>vulas.reach.wala.callgraph.reflection</code> determines the consideration of reflection, which is commonly used to instantiate and invoke classes and methods. See <a href="https://github.com/wala/WALA/blob/master/com.ibm.wala.core/src/main/java/com/ibm/wala/ipa/callgraph/AnalysisOptions.java">here</a> for more information.</p>
 <div class="codehilite"><pre><span></span><span class="c1"># Reflection option to be used for call graph construction</span>
 <span class="c1"># Possible values: FULL; NO_METHOD_INVOKE; NO_STRING_CONSTANTS; APPLICATION_GET_METHOD</span>
@@ -1525,8 +1521,7 @@ mvn -Dvulas compile vulas:a2c
 <span class="c1"># Default value: NO_FLOW_TO_CASTS_NO_METHOD_INVOKE</span>
 <span class="na">vulas.reach.wala.callgraph.reflection</span> <span class="o">=</span> <span class="s">NO_FLOW_TO_CASTS_NO_METHOD_INVOKE</span>
 </pre></div>
-
-<h5>Soot</h5>
+<h5 id="soot">Soot<a class="headerlink" href="#soot" title="Permanent link">&para;</a></h5>
 <p>The subset of Soot configuration options that can be set through Eclipse Steady are as follows. For all other Soot settings, the respective defaults are taken. See <a href="https://soot-build.cs.uni-paderborn.de/public/origin/master/soot/soot-master/3.1.0/options/soot_options.htm">here</a> for a complete documentation of Soot configuration options.</p>
 <div class="codehilite"><pre><span></span><span class="c1"># Packages that are excluded when building callgraph</span>
 <span class="c1"># Soot option: -exclude ...</span>
@@ -1571,32 +1566,31 @@ mvn -Dvulas compile vulas:a2c
 <span class="c1"># | none (default)                                                      | no &#39;DummyMainMethod&#39; is generated (default)                                                          |</span>
 <span class="c1"># | soot.jimple.infoflow.entryPointCreators.SequentialEntryPointCreator | a &#39;DummyMainMethod&#39; that invokes all entrypoints is generated                                        |</span>
 <span class="c1"># | soot.jimple.infoflow.entryPointCreators.DefaultEntryPointCreator    | a &#39;DummyMainMethod&#39; in which all entrypoints are generated (random order)                            |</span>
-<span class="c1"># | com.sap.psr.vulas.cg.soot.CustomEntryPointCreator                   | same as DefaultEntryPointCreated + for abstract classes/interface a dummy implementation is generated |</span>
+<span class="c1"># | org.eclipse.steady.cg.soot.CustomEntryPointCreator                   | same as DefaultEntryPointCreated + for abstract classes/interface a dummy implementation is generated |</span>
 <span class="na">vulas.reach.soot.entrypointGenerator</span> <span class="o">=</span> <span class="s">none</span>
 </pre></div>
-
 <h2 id="dynamic-instrumentation-junit">Dynamic instrumentation (JUnit)<a class="headerlink" href="#dynamic-instrumentation-junit" title="Permanent link">&para;</a></h2>
-<h4>Objective</h4>
+<h4 id="objective_1">Objective<a class="headerlink" href="#objective_1" title="Permanent link">&para;</a></h4>
 <p>Collect method traces during the execution of JUnit tests. Information about traced methods will be compared with methods subject to known vulnerabilities.</p>
-<h4>Limitations</h4>
+<h4 id="limitations_1">Limitations<a class="headerlink" href="#limitations_1" title="Permanent link">&para;</a></h4>
 <ul>
 <li>Python is not supported</li>
 </ul>
-<h4>Result</h4>
+<h4 id="result_2">Result<a class="headerlink" href="#result_2" title="Permanent link">&para;</a></h4>
 <ul>
 <li>In the Eclipse Steady frontend, tab "Vulnerabilities", the column "Dynamic Analysis" is populated for all libraries subject to known vulnerabilities. By selecting single row of this table and the one of the detailed page, one can get more information up until the paths of actual executions (if any).</li>
 <li>In the Eclipse Steady frontend, tab "Test coverage", the number of traced vs. the number of total methods is shown per Java package of the application.</li>
 </ul>
-<h4>How does it work</h4>
-<p>Eclipse Steady collects runtime information during application execution, most importantly whether a vulnerable method has been called and the corresponding call stack. In order to collect this information, the byte code of the application and all its dependencies has to be changed, which can be achieved either dynamically or statically: In case of <em>dynamic instrumentation</em>, the byte code of a given Java class is changed at the time the class definition is loaded for the first time, e.g., during the execution of JUnit tests or integration tests. Eclipse Steady injects statements in order to save the timestamp of every method invocation as well as stack trace information. Per default, this information is saved in folder <code>target/vulas/upload</code> and uploaded using the goal <code>vulas:upload</code>. To that end, Eclipse Steady must be registered using the JVM option <code>-javaagent</code>. In case of JUnit tests, the agent is registered by the Maven goal <code>prepare-vulas-agent</code>. In case of <em>static instrumentation</em>, the byte code of classes residing in the file system is changed, e.g., the WAR file of a deployable Web application. This is done with help of the goal <code>vulas:instr</code> (see below).</p>
-<h4>Run as follows</h4>
+<h4 id="how-does-it-work_1">How does it work<a class="headerlink" href="#how-does-it-work_1" title="Permanent link">&para;</a></h4>
+<p>Eclipse Steady collects runtime information during application execution, most importantly whether a vulnerable method has been called and the corresponding call stack. In order to collect this information, the byte code of the application and all its dependencies has to be changed, which can be achieved either dynamically or statically: In case of <em>dynamic instrumentation</em>, the byte code of a given Java class is changed at the time the class definition is loaded for the first time, e.g., during the execution of JUnit tests or integration tests. Eclipse Steady injects statements in order to save the timestamp of every method invocation as well as stack trace information. Per default, this information is saved in folder <code>target/vulas/upload</code> and uploaded using the goal <code>steady:upload</code>. To that end, Eclipse Steady must be registered using the JVM option <code>-javaagent</code>. In case of JUnit tests, the agent is registered by the Maven goal <code>prepare-agent</code>. In case of <em>static instrumentation</em>, the byte code of classes residing in the file system is changed, e.g., the WAR file of a deployable Web application. This is done with help of the goal <code>steady:instr</code> (see below).</p>
+<h4 id="run-as-follows_2">Run as follows<a class="headerlink" href="#run-as-follows_2" title="Permanent link">&para;</a></h4>
 <div class="superfences-tabs">
 <input name="__tabs_3" type="radio" id="__tab_3_0" checked="checked" />
 <label for="__tab_3_0">Maven</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dvulas vulas:prepare-vulas-agent <span class="nb">test</span> vulas:upload
+<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dsteady steady:prepare-agent <span class="nb">test</span> steady:upload
 </pre></div></div>
 </div>
-<h4>Configure as follows</h4>
+<h4 id="configure-as-follows_2">Configure as follows<a class="headerlink" href="#configure-as-follows_2" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span><span class="c1"># Byte code instrumentor(s) to be used (multiple ones to be separated by comma)</span>
 <span class="c1">#</span>
 <span class="c1"># Possible values:</span>
@@ -1660,86 +1654,84 @@ mvn -Dvulas compile vulas:a2c
 <span class="c1"># Default: -1 (no limit)</span>
 <span class="na">vulas.core.monitor.maxItems</span> <span class="o">=</span> <span class="s">-1</span>
 </pre></div>
-
 <h2 id="dynamic-instrumentation-jvm">Dynamic instrumentation (JVM)<a class="headerlink" href="#dynamic-instrumentation-jvm" title="Permanent link">&para;</a></h2>
-<h4>Objective</h4>
+<h4 id="objective_2">Objective<a class="headerlink" href="#objective_2" title="Permanent link">&para;</a></h4>
 <p>Collect method traces during the actual execution of the application. Information about traced methods will be compared with methods subject to known vulnerabilities.</p>
-<h4>Limitations</h4>
+<h4 id="limitations_2">Limitations<a class="headerlink" href="#limitations_2" title="Permanent link">&para;</a></h4>
 <ul>
 <li>Python is not supported</li>
 </ul>
-<h4>Result</h4>
+<h4 id="result_3">Result<a class="headerlink" href="#result_3" title="Permanent link">&para;</a></h4>
 <p>Same as in previous section</p>
-<h4>How does it work</h4>
+<h4 id="how-does-it-work_2">How does it work<a class="headerlink" href="#how-does-it-work_2" title="Permanent link">&para;</a></h4>
 <p>By registering a Java agent at JVM startup, Eclipse Steady changes the bytecode of every Java class loaded at runtime. For example, it injects Java statements in order to save the timestamp of every method invocation as well as stack trace information. This information is periodically uploaded to the Eclipse Steady backend.</p>
-<h4>Run as follows</h4>
+<h4 id="run-as-follows_3">Run as follows<a class="headerlink" href="#run-as-follows_3" title="Permanent link">&para;</a></h4>
 <ul>
-<li>Download the file <code>lang-java-3.1.14-jar-with-dependencies.jar</code> to your computer (CLI users can take it from the folder <code>./instr</code>).</li>
+<li>Download the file <code>lang-java-3.2.0-jar-with-dependencies.jar</code> to your computer (CLI users can take it from the folder <code>./instr</code>).</li>
 <li>Add the following arguments to the Java runtime (and replace line breaks by a single space characters).</li>
 </ul>
-<div class="codehilite"><pre><span></span>-javaagent:lang-java-3.1.14-jar-with-dependencies.jar
+<div class="codehilite"><pre><span></span>-javaagent:lang-java-3.2.0-jar-with-dependencies.jar
 -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/
 -Dvulas.core.backendConnection=READ_WRITE
 -Dvulas.core.monitor.periodicUpload.enabled=true
 -Dvulas.core.appContext.group=&lt;GROUP&gt;
 -Dvulas.core.appContext.artifact=&lt;ARTIFACT&gt;
 -Dvulas.core.appContext.version=&lt;VERSION&gt;
--Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
+-Dvulas.core.instr.instrumentorsChoosen=org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor
 -Dvulas.core.space.token=&lt;WORKSPACE-TOKEN&gt;
 -noverify
 </pre></div>
-
 <ul>
 <li>Start the application and perform some application-specific tests and workflows.</li>
 </ul>
-<h4>Example</h4>
-<p>In case of Tomcat 8.x, one needs to (1) copy <code>lang-java-3.1.14-jar-with-dependencies.jar</code> into the folder <code>./bin</code> and (2) specify the variable <code>CATALINA_OPTS</code> as follows in the file <code>./bin/setenv.bat</code>. Do not forget to specify <code>&lt;GROUP&gt;</code>, <code>&lt;ARTIFACT&gt;</code>, <code>&lt;VERSION&gt;</code> and <code>&lt;WORKSPACE-TOKEN&gt;</code> for the application under analysis. Note: The use of <code>setenv.bat</code> does not work if Tomcat is run as Windows service.</p>
+<h4 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h4>
+<p>In case of Tomcat 8.x, one needs to (1) copy <code>lang-java-3.2.0-jar-with-dependencies.jar</code> into the folder <code>./bin</code> and (2) specify the variable <code>CATALINA_OPTS</code> as follows in the file <code>./bin/setenv.bat</code>. Do not forget to specify <code>&lt;GROUP&gt;</code>, <code>&lt;ARTIFACT&gt;</code>, <code>&lt;VERSION&gt;</code> and <code>&lt;WORKSPACE-TOKEN&gt;</code> for the application under analysis. Note: The use of <code>setenv.bat</code> does not work if Tomcat is run as Windows service.</p>
 <div class="superfences-tabs">
 <input name="__tabs_4" type="radio" id="__tab_4_0" checked="checked" />
 <label for="__tab_4_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nb">set</span> <span class="s2">&quot;CATALINA_OPTS=-javaagent:lang-java-3.1.14-jar-with-dependencies.jar -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/-Dvulas.core.backendConnection=READ_WRITE -Dvulas.core.monitor.periodicUpload.enabled=true -Dvulas.core.appContext.group=&lt;GROUP&gt; -Dvulas.core.appContext.artifact=&lt;ARTIFACT&gt; -Dvulas.core.appContext.version=&lt;VERSION&gt; -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor -Dvulas.core.space.token=&lt;WORKSPACE-TOKEN&gt; -noverify&quot;</span>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nb">set</span> <span class="s2">&quot;CATALINA_OPTS=-javaagent:lang-java-3.2.0-jar-with-dependencies.jar -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/-Dvulas.core.backendConnection=READ_WRITE -Dvulas.core.monitor.periodicUpload.enabled=true -Dvulas.core.appContext.group=&lt;GROUP&gt; -Dvulas.core.appContext.artifact=&lt;ARTIFACT&gt; -Dvulas.core.appContext.version=&lt;VERSION&gt; -Dvulas.core.instr.instrumentorsChoosen=org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor -Dvulas.core.space.token=&lt;WORKSPACE-TOKEN&gt; -noverify&quot;</span>
 </pre></div></div>
 </div>
 <h2 id="static-instrumentation-instr">Static instrumentation (instr)<a class="headerlink" href="#static-instrumentation-instr" title="Permanent link">&para;</a></h2>
-<h4>Objective</h4>
-<p>Modify an existing JAR (WAR) created by <code>mvn package</code> so that traces will be collected once the JAR is executed (the WAR is deployed in a Web application container such as Tomcat). Note: In contrast to what is described in the previous section "Integration Tests", <code>vulas:instr</code> will not result in the collection of traces for Tomcat itself.</p>
-<h4>Prerequisite</h4>
+<h4 id="objective_3">Objective<a class="headerlink" href="#objective_3" title="Permanent link">&para;</a></h4>
+<p>Modify an existing JAR (WAR) created by <code>mvn package</code> so that traces will be collected once the JAR is executed (the WAR is deployed in a Web application container such as Tomcat). Note: In contrast to what is described in the previous section "Integration Tests", <code>steady:instr</code> will not result in the collection of traces for Tomcat itself.</p>
+<h4 id="prerequisite">Prerequisite<a class="headerlink" href="#prerequisite" title="Permanent link">&para;</a></h4>
 <p>An application's JAR or WAR, e.g., as created with <code>mvn package</code> in folder <code>target</code>.</p>
-<h4>Limitations</h4>
+<h4 id="limitations_3">Limitations<a class="headerlink" href="#limitations_3" title="Permanent link">&para;</a></h4>
 <ul>
 <li>Python is not supported</li>
 </ul>
-<h4>Result</h4>
+<h4 id="result_4">Result<a class="headerlink" href="#result_4" title="Permanent link">&para;</a></h4>
 <p>A new JAR/WAR with suffix <code>-vulas-instr</code> will be created in folder <code>target/vulas/target</code>.</p>
-<h4>How does it work</h4>
+<h4 id="how-does-it-work_3">How does it work<a class="headerlink" href="#how-does-it-work_3" title="Permanent link">&para;</a></h4>
 <p>The bytecode of all the Java classes found in the JAR (WAR) will be modified as to collect information about, for instance, method execution and stack traces. This information will be uploaded to the backend if the JAR (WAR) is executed. Note: The modified code in the new JAR with suffix <code>-vulas-instr</code> can be inspected with decompilers such as <a href="http://jd.benow.ca/">JD-GUI</a>.</p>
-<h4>Run as follows</h4>
+<h4 id="run-as-follows_4">Run as follows<a class="headerlink" href="#run-as-follows_4" title="Permanent link">&para;</a></h4>
 <div class="superfences-tabs">
 <input name="__tabs_5" type="radio" id="__tab_5_0" checked="checked" />
 <label for="__tab_5_0">Maven</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span>mvn package
-mvn -Dvulas vulas:instr
+mvn -Dsteady steady:instr
 </pre></div></div>
 </div>
-<h4>Troubleshooting</h4>
+<h4 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h4>
 <ul>
 <li>The console shows compilation errors, e.g., <code>cannot find javax.servlet.http.HttpServletRequest</code>. The reason is that all application dependencies are re-compiled, and it can happen that some of the classes do have dependency requirements not met by the application. This can be overcome by identifying the respective JAR file and downloading it to the folder <code>target/vulas/lib</code>.</li>
 </ul>
 <h2 id="reachable-from-traces-t2c">Reachable from traces (t2c)<a class="headerlink" href="#reachable-from-traces-t2c" title="Permanent link">&para;</a></h2>
-<h4>Objective</h4>
+<h4 id="objective_4">Objective<a class="headerlink" href="#objective_4" title="Permanent link">&para;</a></h4>
 <p>Understand whether vulnerable methods can be potentially reached from traced methods.</p>
-<h4>Prerequisite</h4>
+<h4 id="prerequisite_1">Prerequisite<a class="headerlink" href="#prerequisite_1" title="Permanent link">&para;</a></h4>
 <p>Traces must have been collected during JUnit or integration tests (see above)</p>
-<h4>Limitations</h4>
+<h4 id="limitations_4">Limitations<a class="headerlink" href="#limitations_4" title="Permanent link">&para;</a></h4>
 <ul>
 <li>Python is not supported</li>
 <li>Java 9 and later versions are not supported by the underlying frameworks</li>
 </ul>
-<h4>Result</h4>
+<h4 id="result_5">Result<a class="headerlink" href="#result_5" title="Permanent link">&para;</a></h4>
 <p>In the Eclipse Steady frontend, tab "Vulnerabilities", the column "Static Analysis" is populated for all libraries subject to known vulnerabilities. By selecting single row of this table and the one of the detailed page, one can get more information up until the paths of potential executions (if any).</p>
-<h4>How does it work</h4>
+<h4 id="how-does-it-work_4">How does it work<a class="headerlink" href="#how-does-it-work_4" title="Permanent link">&para;</a></h4>
 <p>In contrast to the goal <code>a2c</code>, the callgraph is built starting from all methods that were previously traced. As such, the call graph construction overcomes weaknesses of static source analysis related to the use of reflection and control inversion. What remains the same is that the resulting graph is traversed in order to see whether and from where methods with known vulnerabilities can be reached.</p>
-<h4>Run as follows</h4>
+<h4 id="run-as-follows_5">Run as follows<a class="headerlink" href="#run-as-follows_5" title="Permanent link">&para;</a></h4>
 <div class="superfences-tabs">
 <input name="__tabs_6" type="radio" id="__tab_6_0" checked="checked" />
 <label for="__tab_6_0">CLI</label>
@@ -1747,10 +1739,10 @@ mvn -Dvulas vulas:instr
 </pre></div></div>
 <input name="__tabs_6" type="radio" id="__tab_6_1" />
 <label for="__tab_6_1">Maven</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dvulas vulas:t2c
+<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dsteady steady:t2c
 </pre></div></div>
 </div>
-<h4>Configure as follows</h4>
+<h4 id="configure-as-follows_3">Configure as follows<a class="headerlink" href="#configure-as-follows_3" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span><span class="c1"># Limits the analysis to certain bugs (multiple values separated by comma)</span>
 <span class="c1"># If empty, all relevant bugs retrieved from backend will be considered</span>
 <span class="c1"># Default: empty</span>
@@ -1773,7 +1765,7 @@ mvn -Dvulas vulas:instr
 <span class="c1"># Default: WebServicesAgent.jar (from Wily Introscope, an app perf monitoring tool that has invalid manifest header fields creating problems for Wala)</span>
 <span class="na">vulas.reach.excludeJars</span> <span class="o">=</span> <span class="s">WebServicesAgent.jar</span>
 
-<span class="c1"># Dir to search for app source files (only vulas:a2c)</span>
+<span class="c1"># Dir to search for app source files (only steady:a2c)</span>
 <span class="c1"># If empty, they will be fetched from backend</span>
 <span class="na">vulas.reach.sourceDir</span> <span class="o">=</span>
 
@@ -1792,28 +1784,27 @@ mvn -Dvulas vulas:instr
 <span class="c1"># Default: true</span>
 <span class="na">vulas.reach.searchShortest</span> <span class="o">=</span> <span class="s">true</span>
 </pre></div>
-
 <h2 id="analyze-unconfirmed-vulnerabilities-checkcode">Analyze unconfirmed vulnerabilities (checkcode)<a class="headerlink" href="#analyze-unconfirmed-vulnerabilities-checkcode" title="Permanent link">&para;</a></h2>
-<h4>Objective</h4>
+<h4 id="objective_5">Objective<a class="headerlink" href="#objective_5" title="Permanent link">&para;</a></h4>
 <p>Downloads unconfirmed vulnerable dependencies (appearing as orange hourglasses in the report and application frontend) and analyze each dependency to determine whether they contain the vulnerable or fixed code. This is done by constructing the Abstract Syntax Tree (AST) of the constructs changed to fix the vulnerability, and comparing it with the AST(s) build from the bytecode of artifacts known to be vulnerable or fixed (as a result of other evaluation strategies).</p>
-<h4>Result</h4>
+<h4 id="result_6">Result<a class="headerlink" href="#result_6" title="Permanent link">&para;</a></h4>
 <p>In case of equalities to either vulnerable/fixed code, affected libraries are uploaded to the backend, thereby resolving the unconfirmed vulnerabilities (orange hourglasses will turn either red or green).</p>
-<h4>Run as follows</h4>
+<h4 id="run-as-follows_6">Run as follows<a class="headerlink" href="#run-as-follows_6" title="Permanent link">&para;</a></h4>
 <p><code>vulas.shared.cia.serviceUrl</code> must be set.</p>
 <div class="superfences-tabs">
 <input name="__tabs_7" type="radio" id="__tab_7_0" checked="checked" />
 <label for="__tab_7_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>java -jar vulas-cli-3.1.14-jar-with-dependencies.jar -goal checkcode 
+<div class="superfences-content"><div class="codehilite"><pre><span></span>java -jar vulas-cli-3.2.0-jar-with-dependencies.jar -goal checkcode 
 </pre></div></div>
 <input name="__tabs_7" type="radio" id="__tab_7_1" />
 <label for="__tab_7_1">Maven</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dvulas vulas:checkcode
+<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dsteady steady:checkcode
 </pre></div></div>
 </div>
 <h2 id="upload-analysis-files-upload">Upload analysis files (upload)<a class="headerlink" href="#upload-analysis-files-upload" title="Permanent link">&para;</a></h2>
-<h4>Objective</h4>
+<h4 id="objective_6">Objective<a class="headerlink" href="#objective_6" title="Permanent link">&para;</a></h4>
 <p>Uploads analysis data in folder <code>vulas.core.uploadDir</code> to the backend. Such data is only written if the parameter <code>vulas.core.backendConnection</code> is set to <code>OFFLINE</code> or <code>READ_ONLY</code>. By default, this is only the case for the instrumentation of JUnit or integration tests.</p>
-<h4>Configure as follows</h4>
+<h4 id="configure-as-follows_4">Configure as follows<a class="headerlink" href="#configure-as-follows_4" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span>    <span class="c1"># When true, serialized HTTP requests will be deleted after the upload succeeded (incl. the JSON files)</span>
     <span class="c1"># Default: true</span>
     <span class="na">vulas.core.upload.deleteAfterSuccess</span> <span class="o">=</span> <span class="s">true</span>
@@ -1822,36 +1813,35 @@ mvn -Dvulas vulas:instr
     <span class="c1"># Default: -1 (no limit)</span>
     <span class="na">vulas.core.upload.maxSize</span> <span class="o">=</span> <span class="s">-1</span>
 </pre></div>
-
-<h4>Run as follows</h4>
+<h4 id="run-as-follows_7">Run as follows<a class="headerlink" href="#run-as-follows_7" title="Permanent link">&para;</a></h4>
 <div class="superfences-tabs">
 <input name="__tabs_8" type="radio" id="__tab_8_0" checked="checked" />
 <label for="__tab_8_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>java -Dvulas.core.appContext.group<span class="o">=</span>&lt;GROUP&gt; -Dvulas.core.appContext.artifact<span class="o">=</span>&lt;ARTIFACT&gt; -Dvulas.core.appContext.version<span class="o">=</span><span class="m">3</span>.1.14
+<div class="superfences-content"><div class="codehilite"><pre><span></span>java -Dvulas.core.appContext.group<span class="o">=</span>&lt;GROUP&gt; -Dvulas.core.appContext.artifact<span class="o">=</span>&lt;ARTIFACT&gt; -Dvulas.core.appContext.version<span class="o">=</span><span class="m">3</span>.2.0
      -jar vulas-cli-jar-with-dependencies.jar -goal upload
 </pre></div></div>
 <input name="__tabs_8" type="radio" id="__tab_8_1" />
 <label for="__tab_8_1">Maven</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dvulas vulas:upload
+<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dsteady steady:upload
 </pre></div></div>
 </div>
 <h2 id="create-result-report-report">Create result report (report)<a class="headerlink" href="#create-result-report-report" title="Permanent link">&para;</a></h2>
-<h4>Objective</h4>
+<h4 id="objective_7">Objective<a class="headerlink" href="#objective_7" title="Permanent link">&para;</a></h4>
 <p>Creates result reports in HTML, XML and JSON format (on the basis of analysis results downloaded from the Eclipse Steady backend). Additionally, the Maven and Gradle plugins can be configured to throw a build exception in order break Jenkins jobs and pipelines in case vulnerable code is present (or reachable/executed). The HTML report can be copied into a Jenkins dashboard using the <a href="http://wiki.jenkins-ci.org/display/JENKINS/HTML+Publisher+Plugin">HTML Publisher Plugin</a> (see <a href="../../tutorials/jenkins_howto/">automation</a> for a configuration example).</p>
-<h4>Multi-module Maven projects</h4>
-<p>The report goal should be called in a separate build step, e.g., <code>mvn -Dvulas vulas:report</code>. It must NOT be called together with other goals, e.g., <code>mvn -Dvulas compile vulas:app vulas:report</code>, because the build may fail before <code>app</code> and other goals are executed for all the modules. Alternatively, you can use the Maven option <code>--fail-at-end</code> (see <a href="https://maven.apache.org/guides/mini/guide-multiple-modules.html">here</a> for more info).</p>
-<h4>Result</h4>
+<h4 id="multi-module-maven-projects">Multi-module Maven projects<a class="headerlink" href="#multi-module-maven-projects" title="Permanent link">&para;</a></h4>
+<p>The report goal should be called in a separate build step, e.g., <code>mvn -Dsteady steady:report</code>. It must NOT be called together with other goals, e.g., <code>mvn -Dsteady compile steady:app steady:report</code>, because the build may fail before <code>app</code> and other goals are executed for all the modules. Alternatively, you can use the Maven option <code>--fail-at-end</code> (see <a href="https://maven.apache.org/guides/mini/guide-multiple-modules.html">here</a> for more info).</p>
+<h4 id="result_7">Result<a class="headerlink" href="#result_7" title="Permanent link">&para;</a></h4>
 <p>A summary report is written to disk (in HTML, XML and JSON format). For Maven, the target directory of the different files is "target/vulas/report", for Gradle it is "build/vulas/report". For CLI, the exact location is printed to the console.</p>
-<h4>How does it work</h4>
+<h4 id="how-does-it-work_5">How does it work<a class="headerlink" href="#how-does-it-work_5" title="Permanent link">&para;</a></h4>
 <p>Identified vulnerabilities including any information gathered during static and dynamic analysis will be downloaded from the backend.</p>
-<h4>Configure as follows</h4>
+<h4 id="configure-as-follows_5">Configure as follows<a class="headerlink" href="#configure-as-follows_5" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span>    <span class="c1"># Exempts the given vulnerability from causing a build exception</span>
     <span class="c1"># This can apply to all libraries including the vulnerable code (by omitting `libraries` or explicitely specifying `*`)</span>
     <span class="c1"># or to selected libraries with the given digest(s).</span>
     <span class="c1"># </span>
     <span class="c1"># Default: -</span>
     <span class="na">vulas.report.exemptBug.&lt;vuln-id&gt;.reason</span> <span class="o">=</span> <span class="s">&lt;reason&gt;</span>
-<span class="s">    vulas.report.exemptBug.&lt;vuln-id&gt;.libraries = [ * | digest [, digest] ]</span>
+    <span class="na">vulas.report.exemptBug.&lt;vuln-id&gt;.libraries</span> <span class="o">=</span> <span class="s">[ * | digest [, digest] ]</span>
 
     <span class="c1"># A vulnerability in exempted scopes will not cause an exception  (multiple scopes to be separated by comma)</span>
     <span class="c1">#</span>
@@ -1894,8 +1884,7 @@ mvn -Dvulas vulas:instr
     <span class="c1"># Note: The scope of this assessment is beyond a specific application, hence, the CURL command requires a security token.</span>
     <span class="na">vulas.report.createLibraryAssessments</span> <span class="o">=</span> 
 </pre></div>
-
-<h4>Run as follows</h4>
+<h4 id="run-as-follows_8">Run as follows<a class="headerlink" href="#run-as-follows_8" title="Permanent link">&para;</a></h4>
 <div class="superfences-tabs">
 <input name="__tabs_9" type="radio" id="__tab_9_0" checked="checked" />
 <label for="__tab_9_0">CLI</label>
@@ -1904,23 +1893,23 @@ mvn -Dvulas vulas:instr
 </pre></div></div>
 <input name="__tabs_9" type="radio" id="__tab_9_1" />
 <label for="__tab_9_1">Maven</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dvulas vulas:report
+<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dsteady steady:report
 </pre></div></div>
 <input name="__tabs_9" type="radio" id="__tab_9_2" />
 <label for="__tab_9_2">Gradle</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span>./gradlew vulasReport
 </pre></div></div>
 </div>
-<h4>Exemptions</h4>
+<h4 id="exemptions">Exemptions<a class="headerlink" href="#exemptions" title="Permanent link">&para;</a></h4>
 <p>The setting <code>vulas.report.exemptBug.&lt;vuln-id&gt;.reason</code> can be used to capture the results of an audit or assessment by developers in regards to whether a vulnerability is problematic in a given application context. Exempted bugs do not result in build exceptions, but are still shown in both the report and the apps Web frontend.</p>
-<h4>Build exceptions</h4>
+<h4 id="build-exceptions">Build exceptions<a class="headerlink" href="#build-exceptions" title="Permanent link">&para;</a></h4>
 <p>Other settings to fine-tune the threshold for build exceptions are as follows:</p>
 <ul>
 <li><code>vulas.report.exemptScope</code> can be used to exclude certain Maven scopes (default: test)</li>
 <li><code>vulas.report.exceptionThreshold</code> can be used to specify whether a build exception is thrown when vulnerable code is included, potentially reachable, actually reached or not at all (values: <code>noException</code>, <code>dependsOn</code>, <code>potentiallyExecutes</code>, <code>actuallyExecutes</code>; default: <code>actuallyExecutes</code>)</li>
 </ul>
 <h2 id="clean-and-delete-apps-clean">Clean and delete apps (clean)<a class="headerlink" href="#clean-and-delete-apps-clean" title="Permanent link">&para;</a></h2>
-<h4>Objective</h4>
+<h4 id="objective_8">Objective<a class="headerlink" href="#objective_8" title="Permanent link">&para;</a></h4>
 <p>Deletes application-specific data in the backend, e.g., traces collected during JUnit tests, application constructs and dependencies collected through the <code>app</code> goal. Right after executing <code>clean</code> for a given application, the apps Web frontend will be empty for the respective application.</p>
 <p>Run as follows to clean the <strong>current version</strong>, e.g., the version specified in <code>pom.xml</code> (Maven) or <code>vulas-custom.properties</code> (CLI):</p>
 <div class="superfences-tabs">
@@ -1930,10 +1919,10 @@ mvn -Dvulas vulas:instr
 </pre></div></div>
 <input name="__tabs_10" type="radio" id="__tab_10_1" />
 <label for="__tab_10_1">Maven</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dvulas vulas:clean
+<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dsteady steady:clean
 </pre></div></div>
 </div>
-<h4>Configure as follows</h4>
+<h4 id="configure-as-follows_6">Configure as follows<a class="headerlink" href="#configure-as-follows_6" title="Permanent link">&para;</a></h4>
 <p>The following options can be used to delete <strong>multiple versions</strong>.</p>
 <p>Important: In this case, only the creation date of application versions (in the backend) is considered to select the versions to be deleted. Versions specified in <code>pom.xml</code>, <code>vulas-custom.properties</code> etc. are not considered at all. </p>
 <div class="codehilite"><pre><span></span>    <span class="c1"># When true, all but the latest X app versions will be deleted (latest according to the application creation date).</span>
@@ -1952,7 +1941,6 @@ mvn -Dvulas vulas:instr
     <span class="c1"># Default: false</span>
     <span class="na">vulas.core.clean.goalHistory</span> <span class="o">=</span> <span class="s">false</span>
 </pre></div>
-
 <p>Run as follows to delete <strong>all versions</strong>:</p>
 <div class="superfences-tabs">
 <input name="__tabs_11" type="radio" id="__tab_11_0" checked="checked" />
@@ -1961,18 +1949,17 @@ mvn -Dvulas vulas:instr
 </pre></div></div>
 <input name="__tabs_11" type="radio" id="__tab_11_1" />
 <label for="__tab_11_1">Maven</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dvulas -Dvulas.core.clean.purgeVersions<span class="o">=</span><span class="nb">true</span> -Dvulas.core.clean.purgeVersions.keepLast<span class="o">=</span><span class="m">0</span> vulas:clean
+<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dsteady -Dvulas.core.clean.purgeVersions<span class="o">=</span><span class="nb">true</span> -Dvulas.core.clean.purgeVersions.keepLast<span class="o">=</span><span class="m">0</span> steady:clean
 </pre></div></div>
 </div>
-<h4>Troubleshooting</h4>
+<h4 id="troubleshooting_1">Troubleshooting<a class="headerlink" href="#troubleshooting_1" title="Permanent link">&para;</a></h4>
 <p>The Maven plugin will fail to delete an application if a corresponding <code>&lt;module&gt;</code> does not exit any longer in the <code>pom.xml</code>. The CLI must be used in these cases and the Maven coordinates (GAV) of the item to be cleaned shall be provided as system properties when calling the CLI. For example, if you want to delete an application with GAV <code>myGroup:myArtifact:myVersion</code>, the following command line be used</p>
 <div class="codehilite"><pre><span></span>java -Dvulas.core.appContext.group<span class="o">=</span>myGroup -Dvulas.core.appContext.artifact<span class="o">=</span>myArtifact -Dvulas.core.appContext.version<span class="o">=</span>myVersion -jar vulas-cli-jar-with-dependencies.jar -goal clean
 </pre></div>
-
 <h2 id="clean-workspaces-cleanspace">Clean workspaces (cleanspace)<a class="headerlink" href="#clean-workspaces-cleanspace" title="Permanent link">&para;</a></h2>
-<h4>Objective</h4>
+<h4 id="objective_9">Objective<a class="headerlink" href="#objective_9" title="Permanent link">&para;</a></h4>
 <p>Deletes all applications of the given space.</p>
-<h4>Run as follows</h4>
+<h4 id="run-as-follows_9">Run as follows<a class="headerlink" href="#run-as-follows_9" title="Permanent link">&para;</a></h4>
 <div class="superfences-tabs">
 <input name="__tabs_12" type="radio" id="__tab_12_0" checked="checked" />
 <label for="__tab_12_0">CLI</label>
@@ -1980,7 +1967,7 @@ mvn -Dvulas vulas:instr
 </pre></div></div>
 <input name="__tabs_12" type="radio" id="__tab_12_1" />
 <label for="__tab_12_1">Maven</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dvulas vulas:cleanSpace
+<div class="superfences-content"><div class="codehilite"><pre><span></span>mvn -Dsteady steady:cleanSpace
 </pre></div></div>
 </div>
                 
@@ -2041,7 +2028,7 @@ mvn -Dvulas vulas:instr
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+            Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
           </div>
         
         powered by

@@ -40,7 +40,7 @@
     
     
       
-        <title>Vulas profile - Eclipse Steady 3.1.14 (Incubator Project)</title>
+        <title>Vulas profile - Eclipse Steady 3.2.0 (Incubator Project)</title>
       
     
     
@@ -107,7 +107,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -120,7 +120,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.14 (Incubator Project)
+              Eclipse Steady 3.2.0 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -287,12 +287,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.14 (Incubator Project)
+    Eclipse Steady 3.2.0 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1103,14 +1103,14 @@
                   <h1>Vulas profile</h1>
                 
                 <div class="codehilite"><pre><span></span>    <span class="nt">&lt;profile&gt;</span>
-        <span class="nt">&lt;id&gt;</span>vulas<span class="nt">&lt;/id&gt;</span>
+        <span class="nt">&lt;id&gt;</span>steady<span class="nt">&lt;/id&gt;</span>
         <span class="nt">&lt;activation&gt;</span>
             <span class="nt">&lt;property&gt;</span>
-                <span class="nt">&lt;name&gt;</span>vulas<span class="nt">&lt;/name&gt;</span>
+                <span class="nt">&lt;name&gt;</span>steady<span class="nt">&lt;/name&gt;</span>
             <span class="nt">&lt;/property&gt;</span>
         <span class="nt">&lt;/activation&gt;</span>
         <span class="nt">&lt;properties&gt;</span>
-<span class="hll">            <span class="nt">&lt;vulas.version&gt;</span>3.1.14<span class="nt">&lt;/vulas.version&gt;</span>
+<span class="hll">            <span class="nt">&lt;vulas.version&gt;</span>3.2.0<span class="nt">&lt;/vulas.version&gt;</span>
 </span><span class="hll">            <span class="nt">&lt;vulas.shared.backend.serviceUrl&gt;</span>http://localhost:8033/backend/<span class="nt">&lt;/vulas.shared.backend.serviceUrl&gt;</span>
 </span><span class="hll">            <span class="nt">&lt;vulas.core.space.token&gt;</span>WORKSPACE_TOKEN<span class="nt">&lt;/vulas.core.space.token&gt;</span>
 </span>            <span class="nt">&lt;vulas.core.appContext.group&gt;</span>${project.groupId}<span class="nt">&lt;/vulas.core.appContext.group&gt;</span>
@@ -1120,7 +1120,7 @@
         <span class="nt">&lt;build&gt;</span>
             <span class="nt">&lt;plugins&gt;</span>
                 <span class="nt">&lt;plugin&gt;</span>
-                    <span class="nt">&lt;groupId&gt;</span>com.sap.research.security.vulas<span class="nt">&lt;/groupId&gt;</span>
+                    <span class="nt">&lt;groupId&gt;</span>org.eclipse.steady<span class="nt">&lt;/groupId&gt;</span>
                     <span class="nt">&lt;artifactId&gt;</span>plugin-maven<span class="nt">&lt;/artifactId&gt;</span>
                     <span class="nt">&lt;version&gt;</span>${vulas.version}<span class="nt">&lt;/version&gt;</span>
                     <span class="nt">&lt;configuration&gt;</span>
@@ -1136,7 +1136,7 @@
                             <span class="nt">&lt;vulas.core.uploadDir&gt;</span>${project.build.directory}/vulas/upload<span class="nt">&lt;/vulas.core.uploadDir&gt;</span>
                             <span class="nt">&lt;vulas.core.app.sourceDir&gt;</span>${project.build.directory}/classes,${project.basedir}/src/main/java,${project.basedir}/src/main/python<span class="nt">&lt;/vulas.core.app.sourceDir&gt;</span>
 
-                            <span class="c">&lt;!-- vulas:instr : Instruments JAR/WAR files found in source dir,</span>
+                            <span class="c">&lt;!-- steady:instr : Instruments JAR/WAR files found in source dir,</span>
 <span class="c">                                and writes to target dir. Files in include dir are put into /WEB-INF/lib</span>
 <span class="c">                                of output WARs. Files in lib dir are part of the class path when instrumenting. --&gt;</span>
                             <span class="nt">&lt;vulas.core.instr.sourceDir&gt;</span>${project.build.directory}<span class="nt">&lt;/vulas.core.instr.sourceDir&gt;</span>
@@ -1144,16 +1144,16 @@
                             <span class="nt">&lt;vulas.core.instr.includeDir&gt;</span>${project.build.directory}/vulas/include<span class="nt">&lt;/vulas.core.instr.includeDir&gt;</span>
                             <span class="nt">&lt;vulas.core.instr.libDir&gt;</span>${project.build.directory}/vulas/lib<span class="nt">&lt;/vulas.core.instr.libDir&gt;</span>
                             <span class="nt">&lt;vulas.core.instr.writeCode&gt;</span>false<span class="nt">&lt;/vulas.core.instr.writeCode&gt;</span>
-                            <span class="nt">&lt;vulas.core.instr.instrumentorsChoosen&gt;</span>com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor<span class="nt">&lt;/vulas.core.instr.instrumentorsChoosen&gt;</span>
+                            <span class="nt">&lt;vulas.core.instr.instrumentorsChoosen&gt;</span>org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor<span class="nt">&lt;/vulas.core.instr.instrumentorsChoosen&gt;</span>
                             <span class="nt">&lt;vulas.core.instr.searchRecursive&gt;</span>false<span class="nt">&lt;/vulas.core.instr.searchRecursive&gt;</span>
                             <span class="nt">&lt;vulas.core.monitor.periodicUpload.enabled&gt;</span>false<span class="nt">&lt;/vulas.core.monitor.periodicUpload.enabled&gt;</span>
                             <span class="nt">&lt;vulas.core.instr.maxStacktraces&gt;</span>10<span class="nt">&lt;/vulas.core.instr.maxStacktraces&gt;</span>
 
-                            <span class="c">&lt;!-- vulas:a2c/t2c : Performs static call graph analysis --&gt;</span>
+                            <span class="c">&lt;!-- steady:a2c/t2c : Performs static call graph analysis --&gt;</span>
                             <span class="nt">&lt;vulas.reach.wala.callgraph.reflection&gt;</span>NO_FLOW_TO_CASTS_NO_METHOD_INVOKE<span class="nt">&lt;/vulas.reach.wala.callgraph.reflection&gt;</span>
                             <span class="nt">&lt;vulas.reach.timeout&gt;</span>60<span class="nt">&lt;/vulas.reach.timeout&gt;</span>
 
-                            <span class="c">&lt;!-- vulas:report --&gt;</span>
+                            <span class="c">&lt;!-- steady:report --&gt;</span>
                             <span class="nt">&lt;vulas.report.reportDir&gt;</span>${project.build.directory}/vulas/report<span class="nt">&lt;/vulas.report.reportDir&gt;</span>
                         <span class="nt">&lt;/layeredConfiguration&gt;</span>
                     <span class="nt">&lt;/configuration&gt;</span>
@@ -1185,7 +1185,7 @@
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+            Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
           </div>
         
         powered by

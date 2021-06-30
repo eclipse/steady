@@ -40,7 +40,7 @@
     
     
       
-        <title>Deploy on Kubernetes with Helm - Eclipse Steady 3.1.14 (Incubator Project)</title>
+        <title>Deploy on Kubernetes with Helm - Eclipse Steady 3.2.0 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.14 (Incubator Project)
+              Eclipse Steady 3.2.0 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.14 (Incubator Project)
+    Eclipse Steady 3.2.0 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1281,18 +1281,16 @@
 <li><strong>vulnerability-assessment-tool-admin</strong>: which encapsulates all the cluster admin tools (namely the ingress controller to expose the service)  </li>
 <li><strong>vulnerability-assessment-tool-monitoring</strong>: which is used to deploy the dedicated monitoring stack  </li>
 </ul>
-<p>Clone locally <code>vulnerability-assessment-tool</code> repository and change the directory to the Helm chart's folder</p>
+<p>Clone locally <code>Eclipse Steady</code> repository and change the directory to the Helm chart's folder</p>
 <div class="codehilite"><pre><span></span>git clone https://github.com/eclipse/steady.git
 <span class="nb">cd</span> steady/kubernetes/helm
 </pre></div>
-
 <p>Modify the <code>values.yaml</code> files and edit them to match your needs.
 In order to verify the validity of your values and get a preview of your generated chart:</p>
 <div class="codehilite"><pre><span></span>helm template vulnerability-assessment-tool-core
 helm template vulnerability-assessment-tool-admin
 helm template vulnerability-assessment-tool-monitoring
 </pre></div>
-
 <h2 id="run">Run<a class="headerlink" href="#run" title="Permanent link">&para;</a></h2>
 <p>You are now ready to deploy Eclipse Steady inside your Kubernetes cluster:</p>
 <h3 id="vulnerability-assessment-tool-core-chart">Vulnerability-assessment-tool-core chart<a class="headerlink" href="#vulnerability-assessment-tool-core-chart" title="Permanent link">&para;</a></h3>
@@ -1302,7 +1300,6 @@ helm install vulnerability-assessment-tool-core/ --name ReleaseName
 <span class="c1"># For helm 3</span>
 helm install vulnerability-assessment-tool-core ReleaseName
 </pre></div>
-
 <p>The above command will create a <code>Namespace</code> called <code>vulnerability-assessment-tool-core</code> (which can be specified in the <a href="https://github.com/eclipse/steady/blob/master/kubernetes/helm/vulnerability-assessment-tool-core/values.yaml">vulnerability-assessment-tool-core/values.yaml</a>) and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command <code>kubectl get pods -n vulnerability-assessment-tool-core</code>. The deployment will request a couple <code>PersistentVolumeClaims</code> which could need some time to be created depending on the cloud provider you are running on.</p>
 <h3 id="vulnerability-assessment-tool-monitoring-chart">Vulnerability-assessment-tool-monitoring chart<a class="headerlink" href="#vulnerability-assessment-tool-monitoring-chart" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><span class="c1"># For helm 2</span>
@@ -1311,7 +1308,6 @@ helm install vulnerability-assessment-tool-monitoring/ --name ReleaseName
 <span class="c1"># For helm 3</span>
 helm install vulnerability-assessment-tool-monitoring ReleaseName
 </pre></div>
-
 <p>The above command will create a <code>Namespace</code> called <code>vulnerability-assessment-tool-monitoring</code> (which can be specified in the <a href="https://github.com/eclipse/steady/blob/master/kubernetes/helm/vulnerability-assessment-tool-monitoring/values.yaml">vulnerability-assessment-tool-monitoring/values.yaml</a>) and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command <code>kubectl get pods -n vulnerability-assessment-tool-monitoring</code>. The deployment will request a couple <code>PersistentVolumeClaims</code> which could need some time to be created depending on the cloud provider you are running on.</p>
 <div class="admonition info">
 <p class="admonition-title">Monitoring scope</p>
@@ -1324,7 +1320,6 @@ helm install vulnerability-assessment-tool-admin/ --name ReleaseName
 <span class="c1"># For helm 3</span>
 helm install vulnerability-assessment-tool-admin ReleaseName
 </pre></div>
-
 <p>The above command will create a <code>Namespace</code> called <code>vulnerability-assessment-tool-admin</code> (which can be specified in the <a href="https://github.com/eclipse/steady/blob/master/kubernetes/helm/vulnerability-assessment-tool-admin/values.yaml">vulnerability-assessment-tool-admin/values.yaml</a>) and install all the component on it. To check if everything is starting successfully you can watch the deployments by running the command <code>kubectl get pods -n vulnerability-assessment-tool-admin</code>. The deployment will request a <code>LoadBalancer</code> which could need some time to be created depending on the cloud provider you are running on.</p>
 <div class="admonition warning">
 <p class="admonition-title">Reaching Eclipse Steady from the Internet</p>
@@ -1388,7 +1383,7 @@ helm install vulnerability-assessment-tool-admin ReleaseName
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+            Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
           </div>
         
         powered by

@@ -40,7 +40,7 @@
     
     
       
-        <title>Kubernetes resources requirements - Eclipse Steady 3.1.14 (Incubator Project)</title>
+        <title>Kubernetes resources requirements - Eclipse Steady 3.2.0 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.1.14 (Incubator Project)
+              Eclipse Steady 3.2.0 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.1.14 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.1.14 (Incubator Project)
+    Eclipse Steady 3.2.0 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1180,7 +1180,7 @@
                 
                 
                 <h1 id="operational-requirements">Operational requirements<a class="headerlink" href="#operational-requirements" title="Permanent link">&para;</a></h1>
-<p>The following document is meant to summarize the vulnerability-assessment-tool requirements when it comes to running it on the Kubernetes architecture. This will detail its operational cost for a couple of scenarios:</p>
+<p>The following document is meant to summarize the Eclipse Steady requirements when it comes to running it on the Kubernetes architecture. This will detail its operational cost for a couple of scenarios:</p>
 <ul>
 <li>
 <p><strong>Lightweight</strong> : the cluster is instantiated with no prior scan and data, then, the bugs are loaded using the patch-analyzer. This deployment is not destined for high availability or resilience (therefore with less replicas, no auto-scaling) and is optimal for small testing environments with a 6 month usage buffer.</p>
@@ -1195,14 +1195,14 @@
 <p><strong>Medium Load HA</strong> : same as the above but with the sufficient amount of replicas that will ensure high availability and resilience.</p>
 </li>
 <li>
-<p><strong>Production Load</strong> : the cluster is loaded with the latest dump of the internal SAP vulnerability-assessment-tool database (which at the time of this document creation is around 249GB). This deployment is not destined for high availability or
+<p><strong>Production Load</strong> : the cluster is loaded with the latest dump of the internal SAP Eclipse Steady database (which at the time of this document creation is around 249GB). This deployment is not destined for high availability or
 resilience and is optimal for production environments with a 3-5 year usage buffer. This data load includes app specific data (once those are removed, the database size is around 150GB in our current setup)</p>
 </li>
 <li>
 <p><strong>Production Load HA</strong> : same as the above but with the sufficient amount of replicas that will ensure high availability and resilience.</p>
 </li>
 <li>
-<p><strong>Extra PVC</strong> : this use case is destined towards optimizing certain components of the vulnerability-assessment-tool which require read write many volumes (in particular <code>rest-lib-utils</code>)</p>
+<p><strong>Extra PVC</strong> : this use case is destined towards optimizing certain components of the Eclipse Steady which require read write many volumes (in particular <code>rest-lib-utils</code>)</p>
 </li>
 <li>
 <p><strong>Hosted DB</strong> : for using a pre-existing database (for cloud providers such as GCP, AWS, Azure, etc...) which require lower resources as the database are no longer self managed.</p>
@@ -1319,7 +1319,7 @@ resilience and is optimal for production environments with a 3-5 year usage buff
 </tbody>
 </table>
 <h3 id="in-depth-break-down-of-resource-requirements">In-depth break down of resource requirements<a class="headerlink" href="#in-depth-break-down-of-resource-requirements" title="Permanent link">&para;</a></h3>
-<h4>Frontendapps</h4>
+<h4 id="frontendapps">Frontendapps<a class="headerlink" href="#frontendapps" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -1443,7 +1443,7 @@ resilience and is optimal for production environments with a 3-5 year usage buff
 </tr>
 </tbody>
 </table>
-<h4>Frontendbugs</h4>
+<h4 id="frontendbugs">Frontendbugs<a class="headerlink" href="#frontendbugs" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -1567,7 +1567,7 @@ resilience and is optimal for production environments with a 3-5 year usage buff
 </tr>
 </tbody>
 </table>
-<h4>Patch-lib-analyzer</h4>
+<h4 id="patch-lib-analyzer">Patch-lib-analyzer<a class="headerlink" href="#patch-lib-analyzer" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -1691,7 +1691,7 @@ resilience and is optimal for production environments with a 3-5 year usage buff
 </tr>
 </tbody>
 </table>
-<h4>Rest-lib-utils</h4>
+<h4 id="rest-lib-utils">Rest-lib-utils<a class="headerlink" href="#rest-lib-utils" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -1815,7 +1815,7 @@ resilience and is optimal for production environments with a 3-5 year usage buff
 </tr>
 </tbody>
 </table>
-<h4>Rest-backend</h4>
+<h4 id="rest-backend">Rest-backend<a class="headerlink" href="#rest-backend" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -1939,7 +1939,7 @@ resilience and is optimal for production environments with a 3-5 year usage buff
 </tr>
 </tbody>
 </table>
-<h4>Postgres master</h4>
+<h4 id="postgres-master">Postgres master<a class="headerlink" href="#postgres-master" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -2063,7 +2063,7 @@ resilience and is optimal for production environments with a 3-5 year usage buff
 </tr>
 </tbody>
 </table>
-<h4>Postgres replicas</h4>
+<h4 id="postgres-replicas">Postgres replicas<a class="headerlink" href="#postgres-replicas" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -2187,7 +2187,7 @@ resilience and is optimal for production environments with a 3-5 year usage buff
 </tr>
 </tbody>
 </table>
-<h4>Pgpool</h4>
+<h4 id="pgpool">Pgpool<a class="headerlink" href="#pgpool" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -2369,7 +2369,7 @@ resilience and is optimal for production environments with a 3-5 year usage buff
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+            Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
           </div>
         
         powered by
