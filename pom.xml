@@ -266,6 +266,7 @@
 							<serverId>ossrh</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+							<skipNexusStagingDeployMojo>${maven.deploy.skip}</skipNexusStagingDeployMojo>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -429,7 +430,7 @@
 							<goal>flatten</goal>
 						</goals>
 						<configuration>
-							<flattenMode>clean</flattenMode>
+							<flattenMode>ossrh</flattenMode>
 						</configuration>
 					</execution>
 					<execution>
