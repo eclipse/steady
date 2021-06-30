@@ -31,8 +31,8 @@
 	</parent>
 	<artifactId>lang-python</artifactId>
 
-	<name>Python - Core classes for Python analysis</name>
-	<description></description>
+	<name>steady-lang-python</name>
+	<description>Core classes for Python analysis</description>
 	
 	<properties>
 		<maven.deploy.skip>false</maven.deploy.skip>

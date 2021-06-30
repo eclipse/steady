@@ -31,8 +31,8 @@
 	<artifactId>cli-scanner</artifactId>
 	<packaging>jar</packaging>
 
-	<name>Command Line Interface</name>
-	<description></description>
+	<name>steady-cli-scanner</name>
+	<description>Steady Command Line Interface</description>
 	
 	<properties>
 		<maven.deploy.skip>false</maven.deploy.skip>

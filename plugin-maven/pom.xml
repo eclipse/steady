@@ -32,8 +32,8 @@
     <artifactId>plugin-maven</artifactId>
     <packaging>maven-plugin</packaging>
 
-    <name>Plugin for Maven</name>
-    <description></description>
+    <name>steady-plugin-maven</name>
+    <description>Steady plugin for Maven</description>
     
     <properties>
     	<maven.deploy.skip>false</maven.deploy.skip>

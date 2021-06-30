@@ -31,8 +31,8 @@
 	</parent>
 	<artifactId>lang-java</artifactId>
 
-	<name>Java - Core classes for Java analysis</name>
-	<description></description>
+	<name>steady-lang-java</name>
+	<description>Core classes for Java analysis</description>
 	
 	<properties>
 		<maven.deploy.skip>false</maven.deploy.skip>

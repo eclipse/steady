@@ -31,9 +31,9 @@
 	</parent>
 	<artifactId>shared</artifactId>
 
-	<name>Shared classes</name>
+	<name>steady-shared</name>
 	<description>
-		Contains class definitions shared between the different Vulas modules.
+		Contains class definitions shared between the different Maven modules.
 		They can be classified as follows: Classes for JSON (de)serialization, classes
 		supporting service connectivity, utility classes and classes used to ensure
 		consistency across modules.
