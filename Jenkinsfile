@@ -38,11 +38,11 @@ spec:
       mountPath: /home/jenkins/.gnupg
     resources:
       limits:
-        memory: "6Gi"
-        cpu: "4"
+        memory: "4Gi"
+        cpu: "2"
       requests:
-        memory: "6Gi"
-        cpu: "4"
+        memory: "4Gi"
+        cpu: "2"
   volumes:
   - name: settings-xml
     secret:
