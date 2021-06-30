@@ -29,7 +29,8 @@ model.Config = {
 	pwd: "",
 	user: "",
 	pwd: "",
-	skipEmpty : true
+	skipEmpty : true,
+    wikiUrl : "https://eclipse.github.io/steady/"
 };
 
 var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
@@ -343,6 +344,14 @@ model.Config.uploadCVEDescription = function(newjson, url){
     
 };
 
+model.Config.openWiki = function(href){
+	if(model.Config.getWikiUrl()==""){
+		sap.m.MessageBox.warning(
+				"Wiki url not configured in the backend."
+			);
+	}
+	window.open(model.Config.getWikiUrl() + href, '_blank').focus();
+};
 
 /*model.Config.getToLookupList = function(affectedVersions){
     var toLookup = {};
