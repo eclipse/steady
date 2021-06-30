@@ -31,8 +31,8 @@
 	</parent>
 	<artifactId>lang</artifactId>
 
-	<name>Framework and base classes for language analysis</name>
-	<description></description>
+	<name>steady-lang</name>
+	<description>Framework and base classes for language analysis</description>
 
 	<properties>
 		<!-- Exclude ANTLR-generated files from Sonar reports -->

@@ -31,7 +31,7 @@
 	</parent>
 	<artifactId>lang-java-reach</artifactId>
 
-	<name>Java - Core classes and SPI for Java reachability analysis</name>
+	<name>steady-lang-java-reach</name>
 	<description>Performs static analysis of application and OSS source code in order to analyze the reachability of vulnerable Java constructs</description>
 
 	<properties>

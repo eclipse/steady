@@ -21,16 +21,17 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
 	<parent>
 		<groupId>org.eclipse.steady</groupId>
 		<artifactId>root</artifactId>
 		<version>3.2.0</version>
 	</parent>
-	<modelVersion>4.0.0</modelVersion>
-
 	<artifactId>lang-java-reach-soot</artifactId>
-	<name>Java - Soot call graph constructor service</name>
-	<description></description>
+
+	<name>steady-lang-java-reach-soot</name>
+	<description>Soot call graph constructor service</description>
 	
 	<properties>
 		<maven.deploy.skip>false</maven.deploy.skip>
