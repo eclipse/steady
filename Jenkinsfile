@@ -96,11 +96,10 @@ spec:
     }
     // Verifies compliance with Google's Java Style Guide (cf.
     // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines).
-    stage('Verify Coding Style and REUSE compliance') {
+    stage('Verify Coding Style') {
       steps {
         container('maven') {
           sh 'bash .travis/check_code_style.sh'
-          sh 'docker run --rm --volume $(pwd):/data fsfe/reuse lint'
         }
       }
     }
