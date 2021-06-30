@@ -96,8 +96,13 @@ model.Config.setPwd = function(_pwd){
 model.Config.setSkipEmpty = function(_skipEmpty){
 	model.Config.skipEmpty=_skipEmpty;
 }
+
 model.Config.getSkipEmpty = function(){
 	return model.Config.skipEmpty;
+}
+
+model.Config.getWikiUrl = function() {
+	return model.Config.wikiUrl;
 }
 
 model.Config.loadData = function(oModel,sUrl, method) {
@@ -202,8 +207,6 @@ model.Config.getMavenId = function (affectedVersion){
     } 
     return mid;
 };
-
-
 
 model.Config.uploadManualAssessment = function(data, pbugid ){
     var baseurl = model.Config.getHost() + "/bugs/";
