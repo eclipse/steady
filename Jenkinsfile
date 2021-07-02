@@ -91,7 +91,7 @@ spec:
                   -Dspring.standalone \
                   -DskipTests \
                   -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace \
-                  -Dspotbugs.excludeFilterFile=findbugs-exclude.xml
+                  -Dspotbugs.excludeFilterFile=findbugs-exclude.xml \
                   -Dspotbugs.includeFilterFile=findbugs-include.xml \
                   -Dspotbugs.failOnError=true \
                   clean install com.github.spotbugs:spotbugs-maven-plugin:4.2.3:check'
