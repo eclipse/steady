@@ -109,7 +109,7 @@ spec:
     stage('Test') {
       steps {
         container('maven') {
-          sh 'mvn -B -e -P gradle
+          sh 'mvn -B -e -P gradle \
                   -Dspring.standalone \
                   -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace \
                   -Dit.test="!IT01_PatchAnalyzerIT,IT*,*IT" \
