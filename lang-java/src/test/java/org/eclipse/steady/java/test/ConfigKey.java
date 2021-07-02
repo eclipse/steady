@@ -41,7 +41,7 @@ public enum ConfigKey implements ConfigurationKey {
   }
 
   @Override
-  public final Class getType() {
+  public final Class getType(String a, int b) {
     return type;
   }
 

@@ -470,6 +470,7 @@ sap.ui.controller("view.Component", {
 						singlePackage.modules=packageCounters[pack].MODU;
 						singlePackage.functions=packageCounters[pack].FUNC;
 						singlePackage.static_inits=packageCounters[pack].INIT;
+						singlePackage.interfaces=packageCounters[pack].INTF;
 						
 						if(packageCountersTraced!=null&&packageCountersTraced[pack]){
 						//add if else to avoid traced CONSTRUCTORS > traced
@@ -481,6 +482,7 @@ sap.ui.controller("view.Component", {
 							singlePackage.modulesTested=packageCountersTraced[pack].MODU;
 							singlePackage.functionsTested=packageCountersTraced[pack].FUNC;
 							singlePackage.static_initsTested=packageCountersTraced[pack].INIT;
+							singlePackage.interfacesTested=packageCountersTraced[pack].INTF;
 							traced = traced + packageCountersTraced[pack].countExecutable;
 						}
 						else {
@@ -489,6 +491,7 @@ sap.ui.controller("view.Component", {
 							singlePackage.static_initsTested = 0;
 							singlePackage.modulesTested = 0;
 							singlePackage.functionsTested = 0;
+							singlePackage.interfacesTested=0;
 						}
 						
 						//TODO ADD MODU & FUNCTION? (INITIATED

@@ -95,6 +95,18 @@ public class ConstructIdFilter {
   }
 
   /**
+   * <p>countIntf.</p>
+   *
+   * @return a int.
+   */
+  @JsonProperty(value = "INTF")
+  public int countIntf() {
+    return (this.constructIds.containsKey(ConstructType.INTF)
+        ? this.constructIds.get(ConstructType.INTF).size()
+        : 0);
+  }
+
+  /**
    * <p>countEnum.</p>
    *
    * @return a int.
@@ -190,6 +202,7 @@ public class ConstructIdFilter {
   public int countTotal() {
     return this.countPack()
         + this.countClass()
+        + this.countIntf()
         + this.countEnum()
         + this.countMeth()
         + this.countCons()
