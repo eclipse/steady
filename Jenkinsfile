@@ -70,36 +70,38 @@ spec:
     }
   }
   stages {
-    // Verifies that no Spotbugs checks fails (cf.
+    // Verifies compliance with Google's Java Style Guide (cf.
     // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines).
-    stage('Verify Spotbugs') {
+    stage('Verify Coding Style and REUSE compliance') {
       steps {
         container('maven') {
-          sh 'mvn -B -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
-              -Dspotbugs.excludeFilterFile=findbugs-exclude.xml -Dspotbugs.includeFilterFile=findbugs-include.xml \
-              -Dspotbugs.failOnError=true -DskipTests clean install com.github.spotbugs:spotbugs-maven-plugin:4.2.3:check'
+          sh 'reuse lint'
+          sh 'bash .travis/check_code_style.sh'
         }
       }
     }
     // Verifies that the -javadoc and -sources artifacts can be generated (by enabling the
     // javadoc profile contained in three pom.xml files). Also verifies that the build
-    // is reproducible.
-    stage('Verify JavaDoc, Source and Reproducibility') {
+    // is reproducible, and that Spotbugs checks do not fail (cf.
+    // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines).
+    stage('Create javadoc + sources, Verify Spotbugs and Reproducibility') {
       steps {
         container('maven') {
-          sh 'mvn -B -e -P gradle,javadoc -Dspring.standalone -DskipTests clean install'
-          sh 'mvn -B -e -P gradle,javadoc -Dspring.standalone -DskipTests -Dreference.repo=https://repo.maven.apache.org/maven2 clean verify'
+          sh 'mvn -B -e -P gradle,javadoc \
+                  -Dspring.standalone \
+                  -DskipTests \
+                  -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace \
+                  -Dspotbugs.excludeFilterFile=findbugs-exclude.xml \
+                  -Dspotbugs.includeFilterFile=findbugs-include.xml \
+                  -Dspotbugs.failOnError=true \
+                  clean install com.github.spotbugs:spotbugs-maven-plugin:4.2.3:check'
+          sh 'mvn -B -e -P gradle,javadoc \
+                  -Dspring.standalone \
+                  -DskipTests \
+                  -Dreference.repo=https://repo.maven.apache.org/maven2 \
+                  clean verify'
           sh 'cat target/root-*.buildinfo.compare'
           sh 'grep ko=0 target/root-*.buildinfo.compare' // Fail if JARs are different
-        }
-      }
-    }
-    // Verifies compliance with Google's Java Style Guide (cf.
-    // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines).
-    stage('Verify Coding Style') {
-      steps {
-        container('maven') {
-          sh 'bash .travis/check_code_style.sh'
         }
       }
     }
@@ -107,8 +109,12 @@ spec:
     stage('Test') {
       steps {
         container('maven') {
-          sh 'mvn -B -e -P gradle -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace -Dspring.standalone \
-              -Dit.test="!IT01_PatchAnalyzerIT,IT*,*IT" -DfailIfNoTests=false clean test'
+          sh 'mvn -B -e -P gradle \
+                  -Dspring.standalone \
+                  -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace \
+                  -Dit.test="!IT01_PatchAnalyzerIT,IT*,*IT" \
+                  -DfailIfNoTests=false \
+                  clean test'
         }
       }
     }
@@ -125,7 +131,10 @@ spec:
             sh 'gpg --batch --import "${KEYRING}"'
             sh 'for fpr in $(gpg --list-keys --with-colons  | awk -F: \'/fpr:/ {print $10}\' | sort -u); do echo -e "5\ny\n" |  gpg --batch --command-fd 0 --expert --edit-key ${fpr} trust; done'
           }
-          sh 'mvn -B -e -Dspring.standalone -DskipTests -P gradle,javadoc,release clean deploy'
+          sh 'mvn -B -e -P gradle,javadoc,release \
+                  -Dspring.standalone \
+                  -DskipTests \
+                  clean deploy'
         }
       }
     }
