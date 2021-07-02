@@ -99,8 +99,8 @@ spec:
     stage('Verify Coding Style and REUSE compliance') {
       steps {
         container('maven') {
-          sh 'bash .travis/check_code_style.sh'
           sh 'reuse lint'
+          sh 'bash .travis/check_code_style.sh'
         }
       }
     }
