@@ -228,6 +228,10 @@
 		</dependency>
 
 		<!-- Using managed version of org.flywaydb:flyway-core -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
 		
 		<!-- To prevent javadoc error "class file for javax.interceptor.InterceptorBinding not found" -->
 		<dependency>
