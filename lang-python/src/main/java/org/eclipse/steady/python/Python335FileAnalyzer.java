@@ -53,7 +53,6 @@ import org.eclipse.steady.python.antlr.python335.Python335Parser;
 // part of the qname, which is probably wrong.
 /**
  * <p>Python335FileAnalyzer class.</p>
- *
  */
 public class Python335FileAnalyzer extends Python335BaseListener implements FileAnalyzer {
 

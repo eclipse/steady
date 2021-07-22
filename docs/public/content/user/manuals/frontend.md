@@ -56,7 +56,7 @@ UI controls highlighted in the screenshot are as follows:
 
 **Data shown:** Each row corresponds to a vulnerability in a dependency, e.g., multiple vulnerabilities in the same dependency appear in separate table rows. The three columns to the right show whether vulnerable code is included, whether it is potentially reachable or if it was actually reached (executed) at application runtime. Click on a row in order to open the [vulnerability details view](#vulnerabilities-details)
 
-**Data collected by goal(s):** vulas:app (to populate the table rows), vulas:a2c and vulas:t2c to populate the column 'Static Analysis', JUnit and Integration tests to populate the column 'Dynamic Analysis'
+**Data collected by goal(s):** steady:app (to populate the table rows), steady:a2c and steady:t2c to populate the column 'Static Analysis', JUnit and Integration tests to populate the column 'Dynamic Analysis'
 
 **Empty if:** An application has no vulnerable dependencies or no dependencies at all
 
@@ -66,7 +66,7 @@ UI controls highlighted in the screenshot are as follows:
 | Archive Filename <br>(SHA1) | The filename of the library as found in the file system on which the analysis was run. <br>The SHA1 is the unique identifier of libraries. It can happen that an application has multiple dependencies with the same filename but different SHA1. |
 | Vulnerability | The identifier of the vulnerability, typically a CVE identifier as used in the NVD. The CVSS score is shown for all vulnerabilities present in the NVD (note that only CVSS v2 is supported), `n/a` for all others. |
 | Inclusion of vulnerable Code |  Indicates whether the dependency contains vulnerable code. <p><p><p> ![alt](./img/version_alert.png)  The library version is confirmed to contain vulnerable code <p><p><p> ![alt](./img/version_ok.png)  The library version is confirmed to contain fixed code (a so-called "historical vulnerability") <p><p><p> ![alt](./img/version_qmark.png)  It is unknown whether the library version contains the vulnerable or the fixed code. <br> Note: The @@PROJECT_NAME@@ admin team will be automatically notified about such cases in order to take a decision |
-| Static Analysis: Potential execution of vulnerable code | Indicates whether vulnerable code (e.g., methods) are potentially reachable (executable) according to the results of the static source code analysis (performed during vulas:a2c and vulas:t2c).<p><p><p> ![alt](./img/trace_alert.png) Vulnerable code is potentially reachable, i.e., the application can be executed in such a way that the vulnerable code is reached. <br> Note: In few cases, the vulnerable code of a given bug is not known. In those cases, this icon appears as soon as any code of the library is found reachable. <p><p><p> ![alt](./img/trace_ok.png) Library code is reachable, i.e., part of the call graph, but none of the vulnerable code. <p><p><p> ![alt](./img/transparent.png) No library reachable or reachability analysis not performed |
+| Static Analysis: Potential execution of vulnerable code | Indicates whether vulnerable code (e.g., methods) are potentially reachable (executable) according to the results of the static source code analysis (performed during steady:a2c and steady:t2c).<p><p><p> ![alt](./img/trace_alert.png) Vulnerable code is potentially reachable, i.e., the application can be executed in such a way that the vulnerable code is reached. <br> Note: In few cases, the vulnerable code of a given bug is not known. In those cases, this icon appears as soon as any code of the library is found reachable. <p><p><p> ![alt](./img/trace_ok.png) Library code is reachable, i.e., part of the call graph, but none of the vulnerable code. <p><p><p> ![alt](./img/transparent.png) No library reachable or reachability analysis not performed |
 | Dynamic Analysis: Actual execution of vulnerable Code | ![alt](./img/trace_alert.png) Vulnerable code is executed <br>Note: In few cases, the vulnerable code of a given bug is not known. In those cases, this icon appears as soon as any code of the library is executed.<p><p><p> ![alt](./img/trace_ok.png) Library code is executed, but none of the vulnerable code <p><p><p> ![alt](./img/transparent.png) No library code executed or no tests have been performed |
 
 ## Vulnerabilities Details
@@ -90,9 +90,9 @@ UI controls highlighted in the screenshot are as follows:
 
 **Data shown:** All constructs (methods or constructors) that have been added, modified or deleted by the developers of the Open-Source library in order to fix the respective vulnerability.
 
-**Data collected by goal(s):** Table rows are taken from the bug database, which is maintained by the @@PROJECT_NAME@@ admin team. The three columns to the right are populated by vulas:app (column 'Contained'), vulas:a2c and vulas:t2c (column 'Reachable'), as well as through the execution of tests (column 'Traced')
+**Data collected by goal(s):** Table rows are taken from the bug database, which is maintained by the @@PROJECT_NAME@@ admin team. The three columns to the right are populated by steady:app (column 'Contained'), steady:a2c and steady:t2c (column 'Reachable'), as well as through the execution of tests (column 'Traced')
 
-**Empty if:** Vulnerabilities that have no known fix or whose fix concerns non-Java files, e.g., XML configuration files. The two right-most columns are empty if the goals vulas:a2c or vulas:t2c have not been executed, or if no tests have been performed
+**Empty if:** Vulnerabilities that have no known fix or whose fix concerns non-Java files, e.g., XML configuration files. The two right-most columns are empty if the goals steady:a2c or steady:t2c have not been executed, or if no tests have been performed
 
 | Column | Description |
 |---|---|
@@ -146,7 +146,7 @@ UI controls highlighted in the screenshot are as follows:
 
 **Data shown:** All dependencies of the application. Click on a dependency's filename in order to open the [dependencies details view](#dependencies-details)
 
-**Data collected by goal(s):** vulas:app and test
+**Data collected by goal(s):** steady:app and test
 
 **Empty if:** An application has no dependencies at all
 
@@ -228,7 +228,7 @@ Below this picture, details of these interactions are described in a table.
 
 **Data shown::** Calls of a library method by an application method or vice versa.
 
-**Data collected by goal(s)::** `vulas:a2c`, `vulas:t2c` and `test`.
+**Data collected by goal(s)::** `steady:a2c`, `steady:t2c` and `test`.
 
 **Empty if:** Application and library do not directly interact, e.g., as in case of transitive dependencies. None of the goals have been executed.
 
@@ -237,7 +237,7 @@ Below this picture, details of these interactions are described in a table.
 | Caller | Fully-qualified name of the calling construct. |
 | Caller type | **METH**od or **CONS**tructor. |
 | Callee | Fully-qualified name the called construct. |
-| Potential | True if the call has been found by static source analysis, false otherwise.<p>Note: If the call has not been found by static analyses but has been observed during tests, the false is highlighted in <span style="color: rgb(255,0,0);">red</span>. This can happen if either the static analysis goals `vulas:a2c` and `vulas:2tc` were not executed or the analysis failed to identify the call. |
+| Potential | True if the call has been found by static source analysis, false otherwise.<p>Note: If the call has not been found by static analyses but has been observed during tests, the false is highlighted in <span style="color: rgb(255,0,0);">red</span>. This can happen if either the static analysis goals `steady:a2c` and `steady:2tc` were not executed or the analysis failed to identify the call. |
 | Traced | True if the call has been observed during tests, false otherwise. |
 
 ### Library size and application-specific use
@@ -246,7 +246,7 @@ Below this picture, details of these interactions are described in a table.
 
 **Data shown:** The absolute number of constructs contains in the library (methods, constructors, etc.) and the number of constructs potentially or actually executable.
 
-**Data collected by goal(s):** `vulas:a2c`, `vulas:t2c` and `test`.
+**Data collected by goal(s):** `steady:a2c`, `steady:t2c` and `test`.
 
 **Empty if:** The dependency is not at all used in the scope of an application or none of the goals have been executed.
 
@@ -282,7 +282,7 @@ Below this picture, details of these interactions are described in a table.
 
 **Data shown::** All entries of the Manifest file ('META-INF/MANIFEST.MF' in the JAR).
 
-**Data collected by goal(s)::** `vulas:app`.
+**Data collected by goal(s)::** `steady:app`.
 
 **Empty if:** The dependency has no MANIFEST.MF file or it does not contain any entries.
 
@@ -301,7 +301,7 @@ Below this picture, details of these interactions are described in a table.
 
 **Data shown:** All application calls that require a modification because of the fact that a callee method is no more available in the selected library version.
 
-**Data collected by goal(s):** `vulas:a2c`, `vulas:t2c` and `tests`
+**Data collected by goal(s):** `steady:a2c`, `steady:t2c` and `tests`
 
 **Empty if:** Either because there exist no direct method invocations from application to library or all of the callee methods still exist in the selected library version.
 
@@ -320,7 +320,7 @@ These information are followed by a table providing the details:
 | Caller | the name of the construct of the application calling the library. |
 | Callee type | The type of the called construct in the library. |
 | Callee | The name of the called construct in the library. |
-| Potential | True if the call has been found by static source analysis, false otherwise.<p>Note: If the call has not been found by static analyses but has been observed during tests, the false is highlighted in <span style="color: rgb(255,0,0);">red</span>. This can happen if either the static analysis goals `vulas:a2c` and `vulas:2tc` were not executed or the analysis failed to identify the call. |
+| Potential | True if the call has been found by static source analysis, false otherwise.<p>Note: If the call has not been found by static analyses but has been observed during tests, the false is highlighted in <span style="color: rgb(255,0,0);">red</span>. This can happen if either the static analysis goals `steady:a2c` and `steady:2tc` were not executed or the analysis failed to identify the call. |
 | Traced | True if the call has been observed during tests, false otherwise. |
 
 ## Application Statistics
@@ -517,7 +517,7 @@ vulas.shared.sys = user., os., java., runtime., maven., sun.
 
 **Data shown:** Archives that have one or more known vulnerabilities, click on a row in order to see update proposals and metrics in the [dependencies details view](./#dependencies-details).
 
-**Data collected by goal(s):** `vulas:app`.
+**Data collected by goal(s):** `steady:app`.
 
 **Empty if:** An application has no vulnerable dependencies.
 

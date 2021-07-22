@@ -52,7 +52,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>AffectedLibrary class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(

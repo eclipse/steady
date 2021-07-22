@@ -62,7 +62,7 @@ public class FileChange {
   /**
    * Returns the type of change, either an addition, a modification or a deletion.
    *
-   * @return a {@link com.sap.psr.vulas.vcs.FileChange.Type} object.
+   * @return a {@link Type} object.
    */
   public Type getType() {
     if (this.oldFile == null) return Type.ADD;

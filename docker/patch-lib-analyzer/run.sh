@@ -1,4 +1,7 @@
-#!/bin/sh
+#!/bin/bash
+
+#Wait for backend to start and kb-importer to insert data
+sleep 300
 
 java \
 	-Dhttp.nonProxyHosts=$NON_PROXY_HOSTS \

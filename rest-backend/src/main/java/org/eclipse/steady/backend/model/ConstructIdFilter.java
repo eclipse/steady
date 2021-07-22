@@ -24,11 +24,11 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.eclipse.steady.shared.enums.ConstructType;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.eclipse.steady.shared.enums.ConstructType;
 
 /**
  * TODO: Rename to ConstructTypeStatistics
@@ -179,8 +179,12 @@ public class ConstructIdFilter {
   }
 
   /**
-   * Returns the total number of constructs having one of the following types: {@link ConstructId.ConstructType.METH}, {@link ConstructId.ConstructType.CONS} and {@link ConstructId.ConstructType.INIT}.
-   * This are all the types whose execution can be observed during test, and for which reachable is checked.
+   * Returns the total number of constructs having one of the following types:
+   * {@link org.eclipse.steady.shared.enums.ConstructType#METH},
+   * {@link org.eclipse.steady.shared.enums.ConstructType#CONS} and
+   * {@link org.eclipse.steady.shared.enums.ConstructType#INIT}.
+   * This are all the types whose execution can be observed during test, and for
+   * which reachable is checked.
    *
    * @return a int.
    */

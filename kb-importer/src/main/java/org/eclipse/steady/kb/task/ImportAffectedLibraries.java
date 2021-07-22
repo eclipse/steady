@@ -48,6 +48,7 @@ public class ImportAffectedLibraries implements Task {
   private static final String OVERWRITE_OPTION = "o";
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
+  /** {@inheritDoc} */
   public void execute(
       Vulnerability vuln, HashMap<String, Object> args, BackendConnector backendConnector)
       throws MalformedPackageURLException, BackendConnectionException, JsonProcessingException {
@@ -133,6 +134,7 @@ public class ImportAffectedLibraries implements Task {
     affectedLibrary.setSource(AffectedVersionSource.KAYBEE);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Command.NAME getCommandName() {
     return Command.NAME.IMPORT;

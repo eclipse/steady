@@ -22,7 +22,6 @@ import org.eclipse.steady.backend.model.Space;
 
 /**
  * <p>SpaceRepositoryCustom interface.</p>
- *
  */
 public interface SpaceRepositoryCustom {
 

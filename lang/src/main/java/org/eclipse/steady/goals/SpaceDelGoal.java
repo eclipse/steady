@@ -25,7 +25,6 @@ import org.eclipse.steady.shared.json.model.Space;
 
 /**
  * <p>SpaceDelGoal class.</p>
- *
  */
 public class SpaceDelGoal extends AbstractSpaceGoal {
 

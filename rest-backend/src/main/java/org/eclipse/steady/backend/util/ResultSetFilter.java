@@ -26,20 +26,21 @@ import javax.validation.constraints.NotNull;
 import org.springframework.data.repository.CrudRepository;
 
 /**
- * {@link CrudRepository#findOne(java.io.Serializable)} only works for the primary key of the respective {@link Entity}.
+ * {@link CrudRepository#findById(Object)} only works for the primary key of the respective entity.
  * All other "find" methods that can be specified in the extended interface only return {@link Collection}s of objects
  * that match the search criteria. This class works around this problem...
  *
- * @param <T>
+ * @param <T> type of objects handled by the filter.
  */
 public class ResultSetFilter<T> {
 
   /**
    * <p>findOne.</p>
    *
-   * @return the single object contained in the given collection
-   * @throws {@link EntityNotFoundException} if the given collection is empty or contains multiple elements
    * @param _collection a {@link java.util.Collection} object.
+   * @return the single object contained in the given collection.
+   * @throws EntityNotFoundException if the given
+   * collection is empty or contains multiple elements.
    */
   public T findOne(@NotNull Collection<T> _collection) throws EntityNotFoundException {
     if (_collection == null || _collection.isEmpty()) {

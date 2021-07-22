@@ -46,7 +46,6 @@ import org.eclipse.steady.shared.util.StringList;
 
 /**
  * <p>PipInstalledPackage class.</p>
- *
  */
 public class PipInstalledPackage implements Comparable {
 

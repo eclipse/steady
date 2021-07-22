@@ -33,7 +33,6 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
  * <p>ConstructIdRepository interface.</p>
- *
  */
 @RepositoryRestResource(collectionResourceRel = "constructIds", path = "constructIds")
 public interface ConstructIdRepository extends PagingAndSortingRepository<ConstructId, Long> {

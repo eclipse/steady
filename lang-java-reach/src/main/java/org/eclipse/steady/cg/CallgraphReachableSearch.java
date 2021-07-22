@@ -33,7 +33,6 @@ import com.ibm.wala.util.graph.Graph;
 
 /**
  * <p>CallgraphReachableSearch class.</p>
- *
  */
 public class CallgraphReachableSearch implements Runnable {
 

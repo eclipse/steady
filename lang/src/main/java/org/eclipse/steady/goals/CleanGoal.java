@@ -26,7 +26,6 @@ import org.eclipse.steady.shared.json.model.Application;
 
 /**
  * <p>CleanGoal class.</p>
- *
  */
 public class CleanGoal extends AbstractAppGoal {
 

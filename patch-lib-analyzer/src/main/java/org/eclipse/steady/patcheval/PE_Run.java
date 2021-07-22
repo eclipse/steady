@@ -35,7 +35,6 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>PE_Run class.</p>
- *
  */
 public class PE_Run implements Runnable {
 

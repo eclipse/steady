@@ -67,7 +67,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 
 /**
  * <p>SpaceController class.</p>
- *
  */
 @RestController
 @CrossOrigin("*")

@@ -23,6 +23,9 @@ import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * <p>ExemptionUnassessed class.</p>
+ */
 public class ExemptionUnassessed implements IExemption {
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
@@ -45,10 +48,16 @@ public class ExemptionUnassessed implements IExemption {
 
   private Value value = null;
 
+  /**
+   * <p>Constructor for ExemptionUnassessed.</p>
+   *
+   * @param _value a {@link org.eclipse.steady.shared.json.model.ExemptionUnassessed.Value} object
+   */
   public ExemptionUnassessed(Value _value) {
     this.value = _value;
   }
 
+  /** {@inheritDoc} */
   @Override
   public boolean isExempted(VulnerableDependency _vd) {
     if (this.value.equals(Value.ALL)) return !_vd.isAffectedVersionConfirmed();
@@ -57,6 +66,7 @@ public class ExemptionUnassessed implements IExemption {
     else return false;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getReason() {
     if (this.value.equals(Value.ALL))
@@ -74,8 +84,8 @@ public class ExemptionUnassessed implements IExemption {
   /**
    * Reads the {@link Configuration} setting {@link ExemptionUnassessed#CFG} (if any) in order to create one {@link ExemptionBug}.
    *
-   * @param _cfg
-   * @return
+   * @param _cfg a {@link org.apache.commons.configuration.Configuration} object
+   * @return a {@link org.eclipse.steady.shared.json.model.ExemptionSet} object
    */
   public static ExemptionSet readFromConfiguration(Configuration _cfg) {
     final ExemptionSet exempts = new ExemptionSet();
@@ -96,8 +106,8 @@ public class ExemptionUnassessed implements IExemption {
   /**
    * Reads the configuration setting {@link ExemptionUnassessed#CFG} (if any) in order to create one {@link ExemptionBug}.
    *
-   * @param _map
-   * @return
+   * @param _map a {@link java.util.Map} object
+   * @return a {@link org.eclipse.steady.shared.json.model.ExemptionSet} object
    */
   public static ExemptionSet readFromConfiguration(Map<String, String> _map) {
     final ExemptionSet exempts = new ExemptionSet();
@@ -128,15 +138,22 @@ public class ExemptionUnassessed implements IExemption {
     return exempts;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     return "Exemption [unassessed=" + value + "]";
   }
 
+  /**
+   * <p>toShortString.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String toShortString() {
     return this.value.toString();
   }
 
+  /** {@inheritDoc} */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -145,6 +162,7 @@ public class ExemptionUnassessed implements IExemption {
     return result;
   }
 
+  /** {@inheritDoc} */
   @Override
   public boolean equals(Object obj) {
     if (this == obj) return true;

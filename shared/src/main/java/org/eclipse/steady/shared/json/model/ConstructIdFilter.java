@@ -32,7 +32,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * <p>ConstructIdFilter class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)

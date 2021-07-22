@@ -31,7 +31,7 @@ Files: lib/changedistiller-0.0.4-SNAPSHOT.jar
 Copyright: 2011-2013 Software Architecture and Evolution Lab, Department of Informatics, UZH
 License: Apache-2.0
 
-Files: lib/dependency-finder-1.2.1-beta5.jar
+Files: lib/dependency-finder-1.2.1-beta5-log4j.jar
 Copyright: 2001-2009 Jean Tessier
 License: BSD-3-Clause
 

@@ -20,12 +20,6 @@ package org.eclipse.steady.cia.dependencyfinder;
 
 import java.util.Iterator;
 
-import org.eclipse.steady.shared.enums.ConstructType;
-import org.eclipse.steady.shared.enums.ProgrammingLanguage;
-import org.eclipse.steady.shared.json.model.Artifact;
-import org.eclipse.steady.shared.json.model.ConstructId;
-import org.eclipse.steady.shared.json.model.diff.JarDiffResult;
-
 import com.jeantessier.classreader.Class_info;
 import com.jeantessier.classreader.Classfile;
 import com.jeantessier.diff.ClassDifferences;
@@ -35,9 +29,16 @@ import com.jeantessier.diff.PackageDifferences;
 import com.jeantessier.diff.ProjectDifferences;
 import com.jeantessier.diff.VisitorBase;
 
+import org.eclipse.steady.shared.enums.ConstructType;
+import org.eclipse.steady.shared.enums.ProgrammingLanguage;
+import org.eclipse.steady.shared.json.model.Artifact;
+import org.eclipse.steady.shared.json.model.ConstructId;
+import org.eclipse.steady.shared.json.model.diff.JarDiffResult;
+
 /**
- * Visits all kinds of changes and creates instances of the classes contained in package
- * {@link com.sap.psr.vulas.cia.dependencyfinder.model}. Inspired from {@link com.jeantessier.diff.Report}.
+ * Visits all kinds of changes and creates instances of the classes contained in
+ * package {@link org.eclipse.steady.shared.json.model}. Inspired from
+ * {@link com.jeantessier.diff.Report}.
  */
 public class JarDiffVisitor extends VisitorBase {
 

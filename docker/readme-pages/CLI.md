@@ -1,6 +1,6 @@
 ## Prerequisites
 
-- The token of a Vulas [workspace](Workspace.md) is known
+- The token of a Steady [workspace](Workspace.md) is known
 - A working installation of the JDK
 
 ## Setup
@@ -10,9 +10,9 @@
 | Folder/File | Description |
 |---|---|
 | `./app/` | Create folder `app` and put the application code (java, class or JAR files) and all application dependencies (JAR files) into this folder. It will be searched recursively, thus, it is possible to just copy the entire installation directory of an application into the folder. **Important**: (1) Single java and class files are always considered as application code, no matter the package prefix configured with ```vulas.core.app.appPrefixes```. (2) JARs are always considered as application dependency unless they only contain methods starting with the configured package prefix. (3) Nested JARs must be extracted, WARs can stay as-is. |
-| `./vulas-cli-<version>-jar-with-dependencies.jar` | Copy and rename the executable JAR from `<vulas-root>/cli-scanner/target/cli-scanner-<version>-jar-with-dependencies.jar'. It is used to run the different Vulas goals. |
+| `./vulas-cli-<version>-jar-with-dependencies.jar` | Copy and rename the executable JAR from `<vulas-root>/cli-scanner/target/cli-scanner-<version>-jar-with-dependencies.jar'. It is used to run the different Steady goals. |
 | `./instr/lang-java-<version>-jar-with-dependencies.jar` | Copy the executable JAR from `<vulas-root>/lang-java/target/`. It is used to instrument Java runtimes. |
-| `./vulas-custom.properties` | Create the file for the configuration settings for Vulas and fill it with the content below. **Important**: (1) Specify `<GROUP>`, `<ARTIFACT>` and `<VERSION>` of the application to be analyzed. (2) Specify how Vulas identifies your application code (either using `vulas.core.app.appPrefixes` or `vulas.core.app.appJarNames`, see below for more information). (3) Specify the workspace token `vulas.core.space.token`. (4) Provide the hostname of the vulas backend (replacing localhost). |
+| `./vulas-custom.properties` | Create the file for the configuration settings for Steady and fill it with the content below. **Important**: (1) Specify `<GROUP>`, `<ARTIFACT>` and `<VERSION>` of the application to be analyzed. (2) Specify how Steady identifies your application code (either using `vulas.core.app.appPrefixes` or `vulas.core.app.appJarNames`, see below for more information). (3) Specify the workspace token `vulas.core.space.token`. (4) Provide the hostname of the vulas backend (replacing localhost). |
 
 vulas-custom.properties
 ```vulas-custom.properties
@@ -39,14 +39,14 @@ vulas.core.instr.sourceDir =
 vulas.core.instr.targetDir = vulas/target
 vulas.core.instr.includeDir = vulas/include
 vulas.core.instr.libDir = vulas/lib
-vulas.core.instr.instrumentorsChoosen = com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
+vulas.core.instr.instrumentorsChoosen = org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor
 vulas.core.instr.searchRecursive = true
 
 vulas.report.reportDir = vulas/report
 vulas.report.exceptionExcludeBugs =
 ```
 
-**Identification of application code**: You can use `vulas.core.app.appPrefixes` or `vulas.core.app.appJarNames` to tell Vulas how to identify the code of your application, which is important for the call graph construction during the A2C reachability analysis. This analysis is not complete if not all the relevant application methods are used as entry points for the call graph construction. As such, the potential execution of vulnerable open-source methods may be missed. A good indicator to see whether specification is correct is to see whether there are items in the Dependencies tab that are created by you (or your organization), or whether there are open-source packages mentioned in the table on the Statistics tab.
+**Identification of application code**: You can use `vulas.core.app.appPrefixes` or `vulas.core.app.appJarNames` to tell Steady how to identify the code of your application, which is important for the call graph construction during the A2C reachability analysis. This analysis is not complete if not all the relevant application methods are used as entry points for the call graph construction. As such, the potential execution of vulnerable open-source methods may be missed. A good indicator to see whether specification is correct is to see whether there are items in the Dependencies tab that are created by you (or your organization), or whether there are open-source packages mentioned in the table on the Statistics tab.
 
 ```
 # Package prefix(es) of application code (multiple values to be separated by comma), only relevant for CLI
@@ -98,7 +98,7 @@ In order to collect traces outside of the context of Gradle or Maven projects, o
     -Dvulas.core.appContext.group=<GROUP>
     -Dvulas.core.appContext.artifact=<ARTIFACT>
     -Dvulas.core.appContext.version=<VERSION>
-    -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
+    -Dvulas.core.instr.instrumentorsChoosen=org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor
     -noverify
 ```
 

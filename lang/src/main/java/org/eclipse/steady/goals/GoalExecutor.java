@@ -25,7 +25,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * <p>GoalExecutor class.</p>
- *
  */
 public class GoalExecutor {
 

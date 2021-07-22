@@ -43,7 +43,7 @@ See [here](../../manuals/analysis/) for a description of all analysis goals.
 
 ### app
 
-1. `mvn -Dvulas compile vulas:app`
+1. `mvn -Dsteady compile steady:app`
 
 2. Connect to the apps Web frontend, then select your workspace and application. The table in tab [Dependencies](../../manuals/frontend/#dependencies) is populated. Dependencies with known vulnerabilities are shown in tab [Vulnerabilities](../../manuals/frontend/#vulnerabilities).
 
@@ -54,7 +54,7 @@ In case your application does not follow the standard structure of Maven applica
 
 ### report
 
-1. `mvn -Dvulas vulas:report`
+1. `mvn -Dsteady steady:report`
 
 2. A summary report is written to disk (in HTML, XML and JSON format), by default into folder `target/vulas/report`. By default a build exception is thrown if the application includes a library subject to known vulnerabilities.
 
@@ -63,7 +63,7 @@ In case your application does not follow the standard structure of Maven applica
 
 ### clean
 
-1. `mvn -Dvulas vulas:clean`
+1. `mvn -Dsteady steady:clean`
 
 2. All application-specific data in the @@PROJECT_NAME@@ backend are deleted.
 

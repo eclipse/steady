@@ -27,7 +27,6 @@ import javax.persistence.Transient;
 
 /**
  * <p>PathNode class.</p>
- *
  */
 @Embeddable
 public class PathNode implements Serializable {

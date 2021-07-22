@@ -20,7 +20,6 @@ package org.eclipse.steady.cia.model.nexus;
 
 /**
  * <p>NexusDescribeInfo class.</p>
- *
  */
 public class NexusDescribeInfo {
   Long uploaded;

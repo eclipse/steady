@@ -27,7 +27,7 @@ import org.eclipse.steady.shared.util.FileUtil;
 /**
  * Reads a serialized object from disk.
  *
- * @param <T>
+ * @param <T> type of objects handled by the reader.
  */
 public class JsonReader<T> {
 

@@ -25,7 +25,6 @@ import java.io.File;
 
 /**
  * <p>IDecompiler interface.</p>
- *
  */
 public interface IDecompiler {
 

@@ -25,10 +25,21 @@ public class ValidationException extends Exception {
 
   private static final long serialVersionUID = 4113470472092415302L;
 
+  /**
+   * <p>Constructor for ValidationException.</p>
+   *
+   * @param message a {@link java.lang.String} object
+   */
   public ValidationException(String message) {
     super(message);
   }
 
+  /**
+   * <p>Constructor for ValidationException.</p>
+   *
+   * @param message a {@link java.lang.String} object
+   * @param cause a {@link java.lang.Throwable} object
+   */
   public ValidationException(String message, Throwable cause) {
     super(message, cause);
   }

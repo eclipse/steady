@@ -34,7 +34,6 @@ import javassist.CtBehavior;
 
 /**
  * <p>TouchPointInstrumentor class.</p>
- *
  */
 public class TouchPointInstrumentor extends AbstractInstrumentor {
 

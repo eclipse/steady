@@ -31,7 +31,6 @@ import org.springframework.boot.actuate.info.InfoContributor;
 
 /**
  * <p>StatisticsContributor class.</p>
- *
  */
 @Component
 public class StatisticsContributor implements InfoContributor {

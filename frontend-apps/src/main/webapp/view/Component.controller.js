@@ -994,7 +994,7 @@ sap.ui.controller("view.Component", {
 				ajaxQueue.push(r);
 			}
 			else {
-				mitigationModel.setProperty("/"+rowIndex+"/latest", "Artifact identifier unknown to VULAS *");
+				mitigationModel.setProperty("/"+rowIndex+"/latest", "Artifact identifier unknown to Steady *");
 				this.getView().byId("id-legend").setText("* The lookup for the latest version in Maven Central is not possible.");
 			}
 		} // for 

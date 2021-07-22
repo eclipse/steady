@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <p>TenantRepositoryImpl class.</p>
- *
  */
 public class TenantRepositoryImpl implements TenantRepositoryCustom {
 

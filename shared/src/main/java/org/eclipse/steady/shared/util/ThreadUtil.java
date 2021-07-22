@@ -22,7 +22,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * <p>ThreadUtil class.</p>
- *
  */
 public class ThreadUtil {
 

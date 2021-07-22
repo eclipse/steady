@@ -45,7 +45,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>ApplicationExporterThread class.</p>
- *
  */
 @Component(value = "csvProducerThread")
 @Scope("prototype")

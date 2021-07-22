@@ -22,7 +22,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>NexusArtifactResolution class.</p>
- *
  */
 @XmlRootElement(name = "artifact-resolution") // , namespace="com.concretepage" )
 public class NexusArtifactResolution {

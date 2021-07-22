@@ -1,4 +1,4 @@
-version: '2'
+version: '2.4'
 
 services:
   frontend-apps:
@@ -25,7 +25,7 @@ services:
     container_name: steady-haproxy
     hostname: haproxy
     env_file: .env
-    image: haproxy:alpine
+    image: haproxy:2.3-alpine
     ports:
       - "8033:8080"
       - "8034:7070"
@@ -68,14 +68,14 @@ services:
     hostname: postgresql
     image: postgres:11-alpine
     environment:
+      - POSTGRES_DB=vulas
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=vulas
       - PGDATA=/var/lib/postgresql/data
     ports:
       - "8032:5432"
     volumes:
-      - vulnerability-assessment-tool-postgres-data:/var/lib/postgresql/data
+      - steady-postgres-data:/var/lib/postgresql/data
       - ./postgresql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
     security_opt:
       - no-new-privileges
@@ -93,6 +93,7 @@ services:
     environment:
       - DELAY_STARTUP=5
       - vulas.shared.cia.serviceUrl=http://cia:8092/cia
+      - vulas.shared.cve.serviceUrl=https://services.nvd.nist.gov/rest/json/cve/1.0/<ID>
       - spring.datasource.username=${POSTGRES_USER}
       - spring.datasource.password=${POSTGRES_PASSWORD}
     links:
@@ -153,4 +154,4 @@ services:
     restart: always
 
 volumes:
-  vulnerability-assessment-tool-postgres-data:
+  steady-postgres-data:

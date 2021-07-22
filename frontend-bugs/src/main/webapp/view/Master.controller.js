@@ -276,11 +276,11 @@ clone : function(obj) {
 					},
 
 					openDoc: function(){
-						model.Config.openWiki("Bugs-Web-Frontend");
+						model.Config.openWiki("user/manuals/frontend/#start-page");
 					},
 					
 					openHelp : function(oEvent) {
-				    	model.Config.openWiki("Help");
+						model.Config.openWiki("user/support/");
 					},
 
 					onHomePress : function() {

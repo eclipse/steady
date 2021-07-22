@@ -33,7 +33,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * <p>TouchPoint class.</p>
- *
  */
 @Embeddable
 @JsonInclude(JsonInclude.Include.ALWAYS)

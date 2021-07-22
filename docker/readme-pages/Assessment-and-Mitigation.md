@@ -2,12 +2,12 @@ The presence of vulnerable open-source code must be [assessed](#assess). If the 
 
 ## Assess
 
-You can start to assess Vulas findings as soon as you ran the _app_ analysis goal. Assessing means to clarify whether the respective vulnerability is exploitable in the given application context. The other analysis goals provide further evidence in regards to whether vulnerable code is executable, which is a prerequisite for being exploitable, but they do not bring up new findings.
+You can start to assess Steady findings as soon as you ran the _app_ analysis goal. Assessing means to clarify whether the respective vulnerability is exploitable in the given application context. The other analysis goals provide further evidence in regards to whether vulnerable code is executable, which is a prerequisite for being exploitable, but they do not bring up new findings.
 
 A finding (table row) in the _Vulnerabilities_ tab represents a tuple (library, vulnerability). Depending on whether the library _contains the vulnerable or the fixed code_, the column _Inclusion of vulnerable code_ contains one of the following icons:
 - **Green exclamation mark**: The library version in use contains the fixed code for the respective vulnerability, hence, is not affected. Such _historical vulnerabilities_ do not need to be assessed and mitigated.
 - **Red exclamation mark**: The library version in use contains the vulnerable code, hence, is affected by the respective vulnerability, and the finding requires assessment. A findings should be mitigated if considered exploitable (see below). A finding can be [exempted](#exempt) if it is not considered exploitable.
-- **Orange Hourglass**: It is unclear whether the library version in use contains the vulnerable or the fixed code. Hourglasses are resolved by the Vulas operations team (automatically or manually) by comparing the source or byte code of the library in question with the vulnerable and fixed code. Depending on whether the source or byte code of the library is available, e.g., in Maven Central or PyPi, this can take more or less time.
+- **Orange Hourglass**: It is unclear whether the library version in use contains the vulnerable or the fixed code. Hourglasses are resolved by the Steady operations team (automatically or manually) by comparing the source or byte code of the library in question with the vulnerable and fixed code. Depending on whether the source or byte code of the library is available, e.g., in Maven Central or PyPi, this can take more or less time.
 
 **Static and Dynamic Analysis**: The columns _Static Analysis_ and _Dynamic Analysis_ provide information whether vulnerable code can be potentially executed (according to static call graph construction and analysis), or whether its execution has been observed during the execution of tests. **Important**: You cannot simply discard a vulnerability just because no red icon is shown. In other words: We suggest to always look at all vulnerabilities, no matter whether there are indicators in those two columns. The main reasons are (1) deserialization vulnerabilities, whose exploitation does not require that vulnerable code is executed during normal program execution, and (2) the fact that both static and dynamic analyses can also be subject to false-positives.
 
@@ -52,7 +52,7 @@ The analysis goals A2C, TEST and T2C can support you in assessing whether or not
 
 ### Update dependency (default)
 
-An update is the default solution for fixing a dependency with known-vulnerabilities. It is possible for the majority of vulnerabilities in the Vulas Vulnerability Database.
+An update is the default solution for fixing a dependency with known-vulnerabilities. It is possible for the majority of vulnerabilities in the Steady Vulnerability Database.
 
 - Direct dependencies can be updated by declaring a non-vulnerable version in the respective `<dependency>` section.
 - Transitive dependencies can be updated by two means:

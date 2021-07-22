@@ -39,7 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <p>LibraryRepositoryImpl class.</p>
- *
  */
 public class LibraryRepositoryImpl implements LibraryRepositoryCustom {
 

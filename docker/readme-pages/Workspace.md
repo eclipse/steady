@@ -1,10 +1,10 @@
-A workspace acts as a container to group the results of several application analyses. In that context, please note that each module of a multi-module Maven project appears as a separate application in the Vulas Web frontend.
+A workspace acts as a container to group the results of several application analyses. In that context, please note that each module of a multi-module Maven project appears as a separate application in the Steady Web frontend.
 
-Before using workspaces, you need to create one using the Vulas Web frontend (see below); you will obtain a token that you will need to pass as a configuration parameter when performing scans. 
+Before using workspaces, you need to create one using the Steady Web frontend (see below); you will obtain a token that you will need to pass as a configuration parameter when performing scans. 
 
 ## Create workspace(s) (once)
 
-You need to create a workspace once using the Vulas Web frontend. Use the plus icon in the lower-left corner of the apps Web frontend to do so. Do not forget to note down the random **token** generated upon workspace creation.
+You need to create a workspace once using the Steady Web frontend. Use the plus icon in the lower-left corner of the apps Web frontend to do so. Do not forget to note down the random **token** generated upon workspace creation.
 
 A workspace has the following properties (the mandatory ones are flagged with *):
 - ***Name**
@@ -22,7 +22,7 @@ If an application has been already released to customers and, at the same time, 
 
 ## Use the generated token (during application analysis)
 
-Use the workspace token as value for the configuration setting `vulas.core.space.token`. See [here](Configuration.md) for more information regarding the configuration of Vulas clients.
+Use the workspace token as value for the configuration setting `vulas.core.space.token`. See [here](Configuration.md) for more information regarding the configuration of Steady clients.
 
 ## Choose a workspace (in the apps Web frontend)
 
@@ -41,7 +41,7 @@ The API returns an array of JSON elements having the following data model:
 | Property | Description | Possible Values |
 |---|---|---|
 | projectId | Identifies the affected application and dependency (`<app-GAV> > <dep-filename>`) ||
-| type | Identifier of vulnerability in Vulas knowledge base ||
+| type | Identifier of vulnerability in Steady knowledge base ||
 | scope | Scope of the dependency | see [official Maven documentation](https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Dependency_Scope) | 
 | priority | Priority of the finding | 3 in case of dependencies with scope TEST and PROVIDED, 1 otherwise |
 | exemptionReason | Assessment description (if any), see [report goal](Java.md) for more information on how-to assess and exempt findings ||

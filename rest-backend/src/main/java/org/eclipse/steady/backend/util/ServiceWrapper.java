@@ -42,6 +42,7 @@ import org.eclipse.steady.shared.json.model.Artifact;
 import org.eclipse.steady.shared.json.model.ConstructId;
 import org.eclipse.steady.shared.json.model.LibraryId;
 import org.eclipse.steady.shared.json.model.diff.JarDiffResult;
+import org.eclipse.steady.shared.json.model.mavenCentral.ResponseDoc;
 import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,20 +77,22 @@ public class ServiceWrapper {
   }
 
   /**
-   * Returns all versions of the Maven artifact with the given group and artifact identifiers and packaging "JAR".
+   * Returns all versions of the Maven artifact with the given group and
+   * artifact identifiers and packaging "JAR".
    *
    * @param _group a {@link java.lang.String} object.
    * @param _artifact a {@link java.lang.String} object.
    * @param _latest if true, only the latest version will be returned
-   * @param _gt if specified, only versions greater than the provided value are returned
+   * @param _gt if specified, only versions greater than the provided value are
+   * returned
    * @throws org.eclipse.steady.shared.connectivity.ServiceConnectionException
+   * if any.
    * @return a {@link java.util.Collection} object.
    */
   public Collection<LibraryId> getAllArtifactVersions(
       String _group, String _artifact, boolean _latest, String _gt)
       throws ServiceConnectionException {
     // Build URL
-
     final String service_url = VulasConfiguration.getGlobal().getServiceUrl(Service.CIA, true);
     final String service_path;
     String param_template;

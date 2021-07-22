@@ -22,7 +22,6 @@ import java.util.Set;
 
 /**
  * <p>CollectionUtil class.</p>
- *
  */
 public class CollectionUtil<T> {
   /**

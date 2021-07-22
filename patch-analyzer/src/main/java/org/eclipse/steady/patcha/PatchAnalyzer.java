@@ -62,7 +62,6 @@ import org.eclipse.steady.vcs.RepoMismatchException;
 
 /**
  * <p>PatchAnalyzer class.</p>
- *
  */
 public class PatchAnalyzer {
 
@@ -115,6 +114,7 @@ public class PatchAnalyzer {
    * @param _url a {@link java.lang.String} object.
    * @throws java.net.MalformedURLException if the given URL is invalid (previous results are kept)
    * @throws org.eclipse.steady.vcs.NoRepoClientException if no VCS client can be created for the given URL (previous results are kept)
+   * @throws java.net.URISyntaxException if any.
    */
   public void setRepoURL(String _url)
       throws URISyntaxException, MalformedURLException, NoRepoClientException {

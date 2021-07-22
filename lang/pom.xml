@@ -27,12 +27,12 @@
 	<parent>
 		<groupId>org.eclipse.steady</groupId>
 		<artifactId>root</artifactId>
-		<version>3.2.0-SNAPSHOT</version>
+		<version>3.2.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>lang</artifactId>
 
-	<name>Framework and base classes for language analysis</name>
-	<description></description>
+	<name>steady-lang</name>
+	<description>Framework and base classes for language analysis</description>
 
 	<properties>
 		<!-- Exclude ANTLR-generated files from Sonar reports -->

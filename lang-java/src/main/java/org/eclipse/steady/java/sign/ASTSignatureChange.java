@@ -42,7 +42,6 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 
 /**
  * <p>ASTSignatureChange class.</p>
- *
  */
 public class ASTSignatureChange extends DistillerUtil implements SignatureChange, Serializable {
 

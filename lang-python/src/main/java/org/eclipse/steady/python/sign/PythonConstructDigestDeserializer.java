@@ -11,10 +11,14 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-/** PythonConstructDigestDeserializer class. */
+/**
+ * PythonConstructDigestDeserializer class.
+ */
 public class PythonConstructDigestDeserializer extends StdDeserializer<PythonConstructDigest> {
 
-  /** Constructor for PythonConstructDigestDeserializer. */
+  /**
+   * Constructor for PythonConstructDigestDeserializer.
+   */
   public PythonConstructDigestDeserializer() {
     this(null);
   }

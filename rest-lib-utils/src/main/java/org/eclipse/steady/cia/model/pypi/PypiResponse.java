@@ -25,7 +25,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * <p>PypiResponse class.</p>
- *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PypiResponse {

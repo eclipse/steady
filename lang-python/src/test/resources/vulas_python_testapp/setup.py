@@ -3,9 +3,9 @@ from setuptools import setup, find_packages
 setup(
     name='Vulas Python Test App',
     version='0.2',
-    author='Grayden Hormes',
-    author_email='grayden.hormes@sap.com',
-    description='VULAS Test App for Python',
+    author='John Doe',
+    author_email='john.doe@foo.bar',
+    description='Steady Test App for Python',
     #long_description=open('README.md').read(),
     classifiers=[
         "Development Status :: 1 - Alpha",

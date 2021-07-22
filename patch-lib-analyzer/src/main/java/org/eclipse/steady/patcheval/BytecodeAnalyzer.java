@@ -47,7 +47,6 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>DigestAnalyzer class.</p>
- *
  */
 public class BytecodeAnalyzer {
 
@@ -57,13 +56,13 @@ public class BytecodeAnalyzer {
 
   /**
    * <p>Constructor for DigestAnalyzer.</p>
-   *
    */
   public BytecodeAnalyzer() {}
 
   /**
    * <p>analyze.</p>
-   * @throws IOException
+   *
+   * @throws java.io.IOException
    */
   public void analyze() throws IOException {
     // necessary read_write as we use GET PUT POST
@@ -255,7 +254,7 @@ public class BytecodeAnalyzer {
    * <p>main.</p>
    *
    * @param _args an array of {@link java.lang.String} objects.
-   * @throws IOException
+   * @throws java.io.IOException
    */
   public static void main(String[] _args) throws IOException {
     // Prepare parsing of cmd line arguments

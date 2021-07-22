@@ -23,7 +23,6 @@ import java.util.HashSet;
 
 import javax.persistence.EntityNotFoundException;
 
-import org.eclipse.steady.backend.model.Application;
 import org.eclipse.steady.backend.model.ConstructId;
 import org.eclipse.steady.backend.model.LibraryId;
 import org.eclipse.steady.backend.model.Property;
@@ -84,7 +83,7 @@ public class ReferenceUpdater {
   }
 
   /**
-   * Same as {@link Application#saveNestedProperties}.
+   * <p>saveNestedProperties.</p>
    *
    * @param _props a {@link java.util.Collection} object.
    * @return a {@link java.util.Collection} object.

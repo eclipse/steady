@@ -3,11 +3,18 @@ apply plugin: 'groovy'
 
 gradlePlugin {
     plugins {
-        vulas {
-            id = 'vulas'
+        steady {
+            id = 'steady'
             implementationClass = 'org.eclipse.steady.java.gradle.VulasPlugin'
         }
     }
+}
+
+// Make created JAR files reproducible (cf.
+// https://docs.gradle.org/current/userguide/working_with_files.html#sec:reproducible_archives).
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
 }
 
 def getClasspathFiles(String classpathListRelativePath) {

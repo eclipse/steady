@@ -28,7 +28,6 @@ import javassist.Modifier;
 
 /**
  * <p>Abstract AbstractInstrumentor class.</p>
- *
  */
 public abstract class AbstractInstrumentor implements IInstrumentor {
 

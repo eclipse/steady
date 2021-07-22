@@ -179,6 +179,7 @@ model.Config.setCiaHost = function(_host) {
 	model.Config.settings.cookie.ciaHost=_host;
 	oStore.put("vulas-frontend-settings", model.Config.settings.cookie)
 }
+
 model.Config.getCiaHost = function() {
 	return model.Config.settings.cookie.ciaHost;
 }
@@ -187,6 +188,7 @@ model.Config.setListSize = function(_size) {
 	model.Config.settings.cookie.listSize =_size;
 	oStore.put("vulas-frontend-settings", model.Config.settings.cookie)
 }
+
 model.Config.getListSize = function() {
 	return model.Config.settings.cookie.listSize;
 }
@@ -205,6 +207,7 @@ model.Config.setTenant = function(_token) {
 	//we do not store the tenant in the cookies as it's always retrieved from the backend based on the configured host
 //	oStore.put("vulas-frontend-settings", model.Config.settings.cookie)
 }
+
 model.Config.getTenant = function(_force) {
 	if((_force!=undefined && _force) || model.Config.settings.tenant=="" || model.Config.settings.tenant ==null || model.Config.settings.tenant == undefined){
 		//retrieve default from backend
@@ -531,7 +534,7 @@ model.Config.openWiki = function(href){
 				"Wiki url not configured in the backend."
 			);
 	}
-	window.open(model.Config.getWikiUrl() +href, '_blank').focus();
+	window.open(model.Config.getWikiUrl() + href, '_blank').focus();
 };
 
 

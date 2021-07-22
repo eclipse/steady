@@ -50,14 +50,13 @@ import org.eclipse.steady.shared.json.model.Library;
 import org.eclipse.steady.shared.json.model.LibraryId;
 import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.shared.util.StringList;
-import org.eclipse.steady.shared.util.StringUtil;
-import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.eclipse.steady.shared.util.StringList.CaseSensitivity;
 import org.eclipse.steady.shared.util.StringList.ComparisonMode;
+import org.eclipse.steady.shared.util.StringUtil;
+import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>Abstract AbstractVulasMojo class.</p>
- *
  */
 public abstract class AbstractVulasMojo extends AbstractMojo {
 
@@ -206,7 +205,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     }
     // Every other exception results in a MojoExecutionException (= unexpected)
     catch (Exception e) {
-      throw new MojoExecutionException("Error during Vulas goal execution " + this.goal + ": ", e);
+      throw new MojoExecutionException("Error during goal execution " + this.goal + ": ", e);
     }
   }
 
@@ -443,7 +442,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
   /**
    * Parses one element of the {@link Artifact}'s dependency trail, which is a {@link String} comprising groupId, artifactId, type and version.
    *
-   * @param _string
+   * @param _string a {@link java.lang.String} object
    * @return a {@link LibraryId} created from groupId, artifactId and version (or null if the given String does not have the expected format)
    */
   protected final LibraryId parseGAPV(@NotNull String _string) {

@@ -26,7 +26,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>NexusNGData class.</p>
- *
  */
 @XmlRootElement(name = "data")
 public class NexusNGData {

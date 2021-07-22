@@ -52,7 +52,6 @@ import org.eclipse.steady.tasks.AbstractBomTask;
 
 /**
  * <p>JavaBomTask class.</p>
- *
  */
 public class JavaBomTask extends AbstractBomTask {
 

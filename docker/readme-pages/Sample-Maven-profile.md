@@ -1,9 +1,9 @@
 Add the following to the `<profiles>` section of the `pom.xml` of your application project.
 
 
-In case of aggregated, multi-module Maven projects with modules inheriting from their parent, it is sufficient to include the Vulas profile in the top-level (parent) POM. If a module does not inherit from the parent, the Vulas profile has to be added to its POM file. See [project aggregation and project inheritance](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) for more details.
+In case of aggregated, multi-module Maven projects with modules inheriting from their parent, it is sufficient to include the Steady profile in the top-level (parent) POM. If a module does not inherit from the parent, the Steady profile has to be added to its POM file. See [project aggregation and project inheritance](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) for more details.
 
-The Vulas profile contains a configuration for the maven-surefire-plugin. If you use this module already with specific settings in your default profile, you need to add those settings, e.g., the `<argLine>`, also to its configuration in the Vulas profile. 
+The Steady profile contains a configuration for the maven-surefire-plugin. If you use this module already with specific settings in your default profile, you need to add those settings, e.g., the `<argLine>`, also to its configuration in the Steady profile. 
 You may want to replace `localhost` with the host name of your vulas backend as well as provide values for the placeholders `<WORKSPACE-TOKEN>`
 
 ```xml
@@ -25,7 +25,7 @@ You may want to replace `localhost` with the host name of your vulas backend as 
         <build>
             <plugins>
             
-                <!-- Copies Vulas JARs to ${project.build.directory}/vulas/lib and incl, 
+                <!-- Copies Steady JARs to ${project.build.directory}/vulas/lib and incl, 
                     which is needed for the instrumentation of JUnit tests. -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -64,7 +64,7 @@ You may want to replace `localhost` with the host name of your vulas backend as 
                     </executions>
                 </plugin>
 
-                <!-- Registers the Vulas agent at JVM startup (and specifies a couple of configuration settings) -->
+                <!-- Registers the Steady agent at JVM startup (and specifies a couple of configuration settings) -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -77,7 +77,7 @@ You may want to replace `localhost` with the host name of your vulas backend as 
 
                         <!-- Kill the forked test process after a certain number of seconds. 
                             If set to 0, wait forever for the process, never timing out. This allows 
-                            Vulas to (hopefully) upload all info in its shutdown hook. More info: https://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html, 
+                            Steady to (hopefully) upload all info in its shutdown hook. More info: https://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html, 
                             https://maven.apache.org/surefire/maven-surefire-plugin/examples/shutdown.html -->
                         <forkedProcessTimeoutInSeconds>0</forkedProcessTimeoutInSeconds>
                         
@@ -100,13 +100,13 @@ You may want to replace `localhost` with the host name of your vulas backend as 
                             -Dvulas.core.instr.writeCode=false
                             -Dvulas.core.instr.maxStacktraces=10
                             -Dvulas.core.space.token=${vulas.core.space.token}
-                            -Dvulas.core.instr.instrumentorsChoosen=com.sap.psr.vulas.monitor.trace.SingleTraceInstrumentor
+                            -Dvulas.core.instr.instrumentorsChoosen=org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor
                             -noverify
 
                             <!-- Uncomment to write the heap to disk in case of memory issues -->
                             <!-- -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${project.build.directory}/vulas/tmp -->
 
-                            <!-- Uncomment to debug the test execution or the Vulas plugin -->
+                            <!-- Uncomment to debug the test execution or the Steady plugin -->
                             <!-- -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -->
 
                         </argLine>
@@ -159,7 +159,7 @@ You may want to replace `localhost` with the host name of your vulas backend as 
     </profile>
 ```
 
-**Optional**: Binding the Vulas plugin goals to the Maven life cycle makes it very easy to invoke the goals in the right order and at the right time (they are all triggered when running `mvn -Dvulas verify`). In order to do so, one has to include the following XML snippet at the end of the configuration section of the Vulas plugin in the POM file:
+**Optional**: Binding the Steady plugin goals to the Maven life cycle makes it very easy to invoke the goals in the right order and at the right time (they are all triggered when running `mvn -Dvulas verify`). In order to do so, one has to include the following XML snippet at the end of the configuration section of the Steady plugin in the POM file:
 
 ```xml
 	<!-- Constraints: (a) App must run after compile, a2c after app, (b) t2c must be run after Junit and integration tests (if any) and the upload of traces -->

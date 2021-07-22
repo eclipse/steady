@@ -33,7 +33,6 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>Abstract AbstractHttpRequest class.</p>
- *
  */
 public abstract class AbstractHttpRequest implements HttpRequest {
 

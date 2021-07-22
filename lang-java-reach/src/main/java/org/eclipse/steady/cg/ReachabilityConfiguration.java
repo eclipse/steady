@@ -20,7 +20,6 @@ package org.eclipse.steady.cg;
 
 /**
  * <p>ReachabilityConfiguration class.</p>
- *
  */
 public class ReachabilityConfiguration {
 

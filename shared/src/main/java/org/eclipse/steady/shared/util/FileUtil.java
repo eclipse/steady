@@ -113,7 +113,7 @@ public class FileUtil {
   /**
    * Creates a new temporary directory with the given prefix inside the directory returned by {@link VulasConfiguration#getTmpDir()}.
    *
-   * @throws java.io.IOException
+   * @throws java.io.IOException if any.
    * @param _prefix a {@link java.lang.String} object.
    * @return a {@link java.nio.file.Path} object.
    */
@@ -302,7 +302,7 @@ public class FileUtil {
    *
    * @see DigestUtil#getDigestAsString(String,java.nio.charset.Charset, DigestAlgorithm)
    * @param _p a {@link java.nio.file.Path} object.
-   * @throws java.io.IOException
+   * @throws java.io.IOException if any.
    * @return a {@link java.lang.String} object.
    */
   public static String readFile(Path _p) throws IOException {
@@ -316,7 +316,7 @@ public class FileUtil {
    *
    * @param _is a {@link java.io.InputStream} object.
    * @param _cs a {@link java.nio.charset.Charset} object.
-   * @throws java.io.IOException
+   * @throws java.io.IOException if any.
    * @return a {@link java.lang.String} object.
    */
   public static String readInputStream(InputStream _is, Charset _cs) throws IOException {
@@ -327,7 +327,7 @@ public class FileUtil {
    * Reads the given {@link InputStream} into a byte array.
    *
    * @param _is a {@link java.io.InputStream} object.
-   * @throws java.io.IOException
+   * @throws java.io.IOException if any.
    * @return an array of {@link byte} objects.
    */
   public static byte[] readInputStream(InputStream _is) throws IOException {

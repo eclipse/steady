@@ -44,7 +44,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * <p>ConstructChange class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true) // Ignore unknown properties during de-serialization

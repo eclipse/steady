@@ -20,7 +20,6 @@ package org.eclipse.steady.shared.enums;
 
 /**
  * <p>CoverageStatus class.</p>
- *
  */
 public enum CoverageStatus {
   COVERED((byte) 10),

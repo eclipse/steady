@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 FLYWAY_OPTS="-Dflyway.skipDefaultCallbacks=true" 
 

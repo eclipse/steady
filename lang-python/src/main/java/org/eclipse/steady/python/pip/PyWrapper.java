@@ -29,7 +29,9 @@ import org.eclipse.steady.python.ProcessWrapperException;
 import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.shared.util.StringUtil;
 
-/** PyWrapper class. */
+/**
+ * PyWrapper class.
+ */
 public class PyWrapper {
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();

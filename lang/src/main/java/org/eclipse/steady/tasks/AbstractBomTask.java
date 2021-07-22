@@ -22,7 +22,6 @@ import org.eclipse.steady.shared.json.model.Application;
 
 /**
  * <p>Abstract AbstractBomTask class.</p>
- *
  */
 public abstract class AbstractBomTask extends AbstractTask implements BomTask {
 

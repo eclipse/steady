@@ -41,7 +41,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <p>RepositoryDispatcher class.</p>
- *
  */
 public class RepositoryDispatcher implements RepositoryWrapper {
 

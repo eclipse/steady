@@ -22,7 +22,6 @@ import org.eclipse.steady.backend.HttpResponse;
 
 /**
  * <p>StatusCondition class.</p>
- *
  */
 public class StatusCondition implements ResponseCondition {
 

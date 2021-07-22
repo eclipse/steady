@@ -27,12 +27,12 @@
 	<parent>
 		<groupId>org.eclipse.steady</groupId>
 		<artifactId>root</artifactId>
-		<version>3.2.0-SNAPSHOT</version>
+		<version>3.2.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>lang-java</artifactId>
 
-	<name>Java - Core classes for Java analysis</name>
-	<description></description>
+	<name>steady-lang-java</name>
+	<description>Core classes for Java analysis</description>
 	
 	<properties>
 		<maven.deploy.skip>false</maven.deploy.skip>
@@ -69,7 +69,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.11</version>
+			<version>3.12.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -210,7 +210,7 @@
 							<goal>flatten</goal>
 						</goals>
 						<configuration>
-							<flattenMode>clean</flattenMode>
+							<flattenMode>ossrh</flattenMode>
 						</configuration>
 					</execution>
 				</executions>

@@ -26,7 +26,7 @@
 	<parent>
 		<artifactId>root</artifactId>
 		<groupId>org.eclipse.steady</groupId>
-		<version>3.2.0-SNAPSHOT</version>
+		<version>3.2.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>kb-importer</artifactId>
@@ -75,7 +75,6 @@
 		<dependency>
 			<groupId>com.github.package-url</groupId>
 			<artifactId>packageurl-java</artifactId>
-			<version>1.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>

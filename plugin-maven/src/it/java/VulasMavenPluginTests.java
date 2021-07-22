@@ -97,8 +97,8 @@ public class VulasMavenPluginTests {
     @Test
     public void prepareGoalTest() throws Exception {
         Verifier verifier = testPlugin("pom.xml");
-        // check prepare-vulas-agent has been executed
-        verifier.verifyTextInLog("prepare-vulas-agent");
+        // check prepare-agent has been executed
+        verifier.verifyTextInLog("prepare-agent");
         // check if jacoco has been executed
         verifier.assertFilePresent("target/jacoco.exec");
 

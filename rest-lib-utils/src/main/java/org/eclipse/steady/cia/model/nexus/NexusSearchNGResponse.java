@@ -22,7 +22,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>NexusSearchNGResponse class.</p>
- *
  */
 @XmlRootElement(name = "searchNGResponse")
 public class NexusSearchNGResponse {

@@ -23,5 +23,5 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-  <display-name>Vulas Application Analysis Frontend</display-name>
+  <display-name>Eclipse Steady - Application Analysis Frontend</display-name>
 </web-app>

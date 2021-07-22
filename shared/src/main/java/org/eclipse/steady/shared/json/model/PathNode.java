@@ -22,7 +22,6 @@ import java.io.Serializable;
 
 /**
  * <p>PathNode class.</p>
- *
  */
 public class PathNode implements Serializable {
 

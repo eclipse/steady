@@ -32,7 +32,7 @@
 
 	<groupId>org.eclipse.steady</groupId>
 	<artifactId>rest-lib-utils</artifactId>
-	<version>3.2.0-SNAPSHOT</version>
+	<version>3.2.1-SNAPSHOT</version>
 	<packaging>${packaging.type}</packaging>
 
 	<name>REST service to analyze and compare libraries</name>
@@ -116,7 +116,9 @@
 		<skip.install.deploy>true</skip.install.deploy>
 		<maven.install.skip>${skip.install.deploy}</maven.install.skip>
 		<maven.deploy.skip>${skip.install.deploy}</maven.deploy.skip>
-		
+
+		<!-- Used by several plugins, to make builds reproducible -->
+		<project.build.outputTimestamp>2021-06-22T10:45:00Z</project.build.outputTimestamp>
 	</properties>
 	
 	<dependencies>
@@ -198,13 +200,11 @@
 		<dependency>
 			<groupId>com.jeantessier</groupId>
 			<artifactId>dependency-finder</artifactId>
-			<version>1.2.1-beta5</version>
+			<version>1.2.1-beta5-log4j</version>
 		</dependency>
 
 	<!-- The following are the dependencies of dependency-finder They have been 
-		pasted here from the dependency-finder pom.xml. log4j:log4j:1.2.17 is still 
-		needed, since spring-boot-starter-logging:2.x updated the dependency on 
-		org.slf4j:log4j-over-slf4j:jar:1.x to org.apache.logging.log4j:log4j-to-slf4j:2.x. 
+		pasted here from the dependency-finder pom.xml. 
 		ant:ant has been replaced by org.apache.ant:ant. -->
 		<dependency>
 			<groupId>oro</groupId>
@@ -222,14 +222,9 @@
 			<version>1.2</version>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant</artifactId>
-			<version>1.10.9</version>
+			<version>1.10.10</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -322,7 +317,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>2.2.1</version>
+						<version>3.2.0</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -332,12 +327,12 @@
 							</execution>
 						</executions>
 					</plugin>
-					<!--  Run the following to fix all JavaDoc: "mvn -DdefaultAuthor=SAP -X -DfixTags=param,return,throws -P gradle clean compile org.apache.maven.plugins:maven-javadoc-plugin:3.1.1:fix"
+					<!--  Run the following to fix all JavaDoc: "mvn -DdefaultAuthor=SAP -X -DfixTags=param,return,throws -DignoreClirr=true -P gradle clean compile org.apache.maven.plugins:maven-javadoc-plugin:3.3.0:fix"
 					The tag 'links' results in an exception in module lang-java.-->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.1.1</version>
+						<version>3.3.0</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -359,7 +354,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
+						<version>3.0.1</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -367,6 +362,12 @@
 								<goals>
 									<goal>sign</goal>
 								</goals>
+								<configuration>
+									<gpgArguments>
+										<arg>--pinentry-mode</arg>
+										<arg>loopback</arg>
+									</gpgArguments>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
@@ -408,6 +409,7 @@
 			<plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
 			    <artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
 			    <configuration>
 				<archive>
 				    <manifestEntries>

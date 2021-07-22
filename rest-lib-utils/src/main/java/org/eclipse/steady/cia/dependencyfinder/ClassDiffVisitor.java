@@ -22,12 +22,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-import org.eclipse.steady.shared.enums.ConstructType;
-import org.eclipse.steady.shared.enums.ProgrammingLanguage;
-import org.eclipse.steady.shared.json.model.ConstructId;
-import org.eclipse.steady.shared.json.model.diff.ClassDiffResult;
-import org.eclipse.steady.shared.json.model.diff.ClassModification;
-
 import com.jeantessier.classreader.Annotation;
 import com.jeantessier.classreader.AnnotationDefault_attribute;
 import com.jeantessier.classreader.AnnotationElementValue;
@@ -97,9 +91,16 @@ import com.jeantessier.diff.InterfaceDifferences;
 import com.jeantessier.diff.MethodDifferences;
 import com.jeantessier.diff.VisitorBase;
 
+import org.eclipse.steady.shared.enums.ConstructType;
+import org.eclipse.steady.shared.enums.ProgrammingLanguage;
+import org.eclipse.steady.shared.json.model.ConstructId;
+import org.eclipse.steady.shared.json.model.diff.ClassDiffResult;
+import org.eclipse.steady.shared.json.model.diff.ClassModification;
+
 /**
- * Visits all kinds of changes and creates instances of the classes contained in package
- * {@link com.sap.psr.vulas.cia.dependencyfinder.model}. Inspired from {@link com.jeantessier.diff.ClassReport}.
+ * Visits all kinds of changes and creates instances of the classes contained in
+ * package {@link org.eclipse.steady.shared.json.model}. Inspired from
+ * {@link com.jeantessier.diff.ClassReport}.
  */
 public class ClassDiffVisitor extends VisitorBase implements com.jeantessier.classreader.Visitor {
 

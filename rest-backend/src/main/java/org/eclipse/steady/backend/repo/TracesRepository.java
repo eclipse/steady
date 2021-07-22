@@ -36,7 +36,6 @@ import org.springframework.stereotype.Repository;
 
 /**
  * <p>TracesRepository interface.</p>
- *
  */
 @Repository
 public interface TracesRepository extends CrudRepository<Trace, Long>, TracesRepositoryCustom {

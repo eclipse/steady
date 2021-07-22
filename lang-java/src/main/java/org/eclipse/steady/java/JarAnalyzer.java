@@ -329,7 +329,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 
     // Additional manifest file entries
     this.jarWriter.addManifestEntry(
-        "VULAS-classInstrStats",
+        "Steady-classInstrStats",
         "["
             + this.classCount
             + " total, "
@@ -340,10 +340,10 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
             + this.instrControl.countClassesInstrumentedFailure()
             + " err]");
     this.jarWriter.addManifestEntry(
-        "VULAS-constructStats", "[" + constructs.size() + " constructs]");
+        "Steady-constructStats", "[" + constructs.size() + " constructs]");
     if (JarAnalyzer.getAppContext() != null)
       this.jarWriter.addManifestEntry(
-          "VULAS-appContext",
+          "Steady-appContext",
           JarAnalyzer.getAppContext().getMvnGroup()
               + ":"
               + JarAnalyzer.getAppContext().getArtifact()

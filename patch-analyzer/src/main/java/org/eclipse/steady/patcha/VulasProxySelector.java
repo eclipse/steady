@@ -36,7 +36,6 @@ import org.eclipse.steady.shared.util.StringList.ComparisonMode;
 
 /**
  * <p>VulasProxySelector class.</p>
- *
  */
 public class VulasProxySelector extends ProxySelector {
 

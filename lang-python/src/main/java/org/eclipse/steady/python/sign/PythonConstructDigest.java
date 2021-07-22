@@ -29,7 +29,6 @@ import org.eclipse.steady.sign.Signature;
 
 /**
  * <p>PythonConstructDigest class.</p>
- *
  */
 public class PythonConstructDigest implements Signature {
 

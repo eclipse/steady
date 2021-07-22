@@ -29,7 +29,6 @@ import org.eclipse.steady.sign.SignatureFactory;
 
 /**
  * <p>ConstructChange class.</p>
- *
  */
 public class ConstructChange implements Comparable<ConstructChange> {
 

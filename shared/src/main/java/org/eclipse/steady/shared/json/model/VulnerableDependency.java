@@ -21,15 +21,14 @@ package org.eclipse.steady.shared.json.model;
 import java.io.Serializable;
 import java.util.List;
 
-import org.eclipse.steady.shared.enums.AffectedVersionSource;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.eclipse.steady.shared.enums.AffectedVersionSource;
+
 /**
  * <p>VulnerableDependency class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -393,7 +392,7 @@ public class VulnerableDependency implements Serializable, Comparable<Vulnerable
   /**
    * <p>Getter for the field <code>exemption</code>.</p>
    *
-   * @return a {@link Exemption} object.
+   * @return a {@link org.eclipse.steady.shared.json.model.IExemption} object.
    */
   public IExemption getExemption() {
     return this.exemption;
@@ -402,7 +401,7 @@ public class VulnerableDependency implements Serializable, Comparable<Vulnerable
   /**
    * <p>Setter for the field <code>exemption</code>.</p>
    *
-   * @param _e a {@link Exemption} object.
+   * @param _e a {@link org.eclipse.steady.shared.json.model.IExemption} object.
    */
   public void setExemption(IExemption _e) {
     this.exemption = _e;
@@ -411,7 +410,7 @@ public class VulnerableDependency implements Serializable, Comparable<Vulnerable
   /**
    * Returns true if the an exemption has been set before, false otherwise.
    *
-   * @return
+   * @return a {@link java.lang.Boolean} object
    */
   public Boolean isExempted() {
     return this.exemption != null;

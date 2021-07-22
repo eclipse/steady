@@ -22,7 +22,6 @@ import org.eclipse.steady.ConstructId;
 
 /**
  * <p>PathNode class.</p>
- *
  */
 public class PathNode {
 

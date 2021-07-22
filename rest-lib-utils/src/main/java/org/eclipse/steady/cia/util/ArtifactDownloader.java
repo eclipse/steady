@@ -34,7 +34,6 @@ import org.springframework.web.client.ResponseExtractor;
 
 /**
  * <p>ArtifactDownloader class.</p>
- *
  */
 public class ArtifactDownloader {
 

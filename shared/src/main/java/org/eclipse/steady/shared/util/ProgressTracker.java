@@ -20,7 +20,6 @@ package org.eclipse.steady.shared.util;
 
 /**
  * <p>ProgressTracker class.</p>
- *
  */
 public class ProgressTracker {
 
@@ -40,7 +39,7 @@ public class ProgressTracker {
    * Returns the increase in percent of the total.
    *
    * @param _by a double.
-   * @throws java.lang.IllegalArgumentException
+   * @throws java.lang.IllegalArgumentException if the total is exceeded when adding _by to the current progress.
    * @return a double.
    */
   public double increase(double _by) throws IllegalArgumentException {

@@ -28,7 +28,6 @@ import org.eclipse.steady.shared.json.model.ConstructId;
 
 /**
  * <p>ConstructIdUtil class.</p>
- *
  */
 public class ConstructIdUtil {
 

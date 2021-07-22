@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <p>FileAnalyzerFetcher class.</p>
- *
  */
 public class FileAnalyzerFetcher implements ObjectFetcher<Artifact, FileAnalyzer> {
 

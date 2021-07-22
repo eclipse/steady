@@ -23,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * <p>Ratio class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)

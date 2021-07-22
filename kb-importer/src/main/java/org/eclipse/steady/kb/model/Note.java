@@ -20,22 +20,45 @@ package org.eclipse.steady.kb.model;
 
 import java.util.List;
 
+/**
+ * <p>Note class.</p>
+ */
 public class Note {
   private List<String> links;
   private String text;
 
+  /**
+   * <p>Getter for the field <code>links</code>.</p>
+   *
+   * @return a {@link java.util.List} object
+   */
   public List<String> getLinks() {
     return links;
   }
 
+  /**
+   * <p>Setter for the field <code>links</code>.</p>
+   *
+   * @param links a {@link java.util.List} object
+   */
   public void setLinks(List<String> links) {
     this.links = links;
   }
 
+  /**
+   * <p>Getter for the field <code>text</code>.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String getText() {
     return text;
   }
 
+  /**
+   * <p>Setter for the field <code>text</code>.</p>
+   *
+   * @param text a {@link java.lang.String} object
+   */
   public void setText(String text) {
     this.text = text;
   }

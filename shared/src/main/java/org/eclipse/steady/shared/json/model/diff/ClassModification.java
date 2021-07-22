@@ -25,7 +25,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * <p>ClassModification class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)

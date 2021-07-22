@@ -28,7 +28,6 @@ import org.eclipse.steady.shared.enums.ProgrammingLanguage;
 
 /**
  * <p>DigestVerifier interface.</p>
- *
  */
 public interface DigestVerifier {
 

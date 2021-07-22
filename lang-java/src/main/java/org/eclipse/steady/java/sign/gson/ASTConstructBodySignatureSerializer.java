@@ -31,7 +31,6 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 
 /**
  * <p>ASTConstructBodySignatureSerializer class.</p>
- *
  */
 public class ASTConstructBodySignatureSerializer extends StdSerializer<ASTConstructBodySignature> {
 

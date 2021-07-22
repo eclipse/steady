@@ -31,7 +31,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * <p>AffectedLibrary class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(

@@ -33,7 +33,6 @@ import com.jeantessier.diff.Differences;
 
 /**
  * <p>JarDiffCmd class.</p>
- *
  */
 public class JarDiffCmd extends DiffCommand {
 

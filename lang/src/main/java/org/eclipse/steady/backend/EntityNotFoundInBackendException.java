@@ -20,7 +20,6 @@ package org.eclipse.steady.backend;
 
 /**
  * <p>EntityNotFoundInBackendException class.</p>
- *
  */
 public class EntityNotFoundInBackendException extends Exception {
   /**

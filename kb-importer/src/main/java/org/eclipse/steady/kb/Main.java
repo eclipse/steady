@@ -20,7 +20,15 @@ package org.eclipse.steady.kb;
 
 import org.eclipse.steady.kb.command.CommandExecutor;
 
+/**
+ * <p>Main class.</p>
+ */
 public class Main {
+  /**
+   * <p>main.</p>
+   *
+   * @param _args an array of {@link java.lang.String} objects
+   */
   public static void main(String[] _args) {
     CommandExecutor.getInstance().execute(_args);
   }

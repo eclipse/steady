@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <p>ConnectionUtil class.</p>
- *
  */
 public class ConnectionUtil {
 

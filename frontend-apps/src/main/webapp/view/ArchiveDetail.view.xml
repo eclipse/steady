@@ -291,7 +291,7 @@
 					<!--  Button id="toggle" text="Show/hide all releases"
 									press="toggleAllVersion" /-->
 					<Table xmlns="sap.ui.table" selectionMode="None" id="idArchiveMetrics" cellClick="onLibItemTap"
-						editable="false" allowColumnReordering="false" rows="{metricModel>/}" noData="No newer non-vulnerable library is known to Vulas. Click Show/Hide All versions to see all the available ones."
+						editable="false" allowColumnReordering="false" rows="{metricModel>/}" noData="No newer non-vulnerable library is known to Steady. Click Show/Hide All versions to see all the available ones."
 						visibleRowCount="{path: 'archiveConstructCounts>/constructTypeCounters', formatter: 'model.Formatter.getListLength'}" class="clickable">
 					
 						<Column xmlns="sap.ui.table" sorted="true" sortProperty="archiveConstructCounts>type">

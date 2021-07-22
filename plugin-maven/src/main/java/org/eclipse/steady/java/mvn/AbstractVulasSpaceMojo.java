@@ -37,7 +37,6 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>Abstract AbstractVulasSpaceMojo class.</p>
- *
  */
 public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
 
@@ -158,7 +157,7 @@ public abstract class AbstractVulasSpaceMojo extends AbstractMojo {
     }
     // Every other exception results in a MojoExecutionException (= unexpected)
     catch (Exception e) {
-      throw new MojoExecutionException("Error during Vulas goal execution " + this.goal + ": ", e);
+      throw new MojoExecutionException("Error during goal execution " + this.goal + ": ", e);
     }
   }
 

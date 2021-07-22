@@ -20,7 +20,6 @@ package org.eclipse.steady.cia.model.nexus;
 
 /**
  * <p>NexusResolvedArtifact class.</p>
- *
  */
 public class NexusResolvedArtifact {
 

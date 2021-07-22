@@ -48,10 +48,9 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * <p>VulasAgentMojo class.</p>
- *
  */
 @Mojo(
-    name = "prepare-vulas-agent",
+    name = "prepare-agent",
     defaultPhase = LifecyclePhase.INITIALIZE,
     requiresDependencyResolution = ResolutionScope.RUNTIME,
     threadSafe = true)
@@ -212,7 +211,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 
       // remove any javaagent with the same file name from the arguments
       final String[] args = Commandline.translateCommandline(arguments);
-      // the new javaagent, as used by the prepare-vulas-agent goal
+      // the new javaagent, as used by the prepare-agent goal
       final String regexForCurrentVulasAgent =
           format("-javaagent:(\"?)%s(\"?)", Pattern.quote(agentJarFile.toString()));
       // the default name of the legacy JAR

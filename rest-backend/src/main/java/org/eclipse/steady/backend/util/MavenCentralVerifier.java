@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <p>MavenCentralVerifier class.</p>
- *
  */
 public class MavenCentralVerifier implements DigestVerifier {
 

@@ -22,7 +22,6 @@ import org.eclipse.steady.backend.model.Library;
 
 /**
  * <p>VerificationException class.</p>
- *
  */
 public class VerificationException extends Exception {
 

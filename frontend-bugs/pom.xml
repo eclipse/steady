@@ -26,7 +26,7 @@
 	<parent>
 		<groupId>org.eclipse.steady</groupId>
 		<artifactId>root</artifactId>
-		<version>3.2.0-SNAPSHOT</version>
+		<version>3.2.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>frontend-bugs</artifactId>
 	<packaging>war</packaging>
@@ -98,7 +98,7 @@
 						</replacement>
 						<replacement>
 							<token>$buildTimestamp$</token>
-							<value>${maven.build.timestamp}</value>
+							<value>${project.build.outputTimestamp}</value>
 						</replacement>
 						<replacement>
 							<token>$buildNumber$</token>

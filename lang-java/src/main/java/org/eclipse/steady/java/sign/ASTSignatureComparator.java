@@ -47,7 +47,6 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.NGramsC
 
 /**
  * <p>ASTSignatureComparator class.</p>
- *
  */
 public class ASTSignatureComparator implements SignatureComparator {
 

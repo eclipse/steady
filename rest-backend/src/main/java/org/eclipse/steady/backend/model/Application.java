@@ -47,11 +47,6 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import org.eclipse.steady.backend.model.view.Views;
-import org.eclipse.steady.backend.rest.ApplicationController;
-import org.eclipse.steady.shared.util.Constants;
-import org.eclipse.steady.shared.util.StringUtil;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -61,9 +56,13 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import org.eclipse.steady.backend.model.view.Views;
+import org.eclipse.steady.backend.rest.ApplicationController;
+import org.eclipse.steady.shared.util.Constants;
+import org.eclipse.steady.shared.util.StringUtil;
+
 /**
  * <p>Application class.</p>
- *
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -160,8 +159,10 @@ public class Application implements Serializable, Comparable {
   @Transient private PackageStatistics packageStats = null;
 
   /**
-   * Only set when single applications are returned by {@link ApplicationController#getApplication(String, String, String)}.
-   * TODO: Maybe check if they can always bet set (depending on performance and memory).
+   * Only set when single applications are returned by
+   * {@link ApplicationController#getApplication(String, String, String, Boolean, String)}.
+   * TODO: Maybe check if they can always bet set (depending on performance and
+   * memory).
    */
   @Transient private Collection<Trace> traces;
 
@@ -366,7 +367,6 @@ public class Application implements Serializable, Comparable {
 
   /**
    * <p>Orders the collection <code>dependencies</code> from the shallowest (i.e., direct dependencies that do not have any parent) to the deepest (i.e., the dependencies having the longest chain of parents).</p>
-   *
    */
   public void orderDependenciesByDepth() {
     // order dependencies by length of parents

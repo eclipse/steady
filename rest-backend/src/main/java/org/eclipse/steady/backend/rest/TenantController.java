@@ -42,7 +42,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>TenantController class.</p>
- *
  */
 @RestController
 @CrossOrigin("*")

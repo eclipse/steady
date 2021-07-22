@@ -20,6 +20,7 @@ package org.eclipse.steady.kb.command;
 
 import java.util.Collection;
 import java.util.HashMap;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -36,9 +37,9 @@ public class CommandParser {
    * parse a command
    *
    * @param _args array of {@link java.lang.String}
-   * @param options
-   * @return
-   * @throws CommandLineParserException
+   * @param options a {@link org.apache.commons.cli.Options} object
+   * @throws org.eclipse.steady.kb.exception.CommandLineParserException if any.
+   * @return a {@link java.util.HashMap} object
    */
   public static HashMap<String, Object> parse(String[] _args, Options options)
       throws CommandLineParserException {

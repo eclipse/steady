@@ -28,7 +28,6 @@ import java.util.List;
 
 /**
  * <p>MyProxySelector class.</p>
- *
  */
 public class MyProxySelector extends ProxySelector {
 

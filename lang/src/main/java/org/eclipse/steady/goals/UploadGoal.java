@@ -23,7 +23,6 @@ import org.eclipse.steady.shared.enums.GoalType;
 
 /**
  * <p>UploadGoal class.</p>
- *
  */
 public class UploadGoal extends AbstractAppGoal {
 

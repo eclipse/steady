@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 /**
  * <p>PythonConstructDigestSerializer class.</p>
- *
  */
 public class PythonConstructDigestSerializer extends StdSerializer<PythonConstructDigest> {
 

@@ -53,7 +53,6 @@ import org.eclipse.steady.shared.util.StringList.ComparisonMode;
 
 /**
  * <p>PipWrapper class.</p>
- *
  */
 public class PipWrapper {
 

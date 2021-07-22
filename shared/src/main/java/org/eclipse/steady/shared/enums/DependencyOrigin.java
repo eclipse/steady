@@ -20,7 +20,6 @@ package org.eclipse.steady.shared.enums;
 
 /**
  * <p>DependencyOrigin class.</p>
- *
  */
 public enum DependencyOrigin {
   DEPMGR((byte) 10),
