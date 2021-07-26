@@ -20,7 +20,8 @@ package org.eclipse.steady.tasks;
 
 import java.util.Set;
 
-import org.eclipse.steady.Construct;
+import org.eclipse.steady.shared.json.model.ConstructId;
+import org.eclipse.steady.shared.json.model.Dependency;
 
 /**
  * Methods required to 
@@ -35,6 +36,20 @@ public interface DebloatTask extends Task {
 //   * @return a {@link org.eclipse.steady.shared.json.model.Application} object.
 //   */
 //  public Set<Construct> getNeededConstructs();
+	
+   /**
+   * Sets the traced constructs to be used as starting point for debloating the {@link Application} 
+   * (traces resulting from the dynamic analysis)
+   *
+   */
+	public void setTraces(Set<ConstructId> _traces);
+	
+	/**
+	   * Sets the reachable constructs to be used as starting point for debloating the {@link Application} 
+	   * (resulting from the static analysis)
+	   *
+	*/
+	public void setReachableConstructIds(Set<Dependency> _deps);
 
 
 }

@@ -32,12 +32,16 @@ import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.Construct;
+import org.eclipse.steady.backend.BackendConnector;
 import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.goals.GoalConfigurationException;
 import org.eclipse.steady.goals.GoalExecutionException;
 import org.eclipse.steady.java.JarAnalyzer;
 import org.eclipse.steady.shared.enums.GoalClient;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
+import org.eclipse.steady.shared.json.model.ConstructId;
+import org.eclipse.steady.shared.json.model.Dependency;
+import org.eclipse.steady.shared.json.model.Trace;
 import org.eclipse.steady.shared.util.StringList;
 import org.eclipse.steady.shared.util.StringUtil;
 import org.eclipse.steady.shared.util.VulasConfiguration;
@@ -56,10 +60,10 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 
   private static final String[] EXT_FILTER = new String[] {"jar", "war", "class", "java", "aar"};
 
-  private String[] appPrefixes = null;
-
-  private StringList appJarNames = null;
-
+  private Set<ConstructId> traces = null;
+  
+  private Set<Dependency> reachableConstructIds = null;
+  
   private static final List<GoalClient> pluginGoalClients =
       Arrays.asList(GoalClient.MAVEN_PLUGIN, GoalClient.GRADLE_PLUGIN);
 
@@ -70,72 +74,6 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
         Arrays.asList(new ProgrammingLanguage[] {ProgrammingLanguage.JAVA}));
   }
 
-  /**
-   * Returns true if the configuration setting {@link CoreConfiguration#APP_PREFIXES} shall be considered, false otherwise.
-   */
-  private final boolean useAppPrefixes() {
-    return this.appPrefixes != null && !this.isOneOfGoalClients(pluginGoalClients);
-  }
-
-  /**
-   * Returns true if the configuration setting {@link CoreConfiguration#APP_PREFIXES} shall be considered, false otherwise.
-   */
-  private final boolean useAppJarNames() {
-    return this.appJarNames != null && !this.isOneOfGoalClients(pluginGoalClients);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void configure(VulasConfiguration _cfg) throws GoalConfigurationException {
-    super.configure(_cfg);
-
-    // App constructs identified using package prefixes
-    this.appPrefixes = _cfg.getStringArray(CoreConfiguration.APP_PREFIXES, null);
-
-    // Print warning message in case the setting is used as part of the Maven plugin
-    if (this.appPrefixes != null && this.isOneOfGoalClients(pluginGoalClients)) {
-      log.warn(
-          "Configuration setting ["
-              + CoreConfiguration.APP_PREFIXES
-              + "] ignored when running the goal as Maven plugin");
-      this.appPrefixes = null;
-    }
-
-    // App constructs identified using JAR file name patterns (regex)
-    final String[] app_jar_names = _cfg.getStringArray(CoreConfiguration.APP_JAR_NAMES, null);
-    if (app_jar_names != null) {
-      // Print warning message in case the setting is used as part of the Maven plugin
-      if (this.isOneOfGoalClients(pluginGoalClients)) {
-        log.warn(
-            "Configuration setting ["
-                + CoreConfiguration.APP_JAR_NAMES
-                + "] ignored when running the goal as Maven plugin");
-        this.appJarNames = null;
-      } else {
-        this.appJarNames = new StringList();
-        this.appJarNames.addAll(app_jar_names);
-      }
-    }
-
-    // CLI: Only one of appPrefixes and appJarNames can be used
-    if (!this.isOneOfGoalClients(pluginGoalClients)) {
-      if (this.appPrefixes != null && this.appJarNames != null) {
-        throw new GoalConfigurationException(
-            "Exactly one of the configuration settings ["
-                + CoreConfiguration.APP_PREFIXES
-                + "] and ["
-                + CoreConfiguration.APP_JAR_NAMES
-                + "] must be set");
-      } else if (this.appPrefixes == null && this.appJarNames == null) {
-        throw new GoalConfigurationException(
-            "Exactly one of the configuration settings ["
-                + CoreConfiguration.APP_PREFIXES
-                + "] and ["
-                + CoreConfiguration.APP_JAR_NAMES
-                + "] must be set");
-      }
-    }
-  }
 
   /** {@inheritDoc} */
   @Override
@@ -170,6 +108,26 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 	    e.printStackTrace();
 	}
 	
+	log.info("App classpathUnit [" + app.size() +"]");
+	for (ConstructId t : traces) {
+		Clazz c = cp.getClazz(t.getQname().split("(")[0]);
+		app.addAll(c.getClazzpathUnits());
+	}
+	log.info("App classpathUnit with traces [" + app.size() +"]");
+	
+	for (Dependency d : reachableConstructIds) {
+		if(d.getReachableConstructIds()!=null) {
+			for (ConstructId c : d.getReachableConstructIds()) {
+				Clazz cl = cp.getClazz(c.getQname().split("(")[0]);
+				app.addAll(cl.getClazzpathUnits());
+			}
+		}
+	}
+	log.info("App classpathUnit with reachable constructs [" + app.size() +"]");
+	
+	log.info("Classpath classpathUnits [" + cp.getUnits().length +"]");
+	
+		
 	final Set<Clazz> needed = new HashSet<Clazz>();
 	final Set<Clazz> removable = cp.getClazzes();
 	for(ClazzpathUnit u: app) {
@@ -178,12 +136,22 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 		needed.addAll(u.getClazzes());
 		needed.addAll(u.getTransitiveDependencies());
 	}
+	
+
 
 	log.info("Needed ["+ needed.size()+"] classes");
 	log.info("Removable ["+ removable.size()+"] classes");
-	for(Clazz clazz : removable) {
-	  System.out.println("class " + clazz + " is not required");
-	}
+	
+	try {
+		FileWriter writer=new FileWriter("removable.txt");
+		for(Clazz clazz : removable) {
+			writer.write(clazz + System.lineSeparator());
+		}
+		writer.close();
+	} catch (IOException e){// TODO Auto-generated catch block
+		e.printStackTrace();
+  	}
+		
 	try {
 		FileWriter writer=new FileWriter("needed.txt");
 		for(Clazz c: needed) {
@@ -191,7 +159,20 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 		}
 		writer.close();
 	} catch (IOException e){// TODO Auto-generated catch block
-		e.printStackTrace();} 
+		e.printStackTrace();
+	} 
+  }
+
+  /** {@inheritDoc} */
+  @Override 
+  public void setTraces(Set<ConstructId> _traces){
+	  this.traces = _traces;
+  }
+
+  /** {@inheritDoc} */
+  @Override 
+  public void setReachableConstructIds(Set<Dependency> _deps){
+	  this.reachableConstructIds = _deps;
   }
 
 }

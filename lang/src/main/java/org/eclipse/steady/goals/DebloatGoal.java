@@ -69,8 +69,11 @@ public class DebloatGoal extends AbstractAppGoal {
     final ServiceLoader<DebloatTask> loader = ServiceLoader.load(DebloatTask.class);
     for (DebloatTask t : loader) {
       try {
+    	      	
         // Configure
         t.setApplication(a);
+        t.setTraces(BackendConnector.getInstance().getAppTraces(this.getGoalContext(), a));
+        t.setReachableConstructIds(BackendConnector.getInstance().getAppDependencies(this.getGoalContext(), a));
         t.setSearchPaths(this.getAppPaths());
         t.setGoalClient(this.getGoalClient());
         t.setKnownDependencies(this.getKnownDependencies());
