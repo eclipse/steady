@@ -21,30 +21,21 @@ package org.eclipse.steady.java.tasks;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
-import org.eclipse.steady.Construct;
-import org.eclipse.steady.backend.BackendConnector;
-import org.eclipse.steady.core.util.CoreConfiguration;
-import org.eclipse.steady.goals.GoalConfigurationException;
 import org.eclipse.steady.goals.GoalExecutionException;
-import org.eclipse.steady.java.JarAnalyzer;
+import org.eclipse.steady.shared.enums.ConstructType;
 import org.eclipse.steady.shared.enums.GoalClient;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
 import org.eclipse.steady.shared.json.model.ConstructId;
 import org.eclipse.steady.shared.json.model.Dependency;
-import org.eclipse.steady.shared.json.model.Trace;
-import org.eclipse.steady.shared.util.StringList;
-import org.eclipse.steady.shared.util.StringUtil;
-import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.eclipse.steady.tasks.AbstractTask;
 import org.eclipse.steady.tasks.DebloatTask;
 import org.vafer.jdependency.Clazz;
@@ -110,16 +101,36 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 	
 	log.info("App classpathUnit [" + app.size() +"]");
 	for (ConstructId t : traces) {
-		Clazz c = cp.getClazz(t.getQname().split("(")[0]);
-		app.addAll(c.getClazzpathUnits());
+		if(t.getType().equals(ConstructType.CLAS) || t.getType().equals(ConstructType.INTF) || t.getType().equals(ConstructType.ENUM)) {
+			Clazz c = cp.getClazz(t.getQname());
+			Set<ClazzpathUnit> units = c.getClazzpathUnits();
+			if(units.size()>1) {
+				log.warn("Added as entrypoints multiple ClasspathUnits from single class [" + c + "] : [");
+				for(ClazzpathUnit u: units) {
+					log.warn(u + ",");
+				log.warn("]");
+				}
+			}
+			app.addAll(units);
+		}
 	}
 	log.info("App classpathUnit with traces [" + app.size() +"]");
 	
 	for (Dependency d : reachableConstructIds) {
 		if(d.getReachableConstructIds()!=null) {
 			for (ConstructId c : d.getReachableConstructIds()) {
-				Clazz cl = cp.getClazz(c.getQname().split("(")[0]);
-				app.addAll(cl.getClazzpathUnits());
+				if(c.getType().equals(ConstructType.CLAS) || c.getType().equals(ConstructType.INTF) || c.getType().equals(ConstructType.ENUM)) {
+					Clazz cl = cp.getClazz(c.getQname());
+					Set<ClazzpathUnit> units = cl.getClazzpathUnits();
+					if(units.size()>1) {
+						log.warn("Added as entrypoints multiple ClasspathUnits from single class [" + cl + "] : [");
+						for(ClazzpathUnit u: units) {
+							log.warn(u + ",");
+						log.warn("]");
+						}
+					}
+					app.addAll(units);
+				}
 			}
 		}
 	}
@@ -127,17 +138,21 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 	
 	log.info("Classpath classpathUnits [" + cp.getUnits().length +"]");
 	
+
+	SortedSet<Clazz> missing = new TreeSet<Clazz>();
+	for (Clazz c : cp.getMissingClazzes()) {
+		missing.add(c);
+	}
 		
-	final Set<Clazz> needed = new HashSet<Clazz>();
-	final Set<Clazz> removable = cp.getClazzes();
+	final SortedSet<Clazz> needed = new TreeSet<Clazz>();
+	final Set<Clazz> cp_set = cp.getClazzes();
 	for(ClazzpathUnit u: app) {
-		removable.removeAll(u.getClazzes());
-		removable.removeAll(u.getTransitiveDependencies());
+		cp_set.removeAll(u.getClazzes());
+		cp_set.removeAll(u.getTransitiveDependencies());
 		needed.addAll(u.getClazzes());
 		needed.addAll(u.getTransitiveDependencies());
 	}
-	
-
+	final SortedSet<Clazz> removable = new TreeSet<Clazz>(cp_set); 
 
 	log.info("Needed ["+ needed.size()+"] classes");
 	log.info("Removable ["+ removable.size()+"] classes");
@@ -155,6 +170,15 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 	try {
 		FileWriter writer=new FileWriter("needed.txt");
 		for(Clazz c: needed) {
+			writer.write(c + System.lineSeparator());
+		}
+		writer.close();
+	} catch (IOException e){// TODO Auto-generated catch block
+		e.printStackTrace();
+	} 
+	try {
+		FileWriter writer=new FileWriter("missing.txt");
+		for(Clazz c: missing) {
 			writer.write(c + System.lineSeparator());
 		}
 		writer.close();
