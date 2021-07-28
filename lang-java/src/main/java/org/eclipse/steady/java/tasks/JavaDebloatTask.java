@@ -73,6 +73,9 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 	final Clazzpath cp = new Clazzpath();
 	
 	List<ClazzpathUnit> app = new ArrayList<ClazzpathUnit>();
+	Set<ClazzpathUnit> deps = new HashSet<ClazzpathUnit>();
+	Set<ClazzpathUnit> deps_used = new HashSet<ClazzpathUnit>();
+	
 	try {
 		//1) Add app paths 
 		if (this.hasSearchPath()) {
@@ -91,7 +94,8 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 	  		        "Add dep path ["
 	  		            + p
 	  		            + "] to classpath");
-	    	  cp.addClazzpathUnit(p);
+	    	  deps.add(cp.addClazzpathUnit(p));
+	    	  
 	      }
 	    }
 	} catch (IOException e) {
@@ -150,12 +154,22 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 		cp_set.removeAll(u.getClazzes());
 		cp_set.removeAll(u.getTransitiveDependencies());
 		needed.addAll(u.getClazzes());
+		needed.addAll(u.getDependencies());
 		needed.addAll(u.getTransitiveDependencies());
+		if(deps.contains(u)) 
+			deps_used.add(u);
+		for (Clazz c : u.getDependencies()) {
+			deps_used.addAll(c.getClazzpathUnits());
+		}
+		for (Clazz c : u.getTransitiveDependencies()) {
+			deps_used.addAll(c.getClazzpathUnits());
+		}
 	}
 	final SortedSet<Clazz> removable = new TreeSet<Clazz>(cp_set); 
 
-	log.info("Needed ["+ needed.size()+"] classes");
-	log.info("Removable ["+ removable.size()+"] classes");
+	log.info("Needed classes ["+ needed.size()+"] classes");
+	log.info("Removable classes ["+ removable.size()+"] classes");
+	log.info("Used dependencies ["+ deps_used.size()+"] out of [" + deps.size() + "]");
 	
 	try {
 		FileWriter writer=new FileWriter("removable.txt");
@@ -163,22 +177,22 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 			writer.write(clazz + System.lineSeparator());
 		}
 		writer.close();
-	} catch (IOException e){// TODO Auto-generated catch block
-		e.printStackTrace();
-  	}
-		
-	try {
-		FileWriter writer=new FileWriter("needed.txt");
+	
+		writer=new FileWriter("needed.txt");
 		for(Clazz c: needed) {
 			writer.write(c + System.lineSeparator());
 		}
 		writer.close();
-	} catch (IOException e){// TODO Auto-generated catch block
-		e.printStackTrace();
-	} 
-	try {
-		FileWriter writer=new FileWriter("missing.txt");
+	
+		writer=new FileWriter("missing.txt");
 		for(Clazz c: missing) {
+			writer.write(c + System.lineSeparator());
+		}
+		writer.close();
+		
+		writer=new FileWriter("removable_deps.txt");
+		deps.removeAll(deps_used);
+		for(ClazzpathUnit c: deps) {
 			writer.write(c + System.lineSeparator());
 		}
 		writer.close();
