@@ -72,12 +72,17 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 
 	final Clazzpath cp = new Clazzpath();
 	
+	// list of classpathunits to be used as entrypoints
 	List<ClazzpathUnit> app = new ArrayList<ClazzpathUnit>();
-	Set<ClazzpathUnit> deps = new HashSet<ClazzpathUnit>();
+	// list of classes to be used as entrypoints (from traces and reachable constructs)
+	List<Clazz> used_classes = new ArrayList<Clazz>();
+	// classpathunits for the application dependencies (as identified by maven)
+	Set<ClazzpathUnit> maven_deps = new HashSet<ClazzpathUnit>();
+	// classpathunits considered used according to traces, reachable constructs and jdependency analysis
 	Set<ClazzpathUnit> deps_used = new HashSet<ClazzpathUnit>();
 	
 	try {
-		//1) Add app paths 
+		//1) Add application paths (to be then used as entrypoints) 
 		if (this.hasSearchPath()) {
 		  for (Path p : this.getSearchPath()) {
 		    log.info(
@@ -87,14 +92,14 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 		    app.add(cp.addClazzpathUnit(p));
 	      }
 		}
-		//2) Add dependencies to classpath
+		//2) Add dependencies to jdependency classpath object and populate set of dependencies
 	    if (this.getKnownDependencies() != null) {
 	      for (Path p : this.getKnownDependencies().keySet()) {
 	    	  log.info(
 	  		        "Add dep path ["
 	  		            + p
 	  		            + "] to classpath");
-	    	  deps.add(cp.addClazzpathUnit(p));
+	    	  maven_deps.add(cp.addClazzpathUnit(p));
 	    	  
 	      }
 	    }
@@ -103,10 +108,13 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 	    e.printStackTrace();
 	}
 	
-	log.info("App classpathUnit [" + app.size() +"]");
+	log.info("[" + app.size() +"] ClasspathUnit for the application to be used as entrypoints ");
+	
+	// retrieve traces to be used as Clazz entrypoints (1 class may be part of multiple classpathUnits) 
 	for (ConstructId t : traces) {
 		if(t.getType().equals(ConstructType.CLAS) || t.getType().equals(ConstructType.INTF) || t.getType().equals(ConstructType.ENUM)) {
 			Clazz c = cp.getClazz(t.getQname());
+			used_classes.add(c);
 			Set<ClazzpathUnit> units = c.getClazzpathUnits();
 			if(units.size()>1) {
 				log.warn("Added as entrypoints multiple ClasspathUnits from single class [" + c + "] : [");
@@ -115,16 +123,19 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 				log.warn("]");
 				}
 			}
-			app.addAll(units);
+			deps_used.addAll(units);
 		}
 	}
-	log.info("App classpathUnit with traces [" + app.size() +"]");
+	log.info("[" + used_classes.size() +"] Clazz as entrypoints from traces");
 	
+	// retrieve reachable constructs to be used as Clazz entrypoints (1 class may be part of multiple classpathUnits)
+	//TODO: deserialization not working (method getAppDependencies in BackendConnector:707)
 	for (Dependency d : reachableConstructIds) {
 		if(d.getReachableConstructIds()!=null) {
 			for (ConstructId c : d.getReachableConstructIds()) {
 				if(c.getType().equals(ConstructType.CLAS) || c.getType().equals(ConstructType.INTF) || c.getType().equals(ConstructType.ENUM)) {
 					Clazz cl = cp.getClazz(c.getQname());
+					used_classes.add(cl);
 					Set<ClazzpathUnit> units = cl.getClazzpathUnits();
 					if(units.size()>1) {
 						log.warn("Added as entrypoints multiple ClasspathUnits from single class [" + cl + "] : [");
@@ -133,31 +144,37 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 						log.warn("]");
 						}
 					}
-					app.addAll(units);
+					deps_used.addAll(units);
 				}
 			}
 		}
 	}
-	log.info("App classpathUnit with reachable constructs [" + app.size() +"]");
+	log.info("[" + used_classes.size() +"]  Clazz as entrypoints from traces and reachable constructs");
 	
-	log.info("Classpath classpathUnits [" + cp.getUnits().length +"]");
+	log.info("[" + cp.getUnits().length +"] classpathUnits in jdependency classpath object");
 	
 
+	// also collect "missing" classes to be able to check their relation with jre objects considered used
+	// to be removed from final version
 	SortedSet<Clazz> missing = new TreeSet<Clazz>();
 	for (Clazz c : cp.getMissingClazzes()) {
 		missing.add(c);
 	}
-		
+	
+	// classes considered used 
 	final SortedSet<Clazz> needed = new TreeSet<Clazz>();
-	final Set<Clazz> cp_set = cp.getClazzes();
+	final Set<Clazz> classes = cp.getClazzes();
+	//loop over classpathunits (representing the application) marked as entrypoints to find needed classes
 	for(ClazzpathUnit u: app) {
-		cp_set.removeAll(u.getClazzes());
-		cp_set.removeAll(u.getTransitiveDependencies());
+		classes.removeAll(u.getClazzes());
+		//TODO: check if getDependencies is also needed or getTransitiveDependencies sufficies
+		classes.removeAll(u.getDependencies());  
+		classes.removeAll(u.getTransitiveDependencies());
 		needed.addAll(u.getClazzes());
 		needed.addAll(u.getDependencies());
 		needed.addAll(u.getTransitiveDependencies());
-		if(deps.contains(u)) 
-			deps_used.add(u);
+
+		//loop over dependent classes to add their units among the used dependencies
 		for (Clazz c : u.getDependencies()) {
 			deps_used.addAll(c.getClazzpathUnits());
 		}
@@ -165,12 +182,32 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 			deps_used.addAll(c.getClazzpathUnits());
 		}
 	}
-	final SortedSet<Clazz> removable = new TreeSet<Clazz>(cp_set); 
+	
+	
+	// loop over class (representing traces and reachable constructs) marked as entrypoints to find needed classes
+	for(Clazz c: used_classes) {
+		classes.remove(c);
+		classes.removeAll(c.getDependencies());
+		classes.removeAll(c.getTransitiveDependencies());
+		needed.add(c);
+		needed.addAll(c.getDependencies());
+		needed.addAll(c.getTransitiveDependencies());
+		
+		//loop over dependent classes to add their units among the used dependencies
+		for (Clazz cc : c.getDependencies()) {
+			deps_used.addAll(cc.getClazzpathUnits());
+		}
+		for (Clazz cc : c.getTransitiveDependencies()) {
+			deps_used.addAll(cc.getClazzpathUnits());
+		}
+	}
+	final SortedSet<Clazz> removable = new TreeSet<Clazz>(classes); 
 
 	log.info("Needed classes ["+ needed.size()+"] classes");
 	log.info("Removable classes ["+ removable.size()+"] classes");
-	log.info("Used dependencies ["+ deps_used.size()+"] out of [" + deps.size() + "]");
+	log.info("Used dependencies ["+ deps_used.size()+"] out of [" + maven_deps.size() + "]");
 	
+	//TODO: write to target/vulas/...
 	try {
 		FileWriter writer=new FileWriter("removable.txt");
 		for(Clazz clazz : removable) {
@@ -191,8 +228,8 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 		writer.close();
 		
 		writer=new FileWriter("removable_deps.txt");
-		deps.removeAll(deps_used);
-		for(ClazzpathUnit c: deps) {
+		maven_deps.removeAll(deps_used);
+		for(ClazzpathUnit c: maven_deps) {
 			writer.write(c + System.lineSeparator());
 		}
 		writer.close();
