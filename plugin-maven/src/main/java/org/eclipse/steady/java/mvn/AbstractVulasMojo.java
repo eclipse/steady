@@ -146,6 +146,9 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     this.vulasConfiguration.setPropertyIfEmpty(
         CoreConfiguration.REP_DIR,
         Paths.get(this.project.getBuild().getDirectory(), "vulas", "report").toString());
+    this.vulasConfiguration.setPropertyIfEmpty(
+          CoreConfiguration.SLICING_DIR,
+          Paths.get(this.project.getBuild().getDirectory(), "vulas", "slicing").toString());
 
     // Read app constructs from src/main/java and target/classes
     final String p =

@@ -18,24 +18,29 @@
  */
 package org.eclipse.steady.java.tasks;
 
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.logging.log4j.Logger;
+import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.goals.GoalExecutionException;
+import org.eclipse.steady.java.JavaId;
 import org.eclipse.steady.shared.enums.ConstructType;
 import org.eclipse.steady.shared.enums.GoalClient;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
 import org.eclipse.steady.shared.json.model.ConstructId;
 import org.eclipse.steady.shared.json.model.Dependency;
+import org.eclipse.steady.shared.util.FileUtil;
+import org.eclipse.steady.shared.util.StringUtil;
 import org.eclipse.steady.tasks.AbstractTask;
 import org.eclipse.steady.tasks.DebloatTask;
 import org.vafer.jdependency.Clazz;
@@ -53,7 +58,7 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 
   private Set<ConstructId> traces = null;
   
-  private Set<Dependency> reachableConstructIds = null;
+  private Set<Dependency> dependencies = null;
   
   private static final List<GoalClient> pluginGoalClients =
       Arrays.asList(GoalClient.MAVEN_PLUGIN, GoalClient.GRADLE_PLUGIN);
@@ -104,56 +109,59 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 	      }
 	    }
 	} catch (IOException e) {
-	      // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
 	
 	log.info("[" + app.size() +"] ClasspathUnit for the application to be used as entrypoints ");
 	
-	// retrieve traces to be used as Clazz entrypoints (1 class may be part of multiple classpathUnits) 
+	// Retrieve traces to be used as Clazz entrypoints (1 class may be part of multiple classpathUnits) 
 	for (ConstructId t : traces) {
 		if(t.getType().equals(ConstructType.CLAS) || t.getType().equals(ConstructType.INTF) || t.getType().equals(ConstructType.ENUM)) {
 			Clazz c = cp.getClazz(t.getQname());
-			used_classes.add(c);
-			Set<ClazzpathUnit> units = c.getClazzpathUnits();
-			if(units.size()>1) {
-				log.warn("Added as entrypoints multiple ClasspathUnits from single class [" + c + "] : [");
-				for(ClazzpathUnit u: units) {
-					log.warn(u + ",");
-				log.warn("]");
-				}
+			if(c==null) {
+				log.warn("Could not obtain jdependency clazz for traced class [" + t.getQname() + "]");
 			}
-			deps_used.addAll(units);
+			else {
+				used_classes.add(c);
+				Set<ClazzpathUnit> units = c.getClazzpathUnits();
+				if(units.size()>1) {
+					log.warn("Added as entrypoints multiple ClasspathUnits from single class [" + c + "] : [" + StringUtil.join(units, ",") + "]");
+				}
+				deps_used.addAll(units);
+			}
 		}
 	}
-	log.info("[" + used_classes.size() +"] Clazz as entrypoints from traces");
+	log.info("Using [" + used_classes.size() +"] jdependency clazzes as entrypoints from traces");
 	
-	// retrieve reachable constructs to be used as Clazz entrypoints (1 class may be part of multiple classpathUnits)
-	//TODO: deserialization not working (method getAppDependencies in BackendConnector:707)
-	for (Dependency d : reachableConstructIds) {
-		if(d.getReachableConstructIds()!=null) {
+	// Loop reachable constructs (METH, CONS, INIT), find their definition
+	// context (CLASS, ENUM, INTF) and use those as jdependency clazz
+	// entrypoints (1 class may be part of multiple classpathUnits).
+	for (Dependency d : dependencies) {
+		log.info("Processing [" + d.getReachableConstructIds().size() + "] reachable constructs of " + d.getLib().getLibraryId());
+		if(d.getReachableConstructIds()!=null) {	
 			for (ConstructId c : d.getReachableConstructIds()) {
-				if(c.getType().equals(ConstructType.CLAS) || c.getType().equals(ConstructType.INTF) || c.getType().equals(ConstructType.ENUM)) {
-					Clazz cl = cp.getClazz(c.getQname());
+				JavaId core_construct = (JavaId)JavaId.toCoreType(c);
+				JavaId def_context = (JavaId)core_construct.getDefinitionContext();
+				Clazz cl = cp.getClazz(def_context.getQualifiedName());
+				if(cl==null) {
+					log.warn("Could not obtain jdependency clazz for [" + def_context + "]");
+				}
+				else {
 					used_classes.add(cl);
 					Set<ClazzpathUnit> units = cl.getClazzpathUnits();
 					if(units.size()>1) {
-						log.warn("Added as entrypoints multiple ClasspathUnits from single class [" + cl + "] : [");
-						for(ClazzpathUnit u: units) {
-							log.warn(u + ",");
-						log.warn("]");
-						}
+						log.warn("Added as entrypoints multiple ClasspathUnits from single class [" + cl + "] : [" + StringUtil.join(units, ",") + "]");
 					}
 					deps_used.addAll(units);
 				}
 			}
 		}
 	}
-	log.info("[" + used_classes.size() +"]  Clazz as entrypoints from traces and reachable constructs");
+
+	log.info("Using [" + used_classes.size() + "] jdependency clazzes as entrypoints from traces and reachable constructs");
 	
 	log.info("[" + cp.getUnits().length +"] classpathUnits in jdependency classpath object");
 	
-
 	// also collect "missing" classes to be able to check their relation with jre objects considered used
 	// to be removed from final version
 	SortedSet<Clazz> missing = new TreeSet<Clazz>();
@@ -161,7 +169,7 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 		missing.add(c);
 	}
 	
-	// classes considered used 
+	// Classes considered used 
 	final SortedSet<Clazz> needed = new TreeSet<Clazz>();
 	final Set<Clazz> classes = cp.getClazzes();
 	//loop over classpathunits (representing the application) marked as entrypoints to find needed classes
@@ -203,37 +211,30 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 	}
 	final SortedSet<Clazz> removable = new TreeSet<Clazz>(classes); 
 
-	log.info("Needed classes ["+ needed.size()+"] classes");
-	log.info("Removable classes ["+ removable.size()+"] classes");
-	log.info("Used dependencies ["+ deps_used.size()+"] out of [" + maven_deps.size() + "]");
+	log.info("Needed classes: ["+ needed.size()+"]");
+	log.info("Removable classes: ["+ removable.size()+"]");
+	log.info("Used dependencies: ["+ deps_used.size()+"] out of [" + maven_deps.size() + "]");
+
+	maven_deps.removeAll(deps_used);
 	
-	//TODO: write to target/vulas/...
+	// Write names of needed/removable classes and dependencies to disk
 	try {
-		FileWriter writer=new FileWriter("removable.txt");
-		for(Clazz clazz : removable) {
-			writer.write(clazz + System.lineSeparator());
-		}
-		writer.close();
-	
-		writer=new FileWriter("needed.txt");
-		for(Clazz c: needed) {
-			writer.write(c + System.lineSeparator());
-		}
-		writer.close();
-	
-		writer=new FileWriter("missing.txt");
-		for(Clazz c: missing) {
-			writer.write(c + System.lineSeparator());
-		}
-		writer.close();
-		
-		writer=new FileWriter("removable_deps.txt");
-		maven_deps.removeAll(deps_used);
-		for(ClazzpathUnit c: maven_deps) {
-			writer.write(c + System.lineSeparator());
-		}
-		writer.close();
-	} catch (IOException e){// TODO Auto-generated catch block
+		File f = Paths.get(this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(), "removable-classes.txt").toFile();
+		FileUtil.writeToFile(f, StringUtil.join(removable, System.lineSeparator()));
+		log.info("List of removable classes written to [" + f.toPath() + "]");
+
+		f = Paths.get(this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(), "needed-classes.txt").toFile();
+		FileUtil.writeToFile(f, StringUtil.join(needed, System.lineSeparator()));
+		log.info("List of needed classes written to [" + f.toPath() + "]");
+
+		f = Paths.get(this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(), "missing-classes.txt").toFile();
+		FileUtil.writeToFile(f, StringUtil.join(missing, System.lineSeparator()));
+		log.info("List of missing classes written to [" + f.toPath() + "]");
+
+		f = Paths.get(this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(), "removable-deps.txt").toFile();
+		FileUtil.writeToFile(f, StringUtil.join(maven_deps, System.lineSeparator()));
+		log.info("List of removable dependencies written to [" + f.toPath() + "]");
+	} catch (IOException e){
 		e.printStackTrace();
 	} 
   }
@@ -247,7 +248,6 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
   /** {@inheritDoc} */
   @Override 
   public void setReachableConstructIds(Set<Dependency> _deps){
-	  this.reachableConstructIds = _deps;
+	  this.dependencies = _deps;
   }
-
 }

@@ -124,6 +124,9 @@ public class CoreConfiguration {
   /** Constant <code>REP_LIB_ASSESS="vulas.report.createLibraryAssessments"</code> */
   public static final String REP_CREATE_AFF_LIB = "vulas.report.createLibraryAssessments";
 
+  /** Constant <code>SLICING_DIR="vulas.slicing.slicingDir"</code> */
+  public static final String SLICING_DIR = "vulas.slicing.slicingDir";
+
   /** Constant <code>SEQ_DEFAULT="vulas.core.sequence.defaultGoals"</code> */
   public static final String SEQ_DEFAULT = "vulas.core.sequence.defaultGoals";
 

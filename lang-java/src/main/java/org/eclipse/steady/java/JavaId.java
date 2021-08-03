@@ -558,7 +558,7 @@ public abstract class JavaId extends ConstructId {
               _s.substring(j + 1, i),
               JavaId.parseParameterTypes(_s.substring(i + 1, _s.length() - 1)));
     } catch (StringIndexOutOfBoundsException e) {
-      JavaId.log.error("Exception while parsing the string '" + _s + "'");
+      JavaId.log.error("Exception while parsing the string [" + _s + "]");
     }
     return mid;
   }
@@ -627,7 +627,7 @@ public abstract class JavaId extends ConstructId {
       }
       coid = new JavaConstructorId(def_ctx, params);
     } catch (StringIndexOutOfBoundsException e) {
-      JavaId.log.error("Exception while parsing the string '" + _s + "'");
+      JavaId.log.error("Exception while parsing the string [" + _s + "]");
     }
     return coid;
   }
@@ -644,7 +644,7 @@ public abstract class JavaId extends ConstructId {
     final int i = _s.indexOf(JavaClassInit.NAME);
     if (i == -1)
       throw new IllegalArgumentException(
-          "String does not contain brackets "
+          "String does not contain "
               + JavaClassInit.NAME
               + ", as required for qualified names for Java class initializers");
 
@@ -653,7 +653,7 @@ public abstract class JavaId extends ConstructId {
       final JavaClassId cid = JavaId.parseClassQName(_s.substring(0, i - 1));
       clinit = cid.getClassInit();
     } catch (StringIndexOutOfBoundsException e) {
-      JavaId.log.error("Exception while parsing the string '" + _s + "'");
+      JavaId.log.error("Exception while parsing the string [" + _s + "]");
     }
     return clinit;
   }
