@@ -118,8 +118,8 @@ public class GoalFactory {
             "Cannot create instance of class [" + clazzname + "]: " + e.getMessage());
       }
     } else if (_type.equals(GoalType.DEBLOAT)) {
-        goal = new DebloatGoal();
-    }else {
+      goal = new DebloatGoal();
+    } else {
       throw new IllegalArgumentException("Goal [" + _type + "] is not supported");
     }
     return goal;

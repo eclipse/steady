@@ -46,12 +46,12 @@ public class ApplicationTest {
   public void testAppReachDeserialization() {
     try {
       String json = FileUtil.readFile("./src/test/resources/appReachConstructIds.json");
-      org.eclipse.steady.shared.json.model.Dependency[] backend_deps = (org.eclipse.steady.shared.json.model.Dependency[]) JacksonUtil
-        .asObject(json, org.eclipse.steady.shared.json.model.Dependency[].class);
+      org.eclipse.steady.shared.json.model.Dependency[] backend_deps =
+          (org.eclipse.steady.shared.json.model.Dependency[])
+              JacksonUtil.asObject(json, org.eclipse.steady.shared.json.model.Dependency[].class);
       assertNotNull(backend_deps[0].getReachableConstructIds());
     } catch (IOException e) {
-      assert(false);
+      assert (false);
     }
-    
   }
 }

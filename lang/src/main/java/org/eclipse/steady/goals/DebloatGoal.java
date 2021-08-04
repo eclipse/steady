@@ -20,18 +20,14 @@ package org.eclipse.steady.goals;
 
 import java.nio.file.Paths;
 import java.util.ServiceLoader;
-import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.backend.BackendConnector;
 import org.eclipse.steady.core.util.CoreConfiguration;
-import org.eclipse.steady.malice.MaliciousnessAnalysisResult;
-import org.eclipse.steady.malice.MaliciousnessAnalyzerLoop;
 import org.eclipse.steady.shared.enums.GoalType;
 import org.eclipse.steady.shared.json.model.Application;
 import org.eclipse.steady.shared.json.model.Dependency;
 import org.eclipse.steady.shared.json.model.Library;
-import org.eclipse.steady.tasks.BomTask;
 import org.eclipse.steady.tasks.DebloatTask;
 
 /**
@@ -48,15 +44,15 @@ public class DebloatGoal extends AbstractAppGoal {
     super(GoalType.DEBLOAT);
   }
 
-//  /**
-//   * {@inheritDoc}
-//   *
-//   * Evaluates the configuration setting {@link CoreConfiguration#APP_PREFIXES}.
-//   */
-//  @Override
-//  protected void prepareExecution() throws GoalConfigurationException {
-//    super.prepareExecution();
-//  }
+  //  /**
+  //   * {@inheritDoc}
+  //   *
+  //   * Evaluates the configuration setting {@link CoreConfiguration#APP_PREFIXES}.
+  //   */
+  //  @Override
+  //  protected void prepareExecution() throws GoalConfigurationException {
+  //    super.prepareExecution();
+  //  }
 
   /** {@inheritDoc} */
   @Override
@@ -69,11 +65,12 @@ public class DebloatGoal extends AbstractAppGoal {
     final ServiceLoader<DebloatTask> loader = ServiceLoader.load(DebloatTask.class);
     for (DebloatTask t : loader) {
       try {
-    	      	
+
         // Configure
         t.setApplication(a);
         t.setTraces(BackendConnector.getInstance().getAppTraces(this.getGoalContext(), a));
-        t.setReachableConstructIds(BackendConnector.getInstance().getAppDependencies(this.getGoalContext(), a));
+        t.setReachableConstructIds(
+            BackendConnector.getInstance().getAppDependencies(this.getGoalContext(), a));
         t.setSearchPaths(this.getAppPaths());
         t.setGoalClient(this.getGoalClient());
         t.setKnownDependencies(this.getKnownDependencies());
@@ -82,18 +79,15 @@ public class DebloatGoal extends AbstractAppGoal {
         // Execute
         t.execute();
         t.cleanUp();
-   //     t.getNeededConstructs();
+        //     t.getNeededConstructs();
       } catch (Exception e) {
         log.error("Error running task " + t + ": " + e.getMessage(), e);
       }
     }
 
-    
     // Upload libraries and binaries (if requested)
     if (a.getDependencies() != null) {
       for (Dependency dep : a.getDependencies()) {
-
-
 
         // Upload lib
         final Library lib = dep.getLib();

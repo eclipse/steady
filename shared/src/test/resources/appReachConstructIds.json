@@ -1,0 +1,2621 @@
+[
+    {
+        "lib": {
+            "digest": "16CF5A6B78951F50713D29BFAE3230A611DC01F0",
+            "sha1": "16CF5A6B78951F50713D29BFAE3230A611DC01F0",
+            "digestAlgorithm": "SHA1",
+            "createdAt": "2016-12-21T17:46:16.701+0000",
+            "modifiedAt": "2021-07-22T09:26:14.455+0000",
+            "properties": [
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "Manifest-Version",
+                    "value": "1.0"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "Archiver-Version",
+                    "value": "Plexus Archiver"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "Created-By",
+                    "value": "Apache Maven"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "Implementation-Vendor-Id",
+                    "value": "org.apache"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "Specification-Vendor",
+                    "value": "The Apache Software Foundation"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "Implementation-Vendor",
+                    "value": "The Apache Software Foundation"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "X-Compile-Target-JDK",
+                    "value": "1.5"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "X-Compile-Source-JDK",
+                    "value": "1.5"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "Build-Jdk",
+                    "value": "1.5.0_22"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "Implementation-Title",
+                    "value": "HttpComponents HttpClient"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "Implementation-Version",
+                    "value": "4.1.3"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "Built-By",
+                    "value": "oleg"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "Specification-Title",
+                    "value": "HttpComponents HttpClient"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "url",
+                    "value": "http://hc.apache.org/httpcomponents-client"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "Implementation-Build",
+                    "value": "tags/4.1.3-RC1/httpclient@r1239556; 2012-02-02 13:14:24+0100"
+                },
+                {
+                    "source": "JAVA_MANIFEST",
+                    "name": "Specification-Version",
+                    "value": "4.1.3"
+                }
+            ],
+            "libraryId": {
+                "artifact": "httpclient",
+                "version": "4.1.3",
+                "group": "org.apache.httpcomponents"
+            },
+            "bundledLibraryIds": [
+                {
+                    "artifact": "httpclient",
+                    "version": "4.1.3",
+                    "group": "org.apache.httpcomponents"
+                }
+            ],
+            "wellknownDigest": true,
+            "digestTimestamp": "2012-02-02T12:15:19.000+0000",
+            "digestVerificationUrl": "http://search.maven.org/solrsearch/select?q=1:16CF5A6B78951F50713D29BFAE3230A611DC01F0&rows=20&wt=json",
+            "developedIn": [
+                "JAVA"
+            ],
+            "constructTypeCounters": {
+                "FUNC": 0,
+                "CLASS": 206,
+                "countExecutable": 1488,
+                "INTF": 63,
+                "ENUM": 4,
+                "INIT": 18,
+                "CONS": 305,
+                "METH": 1165,
+                "MODU": 0,
+                "countTotal": 1783,
+                "PACK": 22
+            }
+        },
+        "parent": null,
+        "origin": null,
+        "declared": true,
+        "traced": true,
+        "scope": "COMPILE",
+        "transitive": false,
+        "filename": "httpclient-4.1.3.jar",
+        "path": "/Users/foo/.m2/repository/org/apache/httpcomponents/httpclient/4.1.3/httpclient-4.1.3.jar",
+        "relativePath": null,
+        "reachableConstructIds": [
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultUserTokenHandler.getUserToken(HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.RouteSpecificPool.hasThread()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.getWrappedConnection()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPooledConnAdapter.close()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createConnectionReuseStrategy()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.wrapRequest(HttpRequest)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.DefaultHttpRoutePlanner(SchemeRegistry)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.notifyWaitingThread(RouteSpecificPool)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.abortConnection()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.auth.AuthState.getCredentials()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.methods.HttpGet(URI)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRedirectStrategy.getRedirect(HttpRequest,HttpResponse,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.execute(HttpHost,HttpRequest,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.DefaultHttpRequestRetryHandler()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.protocol.RequestProxyAuthentication()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.LoggingSessionOutputBuffer.getMetrics()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPooledConnAdapter.shutdown()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.cookie.BrowserCompatSpecFactory()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRedirectStrategy.isRedirected(HttpRequest,HttpResponse,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.isStale()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager.shutdown()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager$1.getConnection(long,TimeUnit)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.handleResponse(RoutedRequest,HttpResponse,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.routing.HttpRoute(InetAddress,HttpHost,HttpHost[],boolean,TunnelType,LayerType)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.RoutedRequest.getRequest()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPoolEntry.shutdownEntry()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.BasicManagedEntity.streamAbort(InputStream)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.methods.HttpRequestBase.getURI()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.HttpRoute.isTunnelled()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.tsccm.AbstractConnPool()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.receiveResponseHeader()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.routing.RouteTracker(HttpHost,InetAddress)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createHttpRequestRetryHandler()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.auth.MalformedChallengeException(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.ClientProtocolException(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.closeConnection(BasicPoolEntry)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.DefaultHttpClient(ClientConnectionManager)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.params.ConnPerRouteBean.getMaxForRoute(HttpRoute)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultResponseParser.parseHead(SessionInputBuffer)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.RequestWrapper.getURI()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPooledConnAdapter.tunnelProxy(HttpHost,boolean,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.protocol.ResponseAuthCache()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.RouteSpecificPool.removeThread(WaitingThread)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPooledConnAdapter.getRoute()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.params.HttpClientParams.isRedirecting(HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.RouteTracker.toRoute()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getHttpProcessor()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.RequestWrapper.getExecCount()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getRequestExecutor()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.abortConnection()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.RedirectLocations.add(URI)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.cookie.CookieSpecRegistry()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPoolEntry.getState()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute$1.getPoolEntry(long,TimeUnit)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.detach()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.ssl.AbstractVerifier()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager$PoolEntry()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.getFreeEntry(RouteSpecificPool,Object)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createHttpContext()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.auth.AuthState.setAuthScope(AuthScope)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.determineParams(HttpRequest)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.cookie.RFC2109SpecFactory()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.HttpRoute.getProxyHost()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager.finalize()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager.closeIdleConnections(long,TimeUnit)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.ssl.SSLSocketFactory.createDefaultSSLContext()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.LoggingSessionInputBuffer.isEof()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.RequestWrapper.getRequestLine()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.EofSensorInputStream.read(byte[])"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnection.receiveResponseHeader()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.scheme.SchemeRegistry.getScheme(HttpHost)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager.shutdown()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.methods.HttpHead(URI)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.ssl.SSLSocketFactory.createSSLContext(String,KeyStore,String,KeyStore,SecureRandom,TrustStrategy)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.RouteSpecificPool.isUnused()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.createRouteToPoolMap()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPoolEntry.tunnelTarget(boolean,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.isMarkedReusable()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnection.openCompleted(boolean,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.routing.HttpRoute(HttpHost,InetAddress,HttpHost[],boolean,TunnelType,LayerType)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.ssl.StrictHostnameVerifier()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnection.createSessionInputBuffer(Socket,int,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.rewriteRequestURI(RequestWrapper,HttpRoute)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getConnectionReuseStrategy()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.auth.BasicSchemeFactory()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.methods.HttpHead.getMethod()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.routing.RouteInfo$LayerType(String,int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultUserTokenHandler.getAuthPrincipal(AuthState)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.scheme.Scheme.getName()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.BasicPoolEntry.updateExpiry(long,TimeUnit)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.EofSensorInputStream.checkClose()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultHttpClient.createHttpProcessor()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getProtocolProcessor()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.RouteTracker.isTunnelled()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.ConnectionPoolTimeoutException(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.Wire(Log)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.RedirectLocations()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPooledConnAdapter.open(HttpRoute,HttpContext,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.cookie.RFC2965SpecFactory()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "INIT",
+                "qname": "org.apache.http.conn.routing.HttpRoute.<clinit>"
+            },
+            {
+                "lang": "JAVA",
+                "type": "INIT",
+                "qname": "org.apache.http.auth.AuthScope.<clinit>"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.BasicPooledConnAdapter.getManager()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getTargetAuthenticationHandler()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.getManager()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute$1(WaitingThreadAborter,HttpRoute,Object)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.EofSensorInputStream.close()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.ssl.SSLSocketFactory()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.RequestWrapper.incrementExecCount()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.LoggingSessionInputBuffer.readLine(CharArrayBuffer)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager.requestConnection(HttpRoute,Object)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.Wire.input(byte[])"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.BasicCookieStore()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.RouteTracker.layerProtocol(boolean)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnection.sendRequestHeader(HttpRequest)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getConnectionManager()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager.createConnectionOperator(SchemeRegistry)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.EntityEnclosingRequestWrapper$EntityWrapper.writeTo(OutputStream)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.auth.AuthenticationException(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.LoggingSessionOutputBuffer.writeLine(CharArrayBuffer)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.scheme.PlainSocketFactory()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.utils.URIUtils.extractHost(URI)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractAuthenticationHandler.getAuthPreferences()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.ConnectionShutdownException()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.deleteEntry(BasicPoolEntry)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute(ClientConnectionOperator,ConnPerRoute,int,long,TimeUnit)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.RequestWrapper.getOriginal()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getCookieSpecs()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.auth.NegotiateSchemeFactory()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createCookieSpecRegistry()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager.finalize()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.RedirectException(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.newRouteSpecificPool(HttpRoute)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient(ClientConnectionManager,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.WaitingThread.await(Date)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.BasicManagedEntity(HttpEntity,ManagedClientConnection,boolean)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "INIT",
+                "qname": "org.apache.http.conn.routing.RouteInfo$LayerType.<clinit>"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.EntityEnclosingRequestWrapper$EntityWrapper(HttpEntity)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.HttpInetSocketAddress(HttpHost,InetAddress,int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.LoggingSessionInputBuffer.isDataAvailable(int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.LoggingSessionInputBuffer.getMetrics()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.EntityEnclosingRequestWrapper.expectContinue()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.routing.HttpRoute(HttpHost,InetAddress,boolean)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.ConnectTimeoutException(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.DefaultResponseParser(SessionInputBuffer,LineParser,HttpResponseFactory,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy.getKeepAliveDuration(HttpResponse,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPooledConnAdapter.assertValid(AbstractPoolEntry)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.RequestWrapper.setURI(URI)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.tryConnect(RoutedRequest,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.Wire.output(byte[])"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.createFreeConnQueue()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.auth.AuthState.setCredentials(Credentials)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.tsccm.BasicPooledConnAdapter(ThreadSafeClientConnManager,AbstractPoolEntry)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.requestPoolEntry(HttpRoute,Object)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.LoggingSessionOutputBuffer.write(byte[],int,int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.HttpRoute.toChain(HttpHost)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.auth.AuthSchemeRegistry.register(String,AuthSchemeFactory)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPooledConnAdapter.getPoolEntry()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.tsccm.WaitingThread(Condition,RouteSpecificPool)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.BasicPoolEntry.getPlannedRoute()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getConnectionKeepAliveStrategy()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultHttpRequestRetryHandler.handleAsIdempotent(HttpRequest)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.EofSensorInputStream.isReadAllowed()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.RouteSpecificPool.freeEntry(BasicPoolEntry)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.utils.URIUtils.removeDotSegments(URI)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.cookie.CookieIdentityComparator()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter(ClientConnectionManager,OperatedClientConnection)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.BasicManagedEntity.isRepeatable()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.releaseConnection()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.auth.AuthState()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.getRoutePool(HttpRoute,boolean)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.NonRepeatableRequestException(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getParams()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.scheme.SchemeRegistry()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager$ConnAdapter(PoolEntry,HttpRoute)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.sendRequestHeader(HttpRequest)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createHttpRoutePlanner()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.ssl.BrowserCompatHostnameVerifier()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createCookieStore()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.HttpRoute.getHopTarget(int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.BasicManagedEntity.releaseManagedConnection()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.RequestWrapper.resetHeaders()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.HttpRoute.getLocalAddress()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.RouteTracker.connectProxy(HttpHost,boolean)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.auth.AuthScope(String,int,String,String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.params.ConnRouteParams.getDefaultProxy(HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createTargetAuthenticationHandler()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.flush()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.BasicPooledConnAdapter.detach()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnectionOperator.prepareSocket(Socket,HttpContext,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.EntityEnclosingRequestWrapper(HttpEntityEnclosingRequest)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.EntityEnclosingRequestWrapper.setEntity(HttpEntity)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.cookie.BestMatchSpecFactory()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.scheme.SchemeSocketFactoryAdaptor(SocketFactory)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.receiveResponseEntity(HttpResponse)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultProxyAuthenticationHandler.getAuthPreferences(HttpResponse,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.deleteLeastUsedEntry()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.EntityEnclosingRequestWrapper.isRepeatable()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.routing.RouteInfo$TunnelType(String,int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager$1.getConnection(long,TimeUnit)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultHttpClient.setDefaultHttpParams(HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.auth.AuthState.invalidate()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.protocol.RequestDefaultHeaders()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultTargetAuthenticationHandler.getAuthPreferences(HttpResponse,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.RequestWrapper.isRepeatable()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnection.createResponseParser(SessionInputBuffer,HttpResponseFactory,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.tsccm.BasicPoolEntry(ClientConnectionOperator,HttpRoute,long,TimeUnit)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.BasicRouteDirector.directStep(RouteInfo,RouteInfo)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRedirectStrategy.getLocationURI(HttpRequest,HttpResponse,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.tryExecute(RoutedRequest,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.isOpen()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.setIdleDuration(long,TimeUnit)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.setSocketTimeout(int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPoolEntry.setState(Object)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.BasicManagedEntity.streamClosed(InputStream)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPooledConnAdapter.tunnelTarget(boolean,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.methods.HttpGet(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPoolEntry.open(HttpRoute,HttpContext,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultHttpRoutePlanner.determineRoute(HttpHost,HttpRequest,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.auth.NTLMSchemeFactory()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.createEntry(RouteSpecificPool,ClientConnectionOperator)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.tsccm.RouteSpecificPool(HttpRoute,ConnPerRoute)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.scheme.SchemeRegistry.register(Scheme)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager$PoolEntry.shutdown()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.ssl.AllowAllHostnameVerifier()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getCookieStore()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.RequestWrapper(HttpRequest)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.BasicPoolEntry.getConnection()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createUserTokenHandler()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.releaseConnection()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createCredentialsProvider()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnectionOperator.openConnection(OperatedClientConnection,HttpHost,InetAddress,HttpContext,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.determineTarget(HttpUriRequest)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultProxyAuthenticationHandler.getChallenges(HttpResponse,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.WaitingThreadAborter.setWaitingThread(WaitingThread)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.methods.HttpRequestBase.setURI(URI)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.BasicPooledConnAdapter.getPoolEntry()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.RouteSpecificPool.getRoute()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.WaitingThread.interrupt()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.RouteSpecificPool.getMaxEntries()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.ClientParamsStack(HttpParams,HttpParams,HttpParams,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.establishRoute(HttpRoute,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.AbstractPoolEntry(ClientConnectionOperator,HttpRoute)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.scheme.PlainSocketFactory.getSocketFactory()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnection.update(Socket,HttpHost,boolean,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.isResponseAvailable(int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.DefaultProxyAuthenticationHandler()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createProxyAuthenticationHandler()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector(Log,HttpRequestExecutor,ClientConnectionManager,ConnectionReuseStrategy,ConnectionKeepAliveStrategy,HttpRoutePlanner,HttpProcessor,HttpRequestRetryHandler,RedirectStrategy,AuthenticationHandler,AuthenticationHandler,UserTokenHandler,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.isReleased()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager.assertStillUp()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getRoutePlanner()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.ssl.SSLSocketFactory.getSocketFactory()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.RouteSpecificPool.queueThread(WaitingThread)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractAuthenticationHandler.selectScheme(Map,HttpResponse,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.routing.RouteTracker(HttpRoute)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager$PoolEntry.close()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.auth.AuthSchemeRegistry()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.auth.AuthState.setAuthScheme(AuthScheme)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultHttpRequestRetryHandler.retryRequest(IOException,int,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultTargetAuthenticationHandler.getChallenges(HttpResponse,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.LoggingSessionOutputBuffer.flush()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager$1(HttpRoute,Object)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.scheme.SchemeRegistry.get(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.auth.NegotiateSchemeFactory(SpnegoTokenGenerator,boolean)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.utils.URIUtils.normalizePath(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.params.ConnManagerParams$1()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createClientConnectionManager()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultHttpClient.createHttpParams()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.BasicRouteDirector.nextStep(RouteInfo,RouteInfo)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.RouteTracker.tunnelProxy(HttpHost,boolean)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.markReusable()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.processChallenges(Map,AuthState,AuthenticationHandler,HttpResponse,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.protocol.RequestAuthCache()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.RouteSpecificPool.getCapacity()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnection.createSessionOutputBuffer(Socket,int,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.execute(HttpHost,HttpRequest,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.sendRequestEntity(HttpEntityEnclosingRequest)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.BasicManagedEntity.writeTo(OutputStream)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager.getSchemeRegistry()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.EntityEnclosingRequestWrapper.getEntity()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.execute(HttpUriRequest)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.RouteSpecificPool.allocEntry(Object)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.Wire.output(byte[],int,int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.AbstractAuthenticationHandler()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.ssl.SSLSocketFactory(SSLContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnection.isSecure()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager$1(PoolEntryRequest,HttpRoute)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.protocol.RequestTargetAuthentication()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.HttpRoute.getHopCount()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnectionOperator(SchemeRegistry)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.scheme.SchemeRegistry.getScheme(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.scheme.Scheme(String,int,SchemeSocketFactory)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.Wire.enabled()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.utils.URIUtils.createURI(String,String,int,String,String,String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.Wire.input(byte[],int,int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPooledConnAdapter.layerProtocol(HttpContext,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.ClientParamsStack.getParameter(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractAuthenticationHandler.parseChallenges(Header[])"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.routing.HttpRoute(HttpHost)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.RouteSpecificPool.deleteEntry(BasicPoolEntry)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.cookie.IgnoreSpecFactory()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.execute(HttpUriRequest,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.routing.BasicRouteDirector()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.HttpRoute.toChain(HttpHost[])"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.params.ConnRouteParams.getForcedRoute(HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.ssl.TrustManagerDecorator(X509TrustManager,TrustStrategy)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.params.HttpClientParams.isAuthenticating(HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager(SchemeRegistry)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.methods.HttpGet.getMethod()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "INIT",
+                "qname": "org.apache.http.conn.params.ConnRouteParams.<clinit>"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.RouteTracker.connectTarget(boolean)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.BasicRouteDirector.proxiedStep(RouteInfo,RouteInfo)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.IdleConnectionHandler()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getAuthSchemes()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createConnectionKeepAliveStrategy()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.TunnelRefusedException(String,HttpResponse)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.freeEntry(BasicPoolEntry,boolean,long,TimeUnit)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager.releaseConnection(ManagedClientConnection,long,TimeUnit)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultProxyAuthenticationHandler.isAuthenticationRequested(HttpResponse,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultTargetAuthenticationHandler.isAuthenticationRequested(HttpResponse,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.RoutedRequest.getRoute()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getHttpRequestRetryHandler()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.updateAuthState(AuthState,HttpHost,CredentialsProvider)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "INIT",
+                "qname": "org.apache.http.conn.routing.RouteInfo$TunnelType.<clinit>"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.DefaultRedirectStrategy()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.EofSensorInputStream.checkEOF(int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.scheme.Scheme(String,SocketFactory,int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnectionOperator.updateSecureConnection(OperatedClientConnection,HttpHost,HttpContext,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.DefaultTargetAuthenticationHandler()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.RouteSpecificPool.createdEntry(BasicPoolEntry)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.HttpRoute.isLayered()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager.getConnection(HttpRoute,Object)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.RouteTracker.tunnelTarget(boolean)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.protocol.RequestAddCookies()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.protocol.RequestClientConnControl()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.LoggingSessionOutputBuffer(SessionOutputBuffer,Wire,String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.methods.HttpRequestBase.setConnectionRequest(ClientConnectionRequest)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.RedirectLocations.contains(URI)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.RoutedRequest(RequestWrapper,HttpRoute)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "INIT",
+                "qname": "org.apache.http.conn.ssl.SSLSocketFactory.<clinit>"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.RouteTracker.isLayered()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.methods.HttpRequestBase()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager(SchemeRegistry)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager.closeExpiredConnections()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.params.ConnPerRouteBean(int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.BasicRouteDirector.firstStep(RouteInfo)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.methods.HttpRequestBase.getProtocolVersion()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.unmarkReusable()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.HttpRoute.equals(Object)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.auth.AuthState.isValid()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.createTunnelToProxy(HttpRoute,int,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnection()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRedirectStrategy.createLocationURI(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPoolEntry.tunnelProxy(HttpHost,boolean,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "INIT",
+                "qname": "org.apache.http.conn.params.ConnManagerParams.<clinit>"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.methods.HttpRequestBase.setReleaseTrigger(ConnectionReleaseTrigger)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getProxyAuthenticationHandler()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createClientRequestDirector(HttpRequestExecutor,ClientConnectionManager,ConnectionReuseStrategy,ConnectionKeepAliveStrategy,HttpRoutePlanner,HttpProcessor,HttpRequestRetryHandler,RedirectStrategy,AuthenticationHandler,AuthenticationHandler,UserTokenHandler,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.params.ConnManagerParams.getTimeout(HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.params.ConnRouteParams.getLocalAddress(HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.utils.URIUtils.resolve(URI,URI)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.Wire.wire(String,InputStream)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.BasicCredentialsProvider()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.tsccm.WaitingThreadAborter()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnection.getSocket()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.getEntryBlocking(HttpRoute,Object,long,TimeUnit,WaitingThreadAborter)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.BasicManagedEntity.ensureConsumed()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.invalidateAuthIfSuccessful(AuthState)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.EofSensorInputStream(InputStream,EofSensorWatcher)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.LoggingSessionInputBuffer.read(byte[],int,int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.HttpHostConnectException(HttpHost,ConnectException)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnection.shutdown()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.createWaitingThreadQueue()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.createTunnelToTarget(HttpRoute,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.NonRepeatableRequestException(String,Throwable)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.RequestWrapper.getProtocolVersion()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.newWaitingThread(Condition,RouteSpecificPool)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.DefaultHttpRequestRetryHandler(int,boolean)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPooledConnAdapter.setState(Object)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.determineRoute(HttpHost,HttpRequest,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.auth.DigestSchemeFactory()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.SingleClientConnManager.requestConnection(HttpRoute,Object)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.scheme.LayeredSchemeSocketFactoryAdaptor(LayeredSocketFactory)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractClientConnAdapter.assertValid(OperatedClientConnection)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.auth.AuthState.getAuthScheme()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.RequestWrapper.getMethod()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.SchemeRegistryFactory.createDefault()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createRequestExecutor()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.EntityEnclosingRequestWrapper.access$002(EntityEnclosingRequestWrapper,boolean)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.BasicManagedEntity.eofDetected(InputStream)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.ClientProtocolException(Throwable)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.BasicManagedEntity.getContent()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.LoggingSessionInputBuffer(SessionInputBuffer,Wire,String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.EofSensorInputStream.checkAbort()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPooledConnAdapter.detach()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.routing.HttpRoute(HttpHost,InetAddress,HttpHost,boolean)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnectionOperator.resolveHostname(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.CircularRedirectException(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.client.DefaultUserTokenHandler()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.cookie.CookieSpecRegistry.register(String,CookieSpecFactory)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.RouteTracker.getTargetHost()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.AbstractPoolEntry.layerProtocol(HttpContext,HttpParams)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.params.ConnPerRouteBean.setDefaultMaxPerRoute(int)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager.access$000(ThreadSafeClientConnManager)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.createAuthSchemeRegistry()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.cookie.NetscapeDraftSpecFactory()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getCredentialsProvider()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getRedirectStrategy()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager.createConnectionOperator(SchemeRegistry)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.utils.URIUtils.rewriteURI(URI,HttpHost)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnectionOperator.createConnection()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractHttpClient.getUserTokenHandler()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.RouteSpecificPool.dropEntry()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager.releaseConnection(ManagedClientConnection,long,TimeUnit)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ConnPoolByRoute.shutdown()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.BasicPoolEntry.shutdownEntry()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.AbstractAuthenticationHandler.getAuthPreferences(HttpResponse,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.utils.URIUtils.rewriteURI(URI,HttpHost,boolean)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.DefaultRequestDirector.createConnectRequest(HttpRoute,HttpContext)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.RouteSpecificPool.nextThread()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager.createConnectionPool(long,TimeUnit)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager(SchemeRegistry,long,TimeUnit)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.RouteTracker.isConnected()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.HttpRoute.isSecure()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.utils.URIUtils.resolveReferenceStartingWithQueryString(URI,URI)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.conn.routing.HttpRoute.getTargetHost()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.client.protocol.ResponseProcessCookies()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.client.methods.HttpRequestBase.getRequestLine()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.ssl.SSLSocketFactory(SSLContext,X509HostnameVerifier)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.conn.params.ConnPerRouteBean()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "CONS",
+                "qname": "org.apache.http.impl.conn.AbstractPooledConnAdapter(ClientConnectionManager,AbstractPoolEntry)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager.getSchemeRegistry()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.client.TunnelRefusedException.getResponse()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnection.close()"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.DefaultClientConnection.opening(Socket,HttpHost)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "METH",
+                "qname": "org.apache.http.impl.conn.LoggingSessionOutputBuffer.writeLine(String)"
+            },
+            {
+                "lang": "JAVA",
+                "type": "INIT",
+                "qname": "org.apache.http.impl.client.AbstractAuthenticationHandler.<clinit>"
+            }
+        ],
+        "touchPoints": [
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.http.conn.scheme.Scheme(String,SocketFactory,int)"
+                },
+                "direction": "A2L",
+                "source": "X2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "org.apache.http.conn.scheme.SchemeRegistry.register(Scheme)"
+                },
+                "direction": "A2L",
+                "source": "X2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "INIT",
+                    "qname": "org.apache.http.conn.ssl.SSLSocketFactory.<clinit>"
+                },
+                "direction": "A2L",
+                "source": "A2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "org.apache.http.impl.client.AbstractHttpClient.execute(HttpUriRequest)"
+                },
+                "direction": "A2L",
+                "source": "A2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.http.conn.scheme.PlainSocketFactory()"
+                },
+                "direction": "A2L",
+                "source": "X2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "org.apache.http.conn.scheme.SchemeRegistry.register(Scheme)"
+                },
+                "direction": "A2L",
+                "source": "A2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.http.client.methods.HttpGet(String)"
+                },
+                "direction": "A2L",
+                "source": "X2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.http.conn.scheme.Scheme(String,SocketFactory,int)"
+                },
+                "direction": "A2L",
+                "source": "A2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.http.conn.scheme.SchemeRegistry()"
+                },
+                "direction": "A2L",
+                "source": "X2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.http.impl.client.DefaultHttpClient(ClientConnectionManager)"
+                },
+                "direction": "A2L",
+                "source": "A2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.http.conn.scheme.SchemeRegistry()"
+                },
+                "direction": "A2L",
+                "source": "A2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.http.conn.ssl.SSLSocketFactory(SSLContext,X509HostnameVerifier)"
+                },
+                "direction": "A2L",
+                "source": "X2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager(SchemeRegistry)"
+                },
+                "direction": "A2L",
+                "source": "X2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.http.conn.ssl.SSLSocketFactory(SSLContext,X509HostnameVerifier)"
+                },
+                "direction": "A2L",
+                "source": "A2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager(SchemeRegistry)"
+                },
+                "direction": "A2L",
+                "source": "A2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.http.conn.scheme.PlainSocketFactory()"
+                },
+                "direction": "A2L",
+                "source": "A2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "org.apache.http.impl.client.AbstractHttpClient.execute(HttpUriRequest)"
+                },
+                "direction": "A2L",
+                "source": "X2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "INIT",
+                    "qname": "org.apache.http.conn.ssl.SSLSocketFactory.<clinit>"
+                },
+                "direction": "A2L",
+                "source": "X2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.http.client.methods.HttpGet(String)"
+                },
+                "direction": "A2L",
+                "source": "A2C"
+            },
+            {
+                "from": {
+                    "lang": "JAVA",
+                    "type": "METH",
+                    "qname": "com.acme.foo.ArchivePrinter.httpRequest2(String)"
+                },
+                "to": {
+                    "lang": "JAVA",
+                    "type": "CONS",
+                    "qname": "org.apache.http.impl.client.DefaultHttpClient(ClientConnectionManager)"
+                },
+                "direction": "A2L",
+                "source": "X2C"
+            }
+        ],
+        "reachableConstructTypeCounters": {
+            "FUNC": 0,
+            "CLASS": 0,
+            "countExecutable": 438,
+            "INTF": 0,
+            "ENUM": 0,
+            "INIT": 8,
+            "CONS": 116,
+            "METH": 314,
+            "MODU": 0,
+            "countTotal": 438,
+            "PACK": 0
+        },
+        "tracedConstructTypeCounters": null
+    }
+]

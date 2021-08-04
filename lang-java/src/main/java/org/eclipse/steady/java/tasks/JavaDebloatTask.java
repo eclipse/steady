@@ -57,9 +57,9 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
   private static final String[] EXT_FILTER = new String[] {"jar", "war", "class", "java", "aar"};
 
   private Set<ConstructId> traces = null;
-  
+
   private Set<Dependency> dependencies = null;
-  
+
   private static final List<GoalClient> pluginGoalClients =
       Arrays.asList(GoalClient.MAVEN_PLUGIN, GoalClient.GRADLE_PLUGIN);
 
@@ -70,184 +70,213 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
         Arrays.asList(new ProgrammingLanguage[] {ProgrammingLanguage.JAVA}));
   }
 
-
   /** {@inheritDoc} */
   @Override
   public void execute() throws GoalExecutionException {
 
-	final Clazzpath cp = new Clazzpath();
-	
-	// list of classpathunits to be used as entrypoints
-	List<ClazzpathUnit> app = new ArrayList<ClazzpathUnit>();
-	// list of classes to be used as entrypoints (from traces and reachable constructs)
-	List<Clazz> used_classes = new ArrayList<Clazz>();
-	// classpathunits for the application dependencies (as identified by maven)
-	Set<ClazzpathUnit> maven_deps = new HashSet<ClazzpathUnit>();
-	// classpathunits considered used according to traces, reachable constructs and jdependency analysis
-	Set<ClazzpathUnit> deps_used = new HashSet<ClazzpathUnit>();
-	
-	try {
-		//1) Add application paths (to be then used as entrypoints) 
-		if (this.hasSearchPath()) {
-		  for (Path p : this.getSearchPath()) {
-		    log.info(
-		        "Add app path ["
-		            + p
-		            + "] to classpath");
-		    app.add(cp.addClazzpathUnit(p));
-	      }
-		}
-		//2) Add dependencies to jdependency classpath object and populate set of dependencies
-	    if (this.getKnownDependencies() != null) {
-	      for (Path p : this.getKnownDependencies().keySet()) {
-	    	  log.info(
-	  		        "Add dep path ["
-	  		            + p
-	  		            + "] to classpath");
-	    	  maven_deps.add(cp.addClazzpathUnit(p));
-	    	  
-	      }
-	    }
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-	
-	log.info("[" + app.size() +"] ClasspathUnit for the application to be used as entrypoints ");
-	
-	// Retrieve traces to be used as Clazz entrypoints (1 class may be part of multiple classpathUnits) 
-	for (ConstructId t : traces) {
-		if(t.getType().equals(ConstructType.CLAS) || t.getType().equals(ConstructType.INTF) || t.getType().equals(ConstructType.ENUM)) {
-			Clazz c = cp.getClazz(t.getQname());
-			if(c==null) {
-				log.warn("Could not obtain jdependency clazz for traced class [" + t.getQname() + "]");
-			}
-			else {
-				used_classes.add(c);
-				Set<ClazzpathUnit> units = c.getClazzpathUnits();
-				if(units.size()>1) {
-					log.warn("Added as entrypoints multiple ClasspathUnits from single class [" + c + "] : [" + StringUtil.join(units, ",") + "]");
-				}
-				deps_used.addAll(units);
-			}
-		}
-	}
-	log.info("Using [" + used_classes.size() +"] jdependency clazzes as entrypoints from traces");
-	
-	// Loop reachable constructs (METH, CONS, INIT), find their definition
-	// context (CLASS, ENUM, INTF) and use those as jdependency clazz
-	// entrypoints (1 class may be part of multiple classpathUnits).
-	for (Dependency d : dependencies) {
-		log.info("Processing [" + d.getReachableConstructIds().size() + "] reachable constructs of " + d.getLib().getLibraryId());
-		if(d.getReachableConstructIds()!=null) {	
-			for (ConstructId c : d.getReachableConstructIds()) {
-				JavaId core_construct = (JavaId)JavaId.toCoreType(c);
-				JavaId def_context = (JavaId)core_construct.getDefinitionContext();
-				Clazz cl = cp.getClazz(def_context.getQualifiedName());
-				if(cl==null) {
-					log.warn("Could not obtain jdependency clazz for [" + def_context + "]");
-				}
-				else {
-					used_classes.add(cl);
-					Set<ClazzpathUnit> units = cl.getClazzpathUnits();
-					if(units.size()>1) {
-						log.warn("Added as entrypoints multiple ClasspathUnits from single class [" + cl + "] : [" + StringUtil.join(units, ",") + "]");
-					}
-					deps_used.addAll(units);
-				}
-			}
-		}
-	}
+    final Clazzpath cp = new Clazzpath();
 
-	log.info("Using [" + used_classes.size() + "] jdependency clazzes as entrypoints from traces and reachable constructs");
-	
-	log.info("[" + cp.getUnits().length +"] classpathUnits in jdependency classpath object");
-	
-	// also collect "missing" classes to be able to check their relation with jre objects considered used
-	// to be removed from final version
-	SortedSet<Clazz> missing = new TreeSet<Clazz>();
-	for (Clazz c : cp.getMissingClazzes()) {
-		missing.add(c);
-	}
-	
-	// Classes considered used 
-	final SortedSet<Clazz> needed = new TreeSet<Clazz>();
-	final Set<Clazz> classes = cp.getClazzes();
-	//loop over classpathunits (representing the application) marked as entrypoints to find needed classes
-	for(ClazzpathUnit u: app) {
-		classes.removeAll(u.getClazzes());
-		//TODO: check if getDependencies is also needed or getTransitiveDependencies sufficies
-		classes.removeAll(u.getDependencies());  
-		classes.removeAll(u.getTransitiveDependencies());
-		needed.addAll(u.getClazzes());
-		needed.addAll(u.getDependencies());
-		needed.addAll(u.getTransitiveDependencies());
+    // list of classpathunits to be used as entrypoints
+    List<ClazzpathUnit> app = new ArrayList<ClazzpathUnit>();
+    // list of classes to be used as entrypoints (from traces and reachable constructs)
+    List<Clazz> used_classes = new ArrayList<Clazz>();
+    // classpathunits for the application dependencies (as identified by maven)
+    Set<ClazzpathUnit> maven_deps = new HashSet<ClazzpathUnit>();
+    // classpathunits considered used according to traces, reachable constructs and jdependency
+    // analysis
+    Set<ClazzpathUnit> deps_used = new HashSet<ClazzpathUnit>();
 
-		//loop over dependent classes to add their units among the used dependencies
-		for (Clazz c : u.getDependencies()) {
-			deps_used.addAll(c.getClazzpathUnits());
-		}
-		for (Clazz c : u.getTransitiveDependencies()) {
-			deps_used.addAll(c.getClazzpathUnits());
-		}
-	}
-	
-	
-	// loop over class (representing traces and reachable constructs) marked as entrypoints to find needed classes
-	for(Clazz c: used_classes) {
-		classes.remove(c);
-		classes.removeAll(c.getDependencies());
-		classes.removeAll(c.getTransitiveDependencies());
-		needed.add(c);
-		needed.addAll(c.getDependencies());
-		needed.addAll(c.getTransitiveDependencies());
-		
-		//loop over dependent classes to add their units among the used dependencies
-		for (Clazz cc : c.getDependencies()) {
-			deps_used.addAll(cc.getClazzpathUnits());
-		}
-		for (Clazz cc : c.getTransitiveDependencies()) {
-			deps_used.addAll(cc.getClazzpathUnits());
-		}
-	}
-	final SortedSet<Clazz> removable = new TreeSet<Clazz>(classes); 
+    try {
+      // 1) Add application paths (to be then used as entrypoints)
+      if (this.hasSearchPath()) {
+        for (Path p : this.getSearchPath()) {
+          log.info("Add app path [" + p + "] to classpath");
+          app.add(cp.addClazzpathUnit(p));
+        }
+      }
+      // 2) Add dependencies to jdependency classpath object and populate set of dependencies
+      if (this.getKnownDependencies() != null) {
+        for (Path p : this.getKnownDependencies().keySet()) {
+          log.info("Add dep path [" + p + "] to classpath");
+          maven_deps.add(cp.addClazzpathUnit(p));
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
-	log.info("Needed classes: ["+ needed.size()+"]");
-	log.info("Removable classes: ["+ removable.size()+"]");
-	log.info("Used dependencies: ["+ deps_used.size()+"] out of [" + maven_deps.size() + "]");
+    log.info("[" + app.size() + "] ClasspathUnit for the application to be used as entrypoints ");
 
-	maven_deps.removeAll(deps_used);
-	
-	// Write names of needed/removable classes and dependencies to disk
-	try {
-		File f = Paths.get(this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(), "removable-classes.txt").toFile();
-		FileUtil.writeToFile(f, StringUtil.join(removable, System.lineSeparator()));
-		log.info("List of removable classes written to [" + f.toPath() + "]");
+    // Retrieve traces to be used as Clazz entrypoints (1 class may be part of multiple
+    // classpathUnits)
+    for (ConstructId t : traces) {
+      if (t.getType().equals(ConstructType.CLAS)
+          || t.getType().equals(ConstructType.INTF)
+          || t.getType().equals(ConstructType.ENUM)) {
+        Clazz c = cp.getClazz(t.getQname());
+        if (c == null) {
+          log.warn("Could not obtain jdependency clazz for traced class [" + t.getQname() + "]");
+        } else {
+          used_classes.add(c);
+          Set<ClazzpathUnit> units = c.getClazzpathUnits();
+          if (units.size() > 1) {
+            log.warn(
+                "Added as entrypoints multiple ClasspathUnits from single class ["
+                    + c
+                    + "] : ["
+                    + StringUtil.join(units, ",")
+                    + "]");
+          }
+          deps_used.addAll(units);
+        }
+      }
+    }
+    log.info("Using [" + used_classes.size() + "] jdependency clazzes as entrypoints from traces");
 
-		f = Paths.get(this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(), "needed-classes.txt").toFile();
-		FileUtil.writeToFile(f, StringUtil.join(needed, System.lineSeparator()));
-		log.info("List of needed classes written to [" + f.toPath() + "]");
+    // Loop reachable constructs (METH, CONS, INIT), find their definition
+    // context (CLASS, ENUM, INTF) and use those as jdependency clazz
+    // entrypoints (1 class may be part of multiple classpathUnits).
+    for (Dependency d : dependencies) {
+      log.info(
+          "Processing ["
+              + d.getReachableConstructIds().size()
+              + "] reachable constructs of "
+              + d.getLib().getLibraryId());
+      if (d.getReachableConstructIds() != null) {
+        for (ConstructId c : d.getReachableConstructIds()) {
+          JavaId core_construct = (JavaId) JavaId.toCoreType(c);
+          JavaId def_context = (JavaId) core_construct.getDefinitionContext();
+          Clazz cl = cp.getClazz(def_context.getQualifiedName());
+          if (cl == null) {
+            log.warn("Could not obtain jdependency clazz for [" + def_context + "]");
+          } else {
+            used_classes.add(cl);
+            Set<ClazzpathUnit> units = cl.getClazzpathUnits();
+            if (units.size() > 1) {
+              log.warn(
+                  "Added as entrypoints multiple ClasspathUnits from single class ["
+                      + cl
+                      + "] : ["
+                      + StringUtil.join(units, ",")
+                      + "]");
+            }
+            deps_used.addAll(units);
+          }
+        }
+      }
+    }
 
-		f = Paths.get(this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(), "missing-classes.txt").toFile();
-		FileUtil.writeToFile(f, StringUtil.join(missing, System.lineSeparator()));
-		log.info("List of missing classes written to [" + f.toPath() + "]");
+    log.info(
+        "Using ["
+            + used_classes.size()
+            + "] jdependency clazzes as entrypoints from traces and reachable constructs");
 
-		f = Paths.get(this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(), "removable-deps.txt").toFile();
-		FileUtil.writeToFile(f, StringUtil.join(maven_deps, System.lineSeparator()));
-		log.info("List of removable dependencies written to [" + f.toPath() + "]");
-	} catch (IOException e){
-		e.printStackTrace();
-	} 
+    log.info("[" + cp.getUnits().length + "] classpathUnits in jdependency classpath object");
+
+    // also collect "missing" classes to be able to check their relation with jre objects considered
+    // used
+    // to be removed from final version
+    SortedSet<Clazz> missing = new TreeSet<Clazz>();
+    for (Clazz c : cp.getMissingClazzes()) {
+      missing.add(c);
+    }
+
+    // Classes considered used
+    final SortedSet<Clazz> needed = new TreeSet<Clazz>();
+    final Set<Clazz> classes = cp.getClazzes();
+    // loop over classpathunits (representing the application) marked as entrypoints to find needed
+    // classes
+    for (ClazzpathUnit u : app) {
+      classes.removeAll(u.getClazzes());
+      // TODO: check if getDependencies is also needed or getTransitiveDependencies sufficies
+      classes.removeAll(u.getDependencies());
+      classes.removeAll(u.getTransitiveDependencies());
+      needed.addAll(u.getClazzes());
+      needed.addAll(u.getDependencies());
+      needed.addAll(u.getTransitiveDependencies());
+
+      // loop over dependent classes to add their units among the used dependencies
+      for (Clazz c : u.getDependencies()) {
+        deps_used.addAll(c.getClazzpathUnits());
+      }
+      for (Clazz c : u.getTransitiveDependencies()) {
+        deps_used.addAll(c.getClazzpathUnits());
+      }
+    }
+
+    // loop over class (representing traces and reachable constructs) marked as entrypoints to find
+    // needed classes
+    for (Clazz c : used_classes) {
+      classes.remove(c);
+      classes.removeAll(c.getDependencies());
+      classes.removeAll(c.getTransitiveDependencies());
+      needed.add(c);
+      needed.addAll(c.getDependencies());
+      needed.addAll(c.getTransitiveDependencies());
+
+      // loop over dependent classes to add their units among the used dependencies
+      for (Clazz cc : c.getDependencies()) {
+        deps_used.addAll(cc.getClazzpathUnits());
+      }
+      for (Clazz cc : c.getTransitiveDependencies()) {
+        deps_used.addAll(cc.getClazzpathUnits());
+      }
+    }
+    final SortedSet<Clazz> removable = new TreeSet<Clazz>(classes);
+
+    log.info("Needed classes: [" + needed.size() + "]");
+    log.info("Removable classes: [" + removable.size() + "]");
+    log.info("Used dependencies: [" + deps_used.size() + "] out of [" + maven_deps.size() + "]");
+
+    maven_deps.removeAll(deps_used);
+
+    // Write names of needed/removable classes and dependencies to disk
+    try {
+      File f =
+          Paths.get(
+                  this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(),
+                  "removable-classes.txt")
+              .toFile();
+      FileUtil.writeToFile(f, StringUtil.join(removable, System.lineSeparator()));
+      log.info("List of removable classes written to [" + f.toPath() + "]");
+
+      f =
+          Paths.get(
+                  this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(),
+                  "needed-classes.txt")
+              .toFile();
+      FileUtil.writeToFile(f, StringUtil.join(needed, System.lineSeparator()));
+      log.info("List of needed classes written to [" + f.toPath() + "]");
+
+      f =
+          Paths.get(
+                  this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(),
+                  "missing-classes.txt")
+              .toFile();
+      FileUtil.writeToFile(f, StringUtil.join(missing, System.lineSeparator()));
+      log.info("List of missing classes written to [" + f.toPath() + "]");
+
+      f =
+          Paths.get(
+                  this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(),
+                  "removable-deps.txt")
+              .toFile();
+      FileUtil.writeToFile(f, StringUtil.join(maven_deps, System.lineSeparator()));
+      log.info("List of removable dependencies written to [" + f.toPath() + "]");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   /** {@inheritDoc} */
-  @Override 
-  public void setTraces(Set<ConstructId> _traces){
-	  this.traces = _traces;
+  @Override
+  public void setTraces(Set<ConstructId> _traces) {
+    this.traces = _traces;
   }
 
   /** {@inheritDoc} */
-  @Override 
-  public void setReachableConstructIds(Set<Dependency> _deps){
-	  this.dependencies = _deps;
+  @Override
+  public void setReachableConstructIds(Set<Dependency> _deps) {
+    this.dependencies = _deps;
   }
 }
