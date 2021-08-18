@@ -19,14 +19,14 @@ a Java application that is **not built with tools such as Maven or Gradle**.
 
 ## Download
 
-Please download the latest ZIP archive `vulas-cli-@@PROJECT_VERSION@@.zip` from @@CLI_ZIP_LOCATION@@ and extract it into a newly created folder.
+Please download the latest ZIP archive `steady-cli-@@PROJECT_VERSION@@.zip` from @@CLI_ZIP_LOCATION@@ and extract it into a newly created folder.
 This folder will contain the following items:
 
 **`./app/`**
 
 : Put the application code (java, class or JAR files) and all application dependencies (JAR files) into this folder. It will be searched recursively, thus, it is possible to just copy the entire installation directory of an application into the folder.
 
-**`./vulas-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar`**
+**`./steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar`**
 
 : An executable JAR, which is the actual command-line version of the @@PROJECT_NAME@@ client. This is what you will use later to execute @@PROJECT_NAME@@ scans.
 
@@ -75,7 +75,7 @@ See [here](../../manuals/analysis/) for a description of all analysis goals.
 
 ### app
 
-1. `java -jar vulas-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal app`
+1. `java -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal app`
 
 2. Connect to the apps Web frontend, then select your workspace and application. The table in tab [Dependencies](../../manuals/frontend/#dependencies) is populated. Dependencies with known vulnerabilities are shown in tab [Vulnerabilities](../../manuals/frontend/#vulnerabilities).
 
@@ -84,13 +84,13 @@ See [here](../../manuals/analysis/) for a description of all analysis goals.
 
 ### report
 
-1. `java -jar vulas-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal report`
+1. `java -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal report`
 
 2. Check the console to see where the HTML, JSON and XML reports have been written to.
 
 ### clean
 
-1. `java -jar vulas-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal clean`
+1. `java -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal clean`
 
 2. All application-specific data in the @@PROJECT_NAME@@ backend are deleted.
 

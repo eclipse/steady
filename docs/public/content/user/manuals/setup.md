@@ -165,13 +165,13 @@ The Gradle plugin only works with later releases of Gradle. How to upgrade is de
 
 ### Command-line interface
 
-1. Create a new folder, download the latest ZIP archive `vulas-cli-@@PROJECT_VERSION@@.zip` from @@CLI_ZIP_LOCATION@@ and extract it into the newly created folder. This folder will then contain the following items:
+1. Create a new folder, download the latest ZIP archive `steady-cli-@@PROJECT_VERSION@@.zip` from @@CLI_ZIP_LOCATION@@ and extract it into the newly created folder. This folder will then contain the following items:
 
 | Folder/File | Description |
 |---|---|
 | `./app/` | Put the application code (java, class or JAR files) and all application dependencies (JAR files) into this folder. It will be searched recursively, thus, it is possible to just copy the entire installation directory of an application into the folder. **Important**: (1) Single java and class files are always considered as application code, no matter the package prefix configured with ```vulas.core.app.appPrefixes```. (2) JARs are always considered as application dependency unless they only contain methods starting with the configured package prefix. (3) Nested JARs must be extracted, WARs can stay as-is. |
-| `./vulas-cli-<version>-jar-with-dependencies.jar` | An executable JAR used to run the different @@PROJECT_NAME@@ goals. |
-| `./instr/lang-java-<version>-jar-with-dependencies.jar` | Used to instrument Java runtimes. |
+| `./steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar` | An executable JAR used to run the different @@PROJECT_NAME@@ goals. |
+| `./instr/lang-java-@@PROJECT_VERSION@@-jar-with-dependencies.jar` | Used to instrument Java runtimes. |
 | `./vulas-custom.properties.sample` | Configuration settings for @@PROJECT_NAME@@. **Important**: (1) Rename the file to `vulas-custom.properties`. (2) Specify `<GROUP>`, `<ARTIFACT>` and `<VERSION>` of the application to be analyzed. (3) Specify how @@PROJECT_NAME@@ identifies your application code (either using `vulas.core.app.appPrefixes` or `vulas.core.app.appJarNames`, see below for more information). (4) Specify the workspace token `vulas.core.space.token`. |
 
 **Identification of application code**: You can use `vulas.core.app.appPrefixes` or `vulas.core.app.appJarNames` to tell @@PROJECT_NAME@@ how to identify the code of your application, which is important for the call graph construction during the `a2c` reachability analysis. This analysis is not complete if not all the relevant application methods are used as entry points for the call graph construction. As such, the potential execution of vulnerable open-source methods may be missed. A good indicator to see whether specification is correct is to see whether there are items in the Dependencies tab that are created by you (or your organization), or whether there are open-source packages mentioned in the table on the Statistics tab.

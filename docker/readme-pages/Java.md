@@ -88,7 +88,7 @@ mvn -Dvulas compile vulas:app
 #### CLI
 
 ```sh
-java -jar vulas-cli-<version>-jar-with-dependencies.jar -goal app
+java -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal app
 ```
 
 **Result:** In the Steady frontend, the table in tab "Dependencies" is populated. In case any of the dependencies has vulnerabilities, they are shown in tab "Vulnerabilities". The column "Inclusion of vulnerable code" indicates whether the version in use is known to be vulnerable or not (see tooltip for more information).
@@ -117,7 +117,7 @@ mvn -Dvulas compile vulas:a2c
 #### CLI
 
 ```sh
-java -jar vulas-cli-<version>-jar-with-dependencies.jar -goal a2c
+java -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal a2c
 ```
 
 **Result:** In the Steady frontend, tab "Vulnerabilties", the column "Static Analysis" is populated for all libraries subject to known vulnerabilities. By selecting single row of this table and the one of the detailed page, one can get more information up until the paths of potential executions (if any).
@@ -254,7 +254,7 @@ mvn -Dvulas compile vulas:t2c
 java -Dvulas.core.appContext.group=<GROUP> -Dvulas.core.appContext.artifact=<ARTIFACT> -Dvulas.core.appContext.version=<VERSION>
      -Dvulas.core.app.sourceDir=<APP-FOLDER> -Dvulas.core.app.depDirs=<DEP-FOLDER>
      -Dvulas.reach.timeout=15 -Dvulas.reach.preprocessDependencies=true
-     -jar vulas-cli-jar-with-dependencies.jar -goal t2c
+     -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal t2c
 ```
 
 **Result:** In the Steady frontend, tab "Vulnerabilties", the column "Static Analysis" is populated for all libraries subject to known vulnerabilities. By selecting single row of this table and the one of the detailed page, one can get more information up until the paths of potential executions (if any).
@@ -337,7 +337,7 @@ mvn -Dvulas vulas:report
 
 ```sh
 java -Dvulas.core.appContext.group=<GROUP> -Dvulas.core.appContext.artifact=<ARTIFACT> -Dvulas.core.appContext.version=<VERSION>
-     -jar vulas-cli-jar-with-dependencies.jar -goal report
+     -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal report
 ```
 
 **Result:** A summary report is written to disk (in HTML, XML and JSON format). For Maven, the target directory of the different files is "target/vulas/report", for Gradle it is "build/vulas/report". For CLI, the exact location is printed to the console.

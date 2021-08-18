@@ -67,7 +67,7 @@ By default, the Maven plugin searches for application source and compiled code i
 #### Run as follows
 
 ```sh tab="CLI"
-java -jar vulas-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal app
+java -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal app
 ```
 
 ```sh tab="Maven"
@@ -133,7 +133,7 @@ In the @@PROJECT_NAME@@ frontend, tab "Vulnerabilities", the column "Static Anal
 #### Run as follows
 
 ```sh tab="CLI"
-java -Xmx8g -Xms2g -jar vulas-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal a2c
+java -Xmx8g -Xms2g -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal a2c
 ```
 
 ```sh tab="Maven"
@@ -468,7 +468,7 @@ In contrast to the goal `a2c`, the callgraph is built starting from all methods 
 #### Run as follows
 
 ```sh tab="CLI"
-java -jar vulas-cli-jar-with-dependencies.jar -goal t2c
+java -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal t2c
 ```
 
 ```sh tab="Maven"
@@ -535,7 +535,7 @@ In case of equalities to either vulnerable/fixed code, affected libraries are up
 `vulas.shared.cia.serviceUrl` must be set.
 
 ```sh tab="CLI"
-java -jar vulas-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal checkcode 
+java -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal checkcode 
 ```
 
 ```sh tab="Maven"
@@ -564,7 +564,7 @@ Uploads analysis data in folder `vulas.core.uploadDir` to the backend. Such data
 
 ```sh tab="CLI"
 java -Dvulas.core.appContext.group=<GROUP> -Dvulas.core.appContext.artifact=<ARTIFACT> -Dvulas.core.appContext.version=@@PROJECT_VERSION@@
-     -jar vulas-cli-jar-with-dependencies.jar -goal upload
+     -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal upload
 ```
 
 ```sh tab="Maven"
@@ -646,7 +646,7 @@ Identified vulnerabilities including any information gathered during static and 
 
 ```sh tab="CLI"
 java -Dvulas.core.appContext.group=<GROUP> -Dvulas.core.appContext.artifact=<ARTIFACT> -Dvulas.core.appContext.version=<VERSION>
-     -jar vulas-cli-jar-with-dependencies.jar -goal report
+     -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal report
 ```
 
 ```sh tab="Maven"
@@ -677,7 +677,7 @@ Deletes application-specific data in the backend, e.g., traces collected during 
 Run as follows to clean the **current version**, e.g., the version specified in `pom.xml` (Maven) or `vulas-custom.properties` (CLI):
 
 ```sh tab="CLI"
-java -jar vulas-cli-jar-with-dependencies.jar -goal clean
+java -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal clean
 ```
 
 ```sh tab="Maven"
@@ -711,7 +711,7 @@ Important: In this case, only the creation date of application versions (in the 
 Run as follows to delete **all versions**:
 
 ```sh tab="CLI"
-java -Dvulas.core.clean.purgeVersions=true -Dvulas.core.clean.purgeVersions.keepLast=0 -jar vulas-cli-jar-with-dependencies.jar -goal clean
+java -Dvulas.core.clean.purgeVersions=true -Dvulas.core.clean.purgeVersions.keepLast=0 -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal clean
 ```
 
 ```sh tab="Maven"
@@ -720,10 +720,10 @@ mvn -Dsteady -Dvulas.core.clean.purgeVersions=true -Dvulas.core.clean.purgeVersi
 
 #### Troubleshooting
 
-The Maven plugin will fail to delete an application if a corresponding `<module>` does not exit any longer in the `pom.xml`. The CLI must be used in these cases and the Maven coordinates (GAV) of the item to be cleaned shall be provided as system properties when calling the CLI. For example, if you want to delete an application with GAV `myGroup:myArtifact:myVersion`, the following command line be used
+The Maven plugin will fail to delete an application if a corresponding `<module>` does not exit any longer in the `pom.xml`. The CLI must be used in these cases and the Maven coordinates (GAV) of the item to be cleaned shall be provided as system properties when calling the CLI. For example, if you want to delete an application with GAV `myGroup:myArtifact:myVersion`, the following command line can be used
 
 ```sh
-java -Dvulas.core.appContext.group=myGroup -Dvulas.core.appContext.artifact=myArtifact -Dvulas.core.appContext.version=myVersion -jar vulas-cli-jar-with-dependencies.jar -goal clean
+java -Dvulas.core.appContext.group=myGroup -Dvulas.core.appContext.artifact=myArtifact -Dvulas.core.appContext.version=myVersion -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal clean
 ```
 
 ## Clean workspaces (cleanspace)
@@ -735,7 +735,7 @@ Deletes all applications of the given space.
 #### Run as follows
 
 ```sh tab="CLI"
-java -jar vulas-cli-jar-with-dependencies.jar -goal cleanSpace
+java -jar steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar -goal cleanSpace
 ```
 
 ```sh tab="Maven"
