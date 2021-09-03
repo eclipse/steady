@@ -30,7 +30,7 @@ import org.eclipse.steady.goals.DebloatGoal;
 @Mojo(
     name = "debloat",
     defaultPhase = LifecyclePhase.PROCESS_CLASSES,
-    requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME,
+    requiresDependencyResolution = ResolutionScope.RUNTIME,
     requiresOnline = true)
 public class MvnPluginDebloat extends AbstractVulasMojo {
 
