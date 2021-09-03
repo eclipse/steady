@@ -183,22 +183,15 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 
     // Classes considered used
     final SortedSet<Clazz> needed = new TreeSet<Clazz>();
-    final Set<Clazz> classes = cp.getClazzes();
+    final Set<Clazz> removable = cp.getClazzes();
     // loop over classpathunits (representing the application) marked as entrypoints to find needed
     // classes
     for (ClazzpathUnit u : app) {
-      classes.removeAll(u.getClazzes());
-      // TODO: check if getDependencies is also needed or getTransitiveDependencies sufficies
-      classes.removeAll(u.getDependencies());
-      classes.removeAll(u.getTransitiveDependencies());
+      removable.removeAll(u.getClazzes());
+      removable.removeAll(u.getTransitiveDependencies());
       needed.addAll(u.getClazzes());
-      needed.addAll(u.getDependencies());
       needed.addAll(u.getTransitiveDependencies());
 
-      // loop over dependent classes to add their units among the used dependencies
-      for (Clazz c : u.getDependencies()) {
-        deps_used.addAll(c.getClazzpathUnits());
-      }
       for (Clazz c : u.getTransitiveDependencies()) {
         deps_used.addAll(c.getClazzpathUnits());
       }
@@ -207,25 +200,26 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
     // loop over class (representing traces and reachable constructs) marked as entrypoints to find
     // needed classes
     for (Clazz c : used_classes) {
-      classes.remove(c);
-      classes.removeAll(c.getDependencies());
-      classes.removeAll(c.getTransitiveDependencies());
-      needed.add(c);
-      needed.addAll(c.getDependencies());
-      needed.addAll(c.getTransitiveDependencies());
-
-      // loop over dependent classes to add their units among the used dependencies
-      for (Clazz cc : c.getDependencies()) {
-        deps_used.addAll(cc.getClazzpathUnits());
-      }
-      for (Clazz cc : c.getTransitiveDependencies()) {
-        deps_used.addAll(cc.getClazzpathUnits());
-      }
+    	if(removable.contains(c)) {
+	      removable.remove(c);
+	      removable.removeAll(c.getTransitiveDependencies());
+	      needed.add(c);
+	      needed.addAll(c.getTransitiveDependencies());
+	
+	      for (Clazz cc : c.getTransitiveDependencies()) {
+	        deps_used.addAll(cc.getClazzpathUnits());
+	      }
+    	}
     }
-    final SortedSet<Clazz> removable = new TreeSet<Clazz>(classes);
+    final SortedSet<Clazz> removable_sorted = new TreeSet<Clazz>(removable);
 
+    Set<Clazz> remaining = cp.getClazzes();
+    remaining.removeAll(removable_sorted);
+    final SortedSet<Clazz> remaining_sorted = new TreeSet<Clazz>(removable);
+    log.info("jdependency classpath classes size: [" + cp.getClazzes().size() + "]");
     log.info("Needed classes: [" + needed.size() + "]");
-    log.info("Removable classes: [" + removable.size() + "]");
+    log.info("Needed by difference: [" + remaining_sorted.size() + "]");
+    log.info("Removable classes: [" + removable_sorted.size() + "]");
     log.info("Used dependencies: [" + deps_used.size() + "] out of [" + maven_deps.size() + "]");
 
     maven_deps.removeAll(deps_used);
@@ -237,7 +231,7 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
                   this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(),
                   "removable-classes.txt")
               .toFile();
-      FileUtil.writeToFile(f, StringUtil.join(removable, System.lineSeparator()));
+      FileUtil.writeToFile(f, StringUtil.join(removable_sorted, System.lineSeparator()));
       log.info("List of removable classes written to [" + f.toPath() + "]");
 
       f =
@@ -247,6 +241,14 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
               .toFile();
       FileUtil.writeToFile(f, StringUtil.join(needed, System.lineSeparator()));
       log.info("List of needed classes written to [" + f.toPath() + "]");
+      
+      f =
+              Paths.get(
+                      this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(),
+                      "remaining-classes.txt")
+                  .toFile();
+          FileUtil.writeToFile(f, StringUtil.join(remaining_sorted, System.lineSeparator()));
+          log.info("List of remaining classes written to [" + f.toPath() + "]");
 
       f =
           Paths.get(
