@@ -181,12 +181,6 @@
 			<modules>
 				<module>plugin-gradle</module>
 			</modules>
-			<repositories>
-				<repository>
-					<id>gradle</id>
-					<url>${gradle.repo}</url>
-				</repository>
-			</repositories>
 		</profile>
 
 		<!-- Activate when deploying to the Central Repo. Also see https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release -->
