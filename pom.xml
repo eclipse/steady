@@ -131,10 +131,6 @@
 		<snapshots.repo></snapshots.repo>
 		<releases.repo></releases.repo>
 
-		<!-- Repos used for resolving dependencies, specify as system property
-			(-D) to change the defaults -->
-		<gradle.repo>https://maven.google.com/</gradle.repo>
-
 		<!-- Skip certain plugins by default, change for all childs to be installed & deployed -->
 		<maven.deploy.skip>true</maven.deploy.skip>
 		
