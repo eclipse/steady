@@ -8,7 +8,7 @@ then
 fi
 
 #substitute env variables in kaybeeconf.yaml
-envsubst < ../conf/kaybeeconf.yaml > ../conf/kaybeeconf-eval.yaml
+envsubst < ../conf/kaybeeconf.yaml.sample > ../conf/kaybeeconf.yaml
 
 ./kaybee update --force
 
@@ -21,7 +21,7 @@ done
 #Wait for backend to start
 sleep 40
 
-#Run initial importi
+#Run initial import
 ./../kb-importer.sh
 
 #create a cron job kaybeeconf.yaml
