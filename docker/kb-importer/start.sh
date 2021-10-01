@@ -2,8 +2,10 @@
 
 mkdir -p /kb-importer/data
 cd /kb-importer/data
-if [ -f /kb-importer/kb-importer.jar ]
-then
+if [ -d $KB_IMPORTER_CLONE_FOLDER ]; then
+  mkdir -p $KB_IMPORTER_CLONE_FOLDER
+fi
+if [ -f /kb-importer/kb-importer.jar ]; then
   mv /kb-importer/kb-importer.jar /kb-importer/kaybee /kb-importer/data
 fi
 

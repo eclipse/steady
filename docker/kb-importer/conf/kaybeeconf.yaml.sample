@@ -59,7 +59,7 @@ export:
       ##---------------------- E N D --------------------
 
       ANALYZER_CMD="java -Dvulas.shared.backend.header.X-Vulas-Client-Token=$USER_TOKEN -Dvulas.shared.cia.serviceUrl=$CIA_URL -Dvulas.shared.backend.serviceUrl=$BACKEND_URL -jar $KB_IMPORTER_PATH  -u"
-      LOCAL_CLONES_DIR="/tmp"
+      LOCAL_CLONES_DIR=$KB_IMPORTER_CLONE_FOLDER
 
       folder_for_repo(){
         X=$1
