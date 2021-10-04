@@ -1,8 +1,9 @@
 #!/bin/bash
 
+REL="3.2.0"
 SERVICES="ui"
 
-stopui () {
+stop_ui () {
     for service in 'frontend-apps frontend-bugs cache' ; do
         docker-compose -f ./docker-compose.yml stop ${service}
     done
@@ -11,6 +12,8 @@ stopui () {
 usage () {
     cat <<HELP_USAGE
 Starts the Docker Compose environment of Eclipse Steady.
+
+Requires: docker-compose
 
 Usage: $0 [options...]
 
@@ -25,6 +28,32 @@ HELP_USAGE
     exit 0
 }
 
+core_usage () {
+    cat <<HELP_USAGE
+
+Scan your Maven project as follows:
+
+    mvn -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend org.eclipse.steady:plugin-maven:$REL:app
+
+HELP_USAGE
+}
+
+ui_usage () {
+    cat <<HELP_USAGE
+Point your browser to:
+
+    http://localhost:8033/apps to see the results of your application scans
+    http://localhost:8033/bugs to see all vulnerabilities imported from Project KB into Steady's database
+
+HELP_USAGE
+}
+
+more_info () {
+    cat <<HELP_USAGE
+Find more information at https://eclipse.github.io/steady
+HELP_USAGE
+}
+
 while true; do
     case "$1" in
         -s | --services ) SERVICES="$2"; shift 2 ;;
@@ -37,6 +66,6 @@ done
 # Start different sets of services
 case $SERVICES in
     none)   docker-compose -f ./docker-compose.yml stop ;;
-    core)   stopui; docker-compose -f ./docker-compose.yml              up -d --build ;;
-    ui)             docker-compose -f ./docker-compose.yml --profile ui up -d --build ;;
+    core)   stop_ui; docker-compose -f ./docker-compose.yml              up -d --build; core_usage,           more_info ;;
+    ui)              docker-compose -f ./docker-compose.yml --profile ui up -d --build; core_usage; ui_usage; more_info ;;
 esac

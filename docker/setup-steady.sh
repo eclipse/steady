@@ -1,15 +1,12 @@
 #!/bin/bash
 
 REL="3.2.0"
-TAG="release-$REL"
-INSTALL_DIR="steady-$REL"
-SERVICES="ui"
 
 usage () {
     cat <<HELP_USAGE
-Installs and prepares the Docker Compose environment of Eclipse Steady.
+Installs the Docker Compose environment of Eclipse Steady.
 
-Requires: bash, curl, docker-compose
+Requires: curl
 
 Usage: $0 [options...]
 
@@ -17,15 +14,9 @@ Usage: $0 [options...]
 
                                Default: steady-$REL
 
- -t, --tag <tag|commit>        The tag or commit of source files in https://github.com/eclipse/steady
+ -t, --tag <tag|commit>        Tag or commit used for getting source files from https://github.com/eclipse/steady
                                 
-                               Default: $TAG
-
- -s, --services <none|core|ui> Docker Compose services to start (default: ui)
-
-                               none - No services at all (corresponds to docker-compose stop)
-                               core - Only core services (those required by the Maven/Gradle plugins or the CLI)
-                               ui   - All services, incl. the Web interfaces for app and bug mgmt.
+                               Default: release-$REL
 
  -h, --help                    Prints this help text
 HELP_USAGE
@@ -35,36 +26,39 @@ HELP_USAGE
 setup (){
     DIR=$1
 
+    printf "Installing Eclipse Steady...\n"
+    printf "    from https://raw.githubusercontent.com/eclipse/steady/$TAG/docker\n"
+    printf "    into `pwd`/$DIR/\n"
+
     # Services with mounted volumes for configuration and/or data
     conf_services='haproxy postgresql rest-backend cache kb-importer'
     data_services='patch-lib-analyzer postgresql rest-lib-utils cache kb-importer'
-
+    
     # Create directories
-    echo "Creating directory structure in `pwd`/$INSTALL_DIR/ ..."
-    mkdir -p $DIR/certs
+    #mkdir -p $DIR/certs
     for s in $conf_services; do
-    mkdir -p $DIR/conf/$s
+        mkdir -p $DIR/conf/$s
     done
     for s in $data_services; do
-    mkdir -p $DIR/data/$s
+        mkdir -p $DIR/data/$s
     done
 
-    # Download docker-compose.yml and configurations
-    echo "Downloading files from https://raw.githubusercontent.com/eclipse/steady/$TAG/docker ..."
+    # Download all necessary files
     curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/docker-compose-new.yml -o ./$DIR/docker-compose.yml
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/.env.sample -o ./$DIR/.env
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/haproxy/conf/haproxy.cfg -o ./$DIR/conf/haproxy/haproxy.cfg
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/postgresql/docker-entrypoint-initdb.d/10-vulas-setup.sh -o ./$DIR/conf/postgresql/10-vulas-setup.sh 
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/cache/nginx.conf -o ./$DIR/conf/cache/nginx.conf
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/kb-importer/conf/kaybeeconf.yaml -o ./$DIR/conf/kb-importer/kaybeeconf.yaml
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/rest-backend/conf/restbackend.properties -o ./$DIR/conf/rest-backend/restbackend.properties
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/start-steady.sh -o ./$DIR/start-steady.sh
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/.env.sample            -o ./$DIR/.env
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/start-steady.sh        -o ./$DIR/start-steady.sh
     chmod 744 ./$DIR/start-steady.sh
+
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/haproxy/conf/haproxy.cfg                                -o ./$DIR/conf/haproxy/haproxy.cfg
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/postgresql/docker-entrypoint-initdb.d/10-vulas-setup.sh -o ./$DIR/conf/postgresql/10-vulas-setup.sh 
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/cache/nginx.conf                                        -o ./$DIR/conf/cache/nginx.conf
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/kb-importer/conf/kaybeeconf.yaml                        -o ./$DIR/conf/kb-importer/kaybeeconf.yaml
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/rest-backend/conf/restbackend.properties                -o ./$DIR/conf/rest-backend/restbackend.properties
 }
 
+# Read options
 while true; do
     case "$1" in
-        -s | --services ) SERVICES="$2"; shift 2 ;;
         -d | --dir )  INSTALL_DIR="$2"; shift 2 ;;
         -t | --tag )  TAG="$2"; shift 2 ;;
         -h | --help ) usage; shift 2 ;;
@@ -73,35 +67,56 @@ while true; do
     esac
 done
 
-# Install if target dir does not exist or is empty
+# Set tag and installation directory
+if [[ -z $TAG ]]; then
+    TAG="release-$REL"
+    if [[ -z $INSTALL_DIR ]]; then
+        INSTALL_DIR="steady-$REL"
+    fi
+else
+    if [[ -z $INSTALL_DIR ]]; then
+        INSTALL_DIR="steady-$TAG"
+    fi
+fi
+
+# Install if installation directory does not exist yet or is empty
 if [[ ! -d $INSTALL_DIR || -z "$(ls -A $INSTALL_DIR)" ]]; then
 
     # Check connectivity and tag
-    URL="https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/.env.sample"
+    URL="https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/start-steady.sh"
     RC=`curl -o /dev/null -s -w "%{http_code}\n" $URL`
     if [[ ! $RC == "200" ]]; then
-        echo "Cannot reach $URL"
-        echo "Check your internet connectivity and/or the tag '$TAG'"
-        echo "Aborting installation ..."
+        printf "Cannot reach $URL\n"
+        printf "Check your internet connectivity and/or the tag '$TAG'\n"
+        printf "Installation aborted\n"
         exit 1
     fi
 
     setup $INSTALL_DIR
-    echo "IMPORTANT: Adjust default passwords in ./$INSTALL_DIR/.env"
-    read -p "Once done, enter Y to start Steady containers (or any other key to abort): " CONTINUE
-    echo "Installation completed"
+
+    printf "Installation completed, Steady can be started using ./$INSTALL_DIR/start-steady.sh\n\n"
+    printf "IMPORTANT: Before starting it for the first time, change the default passwords in ./$INSTALL_DIR/.env\n\n"
+
+# If a non-empty directory already exists, check whether it contains docker-compose.yml and start-steady.sh
 else
-    echo "Installation skipped, because non-empty directory `pwd`/$INSTALL_DIR/ already exists"
-    CONTINUE="Y"
+    if [[ -f ./$INSTALL_DIR/start-steady.sh && -f ./$INSTALL_DIR/docker-compose.yml ]]; then
+        printf "Installation skipped (the directory `pwd`/$INSTALL_DIR/ already contains necessary files)\n"
+    else
+        printf "Installation aborted (directory `pwd`/$INSTALL_DIR/ is neither empty nor does it contain necessary files)\n"
+        exit 1
+    fi
 fi
 
-# Delegate execution to run-steady.sh
-if [[ -f ./$DIR/start-steady.sh && $CONTINUE == 'Y' ]]; then
-    if [[ $SERVICES == "ui" || $SERVICES == "core" ]]; then
-        echo "Execution delegated to ./$INSTALL_DIR/start-steady.sh ..."
-        cd $INSTALL_DIR
-        bash start-steady.sh -s $SERVICES
-    else
-        echo "Execution skipped (services == '$SERVICES')"
-    fi
+# Delegate execution to start-steady.sh
+read -p "Start (c)ore or (U)I services (or press any other key to skip execution): " CONTINUE
+if [[ $CONTINUE == 'c' || $CONTINUE == 'U' ]]; then
+    cd $INSTALL_DIR
+    case "$CONTINUE" in
+        c ) SERVICES="core" ;;
+        U ) SERVICES="ui" ;;
+    esac
+    printf "Executing Steady with ./$INSTALL_DIR/start-steady.sh -s $SERVICES\n"
+    bash start-steady.sh -s $SERVICES
+else
+    printf "Execution skipped\n"
 fi
