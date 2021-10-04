@@ -51,17 +51,14 @@ setup (){
 
     # Download docker-compose.yml and configurations
     echo "Downloading files from https://raw.githubusercontent.com/eclipse/steady/$TAG/docker ..."
-    curl https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/docker-compose-new.yml -o ./docker-compose.yml
-    cp docker-compose-new.yml ./$DIR/docker-compose.yml
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/.env.sample -o ./$DIR/.env.sample
-    cp ./$DIR/.env.sample ./$DIR/.env
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/docker-compose-new.yml -o ./$DIR/docker-compose.yml
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/.env.sample -o ./$DIR/.env
     curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/haproxy/conf/haproxy.cfg -o ./$DIR/conf/haproxy/haproxy.cfg
     curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/postgresql/docker-entrypoint-initdb.d/10-vulas-setup.sh -o ./$DIR/conf/postgresql/10-vulas-setup.sh 
     curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/cache/nginx.conf -o ./$DIR/conf/cache/nginx.conf
     curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/kb-importer/conf/kaybeeconf.yaml -o ./$DIR/conf/kb-importer/kaybeeconf.yaml
     curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/rest-backend/conf/restbackend.properties -o ./$DIR/conf/rest-backend/restbackend.properties
     curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/start-steady.sh -o ./$DIR/start-steady.sh
-    cp start-steady.sh ./$DIR/start-steady.sh
     chmod 744 ./$DIR/start-steady.sh
 }
 
