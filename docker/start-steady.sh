@@ -66,6 +66,6 @@ done
 # Start different sets of services
 case $SERVICES in
     none)   docker-compose -f ./docker-compose.yml stop ;;
-    core)   stop_ui; docker-compose -f ./docker-compose.yml              up -d --build; core_usage,           more_info ;;
+    core)   stop_ui; docker-compose -f ./docker-compose.yml              up -d --build; core_usage;           more_info ;;
     ui)              docker-compose -f ./docker-compose.yml --profile ui up -d --build; core_usage; ui_usage; more_info ;;
 esac
