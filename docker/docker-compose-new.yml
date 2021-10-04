@@ -1,0 +1,163 @@
+version: '2.4'
+
+services:
+  frontend-apps:
+    container_name: steady-frontend-apps
+    hostname: frontend-apps
+    image: eclipse/steady-frontend-apps:${VULAS_RELEASE}
+    expose:
+      - "8080"
+    security_opt:
+      - no-new-privileges
+    restart: always
+    profiles:
+      - ui
+
+  frontend-bugs:
+    container_name: steady-frontend-bugs
+    hostname: frontend-bugs
+    image: eclipse/steady-frontend-bugs:${VULAS_RELEASE}
+    expose:
+      - "8080"
+    security_opt:
+      - no-new-privileges
+    restart: always
+    profiles:
+      - ui
+
+  haproxy:
+    container_name: steady-haproxy
+    hostname: haproxy
+    env_file: .env
+    image: haproxy:2.3-alpine
+    ports:
+      - "8033:8080"
+      - "8034:7070"
+    volumes:
+      - "./conf/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
+    command: ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
+    depends_on:
+      # - frontend-apps
+      # - frontend-bugs
+      - rest-backend
+      # - rest-lib-utils
+    security_opt:
+      - no-new-privileges
+    restart: always
+
+  patch-lib-analyzer:
+    container_name: steady-patch-lib-analyzer
+    hostname: patch-lib-analyzer
+    image: eclipse/steady-patch-lib-analyzer:${VULAS_RELEASE}
+    expose:
+      - "8080"
+    volumes:
+      - "./data/patch-lib-analyzer:/patcheval-data"
+    links:
+      - rest-backend:backend
+      - rest-lib-utils:cia
+    depends_on:
+      - rest-backend
+    environment:
+      - PATCHEVAL_OPTS=-bug "" -folder /patcheval-data -j -h 0 -p 6
+      - vulas.shared.cia.serviceUrl=http://cia:8092/cia
+      - vulas.shared.backend.serviceUrl=http://backend:8091/backend
+      - vulas.patchEval.onlyAddNewResults=true
+    security_opt:
+      - no-new-privileges
+    restart: always
+
+  postgresql:
+    container_name: steady-postgresql
+    hostname: postgresql
+    image: postgres:11-alpine
+    environment:
+      - POSTGRES_DB=vulas
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data
+    ports:
+      - "8032:5432"
+    volumes:
+      - steady-postgres-data:/var/lib/postgresql/data
+      - ./conf/postgresql:/docker-entrypoint-initdb.d:ro
+    security_opt:
+      - no-new-privileges
+    restart: always
+
+  rest-backend:
+    container_name: steady-rest-backend
+    hostname: rest-backend
+    env_file:
+      - .env
+      - ./conf/rest-backend/restbackend.properties
+    image: eclipse/steady-rest-backend:${VULAS_RELEASE}
+    expose:
+      - "8091"
+    environment:
+      - DELAY_STARTUP=5
+      - vulas.shared.cia.serviceUrl=http://cia:8092/cia
+      - vulas.shared.cve.serviceUrl=https://services.nvd.nist.gov/rest/json/cve/1.0/<ID>
+      - spring.datasource.username=${POSTGRES_USER}
+      - spring.datasource.password=${POSTGRES_PASSWORD}
+    links:
+      - postgresql:postgresql
+      # - rest-lib-utils:cia
+    volumes:
+      - "./data/rest-backend:/flyway-callbacks"
+    depends_on:
+      - postgresql
+    security_opt:
+      - no-new-privileges
+    restart: always
+
+  rest-lib-utils:
+    container_name: steady-rest-lib-utils
+    hostname: rest-lib-utils
+    image: eclipse/steady-rest-lib-utils:${VULAS_RELEASE}
+    expose:
+        - "8092"
+    volumes:
+      - "./data/rest-lib-utils:/root/"
+    security_opt:
+      - no-new-privileges
+    restart: always
+
+  cache:
+    container_name: steady-cache
+    hostname: cache
+    image: nginx:alpine
+    expose:
+      - "80"
+    volumes:
+      - ./conf/cache/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./data/cache/:/tmp/cache_all/
+    security_opt:
+      - no-new-privileges
+    restart: always
+    profiles:
+      - ui
+
+  kb-importer:
+    container_name: steady-kb-importer
+    image: eclipse/steady-kb-importer:${VULAS_RELEASE}
+    env_file: .env
+    volumes:
+      - "./conf/kb-importer:/kb-importer/conf"
+      - "./certs:/kb-importer/certs"
+      - "./data/kb-importer:/kb-importer/data:delegated"
+      - "./data/kb-importer:/tmp:delegated"
+    environment:
+      - CIA_SERVICE_URL=http://cia:8092/cia
+      - BACKEND_SERVICE_URL=http://backend:8091/backend
+    depends_on:
+      - rest-backend
+    links:
+      - rest-backend:backend
+      - rest-lib-utils:cia
+    security_opt:
+      - no-new-privileges
+    restart: always
+
+volumes:
+  steady-postgres-data:
