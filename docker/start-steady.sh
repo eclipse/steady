@@ -2,6 +2,7 @@
 
 REL="3.2.0"
 SERVICES="ui"
+DC_REQUIRED="1.28"
 
 stop_ui () {
     for service in 'frontend-apps frontend-bugs cache' ; do
@@ -13,7 +14,7 @@ usage () {
     cat <<HELP_USAGE
 Starts the Docker Compose environment of Eclipse Steady.
 
-Requires: docker-compose >= 1.28
+Requires: docker-compose >= $DC_REQUIRED
 
 Usage: $0 [options...]
 
@@ -48,11 +49,20 @@ Point your browser to:
 HELP_USAGE
 }
 
+check_docker_version() {
+    docker_version=`docker-compose --version | egrep -o "[0-9]+\.[0-9]+\.?[0-9]*"`
+    IFS='.' read -ra iv <<< "$docker_version"
+    IFS='.' read -ra rv <<< "$DC_REQUIRED"
+    if [[ "$(( ${iv[0]} ))" < "$(( ${rv[0]} ))" || ( "$(( ${iv[0]} ))" == "$(( ${rv[0]} ))" &&  "$(( ${iv[1]} ))" < "$(( ${rv[1]} ))" ) ]]; then
+        printf "Requirement on Docker-Compose not met (installed: $docker_version, required: $DC_REQUIRED)\n"
+        return 0
+    else
+        return 1
+    fi
+}
+
 docker_error() {
-    printf "Error executing docker-compose, make sure the version requirement is met\n"
-    version=`docker-compose --version`
-    printf "    required:  >= 1.28\n"
-    printf "    installed: $version\n"
+    printf "Error executing docker-compose\n"
 }
 
 more_info () {
@@ -69,6 +79,14 @@ while true; do
         * ) break ;;
     esac
 done
+
+# Check requirements
+check_docker_version
+rc=$?
+if [[ $rc == 0 ]]; then
+    printf "Script aborted\n"
+    exit 1
+fi
 
 # Start different sets of services
 case $SERVICES in
