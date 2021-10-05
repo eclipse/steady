@@ -24,7 +24,23 @@ As such, it addresses the OWASP Top 10 security risk A9, [Using Components with 
 
 In comparison to other tools, the detection is code-centric and usage-based, which allows for more accurate detection and assessment than tools relying on meta-data.  It is a collection of client-side scan tools, microservices and rich [OpenUI5](https://openui5.hana.ondemand.com/) Web frontends.
 
-Read more in our [**Docs**](https://eclipse.github.io/steady/)
+## Quickstart
+
+The following two components are needed to scan your application:
+
+1. The Steady **backend**, a Docker Compose application, stores information about open-source vulnerabilities and scan results. It has to be installed once, ideally on a dedicated host, and must be running during application scans.
+
+    Download and run [`setup-steady.sh`](https://raw.githubusercontent.com/eclipse/steady/d3e7b0881f7abfb8e5ea4fd8b20696e73a292340/docker/setup-steady.sh) to install the backend on any *nix host with a recent version of Docker/Docker Compose (>= v1.28).
+
+    Note: During its first execution, triggered by the setup script or directly using `start-steady.sh -s ui`, the backend will be bootstrapped by downloading and processing code-level information of hundreds of vulnerabilities maintained in the open-source knowledge base [Project KB](https://github.com/sap/project-kb). While the bootstrapping can take up to one hour, later updates will import the delta on a daily basis.
+
+2. A Steady **scan client**, e.g. the Maven plugin, analyzes the code of your application project and its dependencies. Being [available on Maven Central](https://search.maven.org/search?q=g:org.eclipse.steady), the clients do not require any installation. However, they need to be run whenever your application's code or dependencies change.
+
+    For Maven, `cd` into your project and run the following command (replace `<host>` by the IP address or host name of the backend system):
+
+    `mvn -Dvulas.shared.backend.serviceUrl=http://<host>/backend org.eclipse.steady:plugin-maven:3.2.0:app`
+
+    Note: During application scans, a lot of information about its dependencies is uploaded to the backend, which makes that the first scan takes significantly more time than later scans of the same application
 
 ## History
 

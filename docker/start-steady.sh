@@ -13,7 +13,7 @@ usage () {
     cat <<HELP_USAGE
 Starts the Docker Compose environment of Eclipse Steady.
 
-Requires: docker-compose
+Requires: docker-compose >= 1.28
 
 Usage: $0 [options...]
 
@@ -48,6 +48,13 @@ Point your browser to:
 HELP_USAGE
 }
 
+docker_error() {
+    printf "Error executing docker-compose, make sure the version requirement is met\n"
+    version=`docker-compose --version`
+    printf "    required:  >= 1.28\n"
+    printf "    installed: $version\n"
+}
+
 more_info () {
     cat <<HELP_USAGE
 Find more information at https://eclipse.github.io/steady
@@ -65,7 +72,35 @@ done
 
 # Start different sets of services
 case $SERVICES in
-    none)   docker-compose -f ./docker-compose.yml stop ;;
-    core)   stop_ui; docker-compose -f ./docker-compose.yml              up -d --build; core_usage;           more_info ;;
-    ui)              docker-compose -f ./docker-compose.yml --profile ui up -d --build; core_usage; ui_usage; more_info ;;
+    none)
+        docker-compose -f ./docker-compose.yml stop
+        rc=$?
+        if [[ $rc == 0 ]]; then
+            printf "Stopped all of Steady's Docker Compose services\n"
+            more_info
+        else
+            docker_error
+        fi
+        ;;
+    core)
+        stop_ui
+        docker-compose -f ./docker-compose.yml up -d --build
+        rc=$?
+        if [[ $rc == 0 ]]; then
+            printf "Started Steady's core Docker Compose services\n"
+            core_usage; more_info
+        else
+            docker_error
+        fi
+        ;;
+    ui)
+        docker-compose -f ./docker-compose.yml --profile ui up -d --build
+        rc=$?
+        if [[ $rc == 0 ]]; then
+            printf "Started all of Steady's Docker Compose services\n"
+            core_usage; ui_usage; more_info
+        else
+            docker_error
+        fi
+        ;;
 esac
