@@ -30,7 +30,7 @@ The following two components are needed to scan your application:
 
 1. The Steady **backend**, a Docker Compose application, stores information about open-source vulnerabilities and scan results. It has to be installed once, ideally on a dedicated host, and must be running during application scans.
 
-    Download and run [`setup-steady.sh`](https://raw.githubusercontent.com/eclipse/steady/d3e7b0881f7abfb8e5ea4fd8b20696e73a292340/docker/setup-steady.sh) to install the backend on any *nix host with a recent version of Docker/Docker Compose.
+    Download and run [`setup-steady.sh`](https://raw.githubusercontent.com/eclipse/steady/d3e7b0881f7abfb8e5ea4fd8b20696e73a292340/docker/setup-steady.sh) to install the backend on any host with a recent version of Docker/Docker Compose (the use of profiles requires a version >= 1.28, installable with `pip install docker-compose` or as [described here](https://github.com/docker/compose#where-to-get-docker-compose)).
 
     **Note**: During its first execution, triggered by the setup script or directly using `start-steady.sh -s ui`, the backend will be bootstrapped by downloading and processing code-level information of hundreds of vulnerabilities maintained in the open-source knowledge base [Project KB](https://github.com/sap/project-kb). While the bootstrapping can take up to one hour, later updates will import the delta on a daily basis.
 
