@@ -37,7 +37,7 @@ import org.eclipse.steady.shared.json.model.Space;
 /**
  * Command line interface (CLI) to execute goals related to {@link Application}s or {@link Space}s.
  * Mandatory configuration parameters such as the backend URL or the workspace token have
- * to be specified as system properties (-D) or using a configuration file "vulas-&lt;foo&gt;.properties".
+ * to be specified as system properties (-D) or using a configuration file "steady-&lt;foo&gt;.properties".
  */
 public class VulasCli {
 

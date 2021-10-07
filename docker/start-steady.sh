@@ -34,7 +34,7 @@ core_usage () {
 
 Scan your Maven project as follows:
 
-    mvn -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend org.eclipse.steady:plugin-maven:$REL:app
+    mvn org.eclipse.steady:plugin-maven:$REL:app
 
 HELP_USAGE
 }

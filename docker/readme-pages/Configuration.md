@@ -2,7 +2,7 @@
 
 The client-side analysis tools can be configured in different ways. At runtime, the following layers are combined in order to establish the effective configuration (which is printed to console upon goal execution).
 - Java system properties: Can be specified when running `java` or `mvn`, each setting must be prefixed with `-D`
-- Property files in file system: Can be specified by adding property file(s) in the folder where Steady is executed (or any of its subfolders). The file name must adhere to the format `vulas-*.properties`, and its entries must be specified according to the [Java spec](https://en.wikipedia.org/wiki/.properties)
+- Property files in file system: Can be specified by adding property file(s) in the folder where Steady is executed (or any of its subfolders). The file name must adhere to the format `steady-*.properties`, and its entries must be specified according to the [Java spec](https://en.wikipedia.org/wiki/.properties)
 - Plugin configuration:
     * Maven: Can be specified in the `<layeredConfiguration>` section of the Steady Maven plugin
     * Gradle: todo

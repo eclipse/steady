@@ -134,14 +134,19 @@ public class VulasConfiguration {
   }
 
   /**
+   * Regex used to discover configurations in the user's home folder.
+   */
+  private static final String homeProperties = ".steady.properties";
+
+  /**
    * Regex used to discover configurations in the file system and (the root folder of) JAR files.
    */
-  private static final String propertiesRegex = "vulas-.*\\.properties";
+  private static final String propertiesRegex = "steady-.*\\.properties";
 
   /**
    * Regex used to discover configurations in the folder BOOT-INF/classes/ of executable Spring JARs.
    */
-  private static final String propertiesRegexSpring = "BOOT-INF/classes/vulas-.*\\.properties";
+  private static final String propertiesRegexSpring = "BOOT-INF/classes/steady-.*\\.properties";
 
   /** Constant <code>SYS_PROP_CFG_LAYER="System-Properties"</code> */
   public static final String SYS_PROP_CFG_LAYER = "System-Properties";
@@ -199,6 +204,17 @@ public class VulasConfiguration {
     Configuration env_config = new MapConfiguration(env);
     addConfiguration(env_config, ENV_CFG_LAYER);
 
+    // Add configuration from home folder
+    final File home_props = new File(System.getProperty("user.home") + System.getProperty("file.separator") + VulasConfiguration.homeProperties);
+    if(FileUtil.isAccessibleFile(home_props.toPath())) {
+      try {
+        Configuration config = new PropertiesConfiguration(home_props);
+        addConfiguration(config, home_props.toString());
+      } catch (ConfigurationException e) {
+        getLog().error("Could not create configuration from file [" + home_props + "]");
+      }
+    }
+
     // Add: Properties in JAR files contained in classpath
     final ClassLoader cl = VulasConfiguration.class.getClassLoader();
     final Set<String> jar_paths = new HashSet<String>();
@@ -207,11 +223,11 @@ public class VulasConfiguration {
     if (cl instanceof URLClassLoader) {
       jar_paths.addAll(FileUtil.getJarFilePaths((URLClassLoader) cl));
     }
-    // Search for JARs containing specific configuration files, e.g., vulas-core.properties
+    // Search for JARs containing specific configuration files, e.g., steady-core.properties
     else {
       jar_paths.addAll(
           FileUtil.getJarFilePathsForResources(
-              cl, new String[] {"vulas-core.properties", "vulas-java.properties"}));
+              cl, new String[] {"steady-core.properties", "steady-java.properties"}));
     }
 
     // Search in all JARs

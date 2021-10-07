@@ -49,7 +49,7 @@ As of today, the plugin supports the _app_, _clean_ and _report_ goal. The stati
 
 1. Get the Steady CLI from `<vulas-root>/cli-scanner/target/cli-scanner-<version>-jar-with-dependencies.jar`.
 
-2. Create a file `vulas-custom.properties` in the same directory. It should contain at least the following configuration settings:
+2. Create a file `steady-custom.properties` in the same directory. It should contain at least the following configuration settings:
 
         # Used to identify the app under analysis
         vulas.core.appContext.group = <GROUP>
