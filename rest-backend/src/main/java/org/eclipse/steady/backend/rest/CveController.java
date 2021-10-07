@@ -166,7 +166,7 @@ public class CveController {
   /**
    * Starts a thread that reads CVE information and replicates it in the local database. The thread
    * behavior is configured using {@link #CACHE_REFRESH_ALL} and {@link #CACHE_REFRESH_SNG}, both
-   * described in the file vulas-rest-backend.properties.
+   * described in the file steady-rest-backend.properties.
    *
    * @return true if the thread got started, false otherwise
    */

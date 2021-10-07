@@ -65,6 +65,15 @@ setup (){
     curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/cache/nginx.conf                                        -o ./$DIR/conf/cache/nginx.conf
     curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/kb-importer/conf/kaybeeconf.yaml                        -o ./$DIR/conf/kb-importer/kaybeeconf.yaml
     curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/rest-backend/conf/restbackend.properties                -o ./$DIR/conf/rest-backend/restbackend.properties
+
+    # Create default configuration in user's home directory
+    home_config="$HOME/.steady.properties"
+    cat > "$home_config" <<EOL
+# URL of the Steady backend to (from) which analysis results are uploaded (downloaded)
+# Default: -
+vulas.shared.backend.serviceUrl = http://localhost:8033/backend
+EOL
+    printf "Created default client configuration $home_config"
 }
 
 # Read options

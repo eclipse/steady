@@ -674,7 +674,7 @@ Other settings to fine-tune the threshold for build exceptions are as follows:
 
 Deletes application-specific data in the backend, e.g., traces collected during JUnit tests, application constructs and dependencies collected through the `app` goal. Right after executing `clean` for a given application, the apps Web frontend will be empty for the respective application.
 
-Run as follows to clean the **current version**, e.g., the version specified in `pom.xml` (Maven) or `vulas-custom.properties` (CLI):
+Run as follows to clean the **current version**, e.g., the version specified in `pom.xml` (Maven) or `steady-custom.properties` (CLI):
 
 ```sh tab="CLI"
 java -jar vulas-cli-jar-with-dependencies.jar -goal clean
@@ -688,7 +688,7 @@ mvn -Dsteady steady:clean
 
 The following options can be used to delete **multiple versions**.
 
-Important: In this case, only the creation date of application versions (in the backend) is considered to select the versions to be deleted. Versions specified in `pom.xml`, `vulas-custom.properties` etc. are not considered at all. 
+Important: In this case, only the creation date of application versions (in the backend) is considered to select the versions to be deleted. Versions specified in `pom.xml`, `steady-custom.properties` etc. are not considered at all. 
 
 ```ini
     # When true, all but the latest X app versions will be deleted (latest according to the application creation date).

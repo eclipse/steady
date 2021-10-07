@@ -12,10 +12,10 @@
 | `./app/` | Create folder `app` and put the application code (java, class or JAR files) and all application dependencies (JAR files) into this folder. It will be searched recursively, thus, it is possible to just copy the entire installation directory of an application into the folder. **Important**: (1) Single java and class files are always considered as application code, no matter the package prefix configured with ```vulas.core.app.appPrefixes```. (2) JARs are always considered as application dependency unless they only contain methods starting with the configured package prefix. (3) Nested JARs must be extracted, WARs can stay as-is. |
 | `./vulas-cli-<version>-jar-with-dependencies.jar` | Copy and rename the executable JAR from `<vulas-root>/cli-scanner/target/cli-scanner-<version>-jar-with-dependencies.jar'. It is used to run the different Steady goals. |
 | `./instr/lang-java-<version>-jar-with-dependencies.jar` | Copy the executable JAR from `<vulas-root>/lang-java/target/`. It is used to instrument Java runtimes. |
-| `./vulas-custom.properties` | Create the file for the configuration settings for Steady and fill it with the content below. **Important**: (1) Specify `<GROUP>`, `<ARTIFACT>` and `<VERSION>` of the application to be analyzed. (2) Specify how Steady identifies your application code (either using `vulas.core.app.appPrefixes` or `vulas.core.app.appJarNames`, see below for more information). (3) Specify the workspace token `vulas.core.space.token`. (4) Provide the hostname of the vulas backend (replacing localhost). |
+| `./steady-custom.properties` | Create the file for the configuration settings for Steady and fill it with the content below. **Important**: (1) Specify `<GROUP>`, `<ARTIFACT>` and `<VERSION>` of the application to be analyzed. (2) Specify how Steady identifies your application code (either using `vulas.core.app.appPrefixes` or `vulas.core.app.appJarNames`, see below for more information). (3) Specify the workspace token `vulas.core.space.token`. (4) Provide the hostname of the vulas backend (replacing localhost). |
 
-vulas-custom.properties
-```vulas-custom.properties
+steady-custom.properties
+```steady-custom.properties
 # vulas.core.space.token = <YOUR WORKSPACE TOKEN>
 vulas.shared.backend.serviceUrl=http://localhost:8033/backend
 vulas.shared.tmpDir = vulas/tmp
