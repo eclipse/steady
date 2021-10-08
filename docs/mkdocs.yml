@@ -1,7 +1,7 @@
 site_name: Eclipse Steady 3.2.0 (Incubator Project)
 site_description: Eclipse Steady Documentation
 site_url: https://eclipse.github.io/steady/
-dev_addr: 0.0.0.0:8000
+dev_addr: localhost:8000
 
 repo_name: 'eclipse/steady'
 repo_url: 'https://github.com/eclipse/steady'
@@ -31,7 +31,9 @@ nav:
       - 'Analysis': 'user/manuals/analysis.md'
       - 'Frontend': 'user/manuals/frontend.md'
       - 'Report': 'user/manuals/report.md'
-      - 'Assessment and Mitigation': 'user/manuals/assess_and_mitigate.md'
+      - 'Impact Assessment and Mitigation': 'user/manuals/assess_and_mitigate.md'
+      - 'Library Assessment': 'user/manuals/library_assessment.md'
+      - 'Updating Vulnerability Data': 'user/manuals/updating_vuln_data.md'
     - Support:
       - 'Getting help': user/support/index.md
       - 'FAQ': user/support/faq.md
@@ -60,19 +62,19 @@ nav:
 #    - Support:
 #      - 'Getting help': contributor/support/getting_help.md
 #      - 'Dev. FAQ': contributor/support/faq.md
-  - Vulnerability database:
+  - Vulnerability data:
     - 'Vulnerability database' : vuln_db/index.md
-    - Tutorial: vuln_db/tutorials/vuln_db_tutorial.md
-    - Manual:
-      - 'Intro': vuln_db/manuals/index.md
-      - 'KB Importer': vuln_db/manuals/kb_importer.md
-      - 'Patch Analyzer' : vuln_db/manuals/patch_analyzer.md
-      - 'Patch Lib Analyzer' : vuln_db/manuals/patch_lib_analyzer.md
-      - 'Manual Assessment' : vuln_db/manuals/manual_assessment.md
+    # - Tutorial: vuln_db/tutorials/vuln_db_tutorial.md
+    # - Manual:
+      # - 'Intro': vuln_db/manuals/index.md
+      # - 'KB Importer': vuln_db/manuals/kb_importer.md
+      # - 'Patch Analyzer' : vuln_db/manuals/patch_analyzer.md
+      # - 'Patch Lib Analyzer' : vuln_db/manuals/patch_lib_analyzer.md
+      # - 'Manual Assessment' : vuln_db/manuals/manual_assessment.md
   - Blog:
     - https://blogs.sap.com/tag/vulas/
 
-copyright: 'Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors'
+copyright: 'Copyright (c) 2018-2021 SAP SE or an SAP affiliate company and Eclipse Steady contributors'
 
 markdown_extensions:
   - markdown.extensions.admonition

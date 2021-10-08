@@ -1,4 +1,4 @@
-# KB(Knowledge Base) Importer
+# Updating Vulnerability Data
 
 KB-Importer is a java application which is used to import vulnerabilities in Steady Backend from [Project KB](https://github.com/SAP/project-kb). 
 

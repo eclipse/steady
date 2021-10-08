@@ -4,11 +4,15 @@ Our aim is to build a lively community, hence, we welcome any exchange and colla
 
 To contribute, read on to learn about your options:
 
+ * [Contribute to the Vulnerability Knowledge Base](#contribute-to-the-vulnerability-knowledge-base)
  * [Help Others](#help-others) on Stack Overflow
  * [Report Bugs](#report-bugs) as GitHub issues
  * [Analyze Bugs](#analyze-bugs)
  * [Contribute Code](#contribute-code) (fixes and features)
- * [Contribute to the Vulnerability Knowledge Base](#contribute-to-the-vulnerability-knowledge-base)
+
+## Contribute to the Vulnerability Knowledge Base
+
+Please refer to the [project "KB" documentation](https://sap.github.io/project-kb/contributing/).
 
 
 ## Help Others
@@ -184,12 +188,3 @@ If this list sounds lengthy and hard to achieve - well, that's what WE have to c
 10. Your pull request cannot be merged directly into the branch (internal SAP processes), but will be merged internally and immediately appear in the public repository as well. Pull requests for non-code branches (like "gh-pages" for the website) can be directly merged.
 11. We will close the pull request, feel free to delete the now obsolete branch
 
-## Contribute to the Vulnerability Knowledge Base
-
-Every installation of @@PROJECT_NAME@@ relies on a database with detailed information about vulnerable code (methods, functions, etc.) in open-source software components. This database is populated by analyzing the source code changes (commits) done by open source developers to fix a given vulnerability.
-
-This analysis is done using the `patch-analyzer`, which takes several arguments as input, e.g., the source code repository of the respective component, the commit identifier(s), and a vulnerability identifier. Analysis results such as the names and abstract syntax trees of modified methods are eventually stored in the local PostgreSQL database of @@PROJECT_NAME@@.
-
-In order to prevent that each and every user of @@PROJECT_NAME@@ has to collect the repository URL and the fix commit(s) for a given vulnerability by himself, we created the shared [vulnerability assessment knowledge base](https://github.com/SAP/vulnerability-assessment-kb) The maintenance of this knowledge base will become - in the ideal case -  a community effort involving both open source projects as well as users of @@PROJECT_NAME@@.
-
-Please [create an issue](https://github.com/SAP/vulnerability-assessment-kb/issues/new) if you want to provide new information about publicly disclosed vulnerabilities in open source components, or correct an existing entry.

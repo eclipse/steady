@@ -51,9 +51,10 @@ To check if everything started successfully, check the page `http://localhost:80
 
 ### Populate/maintain the vulnerability database
 
-In order for the tool to detect vulnerabilities, you need to import and analyze them first so that they are available in the tool's vulnerability database. Large part of CVE's and bugs are open sourced in [vulnerability-assessment-kb](https://github.com/SAP/vulnerability-assessment-kb).
+Vulnerabilities data are automatically fetched and imported from [project KB](https://github.com/SAP/project-kb), so there is nothing to do for you (except
+wait for the vulnerability data to be processed, which can take as long as 1h).
 
-Follow the instructions mentioned [here](../../../vuln_db/tutorials/vuln_db_tutorial/#batch-import-from-knowledge-base), to import and build all the vulnerabilities' knowledge.
+If you want to configure your system to fetch vulnerability data from another source (or from multiple sources), please follow the [documentation here](../tutorials/updating_vuln_data).
 
 ---
 
