@@ -4,7 +4,7 @@
 
 **Important**: Because @@PROJECT_NAME@@ does not currently implement authorization functionality, it is not advised to expose an instance of @@PROJECT_NAME@@ to the public Internet.
 
-- [Deploy on Docker](./tutorials/docker/) and [Import the knowledge base](../vuln_db/tutorials/vuln_db_tutorial/#batch-import-from-knowledge-base)
+- [Deploy on Docker](./tutorials/docker/)
 - [Build JAVA archives and local Docker images](./tutorials/build/)
 - [Push Docker images to a registry](./tutorials/registry/)
 - [Deploy on Kubernetes with Kustomize](./tutorials/kustomize/)
