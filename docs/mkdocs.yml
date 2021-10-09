@@ -62,8 +62,8 @@ nav:
 #    - Support:
 #      - 'Getting help': contributor/support/getting_help.md
 #      - 'Dev. FAQ': contributor/support/faq.md
-  - Vulnerability data:
-    - 'Vulnerability database' : vuln_db/index.md
+  - Vulnerability data: 'vuln_db/index.md'
+    # - 'Vulnerability database' : vuln_db/index.md
     # - Tutorial: vuln_db/tutorials/vuln_db_tutorial.md
     # - Manual:
       # - 'Intro': vuln_db/manuals/index.md
