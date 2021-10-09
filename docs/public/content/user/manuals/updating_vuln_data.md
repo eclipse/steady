@@ -6,10 +6,17 @@ realized using two tools: `kaybee` (from project KB) and `kb-importer` (part of 
 In this document we describe the overall process but we refer to the documentation of [project KB](https://github.com/SAP/project-kb)
 for details on how `kaybee` works.
 
+## Process overview
+
+`kaybee` is used to download vulnerability data from project KB (and possibly from other user-defined sources) and to
+produce a script via its `export` command (the script is called `steady.sh` in the following).
+
+By executing the `steady.sh` script obtained via the `kaybee export` command, the vulnerability data are imported
+to the target backend system (specified a the top of the script -- the user is supposed to edit it before running it).
 
 ## Setup
 
-1. Use the following link to setup and configure Project KB - [installing-the-kaybee-tool](https://sap.github.io/project-kb/getting_started/#installation).
+1. Use the following link to setup and configure project KB - [installing-the-kaybee-tool](https://sap.github.io/project-kb/getting_started/#installation).
 2. Update the variables in `kaybeeconf.yaml` configuration file. The variables are 
     * `USER_TOKEN` - Token specified in your Steady .env file.
     * `BACKEND_URL` - URL of the rest-backend service (Mandatory).
@@ -18,8 +25,8 @@ for details on how `kaybee` works.
 
 ## Usage
 
-1. Run `kaybee merge` to get the vulnerablity information from Project-KB.
-2. Run `kaybee export -t steady` which outputs a shell script `steady.sh` which is is then run to update all vulnerability data in Steady.
+1. Run `kaybee merge` to get the vulnerablity information from project KB.
+2. Run `kaybee export -t steady` to produce the shell script `steady.sh` which is is then run to update all vulnerability data in Steady.
 3. To get specific vulnerability information run `kaybee export -t steady -f .kaybee/merged/CVE-2019-0191/statement.yaml` which outputs a shell script `steady.sh` which is is then run to update `CVE-2019-0191` vulnerability data in Steady.
 
 ## KB-importer: Technical Documentation
