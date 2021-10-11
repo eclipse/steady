@@ -205,8 +205,12 @@ public class VulasConfiguration {
     addConfiguration(env_config, ENV_CFG_LAYER);
 
     // Add configuration from home folder
-    final File home_props = new File(System.getProperty("user.home") + System.getProperty("file.separator") + VulasConfiguration.homeProperties);
-    if(FileUtil.isAccessibleFile(home_props.toPath())) {
+    final File home_props =
+        new File(
+            System.getProperty("user.home")
+                + System.getProperty("file.separator")
+                + VulasConfiguration.homeProperties);
+    if (FileUtil.isAccessibleFile(home_props.toPath())) {
       try {
         Configuration config = new PropertiesConfiguration(home_props);
         addConfiguration(config, home_props.toString());
