@@ -87,7 +87,7 @@ spec:
     stage('Create javadoc + sources, Verify Spotbugs and Reproducibility') {
       steps {
         container('maven') {
-          sh 'mvn -B -e -P gradle,javadoc \
+          sh 'mvn -B -e -P javadoc \
                   -Dspring.standalone \
                   -DskipTests \
                   -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace \
@@ -95,7 +95,7 @@ spec:
                   -Dspotbugs.includeFilterFile=findbugs-include.xml \
                   -Dspotbugs.failOnError=true \
                   clean install com.github.spotbugs:spotbugs-maven-plugin:4.2.3:check'
-          sh 'mvn -B -e -P gradle,javadoc \
+          sh 'mvn -B -e -P javadoc \
                   -Dspring.standalone \
                   -DskipTests \
                   -Dreference.repo=https://repo.maven.apache.org/maven2 \
@@ -109,7 +109,7 @@ spec:
     stage('Test') {
       steps {
         container('maven') {
-          sh 'mvn -B -e -P gradle \
+          sh 'mvn -B -e \
                   -Dspring.standalone \
                   -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace \
                   -Dit.test="!IT01_PatchAnalyzerIT,IT*,*IT" \
@@ -131,7 +131,7 @@ spec:
             sh 'gpg --batch --import "${KEYRING}"'
             sh 'for fpr in $(gpg --list-keys --with-colons  | awk -F: \'/fpr:/ {print $10}\' | sort -u); do echo -e "5\ny\n" |  gpg --batch --command-fd 0 --expert --edit-key ${fpr} trust; done'
           }
-          sh 'mvn -B -e -P gradle,javadoc,release \
+          sh 'mvn -B -e -P javadoc,release \
                   -Dspring.standalone \
                   -DskipTests \
                   clean deploy'
