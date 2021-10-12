@@ -76,8 +76,11 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 
     final Clazzpath cp = new Clazzpath();
 
-    // list of classpathunits to be used as entrypoints
+    // list of classpathunits to be used as application entrypoints
     List<ClazzpathUnit> app = new ArrayList<ClazzpathUnit>();
+    // list of classpathunits to be used as test entrypoints    
+    List<ClazzpathUnit> test = new ArrayList<ClazzpathUnit>();
+    
     // list of classes to be used as entrypoints (from traces and reachable constructs)
     List<Clazz> used_classes = new ArrayList<Clazz>();
     // classpathunits for the application dependencies (as identified by maven)
@@ -90,8 +93,14 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
       // 1) Add application paths (to be then used as entrypoints)
       if (this.hasSearchPath()) {
         for (Path p : this.getSearchPath()) {
-          log.info("Add app path [" + p + "] to classpath");
-          app.add(cp.addClazzpathUnit(p));
+        	if (p.toString().contains(File.separator+"test"+File.separator)) {
+        		log.info("Add test path [" + p + "] to classpath");
+        		test.add(cp.addClazzpathUnit(p));
+        	}
+        	else {
+        		log.info("Add app path [" + p + "] to classpath");
+        		app.add(cp.addClazzpathUnit(p));
+        	}
         }
       }
       // 2) Add dependencies to jdependency classpath object and populate set of dependencies
@@ -106,6 +115,7 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
     }
 
     log.info("[" + app.size() + "] ClasspathUnit for the application to be used as entrypoints ");
+    log.info("[" + test.size() + "] ClasspathUnit for tests to be used as entrypoints ");
 
     // Retrieve traces to be used as Clazz entrypoints (1 class may be part of multiple
     // classpathUnits)
