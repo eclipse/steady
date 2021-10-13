@@ -156,6 +156,11 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
             + ","
             + Paths.get(this.project.getBuild().getSourceDirectory()).toString();
     this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.APP_DIRS, p);
+    
+    final String test_paths= Paths.get(this.project.getBuild().getTestOutputDirectory()).toString()
+            + ","
+            + Paths.get(this.project.getBuild().getTestSourceDirectory()).toString();
+    this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.TEST_DIRS,test_paths);
 
     // Test how-to get the reactor POM in a reliable manner
     // The following method call fails if Maven is called with option -pl

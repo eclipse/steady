@@ -104,6 +104,8 @@ public class CoreConfiguration {
   // BOM, fka APP
   /** Constant <code>APP_DIRS="vulas.core.app.sourceDir"</code> */
   public static final String APP_DIRS = "vulas.core.app.sourceDir";
+  /** Constant <code>TEST_DIRS="vulas.core.app.testDir"</code> */
+  public static final String TEST_DIRS = "vulas.core.app.testDir";
   /** Constant <code>APP_PREFIXES="vulas.core.app.appPrefixes"</code> */
   public static final String APP_PREFIXES = "vulas.core.app.appPrefixes";
   /** Constant <code>APP_JAR_NAMES="vulas.core.app.appJarNames"</code> */

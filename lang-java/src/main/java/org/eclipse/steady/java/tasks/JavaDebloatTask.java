@@ -92,16 +92,16 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
     try {
       // 1) Add application paths (to be then used as entrypoints)
       if (this.hasSearchPath()) {
-        for (Path p : this.getSearchPath()) {
-        	if (p.toString().contains(File.separator+"test"+File.separator)) {
-        		log.info("Add test path [" + p + "] to classpath");
-        		test.add(cp.addClazzpathUnit(p));
-        	}
-        	else {
-        		log.info("Add app path [" + p + "] to classpath");
-        		app.add(cp.addClazzpathUnit(p));
-        	}
+        for (Path p : this.getSearchPath()) {        	
+    		log.info("Add app path [" + p + "] to classpath");
+    		app.add(cp.addClazzpathUnit(p));
         }
+      }
+      for (Path p : FileUtil.getPaths(
+              this.vulasConfiguration.getStringArray(CoreConfiguration.TEST_DIRS, null)))
+      {
+    		log.info("Add test path [" + p + "] to classpath");
+    		test.add(cp.addClazzpathUnit(p));
       }
       // 2) Add dependencies to jdependency classpath object and populate set of dependencies
       if (this.getKnownDependencies() != null) {
@@ -220,12 +220,12 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 	        deps_used.addAll(cc.getClazzpathUnits());
 	      }
     	}
-    }
+    }  
     final SortedSet<Clazz> removable_sorted = new TreeSet<Clazz>(removable);
 
     Set<Clazz> remaining = cp.getClazzes();
     remaining.removeAll(removable_sorted);
-    final SortedSet<Clazz> remaining_sorted = new TreeSet<Clazz>(removable);
+    final SortedSet<Clazz> remaining_sorted = new TreeSet<Clazz>(remaining);
     log.info("jdependency classpath classes size: [" + cp.getClazzes().size() + "]");
     log.info("Needed classes: [" + needed.size() + "]");
     log.info("Needed by difference: [" + remaining_sorted.size() + "]");
@@ -277,6 +277,40 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
       log.info("List of removable dependencies written to [" + f.toPath() + "]");
     } catch (IOException e) {
       e.printStackTrace();
+    }
+
+    // also consider test classes to find needed classes
+    for (ClazzpathUnit u : test) {
+        removable.removeAll(u.getClazzes());
+        removable.removeAll(u.getTransitiveDependencies());
+        needed.addAll(u.getClazzes());
+        needed.addAll(u.getTransitiveDependencies());
+        for (Clazz c : u.getTransitiveDependencies()) {
+          deps_used.addAll(c.getClazzpathUnits());
+        }
+      }
+    maven_deps.removeAll(deps_used);
+    log.info("Needed classes with test: [" + needed.size() + "]");
+    log.info("Removable classes with test: [" + removable.size() + "]");
+    log.info("Used dependencies with test: [" + deps_used.size() + "]");
+    
+    try {
+        File f =
+            Paths.get(
+                    this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(),
+                    "needed-classes-w-test.txt")
+                .toFile();
+        FileUtil.writeToFile(f, StringUtil.join(needed, System.lineSeparator()));
+        log.info("List of needed classes with test written to [" + f.toPath() + "]");
+        f =
+            Paths.get(
+                    this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(),
+                    "removable-deps-w-test.txt")
+                .toFile();
+        FileUtil.writeToFile(f, StringUtil.join(maven_deps, System.lineSeparator()));
+        log.info("List of removable dependencies with test written to [" + f.toPath() + "]");
+    } catch (IOException e) {
+        e.printStackTrace();
     }
   }
 
