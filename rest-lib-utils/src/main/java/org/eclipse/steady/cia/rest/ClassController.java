@@ -116,13 +116,13 @@ public class ClassController {
    * <p>getClassArtifacts.</p>
    *
    * @param classname a {@link java.lang.String} object.
-   * @param rows a {@link java.lang.String} object.
+   * @param rows a {@link java.lang.String} object (max allowed value: 989, default: 989).
    * @return a {@link org.springframework.http.ResponseEntity} object.
    */
   @RequestMapping(value = "/libraryIds/{classname:.+}", method = RequestMethod.GET)
   public ResponseEntity<Set<Artifact>> getClassArtifacts(
       @PathVariable String classname,
-      @RequestParam(value = "rows", required = false, defaultValue = "1000") String rows) {
+      @RequestParam(value = "rows", required = false, defaultValue = "989") String rows) {
     try {
       //			final String url = "http://search.maven.org/solrsearch/select?q={q}&rows={rows}&wt={wt}";
       //			final StringBuilder query = new StringBuilder();
