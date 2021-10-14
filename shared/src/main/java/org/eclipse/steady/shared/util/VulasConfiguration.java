@@ -142,6 +142,7 @@ public class VulasConfiguration {
    * Regex used to discover configurations in the file system and (the root folder of) JAR files.
    */
   private static final String propertiesRegex = "steady-.*\\.properties";
+  private static final String oldPropertiesRegex = "vulas-.*\\.properties";
 
   /**
    * Regex used to discover configurations in the folder BOOT-INF/classes/ of executable Spring JARs.
@@ -173,10 +174,15 @@ public class VulasConfiguration {
    * the file system.
    */
   private void appendInitialConfigurations() {
-    // Search for properties in FS
+    // Search for vulas-* and steady-*.properties in FS
+    final Pattern old_pattern = Pattern.compile(VulasConfiguration.oldPropertiesRegex);
+    final FilenamePatternSearch old_fs = new FilenamePatternSearch(old_pattern);
+
     final Pattern pattern = Pattern.compile(VulasConfiguration.propertiesRegex);
     final FilenamePatternSearch fs = new FilenamePatternSearch(pattern);
+    
     final Set<Path> paths = fs.search(Paths.get("."));
+    paths.addAll(old_fs.search(Paths.get(".")));
 
     // Add: Writable map (takes all settings coming through setProperty)
     addConfiguration(writableConfiguration, TRANSIENT_CFG_LAYER);
@@ -212,7 +218,7 @@ public class VulasConfiguration {
                 + VulasConfiguration.homeProperties);
     if (FileUtil.isAccessibleFile(home_props.toPath())) {
       try {
-        Configuration config = new PropertiesConfiguration(home_props);
+        final Configuration config = new PropertiesConfiguration(home_props);
         addConfiguration(config, home_props.toString());
       } catch (ConfigurationException e) {
         getLog().error("Could not create configuration from file [" + home_props + "]");
