@@ -9,8 +9,9 @@ if [ -f /kb-importer/kb-importer.jar ]; then
   mv /kb-importer/kb-importer.jar /kb-importer/kaybee /kb-importer/data
 fi
 
-#substitute env variables in kaybeeconf.yaml
-envsubst < ../conf/kaybeeconf.yaml.sample > ../conf/kaybeeconf.yaml
+#substitute env variables used by kaybee in kaybeeconf.yaml
+sed "s|KB_IMPORTER_STATEMENTS_REPO|$KB_IMPORTER_STATEMENTS_REPO|g" ../conf/kaybeeconf.yaml.sample > ../conf/kaybeeconf.yaml
+sed -i "s|KB_IMPORTER_STATEMENTS_BRANCH|$KB_IMPORTER_STATEMENTS_BRANCH|g" ../conf/kaybeeconf.yaml
 
 ./kaybee update --force
 
@@ -32,9 +33,9 @@ if ! cat tmpcron | grep "kb-importer.sh"
 then
     if [ -z "$KB_IMPORTER_CRON" ]	
     then
-      echo "0 0 * * * PATH=$PATH BACKEND_SERVICE_URL=$BACKEND_SERVICE_URL KB_IMPORTER_STATEMENTS_FOLDER=$KB_IMPORTER_STATEMENTS_FOLDER KB_IMPORTER_STATEMENTS_BRANCH=$KB_IMPORTER_STATEMENTS_BRANCH /kb-importer/kb-importer.sh >> /kb-importer/cron.log 2>&1" >> tmpcron
+      echo "0 0 * * * PATH=$PATH BACKEND_SERVICE_URL=$BACKEND_SERVICE_URL KB_IMPORTER_STATEMENTS_FOLDER=$KB_IMPORTER_STATEMENTS_FOLDER KB_IMPORTER_STATEMENTS_BRANCH=$KB_IMPORTER_STATEMENTS_BRANCH KB_IMPORTER_CLONE_FOLDER=$KB_IMPORTER_CLONE_FOLDER KB_IMPORTER_SKIP_CLONE=$KB_IMPORTER_SKIP_CLONE /kb-importer/kb-importer.sh >> /kb-importer/cron.log 2>&1" >> tmpcron
     else
-      echo "$KB_IMPORTER_CRON" " PATH=$PATH BACKEND_SERVICE_URL=$BACKEND_SERVICE_URL KB_IMPORTER_STATEMENTS_FOLDER=$KB_IMPORTER_STATEMENTS_FOLDER KB_IMPORTER_STATEMENTS_BRANCH=$KB_IMPORTER_STATEMENTS_BRANCH /kb-importer/kb-importer.sh  >> /kb-importer/cron.log 2>&1" >> tmpcron
+      echo "$KB_IMPORTER_CRON" " PATH=$PATH BACKEND_SERVICE_URL=$BACKEND_SERVICE_URL KB_IMPORTER_STATEMENTS_FOLDER=$KB_IMPORTER_STATEMENTS_FOLDER KB_IMPORTER_STATEMENTS_BRANCH=$KB_IMPORTER_STATEMENTS_BRANCH KB_IMPORTER_CLONE_FOLDER=$KB_IMPORTER_CLONE_FOLDER KB_IMPORTER_SKIP_CLONE=$KB_IMPORTER_SKIP_CLONE /kb-importer/kb-importer.sh  >> /kb-importer/cron.log 2>&1" >> tmpcron
     fi
 fi
 crontab tmpcron

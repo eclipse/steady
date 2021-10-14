@@ -140,7 +140,6 @@ services:
       - "./kb-importer/conf:/kb-importer/conf"
       - "./kb-importer/certs:/kb-importer/certs"
       - "./kb-importer/data:/kb-importer/data:delegated"
-      - "./kb-importer/tmp:/tmp:delegated"
     environment:
       - CIA_SERVICE_URL=http://cia:8092/cia
       - BACKEND_SERVICE_URL=http://backend:8091/backend
