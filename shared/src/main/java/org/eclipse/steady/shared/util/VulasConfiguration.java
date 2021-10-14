@@ -142,6 +142,7 @@ public class VulasConfiguration {
    * Regex used to discover configurations in the file system and (the root folder of) JAR files.
    */
   private static final String propertiesRegex = "steady-.*\\.properties";
+
   private static final String oldPropertiesRegex = "vulas-.*\\.properties";
 
   /**
@@ -180,7 +181,7 @@ public class VulasConfiguration {
 
     final Pattern pattern = Pattern.compile(VulasConfiguration.propertiesRegex);
     final FilenamePatternSearch fs = new FilenamePatternSearch(pattern);
-    
+
     final Set<Path> paths = fs.search(Paths.get("."));
     paths.addAll(old_fs.search(Paths.get(".")));
 
