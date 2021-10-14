@@ -95,13 +95,13 @@ spec:
                   -Dspotbugs.includeFilterFile=findbugs-include.xml \
                   -Dspotbugs.failOnError=true \
                   clean install com.github.spotbugs:spotbugs-maven-plugin:4.2.3:check'
-          sh 'mvn -B -e -P javadoc \
-                  -Dspring.standalone \
-                  -DskipTests \
-                  -Dreference.repo=https://repo.maven.apache.org/maven2 \
-                  clean verify'
-          sh 'cat target/root-*.buildinfo.compare'
-          sh 'grep ko=0 target/root-*.buildinfo.compare' // Fail if JARs are different
+          // sh 'mvn -B -e -P javadoc \
+          //         -Dspring.standalone \
+          //         -DskipTests \
+          //         -Dreference.repo=https://repo.maven.apache.org/maven2 \
+          //         clean verify'
+          // sh 'cat target/root-*.buildinfo.compare'
+          // sh 'grep ko=0 target/root-*.buildinfo.compare' // Fail if JARs are different
         }
       }
     }
