@@ -26,7 +26,7 @@ In comparison to other tools, the detection is code-centric and usage-based, whi
 
 ## Quickstart
 
-The following two components are needed to scan your application:
+This section provides the bare minimum to setup Steady and to use its Maven plugin for scanning a Java application.
 
 1. The Steady **backend**, a Docker Compose application, stores information about open-source vulnerabilities and scan results. It has to be installed once, ideally on a dedicated host, and must be running during application scans.
 
@@ -36,9 +36,11 @@ The following two components are needed to scan your application:
 
 2. A Steady **scan client**, e.g. the Maven plugin, analyzes the code of your application project and its dependencies. Being [available on Maven Central](https://search.maven.org/search?q=g:org.eclipse.steady), the clients do not require any installation. However, they need to be run whenever your application's code or dependencies change.
 
-    For Maven, `cd` into your project and run the following (replace `<host>` by the IP address or hostname of the backend system):
+    In case application scan and Steady backend run on different hosts, the scan clients must be configured accordingly. Just copy and adjust the file `~/.steady.properties`, which has been created in the user's home directory during the backend setup.
 
-    `mvn -Dvulas.shared.backend.serviceUrl=http://<host>/backend org.eclipse.steady:plugin-maven:3.2.0:app`
+    For Maven, `cd` into your project and run the `app` analysis goal as follows (see [here](https://eclipse.github.io/steady/user/manuals/analysis/) for more information about available goals):
+
+    `mvn org.eclipse.steady:plugin-maven:3.2.0:app`
 
     **Note**: During application scans, a lot of information about its dependencies is uploaded to the backend, which makes that the first scan takes significantly more time than later scans of the same application.
 
