@@ -1,5 +1,9 @@
 version: '2.4'
 
+# This Docker Compose file makes use of profiles, available as of Docker Compose 1.28.
+# The "ui" profile groups three services related to the Steady frontend, and can be
+# started and stopped without impacting the scan functionality (cf. start-steady.sh).
+
 services:
   frontend-apps:
     container_name: steady-frontend-apps
