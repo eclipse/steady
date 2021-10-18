@@ -6,7 +6,7 @@ This section provides the bare minimum to setup Steady and to use its Maven plug
 
     Download and run [`setup-steady.sh`](https://raw.githubusercontent.com/eclipse/steady/master/docker/setup-steady.sh) to install the backend on any host with a recent version of Docker/Docker Compose (the use of profiles requires a version >= 1.28, installable with `pip install docker-compose` or as [described here](https://github.com/docker/compose#where-to-get-docker-compose)).
 
-    **Note**: During its first execution, triggered by the setup script or directly using `start-steady.sh -s ui`, the backend will be bootstrapped by downloading and processing code-level information of hundreds of vulnerabilities maintained in the open-source knowledge base [Project KB](https://github.com/sap/project-kb). While the bootstrapping can take up to one hour, later updates will import the delta on a daily basis.
+    **Notes**: During its first execution, triggered by the setup script or directly using `start-steady.sh -s ui`, the backend will be bootstrapped by downloading and processing code-level information of hundreds of vulnerabilities maintained in the open-source knowledge base [Project KB](https://github.com/sap/project-kb). While the bootstrapping can take up to one hour, later updates will import the delta on a daily basis. Run `start-steady.sh -s none` to shut down all Docker Compose services of the backend.
 
 2. A Steady **scan client**, e.g. the Maven plugin, analyzes the code of your application project and its dependencies. Being [available on Maven Central](https://search.maven.org/search?q=g:org.eclipse.steady), the clients do not require any installation. However, they need to be run whenever your application's code or dependencies change.
 
