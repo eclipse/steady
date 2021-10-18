@@ -19,7 +19,7 @@ A finding (table row) in the _Vulnerabilities_ tab represents a tuple (library, 
 
 ## Exempt
 
-If **vulnerable code is NOT considered exploitable** in a given application context, the respective finding (or an entire scope) can be exempted. This can be done by specifying additional configuration settings, preferably in a dedicated properties file (e.g., `vulas-exemptions.properties`). Keeping exemptions in a dedicated file avoids the risk of making accidental changes to other settings. Storing such a dedicated file in the source code repository of the application under analysis, thus making the file subject to version control, has the advantage of tracking modifications in terms of date and author. 
+If **vulnerable code is NOT considered exploitable** in a given application context, the respective finding (or an entire scope) can be exempted. This can be done by specifying additional configuration settings, preferably in a dedicated properties file (e.g., `steady-exemptions.properties`). Keeping exemptions in a dedicated file avoids the risk of making accidental changes to other settings. Storing such a dedicated file in the source code repository of the application under analysis, thus making the file subject to version control, has the advantage of tracking modifications in terms of date and author. 
 
 The relevant settings to be added are as follows:
 ```

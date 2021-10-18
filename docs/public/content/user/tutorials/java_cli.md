@@ -34,13 +34,13 @@ This folder will contain the following items:
 
 : This is used to instrument the Java runtime when performing dynamic analysis.
 
-**`./vulas-custom.properties.sample`**
+**`./steady-custom.properties.sample`**
 
 : This is a template for the configuration file required by @@PROJECT_NAME@@. You will change it in order to specify an identifier for your application (see below).
 
 ## Setup
 
-1. Rename the file `vulas-custom.properties.sample` to `vulas-custom.properties` and edit it to specify `<GROUP>`, `<ARTIFACT>` and `<VERSION>` of the application to be analyzed. Those settings will be used to uniquely identify the application in the backend.
+1. Rename the file `steady-custom.properties.sample` to `steady-custom.properties` and edit it to specify `<GROUP>`, `<ARTIFACT>` and `<VERSION>` of the application to be analyzed. Those settings will be used to uniquely identify the application in the backend.
 2. Set the option `vulas.core.space.token` so that it is assigned your own workspace token.
 3. Put the application code (java, class or JAR files) and all application dependencies (JAR files) into this folder.
 4. Specify how @@PROJECT_NAME@@ can distinguish the code of your application from its dependencies, which is necessary for the call graph construction during the reachability analyses (goals `a2c` and `t2c`).

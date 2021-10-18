@@ -4,8 +4,8 @@ apiVersion: "v1"
 # Ranks: smaller value means higher rank (higher priority)
 # Do not edit the KB_IMPOTER_* placeholders
 sources:
-  - repo: $KB_IMPORTER_STATEMENTS_REPO
-    branch: $KB_IMPORTER_STATEMENTS_BRANCH
+  - repo: KB_IMPORTER_STATEMENTS_REPO
+    branch: KB_IMPORTER_STATEMENTS_BRANCH
     rank: 10
 
 # Edit this to point to your Eclipse Steady server (optional)

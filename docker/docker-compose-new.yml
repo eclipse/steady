@@ -1,5 +1,9 @@
 version: '2.4'
 
+# This Docker Compose file makes use of profiles, available as of Docker Compose 1.28.
+# The "ui" profile groups three services related to the Steady frontend, and can be
+# started and stopped without impacting the scan functionality (cf. start-steady.sh).
+
 services:
   frontend-apps:
     container_name: steady-frontend-apps
@@ -10,6 +14,8 @@ services:
     security_opt:
       - no-new-privileges
     restart: always
+    profiles:
+      - ui
 
   frontend-bugs:
     container_name: steady-frontend-bugs
@@ -20,6 +26,8 @@ services:
     security_opt:
       - no-new-privileges
     restart: always
+    profiles:
+      - ui
 
   haproxy:
     container_name: steady-haproxy
@@ -30,13 +38,13 @@ services:
       - "8033:8080"
       - "8034:7070"
     volumes:
-      - "./haproxy/conf/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
+      - "./conf/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
     command: ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
     depends_on:
-      - frontend-apps
-      - frontend-bugs
+      # - frontend-apps
+      # - frontend-bugs
       - rest-backend
-      - rest-lib-utils
+      # - rest-lib-utils
     security_opt:
       - no-new-privileges
     restart: always
@@ -48,7 +56,7 @@ services:
     expose:
       - "8080"
     volumes:
-      - "./data/patcheval:/patcheval-data"
+      - "./data/patch-lib-analyzer:/patcheval-data"
     links:
       - rest-backend:backend
       - rest-lib-utils:cia
@@ -76,7 +84,7 @@ services:
       - "8032:5432"
     volumes:
       - steady-postgres-data:/var/lib/postgresql/data
-      - ./postgresql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+      - ./conf/postgresql:/docker-entrypoint-initdb.d:ro
     security_opt:
       - no-new-privileges
     restart: always
@@ -86,7 +94,7 @@ services:
     hostname: rest-backend
     env_file:
       - .env
-      - ./rest-backend/conf/restbackend.properties
+      - ./conf/rest-backend/restbackend.properties
     image: eclipse/steady-rest-backend:${VULAS_RELEASE}
     expose:
       - "8091"
@@ -98,9 +106,9 @@ services:
       - spring.datasource.password=${POSTGRES_PASSWORD}
     links:
       - postgresql:postgresql
-      - rest-lib-utils:cia
+      # - rest-lib-utils:cia
     volumes:
-      - "./data/db-dump/flyway-callbacks:/flyway-callbacks"
+      - "./data/rest-backend:/flyway-callbacks"
     depends_on:
       - postgresql
     security_opt:
@@ -126,20 +134,22 @@ services:
     expose:
       - "80"
     volumes:
-      - ./cache/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./conf/cache/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./data/cache/:/tmp/cache_all/
     security_opt:
       - no-new-privileges
     restart: always
+    profiles:
+      - ui
 
   kb-importer:
     container_name: steady-kb-importer
     image: eclipse/steady-kb-importer:${VULAS_RELEASE}
     env_file: .env
     volumes:
-      - "./kb-importer/conf:/kb-importer/conf"
-      - "./kb-importer/certs:/kb-importer/certs"
-      - "./kb-importer/data:/kb-importer/data:delegated"
+      - "./conf/kb-importer:/kb-importer/conf"
+      - "./certs:/kb-importer/certs"
+      - "./data/kb-importer:/kb-importer/data:delegated"
     environment:
       - CIA_SERVICE_URL=http://cia:8092/cia
       - BACKEND_SERVICE_URL=http://backend:8091/backend
