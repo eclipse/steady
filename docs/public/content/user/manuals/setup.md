@@ -87,7 +87,7 @@ The plugin for Maven can be used with or without adding a `<profile>` section to
 
 * **Without profile**, the execution of goals requires the use of the plugin's fully qualified name, e.g., `mvn compile org.eclipse.steady:plugin-maven:@@PROJECT_VERSION@@:app`. Moreover, you need to specify the following mandatory configuration settings. As described [here](#configuration), there are several ways of doing so, however, a file as follows is very common:
 
-    **vulas-custom.properties**
+    **steady-custom.properties**
 
     ```
     vulas.core.space.token = <YOUR WORKSPACE TOKEN>
@@ -136,7 +136,7 @@ The plugin for Gradle requires changes of the following files:
     }
 
     allprojects {
-        apply plugin: "vulas"
+        apply plugin: "steady"
     }
 ```
 
@@ -172,7 +172,7 @@ The Gradle plugin only works with later releases of Gradle. How to upgrade is de
 | `./app/` | Put the application code (java, class or JAR files) and all application dependencies (JAR files) into this folder. It will be searched recursively, thus, it is possible to just copy the entire installation directory of an application into the folder. **Important**: (1) Single java and class files are always considered as application code, no matter the package prefix configured with ```vulas.core.app.appPrefixes```. (2) JARs are always considered as application dependency unless they only contain methods starting with the configured package prefix. (3) Nested JARs must be extracted, WARs can stay as-is. |
 | `./steady-cli-@@PROJECT_VERSION@@-jar-with-dependencies.jar` | An executable JAR used to run the different @@PROJECT_NAME@@ goals. |
 | `./instr/lang-java-@@PROJECT_VERSION@@-jar-with-dependencies.jar` | Used to instrument Java runtimes. |
-| `./vulas-custom.properties.sample` | Configuration settings for @@PROJECT_NAME@@. **Important**: (1) Rename the file to `vulas-custom.properties`. (2) Specify `<GROUP>`, `<ARTIFACT>` and `<VERSION>` of the application to be analyzed. (3) Specify how @@PROJECT_NAME@@ identifies your application code (either using `vulas.core.app.appPrefixes` or `vulas.core.app.appJarNames`, see below for more information). (4) Specify the workspace token `vulas.core.space.token`. |
+| `./steady-custom.properties.sample` | Configuration settings for @@PROJECT_NAME@@. **Important**: (1) Rename the file to `steady-custom.properties`. (2) Specify `<GROUP>`, `<ARTIFACT>` and `<VERSION>` of the application to be analyzed. (3) Specify how @@PROJECT_NAME@@ identifies your application code (either using `vulas.core.app.appPrefixes` or `vulas.core.app.appJarNames`, see below for more information). (4) Specify the workspace token `vulas.core.space.token`. |
 
 **Identification of application code**: You can use `vulas.core.app.appPrefixes` or `vulas.core.app.appJarNames` to tell @@PROJECT_NAME@@ how to identify the code of your application, which is important for the call graph construction during the `a2c` reachability analysis. This analysis is not complete if not all the relevant application methods are used as entry points for the call graph construction. As such, the potential execution of vulnerable open-source methods may be missed. A good indicator to see whether specification is correct is to see whether there are items in the Dependencies tab that are created by you (or your organization), or whether there are open-source packages mentioned in the table on the Statistics tab.
 
@@ -191,7 +191,7 @@ vulas.core.app.appJarNames =
 The client-side analysis tools can be configured in different ways. At runtime, the following layers are combined in order to establish the effective configuration (which is printed to console upon goal execution).
 
 - **Java system properties**: Can be specified when running `java` or `mvn`, each setting must be prefixed with `-D`
-- **Property files in file system**: Can be specified by adding property file(s) in the folder where @@PROJECT_NAME@@ is executed (or any of its subfolders). The file name must adhere to the format `vulas-*.properties`, and its entries must be specified according to the [Java spec](https://en.wikipedia.org/wiki/.properties)
+- **Property files in file system**: Can be specified by adding property file(s) in the folder where @@PROJECT_NAME@@ is executed (or any of its subfolders). The file name must adhere to the format `steady-*.properties`, and its entries must be specified according to the [Java spec](https://en.wikipedia.org/wiki/.properties)
 - **Plugin configuration**:
     - Maven: Can be specified in the `<layeredConfiguration>` section of the Maven plugin
     - Gradle: **todo**

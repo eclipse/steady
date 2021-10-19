@@ -25,6 +25,7 @@ mkdir -p  $WORKDIR/steady-cli/instr
 
 curl -o $WORKDIR/steady-cli/instr/lang-java-${VULAS_RELEASE}-jar-with-dependencies.jar https://repo1.maven.org/maven2/org/eclipse/steady/lang-java/${VULAS_RELEASE}/lang-java-${VULAS_RELEASE}-jar-with-dependencies.jar
 curl -o $WORKDIR/steady-cli/steady-cli-${VULAS_RELEASE}-jar-with-dependencies.jar      https://repo1.maven.org/maven2/org/eclipse/steady/cli-scanner/${VULAS_RELEASE}/cli-scanner-${VULAS_RELEASE}-jar-with-dependencies.jar
-cp vulas-custom.properties.sample $WORKDIR/steady-cli
+cp steady-custom.properties.sample $WORKDIR/steady-cli
 zip -r $WORKDIR/steady-cli-$VULAS_RELEASE.zip $WORKDIR/steady-cli/
+
 echo "Done"

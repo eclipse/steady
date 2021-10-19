@@ -26,13 +26,13 @@ This folder will contain the following items:
 
 : An executable JAR, which is the actual command-line version of the @@PROJECT_NAME@@ client. This is what you will use later to execute @@PROJECT_NAME@@ scans.
 
-**`./vulas-custom.properties.sample`**
+**`./steady-custom.properties.sample`**
 
 : This is a template for the configuration file required by @@PROJECT_NAME@@. You will change it in order to specify an identifier for your application (see below).
 
 ## Setup
 
-1. Rename the file `vulas-custom.properties.sample` to `vulas-custom.properties` and edit it to specify `<GROUP>`, `<ARTIFACT>` and `<VERSION>` of the application to be analyzed. Those settings will be used to uniquely identify the application in the backend. For Python applications, feel free to use the same value for both `<GROUP>` and `<ARTIFACT>`.
+1. Rename the file `steady-custom.properties.sample` to `steady-custom.properties` and edit it to specify `<GROUP>`, `<ARTIFACT>` and `<VERSION>` of the application to be analyzed. Those settings will be used to uniquely identify the application in the backend. For Python applications, feel free to use the same value for both `<GROUP>` and `<ARTIFACT>`.
 2. Set the option `vulas.core.space.token` so that it is assigned your own workspace token.
 3. Put the application code (python files) into the folder `./app/`.
 4. Specify the setting `vulas.core.bom.python.pip` such that it points to a `pip` binary (not only the path in which the binary is located, but the binary itself, e.g., `/foor/bar/pip`). `pip` will be used to determine the dependencies of your Python application. You can either use the global `pip` or one installed in a virtual environment (`virtualenv`, Anaconda, etc.).

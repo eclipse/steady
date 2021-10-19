@@ -35,7 +35,7 @@ The plugin for Maven can be used with or without adding a Steady profile to the 
 
 - **Without Steady profile**, the execution of goals requires the use of the plugin's fully qualified name, e.g., `mvn compile org.eclipse.steady:plugin-maven:<latest>:app`. Moreover, the [analysis goal](Goals.md) _test_ cannot be executed (because mandatory Steady settings cannot be passed to the maven-surefire-plugin). Additionally, you need to specify the following mandatory configuration settings. As described [here](Configuration.md), there are several ways of doing so, however, a file as follows is very common:
 
-**vulas-custom.properties**
+**steady-custom.properties**
 
 ```ini
     vulas.core.space.token = <YOUR WORKSPACE TOKEN>

@@ -35,7 +35,7 @@ public class IT03_ClassControllerTest {
     try {
       Set<Artifact> response =
           r.getArtifactForClass(
-              "org.apache.commons.fileupload.MultipartStream", "1000", null, "jar");
+              "org.apache.commons.fileupload.MultipartStream", "989", null, "jar");
 
       System.out.println(response.size());
       assertTrue(response.size() >= 172);
