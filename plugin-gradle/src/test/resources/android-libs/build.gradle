@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-    id 'vulas'
+    id 'steady'
 }
 
 allprojects {
