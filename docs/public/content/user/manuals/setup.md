@@ -136,7 +136,7 @@ The plugin for Gradle requires changes of the following files:
     }
 
     allprojects {
-        apply plugin: "vulas"
+        apply plugin: "steady"
     }
 ```
 
