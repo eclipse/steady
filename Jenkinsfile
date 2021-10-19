@@ -87,7 +87,7 @@ spec:
     stage('Create javadoc + sources, Verify Spotbugs and Reproducibility') {
       steps {
         container('maven') {
-          sh 'mvn -B -e -P javadoc \
+          sh 'mvn -B -e -P gradle,javadoc \
                   -Dspring.standalone \
                   -DskipTests \
                   -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace \
