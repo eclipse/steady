@@ -131,10 +131,6 @@
 		<snapshots.repo></snapshots.repo>
 		<releases.repo></releases.repo>
 
-		<!-- Repos used for resolving dependencies, specify as system property
-			(-D) to change the defaults -->
-		<gradle.repo>https://maven.google.com/</gradle.repo>
-
 		<!-- Skip certain plugins by default, change for all childs to be installed & deployed -->
 		<maven.deploy.skip>true</maven.deploy.skip>
 		
@@ -181,12 +177,6 @@
 			<modules>
 				<module>plugin-gradle</module>
 			</modules>
-			<repositories>
-				<repository>
-					<id>gradle</id>
-					<url>${gradle.repo}</url>
-				</repository>
-			</repositories>
 		</profile>
 
 		<!-- Activate when deploying to the Central Repo. Also see https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release -->

@@ -1,5 +1,5 @@
 plugins {
-    id 'vulas'
+    id 'steady'
 }
 
 apply plugin: 'java-library'
