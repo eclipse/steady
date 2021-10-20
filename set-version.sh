@@ -41,22 +41,24 @@ fi
 
 # Build timestamp
 old_timestamp=`less pom.xml | grep -m 1 "<project.build.outputTimestamp>" | sed -n "s/.*<project.build.outputTimestamp>\(.*\)<\/project.build.outputTimestamp>.*/\1/p"`
-new_timestamp=`date --utc --iso-8601=seconds`
+#new_timestamp=`date --utc --iso-8601=seconds`
+new_timestamp=`date -u "+%Y-%m-%dT%H:%M:%S%z"`
 
 # Maven
-find . -name pom.xml -exec sed -i "0,/${old}/s//${new}/" {} \;
-sed -i "s/${old_timestamp}/${new_timestamp}/" pom.xml
+#find . -name pom.xml -exec sed -i "0,/${old}/s//${new}/" {} \;
+sed -i "" "s/${old_timestamp}/${new_timestamp}/" pom.xml
 
 # Travis
-sed -i "s/${old}/${new}/" .travis/.env
+sed -i "" "s/${old}/${new}/" .travis/.env
 
 # mkdocs (keep current if new version is snapshot)
 if [ -z $is_snap ]; then
-  sed -i "s/${old_doc}/${new}/" docs/mkdocs.yml
-  sed -i "s/${old_doc}/${new}/" docs/public.properties
-  sed -i "s/${old_doc}/${new}/" docker/setup-steady.sh
-  sed -i "s/${old_doc}/${new}/" docker/start-steady.sh
+  sed -i "" "s/${old_doc}/${new}/" docs/mkdocs.yml
+  sed -i "" "s/${old_doc}/${new}/" docs/public.properties
+  sed -i "" "s/${old_doc}/${new}/" docker/setup-steady.sh
+  sed -i "" "s/${old_doc}/${new}/" docker/start-steady.sh
+  echo
 fi
 
 # Kubernetes doc files
-find kubernetes -name README.md -exec sed -i "s/${old}/${new}/" {} \;
+find kubernetes -name README.md -exec sed -i "" "s/${old}/${new}/" {} \;
