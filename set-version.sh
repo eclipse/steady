@@ -45,7 +45,8 @@ old_timestamp=`less pom.xml | grep -m 1 "<project.build.outputTimestamp>" | sed 
 new_timestamp=`date -u "+%Y-%m-%dT%H:%M:%S%z"`
 
 # Maven
-find . -name pom.xml -exec sed -i "" "0,/${old}/s//${new}/" {} \;
+#find . -name pom.xml -exec sed -i "" "0,/${old}/s//${new}/" {} \;
+find . -name pom.xml -exec sed -i "" "s/${old}/${new}/" {} \;
 sed -i "" "s/${old_timestamp}/${new_timestamp}/" pom.xml
 
 # Travis
@@ -57,7 +58,6 @@ if [ -z $is_snap ]; then
   sed -i "" "s/${old_doc}/${new}/" docs/public.properties
   sed -i "" "s/${old_doc}/${new}/" docker/setup-steady.sh
   sed -i "" "s/${old_doc}/${new}/" docker/start-steady.sh
-  echo
 fi
 
 # Kubernetes doc files
