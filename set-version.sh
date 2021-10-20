@@ -54,6 +54,8 @@ sed -i "s/${old}/${new}/" .travis/.env
 if [ -z $is_snap ]; then
   sed -i "s/${old_doc}/${new}/" docs/mkdocs.yml
   sed -i "s/${old_doc}/${new}/" docs/public.properties
+  sed -i "s/${old_doc}/${new}/" docker/setup-steady.sh
+  sed -i "s/${old_doc}/${new}/" docker/start-steady.sh
 fi
 
 # Kubernetes doc files
