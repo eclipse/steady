@@ -18,12 +18,12 @@
 # SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
 #
 
-# Updates the build timestamp and version identifier in files used by Maven, Travis and mkdocs
+# Updates the build timestamp and version identifier in files used by Maven, Travis and mkdocs as well as some bash scripts
 # Use to bump versions before and after every release
 
 if [ -z $1 ]; then
   printf "usage: set-version.sh NEW-VERSION\n\n"
-  printf "Updates the build timestamp and version identifier in files used by Maven, Travis and mkdocs"
+  printf "Updates the build timestamp and version identifier in files used by Maven, Travis and mkdocs as well as some bash scripts"
   exit 1
 fi
 
@@ -52,7 +52,7 @@ sed -i "" "s/${old_timestamp}/${new_timestamp}/" pom.xml
 # Travis
 sed -i "" "s/${old}/${new}/" .travis/.env
 
-# mkdocs (keep current if new version is snapshot)
+# mkdocs and bash scripts (keep current if new version is snapshot)
 if [ -z $is_snap ]; then
   sed -i "" "s/${old_doc}/${new}/" docs/mkdocs.yml
   sed -i "" "s/${old_doc}/${new}/" docs/public.properties
