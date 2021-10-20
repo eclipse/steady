@@ -45,7 +45,7 @@ old_timestamp=`less pom.xml | grep -m 1 "<project.build.outputTimestamp>" | sed 
 new_timestamp=`date -u "+%Y-%m-%dT%H:%M:%S%z"`
 
 # Maven
-#find . -name pom.xml -exec sed -i "0,/${old}/s//${new}/" {} \;
+find . -name pom.xml -exec sed -i "" "0,/${old}/s//${new}/" {} \;
 sed -i "" "s/${old_timestamp}/${new_timestamp}/" pom.xml
 
 # Travis
