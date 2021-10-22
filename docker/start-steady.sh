@@ -1,11 +1,17 @@
 #!/bin/bash
 
 REL="3.2.0"
-SERVICES="ui"
+SERVICES="all"
 DC_REQUIRED="1.28"
 
 stop_ui () {
     for service in 'frontend-apps frontend-bugs cache' ; do
+        docker-compose -f ./docker-compose.yml stop ${service}
+    done
+}
+
+stop_vdb () {
+    for service in 'rest-lib-utils kb-importer patch-lib-analyzer' ; do
         docker-compose -f ./docker-compose.yml stop ${service}
     done
 }
@@ -18,11 +24,13 @@ Requires: docker-compose >= $DC_REQUIRED
 
 Usage: $0 [options...]
 
- -s, --services <none|core|ui> Docker Compose services to start (default: ui)
+ -s, --services <none|core|ui|vdb|all> Docker Compose services to start (default: all)
 
                                none - No services at all (corresponds to docker-compose stop)
-                               core - Only core services (those required by the Maven/Gradle plugins or the CLI)
-                               ui   - All services, incl. the Web interfaces for app and bug mgmt.
+                               core - Core services only (required by the Maven/Gradle plugins or the CLI)
+                               ui   - Services delivering the Web interfaces for app and vuln. management
+                               vdb  - Services to initialize and update the vulnerability database
+                               all  - All services
 
  -h, --help                    Prints this help text
 HELP_USAGE
@@ -102,6 +110,7 @@ case $SERVICES in
         ;;
     core)
         stop_ui
+        stop_vdb
         docker-compose -f ./docker-compose.yml up -d --build
         rc=$?
         if [[ $rc == 0 ]]; then
@@ -112,7 +121,29 @@ case $SERVICES in
         fi
         ;;
     ui)
+        stop_vdb
         docker-compose -f ./docker-compose.yml --profile ui up -d --build
+        rc=$?
+        if [[ $rc == 0 ]]; then
+            printf "Started Steady's core and UI Docker Compose services\n"
+            core_usage; ui_usage; more_info
+        else
+            docker_error
+        fi
+        ;;
+    vdb)
+        stop_ui
+        docker-compose -f ./docker-compose.yml --profile vdb up -d --build
+        rc=$?
+        if [[ $rc == 0 ]]; then
+            printf "Started Steady's core and vdb Docker Compose services\n"
+            core_usage; more_info
+        else
+            docker_error
+        fi
+        ;;
+    all)
+        docker-compose -f ./docker-compose.yml --profile ui --profile vdb up -d --build
         rc=$?
         if [[ $rc == 0 ]]; then
             printf "Started all of Steady's Docker Compose services\n"

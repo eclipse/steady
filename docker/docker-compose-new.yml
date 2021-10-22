@@ -1,34 +1,22 @@
 version: '2.4'
 
-# This Docker Compose file makes use of profiles, available as of Docker Compose 1.28.
-# The "ui" profile groups three services related to the Steady frontend, and can be
-# started and stopped without impacting the scan functionality (cf. start-steady.sh).
+# This Docker Compose application makes use of profiles, available as of Docker
+# Compose 1.28.
+#
+# - Core services: haproxy, rest-backend and postgresql need to always run
+# - UI services: frontend-apps, frontend-bugs and cache deliver OpenUI5 Web
+#   applications for scan results (http://localhost:8033/apps) and
+#   vulnerabilities (http://localhost:8033/bugs).
+# - VDB services: rest-lib-utils, kb-importer and patch-lib-analyzer update
+#   the vulnerability database and resolve unassessed findings (by comparing
+#   method bodies obtained from rest-lib-utils)
+#
+# The different profiles can be started using start-steady.sh or using Docker
+# Compose's --profile option, e.g. docker-compose --profile ui up -d --build
 
 services:
-  frontend-apps:
-    container_name: steady-frontend-apps
-    hostname: frontend-apps
-    image: eclipse/steady-frontend-apps:${VULAS_RELEASE}
-    expose:
-      - "8080"
-    security_opt:
-      - no-new-privileges
-    restart: always
-    profiles:
-      - ui
 
-  frontend-bugs:
-    container_name: steady-frontend-bugs
-    hostname: frontend-bugs
-    image: eclipse/steady-frontend-bugs:${VULAS_RELEASE}
-    expose:
-      - "8080"
-    security_opt:
-      - no-new-privileges
-    restart: always
-    profiles:
-      - ui
-
+  # Core services
   haproxy:
     container_name: steady-haproxy
     hostname: haproxy
@@ -41,32 +29,30 @@ services:
       - "./conf/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
     command: ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
     depends_on:
-      # - frontend-apps
-      # - frontend-bugs
       - rest-backend
-      # - rest-lib-utils
     security_opt:
       - no-new-privileges
     restart: always
 
-  patch-lib-analyzer:
-    container_name: steady-patch-lib-analyzer
-    hostname: patch-lib-analyzer
-    image: eclipse/steady-patch-lib-analyzer:${VULAS_RELEASE}
+  rest-backend:
+    container_name: steady-rest-backend
+    hostname: rest-backend
+    env_file:
+      - .env
+      - ./conf/rest-backend/restbackend.properties
+    image: eclipse/steady-rest-backend:${VULAS_RELEASE}
     expose:
-      - "8080"
-    volumes:
-      - "./data/patch-lib-analyzer:/patcheval-data"
-    links:
-      - rest-backend:backend
-      - rest-lib-utils:cia
-    depends_on:
-      - rest-backend
+      - "8091"
     environment:
-      - PATCHEVAL_OPTS=-bug "" -folder /patcheval-data -j -h 0 -p 6
-      - vulas.shared.cia.serviceUrl=http://cia:8092/cia
-      - vulas.shared.backend.serviceUrl=http://backend:8091/backend
-      - vulas.patchEval.onlyAddNewResults=true
+      - DELAY_STARTUP=5
+      - vulas.shared.cia.serviceUrl=http://rest-lib-utils:8092/cia
+      - vulas.shared.cve.serviceUrl=https://services.nvd.nist.gov/rest/json/cve/1.0/<ID>
+      - spring.datasource.username=${POSTGRES_USER}
+      - spring.datasource.password=${POSTGRES_PASSWORD}
+    volumes:
+      - "./data/rest-backend:/flyway-callbacks"
+    depends_on:
+      - postgresql
     security_opt:
       - no-new-privileges
     restart: always
@@ -89,43 +75,35 @@ services:
       - no-new-privileges
     restart: always
 
-  rest-backend:
-    container_name: steady-rest-backend
-    hostname: rest-backend
-    env_file:
-      - .env
-      - ./conf/rest-backend/restbackend.properties
-    image: eclipse/steady-rest-backend:${VULAS_RELEASE}
+  # UI services
+  frontend-apps:
+    container_name: steady-frontend-apps
+    hostname: frontend-apps
+    image: eclipse/steady-frontend-apps:${VULAS_RELEASE}
     expose:
-      - "8091"
-    environment:
-      - DELAY_STARTUP=5
-      - vulas.shared.cia.serviceUrl=http://cia:8092/cia
-      - vulas.shared.cve.serviceUrl=https://services.nvd.nist.gov/rest/json/cve/1.0/<ID>
-      - spring.datasource.username=${POSTGRES_USER}
-      - spring.datasource.password=${POSTGRES_PASSWORD}
-    links:
-      - postgresql:postgresql
-      # - rest-lib-utils:cia
-    volumes:
-      - "./data/rest-backend:/flyway-callbacks"
+      - "8080"
     depends_on:
-      - postgresql
+      - rest-backend
+      - cache
     security_opt:
       - no-new-privileges
     restart: always
+    profiles:
+      - ui
 
-  rest-lib-utils:
-    container_name: steady-rest-lib-utils
-    hostname: rest-lib-utils
-    image: eclipse/steady-rest-lib-utils:${VULAS_RELEASE}
+  frontend-bugs:
+    container_name: steady-frontend-bugs
+    hostname: frontend-bugs
+    image: eclipse/steady-frontend-bugs:${VULAS_RELEASE}
     expose:
-        - "8092"
-    volumes:
-      - "./data/rest-lib-utils:/root/"
+      - "8080"
+    depends_on:
+      - rest-backend
     security_opt:
       - no-new-privileges
     restart: always
+    profiles:
+      - ui
 
   cache:
     container_name: steady-cache
@@ -142,6 +120,43 @@ services:
     profiles:
       - ui
 
+  # VDB services
+  patch-lib-analyzer:
+    container_name: steady-patch-lib-analyzer
+    hostname: patch-lib-analyzer
+    image: eclipse/steady-patch-lib-analyzer:${VULAS_RELEASE}
+    expose:
+      - "8080"
+    volumes:
+      - "./data/patch-lib-analyzer:/patcheval-data"
+    depends_on:
+      - rest-backend
+      - rest-lib-utils
+    environment:
+      - PATCHEVAL_OPTS=-bug "" -folder /patcheval-data -j -h 0 -p 6
+      - vulas.shared.cia.serviceUrl=http://rest-lib-utils:8092/cia
+      - vulas.shared.backend.serviceUrl=http://rest-backend:8091/backend
+      - vulas.patchEval.onlyAddNewResults=true
+    security_opt:
+      - no-new-privileges
+    restart: always
+    profiles:
+      - vdb
+
+  rest-lib-utils:
+    container_name: steady-rest-lib-utils
+    hostname: rest-lib-utils
+    image: eclipse/steady-rest-lib-utils:${VULAS_RELEASE}
+    expose:
+        - "8092"
+    volumes:
+      - "./data/rest-lib-utils:/root/"
+    security_opt:
+      - no-new-privileges
+    restart: always
+    profiles:
+      - vdb
+
   kb-importer:
     container_name: steady-kb-importer
     image: eclipse/steady-kb-importer:${VULAS_RELEASE}
@@ -151,16 +166,16 @@ services:
       - "./certs:/kb-importer/certs"
       - "./data/kb-importer:/kb-importer/data:delegated"
     environment:
-      - CIA_SERVICE_URL=http://cia:8092/cia
-      - BACKEND_SERVICE_URL=http://backend:8091/backend
+      - CIA_SERVICE_URL=http://rest-lib-utils:8092/cia
+      - BACKEND_SERVICE_URL=http://rest-backend:8091/backend
     depends_on:
       - rest-backend
-    links:
-      - rest-backend:backend
-      - rest-lib-utils:cia
+      - rest-lib-utils
     security_opt:
       - no-new-privileges
     restart: always
+    profiles:
+      - vdb
 
 volumes:
   steady-postgres-data:
