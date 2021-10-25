@@ -18,12 +18,12 @@
 # SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
 #
 
-# Updates the build timestamp and version identifier in files used by Maven, Travis and mkdocs
+# Updates the build timestamp and version identifier in files used by Maven, Travis and mkdocs as well as some bash scripts
 # Use to bump versions before and after every release
 
 if [ -z $1 ]; then
   printf "usage: set-version.sh NEW-VERSION\n\n"
-  printf "Updates the build timestamp and version identifier in files used by Maven, Travis and mkdocs"
+  printf "Updates the build timestamp and version identifier in files used by Maven, Travis and mkdocs as well as some bash scripts"
   exit 1
 fi
 
@@ -41,20 +41,24 @@ fi
 
 # Build timestamp
 old_timestamp=`less pom.xml | grep -m 1 "<project.build.outputTimestamp>" | sed -n "s/.*<project.build.outputTimestamp>\(.*\)<\/project.build.outputTimestamp>.*/\1/p"`
-new_timestamp=`date --utc --iso-8601=seconds`
+#new_timestamp=`date --utc --iso-8601=seconds`
+new_timestamp=`date -u "+%Y-%m-%dT%H:%M:%S%z"`
 
 # Maven
-find . -name pom.xml -exec sed -i "0,/${old}/s//${new}/" {} \;
-sed -i "s/${old_timestamp}/${new_timestamp}/" pom.xml
+#find . -name pom.xml -exec sed -i "" "0,/${old}/s//${new}/" {} \;
+find . -name pom.xml -exec sed -i "" "s/${old}/${new}/" {} \;
+sed -i "" "s/${old_timestamp}/${new_timestamp}/" pom.xml
 
 # Travis
-sed -i "s/${old}/${new}/" .travis/.env
+sed -i "" "s/${old}/${new}/" .travis/.env
 
-# mkdocs (keep current if new version is snapshot)
+# mkdocs and bash scripts (keep current if new version is snapshot)
 if [ -z $is_snap ]; then
-  sed -i "s/${old_doc}/${new}/" docs/mkdocs.yml
-  sed -i "s/${old_doc}/${new}/" docs/public.properties
+  sed -i "" "s/${old_doc}/${new}/" docs/mkdocs.yml
+  sed -i "" "s/${old_doc}/${new}/" docs/public.properties
+  sed -i "" "s/${old_doc}/${new}/" docker/setup-steady.sh
+  sed -i "" "s/${old_doc}/${new}/" docker/start-steady.sh
 fi
 
 # Kubernetes doc files
-find kubernetes -name README.md -exec sed -i "s/${old}/${new}/" {} \;
+find kubernetes -name README.md -exec sed -i "" "s/${old}/${new}/" {} \;
