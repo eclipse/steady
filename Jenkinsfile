@@ -38,10 +38,10 @@ spec:
       mountPath: /home/jenkins/.gnupg
     resources:
       limits:
-        memory: "4Gi"
+        memory: "8Gi"
         cpu: "2"
       requests:
-        memory: "4Gi"
+        memory: "8Gi"
         cpu: "2"
   volumes:
   - name: settings-xml
@@ -87,6 +87,7 @@ spec:
     stage('Create javadoc + sources, Verify Spotbugs and Reproducibility') {
       steps {
         container('maven') {
+          export MAVEN_OPTS="-Xms4g -Xmx8g"
           sh 'mvn -B -e -P gradle,javadoc \
                   -Dspring.standalone \
                   -DskipTests \
