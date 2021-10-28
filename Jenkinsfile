@@ -87,7 +87,7 @@ spec:
     stage('Create javadoc + sources, Verify Spotbugs and Reproducibility') {
       steps {
         container('maven') {
-          export MAVEN_OPTS="-Xms4g -Xmx8g"
+          sh 'export MAVEN_OPTS="-Xms4g -Xmx8g"'
           sh 'mvn -B -e -P gradle,javadoc \
                   -Dspring.standalone \
                   -DskipTests \
