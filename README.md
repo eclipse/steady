@@ -7,7 +7,6 @@
 # Eclipse Steady (Incubator Project)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![Build Status](https://travis-ci.org/eclipse/steady.svg?branch=master)](https://travis-ci.org/eclipse/steady)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.eclipse.steady/plugin-maven/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.eclipse.steady/plugin-maven)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4202/badge)](https://bestpractices.coreinfrastructure.org/projects/4202)
 [![REUSE status](https://api.reuse.software/badge/github.com/eclipse/steady)](https://api.reuse.software/info/github.com/eclipse/steady)
