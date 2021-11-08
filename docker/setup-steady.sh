@@ -137,15 +137,14 @@ else
 fi
 
 # Delegate execution to start-steady.sh
-read -p "Start (c)ore or (U)I services (or press any other key to skip execution): " CONTINUE
-if [[ $CONTINUE == 'c' || $CONTINUE == 'U' ]]; then
+read -p "Press <a> to start all of Steady's Docker Compose services (or any other key to skip execution): " CONTINUE
+if [[ $CONTINUE == 'a' ]]; then
     cd $INSTALL_DIR
     case "$CONTINUE" in
-        c ) SERVICES="core" ;;
-        U ) SERVICES="ui" ;;
+        a ) SERVICES="all" ;;
     esac
     printf "Executing Steady with ./$INSTALL_DIR/start-steady.sh -s $SERVICES\n"
     bash start-steady.sh -s $SERVICES
 else
-    printf "Execution skipped\n"
+    printf "Execution skipped. Check startup options with ./$INSTALL_DIR/start-steady.sh --help)\n"
 fi
