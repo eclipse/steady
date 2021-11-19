@@ -1,5 +1,13 @@
 #!/bin/bash
 
+cleanup() {
+    echo "Container stopped, removing running flag"
+	rm /kb-importer/data/running
+}
+
+#Trap SIGTERM
+trap 'cleanup' SIGTERM
+
 mkdir -p /kb-importer/data
 cd /kb-importer/data
 if [ -d $KB_IMPORTER_CLONE_FOLDER ]; then
