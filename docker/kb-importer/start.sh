@@ -2,7 +2,7 @@
 
 mkdir -p /kb-importer/data
 cd /kb-importer/data
-if [ -d $KB_IMPORTER_CLONE_FOLDER ]; then
+if [ -d $KB_IMPORTER_CLONE_FOLDER ] && [ ! -z $KB_IMPORTER_CLONE_FOLDER ]; then
   mkdir -p $KB_IMPORTER_CLONE_FOLDER
 fi
 if [ -f /kb-importer/kb-importer.jar ]; then
