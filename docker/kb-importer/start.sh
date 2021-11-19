@@ -1,13 +1,5 @@
 #!/bin/bash
 
-cleanup() {
-    echo "Container stopped, removing running flag"
-	rm /kb-importer/data/running
-}
-
-#Trap SIGTERM
-trap 'cleanup' SIGTERM
-
 mkdir -p /kb-importer/data
 cd /kb-importer/data
 if [ -d $KB_IMPORTER_CLONE_FOLDER ]; then
@@ -21,11 +13,11 @@ fi
 sed "s|KB_IMPORTER_STATEMENTS_REPO|$KB_IMPORTER_STATEMENTS_REPO|g" ../conf/kaybeeconf.yaml.sample > ../conf/kaybeeconf.yaml
 sed -i "s|KB_IMPORTER_STATEMENTS_BRANCH|$KB_IMPORTER_STATEMENTS_BRANCH|g" ../conf/kaybeeconf.yaml
 
-echo "Statements repo: "+$KB_IMPORTER_STATEMENTS_REPO
-echo "Statements branch: "+$KB_IMPORTER_STATEMENTS_BRANCH
-echo "Statements folder: "+$KB_IMPORTER_STATEMENTS_FOLDER
-echo "Clones folder: "+$KB_IMPORTER_CLONE_FOLDER
-echo "Skip clones: "+$KB_IMPORTER_SKIP_CLONE
+echo "Statements repo: " $KB_IMPORTER_STATEMENTS_REPO
+echo "Statements branch: " $KB_IMPORTER_STATEMENTS_BRANCH
+echo "Statements folder: " $KB_IMPORTER_STATEMENTS_FOLDER
+echo "Clones folder: " $KB_IMPORTER_CLONE_FOLDER
+echo "Skip clones: " $KB_IMPORTER_SKIP_CLONE
 
 ./kaybee update --force
 

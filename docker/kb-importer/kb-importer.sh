@@ -1,10 +1,5 @@
 #!/bin/bash
 
-cleanup() {
-    echo "Container stopped, removing running flag"
-	rm /kb-importer/data/running
-}
-
 construct_kaybee_pull_folder(){
   X=$1
 
@@ -25,9 +20,6 @@ construct_kaybee_pull_folder(){
 
   echo ${HOST}_${PATH}
 }
-
-#Trap SIGTERM
-trap 'cleanup' SIGTERM
 
 if [ ! -f /kb-importer/data/running ]
 then
