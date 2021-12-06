@@ -59,7 +59,7 @@
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-assistedinject</artifactId>
-			<version>5.0.1</version><!-- 3.0 in the original POM from ChangeDistiller, 4.2.3 works well but includes Guava vulnerability -->
+ 			<version>4.2.3</version><!-- 3.0 in the original POM from ChangeDistiller, 5.0.1 fails with API incompatibility (the included Guava vulnerability is not relevant) -->
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jdt.core.compiler</groupId>
