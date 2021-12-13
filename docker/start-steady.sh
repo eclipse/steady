@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REL="3.2.0"
+REL="3.2.1"
 SERVICES="all"
 DC_REQUIRED="1.28"
 
