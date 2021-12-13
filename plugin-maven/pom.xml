@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.eclipse.steady</groupId>
         <artifactId>root</artifactId>
-        <version>3.2.1-SNAPSHOT</version>
+        <version>3.2.1</version>
     </parent>
      <!-- NOTE: This plugin name violates the Maven naming convention, which results in a warning during build. -->
     <artifactId>plugin-maven</artifactId>
