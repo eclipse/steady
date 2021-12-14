@@ -139,7 +139,7 @@
 		<maven.deploy.skip>true</maven.deploy.skip>
 		
 		<!-- Used by several plugins, to make builds reproducible -->
-		<project.build.outputTimestamp>2021-12-14T21:51:54+0000</project.build.outputTimestamp>
+		<project.build.outputTimestamp>2021-12-14T21:51:54+00:00</project.build.outputTimestamp>
 	</properties>
 
 	<modules>
