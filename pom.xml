@@ -25,7 +25,7 @@
 
 	<groupId>org.eclipse.steady</groupId>
 	<artifactId>root</artifactId>
-	<version>3.2.1</version>
+	<version>3.2.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Eclipse Steady</name>
@@ -139,7 +139,7 @@
 		<maven.deploy.skip>true</maven.deploy.skip>
 		
 		<!-- Used by several plugins, to make builds reproducible -->
-		<project.build.outputTimestamp>2021-12-13T15:09:42+00:00</project.build.outputTimestamp>
+		<project.build.outputTimestamp>2021-12-14T21:51:54+0000</project.build.outputTimestamp>
 	</properties>
 
 	<modules>
