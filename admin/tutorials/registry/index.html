@@ -40,7 +40,7 @@
     
     
       
-        <title>Push Docker images to a registry - Eclipse Steady 3.2.0 (Incubator Project)</title>
+        <title>Push Docker images to a registry - Eclipse Steady 3.2.1 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.1 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.2.0 (Incubator Project)
+              Eclipse Steady 3.2.1 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.1 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.2.0 (Incubator Project)
+    Eclipse Steady 3.2.1 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1232,12 +1232,12 @@
 <h2 id="generate-eclipse-steady-images">Generate Eclipse Steady images<a class="headerlink" href="#generate-eclipse-steady-images" title="Permanent link">&para;</a></h2>
 <p>In order to generate the Docker images to upload to a local registry, you should generate Eclipse Steady's Java archives. This can be done following <a href="../build/">Build JAVA archives/Docker images</a> tutorial. To briefly summarize you should build and run an image which will populate your local directories with the Eclipse Steady JARs and WARs. In the end of this preliminary step you should have your images locally, this can be tested with the command <code>docker images | grep steady</code>.</p>
 <div class="codehilite"><pre><span></span><span class="c1"># sample output for `docker images` command</span>
-steady-generator          <span class="m">3</span>.2.0 a829f93eb9aa  <span class="m">22</span> hours ago 223MB
-steady-patch-lib-analyzer <span class="m">3</span>.2.0 fbe5ec6de811  <span class="m">22</span> hours ago 103MB
-steady-rest-backend       <span class="m">3</span>.2.0 277217bc35b2  <span class="m">22</span> hours ago 136MB
-steady-rest-lib-utils     <span class="m">3</span>.2.0 53bbb929895d  <span class="m">22</span> hours ago 127MB
-steady-frontend-bugs      <span class="m">3</span>.2.0 fab5925fe785  <span class="m">22</span> hours ago 316MB
-steady-frontend-apps      <span class="m">3</span>.2.0 191ce235c420  <span class="m">22</span> hours ago 317MB
+steady-generator          <span class="m">3</span>.2.1 a829f93eb9aa  <span class="m">22</span> hours ago 223MB
+steady-patch-lib-analyzer <span class="m">3</span>.2.1 fbe5ec6de811  <span class="m">22</span> hours ago 103MB
+steady-rest-backend       <span class="m">3</span>.2.1 277217bc35b2  <span class="m">22</span> hours ago 136MB
+steady-rest-lib-utils     <span class="m">3</span>.2.1 53bbb929895d  <span class="m">22</span> hours ago 127MB
+steady-frontend-bugs      <span class="m">3</span>.2.1 fab5925fe785  <span class="m">22</span> hours ago 316MB
+steady-frontend-apps      <span class="m">3</span>.2.1 191ce235c420  <span class="m">22</span> hours ago 317MB
 </pre></div>
 <h2 id="push-the-images-to-a-registry">Push the images to a registry<a class="headerlink" href="#push-the-images-to-a-registry" title="Permanent link">&para;</a></h2>
 <p>A script was created to push the images to a local Docker registry running inside your organization. <a href="https://github.com/eclipse/steady/blob/master/docker/push-images.sh">This script</a> simply tags the images and pushes them towards the registry.</p>

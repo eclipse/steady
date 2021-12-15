@@ -40,7 +40,7 @@
     
     
       
-        <title>Assessment and Mitigation - Eclipse Steady 3.2.0 (Incubator Project)</title>
+        <title>Assessment and Mitigation - Eclipse Steady 3.2.1 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.1 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.2.0 (Incubator Project)
+              Eclipse Steady 3.2.1 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -293,12 +293,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.0 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.1 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.2.0 (Incubator Project)
+    Eclipse Steady 3.2.1 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1375,7 +1375,7 @@
 <h3 id="cvss-score">CVSS score<a class="headerlink" href="#cvss-score" title="Permanent link">&para;</a></h3>
 <p>All vulnerabilities shall be assessed, no matter the CVSS score. The severity of open-source vulnerabilities significantly depends on the application-specific context (in which the open-source component is used). Thus, the actual severity can differ significantly from the (context-independent) CVSS base score provided by 3<sup>rd</sup> parties such as the Mitre/NVD.</p>
 <h2 id="exempt">Exempt<a class="headerlink" href="#exempt" title="Permanent link">&para;</a></h2>
-<p>If <strong>vulnerable code is NOT considered exploitable</strong> in a given application context, the respective finding (or an entire scope) can be exempted. This can be done by specifying additional configuration settings, preferably in a dedicated properties file (e.g., <code>vulas-exemptions.properties</code>). Keeping exemptions in a dedicated file avoids the risk of making accidental changes to other settings. Storing such a dedicated file in the source code repository of the application under analysis, thus making the file subject to version control, has the advantage of tracking modifications in terms of date and author.</p>
+<p>If <strong>vulnerable code is NOT considered exploitable</strong> in a given application context, the respective finding (or an entire scope) can be exempted. This can be done by specifying additional configuration settings, preferably in a dedicated properties file (e.g., <code>steady-exemptions.properties</code>). Keeping exemptions in a dedicated file avoids the risk of making accidental changes to other settings. Storing such a dedicated file in the source code repository of the application under analysis, thus making the file subject to version control, has the advantage of tracking modifications in terms of date and author.</p>
 <p>The settings required to create exemptions are described in the section <a href="../analysis/#create-result-report-report"><code>report</code> goal</a>.</p>
 <h2 id="mitigate">Mitigate<a class="headerlink" href="#mitigate" title="Permanent link">&para;</a></h2>
 <p>If <strong>vulnerable code is considered exploitable</strong> in a given application context, there are several ways to fix the dependency on the vulnerable open-source component:</p>
