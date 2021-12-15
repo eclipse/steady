@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>org.eclipse.jgit</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
-			<version>4.11.7.201903.2.2-SNAPSHOT05-r</version>
+			<version>4.11.7.201903122105-r</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-configuration</groupId>
