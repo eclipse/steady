@@ -27,7 +27,7 @@
 	<parent>
 		<groupId>org.eclipse.steady</groupId>
 		<artifactId>root</artifactId>
-		<version>3.2.1-SNAPSHOT</version>
+		<version>3.2.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>shared</artifactId>
 
@@ -78,7 +78,7 @@
 				<artifactId>maven-resources-plugin</artifactId>
 			</plugin>
 			
-			<!-- Used to provide version information in "vulas-version.properties" -->
+			<!-- Used to provide version information in "steady-version.properties" -->
 			<plugin>
 				<groupId>com.google.code.maven-replacer-plugin</groupId>
 				<artifactId>replacer</artifactId>
@@ -91,8 +91,8 @@
 					</execution>
 				</executions>
 				<configuration>
-					<file>${project.basedir}/src/main/resources/vulas-version.properties</file>
-					<outputFile>${project.build.directory}/classes/vulas-version.properties</outputFile>
+					<file>${project.basedir}/src/main/resources/steady-version.properties</file>
+					<outputFile>${project.build.directory}/classes/steady-version.properties</outputFile>
 					<regex>false</regex>
 					<replacements>
 						<replacement>

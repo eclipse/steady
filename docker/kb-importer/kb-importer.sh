@@ -1,5 +1,26 @@
 #!/bin/bash
 
+construct_kaybee_pull_folder(){
+  X=$1
+
+  # remove trailing slash
+  X=${X%/}
+
+  # remove everything until '://' is matched
+  X=${X#*:\/\/}
+  
+  # Remove the longest matching suffix pattern
+  HOST=${X%%/*}
+  
+  # Remove shortest matching prefix pattern.
+  PATH=${X#*\/}
+
+  # replace . for /
+  PATH=${PATH//\//.}
+
+  echo ${HOST}_${PATH}
+}
+
 if [ ! -f /kb-importer/data/running ]
 then
   touch /kb-importer/data/running
@@ -8,11 +29,11 @@ then
   cd /kb-importer/data
   ./kaybee update --force
 
-  #run kaybee import for kaybeeconf-eval.yaml (as it contains the substituted env variables for the source repo and branch)
+  #run kaybee import for kaybeeconf.yaml (as it contains the substituted env variables for the source repo and branch)
   echo `date` " Running Kaybee Import" 
-  ./kaybee pull -c ../conf/kaybeeconf-eval.yaml
+  ./kaybee pull -c ../conf/kaybeeconf.yaml
 # As we cannot configure the destination folder of kaybee pull (for now), we explicitly copy the resulting folder to the configured one and skip kaybee merge as we only have 1 source configurable
-  cp -r .kaybee/repositories/github.com_sap.project-kb_$KB_IMPORTER_STATEMENTS_BRANCH/statements/. $KB_IMPORTER_STATEMENTS_FOLDER/
+  cp -r .kaybee/repositories/$(construct_kaybee_pull_folder $KB_IMPORTER_STATEMENTS_REPO)_$KB_IMPORTER_STATEMENTS_BRANCH/statements/. $KB_IMPORTER_STATEMENTS_FOLDER/
 #  echo `date` " Running Kaybee Merge" >> job.log 2>&1
 #  ./kaybee merge -s -c ../conf/kaybeeconf.yaml
 #  echo `date` " Kaybee Merge Done" >> job.log 2>&1

@@ -28,7 +28,7 @@ The plugin for Gradle requires changes of the following two files:
     }
 
     allprojects {
-        apply plugin: "vulas"
+        apply plugin: "steady"
     }
 ```
 

@@ -19,7 +19,7 @@
 /**
  * The enumerations contained in this package ensure consistency across modules.
  * {@link GoalType}, for instance, enumerates all the different goals that can be
- * executed using the vulas-maven-plugin or vulas-cli.
+ * executed using Steady's Maven plugin or CLI.
  *
  */
 package org.eclipse.steady.shared.enums;

@@ -155,11 +155,11 @@ public class WarAnalyzer extends JarAnalyzer {
       for (Path lib : libs) {
         try {
           writer = new JarWriter(lib);
-          if (writer.hasEntry("vulas-core.properties") && !writer.isRewrittenByVulas()) {
+          if (writer.hasEntry("steady-core.properties") && !writer.isRewrittenByVulas()) {
 
             // Rewrite the configuration file
             writer.setClassifier("and-config");
-            writer.register("vulas-core.properties", this);
+            writer.register("steady-core.properties", this);
             writer.rewrite(this.inclDir);
 
             // If we reach this point, the rewriting worked and the original file can be ignored
@@ -237,7 +237,7 @@ public class WarAnalyzer extends JarAnalyzer {
               + "] JARs, to be included in WEB-INF/lib");
 
       // Add all files in incl (except the one(s) rewritten to contain a proper
-      // vulas-cfg.properties)
+      // steady-cfg.properties)
       // this.jarWriter.addFiles("WEB-INF/lib", libs, true);
       for (Path l : libs) {
         if (this.ignoredIncludes.contains(l)) continue;
@@ -246,7 +246,7 @@ public class WarAnalyzer extends JarAnalyzer {
 
       // Add configuration files
       this.jarWriter.addFile(
-          "WEB-INF/classes/", Paths.get(this.inclDir.toString(), "vulas-cfg.properties"), true);
+          "WEB-INF/classes/", Paths.get(this.inclDir.toString(), "steady-cfg.properties"), true);
       this.jarWriter.addFile(
           "WEB-INF/classes/", Paths.get(this.inclDir.toString(), "vulas-cfg.xml"), true);
       this.jarWriter.addFile(
@@ -501,10 +501,10 @@ public class WarAnalyzer extends JarAnalyzer {
       }
     }
     // Called during the rewrite of the JARs in inclDir
-    else if (_regex.equals("vulas-core.properties")) {
+    else if (_regex.equals("steady-core.properties")) {
       Path tmp_file = null;
       try {
-        final PropertiesConfiguration cfg = new PropertiesConfiguration("vulas-core.properties");
+        final PropertiesConfiguration cfg = new PropertiesConfiguration("steady-core.properties");
         cfg.setProperty(CoreConfiguration.APP_CTX_GROUP, JarAnalyzer.getAppContext().getMvnGroup());
         cfg.setProperty(CoreConfiguration.APP_CTX_ARTIF, JarAnalyzer.getAppContext().getArtifact());
         cfg.setProperty(CoreConfiguration.APP_CTX_VERSI, JarAnalyzer.getAppContext().getVersion());
@@ -531,12 +531,12 @@ public class WarAnalyzer extends JarAnalyzer {
                   .getConfiguration()
                   .getString(VulasConfiguration.getServiceUrlKey(Service.BACKEND)));
 
-        tmp_file = Files.createTempFile("vulas-core-", ".properties");
+        tmp_file = Files.createTempFile("steady-core-", ".properties");
         cfg.save(tmp_file.toFile());
         is = new FileInputStream(tmp_file.toFile());
       } catch (ConfigurationException ce) {
         WarAnalyzer.log.error(
-            "Error when loading configuration from 'vulas-core.properties': " + ce.getMessage());
+            "Error when loading configuration from 'steady-core.properties': " + ce.getMessage());
       } catch (IOException ioe) {
         WarAnalyzer.log.error(
             "Error when creating/reading temporary configuration file ["

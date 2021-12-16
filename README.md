@@ -7,7 +7,6 @@
 # Eclipse Steady (Incubator Project)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![Build Status](https://travis-ci.org/eclipse/steady.svg?branch=master)](https://travis-ci.org/eclipse/steady)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.eclipse.steady/plugin-maven/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.eclipse.steady/plugin-maven)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4202/badge)](https://bestpractices.coreinfrastructure.org/projects/4202)
 [![REUSE status](https://api.reuse.software/badge/github.com/eclipse/steady)](https://api.reuse.software/info/github.com/eclipse/steady)
@@ -24,7 +23,25 @@ As such, it addresses the OWASP Top 10 security risk A9, [Using Components with 
 
 In comparison to other tools, the detection is code-centric and usage-based, which allows for more accurate detection and assessment than tools relying on meta-data.  It is a collection of client-side scan tools, microservices and rich [OpenUI5](https://openui5.hana.ondemand.com/) Web frontends.
 
-Read more in our [**Docs**](https://eclipse.github.io/steady/)
+## Quickstart
+
+This section provides the bare minimum to setup Steady and to use its Maven plugin for scanning a Java application.
+
+1. The Steady **backend**, a Docker Compose application, stores information about open-source vulnerabilities and scan results. It has to be installed once, ideally on a dedicated host, and must be running during application scans.
+
+    Download and run [`setup-steady.sh`](https://raw.githubusercontent.com/eclipse/steady/master/docker/setup-steady.sh) to install the backend on any host with a recent version of Docker/Docker Compose (the use of profiles requires a version >= 1.28, installable with `pip install docker-compose` or as [described here](https://github.com/docker/compose#where-to-get-docker-compose)).
+
+    **Notes**: During its first execution, triggered by the setup script or directly using `start-steady.sh -s ui`, the backend will be bootstrapped by downloading and processing code-level information of hundreds of vulnerabilities maintained in the open-source knowledge base [Project KB](https://github.com/sap/project-kb). While the bootstrapping can take up to one hour, later updates will import the delta on a daily basis. Run `start-steady.sh -s none` to shut down all Docker Compose services of the backend.
+
+2. A Steady **scan client**, e.g. the Maven plugin, analyzes the code of your application project and its dependencies. Being [available on Maven Central](https://search.maven.org/search?q=g:org.eclipse.steady), the clients do not require any installation. However, they need to be run whenever your application's code or dependencies change.
+
+    In case application scan and Steady backend run on different hosts, the scan clients must be configured accordingly. Just copy and adjust the file `~/.steady.properties`, which has been created in the user's home directory during the backend setup.
+
+    For Maven, `cd` into your project and run the `app` analysis goal as follows (see [here](https://eclipse.github.io/steady/user/manuals/analysis/) for more information about available goals):
+
+    `mvn org.eclipse.steady:plugin-maven:3.2.0:app`
+
+    **Note**: During application scans, a lot of information about its dependencies is uploaded to the backend, which makes that the first scan takes significantly more time than later scans of the same application.
 
 ## History
 
