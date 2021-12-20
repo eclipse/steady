@@ -58,6 +58,7 @@ if [ -z $is_snap ]; then
   sed -i "" "s/${old_doc}/${new}/" docs/public.properties
   sed -i "" "s/${old_doc}/${new}/" docker/setup-steady.sh
   sed -i "" "s/${old_doc}/${new}/" docker/start-steady.sh
+  sed -i "" "s/${old_doc}/${new}/" docker/.env.sample
 fi
 
 # Kubernetes doc files
