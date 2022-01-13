@@ -326,7 +326,7 @@ public interface LibraryRepository extends CrudRepository<Library, Long>, Librar
               + " l1.id=bl.library_id inner join library_id lid2 on"
               + " bl.bundled_library_ids_id=lid2.id    inner join lib l2 on"
               + " bl.bundled_library_ids_id=l2.library_id_id    where d.app=:app and not l1.id ="
-              + " l2.id and l2.wellknown_digest='true' and not lid1.id=lid2.id",
+              + " l2.id and l2.wellknown_digest=true and not lid1.id=lid2.id",
       nativeQuery = true)
   List<Object[]> findBundledLibByApp(@Param("app") Application app);
 }
