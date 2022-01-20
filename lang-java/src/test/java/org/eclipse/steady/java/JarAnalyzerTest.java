@@ -37,7 +37,9 @@ public class JarAnalyzerTest {
   @Test
   public void testGetFqClassname() {
     assertEquals("Foo", JarAnalyzer.getFqClassname("Foo.class"));
-    assertEquals("com.sun.tools.xjc.grammar.IgnoreItem", JarAnalyzer.getFqClassname("com/sun/tools/xjc/grammar/IgnoreItem.class"));
+    assertEquals(
+        "com.sun.tools.xjc.grammar.IgnoreItem",
+        JarAnalyzer.getFqClassname("com/sun/tools/xjc/grammar/IgnoreItem.class"));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -57,7 +59,9 @@ public class JarAnalyzerTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetFqClassnameErr4() {
-    JarAnalyzer.getFqClassname("META-INF/versions/9/org/apache/logging/log4j/core/util/SystemClock.class"); // from log4j-core-2.14.0.jar
+    JarAnalyzer.getFqClassname(
+        "META-INF/versions/9/org/apache/logging/log4j/core/util/SystemClock.class"); // from
+                                                                                     // log4j-core-2.14.0.jar
   }
 
   @Test

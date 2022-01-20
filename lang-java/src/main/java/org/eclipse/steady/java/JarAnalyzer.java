@@ -430,9 +430,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
           // Ignore class files below META-INF/versions
           if (je.getName().startsWith("META-INF/versions/")) {
             JarAnalyzer.log.warn(
-                    "Multi-release JARs are not supported, skipping JAR entry ["
-                        + je.getName()
-                        + "]");
+                "Multi-release JARs are not supported, skipping JAR entry [" + je.getName() + "]");
           }
 
           // Ignore package-info.class and module-info.class
@@ -452,13 +450,12 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
                       + "] transformed to Java class identifier ["
                       + fqn
                       + "]");
-            }
-            catch(IllegalArgumentException iae) {
+            } catch (IllegalArgumentException iae) {
               JarAnalyzer.log.warn(iae.getMessage());
             }
           }
         }
-        
+
         // pom.xml files
         else if (je.getName().endsWith("pom.xml")) {
           try {
@@ -571,7 +568,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
             // because the class was modified) in case the instrumentation is
             // performed the detach is done in
             // ClassVisitor.finalizeInstrumentation
-            
+
             // Can throw a NPE according to
             // https://github.com/jboss-javassist/javassist/pull/395, esp. if
             // the same class is multiple times in the classpath, which is
@@ -790,17 +787,24 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
    */
   public static String getFqClassname(String _jar_entry_name) throws IllegalArgumentException {
     if (!_jar_entry_name.endsWith(".class")) {
-      throw new IllegalArgumentException("JAR entry [" + _jar_entry_name + "] does not have the file extension [class]");
+      throw new IllegalArgumentException(
+          "JAR entry [" + _jar_entry_name + "] does not have the file extension [class]");
     } else {
       // Class files below META-INF/versions
       if (_jar_entry_name.startsWith("META-INF/versions/")) {
-        throw new IllegalArgumentException("JAR entry [" + _jar_entry_name + "] corresponds to a class file in a multi-release JAR, which are not supported");
+        throw new IllegalArgumentException(
+            "JAR entry ["
+                + _jar_entry_name
+                + "] corresponds to a class file in a multi-release JAR, which are not supported");
       }
 
       // package-info.class and module-info.class
       else if (_jar_entry_name.endsWith("package-info.class")
           || _jar_entry_name.endsWith("module-info.class")) {
-          throw new IllegalArgumentException("JAR entry [" + _jar_entry_name + "] corresponds to a package-info.class or module-info.class, which are ignored");
+        throw new IllegalArgumentException(
+            "JAR entry ["
+                + _jar_entry_name
+                + "] corresponds to a package-info.class or module-info.class, which are ignored");
       }
 
       // Build class identifier for every other .class file
@@ -821,12 +825,13 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
             }
             fqn.append(element);
           } else {
-            throw new IllegalArgumentException("JAR entry ["
-            + _jar_entry_name
-            + "] cannot be transformed to a fully-qualified Java class identifier, because"
-            + " ["
-            + element
-            + "] is not a valid identifier");
+            throw new IllegalArgumentException(
+                "JAR entry ["
+                    + _jar_entry_name
+                    + "] cannot be transformed to a fully-qualified Java class identifier, because"
+                    + " ["
+                    + element
+                    + "] is not a valid identifier");
           }
         }
         return fqn.toString();
