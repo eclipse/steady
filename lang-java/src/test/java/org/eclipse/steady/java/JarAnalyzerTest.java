@@ -61,7 +61,7 @@ public class JarAnalyzerTest {
   public void testGetFqClassnameErr4() {
     JarAnalyzer.getFqClassname(
         "META-INF/versions/9/org/apache/logging/log4j/core/util/SystemClock.class"); // from
-                                                                                     // log4j-core-2.14.0.jar
+    // log4j-core-2.14.0.jar
   }
 
   @Test
