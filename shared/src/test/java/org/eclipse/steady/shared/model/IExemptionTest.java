@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.github.packageurl.MalformedPackageURLException;
+
 import org.eclipse.steady.shared.enums.Scope;
 import org.eclipse.steady.shared.json.JacksonUtil;
 import org.eclipse.steady.shared.json.model.ExemptionBug;
@@ -38,8 +40,6 @@ import org.eclipse.steady.shared.json.model.VulnerableDependency;
 import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.junit.Test;
-
-import com.github.packageurl.MalformedPackageURLException;
 
 public class IExemptionTest {
 
@@ -338,7 +338,7 @@ public class IExemptionTest {
     } catch (MalformedPackageURLException e) {
       assertTrue(true);
       assertEquals(
-          "Package URLs of type [maven] require a valid namespace and name: [" + purl + "]",
+          "The PackageURL specified is invalid. Maven requires both a namespace and name.",
           e.getMessage());
     }
 
