@@ -27,6 +27,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.ibm.wala.util.graph.Graph;
+import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
+
 import org.apache.commons.configuration.Configuration;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.cg.CallgraphConstructException;
@@ -38,9 +41,6 @@ import org.eclipse.steady.java.monitor.ClassVisitor;
 import org.eclipse.steady.shared.json.model.Application;
 import org.eclipse.steady.shared.util.StringUtil;
 import org.eclipse.steady.shared.util.VulasConfiguration;
-
-import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 
 import soot.G;
 import soot.MethodOrMethodContext;
@@ -416,7 +416,7 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
       this.buildTimeNano = System.nanoTime() - start_nanos;
       SootCallgraphConstructor.log.info(
           "Construction completed in "
-              + StringUtil.nanoToMinString(this.buildTimeNano)
+              + StringUtil.nanoToFlexDurationString(this.buildTimeNano)
               + ", call graph has ["
               + callgraph.size()
               + "] edges]");
