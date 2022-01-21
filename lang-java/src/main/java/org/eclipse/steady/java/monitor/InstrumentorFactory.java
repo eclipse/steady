@@ -61,7 +61,7 @@ public class InstrumentorFactory {
     AbstractInstrumentor i = null;
     try {
       final Class cls = Class.forName(_name);
-      i = (AbstractInstrumentor) cls.newInstance();
+      i = (AbstractInstrumentor) cls.getDeclaredConstructor().newInstance();
     } catch (Throwable e) {
       InstrumentorFactory.log.error(
           "Error while creating instrumentor of class [" + _name + "]: " + e.getMessage(), e);

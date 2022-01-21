@@ -114,8 +114,7 @@
 
 	<properties>
 		<!-- Leave at 1.7, otherwise the agent may not work with older applications -->
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.release>8</maven.compiler.release>
 		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 		<maven.compiler.skipMultiThreadWarning>true</maven.compiler.skipMultiThreadWarning>
@@ -386,17 +385,17 @@
 			<dependency>
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-core</artifactId>
-				<version>3.8.2</version>
+				<version>3.8.4</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-model</artifactId>
-				<version>3.8.2</version>
+				<version>3.8.4</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-plugin-api</artifactId>
-				<version>3.8.2</version>
+				<version>3.8.4</version>
 			</dependency>
 
 			<!-- Test deps -->
