@@ -31,6 +31,7 @@ import org.eclipse.steady.cia.util.RepositoryDispatcher;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
 import org.eclipse.steady.shared.json.model.Artifact;
 import org.eclipse.steady.shared.json.model.Version;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class IT01_ArtifactControllerTest {
@@ -69,6 +70,7 @@ public class IT01_ArtifactControllerTest {
     }
   }
 
+  @Ignore
   @Test
   public void getAllVersionsPythonTest() {
 
