@@ -25,11 +25,13 @@ import java.nio.file.Paths;
 import java.util.Set;
 
 import org.eclipse.steady.shared.categories.Slow;
+import org.eclipse.steady.shared.util.AbstractFileSearch;
 import org.eclipse.steady.shared.util.FileSearch;
+import org.eclipse.steady.shared.util.FilenamePatternSearch;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-public class JarAnalysisManagerTest {
+public class ArchiveAnalysisManagerTest {
 
   @Test
   @Category(Slow.class)
@@ -40,6 +42,21 @@ public class JarAnalysisManagerTest {
       jam.startAnalysis(fs.search(Paths.get("./src/test/resources")), null);
       final Set<JarAnalyzer> analyzers = jam.getAnalyzers();
       assertEquals(16, analyzers.size()); // 1 for the WAR and 15 for JARs in WEB-INF/lib
+    } catch (Exception e) {
+      e.printStackTrace();
+      assertTrue(false);
+    }
+  }
+
+  @Test
+  public void testSpringBoot() {
+    try {
+      final ArchiveAnalysisManager jam = new ArchiveAnalysisManager(4, -1, false, null);
+      final AbstractFileSearch fs = new FilenamePatternSearch("boot-app.jar");
+      jam.startAnalysis(fs.search(Paths.get("./src/test/resources")), null);
+      final Set<JarAnalyzer> analyzers = jam.getAnalyzers();
+      assertEquals(2, analyzers.size()); // 1 for the Spring Boot app (JAR) and 1 for the JAR in BOOT-INF/lib
+      assertTrue(analyzers.iterator().next() instanceof SpringBootAnalyzer);
     } catch (Exception e) {
       e.printStackTrace();
       assertTrue(false);

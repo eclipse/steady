@@ -53,11 +53,11 @@ import javassist.CtClass;
 import javassist.NotFoundException;
 
 /**
- * Analyzes a single Web app archive (WAR) as to identify (and potentially instrument) all its classes (in directory WEB-INF/classes),
+ * Analyzes a single Spring Boot application (JAR) as to identify (and potentially instrument) all its classes (in directory BOOT-INF/classes),
  * as well as its JARs (in directory WEB-INF/lib).
  */
 @NotThreadSafe
-public class WarAnalyzer extends JarAnalyzer {
+public class SpringBootAnalyzer extends JarAnalyzer {
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
@@ -93,19 +93,31 @@ public class WarAnalyzer extends JarAnalyzer {
   /** {@inheritDoc} */
   @Override
   public String[] getSupportedFileExtensions() {
-    return new String[] {"war"};
+    return new String[] {"jar"};
   }
 
-  /**
-   * Returns true if the archive has file extension 'war'.
+    /**
+   * Returns true if the archive has file extension 'jar' and contains
+   * a {@link JarEntry} 'BOOT-INF/', false otherwise.
    */
   @Override
-  public final boolean canAnalyze(File _file) {
+  public boolean canAnalyze(File _file) {
     final String ext = FileUtil.getFileExtension(_file);
     if (ext == null || ext.equals("")) return false;
     for (String supported_ext : this.getSupportedFileExtensions()) {
       if (supported_ext.equalsIgnoreCase(ext)) {
-        return true;
+        try {
+          final JarWriter jw = new JarWriter(_file.toPath());
+          if (jw.hasEntry("BOOT-INF/")) {
+            return true;
+          }
+          else {
+            return false;
+          }
+        }
+        catch(IOException ioe) {
+          log.error(ioe.getMessage());
+        }
       }
     }
     return false;
@@ -118,10 +130,10 @@ public class WarAnalyzer extends JarAnalyzer {
       super.analyze(_file);
 
       // Extract the WAR
-      if (this.workDir != null) this.tmpDir = Paths.get(this.workDir.toString(), "war_analysis");
+      if (this.workDir != null) this.tmpDir = Paths.get(this.workDir.toString(), "spring_boot_analysis");
       else {
         try {
-          this.tmpDir = java.nio.file.Files.createTempDirectory("war_analysis_");
+          this.tmpDir = java.nio.file.Files.createTempDirectory("spring_boot_analysis_");
         } catch (IOException e) {
           throw new IllegalStateException("Unable to create temp directory", e);
         }
@@ -131,11 +143,11 @@ public class WarAnalyzer extends JarAnalyzer {
       // Add WEB-INF/classes to the classpath
       try {
         JarAnalyzer.insertClasspath(
-            Paths.get(this.tmpDir.toString(), "WEB-INF", "classes").toString());
+            Paths.get(this.tmpDir.toString(), "BOOT-INF", "classes").toString());
       } catch (Exception e) {
         // No problem at all if instrumentation is not requested.
         // If instrumentation is requested, however, some classes may not compile
-        WarAnalyzer.log.error(
+        SpringBootAnalyzer.log.error(
             this.toString() + ": Error while updating the classpath: " + e.getMessage());
       }
     } catch (IllegalStateException e) {
@@ -184,9 +196,9 @@ public class WarAnalyzer extends JarAnalyzer {
             // Files.move(..., lib, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
           }
         } catch (IOException ioe) {
-          WarAnalyzer.log.error("Error when rewriting the JARs: " + ioe.getMessage());
+          SpringBootAnalyzer.log.error("Error when rewriting the JARs: " + ioe.getMessage());
         } catch (JarAnalysisException jae) {
-          WarAnalyzer.log.error("Error when rewriting the JARs: " + jae.getMessage());
+          SpringBootAnalyzer.log.error("Error when rewriting the JARs: " + jae.getMessage());
         }
       }
     }
@@ -235,38 +247,39 @@ public class WarAnalyzer extends JarAnalyzer {
               + JarAnalyzer.getAppContext().getVersion());
 
     // Register this WarAnalyzer for callbacks
-    this.jarWriter.register("^WEB-INF/classes/.*.class$", this);
-    this.jarWriter.register("^WEB-INF/lib/.*.jar$", this);
+    this.jarWriter.register("^.*.class$", this);
+    this.jarWriter.register("^BOOT-INF/classes/.*.class$", this);
+    this.jarWriter.register("^BOOT-INF/lib/.*.jar$", this);
 
     // Additional files to be added to the WAR
     if (this.inclDir != null && this.inclDir.toFile().exists()) {
 
-      // Include all JARs in inclDir in WEB-INF/lib
+      // Include all JARs in inclDir in BOOT-INF/lib
       final FileSearch vis = new FileSearch(new String[] {"jar"});
       final Set<Path> libs = vis.search(this.inclDir);
-      WarAnalyzer.log.info(
+      SpringBootAnalyzer.log.info(
           this
               + ": Dir ["
               + this.inclDir
               + "] includes another ["
               + libs.size()
-              + "] JARs, to be included in WEB-INF/lib");
+              + "] JARs, to be included in BOOT-INF/lib");
 
       // Add all files in incl (except the one(s) rewritten to contain a proper
       // steady-cfg.properties)
-      // this.jarWriter.addFiles("WEB-INF/lib", libs, true);
+      // this.jarWriter.addFiles("BOOT-INF/lib", libs, true);
       for (Path l : libs) {
         if (this.ignoredIncludes.contains(l)) continue;
-        else this.jarWriter.addFile("WEB-INF/lib", l, true);
+        else this.jarWriter.addFile("BOOT-INF/lib", l, true);
       }
 
       // Add configuration files
       this.jarWriter.addFile(
-          "WEB-INF/classes/", Paths.get(this.inclDir.toString(), "steady-cfg.properties"), true);
+          "BOOT-INF/classes/", Paths.get(this.inclDir.toString(), "steady-cfg.properties"), true);
       this.jarWriter.addFile(
-          "WEB-INF/classes/", Paths.get(this.inclDir.toString(), "vulas-cfg.xml"), true);
+          "BOOT-INF/classes/", Paths.get(this.inclDir.toString(), "vulas-cfg.xml"), true);
       this.jarWriter.addFile(
-          "WEB-INF/classes/", Paths.get(this.inclDir.toString(), "log4j.properties"), false);
+          "BOOT-INF/classes/", Paths.get(this.inclDir.toString(), "log4j.properties"), false);
     }
 
     // Rename
@@ -293,7 +306,7 @@ public class WarAnalyzer extends JarAnalyzer {
 
       // Create a lib_mod folder for instrumented JARs of the WAR
       if (this.instrument) {
-        final Path lib_mod = Paths.get(this.tmpDir.toString(), "WEB-INF", "lib_mod");
+        final Path lib_mod = Paths.get(this.tmpDir.toString(), "BOOT-INF", "lib_mod");
         if (!lib_mod.toFile().exists()) {
           try {
             Files.createDirectory(lib_mod);
@@ -314,7 +327,7 @@ public class WarAnalyzer extends JarAnalyzer {
       // Find and analyze all JARs
       final Set<Path> jars =
           new FileSearch(new String[] {"jar"})
-              .search(Paths.get(this.tmpDir.toString(), "WEB-INF", "lib"));
+              .search(Paths.get(this.tmpDir.toString(), "BOOT-INF", "lib"));
       mgr.startAnalysis(jars, this);
       this.nestedAnalyzers = new HashSet<FileAnalyzer>();
       this.nestedAnalyzers.addAll(mgr.getAnalyzers());
@@ -326,25 +339,25 @@ public class WarAnalyzer extends JarAnalyzer {
    * {@inheritDoc}
    *
    * Identifies all {@link ConstructId}s of all methods and constructors contained in the WAR file.
-   * Returns true if the WAR has classes in WEB-INF/classes, false otherwise. Note that classes in libraries contained in WEB-INF/lib are ignored.
+   * Returns true if the WAR has classes in BOOT-INF/classes, false otherwise. Note that classes in libraries contained in BOOT-INF/lib are ignored.
    */
   @Override
   public synchronized Set<ConstructId> getConstructIds() {
     if (this.constructs == null) {
       this.constructs = new TreeSet<ConstructId>();
-      // Loop all *.class files in WEB-INF/classes
+      // Loop all *.class files in BOOT-INF/classes
       final Set<String> class_names = new HashSet<String>();
       String class_name = null;
       final Set<Path> class_files =
           new FileSearch(new String[] {"class"})
-              .search(Paths.get(this.tmpDir.toString(), "WEB-INF", "classes"));
+              .search(Paths.get(this.tmpDir.toString(), "BOOT-INF", "classes"));
       for (Path p : class_files) {
         class_name = p.toString();
         class_name = class_name.substring(0, class_name.length() - 6); // ".class"
-        class_name = class_name.substring(class_name.indexOf("WEB-INF") + 16); // "WEB-INF/classes/"
+        class_name = class_name.substring(class_name.indexOf("BOOT-INF") + 16); // "BOOT-INF/classes/"
         class_name = class_name.replace(File.separatorChar, '.');
         class_names.add(class_name);
-        WarAnalyzer.log.debug("Found [" + class_name + "]");
+        SpringBootAnalyzer.log.debug("Found [" + class_name + "]");
       }
 
       // Visit all classes using Javassist (and instrument as many as possible - if requested)
@@ -383,7 +396,7 @@ public class WarAnalyzer extends JarAnalyzer {
                   this.instrControl.updateInstrumentationStatistics(
                       cv.getJavaId(), Boolean.valueOf(true));
                 } catch (IOException ioe) {
-                  WarAnalyzer.log.error(
+                  SpringBootAnalyzer.log.error(
                       "I/O exception while instrumenting class ["
                           + cv.getJavaId().getQualifiedName()
                           + "]: "
@@ -391,7 +404,7 @@ public class WarAnalyzer extends JarAnalyzer {
                   this.instrControl.updateInstrumentationStatistics(
                       cv.getJavaId(), Boolean.valueOf(false));
                 } catch (CannotCompileException cce) {
-                  WarAnalyzer.log.warn(
+                  SpringBootAnalyzer.log.warn(
                       "Cannot compile instrumented class ["
                           + cv.getJavaId().getQualifiedName()
                           + "]: "
@@ -399,7 +412,7 @@ public class WarAnalyzer extends JarAnalyzer {
                   this.instrControl.updateInstrumentationStatistics(
                       cv.getJavaId(), Boolean.valueOf(false));
                 } catch (Exception e) {
-                  WarAnalyzer.log.error(
+                  SpringBootAnalyzer.log.error(
                       e.getClass().getName()
                           + " occured while instrumenting class ["
                           + cv.getJavaId().getQualifiedName()
@@ -419,20 +432,20 @@ public class WarAnalyzer extends JarAnalyzer {
             ctclass.detach();
           }
         } catch (NotFoundException nfe) {
-          WarAnalyzer.log.error(
+          SpringBootAnalyzer.log.error(
               "Error while analyzing class ["
                   + cv.getJavaId().getQualifiedName()
                   + "]: "
                   + nfe.getMessage());
           continue;
         } catch (RuntimeException re) {
-          WarAnalyzer.log.error(
+          SpringBootAnalyzer.log.error(
               "Error while analyzing class [" + ctclass.getName() + "]: " + re.getMessage());
           continue;
         }
       }
       if (this.instrument)
-        WarAnalyzer.log.info(
+        SpringBootAnalyzer.log.info(
             this.toString()
                 + ": classes comprised/already-instr/instr/not-instr ["
                 + this.classCount
@@ -446,7 +459,7 @@ public class WarAnalyzer extends JarAnalyzer {
                 + constructs.size()
                 + "]");
       else
-        WarAnalyzer.log.info(
+        SpringBootAnalyzer.log.info(
             this.toString()
                 + ": constructs comprised ["
                 + constructs.size()
@@ -473,17 +486,38 @@ public class WarAnalyzer extends JarAnalyzer {
     InputStream is = null;
 
     // Called during rewrite of classes
-    if (_regex.equals("^WEB-INF/classes/.*.class$")) {
+    if (_regex.equals("^.*.class$")) {
       JavaId jid = null;
       // Create JavaId from entry name
       try {
         String class_name = _entry.getName();
         class_name = class_name.substring(0, class_name.length() - 6); // ".class"
-        class_name = class_name.substring(16); // "WEB-INF/classes/"
+        //class_name = class_name.substring(16); // "BOOT-INF/classes/"
         class_name = class_name.replace('/', '.');
         jid = JavaId.parseClassQName(class_name);
       } catch (Exception e) {
-        WarAnalyzer.log.error(
+        SpringBootAnalyzer.log.error(
+            "Cannot parse Java Id from Jar Entry [" + _entry.getName() + "]: " + e.getMessage());
+        jid = null;
+      }
+
+      // Create input stream
+      if (jid != null && this.instrumentedClasses.get(jid) != null) {
+        // new_entry.setSize(this.instrumentedClasses.get(jid).getBytecode().length);
+        is = new ByteArrayInputStream(this.instrumentedClasses.get(jid).getBytecode());
+      }
+    }
+    else if (_regex.equals("^BOOT-INF/classes/.*.class$")) {
+      JavaId jid = null;
+      // Create JavaId from entry name
+      try {
+        String class_name = _entry.getName();
+        class_name = class_name.substring(0, class_name.length() - 6); // ".class"
+        class_name = class_name.substring(16); // "BOOT-INF/classes/"
+        class_name = class_name.replace('/', '.');
+        jid = JavaId.parseClassQName(class_name);
+      } catch (Exception e) {
+        SpringBootAnalyzer.log.error(
             "Cannot parse Java Id from Jar Entry [" + _entry.getName() + "]: " + e.getMessage());
         jid = null;
       }
@@ -495,7 +529,7 @@ public class WarAnalyzer extends JarAnalyzer {
       }
     }
     // Called during rewrite of WAR
-    else if (_regex.equals("^WEB-INF/lib/.*.jar$")) {
+    else if (_regex.equals("^BOOT-INF/lib/.*.jar$")) {
       JarAnalyzer ja = null;
       try {
         final String[] path_elements = _entry.getName().split("/");
@@ -503,16 +537,16 @@ public class WarAnalyzer extends JarAnalyzer {
             Paths.get(
                 path_elements[0],
                 path_elements[1],
-                path_elements[2]); // Assumming: WEB-INF/lib/xyz.jar
+                path_elements[2]); // Assumming: BOOT-INF/lib/xyz.jar
         ja = mgr.getAnalyzerForSubpath(p);
         if (ja != null) {
           final File f = ja.getInstrumentedArchive();
           is = new FileInputStream(f);
         } else {
-          WarAnalyzer.log.warn("Cannot find JarAnalyzer for path [" + p + "]");
+          SpringBootAnalyzer.log.warn("Cannot find JarAnalyzer for path [" + p + "]");
         }
       } catch (Exception e) {
-        WarAnalyzer.log.error(
+        SpringBootAnalyzer.log.error(
             "Cannot find rewritten JAR file from [" + ja + "]: " + e.getMessage());
       }
     }
@@ -551,10 +585,10 @@ public class WarAnalyzer extends JarAnalyzer {
         cfg.save(tmp_file.toFile());
         is = new FileInputStream(tmp_file.toFile());
       } catch (ConfigurationException ce) {
-        WarAnalyzer.log.error(
+        SpringBootAnalyzer.log.error(
             "Error when loading configuration from 'steady-core.properties': " + ce.getMessage());
       } catch (IOException ioe) {
-        WarAnalyzer.log.error(
+        SpringBootAnalyzer.log.error(
             "Error when creating/reading temporary configuration file ["
                 + tmp_file
                 + "]: "

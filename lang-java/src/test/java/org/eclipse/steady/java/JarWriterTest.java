@@ -48,6 +48,17 @@ public class JarWriterTest implements JarEntryWriter {
   }
 
   @Test
+  public void testHasEntry() {
+    try {
+      final JarWriter jw = new JarWriter(Paths.get("./src/test/resources/boot-app.jar"));
+      assertTrue(jw.hasEntry("BOOT-INF/"));
+    } catch (Exception e) {
+      e.printStackTrace();
+      assertTrue(false);
+    }
+  }
+
+  @Test
   public void testRewrite() {
     try {
       // Create a JarWriter and do some settings

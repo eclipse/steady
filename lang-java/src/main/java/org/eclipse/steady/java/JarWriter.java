@@ -425,17 +425,15 @@ public class JarWriter {
    * @return a boolean.
    */
   public boolean hasEntry(String _entry_name) {
-    boolean has = false;
     final Enumeration<JarEntry> en = this.originalJar.entries();
     JarEntry entry = null;
     while (en.hasMoreElements()) {
       entry = en.nextElement();
       if (entry.getName().equals(_entry_name)) {
-        has = true;
-        break;
+        return true;
       }
     }
-    return has;
+    return false;
   }
 
   /**

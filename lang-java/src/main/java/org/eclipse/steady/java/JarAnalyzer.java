@@ -117,13 +117,29 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
     return new String[] {"jar"};
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Returns true if the archive has file extension 'jar' and does not contain
+   * a {@link JarEntry} 'BOOT-INF/', false otherwise.
+   */
   @Override
-  public final boolean canAnalyze(File _file) {
+  public boolean canAnalyze(File _file) {
     final String ext = FileUtil.getFileExtension(_file);
     if (ext == null || ext.equals("")) return false;
     for (String supported_ext : this.getSupportedFileExtensions()) {
-      if (supported_ext.equalsIgnoreCase(ext)) return true;
+      if (supported_ext.equalsIgnoreCase(ext)) {
+        try {
+          final JarWriter jw = new JarWriter(_file.toPath());
+          if (jw.hasEntry("BOOT-INF/")) {
+            return false;
+          }
+          else {
+            return true;
+          }
+        }
+        catch(IOException ioe) {
+          log.error(ioe.getMessage());
+        }
+      }
     }
     return false;
   }
@@ -219,7 +235,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
   /**
    * Determines whether the instrumented JAR is renamed or not. If yes, the new file name follows the following format:
    * - If app context is provided: [originalJarName]-vulas-[appGroupId]-[appArtifactId]-[appVersion].jar
-   * - Otherwise: [originalJarName]-vulas-instr.jar
+   * - Otherwise: [originalJarName]-steady-instr.jar
    *
    * @param _b a boolean.
    */
@@ -354,7 +370,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
     this.jarWriter.register(".*.class$", this);
 
     // Rename
-    if (this.rename) this.jarWriter.setClassifier("vulas-instr");
+    if (this.rename) this.jarWriter.setClassifier("steady-instr");
 
     // Rewrite
     this.jarWriter.rewrite(this.workDir);

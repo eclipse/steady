@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -290,7 +291,13 @@ public class ArchiveAnalysisManager {
       try {
         JarAnalyzer ja = null;
         if (p.toString().endsWith("jar")) {
-          ja = new JarAnalyzer();
+          final JarWriter jw = new JarWriter(p);
+          if (jw.hasEntry("BOOT-INF/")) {
+            ja = new SpringBootAnalyzer();
+          }
+          else {
+            ja = new JarAnalyzer();
+          }
         } else if (p.toString().endsWith("war")) {
           ja = new WarAnalyzer();
           ((WarAnalyzer) ja).setIncludeDir(this.inclDir);
