@@ -11,6 +11,7 @@ fi
 
 #substitute env variables used by kaybee in kaybeeconf.yaml
 sed "s|KB_IMPORTER_STATEMENTS_REPO|$KB_IMPORTER_STATEMENTS_REPO|g" ../conf/kaybeeconf.yaml.sample > ../conf/kaybeeconf.yaml
+sed -i "s|KB_IMPORTER_STATEMENTS_BRANCH|$KB_IMPORTER_STATEMENTS_BRANCH|g" ../conf/kaybeeconf.yaml
 
 echo "Statements repo: " $KB_IMPORTER_STATEMENTS_REPO
 echo "Statements branch: " $KB_IMPORTER_STATEMENTS_BRANCH
