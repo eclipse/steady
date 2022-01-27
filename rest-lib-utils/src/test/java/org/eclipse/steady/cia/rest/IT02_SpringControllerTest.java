@@ -35,7 +35,6 @@ import org.eclipse.steady.shared.json.model.Artifact;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,7 +108,6 @@ public class IT02_SpringControllerTest {
   @After
   public void reset() throws Exception {}
 
-  @Ignore
   @Test
   public void getAllVersionsTest() throws Exception {
 
@@ -167,7 +165,6 @@ public class IT02_SpringControllerTest {
     // .andExpect(jsonPath("$.libId.version", is("2.9.5")));
   }
 
-  @Ignore
   @Test
   public void getLatestVersionsPackagingFilterPythonTest() throws Exception {
     final MockHttpServletRequestBuilder get_builder2 =
