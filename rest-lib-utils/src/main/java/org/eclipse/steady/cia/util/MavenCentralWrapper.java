@@ -179,7 +179,7 @@ public class MavenCentralWrapper implements RepositoryWrapper {
       // same for classifier
       params.put("q", constructQ(mvnGroup, artifact, version, null, null).toString());
       params.put("core", "gav");
-      params.put("rows", "1000");
+      params.put("rows", "989");
       params.put("wt", "json");
 
       // Make the query

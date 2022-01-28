@@ -38,10 +38,10 @@ spec:
       mountPath: /home/jenkins/.gnupg
     resources:
       limits:
-        memory: "4Gi"
+        memory: "8Gi"
         cpu: "2"
       requests:
-        memory: "4Gi"
+        memory: "8Gi"
         cpu: "2"
   volumes:
   - name: settings-xml
@@ -87,6 +87,7 @@ spec:
     stage('Create javadoc + sources, Verify Spotbugs and Reproducibility') {
       steps {
         container('maven') {
+          sh 'export MAVEN_OPTS="-Xms4g -Xmx8g"'
           sh 'mvn -B -e -P gradle,javadoc \
                   -Dspring.standalone \
                   -DskipTests \
@@ -95,13 +96,13 @@ spec:
                   -Dspotbugs.includeFilterFile=findbugs-include.xml \
                   -Dspotbugs.failOnError=true \
                   clean install com.github.spotbugs:spotbugs-maven-plugin:4.2.3:check'
-          sh 'mvn -B -e -P gradle,javadoc \
-                  -Dspring.standalone \
-                  -DskipTests \
-                  -Dreference.repo=https://repo.maven.apache.org/maven2 \
-                  clean verify'
-          sh 'cat target/root-*.buildinfo.compare'
-          sh 'grep ko=0 target/root-*.buildinfo.compare' // Fail if JARs are different
+          // sh 'mvn -B -e -P javadoc \
+          //         -Dspring.standalone \
+          //         -DskipTests \
+          //         -Dreference.repo=https://repo.maven.apache.org/maven2 \
+          //         clean verify'
+          // sh 'cat target/root-*.buildinfo.compare'
+          // sh 'grep ko=0 target/root-*.buildinfo.compare' // Fail if JARs are different
         }
       }
     }

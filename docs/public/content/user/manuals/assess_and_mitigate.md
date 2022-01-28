@@ -40,7 +40,7 @@ All vulnerabilities shall be assessed, no matter the CVSS score. The severity of
 
 ## Exempt
 
-If **vulnerable code is NOT considered exploitable** in a given application context, the respective finding (or an entire scope) can be exempted. This can be done by specifying additional configuration settings, preferably in a dedicated properties file (e.g., `vulas-exemptions.properties`). Keeping exemptions in a dedicated file avoids the risk of making accidental changes to other settings. Storing such a dedicated file in the source code repository of the application under analysis, thus making the file subject to version control, has the advantage of tracking modifications in terms of date and author.
+If **vulnerable code is NOT considered exploitable** in a given application context, the respective finding (or an entire scope) can be exempted. This can be done by specifying additional configuration settings, preferably in a dedicated properties file (e.g., `steady-exemptions.properties`). Keeping exemptions in a dedicated file avoids the risk of making accidental changes to other settings. Storing such a dedicated file in the source code repository of the application under analysis, thus making the file subject to version control, has the advantage of tracking modifications in terms of date and author.
 
 
 The settings required to create exemptions are described in the section [`report` goal](../analysis/#create-result-report-report).

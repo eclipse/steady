@@ -18,14 +18,14 @@
  */
 package org.eclipse.steady.java;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,26 +37,27 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
+import javax.validation.constraints.NotNull;
+
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.misc.Interval;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.Construct;
 import org.eclipse.steady.ConstructId;
 import org.eclipse.steady.FileAnalysisException;
 import org.eclipse.steady.FileAnalyzer;
-import org.eclipse.steady.shared.util.FileUtil;
-
 import org.eclipse.steady.java.antlr.JavaLexer;
 import org.eclipse.steady.java.antlr.JavaParser;
 import org.eclipse.steady.java.antlr.JavaParser.CompilationUnitContext;
 import org.eclipse.steady.java.antlr.JavaParser.FormalParameterContext;
 import org.eclipse.steady.java.antlr.JavaParser.TypeTypeContext;
 import org.eclipse.steady.java.antlr.JavaParserBaseListener;
+import org.eclipse.steady.shared.util.FileUtil;
 
 /**
  * Analyzes java source files using ANTLR.
@@ -72,7 +73,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
    */
   private Map<ConstructId, Construct> constructs = null;
 
-  private ANTLRInputStream input = null;
+  private CharStream input = null;
 
   /** The file to be analyzed. */
   private File file = null;
@@ -440,7 +441,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
           while ((cc = is2.read()) >= 0) baos.write(cc);
         }
         baos.flush();
-        this.input = new ANTLRInputStream(new ByteArrayInputStream(baos.toByteArray()));
+        this.input = CharStreams.fromStream(new ByteArrayInputStream(baos.toByteArray()));
         JavaLexer lexer = new JavaLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         JavaParser parser = new JavaParser(tokens);

@@ -42,7 +42,7 @@ public class VulasConfigurationTest {
   @Test
   public void testConfigurationChange() {
 
-    // Should be empty by default (see vulas-shared.properties)
+    // Should be empty by default (see steady-shared.properties)
     assertTrue(VulasConfiguration.getGlobal().isEmpty(VulasConfiguration.TMP_DIR));
 
     // Should not result in an update, since this class is not part of a JAR
@@ -205,7 +205,7 @@ public class VulasConfigurationTest {
     final VulasConfiguration c1 = new VulasConfiguration();
     final Properties props = new Properties();
     try {
-      props.load(new FileInputStream(new File("./src/test/resources/vulas-test.properties")));
+      props.load(new FileInputStream(new File("./src/test/resources/steady-test.properties")));
       assertEquals("https://foo.com/bar", props.getProperty("vulas.bar"));
     } catch (IOException e) {
       assertTrue(false);

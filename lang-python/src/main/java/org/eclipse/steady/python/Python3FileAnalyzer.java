@@ -31,7 +31,8 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -42,12 +43,11 @@ import org.eclipse.steady.ConstructId;
 import org.eclipse.steady.FileAnalysisException;
 import org.eclipse.steady.FileAnalyzer;
 import org.eclipse.steady.FileAnalyzerFactory;
-import org.eclipse.steady.shared.util.FileUtil;
-import org.eclipse.steady.shared.util.StringUtil;
-
 import org.eclipse.steady.python.antlr.python3.Python3BaseListener;
 import org.eclipse.steady.python.antlr.python3.Python3Lexer;
 import org.eclipse.steady.python.antlr.python3.Python3Parser;
+import org.eclipse.steady.shared.util.FileUtil;
+import org.eclipse.steady.shared.util.StringUtil;
 
 // TODO: Decide what to do with default arg values in functions and methods? Right now, they are
 // part of the qname, which is probably wrong.
@@ -316,7 +316,7 @@ public class Python3FileAnalyzer extends Python3BaseListener implements FileAnal
    */
   public Map<ConstructId, Construct> getConstructs(InputStream m)
       throws FileAnalysisException, IOException, RecognitionException {
-    final ANTLRInputStream input = new ANTLRInputStream(m);
+    final CharStream input = CharStreams.fromStream(m);
     final Python3Lexer lexer = new Python3Lexer(input);
     final CommonTokenStream tokens = new CommonTokenStream(lexer);
     final Python3Parser parser = new Python3Parser(tokens);
