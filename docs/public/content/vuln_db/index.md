@@ -4,10 +4,10 @@
 
 **TL;DR: There is nothing to do, it's all automated :-)**
 
-When you deploy @@PROJECT_NAME@@ using Docker (using the script `setup-steady.sh`), not only the vulnerability data from project KB is *automatically imported*,
+When you [deploy @@PROJECT_NAME@@ using Docker](../admin/tutorials/docker/), not only the vulnerability data from project KB is *automatically imported*,
 but it is also *periodically updated* so that any new vulnerabilities are imported automatically into your @@PROJECT_NAME@@ backend.
 
-If you want to customize the mechanism whereby vulnerabilities are imported or if you just want to learn more about it, please refer to the dedicated [technical documentation](../admin/manuals/updating_vuln_data).
+If you want to customize the mechanism whereby vulnerabilities are imported or if you just want to learn more about it, please refer to the dedicated [technical documentation](../user/manuals/updating_vuln_data).
 
 ## Why code-level vulnerability data are needed
 
