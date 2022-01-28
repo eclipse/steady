@@ -12,8 +12,8 @@ nav:
   - Home:
     - Home: index.md
     - About: about/index.md
-  - Docs:
-    - Docs: user/index.md
+  - User Guide:
+    - User Guide: user/index.md
     - Tutorials:
       - 'Getting started': 'user/tutorials/index.md'
       - 'Workspace': 'user/tutorials/workspace_howto.md'
@@ -43,8 +43,8 @@ nav:
       - 'Deploy on Docker': 'admin/tutorials/docker.md'
       - 'Build JAVA archives/Docker images': 'admin/tutorials/build.md'
       - 'Push Docker images to a registry': 'admin/tutorials/registry.md'
-      - 'Deploy on Kubernetes with Kustomize': 'admin/tutorials/kustomize.md'
-      - 'Deploy on Kubernetes with Helm': 'admin/tutorials/helm.md'
+    #  - 'Deploy on Kubernetes with Kustomize': 'admin/tutorials/kustomize.md'
+    #  - 'Deploy on Kubernetes with Helm': 'admin/tutorials/helm.md'
     - Misc:
       - 'Kubernetes resources requirements': 'admin/tutorials/kubernetes_resources.md'
   - Contribute:
