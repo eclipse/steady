@@ -64,7 +64,6 @@ setup (){
     curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/postgresql/docker-entrypoint-initdb.d/10-vulas-setup.sh -o ./$DIR/conf/postgresql/10-vulas-setup.sh 
     curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/cache/nginx.conf                                        -o ./$DIR/conf/cache/nginx.conf
     curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/kb-importer/conf/kaybeeconf.yaml.sample                 -o ./$DIR/conf/kb-importer/kaybeeconf.yaml.sample
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/kb-importer/conf/kaybeeconf.yaml                        -o ./$DIR/conf/kb-importer/kaybeeconf.yaml
     curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/rest-backend/conf/restbackend.properties                -o ./$DIR/conf/rest-backend/restbackend.properties
 
     # Create default configuration in user's home directory
