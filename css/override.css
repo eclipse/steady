@@ -262,25 +262,25 @@ a>code {
 }
 
 /* Home link - start */
-.md-tabs.md-tabs--active .md-tabs__list>li:first-child {
-    display: none;
-}
+/* .md-tabs.md-tabs--active .md-tabs__list>li:first-child {
+    display: none; */
+/* } */
 
 /* Headers */
 .md-typeset h1 {
     font-weight: 700;
-    font-size: 65px;
+    font-size: 44px;
     color: rgb(32, 35, 41);
 }
 
 .md-typeset h2 {
     font-weight: 700;
-    font-size: 35px;
+    font-size: 30px;
 }
 
 .md-typeset h3 {
     font-weight: 700;
-    font-size: 25px;
+    font-size: 24px;
 }
 
 .md-typeset h4 {
@@ -290,7 +290,7 @@ a>code {
 
 @media (max-width: 700px) {
     .md-typeset h1 {
-        font-size: 35px;
+        font-size: 30px;
     }
 }
 
