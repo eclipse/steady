@@ -56,6 +56,17 @@ public class FileUtilTest {
   }
 
   @Test
+  public void testGetCRC32File() {
+    assertEquals(
+        2321822010l, FileUtil.getCRC32(new File("./src/test/resources/steady-test.properties")));
+  }
+
+  @Test
+  public void testGetCRC32Bytes() {
+    assertEquals(4157704578l, FileUtil.getCRC32("Hello".getBytes()));
+  }
+
+  @Test
   public void testCopyFile() {
     try {
       final VulasConfiguration cfg = new VulasConfiguration();

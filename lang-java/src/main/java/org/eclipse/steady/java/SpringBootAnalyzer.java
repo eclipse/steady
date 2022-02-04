@@ -80,7 +80,7 @@ public class SpringBootAnalyzer extends JarAnalyzer {
   //	public static boolean isOverwriteEnabled() { return WarAnalyzer.OVERWRITE_ENABLED; }
 
   private Map<JavaId, ClassVisitor> instrumentedClasses = new HashMap<JavaId, ClassVisitor>();
-  private Path tmpDir = null; // To where the WAR is extracted
+  private Path tmpDir = null; // To where the JAR is extracted
   private Path inclDir = null;
 
   private ArchiveAnalysisManager mgr = null;
@@ -96,7 +96,7 @@ public class SpringBootAnalyzer extends JarAnalyzer {
     return new String[] {"jar"};
   }
 
-    /**
+  /**
    * Returns true if the archive has file extension 'jar' and contains
    * a {@link JarEntry} 'BOOT-INF/', false otherwise.
    */
@@ -110,12 +110,10 @@ public class SpringBootAnalyzer extends JarAnalyzer {
           final JarWriter jw = new JarWriter(_file.toPath());
           if (jw.hasEntry("BOOT-INF/")) {
             return true;
-          }
-          else {
+          } else {
             return false;
           }
-        }
-        catch(IOException ioe) {
+        } catch (IOException ioe) {
           log.error(ioe.getMessage());
         }
       }
@@ -129,8 +127,9 @@ public class SpringBootAnalyzer extends JarAnalyzer {
     try {
       super.analyze(_file);
 
-      // Extract the WAR
-      if (this.workDir != null) this.tmpDir = Paths.get(this.workDir.toString(), "spring_boot_analysis");
+      // Extract the JAR
+      if (this.workDir != null)
+        this.tmpDir = Paths.get(this.workDir.toString(), "spring_boot_analysis");
       else {
         try {
           this.tmpDir = java.nio.file.Files.createTempDirectory("spring_boot_analysis_");
@@ -140,10 +139,25 @@ public class SpringBootAnalyzer extends JarAnalyzer {
       }
       this.jarWriter.extract(this.tmpDir);
 
-      // Add WEB-INF/classes to the classpath
+      // Add BOOT-INF/classes to the classpath
       try {
         JarAnalyzer.insertClasspath(
             Paths.get(this.tmpDir.toString(), "BOOT-INF", "classes").toString());
+      } catch (Exception e) {
+        // No problem at all if instrumentation is not requested.
+        // If instrumentation is requested, however, some classes may not compile
+        SpringBootAnalyzer.log.error(
+            this.toString() + ": Error while updating the classpath: " + e.getMessage());
+      }
+
+      // Add BOOT-INF/lib to the classpath
+      try {
+        final FileSearch lib_search = new FileSearch(new String[] {"jar"});
+        final Set<Path> libs =
+            lib_search.search(Paths.get(this.tmpDir.toString(), "BOOT-INF", "lib"));
+        for (Path lib : libs) {
+          JarAnalyzer.insertClasspath(lib.toString());
+        }
       } catch (Exception e) {
         // No problem at all if instrumentation is not requested.
         // If instrumentation is requested, however, some classes may not compile
@@ -251,7 +265,7 @@ public class SpringBootAnalyzer extends JarAnalyzer {
     this.jarWriter.register("^BOOT-INF/classes/.*.class$", this);
     this.jarWriter.register("^BOOT-INF/lib/.*.jar$", this);
 
-    // Additional files to be added to the WAR
+    // Additional files to be added to the JAR
     if (this.inclDir != null && this.inclDir.toFile().exists()) {
 
       // Include all JARs in inclDir in BOOT-INF/lib
@@ -286,6 +300,7 @@ public class SpringBootAnalyzer extends JarAnalyzer {
     if (this.rename) this.jarWriter.setClassifier("steady-instr");
 
     // Rewrite
+    this.jarWriter.setCompressNewJarEntries(false);
     this.jarWriter.rewrite(this.workDir);
 
     // Stats
@@ -354,7 +369,8 @@ public class SpringBootAnalyzer extends JarAnalyzer {
       for (Path p : class_files) {
         class_name = p.toString();
         class_name = class_name.substring(0, class_name.length() - 6); // ".class"
-        class_name = class_name.substring(class_name.indexOf("BOOT-INF") + 16); // "BOOT-INF/classes/"
+        class_name =
+            class_name.substring(class_name.indexOf("BOOT-INF") + 17); // "BOOT-INF/classes/"
         class_name = class_name.replace(File.separatorChar, '.');
         class_names.add(class_name);
         SpringBootAnalyzer.log.debug("Found [" + class_name + "]");
@@ -384,7 +400,7 @@ public class SpringBootAnalyzer extends JarAnalyzer {
             // Instrument (if requested and not blacklisted)
             if (this.instrument && !this.instrControl.isBlacklistedClass(cn)) {
               cv.setOriginalArchiveDigest(this.getSHA1());
-              cv.setAppContext(WarAnalyzer.getAppContext());
+              cv.setAppContext(SpringBootAnalyzer.getAppContext());
               if (cv.isInstrumented())
                 this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), null);
               else {
@@ -482,8 +498,10 @@ public class SpringBootAnalyzer extends JarAnalyzer {
    * The callback registration takes place in {@link #createInstrumentedArchive()}.
    */
   @Override
-  public InputStream getInputStream(String _regex, JarEntry _entry) {
+  public RewrittenJarEntry getInputStream(String _regex, JarEntry _entry) {
     InputStream is = null;
+    long size = -1;
+    long crc32 = -1;
 
     // Called during rewrite of classes
     if (_regex.equals("^.*.class$")) {
@@ -492,7 +510,7 @@ public class SpringBootAnalyzer extends JarAnalyzer {
       try {
         String class_name = _entry.getName();
         class_name = class_name.substring(0, class_name.length() - 6); // ".class"
-        //class_name = class_name.substring(16); // "BOOT-INF/classes/"
+        // class_name = class_name.substring(16); // "BOOT-INF/classes/"
         class_name = class_name.replace('/', '.');
         jid = JavaId.parseClassQName(class_name);
       } catch (Exception e) {
@@ -503,11 +521,13 @@ public class SpringBootAnalyzer extends JarAnalyzer {
 
       // Create input stream
       if (jid != null && this.instrumentedClasses.get(jid) != null) {
-        // new_entry.setSize(this.instrumentedClasses.get(jid).getBytecode().length);
-        is = new ByteArrayInputStream(this.instrumentedClasses.get(jid).getBytecode());
+        final byte[] bytecode = this.instrumentedClasses.get(jid).getBytecode();
+        crc32 = FileUtil.getCRC32(bytecode);
+        size = bytecode.length;
+        is = new ByteArrayInputStream(bytecode);
+        return new RewrittenJarEntry(is, size, crc32);
       }
-    }
-    else if (_regex.equals("^BOOT-INF/classes/.*.class$")) {
+    } else if (_regex.equals("^BOOT-INF/classes/.*.class$")) {
       JavaId jid = null;
       // Create JavaId from entry name
       try {
@@ -524,8 +544,11 @@ public class SpringBootAnalyzer extends JarAnalyzer {
 
       // Create input stream
       if (jid != null && this.instrumentedClasses.get(jid) != null) {
-        // new_entry.setSize(this.instrumentedClasses.get(jid).getBytecode().length);
-        is = new ByteArrayInputStream(this.instrumentedClasses.get(jid).getBytecode());
+        final byte[] bytecode = this.instrumentedClasses.get(jid).getBytecode();
+        crc32 = FileUtil.getCRC32(bytecode);
+        size = bytecode.length;
+        is = new ByteArrayInputStream(bytecode);
+        return new RewrittenJarEntry(is, size, crc32);
       }
     }
     // Called during rewrite of WAR
@@ -541,7 +564,10 @@ public class SpringBootAnalyzer extends JarAnalyzer {
         ja = mgr.getAnalyzerForSubpath(p);
         if (ja != null) {
           final File f = ja.getInstrumentedArchive();
+          crc32 = FileUtil.getCRC32(f);
+          size = f.length();
           is = new FileInputStream(f);
+          return new RewrittenJarEntry(is, size, crc32);
         } else {
           SpringBootAnalyzer.log.warn("Cannot find JarAnalyzer for path [" + p + "]");
         }
@@ -583,7 +609,11 @@ public class SpringBootAnalyzer extends JarAnalyzer {
 
         tmp_file = Files.createTempFile("steady-core-", ".properties");
         cfg.save(tmp_file.toFile());
+
+        crc32 = FileUtil.getCRC32(tmp_file.toFile());
+        size = tmp_file.toFile().length();
         is = new FileInputStream(tmp_file.toFile());
+        return new RewrittenJarEntry(is, size, crc32);
       } catch (ConfigurationException ce) {
         SpringBootAnalyzer.log.error(
             "Error when loading configuration from 'steady-core.properties': " + ce.getMessage());
@@ -596,6 +626,6 @@ public class SpringBootAnalyzer extends JarAnalyzer {
       }
     }
 
-    return is;
+    return null;
   }
 }

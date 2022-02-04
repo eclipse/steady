@@ -30,9 +30,21 @@ import org.eclipse.steady.ConstructId;
 import org.eclipse.steady.java.monitor.ClassVisitor;
 import org.eclipse.steady.shared.json.model.Application;
 import org.eclipse.steady.shared.json.model.LibraryId;
+import org.junit.Before;
 import org.junit.Test;
 
 public class JarAnalyzerTest {
+
+  @Before
+  public void removeInstrumentedArchives() {
+    for (String n :
+        new String[] {"examples-steady-instr.jar", "commons-fileupload-1.3.1-steady-instr.jar"}) {
+      final File f = new File("./target/" + n);
+      if (f.exists()) {
+        f.delete();
+      }
+    }
+  }
 
   @Test
   public void testGetFqClassname() {
@@ -59,9 +71,9 @@ public class JarAnalyzerTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetFqClassnameErr4() {
+    // from log4j-core-2.14.0.jar
     JarAnalyzer.getFqClassname(
-        "META-INF/versions/9/org/apache/logging/log4j/core/util/SystemClock.class"); // from
-    // log4j-core-2.14.0.jar
+        "META-INF/versions/9/org/apache/logging/log4j/core/util/SystemClock.class");
   }
 
   @Test
@@ -79,8 +91,6 @@ public class JarAnalyzerTest {
     try {
       final JarAnalyzer ja = new JarAnalyzer();
       ja.analyze(new File("./src/test/resources/junit-4.12.jar"));
-      ja.setWorkDir(Paths.get("./target"));
-      ja.setRename(true);
       JarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
       ja.call();
     } catch (Exception e) {
@@ -97,8 +107,6 @@ public class JarAnalyzerTest {
     try {
       final JarAnalyzer ja = new JarAnalyzer();
       ja.analyze(new File("./src/test/resources/log4j-core-2.14.0.jar"));
-      ja.setWorkDir(Paths.get("./target"));
-      ja.setRename(true);
       JarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
       ja.call();
     } catch (Exception e) {
@@ -135,8 +143,6 @@ public class JarAnalyzerTest {
     try {
       final JarAnalyzer ja = new JarAnalyzer();
       ja.analyze(new File("./src/test/resources/commons-fileupload-1.3.1.jar"));
-      ja.setWorkDir(Paths.get("./target"));
-      ja.setRename(true);
       JarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
       ja.call();
     } catch (Exception e) {
@@ -146,14 +152,10 @@ public class JarAnalyzerTest {
   }
 
   @Test
-  public void jarAnalyzerTest() {
+  public void testFindRebundles() {
     try {
       final JarAnalyzer ja = new JarAnalyzer();
       ja.analyze(new File("./src/test/resources/examples.jar"));
-      ja.setWorkDir(Paths.get("./target"));
-      ja.setRename(true);
-      JarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
-      ja.call();
 
       // Check bundled library IDs
       final Collection<LibraryId> blibids = ja.getLibrary().getBundledLibraryIds();
@@ -161,6 +163,42 @@ public class JarAnalyzerTest {
       assertTrue(blibids.contains(new LibraryId("org.apache.commons", "commons-compress", "1.10")));
       assertTrue(
           blibids.contains(new LibraryId("commons-fileupload", "commons-fileupload", "1.3.1")));
+    } catch (Exception e) {
+      e.printStackTrace();
+      assertTrue(false);
+    }
+  }
+
+  @Test
+  public void testInstrument() {
+    try {
+      final JarAnalyzer ja = new JarAnalyzer();
+      ja.analyze(new File("./src/test/resources/examples.jar"));
+      ja.setWorkDir(Paths.get("./target"));
+      ja.setRename(true);
+      ja.setInstrument(true);
+      JarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
+      ja.call();
+      final File rewritten_jar = ja.getInstrumentedArchive();
+      assertTrue(rewritten_jar.exists());
+    } catch (Exception e) {
+      e.printStackTrace();
+      assertTrue(false);
+    }
+  }
+
+  @Test
+  public void testInstrumentCommonsFileUpload() {
+    try {
+      final JarAnalyzer ja = new JarAnalyzer();
+      ja.analyze(new File("./src/test/resources/commons-fileupload-1.3.1.jar"));
+      ja.setWorkDir(Paths.get("./target"));
+      ja.setRename(true);
+      ja.setInstrument(true);
+      JarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
+      ja.call();
+      final File rewritten_jar = ja.getInstrumentedArchive();
+      assertTrue(rewritten_jar.exists());
     } catch (Exception e) {
       e.printStackTrace();
       assertTrue(false);

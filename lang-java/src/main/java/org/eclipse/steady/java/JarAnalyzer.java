@@ -131,12 +131,10 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
           final JarWriter jw = new JarWriter(_file.toPath());
           if (jw.hasEntry("BOOT-INF/")) {
             return false;
-          }
-          else {
+          } else {
             return true;
           }
-        }
-        catch(IOException ioe) {
+        } catch (IOException ioe) {
           log.error(ioe.getMessage());
         }
       }
@@ -173,7 +171,9 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
    */
   public void setInstrument(boolean _instrument) {
     this.instrument = _instrument;
-    if (this.instrument) this.instrControl = InstrumentationControl.getInstance(this.url);
+    if (this.instrument) {
+      this.instrControl = InstrumentationControl.getInstance(this.url);
+    }
   }
 
   /**
@@ -370,7 +370,9 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
     this.jarWriter.register(".*.class$", this);
 
     // Rename
-    if (this.rename) this.jarWriter.setClassifier("steady-instr");
+    if (this.rename) {
+      this.jarWriter.setClassifier("steady-instr");
+    }
 
     // Rewrite
     this.jarWriter.rewrite(this.workDir);
@@ -681,8 +683,10 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
    * The callback registration takes place in {@link #createInstrumentedArchive()}.
    */
   @Override
-  public InputStream getInputStream(String _regex, JarEntry _entry) {
+  public RewrittenJarEntry getInputStream(String _regex, JarEntry _entry) {
     InputStream is = null;
+    long size = -1;
+    long crc32 = -1;
 
     if (_regex.equals(".*.class$")) {
       JavaId jid = null;
@@ -701,12 +705,15 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 
       // Create input stream
       if (jid != null && this.instrumentedClasses.get(jid) != null) {
-        // new_entry.setSize(this.instrumentedClasses.get(jid).getBytecode().length);
-        is = new ByteArrayInputStream(this.instrumentedClasses.get(jid).getBytecode());
+        final byte[] bytecode = this.instrumentedClasses.get(jid).getBytecode();
+        crc32 = FileUtil.getCRC32(bytecode);
+        size = bytecode.length;
+        is = new ByteArrayInputStream(bytecode);
+        return new RewrittenJarEntry(is, size, crc32);
       }
     }
 
-    return is;
+    return null;
   }
 
   /** {@inheritDoc} */

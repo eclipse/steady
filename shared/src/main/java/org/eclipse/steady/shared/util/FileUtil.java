@@ -41,6 +41,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 import java.util.zip.ZipInputStream;
 
 import org.apache.logging.log4j.Logger;
@@ -441,6 +443,43 @@ public class FileUtil {
    */
   public static Path getPath(String _path) {
     return FileUtil.getPath(_path, false);
+  }
+
+  /**
+   * Returns the CRC-32 checksum for the given byte array.
+   * @param _bytes
+   * @return
+   */
+  public static long getCRC32(byte[] _bytes) {
+    Checksum checksum = new CRC32();
+    checksum.update(_bytes, 0, _bytes.length);
+    return checksum.getValue();
+  }
+
+  /**
+   * Returns the CRC-32 checksum for the given {@link File}.
+   * Returns -1 if the checksum cannot be computed.
+   * @param _file
+   * @return
+   */
+  public static long getCRC32(File _file) {
+    try {
+      if (!_file.canRead()) throw new IOException("Cannot read file");
+
+      Checksum checksum = new CRC32();
+
+      try (final InputStream is = new FileInputStream(_file); ) {
+        byte[] bytes = new byte[1024];
+        int bytes_read = -1;
+        while ((bytes_read = is.read(bytes)) != -1) {
+          checksum.update(bytes, 0, bytes_read);
+        }
+        return checksum.getValue();
+      }
+    } catch (IOException e) {
+      FileUtil.log.error("IO Error while computing CRC-32: " + e.getMessage());
+    }
+    return -1;
   }
 
   /**

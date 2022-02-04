@@ -469,8 +469,10 @@ public class WarAnalyzer extends JarAnalyzer {
    * The callback registration takes place in {@link #createInstrumentedArchive()}.
    */
   @Override
-  public InputStream getInputStream(String _regex, JarEntry _entry) {
+  public RewrittenJarEntry getInputStream(String _regex, JarEntry _entry) {
     InputStream is = null;
+    long size = -1;
+    long crc32 = -1;
 
     // Called during rewrite of classes
     if (_regex.equals("^WEB-INF/classes/.*.class$")) {
@@ -490,8 +492,11 @@ public class WarAnalyzer extends JarAnalyzer {
 
       // Create input stream
       if (jid != null && this.instrumentedClasses.get(jid) != null) {
-        // new_entry.setSize(this.instrumentedClasses.get(jid).getBytecode().length);
-        is = new ByteArrayInputStream(this.instrumentedClasses.get(jid).getBytecode());
+        final byte[] bytecode = this.instrumentedClasses.get(jid).getBytecode();
+        crc32 = FileUtil.getCRC32(bytecode);
+        size = bytecode.length;
+        is = new ByteArrayInputStream(bytecode);
+        return new RewrittenJarEntry(is, size, crc32);
       }
     }
     // Called during rewrite of WAR
@@ -507,7 +512,10 @@ public class WarAnalyzer extends JarAnalyzer {
         ja = mgr.getAnalyzerForSubpath(p);
         if (ja != null) {
           final File f = ja.getInstrumentedArchive();
+          crc32 = FileUtil.getCRC32(f);
+          size = f.length();
           is = new FileInputStream(f);
+          return new RewrittenJarEntry(is, size, crc32);
         } else {
           WarAnalyzer.log.warn("Cannot find JarAnalyzer for path [" + p + "]");
         }
@@ -549,7 +557,11 @@ public class WarAnalyzer extends JarAnalyzer {
 
         tmp_file = Files.createTempFile("steady-core-", ".properties");
         cfg.save(tmp_file.toFile());
+
+        crc32 = FileUtil.getCRC32(tmp_file.toFile());
+        size = tmp_file.toFile().length();
         is = new FileInputStream(tmp_file.toFile());
+        return new RewrittenJarEntry(is, size, crc32);
       } catch (ConfigurationException ce) {
         WarAnalyzer.log.error(
             "Error when loading configuration from 'steady-core.properties': " + ce.getMessage());
@@ -562,6 +574,6 @@ public class WarAnalyzer extends JarAnalyzer {
       }
     }
 
-    return is;
+    return null;
   }
 }

@@ -40,11 +40,14 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
 
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.core.util.CoreConfiguration;
+import org.eclipse.steady.java.JarEntryWriter.RewrittenJarEntry;
 import org.eclipse.steady.shared.util.DirUtil;
 import org.eclipse.steady.shared.util.FileUtil;
+import org.eclipse.steady.shared.util.StringUtil;
 import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
@@ -59,10 +62,10 @@ public class JarWriter {
   /**
    * Included in the manifest file of every JAR rewritten by Vulas.
    */
-  public static final String MANIFEST_ENTRY_VULAS_MODIF = "VULAS-modifiedAt";
+  public static final String MANIFEST_ENTRY_VULAS_MODIF = "Steady-modifiedAt";
 
   /** Constant <code>MANIFEST_ENTRY_ORIG_SHA1="VULAS-originalSHA1"</code> */
-  public static final String MANIFEST_ENTRY_ORIG_SHA1 = "VULAS-originalSHA1";
+  public static final String MANIFEST_ENTRY_ORIG_SHA1 = "Steady-originalSHA1";
 
   /** Constant <code>hexArray</code> */
   protected static final char[] hexArray = "0123456789ABCDEF".toCharArray();
@@ -92,6 +95,9 @@ public class JarWriter {
 
   /** Additional files to be written in the JAR (entryname:path). */
   private Map<String, Path> additionalFiles = new HashMap<String, Path>();
+
+  /** Compression settings, only for entries added with addFile(s). */
+  private int compressNewJarEntries = ZipEntry.DEFLATED;
 
   /**
    * <p>Constructor for JarWriter.</p>
@@ -477,9 +483,11 @@ public class JarWriter {
       } else {
         final FileOutputStream fos = new FileOutputStream(this.rewrittenFile);
         final JarOutputStream jos = new JarOutputStream(fos, this.createModifiedManifest());
+        RewrittenJarEntry rewr_jar_entry = null;
         InputStream is = null;
         byte[] bytes = new byte[1024];
         int bytes_read = 0;
+        boolean entry_replaced = false;
 
         final Enumeration<JarEntry> en = this.originalJar.entries();
         String class_name = null;
@@ -496,12 +504,12 @@ public class JarWriter {
 
           // The input stream used for writing the entries
           is = null;
+          rewr_jar_entry = null;
 
-          // Check whether we already write an entry with this name
+          // Check whether we already wrote an entry with this name
           if (written_jar_entries.contains(old_entry.getName())) continue;
 
-          // Ignore the original manifest (we built a new one with certain vulas-specific
-          // attributes)
+          // Ignore the original manifest (we built a new with specific attributes)
           if (old_entry.getName().equals("META-INF/MANIFEST.MF")) continue;
 
           // Ignore signature related files (->
@@ -516,22 +524,55 @@ public class JarWriter {
           for (Map.Entry<Pattern, JarEntryWriter> e : this.callbacks.entrySet()) {
             matcher = e.getKey().matcher(old_entry.getName());
             if (matcher.matches()) {
-              is = e.getValue().getInputStream(e.getKey().toString(), old_entry);
+              rewr_jar_entry = e.getValue().getInputStream(e.getKey().toString(), old_entry);
+              entry_replaced = true;
             }
           }
 
           // If null, take the original file
-          if (is == null) is = this.originalJar.getInputStream(old_entry);
+          if (rewr_jar_entry == null) {
+            rewr_jar_entry =
+                new RewrittenJarEntry(
+                    this.originalJar.getInputStream(old_entry),
+                    old_entry.getSize(),
+                    old_entry.getCrc());
+            entry_replaced = false;
+          }
 
           // Debug information regarding specific attributes
           if (old_entry.getAttributes() != null)
             JarWriter.log.debug(
                 this.toString() + ": Entry [" + old_entry.getName() + "] has specific attributes");
 
-          // Write the entry to the modified JAR
+          // Write the entry to the modified JAR (using the same compression method as in the
+          // original JAR)
           new_entry = new JarEntry(old_entry.getName());
+          if (!old_entry.isDirectory()) {
+            JarWriter.log.debug(
+                StringUtil.padLeft("[" + old_entry.getName() + "]", 80)
+                    + " original="
+                    + (entry_replaced == false)
+                    + ", compr="
+                    + (old_entry.getMethod() == ZipEntry.DEFLATED)
+                    + ", crc-equal="
+                    + (old_entry.getCrc() == rewr_jar_entry.crc32)
+                    + " crc="
+                    + old_entry.getCrc()
+                    + "/"
+                    + rewr_jar_entry.crc32
+                    + ", size="
+                    + old_entry.getSize()
+                    + "/"
+                    + rewr_jar_entry.size);
+            new_entry.setMethod(old_entry.getMethod());
+            new_entry.setCrc(rewr_jar_entry.crc32);
+            new_entry.setSize(
+                rewr_jar_entry.size); // Compressed sized is set autom. depending on method
+          }
           jos.putNextEntry(new_entry);
-          while ((bytes_read = is.read(bytes)) != -1) jos.write(bytes, 0, bytes_read);
+          while ((bytes_read = rewr_jar_entry.is.read(bytes)) != -1) {
+            jos.write(bytes, 0, bytes_read);
+          }
 
           // is.close();
           jos.closeEntry();
@@ -540,11 +581,16 @@ public class JarWriter {
           written_jar_entries.add(new_entry.getName());
         }
 
-        // Add additional files
-
+        // Add additional files (using the compression method specified with setCompress)
         for (Map.Entry<String, Path> e : this.additionalFiles.entrySet()) {
           if (e.getValue().toFile().exists()) {
             new_entry = new JarEntry(e.getKey());
+            new_entry.setMethod(this.compressNewJarEntries);
+            new_entry.setCrc(FileUtil.getCRC32(e.getValue().toFile()));
+            new_entry.setSize(
+                e.getValue()
+                    .toFile()
+                    .length()); // Compressed sized is set autom. depending on method
             jos.putNextEntry(new_entry);
             is = new FileInputStream(e.getValue().toFile());
             while ((bytes_read = is.read(bytes)) != -1) jos.write(bytes, 0, bytes_read);
@@ -577,6 +623,14 @@ public class JarWriter {
             "Error while writing modified JAR: " + ioe.getMessage(), ioe);
     }
     return this.rewrittenFile.toPath();
+  }
+
+  public void setCompressNewJarEntries(boolean _compress) {
+    if (_compress) {
+      this.compressNewJarEntries = ZipEntry.DEFLATED;
+    } else {
+      this.compressNewJarEntries = ZipEntry.STORED;
+    }
   }
 
   /**

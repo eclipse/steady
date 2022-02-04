@@ -294,8 +294,8 @@ public class ArchiveAnalysisManager {
           final JarWriter jw = new JarWriter(p);
           if (jw.hasEntry("BOOT-INF/")) {
             ja = new SpringBootAnalyzer();
-          }
-          else {
+            ((SpringBootAnalyzer) ja).setIncludeDir(this.inclDir);
+          } else {
             ja = new JarAnalyzer();
           }
         } else if (p.toString().endsWith("war")) {
