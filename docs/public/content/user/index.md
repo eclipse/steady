@@ -1,4 +1,4 @@
-# Docs
+# User Guide
 
 __Step by step tutorials__
 

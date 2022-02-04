@@ -17,6 +17,10 @@ views of the @@PROJECT_NAME@@ web frontend.
 
 *Coming soon!*
 
-## Assessment and Mitigation
+## Impact Assessment and Mitigation
 
 This section explains in detail how to assess the findings of @@PROJECT_NAME@@ and how to proceed to mitigate them.
+
+## Library Assessment
+
+This section documents the process to determine whether a given artifact contains the vulnerable or the fixed version of a construct that is known to be related to some vulnerability.

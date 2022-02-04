@@ -1,12 +1,20 @@
-# Patch Library Analyzer
+# Library Assessment
 
-The `patch library analyzer` is a Java application that establishes whether a library contains a construct modified to fix a vulnerability (aka changed-construct) in its vulnerable or fixed version.
+The notion of "library assessment" refers to the process that establishes whether a library contains a construct modified to fix a vulnerability (aka changed-construct) in its vulnerable or fixed version. @@PROJECT_NAME@@ performs this process automatically, but in some cases manual intervention
+is required (or desirable, e.g., to override the automated assessment).
 
-The core idea of the `patch lib analyzer` is to compare the abstract syntax tree (AST) of the body of the changed-construct contained in a library with the AST of its vulnerable and fixed version.
-However, the biggest obstacle is that vulnerability fixes are applied on source code whereas library releases imported within applications are binaries. The `patch lib analyzer` overcomes this issue by retrieving the source code of binaries (if available) from Maven repositories (e.g. Maven Central or organization's specific Nexus repositories).
+
+
+## Automated Library Assessment
+
+The process of library assessment is automated in @@PROJECT_NAME@@ through `patch library analyzer`, a Java application that
+compares the abstract syntax tree (AST) of the body of the changed-construct contained in a library with the AST of its vulnerable and fixed version.
+
+Unfortunately, vulnerability fixes are applied on source code whereas library releases imported within applications are binaries and
+this represents a significant technical challenge. The `patch lib analyzer` addresses it by retrieving the source code of binaries (if available) from Maven repositories (e.g. Maven Central or organization's specific Nexus repositories).
 
 !!! warning
-	The current implementation only assesses libraries having a GAV known to Maven Central or configured Nexus repositories. The assessment of python artifacts available in Pypi will soon be covered.
+	The current implementation only assesses libraries having a GAV (*group-artifact-version* identifier) known to Maven Central or configured Nexus repositories. The assessment of python artifacts available in PyPI is not supported at this time.
 
 If the sources of a given library are available, the `patch lib analyzer` compares the ASTs of the changed-constructs with the AST of their vulnerable and fixed version. Once equalities are found in source code, they are also used to conclude--wherever possible--for cases where the source code is not available or equalities are not found. The `patch lib analyzer` may conclude that a library is fixed or vulnerable based on the following criteria:
 
@@ -68,3 +76,20 @@ Run for CVE-2018-1111,CVE-2018-2222
 ```sh
 java -Dvulas.patchEval.uploadResults=true -Dvulas.patchEval.onlyAddNewResults=true -Dvulas.patchEval.basefolder=<csv_folder> -Dvulas.patchEval.bugId=CVE-2018-1111,CVE-2018-2222 -Dvulas.shared.cia.serviceUrl=@@ADDRESS@@/cia -Dvulas.shared.backend.serviceUrl=@@ADDRESS@@/backend/-Xmx6G -Xms6G -jar patch-lib-analyzer-@@PROJECT_VERSION@@-jar-with-dependencies.jar
 ```
+
+## Manual Library Assessment
+
+The manual assessment can be done from the bugs frontend @@ADDRESS@@/bugs, by setting the assessment to the appropriate value in the "Assessment (Manual)" column and clicking the "Save" button.
+
+<center class='expandable'>
+    [![start_page](./img/manual_assessment.jpg)](./img/manual_assessment.jpg)
+</center>
+
+Our recommendation is to always rely on code (manually inspecting it in the worst case) in order to take a decision. The versions indicated in the vulnerability's description were proved wrong in multiple cases.
+
+The column "Patch eval" shows information about the results (if any) of the patch lib analyzer. By clicking on the cell the results obtained by code comparison for each elements of the bug change list are shown. If available, it is recommended to use them in order to take a decision about the vulnerability of the corresponding library version.
+
+!!! warning "What do the 'Orange Hourglass' icons mean?"
+	Whenever an application library contains the signature of a construct that was changed to fix a vulnerability, but the patch lib analyzer didn't yet (or could not) establish whether it contains the vulnerable or fixed version of the construct, then the tool reports the vulnerability in the web frontend with an ORANGE hourglass in the column "Inclusion of vulnerable code".
+
+	To resolve orange hourglasses the tool needs to know whether the library contains the vulnerable or fixed version of the construct changed in the vulnerability fix, which can be determined [manually](./manuals/library_assessment/#manual-library-assessment) or [automatically](/manuals/library_assessment/#automated-library-assessment).
