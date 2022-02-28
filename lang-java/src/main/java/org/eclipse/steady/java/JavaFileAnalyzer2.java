@@ -37,12 +37,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
+import javax.validation.constraints.NotNull;
+
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.misc.Interval;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.Construct;
@@ -71,7 +73,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
    */
   private Map<ConstructId, Construct> constructs = null;
 
-  private ANTLRInputStream input = null;
+  private CharStream input = null;
 
   /** The file to be analyzed. */
   private File file = null;
@@ -461,7 +463,7 @@ public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAna
           while ((cc = is2.read()) >= 0) baos.write(cc);
         }
         baos.flush();
-        this.input = new ANTLRInputStream(new ByteArrayInputStream(baos.toByteArray()));
+        this.input = CharStreams.fromStream(new ByteArrayInputStream(baos.toByteArray()));
         JavaLexer lexer = new JavaLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         JavaParser parser = new JavaParser(tokens);

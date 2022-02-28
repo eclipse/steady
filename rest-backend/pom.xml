@@ -32,7 +32,7 @@
 
 	<groupId>org.eclipse.steady</groupId>
 	<artifactId>rest-backend</artifactId>
-	<version>3.2.2-SNAPSHOT</version>
+	<version>3.2.3-SNAPSHOT</version>
 	<packaging>${packaging.type}</packaging>
 
 	<name>REST service to manage scan results and bugs</name>
@@ -217,7 +217,7 @@
 		<dependency>
 			<groupId>com.xebialabs.restito</groupId>
 			<artifactId>restito</artifactId>
-			<version>0.9.3</version>
+			<version>0.9.4</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -265,13 +265,14 @@
 				<dependency>
 					<groupId>com.h2database</groupId>
 					<artifactId>h2</artifactId>
-					<version>1.4.199</version><!-- Fix Spring Boot's dependency on vulnerable
+					<version>2.0.206</version><!-- Fix Spring Boot's dependency on vulnerable
 						h2 1.4.197 (org.springframework.boot:spring-boot-dependencies:1.5.19.RELEASE) -->
+					<scope>test</scope>
 				</dependency>
 				<dependency>
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
-					<version>42.2.14</version>
+					<version>42.2.25</version>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -298,7 +299,7 @@
 				<dependency>
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
-					<version>42.2.14</version>
+					<version>42.2.25</version>
 				</dependency>
 			</dependencies>
 			<build>

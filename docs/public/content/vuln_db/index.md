@@ -1,30 +1,36 @@
-# Vulnerability database
+# Vulnerability Data
 
-The vulnerability database comprises code-level information about publicly disclosed vulnerabilities in open source projects, which is the fuel of the code-centric analysis performed by **@@PROJECT_NAME@@**. The tool is able to detect and assess all and only the vulnerabilities present in this PostgreSQL database.
+## How to import vulnerability data in the @@PROJECT_NAME@@ backend
 
-The code-level information is gathered by analyzing the commits that the open source developers submitted in order to fix the respective vulnerability (the so-called fix commit). The results of this analysis comprise, for instance, the unique names and abstract syntax trees of all methods or functions modified in the respective fix-commits.
+**TL;DR: There is nothing to do, it's all automated :-)**
 
-The fix commits for hundreds of vulnerabilities in Java and Python open source projects are available in a [dedicated GitHub repository (project "KB")](https://github.com/SAP/project-kb).
+When you [deploy @@PROJECT_NAME@@ using Docker](../admin/tutorials/docker/), not only the vulnerability data from project KB is *automatically imported*,
+but it is also *periodically updated* so that any new vulnerabilities are imported automatically into your @@PROJECT_NAME@@ backend.
 
-__Step by step tutorial__
+If you want to customize the mechanism whereby vulnerabilities are imported or if you just want to learn more about it, please refer to the dedicated [technical documentation](../user/manuals/updating_vuln_data).
 
-: Here you can find the steps to populate your vulnerability database with five known vulnerabilities. Of course, you can exercise the tutorial for all the other vulnerabilities from [project "KB"](https://github.com/SAP/project-kb) as well.
+## Why code-level vulnerability data are needed
 
-: [Go to the Tutorials page](./tutorials/vuln_db_tutorial/)
+The code-level vulnerability analysis performed by @@PROJECT_NAME@@ is based on the concept of *change list*, a set of constructs (e.g., methods) that are
+changed to fix a given security vulnerability. The vulnerability detection capabilities of @@PROJECT_NAME@@ rely on this concept: an artifact (e.g. a library) is considered to be affected by a vulnerability if it contains the constructs that were changed to fix a vulnerability.
 
-__Manual__
+A positive consequence of this approach is that, once the change list for a vulnerability has been created and added to the database, one can immediately
+determine if any of the applications scanned in the past are potentially impacted by this new vulnerability, no need to re-run the analysis for each application!
 
-: Here you can find a description of the main activities and tools around the vulnerability database.
+Hence, if one considers **@@PROJECT_NAME@@** as a powerful machine, then vulnerability data are *the fuel*, since **@@PROJECT_NAME@@** can only detect and assess vulnerabilities if they are present in its vulnerability database.
 
-: [Go to the Vulnerability Database Manual](./manuals/)
+The fix commits for hundreds of vulnerabilities that affect Java and Python open source projects are mantained in a dedicated repository ([project "KB"](https://github.com/SAP/project-kb)) that focuses on fostering a community-based approach to gathering and maintaining a comprehensive knowledge base.
 
-__Contribute__
+@@PROJECT_NAME@@ automatically imports data from project KB, so in typical scenarios you do not need to do anything for it to work.
 
-: Here you can find information about how to contribute new publicly disclosed vulnerabilities to [project "KB"](https://github.com/SAP/project-kb)
+## Contributing to the vulnerability database
 
-: [Go to the Contribute page](../contributor/#contribute-to-the-vulnerability-knowledge-base)
+[In this page](https://sap.github.io/project-kb/contributing/) you will find information about how to contribute vulnerability information to project KB.
 
-!!! warning "Orange Hourglass"
-	Whenever an application library contains the signature of a construct that was changed to fix a vulnerability, but the patch lib analyzer didn't yet (or could not) establish whether it contains the vulnerable or fixed version of the construct, then the tool reports the vulnerability in the web frontend with an ORANGE hourglass in the column "Inclusion of vulnerable code".
 
-	To resolve orange hourglasses it's necessary to feed the tool with the information whether the library contains the vulnerable or fixed version of the construct changed in the vulnerability fix. This can be done either [manually](./manuals/manual_assessment/) or automatically with the [patch-lib-analyzer](./manuals/patch_lib_analyzer/) (for a subset of cases).
+## How to list the vulnerabilities that are currently available in your instance of @@PROJECT_NAME@@
+
+Assuming that @@PROJECT_NAME@@ is deployed on `@@ADDRESS@@`, you can list of the vulnerabilities saved in the database of your installation via this
+endpoint: [@@ADDRESS@@/backend/bugs](@@ADDRESS@@/backend/bugs)
+
+Detailed information for a given vulnerability can be obtained using the following link `@@ADDRESS@@/backend/bugs/<foo>` (where `<vuln_id>` has to be replaced by a real vulnerability identifier).

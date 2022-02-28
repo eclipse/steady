@@ -1,4 +1,4 @@
-# Assessment and Mitigation Manual
+# Impact Assessment and Mitigation
 
 The presence of vulnerable open-source code must be [assessed](#assess). If the vulnerability **IS NOT** considered exploitable, it can be [exempted](#exempt). If it **IS** considered exploitable, it has to be [mitigated](#mitigate).
 

@@ -114,7 +114,7 @@ public interface AffectedLibraryRepository
    */
   @Query(
       "SELECT afflib FROM AffectedLibrary AS afflib JOIN afflib.libraryId lid, Library l "
-          + "WHERE l.libraryId=lid AND l.wellknownDigest='true' AND"
+          + "WHERE l.libraryId=lid AND l.wellknownDigest=true AND"
           + " afflib.bugId = :bug AND afflib.source = :source")
   List<AffectedLibrary> findWellKnownByBugAndSource(
       @Param("bug") Bug bug, @Param("source") AffectedVersionSource source);
@@ -181,7 +181,7 @@ public interface AffectedLibraryRepository
    */
   @Query(
       "SELECT afflib FROM AffectedLibrary AS afflib JOIN afflib.libraryId lid, Library l "
-          + "WHERE l.libraryId=lid AND l.wellknownDigest='true' AND"
+          + "WHERE l.libraryId=lid AND l.wellknownDigest=true AND"
           + " afflib.bugId = :bug")
   List<AffectedLibrary> findWellKnownByBug(@Param("bug") Bug bug);
 

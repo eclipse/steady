@@ -424,29 +424,40 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
       while (en.hasMoreElements()) {
         final JarEntry je = en.nextElement();
 
-        // 18.11.2014: Ignore "package-info.class" files, which can contain annotations and
-        // documentation
-        // 05.12.2017: Ignore "module-info.class" files, which can contain annotations and
-        // documentation
-        if (je.getName().endsWith(".class")
-            && !je.getName().endsWith("package-info.class")
-            && !je.getName().endsWith("module-info.class")) {
-          final String fqn = JarAnalyzer.getFqClassname(je.getName());
-          if (fqn != null) {
-            this.classNames.add(fqn);
-            JarAnalyzer.log.debug(
-                "JAR entry ["
-                    + je.getName()
-                    + "] transformed to Java class identifier ["
-                    + fqn
-                    + "]");
-          } else {
+        // .class files
+        if (je.getName().endsWith(".class")) {
+
+          // Ignore class files below META-INF/versions
+          if (je.getName().startsWith("META-INF/versions/")) {
             JarAnalyzer.log.warn(
-                "JAR entry ["
-                    + je.getName()
-                    + "] will be ignored, as no Java class identifier could be built");
+                "Multi-release JARs are not supported, skipping JAR entry [" + je.getName() + "]");
           }
-        } else if (je.getName().endsWith("pom.xml")) {
+
+          // Ignore package-info.class and module-info.class
+          else if (je.getName().endsWith("package-info.class")
+              || je.getName().endsWith("module-info.class")) {
+            ;
+          }
+
+          // Build class identifier for every other .class file
+          else {
+            try {
+              final String fqn = JarAnalyzer.getFqClassname(je.getName());
+              this.classNames.add(fqn);
+              JarAnalyzer.log.debug(
+                  "JAR entry ["
+                      + je.getName()
+                      + "] transformed to Java class identifier ["
+                      + fqn
+                      + "]");
+            } catch (IllegalArgumentException iae) {
+              JarAnalyzer.log.warn(iae.getMessage());
+            }
+          }
+        }
+
+        // pom.xml files
+        else if (je.getName().endsWith("pom.xml")) {
           try {
             final PomParser pp = new PomParser();
             final SAXParser saxParser = spf.newSAXParser();
@@ -548,10 +559,15 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
           }
 
           if (!this.instrument) {
-            // only detach if no static instrumentation (otherwise it will fail because the class
-            // was modified)
-            // in case the instrumentation is performed the detach is done in
+            // only detach if no static instrumentation (otherwise it will fail
+            // because the class was modified) in case the instrumentation is
+            // performed the detach is done in
             // ClassVisitor.finalizeInstrumentation
+
+            // Can throw a NPE according to
+            // https://github.com/jboss-javassist/javassist/pull/395, esp. if
+            // the same class is multiple times in the classpath, which is
+            // caught by the catch clause below. Update to 3.29.0-GA ASAP
             ctclass.detach();
           }
         } catch (NotFoundException nfe) {
@@ -733,7 +749,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
   // ---------------------------- STATIC METHODS
 
   /**
-   * <p>isJavaIdentifier.</p>
+   * Returns true if the given name is a valid Java identifier, false otherwise.
    *
    * @param _name a {@link java.lang.String} object.
    * @return a boolean.
@@ -753,48 +769,69 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
 
   /**
    * Returns the fully-qualified Java class identifier for a given JAR entry.
-   * This is done by removing the file extension and by interpreting folders as packages.
-   * If anything goes wrong, null is returned.
+   * This is done by removing the file extension and by interpreting folders as
+   * packages. package-info.class and module-info.class files are ignored, and
+   * so are class files below META-INF/versions/ in multi-release JARs. In those
+   * cases, and if anything else goes wrong, an IllegalArgumentException is
+   * thrown.
    *
    * @param _jar_entry_name a {@link java.lang.String} object.
    * @return a {@link java.lang.String} object.
+   * @throws IllegalArgumentException if the JAR entry name cannot be used for
+   * constructing a valid fully-qualified Java class identifier
    */
-  public static String getFqClassname(String _jar_entry_name) {
-    String cn = null;
-    if (_jar_entry_name.endsWith(".class")) {
-      // 18.11.2014: Ignore "package-info.class" files, which can contain annotations and
-      // documentation
-      // 05.12.2017: Ignore "module-info.class" files, which can contain annotations and
-      // documentation
-      if (!_jar_entry_name.endsWith("package-info.class")
-          && !_jar_entry_name.endsWith("module-info.class")) {
-        final StringBuffer fqn = new StringBuffer();
+  public static String getFqClassname(String _jar_entry_name) throws IllegalArgumentException {
+    if (!_jar_entry_name.endsWith(".class")) {
+      throw new IllegalArgumentException(
+          "JAR entry [" + _jar_entry_name + "] does not have the file extension [class]");
+    } else {
+      // Class files below META-INF/versions
+      if (_jar_entry_name.startsWith("META-INF/versions/")) {
+        throw new IllegalArgumentException(
+            "JAR entry ["
+                + _jar_entry_name
+                + "] corresponds to a class file in a multi-release JAR, which are not supported");
+      }
 
+      // package-info.class and module-info.class
+      else if (_jar_entry_name.endsWith("package-info.class")
+          || _jar_entry_name.endsWith("module-info.class")) {
+        throw new IllegalArgumentException(
+            "JAR entry ["
+                + _jar_entry_name
+                + "] corresponds to a package-info.class or module-info.class, which are ignored");
+      }
+
+      // Build class identifier for every other .class file
+      else {
+        final StringBuffer fqn = new StringBuffer();
         final Path p = Paths.get(_jar_entry_name);
         final Iterator<Path> i = p.iterator();
 
+        // Loop over paths elements
         while (i.hasNext()) {
           String element = i.next().toString();
-          if (element.endsWith(".class"))
+          if (element.endsWith(".class")) {
             element = element.substring(0, element.length() - 6); // ".class"
+          }
           if (JarAnalyzer.isJavaIdentifier(element)) {
-            if (fqn.length() != 0) fqn.append('.');
+            if (fqn.length() != 0) {
+              fqn.append('.');
+            }
             fqn.append(element);
           } else {
-            JarAnalyzer.log.warn(
+            throw new IllegalArgumentException(
                 "JAR entry ["
                     + _jar_entry_name
                     + "] cannot be transformed to a fully-qualified Java class identifier, because"
                     + " ["
                     + element
                     + "] is not a valid identifier");
-            return null;
           }
         }
-        cn = fqn.toString();
+        return fqn.toString();
       }
     }
-    return cn;
   }
 
   /**

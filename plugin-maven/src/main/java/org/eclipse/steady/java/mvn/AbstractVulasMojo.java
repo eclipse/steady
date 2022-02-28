@@ -24,7 +24,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
@@ -307,58 +306,31 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
   private final void setKnownDependencies() throws DependencyResolutionRequiredException {
     if (this.goal != null && this.goal instanceof AbstractAppGoal) {
 
-      // ---- Determine dependencies (Vulas 2.x)
-
-      /*final Set<String> runtime_system_classpath = new HashSet<String>();
-      runtime_system_classpath.addAll(project.getRuntimeClasspathElements());
-      runtime_system_classpath.addAll(project.getSystemClasspathElements());
-      int i=0;
-      for (final String resource : runtime_system_classpath) {
-      	//this.goal.addDepPath(Paths.get(resource));
-      	getLog().info("Dependency [" + ++i + "]: " + resource);
-      }*/
-
-      // ---- Determine dependencies (Vulas 3.x)
-
-      // Not sure why this line existed, let's see what happens if I comment it out :)
-      // final ClassLoader originalContextClassLoader = currentThread().getContextClassLoader();
-
-      // Old way of learning about dependencies (getArtifacts seems much better)
-      // for (final String resource : project.getRuntimeClasspathElements()) {
-
-      // Path to dependency info
+      // Paths to Steady dependencies
       final Map<Path, Dependency> dep_for_path = new HashMap<Path, Dependency>();
-
-      // Dependencies (direct and transitive), including Maven ID and file system path
-      @SuppressWarnings("deprecation")
-      final Set<Artifact> direct_artifacts =
-          project
-              .getDependencyArtifacts(); // The artifact class does not seem to tell whether it is a
-      // direct or transitive dependency (hence we keep the call
-      // and suppress the warning)
-      final Set<Artifact> artifacts = project.getArtifacts();
       int count = 0;
-      Dependency dep = null;
-      Library lib = null;
-      for (Artifact a : artifacts) {
-        // Create lib w/o SHA1
-        lib = new Library();
+      for (Artifact a : project.getArtifacts()) {
+
+        // Create library
+        final Library lib = new Library();
         lib.setLibraryId(new LibraryId(a.getGroupId(), a.getArtifactId(), a.getVersion()));
         lib.setDigest(FileUtil.getDigest(a.getFile(), DigestAlgorithm.SHA1));
 
-        // Create dependency and put into map
-        dep =
+        // Create dependency
+        final Dependency dep =
             new Dependency(
                 this.goal.getGoalContext().getApplication(),
                 lib,
                 Scope.fromString(a.getScope().toUpperCase(), Scope.RUNTIME),
-                !direct_artifacts.contains(a),
+                false, // Direct by default, may be changed to transitive below
                 null,
                 a.getFile().toPath().toString());
 
         // Set parent dependency (if there is any and it is NOT an intra-project Maven dependency
         // with path target/classes)
         final LibraryId parent = this.getParent(a.getDependencyTrail());
+
+        // Parent found in dependency trail (a string) -> Find and set parent dependency
         if (parent != null) {
           for (Dependency parent_dep : dep_for_path.values()) {
             final File artifact_file = Paths.get(parent_dep.getPath()).toFile();
@@ -366,10 +338,13 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
                 && !artifact_file.isDirectory()
                 && ArchiveAnalysisManager.canAnalyze(artifact_file)) {
               dep.setParent(parent_dep);
+              dep.setTransitive(true);
               break;
             }
           }
         }
+
+        dep_for_path.put(a.getFile().toPath(), dep);
 
         getLog()
             .info(
@@ -382,7 +357,7 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
                     + ", path="
                     + a.getFile().getPath()
                     + ", direct="
-                    + direct_artifacts.contains(a)
+                    + !dep.getTransitive()
                     + ", scope="
                     + dep.getScope()
                     + "] created for Maven artifact [g="
@@ -397,22 +372,6 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
                     + a.getClassifier()
                     + "]");
         getLog().info("    " + StringUtil.join(a.getDependencyTrail(), " => "));
-
-        // Check consistency
-        if ((dep.getParent() == null && dep.getTransitive())
-            || (dep.getParent() != null && !dep.getTransitive())) {
-          // Note that those warnings are printed for all dependency trails that include
-          // intrta-project dependencies (since they are ignored for the time being)
-          getLog()
-              .warn(
-                  "Dependency is transitive ["
-                      + dep.getTransitive()
-                      + "], but parent is ["
-                      + (dep.getParent() == null ? "null" : "present")
-                      + "]");
-        }
-
-        dep_for_path.put(a.getFile().toPath(), dep);
       }
 
       // TODO: Is it necessary to check whether the above dependency (via getArtifacts) is actually

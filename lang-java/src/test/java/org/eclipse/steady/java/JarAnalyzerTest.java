@@ -36,17 +36,32 @@ public class JarAnalyzerTest {
 
   @Test
   public void testGetFqClassname() {
-    String je = "Foo.class";
-    String fqn = JarAnalyzer.getFqClassname(je);
-    assertEquals("Foo", fqn);
+    assertEquals("Foo", JarAnalyzer.getFqClassname("Foo.class"));
+    assertEquals(
+        "com.sun.tools.xjc.grammar.IgnoreItem",
+        JarAnalyzer.getFqClassname("com/sun/tools/xjc/grammar/IgnoreItem.class"));
+  }
 
-    je = "1.0/com/sun/tools/xjc/grammar/IgnoreItem.class";
-    fqn = JarAnalyzer.getFqClassname(je);
-    assertEquals(null, fqn);
+  @Test(expected = IllegalArgumentException.class)
+  public void testGetFqClassnameErr1() {
+    JarAnalyzer.getFqClassname("1.0/com/sun/tools/xjc/grammar/IgnoreItem.class");
+  }
 
-    je = "com/sun/tools/xjc/grammar/IgnoreItem.class";
-    fqn = JarAnalyzer.getFqClassname(je);
-    assertEquals("com.sun.tools.xjc.grammar.IgnoreItem", fqn);
+  @Test(expected = IllegalArgumentException.class)
+  public void testGetFqClassnameErr2() {
+    JarAnalyzer.getFqClassname("com/sun/tools/xjc/grammar/module-info.class");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testGetFqClassnameErr3() {
+    JarAnalyzer.getFqClassname("com/sun/tools/xjc/grammar/package-info.class");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testGetFqClassnameErr4() {
+    JarAnalyzer.getFqClassname(
+        "META-INF/versions/9/org/apache/logging/log4j/core/util/SystemClock.class"); // from
+    // log4j-core-2.14.0.jar
   }
 
   @Test
@@ -64,6 +79,24 @@ public class JarAnalyzerTest {
     try {
       final JarAnalyzer ja = new JarAnalyzer();
       ja.analyze(new File("./src/test/resources/junit-4.12.jar"));
+      ja.setWorkDir(Paths.get("./target"));
+      ja.setRename(true);
+      JarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
+      ja.call();
+    } catch (Exception e) {
+      e.printStackTrace();
+      assertTrue(false);
+    }
+  }
+
+  /**
+   * Test the analysis of log4j-core 2.14.0, which caused a NPE in Steady 3.2.2
+   */
+  @Test
+  public void testLog4jAnalysis() {
+    try {
+      final JarAnalyzer ja = new JarAnalyzer();
+      ja.analyze(new File("./src/test/resources/log4j-core-2.14.0.jar"));
       ja.setWorkDir(Paths.get("./target"));
       ja.setRename(true);
       JarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));

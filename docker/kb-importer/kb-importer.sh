@@ -21,9 +21,9 @@ construct_kaybee_pull_folder(){
   echo ${HOST}_${PATH}
 }
 
-if [ ! -f /kb-importer/data/running ]
-then
-  touch /kb-importer/data/running
+#if [ ! -f /kb-importer/data/running ]
+#then
+#  touch /kb-importer/data/running
 
   #kaybee update
   cd /kb-importer/data
@@ -41,7 +41,7 @@ then
   chmod +x steady.sh
   ./steady.sh 
   echo `date` " Kaybee Import Done" 
-  rm /kb-importer/data/running
-else
-  echo `date` " Kaybee Import already Running" 
-fi
+#  rm /kb-importer/data/running
+#else
+#  echo `date` " Kaybee Import already Running" 
+#fi
