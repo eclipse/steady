@@ -106,6 +106,24 @@ public class JarAnalyzerTest {
       assertTrue(false);
     }
   }
+  
+  /**
+   * Test the analysis of cucumber-java.jar, which contains caused a NPE in Steady 3.2.2
+   */
+  @Test
+  public void testCucumberJavaAnalysis() {
+    try {
+      final JarAnalyzer ja = new JarAnalyzer();
+      ja.analyze(new File("./src/test/resources/cucumber-java-4.3.1.jar"));
+      ja.setWorkDir(Paths.get("./target"));
+      ja.setRename(true);
+      JarAnalyzer.setAppContext(new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
+      ja.call();
+    } catch (Exception e) {
+      e.printStackTrace();
+      assertTrue(false);
+    }
+  }
 
   /**
    * The archive "org.apache.servicemix.bundles.jaxb-xjc-2.2.4_1.jar" contains 932 class files below directory 1.0 (900 have been deleted).
