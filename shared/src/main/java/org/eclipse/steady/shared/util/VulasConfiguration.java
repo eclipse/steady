@@ -19,13 +19,16 @@
 package org.eclipse.steady.shared.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -502,7 +505,8 @@ public class VulasConfiguration {
         if (m.matches() || m_spring.matches()) {
           try {
             final Properties prop = new Properties();
-            prop.load(jf.getInputStream(entry));
+            // prop.load(jf.getInputStream(entry));
+            prop.load(new InputStreamReader(jf.getInputStream(entry), StandardCharsets.UTF_8));
             jar_configs.put(full_name, ConfigurationConverter.getConfiguration(prop));
           } catch (Exception e) {
             getLog()
@@ -555,7 +559,10 @@ public class VulasConfiguration {
         if (m.matches() || m_spring.matches()) {
           try {
             final Properties prop = new Properties();
-            prop.load(new ByteArrayInputStream(this.readContent(_jis)));
+            // prop.load(new ByteArrayInputStream(this.readContent(_jis)));
+            prop.load(
+                new InputStreamReader(
+                    new ByteArrayInputStream(this.readContent(_jis)), StandardCharsets.UTF_8));
             jar_configs.put(full_name, ConfigurationConverter.getConfiguration(prop));
           } catch (Exception e) {
             getLog()
@@ -599,11 +606,13 @@ public class VulasConfiguration {
    * @throws IOException
    */
   private byte[] readContent(JarInputStream _jis) throws IOException {
-    byte[] bytes = new byte[1024];
-    while (_jis.read(bytes, 0, 1024) != -1) {
-      ;
-    } // read()
-    return bytes;
+    final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    final byte[] byte_buffer = new byte[1024];
+    int len = 0;
+    while ((len = _jis.read(byte_buffer)) != -1) {
+      bos.write(byte_buffer, 0, len);
+    }
+    return bos.toByteArray();
   }
 
   // =============== Stuff for accessing single shared configuration settings
