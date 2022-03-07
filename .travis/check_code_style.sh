@@ -3,8 +3,14 @@
 # Download Google formatter
 executable=google-java-format-1.14.0-all-deps.jar
 if [[ ! -f $executable ]]; then
-    curl -L https://github.com/google/google-java-format/releases/download/v1.14.0/google-java-format-1.14.0-all-deps.jar --output $executable
-    printf "Downloaded [%s]\n" $executable
+    curl -L https://github.com/google/google-java-format/releases/download/v1.14.0/$executable --fail --output $executable
+    res=$?
+    if [[ ! $res == 0 ]]; then
+        printf "Could not download [%s], skipping format check...\n" $executable
+        exit 0
+    else
+        printf "Downloaded [%s]\n" $executable
+    fi
 fi
 
 # Java files below src/main
