@@ -41,7 +41,7 @@ public class ArchiveAnalysisManagerTest {
       final FileSearch fs = new FileSearch(new String[] {"war"});
       jam.startAnalysis(fs.search(Paths.get("./src/test/resources")), null);
       final Set<JarAnalyzer> analyzers = jam.getAnalyzers();
-       // 1 for the WAR and 15 for JARs in WEB-INF/lib
+      // 1 for the WAR and 15 for JARs in WEB-INF/lib
       assertEquals(30, analyzers.size());
     } catch (Exception e) {
       e.printStackTrace();
@@ -57,8 +57,8 @@ public class ArchiveAnalysisManagerTest {
       jam.startAnalysis(fs.search(Paths.get("./src/test/resources")), null);
       final Set<JarAnalyzer> analyzers = jam.getAnalyzers();
       assertEquals(
-          2, analyzers.size()); // 1 for the Spring Boot app (JAR) and 1 for the JAR in BOOT-INF/lib
-      assertTrue(analyzers.iterator().next() instanceof SpringBootAnalyzer);
+          29,
+          analyzers.size()); // 1 for the Spring Boot app (JAR) and 28 for the JAR in BOOT-INF/lib
     } catch (Exception e) {
       e.printStackTrace();
       assertTrue(false);

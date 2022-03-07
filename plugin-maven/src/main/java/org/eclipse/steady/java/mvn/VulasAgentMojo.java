@@ -63,9 +63,6 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 
   private static final String ECLIPSE_TEST_PLUGIN = "eclipse-test-plugin";
 
-  private static final String VULAS_AGENT_ARTIFACT_NAME = "org.eclipse.steady:lang-java";
-  private static final String VULAS_AGENT_ARTIFACT_CLASSIFIER = "jar-with-dependencies";
-
   /**
    * Name of the property used in maven-osgi-test-plugin.
    */
@@ -293,17 +290,6 @@ public class VulasAgentMojo extends AbstractVulasMojo {
     catch (Exception e) {
       throw new MojoExecutionException("Error during Vulas agent preparation: ", e);
     }
-  }
-
-  File getAgentJarFile() throws MojoExecutionException {
-    final Artifact vulasAgentArtifact = pluginArtifactMap.get(VULAS_AGENT_ARTIFACT_NAME);
-    if (vulasAgentArtifact == null
-        || !vulasAgentArtifact.hasClassifier()
-        || !vulasAgentArtifact.getClassifier().equals(VULAS_AGENT_ARTIFACT_CLASSIFIER)) {
-      throw new MojoExecutionException(
-          "Could not found " + VULAS_AGENT_ARTIFACT_NAME + ":" + VULAS_AGENT_ARTIFACT_CLASSIFIER);
-    }
-    return vulasAgentArtifact.getFile();
   }
 
   /** {@inheritDoc} */

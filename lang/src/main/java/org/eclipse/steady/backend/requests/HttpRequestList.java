@@ -32,7 +32,8 @@ import org.eclipse.steady.goals.GoalContext;
  */
 public class HttpRequestList extends AbstractHttpRequest {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(HttpRequestList.class);
 
   /**
    * When set to true, the sending of requests will be stopped upon success, i.e., once a Http response code 2xx will be received.

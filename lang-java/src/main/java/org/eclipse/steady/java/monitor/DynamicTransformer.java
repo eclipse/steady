@@ -53,7 +53,8 @@ public class DynamicTransformer implements ClassFileTransformer {
 
   // ====================================== STATIC MEMBERS
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(DynamicTransformer.class);
 
   private static DynamicTransformer instance = null;
 

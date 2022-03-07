@@ -59,7 +59,8 @@ import javassist.NotFoundException;
 @NotThreadSafe
 public class WarAnalyzer extends JarAnalyzer {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(WarAnalyzer.class);
 
   private static final String INCL_SPACE = "vulas.core.instr.static.inclSpace";
   private static final String INCL_BACKEND_URL = "vulas.core.instr.static.inclBackendUrl";
@@ -215,7 +216,7 @@ public class WarAnalyzer extends JarAnalyzer {
     this.jarWriter.addManifestEntry(
         "Steady-classInstrStats",
         "["
-            + this.classCount
+            + this.instrControl.countClassesTotal()
             + " total, "
             + this.instrControl.countClassesInstrumentedAlready()
             + " existed, "
@@ -434,8 +435,8 @@ public class WarAnalyzer extends JarAnalyzer {
       if (this.instrument)
         WarAnalyzer.log.info(
             this.toString()
-                + ": classes comprised/already-instr/instr/not-instr ["
-                + this.classCount
+                + ": classes and enums comprised/already-instr/instr/not-instr ["
+                + this.instrControl.countClassesTotal()
                 + "/"
                 + this.instrControl.countClassesInstrumentedAlready()
                 + "/"

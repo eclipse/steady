@@ -36,7 +36,8 @@ import org.eclipse.steady.sign.SignatureAnalysis;
  */
 public class CheckverGoal extends AbstractAppGoal {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(CheckverGoal.class);
 
   private StringList bugsWhitelist = new StringList();
 

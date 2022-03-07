@@ -59,6 +59,10 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
  */
 public abstract class AbstractVulasMojo extends AbstractMojo {
 
+  private static final String AGENT_ARTIFACT_NAME = "lang-java";
+
+  private static final String AGENT_ARTIFACT_CLASSIFIER = "jar-with-dependencies";
+
   private static final String INCLUDES = "vulas.maven.includes";
 
   private static final String EXCLUDES = "vulas.maven.excludes";
@@ -412,5 +416,45 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     } else {
       return new LibraryId(gapv[0], gapv[1], gapv[3]);
     }
+  }
+
+  /**
+   * Returns the archive used as agent (in case of dynamic instrumentation) or
+   * to be included in instrumented (re-written) archives (static
+   * instrumentation). The file has to be created with "mvn
+   * org.apache.maven.plugins:maven-dependency-plugin:3.2.0:copy
+   * -Dartifact=org.eclipse.steady:lang-java:3.2.3-SNAPSHOT:jar:jar-with-dependencies"
+   * before running the instr and prepare-agent goals.
+   *
+   * @return the Steady agent file
+   * @throws MojoExecutionException
+   */
+  protected File getAgentJarFile() throws MojoExecutionException {
+    // mvn org.apache.maven.plugins:maven-dependency-plugin:3.2.0:copy
+    // -Dartifact=org.eclipse.steady:lang-java:3.2.3-SNAPSHOT:jar:jar-with-dependencies
+    /*final Artifact vulasAgentArtifact = pluginArtifactMap.get(AGENT_ARTIFACT_NAME);
+    if (vulasAgentArtifact == null
+        || !vulasAgentArtifact.hasClassifier()
+        || !vulasAgentArtifact.getClassifier().equals(AGENT_ARTIFACT_CLASSIFIER)) {
+      throw new MojoExecutionException(
+          "Could not found " + AGENT_ARTIFACT_NAME + ":" + AGENT_ARTIFACT_CLASSIFIER);
+    }
+    return vulasAgentArtifact.getFile();*/
+    final String version =
+        this.vulasConfiguration.getConfiguration().getString(VulasConfiguration.VERSION);
+    final String agent_filename =
+        AGENT_ARTIFACT_NAME + "-" + version + "-" + AGENT_ARTIFACT_CLASSIFIER + ".jar";
+    final Path agent =
+        Paths.get(this.project.getBuild().getDirectory(), "dependency", agent_filename);
+    if (agent == null || !agent.toFile().exists()) {
+      throw new MojoExecutionException(
+          "Could not find agent JAR ["
+              + agent
+              + "], create with [mvn org.apache.maven.plugins:maven-dependency-plugin:3.2.0:copy"
+              + " -Dartifact=org.eclipse.steady:lang-java:"
+              + version
+              + ":jar:jar-with-dependencies]");
+    }
+    return agent.toFile();
   }
 }

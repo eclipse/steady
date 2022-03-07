@@ -73,7 +73,8 @@ import javassist.NotFoundException;
 @NotThreadSafe
 public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, FileAnalyzer {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(JarAnalyzer.class);
 
   private static final ClassPool CLASSPOOL = ClassPool.getDefault();
 
@@ -347,7 +348,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
     this.jarWriter.addManifestEntry(
         "Steady-classInstrStats",
         "["
-            + this.classCount
+            + this.instrControl.countClassesTotal()
             + " total, "
             + this.instrControl.countClassesInstrumentedAlready()
             + " existed, "
@@ -614,8 +615,8 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
       if (this.instrument)
         JarAnalyzer.log.info(
             this.toString()
-                + ": classes comprised/already-instr/instr/not-instr ["
-                + this.classCount
+                + ": classes and enums comprised/already-instr/instr/not-instr ["
+                + this.instrControl.countClassesTotal()
                 + "/"
                 + this.instrControl.countClassesInstrumentedAlready()
                 + "/"

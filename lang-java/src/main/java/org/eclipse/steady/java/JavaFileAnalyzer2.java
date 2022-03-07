@@ -64,7 +64,8 @@ import org.eclipse.steady.shared.util.FileUtil;
  */
 public class JavaFileAnalyzer2 extends JavaParserBaseListener implements FileAnalyzer {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(JavaFileAnalyzer2.class);
 
   /**
    * All Java constructs found in the given Java file, created through visiting relevant nodes of the ANTLR parse tree.

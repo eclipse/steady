@@ -55,7 +55,7 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
  */
 public class JarWriter {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JarWriter.class);
 
   public final SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM yyyy HH:mm:ss");
 

@@ -89,13 +89,17 @@ public class VulasConfiguration {
 
   private static final synchronized Logger getLog() {
     if (VulasConfiguration.log == null)
-      VulasConfiguration.log = org.apache.logging.log4j.LogManager.getLogger();
+      VulasConfiguration.log =
+          org.apache.logging.log4j.LogManager.getLogger(VulasConfiguration.class);
     return VulasConfiguration.log;
   }
 
   private static final String[] LOG_PREFIXES = new String[] {"http", "https", "vulas"};
 
   private static VulasConfiguration global = null;
+
+  private static final Pattern KEY_PATTERN = Pattern.compile("[a-zA-Z0-9\\._\\-]+");
+
   /**
    * <p>Getter for the field <code>global</code>.</p>
    *
@@ -261,6 +265,8 @@ public class VulasConfiguration {
 
   private void addConfiguration(Configuration _cfg, String _source) {
     if (!individualConfigurations.containsValue(_source)) {
+      // Remove malformed keys
+      this.sanitize(_cfg);
       individualConfigurations.put(_cfg, _source);
       cfg.addConfiguration(_cfg);
       VulasConfiguration.getLog()
@@ -278,6 +284,23 @@ public class VulasConfiguration {
                   + "] from source ["
                   + _source
                   + "] already existed and will not be added another time");
+    }
+  }
+
+  /**
+   * Removes keys not matching the regular expression {@link KEY_PATTERN} from
+   * the configuration.
+   * @return
+   */
+  public void sanitize(Configuration _cfg) {
+    final Iterator<String> i = _cfg.getKeys();
+    while (i.hasNext()) {
+      final String k = i.next();
+      final Matcher m = KEY_PATTERN.matcher(k);
+      if (!m.matches()) {
+        getLog().warn("Configuration key [" + k + "] removed due to illegal characters");
+        _cfg.clearProperty(k);
+      }
     }
   }
 

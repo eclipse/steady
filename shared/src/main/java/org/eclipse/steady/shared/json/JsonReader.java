@@ -31,7 +31,7 @@ import org.eclipse.steady.shared.util.FileUtil;
  */
 public class JsonReader<T> {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JsonReader.class);
 
   private Class<T> clazz;
 

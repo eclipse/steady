@@ -64,7 +64,8 @@ public class InstrumentationControl {
     classesAlreadyInstrumented
   };
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(InstrumentationControl.class);
 
   /**
    * All instances of the class, used to produce overall instrumentation statistics.

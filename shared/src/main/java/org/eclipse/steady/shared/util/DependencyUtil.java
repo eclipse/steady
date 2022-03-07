@@ -34,7 +34,8 @@ import org.eclipse.steady.shared.json.model.Library;
  */
 public class DependencyUtil {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(DependencyUtil.class);
 
   /**
    * Returns a set of dependencies such that every {@link Dependency} points to a different {@link Library}.

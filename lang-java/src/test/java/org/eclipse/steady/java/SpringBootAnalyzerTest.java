@@ -38,7 +38,7 @@ public class SpringBootAnalyzerTest {
 
   @Before
   public void removeInstrumentedArchives() {
-    for (String n : new String[] {"boot-app-steady-instr.war"}) {
+    for (String n : new String[] {"boot-app-steady-instr.jar"}) {
       final File f = new File("./target/" + n);
       if (f.exists()) {
         f.delete();
@@ -76,13 +76,13 @@ public class SpringBootAnalyzerTest {
   public void testInstrument() {
     try {
       VulasConfiguration.getGlobal().setProperty(CoreConfiguration.INSTR_WRITE_CODE, "true");
+      SpringBootAnalyzer.setAppContext(
+          new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
       final SpringBootAnalyzer wa = new SpringBootAnalyzer();
       wa.analyze(new File("./src/test/resources/boot-app.jar"));
       wa.setWorkDir(Paths.get("./target"));
       wa.setRename(true);
       wa.setInstrument(true);
-      SpringBootAnalyzer.setAppContext(
-          new Application("dummy-group", "dummy-artifact", "0.0.1-SNAPSHOT"));
       wa.call();
 
       // Check instrumented WAR

@@ -25,7 +25,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class RequestRepeater {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(RequestRepeater.class);
 
   private long failCount = 0;
   private long max = 50;

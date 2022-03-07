@@ -65,7 +65,7 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
  */
 public class Report {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(Report.class);
 
   private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH:mm Z");
 

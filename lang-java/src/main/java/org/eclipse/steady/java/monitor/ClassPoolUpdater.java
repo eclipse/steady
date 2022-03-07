@@ -44,7 +44,8 @@ import javassist.NotFoundException;
  */
 public class ClassPoolUpdater {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(ClassPoolUpdater.class);
 
   private static ClassPoolUpdater instance = null;
 

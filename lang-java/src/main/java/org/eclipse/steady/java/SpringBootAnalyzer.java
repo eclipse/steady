@@ -59,7 +59,8 @@ import javassist.NotFoundException;
 @NotThreadSafe
 public class SpringBootAnalyzer extends JarAnalyzer {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(SpringBootAnalyzer.class);
 
   private static final String INCL_SPACE = "vulas.core.instr.static.inclSpace";
   private static final String INCL_BACKEND_URL = "vulas.core.instr.static.inclBackendUrl";
@@ -241,7 +242,7 @@ public class SpringBootAnalyzer extends JarAnalyzer {
     this.jarWriter.addManifestEntry(
         "Steady-classInstrStats",
         "["
-            + this.classCount
+            + this.instrControl.countClassesTotal()
             + " total, "
             + this.instrControl.countClassesInstrumentedAlready()
             + " existed, "
@@ -463,8 +464,8 @@ public class SpringBootAnalyzer extends JarAnalyzer {
       if (this.instrument)
         SpringBootAnalyzer.log.info(
             this.toString()
-                + ": classes comprised/already-instr/instr/not-instr ["
-                + this.classCount
+                + ": classes and enums comprised/already-instr/instr/not-instr ["
+                + this.instrControl.countClassesTotal()
                 + "/"
                 + this.instrControl.countClassesInstrumentedAlready()
                 + "/"
@@ -533,7 +534,7 @@ public class SpringBootAnalyzer extends JarAnalyzer {
       try {
         String class_name = _entry.getName();
         class_name = class_name.substring(0, class_name.length() - 6); // ".class"
-        class_name = class_name.substring(16); // "BOOT-INF/classes/"
+        class_name = class_name.substring(17); // "BOOT-INF/classes/"
         class_name = class_name.replace('/', '.');
         jid = JavaId.parseClassQName(class_name);
       } catch (Exception e) {
@@ -549,6 +550,9 @@ public class SpringBootAnalyzer extends JarAnalyzer {
         size = bytecode.length;
         is = new ByteArrayInputStream(bytecode);
         return new RewrittenJarEntry(is, size, crc32);
+      } else {
+        SpringBootAnalyzer.log.error(
+            "No instrumented class found for Jar Entry [" + _entry.getName() + "]");
       }
     }
     // Called during rewrite of WAR

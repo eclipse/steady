@@ -42,7 +42,8 @@ public class StackTraceInstrumentor extends AbstractTraceInstrumentor {
 
   // ====================================== STATIC MEMBERS
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(StackTraceInstrumentor.class);
 
   // ====================================== INSTANCE MEMBERS
 

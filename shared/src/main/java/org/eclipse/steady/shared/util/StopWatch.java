@@ -31,7 +31,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class StopWatch {
 
-  private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static Logger log = org.apache.logging.log4j.LogManager.getLogger(StopWatch.class);
 
   private String id;
 

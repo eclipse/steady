@@ -25,7 +25,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class MemoryMonitor implements Runnable {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(MemoryMonitor.class);
 
   private long memoSleepTimeMs = 2000; // Every  2 seconds
   private long memoPrintTimeMs = 60000; // Every 60 seconds

@@ -38,7 +38,7 @@ import org.eclipse.steady.tasks.BomTask;
  */
 public class BomGoal extends AbstractAppGoal {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(BomGoal.class);
 
   /**
    * <p>Constructor for BomGoal.</p>

@@ -32,7 +32,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class PomParser extends DefaultHandler {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(PomParser.class);
 
   private static final String[] pg = new String[] {"project", "parent", "groupId"};
   private static final String[] pa = new String[] {"project", "parent", "artifactId"};

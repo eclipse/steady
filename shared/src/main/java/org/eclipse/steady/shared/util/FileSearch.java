@@ -29,7 +29,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class FileSearch extends AbstractFileSearch {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(FileSearch.class);
 
   private String[] suffixes = null;
 

@@ -43,7 +43,8 @@ import org.eclipse.steady.shared.json.model.VulnerableDependency;
  */
 public class CheckBytecodeGoal extends AbstractAppGoal {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(CheckBytecodeGoal.class);
 
   /**
    * <p>
