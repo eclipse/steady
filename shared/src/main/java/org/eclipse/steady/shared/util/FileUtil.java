@@ -447,8 +447,8 @@ public class FileUtil {
 
   /**
    * Returns the CRC-32 checksum for the given byte array.
-   * @param _bytes
-   * @return
+   * @param _bytes a byte array
+   * @return the CRC-32 checksum of the array
    */
   public static long getCRC32(byte[] _bytes) {
     Checksum checksum = new CRC32();
@@ -459,8 +459,8 @@ public class FileUtil {
   /**
    * Returns the CRC-32 checksum for the given {@link File}.
    * Returns -1 if the checksum cannot be computed.
-   * @param _file
-   * @return
+   * @param _file a file
+   * @return the CRC-32 checksum of the file
    */
   public static long getCRC32(File _file) {
     try {

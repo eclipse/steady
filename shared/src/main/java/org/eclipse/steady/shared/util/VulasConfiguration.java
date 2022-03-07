@@ -290,7 +290,7 @@ public class VulasConfiguration {
   /**
    * Removes keys not matching the regular expression {@link KEY_PATTERN} from
    * the configuration.
-   * @return
+   * @param _cfg the configuration whose keys are checked
    */
   public void sanitize(Configuration _cfg) {
     final Iterator<String> i = _cfg.getKeys();
