@@ -21,7 +21,7 @@ printf "Found [%s] Java files in all modules' source directories\n" $count
 if [[ $1 == "format" ]]; then
 
     printf "Formatting... "
-    java -jar google-java-format-1.8-all-deps.jar -r --skip-sorting-imports --skip-javadoc-formatting --set-exit-if-changed @java-files.txt
+    java -jar $executable -r --skip-sorting-imports --skip-javadoc-formatting --set-exit-if-changed @java-files.txt
     status=$?
 
     if [[ $status -eq 0 ]]; then
@@ -33,7 +33,7 @@ if [[ $1 == "format" ]]; then
     fi
 else
     printf "Checking... "
-    java -jar google-java-format-1.8-all-deps.jar -n --skip-sorting-imports --skip-javadoc-formatting --set-exit-if-changed @java-files.txt > non-compliant-files.txt
+    java -jar $executable -n --skip-sorting-imports --skip-javadoc-formatting --set-exit-if-changed @java-files.txt > non-compliant-files.txt
     status=$?
 
     if [[ $status -eq 0 ]]; then
