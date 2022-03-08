@@ -636,8 +636,8 @@ public abstract class AbstractGoal implements Runnable {
   }
 
   /**
-   * Uploads the JSON presentation of this goal execution to the Vulas backend.
-   * Returns true of everything went fine (upload succeeded or is not necessary), false otherwise.
+   * Uploads the JSON presentation of this goal execution to the backend.
+   * Returns true if everything went fine (upload succeeded or is not necessary), false otherwise.
    *
    * @param _before a boolean.
    * @return a boolean.
