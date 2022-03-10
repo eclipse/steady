@@ -53,8 +53,9 @@ import javassist.CtClass;
 import javassist.NotFoundException;
 
 /**
- * Analyzes a single Spring Boot application (JAR) as to identify (and potentially instrument) all its classes (in directory BOOT-INF/classes),
- * as well as its JARs (in directory WEB-INF/lib).
+ * Analyzes a single Spring Boot application (JAR) as to identify (and
+ * potentially instrument) all its classes (in directory BOOT-INF/classes), as
+ * well as its JARs (in directory BOOT-INF/lib).
  */
 @NotThreadSafe
 public class SpringBootAnalyzer extends JarAnalyzer {
@@ -87,8 +88,10 @@ public class SpringBootAnalyzer extends JarAnalyzer {
   private ArchiveAnalysisManager mgr = null;
   private Set<FileAnalyzer> nestedAnalyzers = null;
 
-  /** The Vulas archive in incl/ will be rewritten as to contain a proper vulas configuration file. The original will
-   * then need to be skipped, i.e., not included in the instrumented WAR. */
+  /** The Steady archive in directory target/vulas/incl/ will be rewritten as to
+   * contain additional, app-specific configuration settings in the embedded
+   * configuration file steady-core.properties. The original will then need to be skipped, i.e., not
+   * included in the instrumented JAR, see {@link SpringBootAnalyzer#setIncludeDir(Path)}. */
   private Set<Path> ignoredIncludes = new HashSet<Path>();
 
   /** {@inheritDoc} */
@@ -181,8 +184,9 @@ public class SpringBootAnalyzer extends JarAnalyzer {
   }
 
   /**
-   * Sets the directory containing JARs to be included in the rewritten WAR.
-   * All JARs contained therein will be modified as well in order to set the application scope in the Vulas configuration file.
+   * Sets the directory containing JARs to be included in the rewritten JAR. All
+   * JARs contained therein will be modified as well in order to set the
+   * application scope in the configuration file steady-core.properties.
    *
    * @param _p a {@link java.nio.file.Path} object.
    */
