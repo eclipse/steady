@@ -220,7 +220,7 @@ public class VulasAgentMojo extends AbstractVulasMojo {
     }
     // Every other exception results in a MojoExecutionException (= unexpected)
     catch (Exception e) {
-      throw new MojoExecutionException("Error during Vulas agent preparation: ", e);
+      throw new MojoExecutionException("Error during agent preparation: ", e);
     }
   }
 
