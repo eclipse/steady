@@ -139,10 +139,10 @@ public interface V_AppVulndepRepository
       value =
           " select count(*) from  ( select distinct"
               + " latest.mvn_group,a1.artifact,latest.latest_version from  (		select"
-              + " aa.mvn_group,aa.version as latest_version from app aa join 		(select app from ( "
-              + "			select distinct b.mvn_group,max(created_at) as max from 				(select distinct"
-              + " g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join app a on g.app=a.id"
-              + " ) as b 					group by b.mvn_group ) as c join app_goal_exe as l on"
+              + " aa.mvn_group,aa.version as latest_version from app aa join 		(select app from ( 	"
+              + "		select distinct b.mvn_group,max(created_at) as max from 				(select distinct"
+              + " g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join app a on g.app=a.id )"
+              + " as b 					group by b.mvn_group ) as c join app_goal_exe as l on"
               + " c.max=l.created_at) as d on d.app=aa.id) as latest  join app a1 on"
               + " latest.mvn_group=a1.mvn_group and latest.latest_version=a1.version) as f ",
       nativeQuery = true)
@@ -167,12 +167,12 @@ public interface V_AppVulndepRepository
    */
   @Query(
       value =
-          " select count(*) from  (select distinct vd.app_group,vd.app_artifact,vd.app_version"
-              + " from v_app_vulndep as vd join ( 		select aa.mvn_group,aa.version as"
-              + " latest_version from app aa join 		(select app from ( 			select distinct"
+          " select count(*) from  (select distinct vd.app_group,vd.app_artifact,vd.app_version from"
+              + " v_app_vulndep as vd join ( 		select aa.mvn_group,aa.version as latest_version"
+              + " from app aa join 		(select app from ( 			select distinct"
               + " b.mvn_group,max(created_at) as max from 				(select distinct"
-              + " g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join app a on g.app=a.id"
-              + " ) as b 					group by b.mvn_group ) as c join app_goal_exe as l on"
+              + " g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join app a on g.app=a.id )"
+              + " as b 					group by b.mvn_group ) as c join app_goal_exe as l on"
               + " c.max=l.created_at) as d on d.app=aa.id) as latest 					on"
               + " latest.mvn_group=vd.app_group and latest.latest_version=vd.app_version where"
               + " affected=true) as latest_vd ",
@@ -196,11 +196,11 @@ public interface V_AppVulndepRepository
       value =
           " select count(*) from  (select distinct"
               + " vd.app_group,vd.app_artifact,vd.app_version,vd.digest,vd.bug from v_app_vulndep"
-              + " as vd join ( 		select aa.mvn_group,aa.version as latest_version from app aa join"
-              + " 		(select app from ( 			select distinct b.mvn_group,max(created_at) as max from "
-              + "				(select distinct g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join"
-              + " app a on g.app=a.id ) as b 					group by b.mvn_group ) as c join app_goal_exe as"
-              + " l on c.max=l.created_at) as d on d.app=aa.id) as latest 					on"
+              + " as vd join ( 		select aa.mvn_group,aa.version as latest_version from app aa join "
+              + "		(select app from ( 			select distinct b.mvn_group,max(created_at) as max from 		"
+              + "		(select distinct g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join app"
+              + " a on g.app=a.id ) as b 					group by b.mvn_group ) as c join app_goal_exe as l on"
+              + " c.max=l.created_at) as d on d.app=aa.id) as latest 					on"
               + " latest.mvn_group=vd.app_group and latest.latest_version=vd.app_version where"
               + " affected=true or affected is NULL) as latest_vd ",
       nativeQuery = true)
@@ -215,11 +215,11 @@ public interface V_AppVulndepRepository
       value =
           " select count(*) from  (select distinct"
               + " vd.app_group,vd.app_artifact,vd.app_version,vd.digest,vd.bug from v_app_vulndep"
-              + " as vd join ( 		select aa.mvn_group,aa.version as latest_version from app aa join"
-              + " 		(select app from ( 			select distinct b.mvn_group,max(created_at) as max from "
-              + "				(select distinct g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join"
-              + " app a on g.app=a.id ) as b 					group by b.mvn_group ) as c join app_goal_exe as"
-              + " l on c.max=l.created_at) as d on d.app=aa.id) as latest 					on"
+              + " as vd join ( 		select aa.mvn_group,aa.version as latest_version from app aa join "
+              + "		(select app from ( 			select distinct b.mvn_group,max(created_at) as max from 		"
+              + "		(select distinct g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join app"
+              + " a on g.app=a.id ) as b 					group by b.mvn_group ) as c join app_goal_exe as l on"
+              + " c.max=l.created_at) as d on d.app=aa.id) as latest 					on"
               + " latest.mvn_group=vd.app_group and latest.latest_version=vd.app_version where"
               + " affected=true and NOT (scope='TEST' or scope='PROVIDED')) as latest_vd ",
       nativeQuery = true)
@@ -233,11 +233,11 @@ public interface V_AppVulndepRepository
   @Query(
       value =
           " select count(*) from  (select distinct vd.app_group,vd.app_artifact from v_app_vulndep"
-              + " as vd join ( 		select aa.mvn_group,aa.version as latest_version from app aa join"
-              + " 		(select app from ( 			select distinct b.mvn_group,max(created_at) as max from "
-              + "				(select distinct g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join"
-              + " app a on g.app=a.id ) as b 					group by b.mvn_group ) as c join app_goal_exe as"
-              + " l on c.max=l.created_at) as d on d.app=aa.id) as latest 					on"
+              + " as vd join ( 		select aa.mvn_group,aa.version as latest_version from app aa join "
+              + "		(select app from ( 			select distinct b.mvn_group,max(created_at) as max from 		"
+              + "		(select distinct g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join app"
+              + " a on g.app=a.id ) as b 					group by b.mvn_group ) as c join app_goal_exe as l on"
+              + " c.max=l.created_at) as d on d.app=aa.id) as latest 					on"
               + " latest.mvn_group=vd.app_group and latest.latest_version=vd.app_version where"
               + " affected=true or affected is NULL) as latest_vd ",
       nativeQuery = true)
@@ -251,10 +251,10 @@ public interface V_AppVulndepRepository
   @Query(
       value =
           " select count(*) from  ( select distinct latest.mvn_group,a1.artifact from  (		select"
-              + " aa.mvn_group,aa.version as latest_version from app aa join 		(select app from ( "
-              + "			select distinct b.mvn_group,max(created_at) as max from 				(select distinct"
-              + " g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join app a on g.app=a.id"
-              + " ) as b 					group by b.mvn_group ) as c join app_goal_exe as l on"
+              + " aa.mvn_group,aa.version as latest_version from app aa join 		(select app from ( 	"
+              + "		select distinct b.mvn_group,max(created_at) as max from 				(select distinct"
+              + " g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join app a on g.app=a.id )"
+              + " as b 					group by b.mvn_group ) as c join app_goal_exe as l on"
               + " c.max=l.created_at) as d on d.app=aa.id) as latest  join app a1 on"
               + " latest.mvn_group=a1.mvn_group and latest.latest_version=a1.version) as f ",
       nativeQuery = true)
@@ -268,11 +268,11 @@ public interface V_AppVulndepRepository
   @Query(
       value =
           " select count(*) from  (select distinct vd.app_group,vd.app_artifact from v_app_vulndep"
-              + " as vd join ( 		select aa.mvn_group,aa.version as latest_version from app aa join"
-              + " 		(select app from ( 			select distinct b.mvn_group,max(created_at) as max from "
-              + "				(select distinct g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join"
-              + " app a on g.app=a.id ) as b 					group by b.mvn_group ) as c join app_goal_exe as"
-              + " l on c.max=l.created_at) as d on d.app=aa.id) as latest 					on"
+              + " as vd join ( 		select aa.mvn_group,aa.version as latest_version from app aa join "
+              + "		(select app from ( 			select distinct b.mvn_group,max(created_at) as max from 		"
+              + "		(select distinct g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join app"
+              + " a on g.app=a.id ) as b 					group by b.mvn_group ) as c join app_goal_exe as l on"
+              + " c.max=l.created_at) as d on d.app=aa.id) as latest 					on"
               + " latest.mvn_group=vd.app_group and latest.latest_version=vd.app_version where"
               + " affected=true and NOT (scope='TEST' or scope='PROVIDED')) as latest_vd ",
       nativeQuery = true)
@@ -325,11 +325,11 @@ public interface V_AppVulndepRepository
       value =
           " select latest_vd.app_group,latest_vd.app_artifact,count(*) from  (select distinct"
               + " vd.app_group,vd.app_artifact,vd.app_version,vd.digest,vd.bug from v_app_vulndep"
-              + " as vd join ( 		select aa.mvn_group,aa.version as latest_version from app aa join"
-              + " 		(select app from ( 			select distinct b.mvn_group,max(created_at) as max from "
-              + "				(select distinct g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join"
-              + " app a on g.app=a.id ) as b 					group by b.mvn_group ) as c join app_goal_exe as"
-              + " l on c.max=l.created_at) as d on d.app=aa.id) as latest 					on"
+              + " as vd join ( 		select aa.mvn_group,aa.version as latest_version from app aa join "
+              + "		(select app from ( 			select distinct b.mvn_group,max(created_at) as max from 		"
+              + "		(select distinct g.id,g.created_at,a.id,a.mvn_group from app_goal_exe g join app"
+              + " a on g.app=a.id ) as b 					group by b.mvn_group ) as c join app_goal_exe as l on"
+              + " c.max=l.created_at) as d on d.app=aa.id) as latest 					on"
               + " latest.mvn_group=vd.app_group and latest.latest_version=vd.app_version where"
               + " affected=true or affected is NULL) as latest_vd group by"
               + " latest_vd.app_group,latest_vd.app_artifact",

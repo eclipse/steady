@@ -67,7 +67,7 @@ public class StackTraceUtil {
 
   private static final Logger getLog() {
     if (StackTraceUtil.log == null)
-      StackTraceUtil.log = org.apache.logging.log4j.LogManager.getLogger();
+      StackTraceUtil.log = org.apache.logging.log4j.LogManager.getLogger(StackTraceUtil.class);
     return StackTraceUtil.log;
   }
 

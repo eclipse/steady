@@ -102,13 +102,13 @@
             <version>1.10.12</version>
         </dependency>
 
-        <!--instrumentation agent dependency -->
-        <dependency>
+        <!-- Instrumentation agent dependency -->
+        <!-- <dependency>
             <groupId>org.eclipse.steady</groupId>
             <artifactId>lang-java</artifactId>
             <version>${project.version}</version>
             <classifier>jar-with-dependencies</classifier>
-        </dependency>
+        </dependency> -->
 
         <!-- testing dependency -->
         <dependency>

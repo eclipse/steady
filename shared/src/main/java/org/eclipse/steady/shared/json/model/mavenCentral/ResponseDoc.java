@@ -22,13 +22,13 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
 import org.eclipse.steady.shared.json.model.Artifact;
 import org.eclipse.steady.shared.json.model.LibraryId;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Corresponds to the JSON object structure returned by the RESTful search of the Maven Central.
@@ -42,7 +42,7 @@ public class ResponseDoc implements Comparable {
 
   static final Pattern VERSION_PATTERN = Pattern.compile("([\\d\\.]*)(.*)", Pattern.DOTALL);
 
-  private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static Logger log = org.apache.logging.log4j.LogManager.getLogger(ResponseDoc.class);
 
   private String id;
 

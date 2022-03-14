@@ -425,11 +425,11 @@ An application's JAR or WAR, e.g., as created with `mvn package` in folder `targ
 
 #### Result
 
-A new JAR/WAR with suffix `-vulas-instr` will be created in folder `target/vulas/target`.
+A new JAR/WAR with suffix `-steady-instr` will be created in folder `target/vulas/target`.
 
 #### How does it work
 
-The bytecode of all the Java classes found in the JAR (WAR) will be modified as to collect information about, for instance, method execution and stack traces. This information will be uploaded to the backend if the JAR (WAR) is executed. Note: The modified code in the new JAR with suffix `-vulas-instr` can be inspected with decompilers such as [JD-GUI](http://jd.benow.ca/).
+The bytecode of all the Java classes found in the JAR (WAR) will be modified as to collect information about, for instance, method execution and stack traces. This information will be uploaded to the backend if the JAR (WAR) is executed. Note: The modified code in the new JAR with suffix `-steady-instr` can be inspected with decompilers such as [JD-GUI](http://jd.benow.ca/).
 
 #### Run as follows
 

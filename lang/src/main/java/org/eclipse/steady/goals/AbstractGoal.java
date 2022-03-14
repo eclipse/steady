@@ -36,10 +36,10 @@ import org.eclipse.steady.shared.json.model.Tenant;
 import org.eclipse.steady.shared.util.MemoryMonitor;
 import org.eclipse.steady.shared.util.StopWatch;
 import org.eclipse.steady.shared.util.StringList;
-import org.eclipse.steady.shared.util.StringUtil;
-import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.eclipse.steady.shared.util.StringList.CaseSensitivity;
 import org.eclipse.steady.shared.util.StringList.ComparisonMode;
+import org.eclipse.steady.shared.util.StringUtil;
+import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
  * Represents the execution of a goal, which is triggered by client components such as the CLI and the Maven plugin.
@@ -58,7 +58,8 @@ import org.eclipse.steady.shared.util.StringList.ComparisonMode;
  */
 public abstract class AbstractGoal implements Runnable {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(AbstractGoal.class);
 
   /** Constant <code>CLASS_EXT</code> */
   protected static final String[] CLASS_EXT = new String[] {"CLASS"};
@@ -635,8 +636,8 @@ public abstract class AbstractGoal implements Runnable {
   }
 
   /**
-   * Uploads the JSON presentation of this goal execution to the Vulas backend.
-   * Returns true of everything went fine (upload succeeded or is not necessary), false otherwise.
+   * Uploads the JSON presentation of this goal execution to the backend.
+   * Returns true if everything went fine (upload succeeded or is not necessary), false otherwise.
    *
    * @param _before a boolean.
    * @return a boolean.

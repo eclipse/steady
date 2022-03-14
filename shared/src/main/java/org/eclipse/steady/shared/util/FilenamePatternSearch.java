@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 
 /**
- * Searches for all files whose name follows a given pattern.
+ * Searches for all files whose name matches a given pattern.
  */
 public class FilenamePatternSearch extends AbstractFileSearch {
 

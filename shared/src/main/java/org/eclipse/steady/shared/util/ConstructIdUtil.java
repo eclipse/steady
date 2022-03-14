@@ -31,7 +31,8 @@ import org.eclipse.steady.shared.json.model.ConstructId;
  */
 public class ConstructIdUtil {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(ConstructIdUtil.class);
 
   /**
    * <p>filterWithRegex.</p>

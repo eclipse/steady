@@ -63,9 +63,6 @@ public class VulasAgentMojo extends AbstractVulasMojo {
 
   private static final String ECLIPSE_TEST_PLUGIN = "eclipse-test-plugin";
 
-  private static final String VULAS_AGENT_ARTIFACT_NAME = "org.eclipse.steady:lang-java";
-  private static final String VULAS_AGENT_ARTIFACT_CLASSIFIER = "jar-with-dependencies";
-
   /**
    * Name of the property used in maven-osgi-test-plugin.
    */
@@ -81,30 +78,22 @@ public class VulasAgentMojo extends AbstractVulasMojo {
     private final HashMap<String, String> agentOptions = new HashMap<>();
 
     /**
-     * Creates the options for Vulas' Java Agent and initializes them with reasonable defaults.
+     * Creates the options for Steady's Java agent and populates them using
+     * some settings from {@link VulasConfiguration}, which is created in
+     * {@link AbstractVulasMojo#prepareConfiguration}.
      */
     public VulasAgentOptions() {
-      // prepare vulas configuration
-      /*try {
-          VulasAgentMojo.this.prepareConfiguration();
-          VulasConfiguration.getGlobal().setPropertyIfEmpty(CoreConfiguration.MONI_PERIODIC_UPL_ENABLED, false);
-          VulasConfiguration.getGlobal().setPropertyIfEmpty(CoreConfiguration.INSTR_WRITE_CODE, false);
-          VulasConfiguration.getGlobal().setPropertyIfEmpty(CoreConfiguration.INSTR_MAX_STACKTRACES, 10);
-          VulasConfiguration.getGlobal().setPropertyIfEmpty(CoreConfiguration.INSTR_CHOOSEN_INSTR, "org.eclipse.steady.java.monitor.trace.SingleStackTraceInstrumentor");
-
-      } catch (Exception e) {
-          e.printStackTrace();
-      }*/
-
-      // Add settings from plugin configuration
-      Configuration configuration = vulasConfiguration.getConfigurationLayer(PLUGIN_CFG_LAYER);
-      if (configuration != null) {
-        getLog().info("The following settings are taken from layer [" + PLUGIN_CFG_LAYER + "]:");
-        final Iterator<String> iter = configuration.getKeys();
-        while (iter.hasNext()) {
-          final String key = iter.next();
-          final Object val = configuration.getProperty(key);
-          String val_str = null;
+      final Configuration configuration = vulasConfiguration.getConfiguration();
+      getLog()
+          .info(
+              "The configuration settings starting with \"vulas.core.*\" or \"vulas.shared.*\" are"
+                  + " taken from the composite configuration:");
+      final Iterator<String> iter = configuration.getKeys();
+      while (iter.hasNext()) {
+        final String key = iter.next();
+        final Object val = configuration.getProperty(key);
+        String val_str = null;
+        if (key.startsWith("vulas.core.") || key.startsWith("vulas.shared.")) {
           if (val instanceof String[]) {
             val_str = StringUtil.join((String[]) val, ",");
           } else if (val instanceof ArrayList<?>) {
@@ -113,8 +102,8 @@ public class VulasAgentMojo extends AbstractVulasMojo {
             val_str = val.toString();
           }
 
-          // Do not include exemptions, as too many would result in error "The command line is too
-          // long."
+          // Do not include exemptions, as too many would result in error "The
+          // command line is too long."
           if (key.startsWith(ExemptionBug.CFG_PREFIX)
               || key.startsWith(ExemptionBug.DEPRECATED_CFG_PREFIX)) {
             getLog().warn("  Ignoring  [" + key + "=...]");
@@ -122,65 +111,6 @@ public class VulasAgentMojo extends AbstractVulasMojo {
             this.agentOptions.put(key, val_str);
             getLog().info("    [" + key + "=" + val + "]");
           }
-        }
-      }
-
-      // Add settings from sys properties
-      configuration =
-          vulasConfiguration.getConfigurationLayer(VulasConfiguration.SYS_PROP_CFG_LAYER);
-      if (configuration != null) {
-        getLog()
-            .info(
-                "The following settings are taken from layer ["
-                    + VulasConfiguration.SYS_PROP_CFG_LAYER
-                    + "]:");
-        final Iterator<String> iter = configuration.getKeys();
-        while (iter.hasNext()) {
-          final String key = iter.next();
-          final Object val = configuration.getProperty(key);
-          String val_str = null;
-          if (key.startsWith("vulas.")) {
-            if (val instanceof String[]) {
-              val_str = StringUtil.join((String[]) val, ",");
-            } else if (val instanceof ArrayList<?>) {
-              val_str = StringUtil.join((ArrayList<String>) val, ",");
-            } else {
-              val_str = val.toString();
-            }
-
-            // Do not include exemptions, as too many would result in error "The command line is too
-            // long."
-            if (key.startsWith(ExemptionBug.CFG_PREFIX)
-                || key.startsWith(ExemptionBug.DEPRECATED_CFG_PREFIX)) {
-              getLog().warn("  Ignoring  [" + key + "=...]");
-            } else {
-              this.agentOptions.put(key, val_str);
-              getLog().info("    [" + key + "=" + val + "]");
-            }
-          }
-        }
-      }
-
-      // If not yet present, e.g., because no plugin configuration is present, add GAV from pom.xml
-      if (this.agentOptions.get(CoreConfiguration.APP_CTX_GROUP) == null
-          || this.agentOptions.get(CoreConfiguration.APP_CTX_ARTIF) == null
-          || this.agentOptions.get(CoreConfiguration.APP_CTX_VERSI) == null) {
-        getLog().info("The following settings are taken from the project's [pom.xml]:");
-        if (this.agentOptions.get(CoreConfiguration.APP_CTX_GROUP) == null) {
-          this.agentOptions.put(CoreConfiguration.APP_CTX_GROUP, project.getGroupId());
-          getLog()
-              .info("    [" + CoreConfiguration.APP_CTX_GROUP + "=" + project.getGroupId() + "]");
-        }
-        if (this.agentOptions.get(CoreConfiguration.APP_CTX_ARTIF) == null) {
-          this.agentOptions.put(CoreConfiguration.APP_CTX_ARTIF, project.getArtifactId());
-          getLog()
-              .info(
-                  "    [" + CoreConfiguration.APP_CTX_ARTIF + "=" + project.getArtifactId() + "]");
-        }
-        if (this.agentOptions.get(CoreConfiguration.APP_CTX_VERSI) == null) {
-          this.agentOptions.put(CoreConfiguration.APP_CTX_VERSI, project.getVersion());
-          getLog()
-              .info("    [" + CoreConfiguration.APP_CTX_VERSI + "=" + project.getVersion() + "]");
         }
       }
 
@@ -197,7 +127,6 @@ public class VulasAgentMojo extends AbstractVulasMojo {
     }
 
     public String prependVMArguments(final String arguments, final File agentJarFile) {
-
       CommandlineJava commandlineJava =
           new CommandlineJava() {
             @Override
@@ -291,19 +220,8 @@ public class VulasAgentMojo extends AbstractVulasMojo {
     }
     // Every other exception results in a MojoExecutionException (= unexpected)
     catch (Exception e) {
-      throw new MojoExecutionException("Error during Vulas agent preparation: ", e);
+      throw new MojoExecutionException("Error during agent preparation: ", e);
     }
-  }
-
-  File getAgentJarFile() throws MojoExecutionException {
-    final Artifact vulasAgentArtifact = pluginArtifactMap.get(VULAS_AGENT_ARTIFACT_NAME);
-    if (vulasAgentArtifact == null
-        || !vulasAgentArtifact.hasClassifier()
-        || !vulasAgentArtifact.getClassifier().equals(VULAS_AGENT_ARTIFACT_CLASSIFIER)) {
-      throw new MojoExecutionException(
-          "Could not found " + VULAS_AGENT_ARTIFACT_NAME + ":" + VULAS_AGENT_ARTIFACT_CLASSIFIER);
-    }
-    return vulasAgentArtifact.getFile();
   }
 
   /** {@inheritDoc} */

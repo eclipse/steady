@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -47,7 +48,8 @@ import org.eclipse.steady.shared.util.StopWatch;
  */
 public class ArchiveAnalysisManager {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(ArchiveAnalysisManager.class);
 
   private ExecutorService pool;
 
@@ -290,10 +292,14 @@ public class ArchiveAnalysisManager {
       try {
         JarAnalyzer ja = null;
         if (p.toString().endsWith("jar")) {
-          ja = new JarAnalyzer();
+          final JarWriter jw = new JarWriter(p);
+          if (jw.hasEntry("BOOT-INF/")) {
+            ja = new SpringBootAnalyzer();
+          } else {
+            ja = new JarAnalyzer();
+          }
         } else if (p.toString().endsWith("war")) {
           ja = new WarAnalyzer();
-          ((WarAnalyzer) ja).setIncludeDir(this.inclDir);
         } else if (p.toString().endsWith("aar")) {
           ja = new AarAnalyzer();
         } else {
@@ -313,6 +319,15 @@ public class ArchiveAnalysisManager {
         ja.analyze(p.toFile());
         ja.setInstrument(
             this.instrument); // To be called after analyze, since instrument uses the URL member
+
+        // Set include dir for some archive types (after setInstrument)
+        if (this.instrument) {
+          if (ja instanceof SpringBootAnalyzer) {
+            ((SpringBootAnalyzer) ja).setIncludeDir(this.inclDir);
+          } else if (ja instanceof WarAnalyzer) {
+            ((WarAnalyzer) ja).setIncludeDir(this.inclDir);
+          }
+        }
 
         this.analyzers.put(p, ja);
 

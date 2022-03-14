@@ -73,7 +73,8 @@ import org.eclipse.steady.shared.util.StringList.ComparisonMode;
  */
 public class BackendConnector {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(BackendConnector.class);
 
   /* Singleton instance. */
   private static BackendConnector instance = null;

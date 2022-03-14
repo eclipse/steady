@@ -27,7 +27,6 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.execution.MavenSession;
@@ -43,7 +42,6 @@ import org.eclipse.steady.java.ArchiveAnalysisManager;
 import org.eclipse.steady.shared.enums.DigestAlgorithm;
 import org.eclipse.steady.shared.enums.GoalClient;
 import org.eclipse.steady.shared.enums.Scope;
-import org.eclipse.steady.shared.json.model.Application;
 import org.eclipse.steady.shared.json.model.Dependency;
 import org.eclipse.steady.shared.json.model.Library;
 import org.eclipse.steady.shared.json.model.LibraryId;
@@ -58,6 +56,10 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
  * <p>Abstract AbstractVulasMojo class.</p>
  */
 public abstract class AbstractVulasMojo extends AbstractMojo {
+
+  private static final String AGENT_ARTIFACT_NAME = "lang-java";
+
+  private static final String AGENT_ARTIFACT_CLASSIFIER = "jar-with-dependencies";
 
   private static final String INCLUDES = "vulas.maven.includes";
 
@@ -97,61 +99,24 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
    */
   public final void prepareConfiguration() throws Exception {
 
-    // Delete any transient settings that remaining from a previous goal execution (if any)
+    // Delete any transient settings remaining from a previous goal execution (if any)
     final boolean contained_values = this.vulasConfiguration.clearTransientProperties();
-    if (contained_values) getLog().info("Transient configuration settings deleted");
+    if (contained_values) {
+      getLog().info("Transient configuration settings deleted");
+    }
 
     // Get the configuration layer from the plugin configuration (can be null)
     this.vulasConfiguration.addLayerAfterSysProps(
         PLUGIN_CFG_LAYER, this.layeredConfiguration, null, true);
+    VulasConfiguration.getGlobal()
+        .addLayerAfterSysProps(PLUGIN_CFG_LAYER, this.layeredConfiguration, null, true);
 
-    // Check whether the application context can be established
-    Application app = null;
-    try {
-      app = CoreConfiguration.getAppContext(this.vulasConfiguration);
-    }
-    // In case the plugin is called w/o using the Vulas profile, project-specific settings are not
-    // set
-    // Set them using the project member
-    catch (ConfigurationException e) {
-      this.vulasConfiguration.setPropertyIfEmpty(
-          CoreConfiguration.APP_CTX_GROUP, this.project.getGroupId());
-      this.vulasConfiguration.setPropertyIfEmpty(
-          CoreConfiguration.APP_CTX_ARTIF, this.project.getArtifactId());
-      this.vulasConfiguration.setPropertyIfEmpty(
-          CoreConfiguration.APP_CTX_VERSI, this.project.getVersion());
-      app = CoreConfiguration.getAppContext(this.vulasConfiguration);
-    }
+    // Set defaults
+    this.setDefaults(this.vulasConfiguration, this.project);
+    this.setDefaults(VulasConfiguration.getGlobal(), this.project);
 
-    // Set defaults for all the paths
-    this.vulasConfiguration.setPropertyIfEmpty(
-        VulasConfiguration.TMP_DIR,
-        Paths.get(this.project.getBuild().getDirectory(), "vulas", "tmp").toString());
-    this.vulasConfiguration.setPropertyIfEmpty(
-        CoreConfiguration.UPLOAD_DIR,
-        Paths.get(this.project.getBuild().getDirectory(), "vulas", "upload").toString());
-    this.vulasConfiguration.setPropertyIfEmpty(
-        CoreConfiguration.INSTR_SRC_DIR,
-        Paths.get(this.project.getBuild().getDirectory()).toString());
-    this.vulasConfiguration.setPropertyIfEmpty(
-        CoreConfiguration.INSTR_TARGET_DIR,
-        Paths.get(this.project.getBuild().getDirectory(), "vulas", "target").toString());
-    this.vulasConfiguration.setPropertyIfEmpty(
-        CoreConfiguration.INSTR_INCLUDE_DIR,
-        Paths.get(this.project.getBuild().getDirectory(), "vulas", "include").toString());
-    this.vulasConfiguration.setPropertyIfEmpty(
-        CoreConfiguration.INSTR_LIB_DIR,
-        Paths.get(this.project.getBuild().getDirectory(), "vulas", "lib").toString());
-    this.vulasConfiguration.setPropertyIfEmpty(
-        CoreConfiguration.REP_DIR,
-        Paths.get(this.project.getBuild().getDirectory(), "vulas", "report").toString());
-
-    // Read app constructs from src/main/java and target/classes
-    final String p =
-        Paths.get(this.project.getBuild().getOutputDirectory()).toString()
-            + ","
-            + Paths.get(this.project.getBuild().getSourceDirectory()).toString();
-    this.vulasConfiguration.setPropertyIfEmpty(CoreConfiguration.APP_DIRS, p);
+    // Establish application context (exception thrown if not possible)
+    CoreConfiguration.getAppContext(this.vulasConfiguration);
 
     // Test how-to get the reactor POM in a reliable manner
     // The following method call fails if Maven is called with option -pl
@@ -162,6 +127,51 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     this.includeArtifacts = new StringList(this.vulasConfiguration.getStringArray(INCLUDES, null));
     this.excludeArtifacts = new StringList(this.vulasConfiguration.getStringArray(EXCLUDES, null));
     this.ignorePoms = this.vulasConfiguration.getConfiguration().getBoolean(IGNORE_POMS, false);
+  }
+
+  /**
+   * Completes several {@link VulasConfiguration} settings with defaults taken
+   * from the given {@link MavenProject}. This is useful, for instance, if the
+   * Maven plugin is called using the fully-qualified plugin identifier (rather
+   * than including and configuring the plugin in the POM).
+   * @param _cfg the configuration to update with defaults
+   * @param _prj the Maven project from which defaults are taken
+   */
+  private final void setDefaults(VulasConfiguration _cfg, MavenProject _prj) {
+    // In case the plugin is called w/o using the Maven profile,
+    // take project-specific settings to establish/complete the app context
+    _cfg.setPropertyIfEmpty(CoreConfiguration.APP_CTX_GROUP, _prj.getGroupId());
+    _cfg.setPropertyIfEmpty(CoreConfiguration.APP_CTX_ARTIF, _prj.getArtifactId());
+    _cfg.setPropertyIfEmpty(CoreConfiguration.APP_CTX_VERSI, _prj.getVersion());
+
+    // Set defaults for all the paths
+    _cfg.setPropertyIfEmpty(
+        VulasConfiguration.TMP_DIR,
+        Paths.get(_prj.getBuild().getDirectory(), "vulas", "tmp").toString());
+    _cfg.setPropertyIfEmpty(
+        CoreConfiguration.UPLOAD_DIR,
+        Paths.get(_prj.getBuild().getDirectory(), "vulas", "upload").toString());
+    _cfg.setPropertyIfEmpty(
+        CoreConfiguration.INSTR_SRC_DIR, Paths.get(_prj.getBuild().getDirectory()).toString());
+    _cfg.setPropertyIfEmpty(
+        CoreConfiguration.INSTR_TARGET_DIR,
+        Paths.get(_prj.getBuild().getDirectory(), "vulas", "target").toString());
+    _cfg.setPropertyIfEmpty(
+        CoreConfiguration.INSTR_INCLUDE_DIR,
+        Paths.get(_prj.getBuild().getDirectory(), "vulas", "include").toString());
+    _cfg.setPropertyIfEmpty(
+        CoreConfiguration.INSTR_LIB_DIR,
+        Paths.get(_prj.getBuild().getDirectory(), "vulas", "lib").toString());
+    _cfg.setPropertyIfEmpty(
+        CoreConfiguration.REP_DIR,
+        Paths.get(_prj.getBuild().getDirectory(), "vulas", "report").toString());
+
+    // Read app constructs from src/main/java and target/classes
+    final String p =
+        Paths.get(_prj.getBuild().getOutputDirectory()).toString()
+            + ","
+            + Paths.get(_prj.getBuild().getSourceDirectory()).toString();
+    _cfg.setPropertyIfEmpty(CoreConfiguration.APP_DIRS, p);
   }
 
   /**
@@ -412,5 +422,45 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     } else {
       return new LibraryId(gapv[0], gapv[1], gapv[3]);
     }
+  }
+
+  /**
+   * Returns the archive used as agent (in case of dynamic instrumentation) or
+   * to be included in instrumented (re-written) archives (static
+   * instrumentation). The file has to be created with "mvn
+   * org.apache.maven.plugins:maven-dependency-plugin:3.2.0:copy
+   * -Dartifact=org.eclipse.steady:lang-java:3.2.3-SNAPSHOT:jar:jar-with-dependencies"
+   * before running the instr and prepare-agent goals.
+   *
+   * @return the Steady agent file
+   * @throws MojoExecutionException
+   */
+  protected File getAgentJarFile() throws MojoExecutionException {
+    // mvn org.apache.maven.plugins:maven-dependency-plugin:3.2.0:copy
+    // -Dartifact=org.eclipse.steady:lang-java:3.2.3-SNAPSHOT:jar:jar-with-dependencies
+    /*final Artifact vulasAgentArtifact = pluginArtifactMap.get(AGENT_ARTIFACT_NAME);
+    if (vulasAgentArtifact == null
+        || !vulasAgentArtifact.hasClassifier()
+        || !vulasAgentArtifact.getClassifier().equals(AGENT_ARTIFACT_CLASSIFIER)) {
+      throw new MojoExecutionException(
+          "Could not found " + AGENT_ARTIFACT_NAME + ":" + AGENT_ARTIFACT_CLASSIFIER);
+    }
+    return vulasAgentArtifact.getFile();*/
+    final String version =
+        this.vulasConfiguration.getConfiguration().getString(VulasConfiguration.VERSION);
+    final String agent_filename =
+        AGENT_ARTIFACT_NAME + "-" + version + "-" + AGENT_ARTIFACT_CLASSIFIER + ".jar";
+    final Path agent =
+        Paths.get(this.project.getBuild().getDirectory(), "dependency", agent_filename);
+    if (agent == null || !agent.toFile().exists()) {
+      throw new MojoExecutionException(
+          "Could not find agent JAR ["
+              + agent
+              + "], create with [mvn org.apache.maven.plugins:maven-dependency-plugin:3.2.0:copy"
+              + " -Dartifact=org.eclipse.steady:lang-java:"
+              + version
+              + ":jar:jar-with-dependencies]");
+    }
+    return agent.toFile();
   }
 }

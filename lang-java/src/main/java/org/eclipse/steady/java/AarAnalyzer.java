@@ -35,7 +35,8 @@ import org.eclipse.steady.shared.util.FileUtil;
 @NotThreadSafe
 public class AarAnalyzer extends JarAnalyzer {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(AarAnalyzer.class);
 
   private static final String CLASSES_JAR = "classes.jar";
 

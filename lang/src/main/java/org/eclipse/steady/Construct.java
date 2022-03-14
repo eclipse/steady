@@ -31,7 +31,7 @@ import org.eclipse.steady.shared.util.DigestUtil;
  */
 public class Construct {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(Construct.class);
   private ConstructId id = null;
   private String content, contentDigest = null;
 

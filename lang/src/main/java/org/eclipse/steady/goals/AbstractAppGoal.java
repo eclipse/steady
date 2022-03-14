@@ -40,7 +40,8 @@ import org.eclipse.steady.shared.util.FileUtil;
  */
 public abstract class AbstractAppGoal extends AbstractGoal {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(AbstractAppGoal.class);
 
   /**
    * Maps file system paths to {@link Dependency}s.

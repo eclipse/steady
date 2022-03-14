@@ -33,7 +33,8 @@ import org.eclipse.steady.shared.json.model.Space;
  */
 public abstract class AbstractSpaceGoal extends AbstractGoal {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(AbstractSpaceGoal.class);
 
   /**
    * <p>Constructor for AbstractSpaceGoal.</p>

@@ -32,7 +32,8 @@ import org.eclipse.steady.shared.enums.GoalType;
  */
 public class SequenceGoal extends AbstractAppGoal {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(SequenceGoal.class);
 
   private List<AbstractGoal> sequence = new ArrayList<AbstractGoal>();
 

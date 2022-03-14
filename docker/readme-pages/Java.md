@@ -224,9 +224,9 @@ mvn package
 mvn -Dvulas initialize vulas:instr
 ```
 
-**Result:** A new JAR/WAR with suffix "-vulas-instr" will be created in folder "target/vulas/target".
+**Result:** A new JAR/WAR with suffix "-steady-instr" will be created in folder "target/vulas/target".
 
-**How does it work:** The bytecode of all the Java classes found in the JAR (WAR) will be modified as to collect information about, for instance, method execution and stack traces. This information will be uploaded to the Steady backend. Note: The modified code in the new JAR with suffix "-vulas-instr" can be inspected with decompilers such as [JD-GUI](http://jd.benow.ca/).
+**How does it work:** The bytecode of all the Java classes found in the JAR (WAR) will be modified as to collect information about, for instance, method execution and stack traces. This information will be uploaded to the Steady backend. Note: The modified code in the new JAR with suffix "-steady-instr" can be inspected with decompilers such as [JD-GUI](http://jd.benow.ca/).
 
 **Troubleshooting:**
 

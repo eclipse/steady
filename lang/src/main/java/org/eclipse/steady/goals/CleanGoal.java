@@ -29,7 +29,7 @@ import org.eclipse.steady.shared.json.model.Application;
  */
 public class CleanGoal extends AbstractAppGoal {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(CleanGoal.class);
 
   /**
    * <p>Constructor for CleanGoal.</p>

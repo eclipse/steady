@@ -36,7 +36,8 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
  */
 public abstract class AbstractHttpRequest implements HttpRequest {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(AbstractHttpRequest.class);
 
   protected long ms = -1;
 

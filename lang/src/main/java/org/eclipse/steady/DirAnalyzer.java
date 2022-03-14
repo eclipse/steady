@@ -41,7 +41,8 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
  */
 public class DirAnalyzer implements FileAnalyzer {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(DirAnalyzer.class);
 
   /** The dir to be analyzed. */
   private File dir = null;

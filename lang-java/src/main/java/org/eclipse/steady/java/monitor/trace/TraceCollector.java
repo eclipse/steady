@@ -158,7 +158,7 @@ public class TraceCollector {
 
   private static final Logger getLog() {
     if (TraceCollector.log == null)
-      TraceCollector.log = org.apache.logging.log4j.LogManager.getLogger();
+      TraceCollector.log = org.apache.logging.log4j.LogManager.getLogger(TraceCollector.class);
     return TraceCollector.log;
   }
 
@@ -365,8 +365,9 @@ public class TraceCollector {
     else {
       u.setArchiveDigest(_archive_digest);
       u.setArchiveFileName(jar_name);
-      if (_app_groupid != null && _app_artifactid != null && _app_version != null)
+      if (_app_groupid != null && _app_artifactid != null && _app_version != null) {
         u.setAppContext(new Application(_app_groupid, _app_artifactid, _app_version));
+      }
     }
 
     // Only add the trace if the JAR is not blacklisted
@@ -391,14 +392,28 @@ public class TraceCollector {
       // Add 1 trace for context and package (more does not seem to make any sense, there could be
       // easily too many)
       final ConstructId ctx_id = _id.getDefinitionContext();
-      final ConstructId pack_id = ((JavaId) _id).getJavaPackageId();
       if (!this.contextConstructs.contains(ctx_id)) {
         final ConstructUsage ctx_u = new ConstructUsage(ctx_id, jar_path, l, now, 1);
+        if (_archive_digest != null) {
+          ctx_u.setArchiveDigest(_archive_digest);
+          ctx_u.setArchiveFileName(jar_name);
+          if (_app_groupid != null && _app_artifactid != null && _app_version != null) {
+            ctx_u.setAppContext(new Application(_app_groupid, _app_artifactid, _app_version));
+          }
+        }
         this.contextConstructs.add(ctx_id);
         this.constructUsage.add(ctx_u);
       }
+      final ConstructId pack_id = ((JavaId) _id).getJavaPackageId();
       if (!this.contextConstructs.contains(pack_id)) {
         final ConstructUsage pack_u = new ConstructUsage(pack_id, jar_path, l, now, 1);
+        if (_archive_digest != null) {
+          pack_u.setArchiveDigest(_archive_digest);
+          pack_u.setArchiveFileName(jar_name);
+          if (_app_groupid != null && _app_artifactid != null && _app_version != null) {
+            pack_u.setAppContext(new Application(_app_groupid, _app_artifactid, _app_version));
+          }
+        }
         this.contextConstructs.add(pack_id);
         this.constructUsage.add(pack_u);
       }
@@ -748,7 +763,6 @@ public class TraceCollector {
           }
           // No, we need to get it from the JAR analyzer (created in method addUsedConstruct)
           else {
-
             if (this.jarFiles.containsKey(jar_path)) {
               ja = this.jarFiles.get(jar_path);
 
@@ -762,7 +776,16 @@ public class TraceCollector {
               else
                 throw new IllegalStateException(
                     "SHA1 for construct [" + usage.toString() + "] not known");
-            } else throw new IllegalStateException("JAR analyzer not found for [" + jar_path + "]");
+            } else {
+              throw new IllegalStateException(
+                  "Among ["
+                      + this.jarFiles.size()
+                      + "] analyzers, none has been found for path ["
+                      + jar_path
+                      + "], "
+                      + usage
+                      + " cannot be uploaded");
+            }
           }
         }
 

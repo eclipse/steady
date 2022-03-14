@@ -43,7 +43,7 @@ import org.eclipse.steady.shared.enums.DigestAlgorithm;
  */
 public class DirUtil {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(DirUtil.class);
 
   /**
    * Returns true if the given directory contains a file with the given name, false otherwise.

@@ -30,6 +30,9 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.ConstructId;
 import org.eclipse.steady.java.monitor.ClassPoolUpdater;
@@ -38,15 +41,12 @@ import org.eclipse.steady.shared.enums.ConstructType;
 import org.eclipse.steady.shared.enums.ProgrammingLanguage;
 import org.eclipse.steady.shared.json.JsonBuilder;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
 /**
  * <p>Abstract JavaId class.</p>
  */
 public abstract class JavaId extends ConstructId {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JavaId.class);
 
   /** Supported Java programming constructs. */
   public static enum Type {

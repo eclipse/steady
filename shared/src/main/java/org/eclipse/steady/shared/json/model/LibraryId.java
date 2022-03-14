@@ -20,12 +20,12 @@ package org.eclipse.steady.shared.json.model;
 
 import java.io.Serializable;
 
-import org.apache.logging.log4j.Logger;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.apache.logging.log4j.Logger;
 
 /**
  * Human-readable library ID, for instance, a Maven artifact identifier.
@@ -37,7 +37,7 @@ public class LibraryId implements Serializable, Comparable<LibraryId> {
 
   private static final long serialVersionUID = 1L;
 
-  private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static Logger log = org.apache.logging.log4j.LogManager.getLogger(LibraryId.class);
 
   @JsonIgnore private Long id;
 

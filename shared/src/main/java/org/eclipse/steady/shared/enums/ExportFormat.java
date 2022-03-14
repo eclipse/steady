@@ -31,7 +31,7 @@ public enum ExportFormat {
   JSON;
 
   /** Constant <code>log</code> */
-  private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static Logger log = org.apache.logging.log4j.LogManager.getLogger(ExportFormat.class);
 
   /** Constant <code>TXT_CSV="text/csv;charset=UTF-8"</code> */
   public static final String TXT_CSV = "text/csv;charset=UTF-8";

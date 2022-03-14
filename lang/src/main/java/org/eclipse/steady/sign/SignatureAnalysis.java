@@ -39,7 +39,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         "Fields app, isCLI, depPath and uRLClassLoader appear not being used because the metod"
             + " body of method execute() is commented out")
 public class SignatureAnalysis {
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(SignatureAnalysis.class);
   private Application app;
 
   private StringList bugs;

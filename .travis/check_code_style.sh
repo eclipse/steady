@@ -1,10 +1,16 @@
 #!/bin/bash
 
 # Download Google formatter
-executable=google-java-format-1.8-all-deps.jar
+executable=google-java-format-1.14.0-all-deps.jar
 if [[ ! -f $executable ]]; then
-    curl -L https://github.com/google/google-java-format/releases/download/google-java-format-1.8/google-java-format-1.8-all-deps.jar --output $executable
-    printf "Downloaded [%s]\n" $executable
+    curl -L https://github.com/google/google-java-format/releases/download/v1.14.0/$executable --fail --output $executable
+    res=$?
+    if [[ ! $res == 0 ]]; then
+        printf "Could not download [%s], skipping format check...\n" $executable
+        exit 0
+    else
+        printf "Downloaded [%s]\n" $executable
+    fi
 fi
 
 # Java files below src/main
@@ -21,7 +27,7 @@ printf "Found [%s] Java files in all modules' source directories\n" $count
 if [[ $1 == "format" ]]; then
 
     printf "Formatting... "
-    java -jar google-java-format-1.8-all-deps.jar -r --skip-sorting-imports --skip-javadoc-formatting --set-exit-if-changed @java-files.txt
+    java -jar $executable -r --skip-sorting-imports --skip-javadoc-formatting --set-exit-if-changed @java-files.txt
     status=$?
 
     if [[ $status -eq 0 ]]; then
@@ -33,7 +39,7 @@ if [[ $1 == "format" ]]; then
     fi
 else
     printf "Checking... "
-    java -jar google-java-format-1.8-all-deps.jar -n --skip-sorting-imports --skip-javadoc-formatting --set-exit-if-changed @java-files.txt > non-compliant-files.txt
+    java -jar $executable -n --skip-sorting-imports --skip-javadoc-formatting --set-exit-if-changed @java-files.txt > non-compliant-files.txt
     status=$?
 
     if [[ $status -eq 0 ]]; then

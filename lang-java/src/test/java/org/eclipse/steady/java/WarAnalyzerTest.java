@@ -31,10 +31,21 @@ import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.shared.categories.Slow;
 import org.eclipse.steady.shared.json.model.Application;
 import org.eclipse.steady.shared.util.VulasConfiguration;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 public class WarAnalyzerTest {
+
+  @Before
+  public void removeInstrumentedArchives() {
+    for (String n : new String[] {"small-steady-instr.war"}) {
+      final File f = new File("./target/" + n);
+      if (f.exists()) {
+        f.delete();
+      }
+    }
+  }
 
   @Test
   @Category(Slow.class)
@@ -66,7 +77,7 @@ public class WarAnalyzerTest {
     try {
       VulasConfiguration.getGlobal().setProperty(CoreConfiguration.INSTR_WRITE_CODE, "true");
       final WarAnalyzer wa = new WarAnalyzer();
-      wa.analyze(new File("./src/test/resources/examples.war"));
+      wa.analyze(new File("./src/test/resources/small.war"));
       wa.setWorkDir(Paths.get("./target"));
       wa.setRename(true);
       wa.setInstrument(true);
@@ -76,6 +87,8 @@ public class WarAnalyzerTest {
       // Check instrumented WAR
       final File new_war = wa.getInstrumentedArchive();
       assertTrue(new_war.exists());
+      // System.out.println("Size of rewritten archive [" + new_war.getName() + "]: " +
+      // new_war.length());
     } catch (Exception e) {
       e.printStackTrace();
       assertTrue(false);

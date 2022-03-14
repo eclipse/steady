@@ -33,6 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
@@ -61,7 +62,8 @@ import org.eclipse.steady.shared.util.StringUtil;
  */
 public class BasicHttpRequest extends AbstractHttpRequest {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(BasicHttpRequest.class);
 
   private static final long serialVersionUID = 1L;
 

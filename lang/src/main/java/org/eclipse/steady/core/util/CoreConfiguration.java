@@ -38,7 +38,8 @@ import org.eclipse.steady.sign.SignatureFactory;
  */
 public class CoreConfiguration {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(CoreConfiguration.class);
 
   // Goal context
   /** Constant <code>TENANT_TOKEN="vulas.core.tenant.token"</code> */
@@ -165,6 +166,8 @@ public class CoreConfiguration {
   public static final String INSTR_MAX_STACKTRACES = "vulas.core.instr.maxStacktraces";
   /** Constant <code>INSTR_WRITE_CODE="vulas.core.instr.writeCode"</code> */
   public static final String INSTR_WRITE_CODE = "vulas.core.instr.writeCode";
+  /** Constant <code>INSTR_PRINT_ERR_STACK_TRACE="vulas.core.instr.printErrorStackTrace"</code> */
+  public static final String INSTR_PRINT_ERR_STACK_TRACE = "vulas.core.instr.printErrorStackTrace";
   /** Constant <code>INSTR_FLD_ANNOS="vulas.core.instr.fieldAnnotations"</code> */
   public static final String INSTR_FLD_ANNOS = "vulas.core.instr.fieldAnnotations";
 
