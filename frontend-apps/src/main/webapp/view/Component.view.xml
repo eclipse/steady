@@ -333,6 +333,15 @@
 										</template>
 										<!-- Text text="App actually executes library code" / -->
 									</Column>
+									<Column xmlns="sap.ui.table" width="10%" sorted="true">
+										<multiLabels>
+											<Label text="Library executable " xmlns="sap.ui.commons" />
+											<Label text="constructs" xmlns="sap.ui.commons" />
+										</multiLabels>
+										<template>
+											<TextView xmlns="sap.ui.commons" text="{lib/constructTypeCounters/countExecutable}"></TextView>
+										</template>
+									</Column>
 								</Table>
 							</IconTabFilter>
 
