@@ -249,14 +249,14 @@
 										</template>
 									</Column>
 									<Column xmlns="sap.ui.table" width="10%" sorted="true"
-										sortProperty="scope">
+										sortProperty="scope" filterProperty="scope">
 										<Label text="Dependency Scope" xmlns="sap.ui.commons" />
 										<template>
 											<TextView xmlns="sap.ui.commons" text="{scope}"></TextView>
 										</template>
 									</Column>
 									<Column xmlns="sap.ui.table" width="10%" sorted="true"
-										sortProperty="transitive">
+										sortProperty="transitive" filterProperty="transitive">
 										<Label text="Direct / Transitive" xmlns="sap.ui.commons" />
 										<template>
 											<TextView xmlns="sap.ui.commons"
