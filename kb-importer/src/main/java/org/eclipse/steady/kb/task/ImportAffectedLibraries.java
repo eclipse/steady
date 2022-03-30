@@ -46,6 +46,7 @@ import com.github.packageurl.PackageURL;
  */
 public class ImportAffectedLibraries implements Task {
   private static final String OVERWRITE_OPTION = "o";
+  private static final String DELETE = "del";
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
   /** {@inheritDoc} */
@@ -55,6 +56,9 @@ public class ImportAffectedLibraries implements Task {
     List<Artifact> artifacts = vuln.getArtifacts();
     if (artifacts == null || artifacts.isEmpty()) {
       return;
+    }
+    if ((boolean) args.get(DELETE)) {
+      backendConnector.deletePatchEvalResults(vuln.getVulnId(), AffectedVersionSource.KAYBEE);
     }
 
     List<AffectedLibrary> affectedLibsToUpsert = new ArrayList<AffectedLibrary>();

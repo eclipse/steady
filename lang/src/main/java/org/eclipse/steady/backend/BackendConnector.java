@@ -1042,6 +1042,22 @@ public class BackendConnector {
   }
 
   /**
+   * <p>deleteBug.</p>
+   *
+   * @param _bugId a {@link java.lang.String} object.
+   * @throws org.eclipse.steady.backend.BackendConnectionException if any.
+   */
+  public void deleteBug(String _bugId) throws BackendConnectionException {
+
+    final BasicHttpRequest del_req =
+        new BasicHttpRequest(HttpMethod.DELETE, 
+        PathBuilder.bug(_bugId));
+    // payload cannot be empty otherwise request doesn t work
+    del_req.setPayload("[]", "application/json", true);
+    del_req.send();
+  }
+
+  /**
    * <p>uploadCheckVersionResults.</p>
    *
    * @param _bugId a {@link java.lang.String} object.
