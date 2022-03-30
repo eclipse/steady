@@ -57,7 +57,7 @@ public class ImportAffectedLibraries implements Task {
     if (artifacts == null || artifacts.isEmpty()) {
       return;
     }
-    if ((boolean) args.get(DELETE)) {
+    if (args.containsKey(DELETE) && (boolean) args.get(DELETE)) {
       backendConnector.deletePatchEvalResults(vuln.getVulnId(), AffectedVersionSource.KAYBEE);
     }
 
