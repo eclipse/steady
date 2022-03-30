@@ -38,6 +38,7 @@ import org.eclipse.steady.kb.task.TaskProvider;
 import org.eclipse.steady.kb.util.Metadata;
 import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.shared.util.VulasConfiguration;
+import org.eclipse.steady.backend.BackendConnectionException;
 
 /**
  * import command
@@ -49,6 +50,7 @@ public class Import implements Command {
   private static final String DIRECTORY_OPTION = "d";
   private static final String OVERWRITE_OPTION = "o";
   private static final String VERBOSE_OPTION = "v";
+  private static final String DELETE = "del";
 
   private static final String UPLOAD_LONG_OPTION = "upload";
   private static final String VERBOSE_LONG_OPTION = "verbose";
