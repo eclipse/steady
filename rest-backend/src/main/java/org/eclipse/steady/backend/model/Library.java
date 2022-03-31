@@ -461,7 +461,7 @@ public class Library implements Serializable {
    * @return a {@link org.eclipse.steady.backend.model.ConstructIdFilter} object.
    */
   @JsonProperty(value = "constructTypeCounters")
-  @JsonView(Views.CountDetails.class)
+  @JsonView(Views.Default.class)
   @JsonIgnoreProperties(
       value = {"constructTypeCounters"},
       allowGetters = true)

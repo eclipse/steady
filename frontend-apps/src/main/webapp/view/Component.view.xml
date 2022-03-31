@@ -219,16 +219,16 @@
 											<Text id="archiveTotal" xmlns="sap.m" text="None" />
 										</m:MatrixLayoutCell>
 									</m:MatrixLayoutRow>
-									<m:MatrixLayoutRow>
-										<m:MatrixLayoutCell>
-											<Text id="archiveTraced" xmlns="sap.m" text="None" />
-										</m:MatrixLayoutCell>
-									</m:MatrixLayoutRow>
-									<m:MatrixLayoutRow>
-										<m:MatrixLayoutCell>
-											<Text id="archiveTotalTraces" xmlns="sap.m" text="None" />
-										</m:MatrixLayoutCell>
-									</m:MatrixLayoutRow>
+<!-- 									<m:MatrixLayoutRow> -->
+<!-- 										<m:MatrixLayoutCell> -->
+<!-- 											<Text id="archiveTraced" xmlns="sap.m" text="None" /> -->
+<!-- 										</m:MatrixLayoutCell> -->
+<!-- 									</m:MatrixLayoutRow> -->
+<!-- 									<m:MatrixLayoutRow> -->
+<!-- 										<m:MatrixLayoutCell> -->
+<!-- 											<Text id="archiveTotalTraces" xmlns="sap.m" text="None" /> -->
+<!-- 										</m:MatrixLayoutCell> -->
+<!-- 									</m:MatrixLayoutRow> -->
 									<m:MatrixLayoutRow>
 										<m:MatrixLayoutCell>
 											<Text id="archiveAvgAge" xmlns="sap.m" text="None" />
@@ -249,14 +249,14 @@
 										</template>
 									</Column>
 									<Column xmlns="sap.ui.table" width="10%" sorted="true"
-										sortProperty="scope">
+										sortProperty="scope" filterProperty="scope">
 										<Label text="Dependency Scope" xmlns="sap.ui.commons" />
 										<template>
 											<TextView xmlns="sap.ui.commons" text="{scope}"></TextView>
 										</template>
 									</Column>
 									<Column xmlns="sap.ui.table" width="10%" sorted="true"
-										sortProperty="transitive">
+										sortProperty="transitive" filterProperty="transitive">
 										<Label text="Direct / Transitive" xmlns="sap.ui.commons" />
 										<template>
 											<TextView xmlns="sap.ui.commons"
@@ -310,8 +310,114 @@
 											</commons:TextView>
 										</template>
 									</Column>
+<!-- 									<Column xmlns="sap.ui.table" width="10%" sorted="true" -->
+<!-- 										sortProperty="reachExecConstructsCounter"> -->
+<!-- 										Text text="App potentially executes library code" / -->
+<!-- 										<multiLabels> -->
+<!-- 											<Label text="Library constructs" xmlns="sap.ui.commons" /> -->
+<!-- 											<Label text="potentially executable" xmlns="sap.ui.commons" /> -->
+<!-- 										</multiLabels> -->
+<!-- 										<template> -->
+<!-- 											<TextView xmlns="sap.ui.commons" -->
+<!-- 												text="{reachExecConstructsCounter}"></TextView> -->
+<!-- 										</template> -->
+<!-- 									</Column> -->
+<!-- 									<Column xmlns="sap.ui.table" width="10%" sorted="true" -->
+<!-- 										sortProperty="tracedExecConstructsCounter"> -->
+<!-- 										<multiLabels> -->
+<!-- 											<Label text="Library constructs " xmlns="sap.ui.commons" /> -->
+<!-- 											<Label text="actually executed" xmlns="sap.ui.commons" /> -->
+<!-- 										</multiLabels> -->
+<!-- 										<template> -->
+<!-- 											<TextView xmlns="sap.ui.commons" text="{tracedExecConstructsCounter}"></TextView> -->
+<!-- 										</template> -->
+<!-- 										Text text="App actually executes library code" / -->
+<!-- 									</Column> -->
+<!-- 									<Column xmlns="sap.ui.table" width="10%" sorted="true"> -->
+<!-- 										<multiLabels> -->
+<!-- 											<Label text="Library executable " xmlns="sap.ui.commons" /> -->
+<!-- 											<Label text="constructs" xmlns="sap.ui.commons" /> -->
+<!-- 										</multiLabels> -->
+<!-- 										<template> -->
+<!-- 											<TextView xmlns="sap.ui.commons" text="{lib/constructTypeCounters/countExecutable}"></TextView> -->
+<!-- 										</template> -->
+<!-- 									</Column> -->
+								</Table>
+							</IconTabFilter>
+
+							<IconTabFilter text="{i18n>Bloat}" icon="sap-icon://scissors" id="id_debloat">
+
+								<m:MatrixLayout columns="1">
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="archiveInScope" xmlns="sap.m" text="None" />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="archiveDebloat" xmlns="sap.m" text="None" />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="archiveTraced" xmlns="sap.m" text="None" />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="archiveReachable" xmlns="sap.m" text="None" />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<Text id="archiveTotalTraces" xmlns="sap.m" text="None" />
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+									<m:MatrixLayoutCell>
+											<CheckBox id="includeTest" text="Include TEST dependencies" selected="false" select="showDebloatableArchives"/>
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+									<m:MatrixLayoutRow>
+										<m:MatrixLayoutCell>
+											<CheckBox id="showDebloat" text="Show debloatable only (libraries with executable constructs where none was actually executed nor found potentially reachable)" selected="false" select="showDebloatableArchives"/>
+										</m:MatrixLayoutCell>
+									</m:MatrixLayoutRow>
+								</m:MatrixLayout>
+
+
+								<Table xmlns="sap.ui.table" id="idBloatList"
+									rows="{ path: '/', sorter: { path: 'filename'} }"
+									selectionMode="None">
+									<Column xmlns="sap.ui.table" width="30%" sorted="true"
+										filtered="true" sortProperty="filename" filterProperty="filename">
+										<Label text="Archive Filename&#13;&#10;(Digest)" xmlns="sap.ui.commons" />
+										<template>
+											<ObjectIdentifier title="{filename}" text="{lib/digest}"
+												xmlns="sap.m" titleActive="true" titlePress="onArchiveListItemTap" />
+										</template>
+									</Column>
 									<Column xmlns="sap.ui.table" width="10%" sorted="true"
-										sortProperty="reachExecConstructsCounter">
+										sortProperty="scope" filterProperty="scope" id='scopeColumn'>
+										<Label text="Dependency Scope" xmlns="sap.ui.commons" />
+										<template>
+											<TextView xmlns="sap.ui.commons" text="{scope}"></TextView>
+										</template>
+									</Column>
+									<Column xmlns="sap.ui.table" width="10%" sorted="true"
+										sortProperty="transitive" filterProperty="transitive">
+										<Label text="Direct / Transitive" xmlns="sap.ui.commons" />
+										<template>
+											<TextView xmlns="sap.ui.commons"
+												text="{
+		 												path: 'transitive',
+		 												formatter: 'model.Formatter.directTransitive'}"></TextView>
+										</template>
+									</Column>
+									<Column xmlns="sap.ui.table" width="10%" sorted="true"
+										sortProperty="reachExecConstructsCounter" 
+										filterProperty="reachExecConstructsCounter" filtered="false">
+										
 										<!-- Text text="App potentially executes library code" / -->
 										<multiLabels>
 											<Label text="Library constructs" xmlns="sap.ui.commons" />
@@ -323,7 +429,8 @@
 										</template>
 									</Column>
 									<Column xmlns="sap.ui.table" width="10%" sorted="true"
-										sortProperty="tracedExecConstructsCounter">
+										sortProperty="tracedExecConstructsCounter"
+										filterProperty="tracedExecConstructsCounter" filtered="false">
 										<multiLabels>
 											<Label text="Library constructs " xmlns="sap.ui.commons" />
 											<Label text="actually executed" xmlns="sap.ui.commons" />
@@ -332,6 +439,26 @@
 											<TextView xmlns="sap.ui.commons" text="{tracedExecConstructsCounter}"></TextView>
 										</template>
 										<!-- Text text="App actually executes library code" / -->
+									</Column>
+									<Column xmlns="sap.ui.table" width="10%" sorted="true"
+									    sortProperty="lib/constructTypeCounters/countExecutable"
+									    filterProperty="lib/constructTypeCounters/countExecutable" filtered="false">
+										<multiLabels>
+											<Label text="Library executable " xmlns="sap.ui.commons" />
+											<Label text="constructs" xmlns="sap.ui.commons" />
+										</multiLabels>
+										<template>
+											<TextView xmlns="sap.ui.commons" text="{lib/constructTypeCounters/countExecutable}"></TextView>
+										</template>
+									</Column>
+									<Column xmlns="sap.ui.table" width="10%" >
+											<Label text="Debloatable? " xmlns="sap.ui.commons" />
+										<template>
+												<TextView xmlns="sap.ui.commons"
+												text="{
+		 												parts: ['reachExecConstructsCounter','tracedExecConstructsCounter','lib/constructTypeCounters/countExecutable'],
+		 												formatter: 'model.Formatter.debloat'}"></TextView>
+										</template>
 									</Column>
 								</Table>
 							</IconTabFilter>
