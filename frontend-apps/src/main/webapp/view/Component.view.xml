@@ -380,7 +380,7 @@
 									</m:MatrixLayoutRow>
 									<m:MatrixLayoutRow>
 										<m:MatrixLayoutCell>
-											<CheckBox id="showDebloat" text="Show Debloatable" selected="false" select="showDebloatableArchives"/>
+											<CheckBox id="showDebloat" text="Show debloatable only (libraries with executable constructs where none was actually executed nor found potentially reachable)" selected="false" select="showDebloatableArchives"/>
 										</m:MatrixLayoutCell>
 									</m:MatrixLayoutRow>
 								</m:MatrixLayout>
@@ -452,7 +452,7 @@
 										</template>
 									</Column>
 									<Column xmlns="sap.ui.table" width="10%" >
-											<Label text="Debloat? " xmlns="sap.ui.commons" />
+											<Label text="Debloatable? " xmlns="sap.ui.commons" />
 										<template>
 												<TextView xmlns="sap.ui.commons"
 												text="{

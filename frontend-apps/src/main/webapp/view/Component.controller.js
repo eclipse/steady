@@ -104,6 +104,7 @@ sap.ui.controller("view.Component", {
 		archiveTraced.setText("Archives Traced: " + traced);
 		archiveReachable.setText("Archives Reachable: " + reachable);
 		archiveTotalTraces.setText("Total Number of Traces: " + traces);
+		
 	},
 	
 //	includeTestDeps: function(){
@@ -172,11 +173,12 @@ sap.ui.controller("view.Component", {
 			});
 
 			this.getView().byId("idBloatList").getBinding("rows").filter(tableFilter);
-	
 		}
-	
-		else
+		else{
 			this.getView().byId("idBloatList").getBinding("rows").filter();
+		}
+		this.getView().byId("idBloatList").setVisibleRowCount(this.getView().byId("idBloatList").getBinding("rows").iLength);
+		
 	},
 	
 	// Vulnerabilities tab: Sets the 2 counters
@@ -466,7 +468,6 @@ sap.ui.controller("view.Component", {
 				oArchiveView.setModel(oArchiveModel);
 				oArchiveView.setBusy(false);
 
-				oBloatView.setVisibleRowCount(oArchiveModel.getObject("/").length);
 				oBloatView.setModel(oArchiveModel);
 				scopeColumn.setFilterValue("!=TEST");
 				scopeColumn.setFiltered(true);
