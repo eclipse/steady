@@ -70,6 +70,115 @@ sap.ui.controller("view.Component", {
 		return emptyModel;
 	},
 	
+	computeDebloatViewMetrics : function(_test){
+		var archiveInScope = this.getView().byId("archiveInScope");
+		var archiveDebloat = this.getView().byId("archiveDebloat");
+		var archiveTraced = this.getView().byId("archiveTraced");
+		var archiveReachable = this.getView().byId("archiveReachable");
+		var archiveTotalTraces = this.getView().byId("archiveTotalTraces");
+		
+		var archivesInTable = this.getView().byId("idBloatList").getModel().getObject("/");
+		var archives = 0;
+		var traced = 0;
+		var reachable = 0;
+		var traces = 0;
+		var debloatable = 0;
+		for (var a=0;a<archivesInTable.length;a++){
+			if(_test || archivesInTable[a].scope!="TEST"){
+				archives++;
+				if(archivesInTable[a].tracedExecConstructsCounter>0){
+					traced++;
+					traces = traces + archivesInTable[a].tracedExecConstructsCounter;
+				}
+				if(archivesInTable[a].reachExecConstructsCounter>0){
+					reachable++;
+				}
+				if(archivesInTable[a].tracedExecConstructsCounter==0 && archivesInTable[a].reachExecConstructsCounter==0 && archivesInTable[a].lib.constructTypeCounters.countExecutable>0){
+					debloatable++;
+				}
+			}
+		}
+		
+		archiveInScope.setText("Archives in selected scopes: " + archives);
+		archiveDebloat.setText("Debloatable archives: " + debloatable);
+		archiveTraced.setText("Archives Traced: " + traced);
+		archiveReachable.setText("Archives Reachable: " + reachable);
+		archiveTotalTraces.setText("Total Number of Traces: " + traces);
+	},
+	
+//	includeTestDeps: function(){
+//		if(this.getView().byId("showDebloat").getSelected()==true){
+//			this.showDebloatableArchives();
+//		}
+//		else{
+//			var scopeColumn = this.getView().byId("scopeColumn");
+//			var oBloatView = this.getView().byId("idBloatList");
+//			if(scopeColumn.getFiltered()==true){
+//				scopeColumn.setFilterValue("");
+//				scopeColumn.setFiltered(false);
+//				oBloatView.filter(scopeColumn,"")
+//				this.computeDebloatViewMetrics(true);
+//			}
+//			else{
+//				scopeColumn.setFilterValue("!=TEST");
+//				scopeColumn.setFiltered(true);
+//				oBloatView.filter(scopeColumn,"!=TEST")
+//				this.computeDebloatViewMetrics(false);
+//			}
+//		}
+//	},
+	
+	showDebloatableArchives: function(){
+		var array=[];
+		var scopeColumn = this.getView().byId("scopeColumn");
+		if(this.getView().byId("showDebloat").getSelected()==true){
+			var filter1 = new sap.ui.model.Filter(
+				    "reachExecConstructsCounter", 
+				    sap.ui.model.FilterOperator.EQ, 
+				    "0");
+			var filter2 = new sap.ui.model.Filter(
+				    "tracedExecConstructsCounter", 
+				    sap.ui.model.FilterOperator.EQ, 
+				    "0");
+			var filter3 = new sap.ui.model.Filter(
+				    "lib/constructTypeCounters/countExecutable", 
+				    sap.ui.model.FilterOperator.NE, 
+				    "0");
+			
+			array.push(filter1);
+			array.push(filter2);
+			array.push(filter3);
+		}
+		if(this.getView().byId("includeTest").getSelected()==false){
+			var filter4 = new sap.ui.model.Filter(
+				    "scope", 
+				    sap.ui.model.FilterOperator.NE, 
+				    "TEST");
+			array.push(filter4);
+			scopeColumn.setFilterValue("!=TEST");
+			scopeColumn.setFiltered(true);
+			this.computeDebloatViewMetrics(false);
+		}
+		else if (this.getView().byId("includeTest").getSelected()==true){
+			scopeColumn.setFilterValue("");
+			scopeColumn.setFiltered(false);
+			this.computeDebloatViewMetrics(true);
+		}
+		
+		if(array!=[]){
+			var tableFilter = new sap.ui.model.Filter({
+					    filters: array,
+					    and: true
+			});
+
+			this.getView().byId("idBloatList").getBinding("rows").filter(tableFilter);
+	
+		}
+	
+		else
+			this.getView().byId("idBloatList").getBinding("rows").filter();
+	},
+	
 	// Vulnerabilities tab: Sets the 2 counters
 	setVulnDepCounters:function(_archives, _vulns) {
 		var archiveCount = this.getView().byId("archiveCount");
@@ -271,6 +380,10 @@ sap.ui.controller("view.Component", {
 		oArchiveView.setModel(this.getEmptyModel());
 		oArchiveView.setBusy(true);
 		
+		var oBloatView = this.getView().byId("idBloatList");
+		oBloatView.setModel(this.getEmptyModel());
+		oBloatView.setBusy(true);
+		
 		//var oConstructView = this.getView().byId("idPatchAnalysisList");		
 		//oConstructView.setModel(emptyModel);
 		//oConstructView.setBusy(true);
@@ -321,14 +434,28 @@ sap.ui.controller("view.Component", {
 			}
 			sUrl = model.Config.getArchivesServiceUrl(groupId,artifactId,versionId, cache);
 
+			
 			var archiveTotal = this.getView().byId("archiveTotal");
-			var archiveTraced = this.getView().byId("archiveTraced");
-			var archiveTotalTraces = this.getView().byId("archiveTotalTraces");
 			var archiveAvgAge = this.getView().byId("archiveAvgAge");
+			
+			var archiveInScope = this.getView().byId("archiveInScope");
+			var archiveDebloat = this.getView().byId("archiveDebloat");
+			var archiveTraced = this.getView().byId("archiveTraced");
+			var archiveReachable = this.getView().byId("archiveReachable");
+			var archiveTotalTraces = this.getView().byId("archiveTotalTraces");
+			
+			var scopeColumn = this.getView().byId("scopeColumn");
+			
 			archiveTotal.setText("Archives Total: ");
-			archiveTraced.setText("Archives Traced: ");
-			archiveTotalTraces.setText("Total Number of Traces: ");
 			archiveAvgAge.setText("Average age (in months): ");
+			
+
+			archiveInScope.setText("Archives in selected scopes: ");
+			archiveDebloat.setText("Debloatable archives: ");
+			archiveTraced.setText("Archives Traced: ");
+			archiveReachable.setText("Archives Reachable: ");
+			archiveTotalTraces.setText("Total Number of Traces: ");
+			
 			
 			model.Config.addToQueue(oArchiveModel);
 			model.Config.loadData(oArchiveModel, sUrl, 'GET');
@@ -338,16 +465,18 @@ sap.ui.controller("view.Component", {
 				oArchiveView.setVisibleRowCount(oArchiveModel.getObject("/").length);
 				oArchiveView.setModel(oArchiveModel);
 				oArchiveView.setBusy(false);
+
+				oBloatView.setVisibleRowCount(oArchiveModel.getObject("/").length);
+				oBloatView.setModel(oArchiveModel);
+				scopeColumn.setFilterValue("!=TEST");
+				scopeColumn.setFiltered(true);
+				oBloatView.filter(scopeColumn,"!=TEST")
+				oBloatView.setBusy(false);
 				
 				var archives = oArchiveModel.getObject("/");
-				var traced = 0;
-				var traces = 0;
 				var days = 0, archives_with_timestamp = 0, now = Date.now();
 				for(var a=0;a<archives.length; a++){
-					if(archives[a].tracedExecConstructsCounter>0){
-						traced++;
-						traces = traces + archives[a].tracedExecConstructsCounter;
-					}
+					
 					if(archives[a].lib.digestTimestamp!=null) {
 						archives_with_timestamp++;
 						var timestamp19 = archives[a].lib.digestTimestamp.substring(0,19);
@@ -355,12 +484,12 @@ sap.ui.controller("view.Component", {
 						days += Math.floor(Math.abs(now-timestamp)/86400000);
 					}
 				}
-				
 				archiveTotal.setText("Archives Total: " + archives.length);
-				archiveTraced.setText("Archives Traced: " + traced);
-				archiveTotalTraces.setText("Total Number of Traces: " + traces);
 				archiveAvgAge.setText("Average age (in months): " + (archives_with_timestamp==0 ? "n/a" : Math.floor(days/30/archives_with_timestamp)));
-			});
+				
+				this.computeDebloatViewMetrics(false);
+				
+			}.bind(this));
 		}
 		
 		// Goal-Executions-Tab
@@ -695,6 +824,7 @@ sap.ui.controller("view.Component", {
 		// Remove selection so that you can click on the same item again
 //		oEvent.getSource().removeSelections();
 //	},
+	
 	
 	onSearchButtonPress : function() {
 		
