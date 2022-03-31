@@ -25,7 +25,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class ThreadUtil {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(ThreadUtil.class);
 
   /** Constant <code>NO_OF_THREADS="vulas.core.noThreads"</code> */
   public static final String NO_OF_THREADS = "vulas.core.noThreads";

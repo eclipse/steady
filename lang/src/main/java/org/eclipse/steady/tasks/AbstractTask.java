@@ -34,7 +34,8 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
  */
 public abstract class AbstractTask implements Task {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(AbstractTask.class);
 
   private GoalClient client = null;
 

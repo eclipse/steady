@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
@@ -48,10 +47,22 @@ public class JarWriterTest implements JarEntryWriter {
   }
 
   @Test
+  public void testHasEntry() {
+    try {
+      final JarWriter jw = new JarWriter(Paths.get("./src/test/resources/boot-app.jar"));
+      assertTrue(jw.hasEntry("BOOT-INF/"));
+    } catch (Exception e) {
+      e.printStackTrace();
+      assertTrue(false);
+    }
+  }
+
+  @Test
   public void testRewrite() {
     try {
       // Create a JarWriter and do some settings
       final JarWriter jw = new JarWriter(Paths.get("./src/test/resources/examples.jar"));
+      // jw.setCompress(ZipEntry.STORED);
       jw.addManifestEntry("Test", "JUnit test entry");
       jw.setClassifier(StringUtil.getRandonString(6));
       jw.addFile("", Paths.get("./src/test/resources/Callgraph.class"), true);
@@ -154,7 +165,7 @@ public class JarWriterTest implements JarEntryWriter {
   }
 
   @Override
-  public InputStream getInputStream(String _regex, JarEntry _entry) {
+  public RewrittenJarEntry getInputStream(String _regex, JarEntry _entry) {
     // System.out.println("Callback for regex [" + _regex + "], jar entry [" + _entry.getName() +
     // "]");
     this.countCallbacks++;

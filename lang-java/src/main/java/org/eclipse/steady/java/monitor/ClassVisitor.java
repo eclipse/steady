@@ -68,7 +68,7 @@ public class ClassVisitor {
 
   private static final Logger getLog() {
     if (ClassVisitor.log == null)
-      ClassVisitor.log = org.apache.logging.log4j.LogManager.getLogger();
+      ClassVisitor.log = org.apache.logging.log4j.LogManager.getLogger(ClassVisitor.class);
     return ClassVisitor.log;
   }
 
@@ -98,6 +98,8 @@ public class ClassVisitor {
   private Set<ConstructId> constructs = null;
 
   private boolean writeCodeToTmp = false;
+
+  private boolean printErrStackTrace = true;
 
   private String[] fieldAnnotations = null;
 
@@ -147,6 +149,11 @@ public class ClassVisitor {
     this.fieldAnnotations =
         VulasConfiguration.getGlobal()
             .getStringArray(CoreConfiguration.INSTR_FLD_ANNOS, new String[] {});
+
+    this.printErrStackTrace =
+        VulasConfiguration.getGlobal()
+            .getConfiguration()
+            .getBoolean(CoreConfiguration.INSTR_PRINT_ERR_STACK_TRACE, false);
   }
 
   /**
@@ -335,7 +342,11 @@ public class ClassVisitor {
         "catch(Throwable e) { System.err.println(e.getClass().getName() + \" occurred during"
             + " execution of instrumentation code in "
             + _jid.toString()
-            + ": \" + e.getMessage()); }");
+            + ": \" + e.getMessage());");
+    if (this.printErrStackTrace) {
+      source_code.append("e.printStackTrace();");
+    }
+    source_code.append("}");
 
     // Remember an exception (if any) and throw it at the end
     CannotCompileException cce = null;
@@ -447,10 +458,25 @@ public class ClassVisitor {
     final DataOutputStream dos = new DataOutputStream(bos);
     final ClassFile cf = c.getClassFile();
 
-    // Set major and minor version of the new class file (max. JAVA 7), preferably from the original
-    // class file (as read in the constructor)
-    // Todo: Make max. version configurable
-    cf.setMajorVersion(Math.min(this.major, ClassFile.JAVA_7));
+    // Preferrably, the major version of the new instrumented  class will be the
+    // same as in the original file. If that is not supported by the current
+    // JVM, it will be the maximum major version supported
+    // (ClassFile.MAJOR_VERSION), to get as close as possible.
+    // https://www.javassist.org/html/javassist/bytecode/ClassFile.html#MAJOR_VERSION
+    if (this.major <= ClassFile.MAJOR_VERSION) {
+      cf.setMajorVersion(this.major);
+    } else {
+      ClassVisitor.getLog()
+          .warn(
+              "Major version of "
+                  + this.javaId
+                  + " changed from ["
+                  + this.major
+                  + "] to ["
+                  + ClassFile.MAJOR_VERSION
+                  + "]");
+      cf.setMajorVersion(ClassFile.MAJOR_VERSION);
+    }
     cf.setMinorVersion(this.minor);
 
     cf.write(dos);

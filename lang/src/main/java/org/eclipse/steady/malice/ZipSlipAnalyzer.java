@@ -47,7 +47,8 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
  */
 public class ZipSlipAnalyzer implements MaliciousnessAnalyzer {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(ZipSlipAnalyzer.class);
 
   private Path destinationPath =
       VulasConfiguration.getGlobal()
@@ -85,7 +86,7 @@ public class ZipSlipAnalyzer implements MaliciousnessAnalyzer {
       if (mal != null) {
         mal.setReason("[" + _file.toPath().toAbsolutePath() + "] " + mal.getReason());
         if (mal.isMalicious()) log.warn(mal.getReason());
-        else log.info(mal.getReason());
+        else log.debug(mal.getReason());
       }
     } catch (FileNotFoundException fnfe) {
       log.error("File [" + _file.getAbsolutePath() + "] cannot be found");

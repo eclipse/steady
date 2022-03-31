@@ -32,11 +32,28 @@ import java.util.jar.JarEntry;
 public interface JarEntryWriter {
 
   /**
+   * Carries the {@link InputStream} as well as the size and CRC-32 checksum of
+   * rewritten JAR entries. The latter are required to write non-compressed JAR
+   * entries in {@link JarWriter}).
+   */
+  public final class RewrittenJarEntry {
+    final InputStream is;
+    final long size;
+    final long crc32;
+
+    public RewrittenJarEntry(InputStream _is, long _size, long _crc32) {
+      this.is = _is;
+      this.size = _size;
+      this.crc32 = _crc32;
+    }
+  }
+
+  /**
    * Callback used for rewriting particular JAR entries. Return null to rewrite the original JAR entry.
    *
    * @param _entry a {@link java.util.jar.JarEntry} object.
    * @param _regex a {@link java.lang.String} object.
    * @return a {@link java.io.InputStream} object.
    */
-  public InputStream getInputStream(String _regex, JarEntry _entry);
+  public RewrittenJarEntry getInputStream(String _regex, JarEntry _entry);
 }

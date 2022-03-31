@@ -28,15 +28,15 @@ import org.eclipse.steady.shared.util.Constants;
 import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
- * Represents the context of a goal execution. All its elements can be specified using
- * the tenant, space and application related configuration settings.
+ * Represents the context of a goal execution. All its elements can be specified
+ * using the tenant, space and application related configuration settings.
  *
  * @see CoreConfiguration#APP_CTX_GROUP
  * @see CoreConfiguration#TENANT_TOKEN
  * @see CoreConfiguration#SPACE_TOKEN
  *
- * The secret tokens of the tenant and space, if any, will be included as HTTP headers
- * into every request sent to the Vulas backend.
+ * The tenant and space tokens, if any, will be included as HTTP headers into
+ * every request sent to the Vulas backend.
  * @see Constants#HTTP_TENANT_HEADER
  * @see Constants#HTTP_SPACE_HEADER
  */

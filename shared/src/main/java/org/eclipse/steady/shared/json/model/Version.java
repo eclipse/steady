@@ -29,7 +29,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class Version implements Comparable<Version> {
 
-  private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static Logger log = org.apache.logging.log4j.LogManager.getLogger(Version.class);
 
   static final Pattern VERSION_PATTERN = Pattern.compile("([\\d\\.]*)(.*)", Pattern.DOTALL);
 

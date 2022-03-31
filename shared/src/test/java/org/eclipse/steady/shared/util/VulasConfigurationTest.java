@@ -33,6 +33,7 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.eclipse.steady.shared.connectivity.Service;
 import org.eclipse.steady.shared.json.model.KeyValue;
 import org.junit.Test;
@@ -237,5 +238,15 @@ public class VulasConfigurationTest {
     assertEquals("1", headers.get("baz"));
     assertEquals("AJDEY@HEX@EWX@XEH@I*QA", headers.get("X-Vulas-Client-Token"));
     // assertEquals("123, 456", headers.get("test"));
+  }
+
+  @Test
+  public void testSanitize() {
+    VulasConfiguration c1 = new VulasConfiguration();
+    Configuration pc = new PropertiesConfiguration();
+    pc.setProperty("abc.123", "foo");
+    pc.setProperty("!@&^!@", "bar");
+    c1.sanitize(pc);
+    assertTrue(!pc.containsKey("!@&^!@"));
   }
 }

@@ -23,20 +23,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.logging.log4j.Logger;
-import org.eclipse.steady.shared.util.FileUtil;
-
 import com.strobel.decompiler.Decompiler;
 import com.strobel.decompiler.DecompilerSettings;
 import com.strobel.decompiler.PlainTextOutput;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.steady.shared.util.FileUtil;
 
 /**
  * <p>ProcyonDecompiler class.</p>
  */
 public class ProcyonDecompiler implements IDecompiler {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(ProcyonDecompiler.class);
 
   /** {@inheritDoc} */
   @Override

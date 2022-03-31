@@ -46,7 +46,7 @@ import org.eclipse.steady.shared.json.JsonBuilder;
  */
 public abstract class JavaId extends ConstructId {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(JavaId.class);
 
   /** Supported Java programming constructs. */
   public static enum Type {

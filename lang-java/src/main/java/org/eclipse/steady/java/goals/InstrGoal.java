@@ -40,7 +40,7 @@ import org.eclipse.steady.shared.util.ThreadUtil;
  */
 public class InstrGoal extends AbstractAppGoal {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(InstrGoal.class);
 
   private Path libPath = null;
 

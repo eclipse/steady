@@ -98,8 +98,8 @@ public class ClassVisitorTest extends AbstractGoalTest {
     final String src =
         "try {if(!VUL_TRC_XGETALIGNMENT_635905){Class vul_cls = null;if(vul_cls==null) { try {"
             + " vul_cls=$0.getClass(); } catch(Exception e) {} }if(vul_cls==null) { try {"
-            + " vul_cls=java.lang.invoke.MethodHandles.lookup().lookupClass(); } catch(Exception"
-            + " e) {} }if(vul_cls==null) { try { vul_cls=$class; } catch(Exception e) {} }final"
+            + " vul_cls=java.lang.invoke.MethodHandles.lookup().lookupClass(); } catch(Exception e)"
+            + " {} }if(vul_cls==null) { try { vul_cls=$class; } catch(Exception e) {} }final"
             + " ClassLoader vul_cls_ldr=vul_cls.getClassLoader();java.net.URL vul_cls_res ="
             + " null;if(vul_cls_ldr!=null)vul_cls_res=vul_cls_ldr.getResource(vul_cls.getName().replace('.',"
             + " '/') + \".class\");java.util.Map params = new"

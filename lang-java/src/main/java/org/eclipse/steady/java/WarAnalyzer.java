@@ -45,6 +45,7 @@ import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.java.monitor.ClassVisitor;
 import org.eclipse.steady.shared.connectivity.Service;
 import org.eclipse.steady.shared.util.FileSearch;
+import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.shared.util.VulasConfiguration;
 
 import javassist.CannotCompileException;
@@ -58,7 +59,8 @@ import javassist.NotFoundException;
 @NotThreadSafe
 public class WarAnalyzer extends JarAnalyzer {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(WarAnalyzer.class);
 
   private static final String INCL_SPACE = "vulas.core.instr.static.inclSpace";
   private static final String INCL_BACKEND_URL = "vulas.core.instr.static.inclBackendUrl";
@@ -93,6 +95,21 @@ public class WarAnalyzer extends JarAnalyzer {
   @Override
   public String[] getSupportedFileExtensions() {
     return new String[] {"war"};
+  }
+
+  /**
+   * Returns true if the archive has file extension 'war'.
+   */
+  @Override
+  public final boolean canAnalyze(File _file) {
+    final String ext = FileUtil.getFileExtension(_file);
+    if (ext == null || ext.equals("")) return false;
+    for (String supported_ext : this.getSupportedFileExtensions()) {
+      if (supported_ext.equalsIgnoreCase(ext)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /** {@inheritDoc} */
@@ -199,7 +216,7 @@ public class WarAnalyzer extends JarAnalyzer {
     this.jarWriter.addManifestEntry(
         "Steady-classInstrStats",
         "["
-            + this.classCount
+            + this.instrControl.countClassesTotal()
             + " total, "
             + this.instrControl.countClassesInstrumentedAlready()
             + " existed, "
@@ -254,7 +271,7 @@ public class WarAnalyzer extends JarAnalyzer {
     }
 
     // Rename
-    if (this.rename) this.jarWriter.setClassifier("vulas-instr");
+    if (this.rename) this.jarWriter.setClassifier("steady-instr");
 
     // Rewrite
     this.jarWriter.rewrite(this.workDir);
@@ -418,8 +435,8 @@ public class WarAnalyzer extends JarAnalyzer {
       if (this.instrument)
         WarAnalyzer.log.info(
             this.toString()
-                + ": classes comprised/already-instr/instr/not-instr ["
-                + this.classCount
+                + ": classes and enums comprised/already-instr/instr/not-instr ["
+                + this.instrControl.countClassesTotal()
                 + "/"
                 + this.instrControl.countClassesInstrumentedAlready()
                 + "/"
@@ -453,8 +470,10 @@ public class WarAnalyzer extends JarAnalyzer {
    * The callback registration takes place in {@link #createInstrumentedArchive()}.
    */
   @Override
-  public InputStream getInputStream(String _regex, JarEntry _entry) {
+  public RewrittenJarEntry getInputStream(String _regex, JarEntry _entry) {
     InputStream is = null;
+    long size = -1;
+    long crc32 = -1;
 
     // Called during rewrite of classes
     if (_regex.equals("^WEB-INF/classes/.*.class$")) {
@@ -474,8 +493,11 @@ public class WarAnalyzer extends JarAnalyzer {
 
       // Create input stream
       if (jid != null && this.instrumentedClasses.get(jid) != null) {
-        // new_entry.setSize(this.instrumentedClasses.get(jid).getBytecode().length);
-        is = new ByteArrayInputStream(this.instrumentedClasses.get(jid).getBytecode());
+        final byte[] bytecode = this.instrumentedClasses.get(jid).getBytecode();
+        crc32 = FileUtil.getCRC32(bytecode);
+        size = bytecode.length;
+        is = new ByteArrayInputStream(bytecode);
+        return new RewrittenJarEntry(is, size, crc32);
       }
     }
     // Called during rewrite of WAR
@@ -491,7 +513,10 @@ public class WarAnalyzer extends JarAnalyzer {
         ja = mgr.getAnalyzerForSubpath(p);
         if (ja != null) {
           final File f = ja.getInstrumentedArchive();
+          crc32 = FileUtil.getCRC32(f);
+          size = f.length();
           is = new FileInputStream(f);
+          return new RewrittenJarEntry(is, size, crc32);
         } else {
           WarAnalyzer.log.warn("Cannot find JarAnalyzer for path [" + p + "]");
         }
@@ -533,7 +558,11 @@ public class WarAnalyzer extends JarAnalyzer {
 
         tmp_file = Files.createTempFile("steady-core-", ".properties");
         cfg.save(tmp_file.toFile());
+
+        crc32 = FileUtil.getCRC32(tmp_file.toFile());
+        size = tmp_file.toFile().length();
         is = new FileInputStream(tmp_file.toFile());
+        return new RewrittenJarEntry(is, size, crc32);
       } catch (ConfigurationException ce) {
         WarAnalyzer.log.error(
             "Error when loading configuration from 'steady-core.properties': " + ce.getMessage());
@@ -546,6 +575,6 @@ public class WarAnalyzer extends JarAnalyzer {
       }
     }
 
-    return is;
+    return null;
   }
 }

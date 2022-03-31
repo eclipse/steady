@@ -33,7 +33,7 @@ import org.eclipse.steady.shared.util.StopWatch;
  */
 public class Cache<S, T> {
 
-  private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static Logger log = org.apache.logging.log4j.LogManager.getLogger(Cache.class);
 
   private long refreshMilli = -1;
   private int maxSize = -1;

@@ -239,6 +239,12 @@ model.Formatter = {
 		return a;
 	},
 	
+	debloat: function(reach,traced,exec){
+		if( reach==0 && traced==0 && exec>0)
+			return true;
+		else return false;
+	},
+	
 	parentDepth : function(parent) {
 		let a=0;
 		if(parent){

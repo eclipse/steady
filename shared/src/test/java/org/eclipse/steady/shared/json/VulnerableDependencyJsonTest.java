@@ -45,7 +45,8 @@ public class VulnerableDependencyJsonTest {
   @Test
   public void testVulnerableDependecyDeserialization() {
 
-    final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+    final Logger log =
+        org.apache.logging.log4j.LogManager.getLogger(VulnerableDependencyJsonTest.class);
     String vulndepstring = this.getFile("vulndepJsonExpected.json");
     inputNew =
         (VulnerableDependency) JacksonUtil.asObject(vulndepstring, VulnerableDependency.class);

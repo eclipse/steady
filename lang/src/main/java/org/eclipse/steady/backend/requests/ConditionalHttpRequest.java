@@ -36,7 +36,8 @@ import org.eclipse.steady.goals.GoalContext;
  */
 public class ConditionalHttpRequest extends BasicHttpRequest {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(ConditionalHttpRequest.class);
 
   private List<ResponseCondition> conditions = new LinkedList<ResponseCondition>();
 

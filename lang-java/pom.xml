@@ -152,8 +152,8 @@
 							</filters>
 						</configuration>
 					</execution>
-					<!-- For instrumentation with the -agent option, incl. a repackaged 
-						version of httpclient -->
+					<!-- Used for static and dynamic (-agent option)
+					instrumentation. -->
 					<execution>
 						<id>self-contained-agent-jar</id>
 						<phase>package</phase>
@@ -164,12 +164,22 @@
 							<shadedClassifierName>jar-with-dependencies</shadedClassifierName>
 							<shadedArtifactAttached>true</shadedArtifactAttached>
 							<transformers>
+								<!-- Required to be used with the -agent option-->
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
 										<premain-class>org.eclipse.steady.java.monitor.DynamicTransformer</premain-class>
 									</manifestEntries>
 								</transformer>
+								<!-- Required for re-packaged Log4j2 services-->
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+								<!-- Required to adjust Log4j2Plugins.dat, see:
+								https://github.com/edwgiz/maven-shaded-log4j-transformer
+								https://stackoverflow.com/questions/67133027/error-statuslogger-unrecognized-format-specifier
+								-->
+								<transformer
+                                        implementation="io.github.edwgiz.log4j.maven.plugins.shade.transformer.Log4j2PluginCacheFileTransformer">
+                                </transformer>
 							</transformers>
 							<artifactSet>
 								<includes>
@@ -186,12 +196,40 @@
 										<exclude>META-INF/MANIFEST.MF</exclude>
 									</excludes>
 								</filter>
+								<!-- Apparently, the multi-release class files
+								do not pose any problem. -->
+								<!-- <filter>
+									<artifact>org.apache.logging.log4j:*</artifact>
+									<excludes>
+										<exclude>META-INF/versions/**</exclude>
+									</excludes>
+								</filter> -->
 							</filters>
 							<relocations>
 								<relocation>
-									<pattern>org.apache.http</pattern>
-									<shadedPattern>org.eclipse.steady.repackaged.org.apache.http</shadedPattern>
+									<pattern>org.apache</pattern>
+									<shadedPattern>org.eclipse.steady.repackaged.org.apache</shadedPattern>
 								</relocation>
+								<relocation>
+									<pattern>org.slf4j</pattern>
+									<shadedPattern>org.eclipse.steady.repackaged.org.slf4j</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>org.antlr</pattern>
+									<shadedPattern>org.eclipse.steady.repackaged.org.antlr</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>org.aopalliance</pattern>
+									<shadedPattern>org.eclipse.steady.repackaged.org.aopalliance</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>com</pattern>
+									<shadedPattern>org.eclipse.steady.repackaged.com</shadedPattern>
+								</relocation>
+								<!-- <relocation>
+									<pattern>javax</pattern>
+									<shadedPattern>org.eclipse.steady.repackaged.javax</shadedPattern>
+								</relocation> -->
 								<relocation>
 									<pattern>javassist</pattern>
 									<shadedPattern>org.eclipse.steady.repackaged.javassist</shadedPattern>
@@ -200,6 +238,13 @@
 						</configuration>
 					</execution>
 				</executions>
+				<dependencies>
+                    <dependency>
+                        <groupId>io.github.edwgiz</groupId>
+                        <artifactId>log4j-maven-shade-plugin-extensions</artifactId>
+                        <version>2.17.1</version>
+                    </dependency>
+                </dependencies>
 			</plugin>
 			<!-- Flatten a 2nd time after shade, in order to process the dependency-reduced-pom, see
 				https://stackoverflow.com/questions/52552329/use-maven-flatten-plugin-and-maven-shade-plugin-at-the-same-time

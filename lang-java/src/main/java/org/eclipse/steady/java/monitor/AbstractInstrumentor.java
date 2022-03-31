@@ -31,7 +31,7 @@ import javassist.Modifier;
  */
 public abstract class AbstractInstrumentor implements IInstrumentor {
 
-  protected VulasConfiguration vulasConfiguration = new VulasConfiguration();
+  protected VulasConfiguration vulasConfiguration = VulasConfiguration.getGlobal();
 
   /**
    * Adds Java code to determine the URL of the resource from which the given class was loaded, and the class loader which loaded it.

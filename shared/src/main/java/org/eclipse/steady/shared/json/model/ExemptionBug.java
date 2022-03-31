@@ -40,7 +40,8 @@ import org.eclipse.steady.shared.enums.AffectedVersionSource;
  */
 public class ExemptionBug implements IExemption {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(ExemptionBug.class);
 
   private static final String ALL = "*";
 

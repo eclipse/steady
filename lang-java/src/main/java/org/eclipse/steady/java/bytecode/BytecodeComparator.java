@@ -34,6 +34,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipException;
 
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.backend.BackendConnectionException;
@@ -56,14 +58,13 @@ import org.eclipse.steady.shared.json.model.Library;
 import org.eclipse.steady.shared.json.model.LibraryId;
 import org.eclipse.steady.sign.SignatureFactory;
 
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-
 /**
  * <p>BytecodeComparator class.</p>
  */
 public class BytecodeComparator {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final Logger log =
+      org.apache.logging.log4j.LogManager.getLogger(BytecodeComparator.class);
 
   private GoalContext context;
   private Map<Class<?>, StdDeserializer<?>> custom_deserializers =
