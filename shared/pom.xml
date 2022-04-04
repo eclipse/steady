@@ -27,7 +27,7 @@
 	<parent>
 		<groupId>org.eclipse.steady</groupId>
 		<artifactId>root</artifactId>
-		<version>3.2.3-SNAPSHOT</version>
+		<version>3.2.3</version>
 	</parent>
 	<artifactId>shared</artifactId>
 
