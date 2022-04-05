@@ -1050,8 +1050,7 @@ public class BackendConnector {
   public void deleteBug(String _bugId) throws BackendConnectionException {
 
     final BasicHttpRequest del_req =
-        new BasicHttpRequest(HttpMethod.DELETE, 
-        PathBuilder.bug(_bugId));
+        new BasicHttpRequest(HttpMethod.DELETE, PathBuilder.bug(_bugId));
     // payload cannot be empty otherwise request doesn t work
     del_req.setPayload("[]", "application/json", true);
     del_req.send();

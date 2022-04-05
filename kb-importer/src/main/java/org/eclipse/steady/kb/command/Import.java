@@ -117,13 +117,12 @@ public class Import implements Command {
       Import.log.error("Please specify the vulerability id in the json");
       return;
     }
-        
+
     String vulnId = vuln.getVulnId();
     boolean bugExists = false;
     try {
       bugExists = BackendConnector.getInstance().isBugExisting(vulnId);
-    }
-    catch (BackendConnectionException e) {
+    } catch (BackendConnectionException e) {
       log.error("Can't connect to the Backend");
       return;
     }
@@ -132,8 +131,7 @@ public class Import implements Command {
     if (bugExists) {
       if (overwrite) {
         args.put(DELETE, true);
-      }
-      else {
+      } else {
         log.info("Bug [{}] already exists in backend, analysis will be skipped", vulnId);
         return;
       }
