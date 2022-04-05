@@ -40,7 +40,7 @@
     
     
       
-        <title>Analysis - Eclipse Steady 3.2.2 (Incubator Project)</title>
+        <title>Analysis - Eclipse Steady 3.2.3 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.2 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.3 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.2.2 (Incubator Project)
+              Eclipse Steady 3.2.3 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -290,12 +290,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.2 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.3 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.2.2 (Incubator Project)
+    Eclipse Steady 3.2.3 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1268,7 +1268,7 @@
 <div class="superfences-tabs">
 <input name="__tabs_1" type="radio" id="__tab_1_0" checked="checked" />
 <label for="__tab_1_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>java -jar steady-cli-3.2.2-jar-with-dependencies.jar -goal app
+<div class="superfences-content"><div class="codehilite"><pre><span></span>java -jar steady-cli-3.2.3-jar-with-dependencies.jar -goal app
 </pre></div></div>
 <input name="__tabs_1" type="radio" id="__tab_1_1" />
 <label for="__tab_1_1">Maven</label>
@@ -1326,7 +1326,7 @@
 <div class="superfences-tabs">
 <input name="__tabs_2" type="radio" id="__tab_2_0" checked="checked" />
 <label for="__tab_2_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>java -Xmx8g -Xms2g -jar steady-cli-3.2.2-jar-with-dependencies.jar -goal a2c
+<div class="superfences-content"><div class="codehilite"><pre><span></span>java -Xmx8g -Xms2g -jar steady-cli-3.2.3-jar-with-dependencies.jar -goal a2c
 </pre></div></div>
 <input name="__tabs_2" type="radio" id="__tab_2_1" />
 <label for="__tab_2_1">Maven</label>
@@ -1544,10 +1544,10 @@ mvn -Dsteady compile steady:a2c
 <p>By registering a Java agent at JVM startup, Eclipse Steady changes the bytecode of every Java class loaded at runtime. For example, it injects Java statements in order to save the timestamp of every method invocation as well as stack trace information. This information is periodically uploaded to the Eclipse Steady backend.</p>
 <h4 id="run-as-follows_3">Run as follows<a class="headerlink" href="#run-as-follows_3" title="Permanent link">&para;</a></h4>
 <ul>
-<li>Download the file <code>lang-java-3.2.2-jar-with-dependencies.jar</code> to your computer (CLI users can take it from the folder <code>./instr</code>).</li>
+<li>Download the file <code>lang-java-3.2.3-jar-with-dependencies.jar</code> to your computer (CLI users can take it from the folder <code>./instr</code>).</li>
 <li>Add the following arguments to the Java runtime (and replace line breaks by a single space characters).</li>
 </ul>
-<div class="codehilite"><pre><span></span>-javaagent:lang-java-3.2.2-jar-with-dependencies.jar
+<div class="codehilite"><pre><span></span>-javaagent:lang-java-3.2.3-jar-with-dependencies.jar
 -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/
 -Dvulas.core.backendConnection=READ_WRITE
 -Dvulas.core.monitor.periodicUpload.enabled=true
@@ -1562,11 +1562,11 @@ mvn -Dsteady compile steady:a2c
 <li>Start the application and perform some application-specific tests and workflows.</li>
 </ul>
 <h4 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h4>
-<p>In case of Tomcat 8.x, one needs to (1) copy <code>lang-java-3.2.2-jar-with-dependencies.jar</code> into the folder <code>./bin</code> and (2) specify the variable <code>CATALINA_OPTS</code> as follows in the file <code>./bin/setenv.bat</code>. Do not forget to specify <code>&lt;GROUP&gt;</code>, <code>&lt;ARTIFACT&gt;</code>, <code>&lt;VERSION&gt;</code> and <code>&lt;WORKSPACE-TOKEN&gt;</code> for the application under analysis. Note: The use of <code>setenv.bat</code> does not work if Tomcat is run as Windows service.</p>
+<p>In case of Tomcat 8.x, one needs to (1) copy <code>lang-java-3.2.3-jar-with-dependencies.jar</code> into the folder <code>./bin</code> and (2) specify the variable <code>CATALINA_OPTS</code> as follows in the file <code>./bin/setenv.bat</code>. Do not forget to specify <code>&lt;GROUP&gt;</code>, <code>&lt;ARTIFACT&gt;</code>, <code>&lt;VERSION&gt;</code> and <code>&lt;WORKSPACE-TOKEN&gt;</code> for the application under analysis. Note: The use of <code>setenv.bat</code> does not work if Tomcat is run as Windows service.</p>
 <div class="superfences-tabs">
 <input name="__tabs_4" type="radio" id="__tab_4_0" checked="checked" />
 <label for="__tab_4_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nb">set</span> <span class="s2">&quot;CATALINA_OPTS=-javaagent:lang-java-3.2.2-jar-with-dependencies.jar -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/-Dvulas.core.backendConnection=READ_WRITE -Dvulas.core.monitor.periodicUpload.enabled=true -Dvulas.core.appContext.group=&lt;GROUP&gt; -Dvulas.core.appContext.artifact=&lt;ARTIFACT&gt; -Dvulas.core.appContext.version=&lt;VERSION&gt; -Dvulas.core.instr.instrumentorsChoosen=org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor -Dvulas.core.space.token=&lt;WORKSPACE-TOKEN&gt; -noverify&quot;</span>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nb">set</span> <span class="s2">&quot;CATALINA_OPTS=-javaagent:lang-java-3.2.3-jar-with-dependencies.jar -Dvulas.shared.backend.serviceUrl=http://localhost:8033/backend/-Dvulas.core.backendConnection=READ_WRITE -Dvulas.core.monitor.periodicUpload.enabled=true -Dvulas.core.appContext.group=&lt;GROUP&gt; -Dvulas.core.appContext.artifact=&lt;ARTIFACT&gt; -Dvulas.core.appContext.version=&lt;VERSION&gt; -Dvulas.core.instr.instrumentorsChoosen=org.eclipse.steady.java.monitor.trace.SingleTraceInstrumentor -Dvulas.core.space.token=&lt;WORKSPACE-TOKEN&gt; -noverify&quot;</span>
 </pre></div></div>
 </div>
 <h2 id="static-instrumentation-instr">Static instrumentation (instr)<a class="headerlink" href="#static-instrumentation-instr" title="Permanent link">&para;</a></h2>
@@ -1579,9 +1579,9 @@ mvn -Dsteady compile steady:a2c
 <li>Python is not supported</li>
 </ul>
 <h4 id="result_4">Result<a class="headerlink" href="#result_4" title="Permanent link">&para;</a></h4>
-<p>A new JAR/WAR with suffix <code>-vulas-instr</code> will be created in folder <code>target/vulas/target</code>.</p>
+<p>A new JAR/WAR with suffix <code>-steady-instr</code> will be created in folder <code>target/vulas/target</code>.</p>
 <h4 id="how-does-it-work_3">How does it work<a class="headerlink" href="#how-does-it-work_3" title="Permanent link">&para;</a></h4>
-<p>The bytecode of all the Java classes found in the JAR (WAR) will be modified as to collect information about, for instance, method execution and stack traces. This information will be uploaded to the backend if the JAR (WAR) is executed. Note: The modified code in the new JAR with suffix <code>-vulas-instr</code> can be inspected with decompilers such as <a href="http://jd.benow.ca/">JD-GUI</a>.</p>
+<p>The bytecode of all the Java classes found in the JAR (WAR) will be modified as to collect information about, for instance, method execution and stack traces. This information will be uploaded to the backend if the JAR (WAR) is executed. Note: The modified code in the new JAR with suffix <code>-steady-instr</code> can be inspected with decompilers such as <a href="http://jd.benow.ca/">JD-GUI</a>.</p>
 <h4 id="run-as-follows_4">Run as follows<a class="headerlink" href="#run-as-follows_4" title="Permanent link">&para;</a></h4>
 <div class="superfences-tabs">
 <input name="__tabs_5" type="radio" id="__tab_5_0" checked="checked" />
@@ -1612,7 +1612,7 @@ mvn -Dsteady steady:instr
 <div class="superfences-tabs">
 <input name="__tabs_6" type="radio" id="__tab_6_0" checked="checked" />
 <label for="__tab_6_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>java -jar steady-cli-3.2.2-jar-with-dependencies.jar -goal t2c
+<div class="superfences-content"><div class="codehilite"><pre><span></span>java -jar steady-cli-3.2.3-jar-with-dependencies.jar -goal t2c
 </pre></div></div>
 <input name="__tabs_6" type="radio" id="__tab_6_1" />
 <label for="__tab_6_1">Maven</label>
@@ -1671,7 +1671,7 @@ mvn -Dsteady steady:instr
 <div class="superfences-tabs">
 <input name="__tabs_7" type="radio" id="__tab_7_0" checked="checked" />
 <label for="__tab_7_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>java -jar steady-cli-3.2.2-jar-with-dependencies.jar -goal checkcode 
+<div class="superfences-content"><div class="codehilite"><pre><span></span>java -jar steady-cli-3.2.3-jar-with-dependencies.jar -goal checkcode 
 </pre></div></div>
 <input name="__tabs_7" type="radio" id="__tab_7_1" />
 <label for="__tab_7_1">Maven</label>
@@ -1694,8 +1694,8 @@ mvn -Dsteady steady:instr
 <div class="superfences-tabs">
 <input name="__tabs_8" type="radio" id="__tab_8_0" checked="checked" />
 <label for="__tab_8_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>java -Dvulas.core.appContext.group<span class="o">=</span>&lt;GROUP&gt; -Dvulas.core.appContext.artifact<span class="o">=</span>&lt;ARTIFACT&gt; -Dvulas.core.appContext.version<span class="o">=</span><span class="m">3</span>.2.2
-     -jar steady-cli-3.2.2-jar-with-dependencies.jar -goal upload
+<div class="superfences-content"><div class="codehilite"><pre><span></span>java -Dvulas.core.appContext.group<span class="o">=</span>&lt;GROUP&gt; -Dvulas.core.appContext.artifact<span class="o">=</span>&lt;ARTIFACT&gt; -Dvulas.core.appContext.version<span class="o">=</span><span class="m">3</span>.2.3
+     -jar steady-cli-3.2.3-jar-with-dependencies.jar -goal upload
 </pre></div></div>
 <input name="__tabs_8" type="radio" id="__tab_8_1" />
 <label for="__tab_8_1">Maven</label>
@@ -1766,7 +1766,7 @@ mvn -Dsteady steady:instr
 <input name="__tabs_9" type="radio" id="__tab_9_0" checked="checked" />
 <label for="__tab_9_0">CLI</label>
 <div class="superfences-content"><div class="codehilite"><pre><span></span>java -Dvulas.core.appContext.group<span class="o">=</span>&lt;GROUP&gt; -Dvulas.core.appContext.artifact<span class="o">=</span>&lt;ARTIFACT&gt; -Dvulas.core.appContext.version<span class="o">=</span>&lt;VERSION&gt;
-     -jar steady-cli-3.2.2-jar-with-dependencies.jar -goal report
+     -jar steady-cli-3.2.3-jar-with-dependencies.jar -goal report
 </pre></div></div>
 <input name="__tabs_9" type="radio" id="__tab_9_1" />
 <label for="__tab_9_1">Maven</label>
@@ -1792,7 +1792,7 @@ mvn -Dsteady steady:instr
 <div class="superfences-tabs">
 <input name="__tabs_10" type="radio" id="__tab_10_0" checked="checked" />
 <label for="__tab_10_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>java -jar steady-cli-3.2.2-jar-with-dependencies.jar -goal clean
+<div class="superfences-content"><div class="codehilite"><pre><span></span>java -jar steady-cli-3.2.3-jar-with-dependencies.jar -goal clean
 </pre></div></div>
 <input name="__tabs_10" type="radio" id="__tab_10_1" />
 <label for="__tab_10_1">Maven</label>
@@ -1822,7 +1822,7 @@ mvn -Dsteady steady:instr
 <div class="superfences-tabs">
 <input name="__tabs_11" type="radio" id="__tab_11_0" checked="checked" />
 <label for="__tab_11_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>java -Dvulas.core.clean.purgeVersions<span class="o">=</span><span class="nb">true</span> -Dvulas.core.clean.purgeVersions.keepLast<span class="o">=</span><span class="m">0</span> -jar steady-cli-3.2.2-jar-with-dependencies.jar -goal clean
+<div class="superfences-content"><div class="codehilite"><pre><span></span>java -Dvulas.core.clean.purgeVersions<span class="o">=</span><span class="nb">true</span> -Dvulas.core.clean.purgeVersions.keepLast<span class="o">=</span><span class="m">0</span> -jar steady-cli-3.2.3-jar-with-dependencies.jar -goal clean
 </pre></div></div>
 <input name="__tabs_11" type="radio" id="__tab_11_1" />
 <label for="__tab_11_1">Maven</label>
@@ -1831,7 +1831,7 @@ mvn -Dsteady steady:instr
 </div>
 <h4 id="troubleshooting_1">Troubleshooting<a class="headerlink" href="#troubleshooting_1" title="Permanent link">&para;</a></h4>
 <p>The Maven plugin will fail to delete an application if a corresponding <code>&lt;module&gt;</code> does not exit any longer in the <code>pom.xml</code>. The CLI must be used in these cases and the Maven coordinates (GAV) of the item to be cleaned shall be provided as system properties when calling the CLI. For example, if you want to delete an application with GAV <code>myGroup:myArtifact:myVersion</code>, the following command line can be used</p>
-<div class="codehilite"><pre><span></span>java -Dvulas.core.appContext.group<span class="o">=</span>myGroup -Dvulas.core.appContext.artifact<span class="o">=</span>myArtifact -Dvulas.core.appContext.version<span class="o">=</span>myVersion -jar steady-cli-3.2.2-jar-with-dependencies.jar -goal clean
+<div class="codehilite"><pre><span></span>java -Dvulas.core.appContext.group<span class="o">=</span>myGroup -Dvulas.core.appContext.artifact<span class="o">=</span>myArtifact -Dvulas.core.appContext.version<span class="o">=</span>myVersion -jar steady-cli-3.2.3-jar-with-dependencies.jar -goal clean
 </pre></div>
 <h2 id="clean-workspaces-cleanspace">Clean workspaces (cleanspace)<a class="headerlink" href="#clean-workspaces-cleanspace" title="Permanent link">&para;</a></h2>
 <h4 id="objective_9">Objective<a class="headerlink" href="#objective_9" title="Permanent link">&para;</a></h4>
@@ -1840,7 +1840,7 @@ mvn -Dsteady steady:instr
 <div class="superfences-tabs">
 <input name="__tabs_12" type="radio" id="__tab_12_0" checked="checked" />
 <label for="__tab_12_0">CLI</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span>java -jar steady-cli-3.2.2-jar-with-dependencies.jar -goal cleanSpace
+<div class="superfences-content"><div class="codehilite"><pre><span></span>java -jar steady-cli-3.2.3-jar-with-dependencies.jar -goal cleanSpace
 </pre></div></div>
 <input name="__tabs_12" type="radio" id="__tab_12_1" />
 <label for="__tab_12_1">Maven</label>
