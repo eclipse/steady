@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.backend.BackendConnector;
+import org.eclipse.steady.kb.command.Import;
 import org.eclipse.steady.kb.command.Command;
 import org.eclipse.steady.kb.model.Artifact;
 import org.eclipse.steady.kb.model.Vulnerability;
@@ -45,8 +46,7 @@ import com.github.packageurl.PackageURL;
  * </p>
  */
 public class ImportAffectedLibraries implements Task {
-  private static final String OVERWRITE_OPTION = "o";
-  private static final String DELETE = "del";
+
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
   /** {@inheritDoc} */
@@ -57,7 +57,7 @@ public class ImportAffectedLibraries implements Task {
     if (artifacts == null || artifacts.isEmpty()) {
       return;
     }
-    if (args.containsKey(DELETE) && (boolean) args.get(DELETE)) {
+    if (args.containsKey(Import.DELETE) && (boolean) args.get(Import.DELETE)) {
       backendConnector.deletePatchEvalResults(vuln.getVulnId(), AffectedVersionSource.KAYBEE);
     }
 
@@ -75,7 +75,7 @@ public class ImportAffectedLibraries implements Task {
               vuln.getVulnId(), purlGroup, purlArtifact, purlVersion, AffectedVersionSource.KAYBEE);
       if (affectedLibs != null && affectedLibs.length > 0) {
         AffectedLibrary affectedLibrary = affectedLibs[0];
-        Boolean overwrite = (Boolean) args.get(OVERWRITE_OPTION);
+        Boolean overwrite = (Boolean) args.get(Import.OVERWRITE_OPTION);
         if (overwrite || affectedLibrary.getAffected() == null) {
           setAfftectedLib(artifact, affectedLibrary);
           affectedLibsToUpsert.add(affectedLibrary);

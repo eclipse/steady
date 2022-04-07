@@ -46,16 +46,16 @@ import org.eclipse.steady.backend.BackendConnectionException;
 public class Import implements Command {
 
   private static final String METADATA_JSON = "metadata.json";
-  private static final String UPLOAD_CONSTRUCT_OPTION = "u";
-  private static final String DIRECTORY_OPTION = "d";
-  private static final String OVERWRITE_OPTION = "o";
-  private static final String VERBOSE_OPTION = "v";
-  private static final String DELETE = "del";
+  public static final String UPLOAD_CONSTRUCT_OPTION = "u";
+  public static final String DIRECTORY_OPTION = "d";
+  public static final String OVERWRITE_OPTION = "o";
+  public static final String VERBOSE_OPTION = "v";
+  public static final String DELETE = "del";
 
-  private static final String UPLOAD_LONG_OPTION = "upload";
-  private static final String VERBOSE_LONG_OPTION = "verbose";
-  private static final String OVERWRITE_LONG_OPTION = "overwrite";
-  private static final String DIRECTORY_LONG_OPTION = "directory";
+  public static final String UPLOAD_LONG_OPTION = "upload";
+  public static final String VERBOSE_LONG_OPTION = "verbose";
+  public static final String OVERWRITE_LONG_OPTION = "overwrite";
+  public static final String DIRECTORY_LONG_OPTION = "directory";
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
