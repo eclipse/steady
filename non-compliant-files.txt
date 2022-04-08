@@ -1,0 +1,2 @@
+kb-importer/src/test/java/org/eclipse/steady/kb/task/TestImportVulnerability.java
+kb-importer/src/test/java/org/eclipse/steady/kb/command/ImportTest.java
