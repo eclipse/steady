@@ -59,6 +59,16 @@ public class Import implements Command {
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
+  private BackendConnector backendConnector;
+
+  public Import() {
+    this.backendConnector = BackendConnector.getInstance();
+  }
+
+  public Import(BackendConnector backendConnector) {
+    this.backendConnector = backendConnector;
+  }
+
   /** {@inheritDoc} */
   @Override
   public Command.NAME getCommandName() {
@@ -121,7 +131,7 @@ public class Import implements Command {
     String vulnId = vuln.getVulnId();
     boolean bugExists = false;
     try {
-      bugExists = BackendConnector.getInstance().isBugExisting(vulnId);
+      bugExists = this.backendConnector.isBugExisting(vulnId);
     } catch (BackendConnectionException e) {
       log.error("Can't connect to the Backend");
       return;
@@ -142,7 +152,7 @@ public class Import implements Command {
     for (Task task : importTasks) {
       try {
         args.put(DIRECTORY_OPTION, dirPath);
-        task.execute(vuln, args, BackendConnector.getInstance());
+        task.execute(vuln, args, backendConnector);
       } catch (Exception e) {
         log.error(
             "Got ["

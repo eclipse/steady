@@ -17,12 +17,23 @@
  * SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
  */
 package org.eclipse.steady.kb.command;
+import org.eclipse.steady.kb.task.MockBackConnector;
+import org.eclipse.steady.shared.json.model.AffectedLibrary;
+import org.eclipse.steady.kb.model.Vulnerability;
+import org.eclipse.steady.kb.util.Metadata;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 import java.util.HashMap;
+import java.util.List;
 import org.apache.commons.cli.Options;
+
+import java.io.IOException;
 import org.eclipse.steady.kb.exception.ValidationException;
+import com.google.gson.JsonSyntaxException;
+import org.eclipse.steady.backend.BackendConnectionException;
 import org.junit.Test;
 
 public class ImportTest {
@@ -52,4 +63,19 @@ public class ImportTest {
     args.put("d", "invalidDir");
     command.validate(args);
   }
+
+  @Test
+  public void testImportSkipExistingBug()
+      throws JsonSyntaxException, IOException, BackendConnectionException {
+    Vulnerability vuln = new Vulnerability();
+    vuln.setVulnId("CVE-TEST01");
+    MockBackConnector mockBackendConnector = new MockBackConnector();
+    HashMap<String, Object> args = new HashMap<String, Object>();
+    args.put("o", false);
+    args.put("v", false);
+    Import command = new Import(mockBackendConnector);
+    command.run(args);
+    assertNull(mockBackendConnector.getUploadJson());
+  }
+
 }
