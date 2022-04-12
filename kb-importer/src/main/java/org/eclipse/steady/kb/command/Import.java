@@ -46,6 +46,7 @@ import org.eclipse.steady.backend.BackendConnectionException;
 public class Import implements Command {
 
   private static final String METADATA_JSON = "metadata.json";
+  private static final String STATEMENT_YAML = "statement.yaml";
   public static final String UPLOAD_CONSTRUCT_OPTION = "u";
   public static final String DIRECTORY_OPTION = "d";
   public static final String OVERWRITE_OPTION = "o";
@@ -89,7 +90,7 @@ public class Import implements Command {
                 ? CoreConfiguration.ConnectType.READ_WRITE.toString()
                 : CoreConfiguration.ConnectType.READ_ONLY.toString()));
 
-    if (FileUtil.isAccessibleFile(dirPath + File.separator + METADATA_JSON)) {
+    if (FileUtil.isAccessibleFile(dirPath + File.separator + STATEMENT_YAML)) {
       importVuln(args, dirPath);
     } else if (FileUtil.isAccessibleDirectory(dirPath)) {
       File directory = new File(dirPath);
@@ -98,11 +99,12 @@ public class Import implements Command {
         for (File file : fList) {
           if (file.isDirectory()) {
             if (FileUtil.isAccessibleFile(
-                file.getAbsolutePath() + File.separator + METADATA_JSON)) {
+                  file.getAbsolutePath() + File.separator + STATEMENT_YAML)) {
               importVuln(args, file.getAbsolutePath());
             } else {
               Import.log.warn(
-                  "Skipping {} as the directory does not contain metdata.json file",
+                  "Skipping {} as the directory does not contain statement.yaml or metdata.json"
+                      + " file",
                   file.getAbsolutePath());
             }
           }
@@ -117,7 +119,8 @@ public class Import implements Command {
   private void importVuln(HashMap<String, Object> args, String dirPath) {
     Vulnerability vuln = null;
     try {
-      vuln = Metadata.getVulnerabilityMetadata(dirPath);
+      // vuln = Metadata.getVulnerabilityMetadata(dirPath);
+      vuln = Metadata.getFromYaml(dirPath + File.separator + STATEMENT_YAML);
     } catch (JsonSyntaxException | IOException e1) {
       Import.log.error(e1.getMessage(), e1);
       return;
@@ -194,6 +197,45 @@ public class Import implements Command {
     String dir = (String) args.get(DIRECTORY_OPTION);
     if (!Files.isDirectory(Paths.get(dir))) {
       throw new ValidationException("directory " + dir + "does not exist");
+    }
+  }
+
+  public void extractOrClone(File dir) {
+    String dirPath = dir.getPath();
+    // String cmd = "cd " + dirPath + "; ls";
+    File tarFile = null;
+    // System.out.println(dirPath);
+    File[] cveFiles = dir.listFiles();
+    for (File cveFile : cveFiles) {
+      String filename = cveFile.getName();
+      System.out.println(filename);
+      String[] splitted = filename.split("[.]");
+      if (splitted.length == 0) {
+        continue;
+      }
+      String extension = splitted[splitted.length - 1];
+      if (extension.equals("tar")
+          || (splitted.length > 2 && splitted[splitted.length - 2].equals("tar"))) {
+        System.out.println("tar file found");
+        tarFile = cveFile;
+      }
+    }
+
+    if (tarFile != null) {
+      System.out.println("tarFile != null");
+      String extractCommand = "tar -xf " + tarFile.getPath() + " --directory " + dirPath;
+      try {
+        System.out.println("before exec");
+        Process process = Runtime.getRuntime().exec(extractCommand);
+        System.out.println("after exec");
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    } else {
+      System.out.println("tarFile == null");
+      // How can I get the repo_url, commit_id and branch?
+      // String gitCloneCommand = "git clone " + tarFile.getPath() + " --directory " + dirPath;
+      // for F in $(git -C $repo_dir diff  --name-only  $commit_id^..$commit_id)
     }
   }
 }

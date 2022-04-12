@@ -20,15 +20,27 @@ package org.eclipse.steady.kb.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import org.yaml.snakeyaml.Yaml;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+
+import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.kb.model.Commit;
 import org.eclipse.steady.kb.model.Vulnerability;
-import org.eclipse.steady.shared.util.FileUtil;
+import org.eclipse.steady.kb.model.Note;
+import org.eclipse.steady.kb.model.Artifact;
 
 /**
  * Metadata
@@ -93,5 +105,51 @@ public class Metadata {
     }
 
     return metadata;
+  }
+
+  public static Vulnerability getFromYaml(String metadataPathString) throws IOException {
+    // Yaml yaml = new Yaml(new Constructor(Vulnerability.class));
+    Path metadataPath = Paths.get(metadataPathString);
+    Yaml yaml = new Yaml();
+
+
+    // String metadataString = File.readString(dirPath + "/metadata.yaml");
+    String metadataString = new String(Files.readAllBytes(metadataPath));
+
+    // Vulnerability vulnerability = yaml.load(metadataString);
+    Map<String, Object> vulnerabilityMap = yaml.load(metadataString);
+    // ObjectMapper objectMapper = new ObjectMapper();
+    // Vulnerability vulnerability = objectMapper.convertValue(vulnerabilityMap,
+    // Vulnerability.class);
+
+    Vulnerability vulnerability = new Vulnerability();
+
+    vulnerability.setVulnId((String) vulnerabilityMap.get("vulnerability_id"));
+
+    List<HashMap<String, Object>> notesMaps =
+        (List<HashMap<String, Object>>) vulnerabilityMap.get("notes");
+    List<Note> notes = new ArrayList<Note>();
+    for (HashMap<String, Object> noteMap : notesMaps) {
+      Note note = new Note();
+      note.setText((String) noteMap.get("text"));
+      List<String> links = (List<String>) noteMap.get("links");
+      note.setLinks(links);
+      notes.add(note);
+    }
+    vulnerability.setNotes(notes);
+
+    List<HashMap<String, Object>> artifactsMaps =
+        (List<HashMap<String, Object>>) vulnerabilityMap.get("artifacts");
+    List<Artifact> artifacts = new ArrayList<Artifact>();
+    for (HashMap<String, Object> artifactMap : artifactsMaps) {
+      Artifact artifact = new Artifact();
+      artifact.setId((String) artifactMap.get("id"));
+      artifact.setReason((String)artifactMap.get("reason"));
+      artifact.setAffected((Boolean)artifactMap.get("affected"));
+      artifacts.add(artifact);
+    }
+    vulnerability.setArtifacts(artifacts);
+
+    return vulnerability;
   }
 }
