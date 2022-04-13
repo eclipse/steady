@@ -18,6 +18,13 @@
  */
 package org.eclipse.steady.kb;
 
+import java.util.HashMap;
+import org.apache.commons.cli.Options;
+
+import org.eclipse.steady.kb.command.Import;
+import org.eclipse.steady.kb.command.Command;
+import org.eclipse.steady.kb.command.CommandParser;
+import org.eclipse.steady.kb.exception.CommandLineParserException;
 
 /**
  * <p>Main class.</p>
@@ -30,7 +37,30 @@ public class Main {
    */
   public static void main(String[] _args) {
     // CommandExecutor.getInstance().execute(_args);
+
+    Command command = new Import();
+    Options commandOptions = command.getOptions();
+
+    HashMap<String, Object> mapCommandOptionValues ;
+    try {
+      mapCommandOptionValues = CommandParser.parse(_args, commandOptions);
+    } catch (CommandLineParserException e) {
+      System.out.println("commandLineParserException");
+      //log.error(e.getMessage());
+      //printHelp(commandOptions);
+      return;
+    }
+    mapCommandOptionValues.put(Import.DIRECTORY_OPTION, "/kb-importer/data");
+
+    /*try {
+      command.validate(mapCommandOptionValues);
+    } catch (ValidationException e) {
+      log.error(e.getMessage());
+      return;
+    }*/
+
+    command.run(mapCommandOptionValues);
     Manager manager = new Manager();
-    manager.start("/kb-importer/data/statements");
+    manager.start("/kb-importer/data/statements", mapCommandOptionValues);
   }
 }
