@@ -112,7 +112,6 @@ public class Metadata {
     Path metadataPath = Paths.get(metadataPathString);
     Yaml yaml = new Yaml();
 
-
     // String metadataString = File.readString(dirPath + "/metadata.yaml");
     String metadataString = new String(Files.readAllBytes(metadataPath));
 
@@ -126,29 +125,58 @@ public class Metadata {
 
     vulnerability.setVulnId((String) vulnerabilityMap.get("vulnerability_id"));
 
-    List<HashMap<String, Object>> notesMaps =
-        (List<HashMap<String, Object>>) vulnerabilityMap.get("notes");
-    List<Note> notes = new ArrayList<Note>();
-    for (HashMap<String, Object> noteMap : notesMaps) {
-      Note note = new Note();
-      note.setText((String) noteMap.get("text"));
-      List<String> links = (List<String>) noteMap.get("links");
-      note.setLinks(links);
-      notes.add(note);
+    if (vulnerabilityMap.containsKey("notes")) {
+      List<HashMap<String, Object>> notesMaps =
+          (List<HashMap<String, Object>>) vulnerabilityMap.get("notes");
+      List<Note> notes = new ArrayList<Note>();
+      for (HashMap<String, Object> noteMap : notesMaps) {
+        Note note = new Note();
+        note.setText((String) noteMap.get("text"));
+        List<String> links = (List<String>) noteMap.get("links");
+        note.setLinks(links);
+        notes.add(note);
+      }
+      vulnerability.setNotes(notes);
     }
-    vulnerability.setNotes(notes);
 
-    List<HashMap<String, Object>> artifactsMaps =
-        (List<HashMap<String, Object>>) vulnerabilityMap.get("artifacts");
-    List<Artifact> artifacts = new ArrayList<Artifact>();
-    for (HashMap<String, Object> artifactMap : artifactsMaps) {
-      Artifact artifact = new Artifact();
-      artifact.setId((String) artifactMap.get("id"));
-      artifact.setReason((String)artifactMap.get("reason"));
-      artifact.setAffected((Boolean)artifactMap.get("affected"));
-      artifacts.add(artifact);
+    if (vulnerabilityMap.containsKey("artifacts")) {
+      List<HashMap<String, Object>> artifactsMaps =
+          (List<HashMap<String, Object>>) vulnerabilityMap.get("artifacts");
+      List<Artifact> artifacts = new ArrayList<Artifact>();
+      for (HashMap<String, Object> artifactMap : artifactsMaps) {
+        Artifact artifact = new Artifact();
+        artifact.setId((String) artifactMap.get("id"));
+        artifact.setReason((String) artifactMap.get("reason"));
+        artifact.setAffected((Boolean) artifactMap.get("affected"));
+        artifacts.add(artifact);
+      }
+      vulnerability.setArtifacts(artifacts);
     }
-    vulnerability.setArtifacts(artifacts);
+
+    if (vulnerabilityMap.containsKey("aliases")) {
+      List<String> aliases = (List<String>) vulnerabilityMap.get("aliases");
+      vulnerability.setAliases(aliases);
+    }
+
+    List<HashMap<String, Object>> fixes =
+        (List<HashMap<String, Object>>) vulnerabilityMap.get("fixes");
+    List<Commit> commitList = new ArrayList<Commit>();
+    if (fixes != null) {
+      for (HashMap<String, Object> fix : fixes) {
+        String branch = (String) fix.get("id");
+        List<HashMap<String, String>> commits = (List<HashMap<String, String>>) fix.get("commits");
+        for (HashMap<String, String> commitMap : commits) {
+          Commit commit = new Commit();
+          String repository = commitMap.get("repository");
+          String commitId = commitMap.get("id");
+          commit.setRepoUrl(repository);
+          commit.setCommitId(commitId);
+          commit.setBranch(branch);
+          commitList.add(commit);
+        }
+      }
+      vulnerability.setCommits(commitList);
+    }
 
     return vulnerability;
   }

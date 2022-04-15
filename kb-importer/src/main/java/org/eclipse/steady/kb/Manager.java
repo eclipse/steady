@@ -5,34 +5,56 @@ import java.util.HashMap;
 
 import java.io.File;
 
-import org.eclipse.steady.kb.command.Import;
+import org.eclipse.steady.kb.Import;
 import org.eclipse.steady.kb.command.Command;
 
 class Manager {
 
-  // private ThreadPoolExecutor ....;
-  private Map<String, String> runningProcesses = new HashMap<String, String>(); // Lock ?
-
-  public void start(String statementsPath,
-    HashMap<String, Object> mapCommandOptionValues) {
-
-    File statementsDir = new File(statementsPath);
-    System.out.println(statementsDir);
-    File[] subdirs = statementsDir.listFiles();
-    System.out.println(subdirs);
-
-    for (File dir : subdirs) {
-      if (dir.isDirectory()) {
-        String dirPath = dir.getPath();
-        mapCommandOptionValues.put(Import.DIRECTORY_OPTION, dirPath);
-        System.out.println("mapCommandOptionValues");
-        System.out.println(mapCommandOptionValues);
-        Import command = new Import();
-        command.run(mapCommandOptionValues);
-      }
+    private ThreadPoolExecutor executor = 
+        (ThreadPoolExecutor) Executors.newCachedThreadPool();
+  
+    enum VulnStatus {
+        NOT_STARTED,
+        PROCESSING,
+        IMPORTED,
+        FAILED
     }
-  }
+    
+    private Map<String, VulnStatus> vulnerabilitiesStatus = new HashMap<String, String>();
 
+    public void start(String statementsPath,
+        HashMap<String, Object> mapCommandOptionValues) {
+
+        File statementsDir = new File(statementsPath);
+        File[] subdirs = statementsDir.listFiles();
+
+        setUploadConfiguration(mapCommandOptionValues);
+
+        for (File dir : subdirs) {
+            if (dir.isDirectory(){
+                vulnerabilitiesStatus.put(dir.getName(), VulnStatus.NOT_STARTED);
+            } 
+        }
+        for (File dir : vulnerabilitiesStatus.keySet()){
+            //synchronized (vulnerabilitiesStatus.get(dir.getName())) {
+                String dirPath = dir.getPath();
+                mapCommandOptionValues.put(Import.DIRECTORY_OPTION, dirPath);
+                Import import = new Import(mapCommandOptionValues);
+                executor.execute(import);
+            //}
+        }
+    }
+
+    private void setUploadConfiguration() {
+
+        Object uploadConstruct = args.get(UPLOAD_CONSTRUCT_OPTION);
+        VulasConfiguration.getGlobal()
+            .setProperty(
+                CoreConfiguration.BACKEND_CONNECT,
+                (uploadConstruct != null
+                    ? CoreConfiguration.ConnectType.READ_WRITE.toString()
+                    : CoreConfiguration.ConnectType.READ_ONLY.toString()));
+    }
 
   /*public String status() {
       return "";

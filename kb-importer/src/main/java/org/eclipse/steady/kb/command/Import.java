@@ -22,9 +22,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
+import java.util.ArrayList;
 
+import org.yaml.snakeyaml.Yaml;
 import com.google.gson.JsonSyntaxException;
 
 import org.apache.commons.cli.Options;
@@ -33,6 +37,7 @@ import org.eclipse.steady.backend.BackendConnector;
 import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.kb.exception.ValidationException;
 import org.eclipse.steady.kb.model.Vulnerability;
+import org.eclipse.steady.kb.model.Commit;
 import org.eclipse.steady.kb.task.Task;
 import org.eclipse.steady.kb.task.TaskProvider;
 import org.eclipse.steady.kb.util.Metadata;
@@ -99,11 +104,11 @@ public class Import implements Command {
         for (File file : fList) {
           if (file.isDirectory()) {
             if (FileUtil.isAccessibleFile(
-                  file.getAbsolutePath() + File.separator + STATEMENT_YAML)) {
+                file.getAbsolutePath() + File.separator + STATEMENT_YAML)) {
               importVuln(args, file.getAbsolutePath());
             } else {
               Import.log.warn(
-                  "Skipping {} as the directory does not contain statement.yaml or metdata.json"
+                  "Skipping {} as the directory does not contain statement.yaml or metadata.json"
                       + " file",
                   file.getAbsolutePath());
             }
@@ -120,7 +125,11 @@ public class Import implements Command {
     Vulnerability vuln = null;
     try {
       // vuln = Metadata.getVulnerabilityMetadata(dirPath);
-      vuln = Metadata.getFromYaml(dirPath + File.separator + STATEMENT_YAML);
+      vuln =
+          Metadata.getFromYaml(
+              dirPath + File.separator + STATEMENT_YAML); // this could be skipped in some cases
+      System.out.println("Vulnerability from YAML");
+      System.out.println(vuln);
     } catch (JsonSyntaxException | IOException e1) {
       Import.log.error(e1.getMessage(), e1);
       return;
@@ -149,6 +158,36 @@ public class Import implements Command {
         return;
       }
     }
+
+    Yaml yaml = new Yaml();
+    Path metadataPath = Paths.get(dirPath + File.separator + STATEMENT_YAML);
+    String metadataString;
+    try {
+      metadataString = new String(Files.readAllBytes(metadataPath));
+    } catch (IOException e) {
+      e.printStackTrace();
+      return;
+    }
+    Map<String, Object> vulnerabilityMap = yaml.load(metadataString);
+    List<HashMap<String, Object>> fixes =
+        (List<HashMap<String, Object>>) vulnerabilityMap.get("fixes");
+    List<Commit> commitList = new ArrayList<Commit>();
+    if (fixes != null) {
+      for (HashMap<String, Object> fix : fixes) {
+        String branch = (String) fix.get("id");
+        List<HashMap<String, String>> commits = (List<HashMap<String, String>>) fix.get("commits");
+        for (HashMap<String, String> commitMap : commits) {
+          Commit commit = new Commit();
+          String repository = commitMap.get("repository");
+          String commitId = commitMap.get("id");
+          commit.setRepoUrl(repository);
+          commit.setCommitId(commitId);
+          commit.setBranch(branch);
+          commitList.add(commit);
+        }
+      }
+    }
+    this.extractOrClone(new File(dirPath), commitList);
 
     List<Task> importTasks = TaskProvider.getInstance().getTasks(Command.NAME.IMPORT);
 
@@ -200,15 +239,12 @@ public class Import implements Command {
     }
   }
 
-  public void extractOrClone(File dir) {
+  public void extractOrClone(File dir, List<Commit> commits) {
     String dirPath = dir.getPath();
-    // String cmd = "cd " + dirPath + "; ls";
     File tarFile = null;
-    // System.out.println(dirPath);
     File[] cveFiles = dir.listFiles();
     for (File cveFile : cveFiles) {
       String filename = cveFile.getName();
-      System.out.println(filename);
       String[] splitted = filename.split("[.]");
       if (splitted.length == 0) {
         continue;
@@ -216,25 +252,36 @@ public class Import implements Command {
       String extension = splitted[splitted.length - 1];
       if (extension.equals("tar")
           || (splitted.length > 2 && splitted[splitted.length - 2].equals("tar"))) {
-        System.out.println("tar file found");
         tarFile = cveFile;
       }
     }
 
     if (tarFile != null) {
-      System.out.println("tarFile != null");
       String extractCommand = "tar -xf " + tarFile.getPath() + " --directory " + dirPath;
       try {
-        System.out.println("before exec");
         Process process = Runtime.getRuntime().exec(extractCommand);
-        System.out.println("after exec");
       } catch (IOException e) {
         e.printStackTrace();
       }
     } else {
       System.out.println("tarFile == null");
-      // How can I get the repo_url, commit_id and branch?
-      // String gitCloneCommand = "git clone " + tarFile.getPath() + " --directory " + dirPath;
+      if (commits.size() > 0) {
+        String repoUrl = commits.get(0).getRepoUrl();
+        String gitCloneCommand = "git clone " + repoUrl; // + " --directory" + gitDir
+        try {
+          System.out.println("before exec git clone");
+          Runtime.getRuntime().exec(gitCloneCommand);
+          System.out.println("after exec git clone");
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      } else {
+        System.out.println("PROBLEM: NO COMMITS");
+      }
+      for (Commit commit : commits) {
+        String commitId = commit.getCommitId();
+        // commit diff
+      }
       // for F in $(git -C $repo_dir diff  --name-only  $commit_id^..$commit_id)
     }
   }

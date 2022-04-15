@@ -36,29 +36,6 @@ public class Main {
    * @param _args an array of {@link java.lang.String} objects
    */
   public static void main(String[] _args) {
-    // CommandExecutor.getInstance().execute(_args);
-
-    Command command = new Import();
-    Options commandOptions = command.getOptions();
-
-    HashMap<String, Object> mapCommandOptionValues ;
-    try {
-      mapCommandOptionValues = CommandParser.parse(_args, commandOptions);
-    } catch (CommandLineParserException e) {
-      System.out.println("commandLineParserException");
-      //log.error(e.getMessage());
-      //printHelp(commandOptions);
-      return;
-    }
-    mapCommandOptionValues.put(Import.DIRECTORY_OPTION, "/kb-importer/data");
-
-    /*try {
-      command.validate(mapCommandOptionValues);
-    } catch (ValidationException e) {
-      log.error(e.getMessage());
-      return;
-    }*/
-
     command.run(mapCommandOptionValues);
     Manager manager = new Manager();
     manager.start("/kb-importer/data/statements", mapCommandOptionValues);
