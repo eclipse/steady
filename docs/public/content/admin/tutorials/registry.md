@@ -35,7 +35,7 @@ Invoke the script with the following positional arguments.
 
 ```sh
 docker login [registry]
-bash push-images.sh -r [registry] -u [username] -v [steady-version]
+bash push-images.sh -r [registry] -p [project] -v [steady-version]
 ```
 
 ## Pulling the images from a repository
@@ -43,7 +43,7 @@ bash push-images.sh -r [registry] -u [username] -v [steady-version]
 You can use Docker to pull your images from a registry.
 
 ```sh
-docker pull [registry]/[username]/steady-rest-backend:[steady-version]
+docker pull [registry]/[project]/steady-rest-backend:[steady-version]
 ```
 
 ---
