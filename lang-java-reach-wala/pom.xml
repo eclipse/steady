@@ -27,7 +27,7 @@
     <parent>
         <groupId>org.eclipse.steady</groupId>
         <artifactId>root</artifactId>
-        <version>3.2.4-SNAPSHOT</version>
+        <version>3.2.4</version>
     </parent>
     <artifactId>lang-java-reach-wala</artifactId>
 
