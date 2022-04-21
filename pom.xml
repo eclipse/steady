@@ -429,6 +429,7 @@
 						</goals>
 						<configuration>
 							<flattenMode>ossrh</flattenMode>
+							<updatePomFile>true</updatePomFile>
 						</configuration>
 					</execution>
 					<execution>
