@@ -13,7 +13,7 @@ All the following commands are supposed to be executed from the root folder of t
 If you want to build images specific to a version you can checkout a stable version of Steady. Usually the `master` branch holds a `-SNAPSHOT` version.
 
 ```sh
-git checkout tags/@@PROJECT_VERSION@@
+git checkout tags/release-@@PROJECT_VERSION@@
 ```
 
 Make a copy of the sample configuration:
