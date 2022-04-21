@@ -32,7 +32,7 @@
 
 	<groupId>org.eclipse.steady</groupId>
 	<artifactId>rest-backend</artifactId>
-	<version>3.2.3</version>
+	<version>3.2.4-SNAPSHOT</version>
 	<packaging>${packaging.type}</packaging>
 
 	<name>REST service to manage scan results and bugs</name>
