@@ -40,7 +40,7 @@
     
     
       
-        <title>Configuration - Eclipse Steady 3.2.3 (Incubator Project)</title>
+        <title>Configuration - Eclipse Steady 3.2.4 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.3 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.4 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.2.3 (Incubator Project)
+              Eclipse Steady 3.2.4 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -290,12 +290,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.3 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.4 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.2.3 (Incubator Project)
+    Eclipse Steady 3.2.4 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -1403,7 +1403,7 @@ For single applications, call HTTP GET <code>http://localhost:8033/backend/hubIn
 <p><strong>With profile</strong>, the execution of goals is more concise (readable), e.g., <code>mvn -Dsteady compile steady:app</code>. A sample profile can be found <a href="../../tutorials/java_maven/#setup">here</a>, just copy&amp;paste it into the <code>&lt;profiles&gt;</code> section of your <code>pom.xml</code>. In case of aggregated, multi-module Maven projects with modules inheriting from their parent, it is sufficient to include the profile in the top-level (parent) <code>pom.xml</code>. If a module does not inherit from the parent, the profile has to be added to its POM file. Once added, run <code>mvn -Dsteady versions:display-property-updates</code> every now and then to check whether there are new plugin versions available. If so, manually update the property <code>vulas.version</code> in the Eclipse Steady profile.</p>
 </li>
 <li>
-<p><strong>Without profile</strong>, the execution of goals requires the use of the plugin's fully qualified name, e.g., <code>mvn compile org.eclipse.steady:plugin-maven:3.2.3:app</code>. Moreover, you need to specify the following mandatory configuration settings. As described <a href="#configuration">here</a>, there are several ways of doing so, however, a file as follows is very common:</p>
+<p><strong>Without profile</strong>, the execution of goals requires the use of the plugin's fully qualified name, e.g., <code>mvn compile org.eclipse.steady:plugin-maven:3.2.4:app</code>. Moreover, you need to specify the following mandatory configuration settings. As described <a href="#configuration">here</a>, there are several ways of doing so, however, a file as follows is very common:</p>
 <p><strong>steady-custom.properties</strong></p>
 <div class="codehilite"><pre><span></span>vulas.core.space.token = &lt;YOUR WORKSPACE TOKEN&gt;
 vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
@@ -1440,7 +1440,7 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
         }
 
         dependencies {
-            classpath(&#39;org.eclipse.steady:plugin-gradle:3.2.3&#39;) { changing = true }
+            classpath(&#39;org.eclipse.steady:plugin-gradle:3.2.4&#39;) { changing = true }
         }
     }
 
@@ -1465,7 +1465,7 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 <p>The Gradle plugin only works with later releases of Gradle. How to upgrade is described <a href="https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:upgrading_wrapper">here</a>.</p>
 <h3 id="command-line-interface">Command-line interface<a class="headerlink" href="#command-line-interface" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Create a new folder, download the latest ZIP archive <code>steady-cli-3.2.3.zip</code> from <a href="https://github.com/eclipse/steady/releases">Releases</a> and extract it into the newly created folder. This folder will then contain the following items:</li>
+<li>Create a new folder, download the latest ZIP archive <code>steady-cli-3.2.4.zip</code> from <a href="https://github.com/eclipse/steady/releases">Releases</a> and extract it into the newly created folder. This folder will then contain the following items:</li>
 </ol>
 <table>
 <thead>
@@ -1480,11 +1480,11 @@ vulas.shared.backend.serviceUrl = http://localhost:8033/backend/
 <td>Put the application code (java, class or JAR files) and all application dependencies (JAR files) into this folder. It will be searched recursively, thus, it is possible to just copy the entire installation directory of an application into the folder. <strong>Important</strong>: (1) Single java and class files are always considered as application code, no matter the package prefix configured with <code>vulas.core.app.appPrefixes</code>. (2) JARs are always considered as application dependency unless they only contain methods starting with the configured package prefix. (3) Nested JARs must be extracted, WARs can stay as-is.</td>
 </tr>
 <tr>
-<td><code>./steady-cli-3.2.3-jar-with-dependencies.jar</code></td>
+<td><code>./steady-cli-3.2.4-jar-with-dependencies.jar</code></td>
 <td>An executable JAR used to run the different Eclipse Steady goals.</td>
 </tr>
 <tr>
-<td><code>./instr/lang-java-3.2.3-jar-with-dependencies.jar</code></td>
+<td><code>./instr/lang-java-3.2.4-jar-with-dependencies.jar</code></td>
 <td>Used to instrument Java runtimes.</td>
 </tr>
 <tr>
