@@ -50,8 +50,9 @@ import org.eclipse.steady.backend.BackendConnectionException;
  */
 public class Import implements Command {
 
-  private static final String METADATA_JSON = "metadata.json";
-  private static final String STATEMENT_YAML = "statement.yaml";
+  public static final String METADATA_JSON = "metadata.json";
+  public static final String STATEMENT_YAML = "statement.yaml";
+
   public static final String UPLOAD_CONSTRUCT_OPTION = "u";
   public static final String DIRECTORY_OPTION = "d";
   public static final String OVERWRITE_OPTION = "o";

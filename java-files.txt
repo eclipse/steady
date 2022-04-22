@@ -307,6 +307,7 @@ kb-importer/src/main/java/org/eclipse/steady/kb/util/ConstructSet.java
 kb-importer/src/main/java/org/eclipse/steady/kb/Manager.java
 kb-importer/src/main/java/org/eclipse/steady/kb/task/ImportAffectedLibraries.java
 kb-importer/src/main/java/org/eclipse/steady/kb/task/ImportVulnerability.java
+kb-importer/src/main/java/org/eclipse/steady/kb/task/ExtractOrClone.java
 kb-importer/src/main/java/org/eclipse/steady/kb/task/TaskProvider.java
 kb-importer/src/main/java/org/eclipse/steady/kb/task/Task.java
 kb-importer/src/main/java/org/eclipse/steady/kb/exception/CommandLineParserException.java

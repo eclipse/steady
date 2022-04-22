@@ -20,6 +20,8 @@ package org.eclipse.steady.kb.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Writer;
+import java.io.FileWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
@@ -74,6 +76,16 @@ public class Metadata {
     metadata = gson.fromJson(FileUtil.readFile(filePath), Commit.class);
     metadata.setDirectory(commitDir);
     return metadata;
+  }
+
+  public static void writeCommitMetadata(String commitDir, HashMap<String, String> commitMetadata)
+      throws IOException {
+    String filePath = commitDir + File.separator + META_PROPERTIES_FILE;
+    // File file = new File(filePath);
+    // file.createNewFile();
+    Writer writer = new FileWriter(filePath, false);
+    new Gson().toJson(commitMetadata, writer);
+    writer.close();
   }
 
   /**

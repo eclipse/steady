@@ -19,12 +19,6 @@
 package org.eclipse.steady.kb;
 
 import java.util.HashMap;
-import org.apache.commons.cli.Options;
-
-import org.eclipse.steady.kb.command.Import;
-import org.eclipse.steady.kb.command.Command;
-import org.eclipse.steady.kb.command.CommandParser;
-import org.eclipse.steady.kb.exception.CommandLineParserException;
 
 /**
  * <p>Main class.</p>
@@ -36,7 +30,8 @@ public class Main {
    * @param _args an array of {@link java.lang.String} objects
    */
   public static void main(String[] _args) {
-    command.run(mapCommandOptionValues);
+    // command.run(mapCommandOptionValues);
+    HashMap<String, Object> mapCommandOptionValues = new HashMap<String, Object>();
     Manager manager = new Manager();
     manager.start("/kb-importer/data/statements", mapCommandOptionValues);
   }
