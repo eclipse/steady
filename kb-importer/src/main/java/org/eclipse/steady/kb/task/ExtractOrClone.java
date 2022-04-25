@@ -14,10 +14,16 @@ import org.eclipse.steady.kb.model.Vulnerability;
 import org.eclipse.steady.kb.model.Commit;
 import org.eclipse.steady.kb.Import;
 import org.eclipse.steady.kb.util.Metadata;
+import org.eclipse.steady.kb.Manager;
 
 public class ExtractOrClone {
 
   private static final String GIT_DIRECTORY = "git-repos";
+  private final Manager manager;
+
+  public ExtractOrClone(Manager manager){
+    this.manager = manager;
+  }
 
   public void execute(File dir, Vulnerability vuln) {
     String dirPath = dir.getPath();
@@ -81,9 +87,11 @@ public class ExtractOrClone {
       String repoDirPath =
           GIT_DIRECTORY + File.separator + repoUrl.split("/")[repoUrl.split("/").length - 1];
       try {
-        cloneOnce(repoUrl, repoDirPath);
-        createAndWriteCommitMetadata(commit, repoDirPath, commitDirPath);
-        writeCommitDiff(commitId, repoDirPath, commitDirPath);
+          manager.start(repoUrl);
+          cloneOnce(repoUrl, repoDirPath);
+          createAndWriteCommitMetadata(commit, repoDirPath, commitDirPath);
+          writeCommitDiff(commitId, repoDirPath, commitDirPath);
+          manager.complete(repoUrl);
       } catch (IOException e) {
         e.printStackTrace();
         continue;

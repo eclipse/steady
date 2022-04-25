@@ -13,6 +13,7 @@ import org.eclipse.steady.kb.task.ExtractOrClone;
 import org.eclipse.steady.kb.util.Metadata;
 import org.eclipse.steady.kb.model.Vulnerability;
 import org.eclipse.steady.backend.BackendConnectionException;
+import org.eclipse.steady.kb.Manager;
 
 public class Import implements Runnable {
 
@@ -31,8 +32,10 @@ public class Import implements Runnable {
   private String vulnId;
   private BackendConnector backendConnector;
   private HashMap<String, Object> args;
+  Manager manager;
 
-  public Import(HashMap<String, Object> args) {
+  public Import(Manager manager, HashMap<String, Object> args) {
+    this.manager = manager;
     this.backendConnector = BackendConnector.getInstance();
     this.vulnDir = Paths.get((String) args.get(DIRECTORY_OPTION));
     this.vulnId = vulnDir.getFileName().toString();
@@ -78,7 +81,7 @@ public class Import implements Runnable {
       // ImportVulnerability importVulnerability = new ImportVulnerability(vuln, args);
       // ImportAffectedLibraries importAffectedLibraries = new ImportAffectedLibraries(vuln, args);
 
-      ExtractOrClone extractOrClone = new ExtractOrClone();
+      ExtractOrClone extractOrClone = new ExtractOrClone(this.manager);
       extractOrClone.execute(new File(this.vulnDir.toString()), vuln);
       // importVulnerability.execute();
       // importAffectedLibraries.execute();

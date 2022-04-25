@@ -6,7 +6,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Executors;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import java.io.File;
 
@@ -15,49 +18,20 @@ import org.eclipse.steady.core.util.CoreConfiguration;
 
 public class Manager {
 
-  class MyThreadExecutor extends ThreadPoolExecutor {
-    public MyThreadExecutor(
-        int PoolSize,
-        int maxPoolSize,
-        long keepAliveTime,
-        TimeUnit unit,
-        BlockingQueue<Runnable> workQueue) {
-      super(PoolSize, maxPoolSize, keepAliveTime, unit, workQueue);
-    }
-
-    @Override
-    protected void afterExecute(Runnable run, Throwable throw1) {
-
-      super.afterExecute(run, throw1);
-
-      // String vulnId = ((Import)run).getVulnId();
-      // System.out.println("afterExecute()3");
-      // System.out.println(vulnId);
-
-      if (throw1 == null) {
-        // Manager.addStatus(vulnId, VulnStatus.IMPORTED);
-        Manager.addStatus();
-      } else {
-        System.out.println("encountered exception- " + throw1.getMessage());
-        // Manager.addStatus(vulnId, VulnStatus.FAILED);
-      }
-    }
-  }
-
   private static int imported = 0;
 
-  public static void addStatus() { // String vulnId, VulnStatus vulnStatus) {
+  public static void addStatus(String vulnId, VulnStatus vulnStatus) {
     imported += 1;
-    // System.out.println("addStatus()");
-    // System.out.println(vulnId);
-    // vulnerabilitiesStatus.put(vulnId, vulnStatus);
-    // System.out.println("addStatus()2");
+    System.out.println("addStatus()");
+    System.out.println(vulnId);
+    vulnerabilitiesStatus.put(vulnId, vulnStatus);
+    System.out.println("addStatus()2");
   }
 
-  private MyThreadExecutor executor =
-      new MyThreadExecutor(16, 32, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
-  // (ThreadPoolExecutor) Executors.newCachedThreadPool();
-  // this.pool = Executors.newFixedThreadPool(_pool_size);
+  private ThreadPoolExecutor executor =
+      //new MyThreadExecutor(16, 32, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+      //(ThreadPoolExecutor) Executors.newCachedThreadPool();
+      (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
 
   enum VulnStatus {
     NOT_STARTED,
@@ -67,6 +41,32 @@ public class Manager {
   }
 
   private static Map<String, VulnStatus> vulnerabilitiesStatus = new HashMap<String, VulnStatus>();
+  // synchronized Map<String, Lock> reposInProcess = new HashMap<String, Lock>();
+  Map<String, Lock> repoLocks = new HashMap<String, Lock>();
+  
+
+  //private synchronized Set<String> vulnDone;
+
+  /*public synchronized boolean isRepoInProcess(String repo) {
+    return reposInProcess.get(repo);
+  }*/
+
+  public void start(String repo) {
+   // reposInProcess.put(repo, true);
+    if (!repoLocks.containsKey(repo)){
+      repoLocks.put(repo, new ReentrantLock());
+    }
+    repoLocks.get(repo).lock();
+  }
+
+  public void complete(String repo) {
+    if (!repoLocks.containsKey(repo)) {
+      System.out.println("ERROR : Lock not found");
+      return;
+    }
+    repoLocks.get(repo).unlock();
+  }
+  //HashMap<String, Set> all_vulns =
 
   public synchronized void start(
       String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
@@ -80,7 +80,7 @@ public class Manager {
     for (File dir : subdirs) {
       String dirPath = dir.getPath();
       mapCommandOptionValues.put(Import.DIRECTORY_OPTION, dirPath);
-      Import command = new Import(mapCommandOptionValues);
+      Import command = new Import(this, mapCommandOptionValues);
       executor.submit(command);
     }
     for (int i = 0; i < 10; i++) {
