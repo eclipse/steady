@@ -245,6 +245,14 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
       log.info("List of removable classes written to [" + f.toPath() + "]");
 
       f =
+              Paths.get(
+                      this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(),
+                      "used-classes-steady.txt")
+                  .toFile();
+          FileUtil.writeToFile(f, StringUtil.join(used_classes, System.lineSeparator()));
+          log.info("List of used classes according to steady backend data (no jdependency) written to [" + f.toPath() + "]");
+          
+      f =
           Paths.get(
                   this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(),
                   "needed-classes.txt")
