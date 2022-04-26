@@ -14,9 +14,9 @@ set -e
 usage () {
     cat <<HELP_USAGE
 Usage: $0 [options...]
- -r, --registry <registry>  The Docker registry.  e.g.: docker.io
- -p, --project <project>    The project where to nest it.  e.g.: vulas
- -v, --version <version>    The version of the images to push.  e.g.: 3.1.5
+ -r, --registry <registry>  The Docker registry (e.g., docker.io)
+ -p, --project <project>    The project or user where to nest it (e.g., eclipse)
+ -v, --version <version>    The version of the images to push (e.g., 3.1.5)
  -h, --help                 This help text
 HELP_USAGE
     exit 0
@@ -28,14 +28,14 @@ then
     exit 1
 fi
 
-set -- $options
+#set -- $options
 
 while true; do
     case "$1" in
         -r | --registry ) REGISTRY="$2"; shift 2 ;;
         -p | --project ) PROJECT="$2"; shift 2 ;;
         -v | --version ) VULAS_RELEASE="$2"; shift 2 ;;
-        -h | --help ) usage; shift 2 ;;
+        -h | --help ) usage; shift 1 ;;
         -- ) shift; break ;;
         * ) break ;;
     esac
@@ -56,7 +56,7 @@ if [[ ! $VULAS_RELEASE =~ $RELEASE_PATTERN ]]; then
     exit 1
 fi
 
-SERVICES='frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils kb-importer pipeline'
+SERVICES='frontend-apps frontend-bugs patch-lib-analyzer rest-backend rest-lib-utils kb-importer'
 
 VULAS_RELEASE=${VULAS_RELEASE} docker-compose -f docker-compose.build.yml build
 
@@ -64,7 +64,6 @@ if [[ "$(docker images -q steady-rest-backend:"$VULAS_RELEASE" 2> /dev/null)" ==
     echo "[-] There are no local images for release $VULAS_RELEASE"
     exit 1
 fi
-
 
 for service in $SERVICES ; do
     IMAGE=${REGISTRY}/${PROJECT}/steady-${service}
