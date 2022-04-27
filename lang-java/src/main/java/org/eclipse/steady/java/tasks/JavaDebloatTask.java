@@ -185,6 +185,10 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
       if (c == null) {
         log.warn("Could not obtain jdependency clazz for steady class [" + class_name + "]");
       } else {
+        for (Clazz cl : c.getTransitiveDependencies()) {
+          needed.add(cl.getName());
+          deps_used.addAll(cl.getClazzpathUnits());
+        }
         Set<ClazzpathUnit> units = c.getClazzpathUnits();
         if (units.size() > 1) {
           log.warn(
@@ -199,10 +203,6 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
         if (removable.contains(c)) {
           removable.remove(c);
           removable.removeAll(c.getTransitiveDependencies());
-          for (Clazz cl : c.getTransitiveDependencies()) {
-            needed.add(cl.getName());
-            deps_used.addAll(cl.getClazzpathUnits());
-          }
         }
       }
     }
