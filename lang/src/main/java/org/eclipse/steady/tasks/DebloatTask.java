@@ -40,14 +40,14 @@ public interface DebloatTask extends Task {
   //  public Set<Construct> getNeededConstructs();
 
   /**
-   * Sets the traced constructs to be used as starting point for debloating the {@link Application}
+   * Sets the traced constructs to be used as starting point for debloating the application
    * (traces resulting from the dynamic analysis)
    *
    */
   public void setTraces(Set<ConstructId> _traces);
 
   /**
-   * Sets the reachable constructs to be used as starting point for debloating the {@link Application}
+   * Sets the reachable constructs to be used as starting point for debloating the application
    * (resulting from the static analysis)
    *
    */
