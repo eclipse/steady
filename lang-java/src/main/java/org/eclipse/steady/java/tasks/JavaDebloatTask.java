@@ -121,10 +121,9 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
     // classpathUnits)
     for (ConstructId t : traces) {
       if (t.getType().equals(ConstructType.CLAS)
-         || t.getType().equals(ConstructType.INTF)
-        || t.getType().equals(ConstructType.ENUM)) {
-    	 used_classes.add(t.getQname());
-      
+          || t.getType().equals(ConstructType.INTF)
+          || t.getType().equals(ConstructType.ENUM)) {
+        used_classes.add(t.getQname());
       }
     }
     log.info("Retrieved [" + used_classes.size() + "] clazzes from steady traces");
@@ -143,16 +142,11 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
           JavaId core_construct = (JavaId) JavaId.toCoreType(c);
           JavaId def_context = (JavaId) core_construct.getDefinitionContext();
           used_classes.add(def_context.getQualifiedName());
-          }
         }
       }
-    
+    }
 
-    log.info(
-        "Using ["
-            + used_classes.size()
-            + "] clazzes from Steady traces/reachable constructs");
-
+    log.info("Using [" + used_classes.size() + "] clazzes from Steady traces/reachable constructs");
 
     // also collect "missing" classes to be able to check their relation with jre objects considered
     // used
@@ -165,57 +159,54 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
     // Classes considered used
     final SortedSet<String> needed = new TreeSet<String>();
     final Set<Clazz> removable = cp.getClazzes();
-   
+
     // loop over classpathunits (representing the application) marked as entrypoints to find needed
     // classes
     for (ClazzpathUnit u : app) {
       removable.removeAll(u.getClazzes());
       removable.removeAll(u.getTransitiveDependencies());
-      for (Clazz c: u.getClazzes()) {
-    	  needed.add(c.getName());      
+      for (Clazz c : u.getClazzes()) {
+        needed.add(c.getName());
       }
-      for (Clazz c: u.getTransitiveDependencies()) {
-    	  needed.add(c.getName());
-    	  deps_used.addAll(c.getClazzpathUnits());
+      for (Clazz c : u.getTransitiveDependencies()) {
+        needed.add(c.getName());
+        deps_used.addAll(c.getClazzpathUnits());
       }
-      
     }
 
-    
-    // loop over class (representing traces and reachable constructs) and use them as entrypoints to find
+    // loop over class (representing traces and reachable constructs) and use them as entrypoints to
+    // find
     // needed classes
     for (String class_name : used_classes) {
-    	needed.add(class_name);
-    	
-    	Clazz c = cp.getClazz(class_name);
+      needed.add(class_name);
 
-       if (c == null) {
-         log.warn("Could not obtain jdependency clazz for steady class [" + class_name + "]");
-       } else {
-         Set<ClazzpathUnit> units = c.getClazzpathUnits();
-         if (units.size() > 1) {
-           log.warn(
-               "Added as entrypoints multiple ClasspathUnits from single class ["
-                   + c
-                   + "] : ["
-                   + StringUtil.join(units, ",")
-                   + "]");
-         }
-         deps_used.addAll(units);
-         
-         if (removable.contains(c)) {
-             removable.remove(c);
-             removable.removeAll(c.getTransitiveDependencies());
-             for (Clazz cl: c.getTransitiveDependencies()) {
-            	 needed.add(cl.getName());
-            	 deps_used.addAll(cl.getClazzpathUnits());
-             }
-           }
-       }
+      Clazz c = cp.getClazz(class_name);
+
+      if (c == null) {
+        log.warn("Could not obtain jdependency clazz for steady class [" + class_name + "]");
+      } else {
+        Set<ClazzpathUnit> units = c.getClazzpathUnits();
+        if (units.size() > 1) {
+          log.warn(
+              "Added as entrypoints multiple ClasspathUnits from single class ["
+                  + c
+                  + "] : ["
+                  + StringUtil.join(units, ",")
+                  + "]");
+        }
+        deps_used.addAll(units);
+
+        if (removable.contains(c)) {
+          removable.remove(c);
+          removable.removeAll(c.getTransitiveDependencies());
+          for (Clazz cl : c.getTransitiveDependencies()) {
+            needed.add(cl.getName());
+            deps_used.addAll(cl.getClazzpathUnits());
+          }
+        }
+      }
     }
-    
-    
-    
+
     final SortedSet<Clazz> removable_sorted = new TreeSet<Clazz>(removable);
 
     Set<Clazz> remaining = cp.getClazzes();
@@ -289,12 +280,12 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
     for (ClazzpathUnit u : test) {
       removable.removeAll(u.getClazzes());
       removable.removeAll(u.getTransitiveDependencies());
-      for (Clazz c: u.getClazzes()) {
-    	  needed.add(c.getName());      
+      for (Clazz c : u.getClazzes()) {
+        needed.add(c.getName());
       }
-      for (Clazz c: u.getTransitiveDependencies()) {
-    	  needed.add(c.getName());
-    	  deps_used.addAll(c.getClazzpathUnits());
+      for (Clazz c : u.getTransitiveDependencies()) {
+        needed.add(c.getName());
+        deps_used.addAll(c.getClazzpathUnits());
       }
     }
     maven_deps.removeAll(deps_used);
@@ -317,14 +308,14 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
               .toFile();
       FileUtil.writeToFile(f, StringUtil.join(maven_deps, System.lineSeparator()));
       log.info("List of removable dependencies with test written to [" + f.toPath() + "]");
-      
+
       f =
-              Paths.get(
-                      this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(),
-                      "used-deps.txt")
-                  .toFile();
-          FileUtil.writeToFile(f, StringUtil.join(deps_used, System.lineSeparator()));
-          log.info("List of used dependencies written to [" + f.toPath() + "]");
+          Paths.get(
+                  this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(),
+                  "used-deps.txt")
+              .toFile();
+      FileUtil.writeToFile(f, StringUtil.join(deps_used, System.lineSeparator()));
+      log.info("List of used dependencies written to [" + f.toPath() + "]");
     } catch (IOException e) {
       e.printStackTrace();
     }
