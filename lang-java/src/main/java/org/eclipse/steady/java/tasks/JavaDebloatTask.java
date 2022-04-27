@@ -81,8 +81,8 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
     // list of classpathunits to be used as test entrypoints
     List<ClazzpathUnit> test = new ArrayList<ClazzpathUnit>();
 
-    // list of classes to be used as entrypoints (from traces and reachable constructs)
-    List<Clazz> used_classes = new ArrayList<Clazz>();
+    // list of classes from Steasy traces/reachableConstructs (also used as entrypoints)
+    final SortedSet<String> used_classes = new TreeSet<String>();
     // classpathunits for the application dependencies (as identified by maven)
     Set<ClazzpathUnit> maven_deps = new HashSet<ClazzpathUnit>();
     // classpathunits considered used according to traces, reachable constructs and jdependency
@@ -106,7 +106,6 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
       // 2) Add dependencies to jdependency classpath object and populate set of dependencies
       if (this.getKnownDependencies() != null) {
         for (Path p : this.getKnownDependencies().keySet()) {
-          log.info("Add dep path [" + p + "] to classpath");
           maven_deps.add(cp.addClazzpathUnit(p));
         }
       }
@@ -116,32 +115,19 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
 
     log.info("[" + app.size() + "] ClasspathUnit for the application to be used as entrypoints ");
     log.info("[" + test.size() + "] ClasspathUnit for tests to be used as entrypoints ");
+    log.info("[" + cp.getUnits().length + "] classpathUnits in jdependency classpath object");
 
     // Retrieve traces to be used as Clazz entrypoints (1 class may be part of multiple
     // classpathUnits)
     for (ConstructId t : traces) {
       if (t.getType().equals(ConstructType.CLAS)
-          || t.getType().equals(ConstructType.INTF)
-          || t.getType().equals(ConstructType.ENUM)) {
-        Clazz c = cp.getClazz(t.getQname());
-        if (c == null) {
-          log.warn("Could not obtain jdependency clazz for traced class [" + t.getQname() + "]");
-        } else {
-          used_classes.add(c);
-          Set<ClazzpathUnit> units = c.getClazzpathUnits();
-          if (units.size() > 1) {
-            log.warn(
-                "Added as entrypoints multiple ClasspathUnits from single class ["
-                    + c
-                    + "] : ["
-                    + StringUtil.join(units, ",")
-                    + "]");
-          }
-          deps_used.addAll(units);
-        }
+         || t.getType().equals(ConstructType.INTF)
+        || t.getType().equals(ConstructType.ENUM)) {
+    	 used_classes.add(t.getQname());
+      
       }
     }
-    log.info("Using [" + used_classes.size() + "] jdependency clazzes as entrypoints from traces");
+    log.info("Retrieved [" + used_classes.size() + "] clazzes from steady traces");
 
     // Loop reachable constructs (METH, CONS, INIT), find their definition
     // context (CLASS, ENUM, INTF) and use those as jdependency clazz
@@ -156,32 +142,17 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
         for (ConstructId c : d.getReachableConstructIds()) {
           JavaId core_construct = (JavaId) JavaId.toCoreType(c);
           JavaId def_context = (JavaId) core_construct.getDefinitionContext();
-          Clazz cl = cp.getClazz(def_context.getQualifiedName());
-          if (cl == null) {
-            log.warn("Could not obtain jdependency clazz for [" + def_context + "]");
-          } else {
-            used_classes.add(cl);
-            Set<ClazzpathUnit> units = cl.getClazzpathUnits();
-            if (units.size() > 1) {
-              log.warn(
-                  "Added as entrypoints multiple ClasspathUnits from single class ["
-                      + cl
-                      + "] : ["
-                      + StringUtil.join(units, ",")
-                      + "]");
-            }
-            deps_used.addAll(units);
+          used_classes.add(def_context.getQualifiedName());
           }
         }
       }
-    }
+    
 
     log.info(
         "Using ["
             + used_classes.size()
-            + "] jdependency clazzes as entrypoints from traces and reachable constructs");
+            + "] clazzes from Steady traces/reachable constructs");
 
-    log.info("[" + cp.getUnits().length + "] classpathUnits in jdependency classpath object");
 
     // also collect "missing" classes to be able to check their relation with jre objects considered
     // used
@@ -192,35 +163,59 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
     }
 
     // Classes considered used
-    final SortedSet<Clazz> needed = new TreeSet<Clazz>();
+    final SortedSet<String> needed = new TreeSet<String>();
     final Set<Clazz> removable = cp.getClazzes();
+   
     // loop over classpathunits (representing the application) marked as entrypoints to find needed
     // classes
     for (ClazzpathUnit u : app) {
       removable.removeAll(u.getClazzes());
       removable.removeAll(u.getTransitiveDependencies());
-      needed.addAll(u.getClazzes());
-      needed.addAll(u.getTransitiveDependencies());
-
-      for (Clazz c : u.getTransitiveDependencies()) {
-        deps_used.addAll(c.getClazzpathUnits());
+      for (Clazz c: u.getClazzes()) {
+    	  needed.add(c.getName());      
       }
+      for (Clazz c: u.getTransitiveDependencies()) {
+    	  needed.add(c.getName());
+    	  deps_used.addAll(c.getClazzpathUnits());
+      }
+      
     }
 
-    // loop over class (representing traces and reachable constructs) marked as entrypoints to find
+    
+    // loop over class (representing traces and reachable constructs) and use them as entrypoints to find
     // needed classes
-    for (Clazz c : used_classes) {
-      if (removable.contains(c)) {
-        removable.remove(c);
-        removable.removeAll(c.getTransitiveDependencies());
-        needed.add(c);
-        needed.addAll(c.getTransitiveDependencies());
+    for (String class_name : used_classes) {
+    	needed.add(class_name);
+    	
+    	Clazz c = cp.getClazz(class_name);
 
-        for (Clazz cc : c.getTransitiveDependencies()) {
-          deps_used.addAll(cc.getClazzpathUnits());
-        }
-      }
+       if (c == null) {
+         log.warn("Could not obtain jdependency clazz for steady class [" + class_name + "]");
+       } else {
+         Set<ClazzpathUnit> units = c.getClazzpathUnits();
+         if (units.size() > 1) {
+           log.warn(
+               "Added as entrypoints multiple ClasspathUnits from single class ["
+                   + c
+                   + "] : ["
+                   + StringUtil.join(units, ",")
+                   + "]");
+         }
+         deps_used.addAll(units);
+         
+         if (removable.contains(c)) {
+             removable.remove(c);
+             removable.removeAll(c.getTransitiveDependencies());
+             for (Clazz cl: c.getTransitiveDependencies()) {
+            	 needed.add(cl.getName());
+            	 deps_used.addAll(cl.getClazzpathUnits());
+             }
+           }
+       }
     }
+    
+    
+    
     final SortedSet<Clazz> removable_sorted = new TreeSet<Clazz>(removable);
 
     Set<Clazz> remaining = cp.getClazzes();
@@ -294,10 +289,12 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
     for (ClazzpathUnit u : test) {
       removable.removeAll(u.getClazzes());
       removable.removeAll(u.getTransitiveDependencies());
-      needed.addAll(u.getClazzes());
-      needed.addAll(u.getTransitiveDependencies());
-      for (Clazz c : u.getTransitiveDependencies()) {
-        deps_used.addAll(c.getClazzpathUnits());
+      for (Clazz c: u.getClazzes()) {
+    	  needed.add(c.getName());      
+      }
+      for (Clazz c: u.getTransitiveDependencies()) {
+    	  needed.add(c.getName());
+    	  deps_used.addAll(c.getClazzpathUnits());
       }
     }
     maven_deps.removeAll(deps_used);
@@ -320,6 +317,14 @@ public class JavaDebloatTask extends AbstractTask implements DebloatTask {
               .toFile();
       FileUtil.writeToFile(f, StringUtil.join(maven_deps, System.lineSeparator()));
       log.info("List of removable dependencies with test written to [" + f.toPath() + "]");
+      
+      f =
+              Paths.get(
+                      this.vulasConfiguration.getDir(CoreConfiguration.SLICING_DIR).toString(),
+                      "used-deps.txt")
+                  .toFile();
+          FileUtil.writeToFile(f, StringUtil.join(deps_used, System.lineSeparator()));
+          log.info("List of used dependencies written to [" + f.toPath() + "]");
     } catch (IOException e) {
       e.printStackTrace();
     }
