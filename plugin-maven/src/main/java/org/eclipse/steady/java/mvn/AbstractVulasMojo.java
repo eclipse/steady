@@ -169,18 +169,18 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
         CoreConfiguration.SLICING_DIR,
         Paths.get(_prj.getBuild().getDirectory(), "vulas", "debloat").toString());
 
-
     // Read app constructs from src/main/java and target/classes
     final String p =
         Paths.get(_prj.getBuild().getOutputDirectory()).toString()
             + ","
             + Paths.get(_prj.getBuild().getSourceDirectory()).toString();
     _cfg.setPropertyIfEmpty(CoreConfiguration.APP_DIRS, p);
-    
-    final String test_paths= Paths.get(_prj.getBuild().getTestOutputDirectory()).toString()
+
+    final String test_paths =
+        Paths.get(_prj.getBuild().getTestOutputDirectory()).toString()
             + ","
             + Paths.get(_prj.getBuild().getTestSourceDirectory()).toString();
-    _cfg.setPropertyIfEmpty(CoreConfiguration.TEST_DIRS,test_paths);
+    _cfg.setPropertyIfEmpty(CoreConfiguration.TEST_DIRS, test_paths);
   }
 
   /**
