@@ -65,7 +65,7 @@ public class Manager {
   }
 
   public synchronized void start(
-      String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
+    String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
 
     File statementsDir = new File(statementsPath);
     File[] subdirs = statementsDir.listFiles();
@@ -84,11 +84,8 @@ public class Manager {
       if (dir.getName().startsWith("CVE")) {
         // It is necessary to copy the arguments to avoid concurrent modification
         HashMap<String, Object> args = new HashMap<String, Object>(mapCommandOptionValues);
-        System.out.println(args);
         args.put(Import.DIRECTORY_OPTION, dirPath);
-        System.out.println(args);
         Import command = new Import(this, args);
-        System.out.println("after new Import");
         executor.submit(command);
         // command.run();
         System.out.println(status());

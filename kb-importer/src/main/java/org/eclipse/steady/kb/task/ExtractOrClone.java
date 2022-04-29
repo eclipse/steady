@@ -43,9 +43,9 @@ public class ExtractOrClone {
       extract(tarFile, dirPath);
     } else {
       System.out.println("else");
-      System.out.println("skipping clone");
-      manager.setVulnStatus(this.vulnId, Manager.VulnStatus.FAILED);
-      // clone(vuln, dirPath);
+      //System.out.println("skipping clone");
+      //manager.setVulnStatus(this.vulnId, Manager.VulnStatus.FAILED);
+      clone(vuln, dirPath);
     }
     System.out.println("ExtractOrClone : done (" + dirPath + ")");
   }
@@ -123,7 +123,7 @@ public class ExtractOrClone {
       } catch (IOException | InterruptedException e) {
         e.printStackTrace();
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED);
-        continue;
+        break;
       }
       manager.unlockRepo(repoUrl);
     }
@@ -190,13 +190,13 @@ public class ExtractOrClone {
       BufferedReader gitCloneErrorInput =
           new BufferedReader(new InputStreamReader(gitClone.getErrorStream()));
       String line;
-      while ((line = gitCloneStdInput.readLine()) != null) {
+      /*while ((line = gitCloneStdInput.readLine()) != null) {
         System.out.println("git clone");
         System.out.println(line);
         if ((line = gitCloneErrorInput.readLine()) != null) {
           System.out.println(line);
         }
-      }
+      }*/
       gitClone.waitFor();
     }
   }
