@@ -6,14 +6,16 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.apache.logging.log4j.Logger;
+import com.github.packageurl.MalformedPackageURLException;
 
 import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.backend.BackendConnector;
 import org.eclipse.steady.kb.task.ExtractOrClone;
+import org.eclipse.steady.kb.task.ImportVulnerability;
+import org.eclipse.steady.kb.task.ImportAffectedLibraries;
 import org.eclipse.steady.kb.util.Metadata;
 import org.eclipse.steady.kb.model.Vulnerability;
 import org.eclipse.steady.backend.BackendConnectionException;
-import org.eclipse.steady.kb.Manager;
 
 public class Import implements Runnable {
 
@@ -48,55 +50,77 @@ public class Import implements Runnable {
 
   @Override
   public void run() {
+
+    manager.setVulnStatus(vulnId, Manager.VulnStatus.PROCESSING);
     boolean bugExists = false;
     try {
-      // System.out.println("before isBugExisting");
       bugExists = this.backendConnector.isBugExisting(vulnId);
-      // System.out.println("after isBugExisting");
     } catch (BackendConnectionException e) {
       log.error("Can't connect to the Backend");
       return;
     }
+    System.out.println("a");
     Boolean overwrite = (Boolean) args.get(OVERWRITE_OPTION);
     if (bugExists) {
       if (overwrite) {
         args.put(DELETE, true);
       } else {
-        System.out.println("bugExists no Overwrite");
         log.info("Bug [{}] already exists in backend, analysis will be skipped", vulnId);
         return;
       }
     }
+    System.out.println("b");
     String statementPath = findStatementPath();
-    System.out.println("statementPath");
-    System.out.println(statementPath);
+    System.out.println("c");
+
     if (statementPath != null) {
+      System.out.println("d");
       Vulnerability vuln;
       try {
+        // System.out.println("getFromYaml...");
         vuln = Metadata.getFromYaml(statementPath);
+        // System.out.println("after getFromYaml");
       } catch (IOException e) {
         log.error("Error while reading Yaml file for [{}]", vulnId);
         return;
       }
-      // ImportVulnerability importVulnerability = new ImportVulnerability(vuln, args);
-      // ImportAffectedLibraries importAffectedLibraries = new ImportAffectedLibraries(vuln, args);
+      System.out.println("e");
+      if (vuln.getCommits() == null || vuln.getCommits().size() == 0) {
+        log.error("No fix commits for vulnerability " + vuln.getVulnId());
+        manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.NO_FIXES);
+        return;
+      }
 
-      ExtractOrClone extractOrClone = new ExtractOrClone(this.manager);
-      extractOrClone.execute(new File(this.vulnDir.toString()), vuln);
-      // importVulnerability.execute();
-      // importAffectedLibraries.execute();
+      ExtractOrClone extractOrClone =
+          new ExtractOrClone(this.manager, vuln, new File(this.vulnDir.toString()));
+      extractOrClone.execute();
+
+      if (manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.FAILED) {
+        manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.DIFF_DONE);
+        ImportVulnerability importVulnerability = new ImportVulnerability();
+        ImportAffectedLibraries importAffectedLibraries = new ImportAffectedLibraries();
+        try {
+          importVulnerability.execute(vuln, args, backendConnector);
+        } catch (IOException | BackendConnectionException e) {
+          manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_IMPORT_VULN);
+          e.printStackTrace();
+        }
+        try {
+          importAffectedLibraries.execute(vuln, args, backendConnector);
+        } catch (IOException | MalformedPackageURLException | BackendConnectionException e) {
+          manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_IMPORT_LIB);
+          e.printStackTrace();
+        }
+        manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.IMPORTED);
+      }
     }
   }
 
   public String findStatementPath() {
-    // TODO: Should also check for metadata.json?
     // Review this function
     if (FileUtil.isAccessibleFile(vulnDir + File.separator + STATEMENT_YAML)) {
       return vulnDir + File.separator + STATEMENT_YAML;
-    }
-    // Since there is one Import task per vulnerability, there is no need to loop over
-    // subdirectories
-    else if (FileUtil.isAccessibleDirectory(vulnDir)) {
+    } else if (FileUtil.isAccessibleDirectory(vulnDir)) {
       File directory = new File(vulnDir.toString());
       File[] fList = directory.listFiles();
       if (fList != null) {
@@ -107,7 +131,7 @@ public class Import implements Runnable {
               return file.getAbsolutePath() + File.separator + STATEMENT_YAML;
             } else {
               Import.log.warn(
-                  "Skipping {} as the directory does not contain statement.yaml" + " file",
+                  "Skipping {} as the directory does not contain statement.yaml file",
                   file.getAbsolutePath());
             }
           }

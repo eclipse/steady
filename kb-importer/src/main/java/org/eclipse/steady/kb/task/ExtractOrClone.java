@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.HashMap;
@@ -20,19 +21,31 @@ public class ExtractOrClone {
 
   private static final String GIT_DIRECTORY = "git-repos";
   private final Manager manager;
+  private final Vulnerability vuln;
+  private final String vulnId;
+  private final String dirPath;
+  private final File tarFile;
 
-  public ExtractOrClone(Manager manager){
+  public ExtractOrClone(Manager manager, Vulnerability vuln, File dir) {
     this.manager = manager;
+    this.vuln = vuln;
+    this.vulnId = vuln.getVulnId();
+    this.dirPath = dir.getPath();
+    this.tarFile = getTarFile(dirPath);
+    System.out.println("ExtractOrClone constructor");
   }
 
-  public void execute(File dir, Vulnerability vuln) {
-    String dirPath = dir.getPath();
-    File tarFile = getTarFile(dirPath);
+  public void execute() {
 
+    System.out.println("ExtractOrClone.execute()");
     if (tarFile != null) {
+      System.out.println("if (tarFile != null)");
       extract(tarFile, dirPath);
     } else {
-      clone(vuln, dirPath);
+      System.out.println("else");
+      System.out.println("skipping clone");
+      manager.setVulnStatus(this.vulnId, Manager.VulnStatus.FAILED);
+      // clone(vuln, dirPath);
     }
     System.out.println("ExtractOrClone : done (" + dirPath + ")");
   }
@@ -61,41 +74,58 @@ public class ExtractOrClone {
   }
 
   public void extract(File tarFile, String dirPath) {
+
+    System.out.println("extract");
     String extractCommand = "tar -xf " + tarFile.getPath() + " --directory " + dirPath;
     try {
       Process process = Runtime.getRuntime().exec(extractCommand);
       process.waitFor();
+
+      File dir = new File(dirPath);
+
+      List<Commit> commits = vuln.getCommits();
+      for (Commit commit : commits) {
+        String commitDirPath = dirPath + File.separator + commit.getCommitId();
+        createAndWriteCommitMetadata(commit, null, commitDirPath);
+      }
+
     } catch (IOException | InterruptedException e) {
+      String vulnId = dirPath.split(File.separator)[dirPath.split(File.separator).length - 1];
+      manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED);
       e.printStackTrace();
     }
   }
 
   public void clone(Vulnerability vuln, String dirPath) {
+    System.out.println("clone");
+    System.out.println(vuln);
+
     List<Commit> commits = vuln.getCommits();
+    System.out.println(commits);
     if (commits.size() == 0) {
       System.out.println("NO COMMITS");
       return;
     }
+
     for (Commit commit : commits) {
-      // TODO : lock the repo from this point
-      // can the bugs have multiple repositories?
       String repoUrl = commit.getRepoUrl();
       String commitId = commit.getCommitId();
       String commitDirPath = dirPath + File.separator + commitId;
       System.out.println("commitDirPath : " + commitDirPath);
       File commitDir = new File(commitDirPath);
       String repoDirPath =
-          GIT_DIRECTORY + File.separator + repoUrl.split("/")[repoUrl.split("/").length - 1];
+          GIT_DIRECTORY + File.separator + repoUrl.replace("https://", "").replace("/", "_");
+      manager.lockRepo(repoUrl);
       try {
-          manager.start(repoUrl);
-          cloneOnce(repoUrl, repoDirPath);
-          createAndWriteCommitMetadata(commit, repoDirPath, commitDirPath);
-          writeCommitDiff(commitId, repoDirPath, commitDirPath);
-          manager.complete(repoUrl);
-      } catch (IOException e) {
+        cloneOnce(repoUrl, repoDirPath);
+        createAndWriteCommitMetadata(commit, repoDirPath, commitDirPath);
+        writeCommitDiff(commitId, repoDirPath, commitDirPath);
+      } catch (IOException | InterruptedException e) {
         e.printStackTrace();
+        manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED);
         continue;
       }
+      manager.unlockRepo(repoUrl);
     }
   }
 
@@ -107,33 +137,37 @@ public class ExtractOrClone {
     File commitMetadataFile = new File(commitDirPath);
     // if (!Files.exists(commitMetadataPath)) {
     HashMap<String, String> commitMetadata = new HashMap<String, String>();
-    String gitShowCommand =
-        "git -C " + repoDirPath + " show --no-patch --no-notes --pretty='%at' " + commitId;
-    Process gitShow =
-        Runtime.getRuntime()
-            .exec(gitShowCommand); // have problems probably caused by parallelization
 
-    BufferedReader gitShowStdInput =
-        new BufferedReader(new InputStreamReader(gitShow.getInputStream()));
-    BufferedReader gitShowError =
-        new BufferedReader(new InputStreamReader(gitShow.getErrorStream()));
     String timestamp;
-    if ((timestamp = gitShowStdInput.readLine()) == null) {
-      System.out.println("NULL 1");
+    if (repoDirPath == null) {
+      System.out.println("repoDirPath == null");
+      Path timestampPath = Paths.get(commitDirPath + File.separator + "timestamp");
+      System.out.println(commitDirPath + File.separator + "timestamp");
+      timestamp = new String(Files.readAllBytes(timestampPath)).replace("\n", "");
+      System.out.println(timestamp);
+    } else {
+      String gitShowCommand =
+          "git -C " + repoDirPath + " show --no-patch --no-notes --pretty='%at' " + commitId;
+      Process gitShow = Runtime.getRuntime().exec(gitShowCommand);
+
+      BufferedReader gitShowStdInput =
+          new BufferedReader(new InputStreamReader(gitShow.getInputStream()));
+      System.out.println(gitShowCommand);
+
+      if ((timestamp = gitShowStdInput.readLine()) == null || timestamp == null) {
+        BufferedReader gitShowError =
+            new BufferedReader(new InputStreamReader(gitShow.getErrorStream()));
+        System.out.println("Error: Failed to get commit timestamp");
+        String error = gitShowError.readLine();
+        System.out.println("git show Error: " + error);
+        manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED);
+      }
     }
-    System.out.println("timestamp1");
-    System.out.println(timestamp);
-    if (timestamp == null) {
-      System.out.println("NULL!!!");
-    }
-    String error = gitShowError.readLine();
-    System.out.println("git show Error: " + error);
     /*
     while ((timestamp = gitShowStdInput.readLine()) == null) {
       System.out.println("timestamp : "+timestamp);
     }*/
     System.out.println("timestamp : " + timestamp);
-
     commitMetadata.put("repository", commit.getRepoUrl());
     commitMetadata.put("branch", commit.getBranch());
     commitMetadata.put("timestamp", timestamp);
@@ -142,18 +176,28 @@ public class ExtractOrClone {
     Metadata.writeCommitMetadata(commitDirPath, commitMetadata);
   }
 
-  public void cloneOnce(String repoUrl, String repoDirPath) {
+  public void cloneOnce(String repoUrl, String repoDirPath)
+      throws IOException, InterruptedException {
     String gitCloneCommand = "git clone " + repoUrl + " " + repoDirPath;
     File repoDir = new File(repoDirPath);
+
     if (Files.exists(Paths.get(repoDirPath))) {
       System.out.println("Folder " + repoDirPath + " exists. Skipping git clone.");
     } else {
-      try {
-        Process gitClone = Runtime.getRuntime().exec(gitCloneCommand);
-        gitClone.waitFor();
-      } catch (IOException | InterruptedException e) {
-        e.printStackTrace();
+      Process gitClone = Runtime.getRuntime().exec(gitCloneCommand);
+      BufferedReader gitCloneStdInput =
+          new BufferedReader(new InputStreamReader(gitClone.getInputStream()));
+      BufferedReader gitCloneErrorInput =
+          new BufferedReader(new InputStreamReader(gitClone.getErrorStream()));
+      String line;
+      while ((line = gitCloneStdInput.readLine()) != null) {
+        System.out.println("git clone");
+        System.out.println(line);
+        if ((line = gitCloneErrorInput.readLine()) != null) {
+          System.out.println(line);
+        }
       }
+      gitClone.waitFor();
     }
   }
 
@@ -185,6 +229,9 @@ public class ExtractOrClone {
                 + "before"
                 + File.separator
                 + filename;
+      } else {
+        System.out.println("Error: git cat-file didn't work");
+        manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED);
       }
 
       String gitCatAfterCommand =
@@ -205,6 +252,9 @@ public class ExtractOrClone {
                 + "after"
                 + File.separator
                 + filename;
+      } else {
+        System.out.println("Error: git cat-file didn't work");
+        manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED);
       }
     }
   }

@@ -53,6 +53,9 @@ public class ImportAffectedLibraries implements Task {
   public void execute(
       Vulnerability vuln, HashMap<String, Object> args, BackendConnector backendConnector)
       throws MalformedPackageURLException, BackendConnectionException, JsonProcessingException {
+
+    System.out.println("ImportAffectedLibraries: " + vuln.getVulnId());
+
     List<Artifact> artifacts = vuln.getArtifacts();
     if (artifacts == null || artifacts.isEmpty()) {
       return;
@@ -121,6 +124,7 @@ public class ImportAffectedLibraries implements Task {
         affectedLibsToUpsert.add(affectedLibrary);
       }
     }
+    System.out.println("ImportAffectedLibraries 2");
 
     if (!affectedLibsToUpsert.isEmpty()) {
       ObjectMapper mapper = new ObjectMapper();
@@ -129,6 +133,8 @@ public class ImportAffectedLibraries implements Task {
       backendConnector.uploadBugAffectedLibraries(
           null, vuln.getVulnId(), json, AffectedVersionSource.KAYBEE);
     }
+
+    System.out.println("ImportAffectedLibraries: " + vuln.getVulnId() + " complete");
   }
 
   private void setAfftectedLib(Artifact artifact, AffectedLibrary affectedLibrary) {

@@ -1,15 +1,13 @@
 package org.eclipse.steady.kb;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Executors;
-
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
 
 import java.io.File;
 
@@ -18,55 +16,53 @@ import org.eclipse.steady.core.util.CoreConfiguration;
 
 public class Manager {
 
-  private static int imported = 0;
-
-  public static void addStatus(String vulnId, VulnStatus vulnStatus) {
-    imported += 1;
-    System.out.println("addStatus()");
-    System.out.println(vulnId);
+  public void setVulnStatus(String vulnId, VulnStatus vulnStatus) {
     vulnerabilitiesStatus.put(vulnId, vulnStatus);
-    System.out.println("addStatus()2");
+  }
+
+  public VulnStatus getVulnStatus(String vulnId) {
+    return vulnerabilitiesStatus.get(vulnId);
   }
 
   private ThreadPoolExecutor executor =
-      //new MyThreadExecutor(16, 32, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
-      //(ThreadPoolExecutor) Executors.newCachedThreadPool();
-      (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
+      // new MyThreadExecutor(16, 32, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+      (ThreadPoolExecutor) Executors.newCachedThreadPool();
+  // (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
 
-  enum VulnStatus {
+  public enum VulnStatus {
     NOT_STARTED,
     PROCESSING,
+    DIFF_DONE,
     IMPORTED,
-    FAILED
+    FAILED,
+    FAILED_IMPORT_LIB,
+    FAILED_IMPORT_VULN,
+    NO_FIXES
   }
 
   private static Map<String, VulnStatus> vulnerabilitiesStatus = new HashMap<String, VulnStatus>();
-  // synchronized Map<String, Lock> reposInProcess = new HashMap<String, Lock>();
+
   Map<String, Lock> repoLocks = new HashMap<String, Lock>();
-  
 
-  //private synchronized Set<String> vulnDone;
-
-  /*public synchronized boolean isRepoInProcess(String repo) {
-    return reposInProcess.get(repo);
-  }*/
-
-  public void start(String repo) {
-   // reposInProcess.put(repo, true);
-    if (!repoLocks.containsKey(repo)){
+  public void lockRepo(String repo) {
+    System.out.println("Lock: " + repo);
+    if (!repoLocks.containsKey(repo)) {
+      System.out.println("no key: " + repo);
       repoLocks.put(repo, new ReentrantLock());
     }
     repoLocks.get(repo).lock();
+    System.out.println("Locked:" + repo);
   }
 
-  public void complete(String repo) {
+  public void unlockRepo(String repo) {
+    System.out.println("Unlock: " + repo);
     if (!repoLocks.containsKey(repo)) {
       System.out.println("ERROR : Lock not found");
       return;
     }
     repoLocks.get(repo).unlock();
+    System.out.println("Unlocked: " + repo);
   }
-  //HashMap<String, Set> all_vulns =
 
   public synchronized void start(
       String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
@@ -79,18 +75,37 @@ public class Manager {
 
     for (File dir : subdirs) {
       String dirPath = dir.getPath();
-      mapCommandOptionValues.put(Import.DIRECTORY_OPTION, dirPath);
-      Import command = new Import(this, mapCommandOptionValues);
-      executor.submit(command);
+      String vulnId = dir.getName().toString();
+      setVulnStatus(vulnId, VulnStatus.NOT_STARTED);
     }
-    for (int i = 0; i < 10; i++) {
+    for (File dir : subdirs) {
+      String dirPath = dir.getPath();
+      System.out.println(dirPath);
+      if (dir.getName().startsWith("CVE")) {
+        // It is necessary to copy the arguments to avoid concurrent modification
+        HashMap<String, Object> args = new HashMap<String, Object>(mapCommandOptionValues);
+        System.out.println(args);
+        args.put(Import.DIRECTORY_OPTION, dirPath);
+        System.out.println(args);
+        Import command = new Import(this, args);
+        System.out.println("after new Import");
+        executor.submit(command);
+        // command.run();
+        System.out.println(status());
+        /*try {
+          Thread.sleep(100);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }*/
+      }
+    }
+    while (true) {
+      System.out.println(status());
       try {
-        Thread.sleep(10000);
+        Thread.sleep(1000);
       } catch (InterruptedException e) {
         e.printStackTrace();
-        System.out.println("Interrupted");
       }
-      System.out.println(status());
     }
   }
 
@@ -105,18 +120,59 @@ public class Manager {
   }
 
   public String status() {
-    /*int imported = 0;
-    int others = 0;
+    int not_started = 0;
+    int imported = 0;
+    int processing = 0;
+    int diff_done = 0;
+    int no_fixes = 0;
+    int failed = 0;
+    int failed_vuln = 0;
+    int failed_lib = 0;
     for (VulnStatus vulnStatus : new ArrayList<VulnStatus>(vulnerabilitiesStatus.values())) {
-        if (vulnStatus == VulnStatus.IMPORTED) {
-            imported += 1;
-        }
-        else {
-            others += 1;
-        }
-    }*/
-
+      switch (vulnStatus) {
+        case NOT_STARTED:
+          not_started += 1;
+          break;
+        case IMPORTED:
+          imported += 1;
+          break;
+        case PROCESSING:
+          processing += 1;
+          break;
+        case DIFF_DONE:
+          diff_done += 1;
+          break;
+        case NO_FIXES:
+          no_fixes += 1;
+          break;
+        case FAILED_IMPORT_VULN:
+          failed_vuln += 1;
+          break;
+        case FAILED_IMPORT_LIB:
+          failed_lib += 1;
+          break;
+        case FAILED:
+          failed += 1;
+          break;
+        default:
+          break;
+      }
+    }
     return "imported = "
-        + Integer.toString(imported); // + "\nothers = " + Integer.toString(others);
+        + Integer.toString(imported)
+        + "\nnot_started = "
+        + Integer.toString(not_started)
+        + "\nprocessing = "
+        + Integer.toString(processing)
+        + "\ndiff_done = "
+        + Integer.toString(diff_done)
+        + "\nno_commits = "
+        + Integer.toString(no_fixes)
+        + "\nfailed = "
+        + Integer.toString(failed)
+        + "\nfailed vuln = "
+        + Integer.toString(failed_lib)
+        + "\nfailed lib = "
+        + Integer.toString(failed_vuln);
   }
 }
