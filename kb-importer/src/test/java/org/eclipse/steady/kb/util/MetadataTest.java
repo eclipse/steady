@@ -21,6 +21,7 @@ package org.eclipse.steady.kb.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import java.io.IOException;
+import java.io.File;
 
 import org.eclipse.steady.kb.model.Commit;
 import org.eclipse.steady.kb.model.Vulnerability;
@@ -95,5 +96,21 @@ public class MetadataTest {
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidCommitMetadataDir() throws JsonSyntaxException, IOException {
     Metadata.getVulnerabilityMetadata("commitDir2");
+  }
+
+  @Test
+  public void testGetFromYaml() throws IOException {
+
+    ClassLoader classLoader = getClass().getClassLoader();
+    String path = classLoader.getResource("testRootDir1").getPath() + File.separator + "statement.yaml";
+    Vulnerability vuln = Metadata.getFromYaml(path);
+
+    System.out.println("vuln");
+    System.out.println(vuln);
+    System.out.println(vuln.getArtifacts());
+
+    assertEquals(3, vuln.getArtifacts().size());
+    assertEquals(3, vuln.getNotes().size());
+    assertEquals("COLLECTIONS-580", vuln.getVulnId());
   }
 }

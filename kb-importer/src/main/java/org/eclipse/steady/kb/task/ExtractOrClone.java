@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.HashMap;
 
 import org.eclipse.steady.shared.util.FileUtil;
@@ -77,7 +78,9 @@ public class ExtractOrClone {
 
     System.out.println("extract");
     String extractCommand = "tar -xf " + tarFile.getPath() + " --directory " + dirPath;
+
     try {
+
       Process process = Runtime.getRuntime().exec(extractCommand);
       process.waitFor();
 
@@ -113,13 +116,18 @@ public class ExtractOrClone {
       String commitDirPath = dirPath + File.separator + commitId;
       System.out.println("commitDirPath : " + commitDirPath);
       File commitDir = new File(commitDirPath);
+      commitDir.mkdir();
       String repoDirPath =
           GIT_DIRECTORY + File.separator + repoUrl.replace("https://", "").replace("/", "_");
       manager.lockRepo(repoUrl);
       try {
         cloneOnce(repoUrl, repoDirPath);
+        System.out.println("after cloneOnce");
         createAndWriteCommitMetadata(commit, repoDirPath, commitDirPath);
+        System.out.println("after createAndWriteCommitMetadata");
         writeCommitDiff(commitId, repoDirPath, commitDirPath);
+        System.out.println("after writeCommmitDiff");
+
       } catch (IOException | InterruptedException e) {
         e.printStackTrace();
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED);
@@ -197,24 +205,36 @@ public class ExtractOrClone {
           System.out.println(line);
         }
       }*/
-      gitClone.waitFor();
     }
   }
 
   public void writeCommitDiff(String commitId, String repoDirPath, String commitDirPath)
-      throws IOException {
+      throws IOException, InterruptedException {
     String gitDiffCommand =
         "git -C " + repoDirPath + " diff --name-only " + commitId + "^.." + commitId;
+    System.out.println(gitDiffCommand);
     Process gitDiff = Runtime.getRuntime().exec(gitDiffCommand);
     BufferedReader gitDiffStdInput =
         new BufferedReader(new InputStreamReader(gitDiff.getInputStream()));
     String filename;
     while ((filename = gitDiffStdInput.readLine()) != null) {
+      System.out.println("while");
+      System.out.println(filename);
+
       // for each file modified in the commit...
       String gitCatBeforeCommand =
-          "git -C " + repoDirPath + " cat-file -e " + commitId + "~1:" + filename + " &> /dev/null";
+          "git -C " + repoDirPath + " cat-file -e " + commitId + "~1:" + filename;// + " &> /dev/null";
       Process gitCatBefore = Runtime.getRuntime().exec(gitCatBeforeCommand);
+
+      BufferedReader gitCatErrorInput =
+          new BufferedReader(new InputStreamReader(gitDiff.getErrorStream()));
+      gitCatBefore.waitFor();
       if (gitCatBefore.exitValue() == 0) {
+        String filepath = commitDirPath + File.separator + "before" + File.separator + filename;
+        File file = new File(filepath);
+        File dir = file.getParentFile();
+        //Paths.createDirectories(dir.getPath());
+        dir.mkdirs();
         // git -C $repo_dir show $commit_id~1:$F > $vulnerability_id/$commit_id/before/$F
         String diffFileCommand =
             "git -C "
@@ -224,21 +244,29 @@ public class ExtractOrClone {
                 + "~1:"
                 + filename
                 + " > "
-                + commitDirPath
-                + File.separator
-                + "before"
-                + File.separator
-                + filename;
+                + filepath;
+        System.out.println(diffFileCommand);
+        Process gitDiffFileBefore = Runtime.getRuntime().exec(diffFileCommand);
+        gitDiffFileBefore.waitFor();
+
       } else {
         System.out.println("Error: git cat-file didn't work");
+        System.out.println(gitCatErrorInput.readLine());
         manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED);
       }
 
       String gitCatAfterCommand =
           "git -C " + repoDirPath + " cat-file -e " + commitId + ":" + filename + " &> /dev/null";
       Process gitCatAfter = Runtime.getRuntime().exec(gitCatBeforeCommand);
+      gitCatAfter.waitFor();
+
       if (gitCatAfter.exitValue() == 0) {
         // git -C $repo_dir show $commit_id:$F > $vulnerability_id/$commit_id/after/$F
+        String filepath = commitDirPath + File.separator + "after" + File.separator + filename;
+        File file = new File(filepath);
+        File dir = file.getParentFile();
+        //Paths.createDirectories(dir.getPath());
+        dir.mkdirs();
         String diffFileCommand =
             "git -C "
                 + repoDirPath
@@ -247,11 +275,10 @@ public class ExtractOrClone {
                 + ":"
                 + filename
                 + " > "
-                + commitDirPath
-                + File.separator
-                + "after"
-                + File.separator
-                + filename;
+                + filepath;
+        System.out.println(diffFileCommand);      
+        Process gitDiffFileAfter = Runtime.getRuntime().exec(diffFileCommand);
+        gitDiffFileAfter.waitFor();
       } else {
         System.out.println("Error: git cat-file didn't work");
         manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED);

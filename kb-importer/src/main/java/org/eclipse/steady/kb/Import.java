@@ -69,9 +69,8 @@ public class Import implements Runnable {
         return;
       }
     }
-    System.out.println("b");
+
     String statementPath = findStatementPath();
-    System.out.println("c");
 
     if (statementPath != null) {
       System.out.println("d");

@@ -81,8 +81,9 @@ public class Metadata {
   public static void writeCommitMetadata(String commitDir, HashMap<String, String> commitMetadata)
       throws IOException {
     String filePath = commitDir + File.separator + META_PROPERTIES_FILE;
-    // File file = new File(filePath);
-    // file.createNewFile();
+    System.out.println(filePath);
+    File file = new File(filePath);
+    file.createNewFile();
     Writer writer = new FileWriter(filePath, false);
     new Gson().toJson(commitMetadata, writer);
     writer.close();

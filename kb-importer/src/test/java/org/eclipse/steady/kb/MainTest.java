@@ -23,6 +23,7 @@ import org.junit.Test;
 public class MainTest {
   private static final String SPACE = " ";
 
+/*
   @Test
   public void testHelp() {
     String args = "help";
@@ -33,5 +34,5 @@ public class MainTest {
   public void testVersion() {
     String args = "version";
     Main.main(args.split(SPACE));
-  }
+  }*/
 }
