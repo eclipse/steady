@@ -19,7 +19,7 @@ Eclipse Steady supports software development organizations in regards to the sec
 - collect evidence regarding the execution of vulnerable code in a given application context (through the combination of static and dynamic analysis techniques), and
 - support developers in the mitigation of such dependencies.
 
-As such, it addresses the OWASP Top 10 security risk A9, [Using Components with Known Vulnerabilities](https://www.owasp.org/index.php/Top_10-2017_A9-Using_Components_with_Known_Vulnerabilities), which is often the root cause of data breaches: [snyk.io/blog/owasp-top-10-breaches](https://snyk.io/blog/owasp-top-10-breaches/)
+As such, it addresses the OWASP Top 10 security risk A6, [Vulnerable and Outdated Components](https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/), which is often the root cause of data breaches: [snyk.io/blog/owasp-top-10-breaches](https://snyk.io/blog/owasp-top-10-breaches/)
 
 In comparison to other tools, the detection is code-centric and usage-based, which allows for more accurate detection and assessment than tools relying on meta-data.  It is a collection of client-side scan tools, microservices and rich [OpenUI5](https://openui5.hana.ondemand.com/) Web frontends.
 
