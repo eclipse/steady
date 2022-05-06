@@ -50,16 +50,23 @@ public class Import implements Runnable {
 
   @Override
   public void run() {
+    System.out.println("Import.run()");
 
     manager.setVulnStatus(vulnId, Manager.VulnStatus.PROCESSING);
     boolean bugExists = false;
     try {
+
+    System.out.println("try");
       bugExists = this.backendConnector.isBugExisting(vulnId);
+    System.out.println("after isBugExisting");
+
     } catch (BackendConnectionException e) {
+    System.out.println("BackendConnectionException");
+
       log.error("Can't connect to the Backend");
       return;
     }
-    System.out.println("a");
+    System.out.println("aaaaaaaaaa");
     Boolean overwrite = (Boolean) args.get(OVERWRITE_OPTION);
     if (bugExists) {
       if (overwrite) {
@@ -137,7 +144,6 @@ public class Import implements Runnable {
         }
       }
     } else {
-      System.out.println("statement not found");
       Import.log.error("Invalid directory {}", vulnDir);
     }
     return null;

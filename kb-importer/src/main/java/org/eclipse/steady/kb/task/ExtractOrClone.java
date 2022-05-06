@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.kb.model.Vulnerability;
@@ -84,8 +85,6 @@ public class ExtractOrClone {
       Process process = Runtime.getRuntime().exec(extractCommand);
       process.waitFor();
 
-      File dir = new File(dirPath);
-
       List<Commit> commits = vuln.getCommits();
       for (Commit commit : commits) {
         String commitDirPath = dirPath + File.separator + commit.getCommitId();
@@ -117,7 +116,7 @@ public class ExtractOrClone {
       System.out.println("commitDirPath : " + commitDirPath);
       File commitDir = new File(commitDirPath);
       commitDir.mkdir();
-      String repoDirPath =
+      String repoDirPath = dirPath + File.separator + 
           GIT_DIRECTORY + File.separator + repoUrl.replace("https://", "").replace("/", "_");
       manager.lockRepo(repoUrl);
       try {
@@ -173,7 +172,7 @@ public class ExtractOrClone {
     }
     /*
     while ((timestamp = gitShowStdInput.readLine()) == null) {
-      System.out.println("timestamp : "+timestamp);
+      System.out.println("timestamp : " + timestamp);
     }*/
     System.out.println("timestamp : " + timestamp);
     commitMetadata.put("repository", commit.getRepoUrl());
@@ -187,24 +186,24 @@ public class ExtractOrClone {
   public void cloneOnce(String repoUrl, String repoDirPath)
       throws IOException, InterruptedException {
     String gitCloneCommand = "git clone " + repoUrl + " " + repoDirPath;
-    File repoDir = new File(repoDirPath);
 
     if (Files.exists(Paths.get(repoDirPath))) {
       System.out.println("Folder " + repoDirPath + " exists. Skipping git clone.");
     } else {
       Process gitClone = Runtime.getRuntime().exec(gitCloneCommand);
-      BufferedReader gitCloneStdInput =
+      /*BufferedReader gitCloneStdInput =
           new BufferedReader(new InputStreamReader(gitClone.getInputStream()));
       BufferedReader gitCloneErrorInput =
           new BufferedReader(new InputStreamReader(gitClone.getErrorStream()));
       String line;
-      /*while ((line = gitCloneStdInput.readLine()) != null) {
+      while ((line = gitCloneStdInput.readLine()) != null) {
         System.out.println("git clone");
         System.out.println(line);
         if ((line = gitCloneErrorInput.readLine()) != null) {
           System.out.println(line);
         }
       }*/
+      gitClone.waitFor();
     }
   }
 
@@ -218,71 +217,79 @@ public class ExtractOrClone {
         new BufferedReader(new InputStreamReader(gitDiff.getInputStream()));
     String filename;
     while ((filename = gitDiffStdInput.readLine()) != null) {
-      System.out.println("while");
-      System.out.println(filename);
-
-      // for each file modified in the commit...
-      String gitCatBeforeCommand =
-          "git -C " + repoDirPath + " cat-file -e " + commitId + "~1:" + filename;// + " &> /dev/null";
-      Process gitCatBefore = Runtime.getRuntime().exec(gitCatBeforeCommand);
-
-      BufferedReader gitCatErrorInput =
-          new BufferedReader(new InputStreamReader(gitDiff.getErrorStream()));
-      gitCatBefore.waitFor();
-      if (gitCatBefore.exitValue() == 0) {
-        String filepath = commitDirPath + File.separator + "before" + File.separator + filename;
-        File file = new File(filepath);
-        File dir = file.getParentFile();
-        //Paths.createDirectories(dir.getPath());
-        dir.mkdirs();
-        // git -C $repo_dir show $commit_id~1:$F > $vulnerability_id/$commit_id/before/$F
-        String diffFileCommand =
-            "git -C "
-                + repoDirPath
-                + " show "
-                + commitId
-                + "~1:"
-                + filename
-                + " > "
-                + filepath;
-        System.out.println(diffFileCommand);
-        Process gitDiffFileBefore = Runtime.getRuntime().exec(diffFileCommand);
-        gitDiffFileBefore.waitFor();
-
-      } else {
-        System.out.println("Error: git cat-file didn't work");
-        System.out.println(gitCatErrorInput.readLine());
-        manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED);
-      }
-
-      String gitCatAfterCommand =
-          "git -C " + repoDirPath + " cat-file -e " + commitId + ":" + filename + " &> /dev/null";
-      Process gitCatAfter = Runtime.getRuntime().exec(gitCatBeforeCommand);
-      gitCatAfter.waitFor();
-
-      if (gitCatAfter.exitValue() == 0) {
-        // git -C $repo_dir show $commit_id:$F > $vulnerability_id/$commit_id/after/$F
-        String filepath = commitDirPath + File.separator + "after" + File.separator + filename;
-        File file = new File(filepath);
-        File dir = file.getParentFile();
-        //Paths.createDirectories(dir.getPath());
-        dir.mkdirs();
-        String diffFileCommand =
-            "git -C "
-                + repoDirPath
-                + " show "
-                + commitId
-                + ":"
-                + filename
-                + " > "
-                + filepath;
-        System.out.println(diffFileCommand);      
-        Process gitDiffFileAfter = Runtime.getRuntime().exec(diffFileCommand);
-        gitDiffFileAfter.waitFor();
-      } else {
-        System.out.println("Error: git cat-file didn't work");
-        manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED);
-      }
+      execGitDiffFile(repoDirPath, commitId, filename, true);
+      execGitDiffFile(repoDirPath, commitId, filename, false);
     }
   }
+
+  public void execGitDiffFile(String repoDirPath, String commitId, String filename, boolean before)
+      throws IOException, InterruptedException {
+
+    String commitDirPath = dirPath + File.separator + commitId;
+    String commitStr;
+    if (before) { 
+      commitStr = commitId + "~1:";
+    } else {
+      commitStr = commitId + ":";
+    }
+    String beforeOrAfter = before? "before" : "after";
+    // for each file modified in the commit...
+    String gitCatCommand =
+        "git -C " + repoDirPath + " cat-file -e " + commitStr + filename;// + " &> /dev/null";
+    Process gitCat = Runtime.getRuntime().exec(gitCatCommand);
+    System.out.println(gitCatCommand);
+    BufferedReader gitCatErrorInput =
+        new BufferedReader(new InputStreamReader(gitCat.getErrorStream()));
+    gitCat.waitFor();
+    if (gitCat.exitValue() == 0) {
+
+      System.out.println("git cat-file works");
+      String filepath = commitDirPath + File.separator + beforeOrAfter + File.separator + filename;
+      File file = new File(filepath);
+      File dir = file.getParentFile();
+      // Paths.createDirectories(dir.getPath());
+      dir.mkdirs();
+      // git -C $repo_dir show $commit_id~1:$F > $vulnerability_id/$commit_id/before/$F
+      String diffFileCommand =
+          "git -C "
+              + repoDirPath
+              + " show "
+              + commitId
+              + "~1:"
+              + filename;
+
+      System.out.println(diffFileCommand);
+      Process gitDiffFile = Runtime.getRuntime().exec(diffFileCommand);
+    
+      writeCmdOutputToFile(gitDiffFile, filepath);
+    
+      gitDiffFile.waitFor();
+
+    } else {
+      System.out.println("Error: git cat-file didn't work");
+      System.out.println(gitCatErrorInput.readLine());
+      // What to do in case it doesn't work?
+      // manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED);
+    }
+  }
+
+  public void writeCmdOutputToFile(Process process, String filepath) throws IOException {
+    BufferedReader stdInput =
+        new BufferedReader(new InputStreamReader(process.getInputStream()));
+    /*BufferedReader errorInput =
+        new BufferedReader(new InputStreamReader(process.getErrorStream()));
+    if ((line = errorInput.readLine()) != null) {
+      System.out.println(line);
+    }*/
+    String line;
+    String lines = "";
+    while ((line = stdInput.readLine()) != null) {
+      lines += line + "\n";
+    }
+    Path path = Paths.get(filepath);
+    byte[] bytes = lines.getBytes();
+
+    Files.write(path, bytes);
+  }
+
 }

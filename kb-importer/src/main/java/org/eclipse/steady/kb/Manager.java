@@ -72,11 +72,12 @@ public class Manager {
 
     mapCommandOptionValues.put(Import.OVERWRITE_OPTION, true); // Change this
     setUploadConfiguration(mapCommandOptionValues);
-
+    System.out.println(subdirs);
     for (File dir : subdirs) {
-      String dirPath = dir.getPath();
-      String vulnId = dir.getName().toString();
-      setVulnStatus(vulnId, VulnStatus.NOT_STARTED);
+      if (dir.getName().startsWith("CVE")) {
+        String vulnId = dir.getName().toString();
+        setVulnStatus(vulnId, VulnStatus.NOT_STARTED);
+      }
     }
     for (File dir : subdirs) {
       String dirPath = dir.getPath();
@@ -87,13 +88,8 @@ public class Manager {
         args.put(Import.DIRECTORY_OPTION, dirPath);
         Import command = new Import(this, args);
         executor.submit(command);
-        // command.run();
+        //command.run();
         System.out.println(status());
-        /*try {
-          Thread.sleep(100);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }*/
       }
     }
     while (true) {
@@ -172,4 +168,5 @@ public class Manager {
         + "\nfailed lib = "
         + Integer.toString(failed_vuln);
   }
+
 }

@@ -113,7 +113,8 @@
 	</distributionManagement>
 
 	<properties>
-		<maven.compiler.release>8</maven.compiler.release>
+		<maven.compiler.source>8</maven.compiler.source>
+		<maven.compiler.target>8</maven.compiler.target>
 		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 		<maven.compiler.skipMultiThreadWarning>true</maven.compiler.skipMultiThreadWarning>
@@ -152,7 +153,7 @@
 		<module>lang-java-reach</module>
 		<module>lang-java-reach-wala</module>
 		<module>lang-java-reach-soot</module>
-		<!-- <module>lang-python</module> -->
+		<module>lang-python</module>
 
 		<!-- Analysis of security patches and libraries -->
 		<module>repo-client</module>
