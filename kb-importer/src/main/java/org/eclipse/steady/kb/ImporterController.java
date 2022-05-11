@@ -3,22 +3,47 @@ package org.eclipse.steady.kb;
 import java.util.HashMap;
 import org.eclipse.steady.kb.Manager;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
+//import org.springframework.web.bind.annotation.RestController;
+//import org.springframework.web.bind.annotation.CrossOrigin;
+//import org.springframework.web.bind.annotation.RequestMapping;
 
-@RestController
-@CrossOrigin("*")
-@RequestMapping("/")
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+//@RestController
+//@CrossOrigin("*")
+//@RequestMapping("/")
 class ImporterController {
 
-  @RequestMapping("/start")
+  private static Logger log = LoggerFactory.getLogger(ImporterController.class);
+
+  private Thread importerCacheFetch = null;
+
+  //@RequestMapping("/start")
   public void start() {
 
     HashMap<String, Object> mapCommandOptionValues = new HashMap<String, Object>();
     Manager manager = new Manager();
-    manager.start("/kb-importer/data/statements", mapCommandOptionValues);
-  
-    return;
+
+    this.importerCacheFetch =
+      new Thread(
+        new Runnable() {
+          public void run() {
+            while (true) {
+              manager.start("/kb-importer/data/statements", mapCommandOptionValues);
+
+              long interval = 3600*24*1000;
+              try {
+                Thread.sleep(interval);
+              } catch (InterruptedException e) {
+                ImporterController.log.error(
+                    "Interrupted exception: "
+                        + e.getMessage());
+              }
+            }
+          }
+        },
+        "ImporterCacheFetch");
+    this.importerCacheFetch.setPriority(Thread.MIN_PRIORITY);
   }
 }

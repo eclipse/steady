@@ -18,6 +18,9 @@
  */
 package org.eclipse.steady.kb;
 
+//import org.springframework.boot.autoconfigure.SpringBootApplication;
+//import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+//import org.springframework.boot.SpringApplication;
 import java.util.HashMap;
 
 /**
@@ -31,8 +34,14 @@ public class Main {
    */
   public static void main(String[] _args) {
     // command.run(mapCommandOptionValues);
+    
     HashMap<String, Object> mapCommandOptionValues = new HashMap<String, Object>();
     Manager manager = new Manager();
+    for (String arg : _args) {
+      arg.replace("-", "");
+      mapCommandOptionValues.put(arg, true);
+    }
     manager.start("/kb-importer/data/statements", mapCommandOptionValues);
+    //SpringApplication.run(Main.class, _args);
   }
 }

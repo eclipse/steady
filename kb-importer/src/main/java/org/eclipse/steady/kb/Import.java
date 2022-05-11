@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.apache.logging.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.github.packageurl.MalformedPackageURLException;
 
 import org.eclipse.steady.shared.util.FileUtil;
@@ -16,6 +18,7 @@ import org.eclipse.steady.kb.task.ImportAffectedLibraries;
 import org.eclipse.steady.kb.util.Metadata;
 import org.eclipse.steady.kb.model.Vulnerability;
 import org.eclipse.steady.backend.BackendConnectionException;
+import org.eclipse.steady.shared.util.StopWatch;
 
 public class Import implements Runnable {
 
@@ -28,8 +31,11 @@ public class Import implements Runnable {
   public static final String DELETE_OPTION = "del";
   public static final String DIRECTORY_OPTION = "d";
   public static final String DELETE = "del";
+  public static final String SEQUENTIAL = "seq";
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static Logger log = LoggerFactory.getLogger(Import.class);
+
+  private StopWatch stopWatch = null;
   private Path vulnDir;
   private String vulnId;
   private BackendConnector backendConnector;
@@ -42,6 +48,7 @@ public class Import implements Runnable {
     this.vulnDir = Paths.get((String) args.get(DIRECTORY_OPTION));
     this.vulnId = vulnDir.getFileName().toString();
     this.args = args;
+    this.stopWatch = new StopWatch(this.vulnId).start();
   }
 
   public String getVulnId() {
@@ -50,37 +57,36 @@ public class Import implements Runnable {
 
   @Override
   public void run() {
-    System.out.println("Import.run()");
 
     manager.setVulnStatus(vulnId, Manager.VulnStatus.PROCESSING);
     boolean bugExists = false;
     try {
-
-    System.out.println("try");
       bugExists = this.backendConnector.isBugExisting(vulnId);
-    System.out.println("after isBugExisting");
-
     } catch (BackendConnectionException e) {
-    System.out.println("BackendConnectionException");
-
       log.error("Can't connect to the Backend");
       return;
     }
-    System.out.println("aaaaaaaaaa");
-    Boolean overwrite = (Boolean) args.get(OVERWRITE_OPTION);
+    Boolean overwrite = false;
+    if (args.containsKey(OVERWRITE_OPTION)) {
+      overwrite = (Boolean) args.get(OVERWRITE_OPTION);
+    }
     if (bugExists) {
       if (overwrite) {
         args.put(DELETE, true);
+        log.info("Bug [{}] already exists in backend and will be overwritten", vulnId);
       } else {
         log.info("Bug [{}] already exists in backend, analysis will be skipped", vulnId);
+        manager.setVulnStatus(vulnId, Manager.VulnStatus.IMPORTED);
         return;
       }
+    } else {
+        log.info("Bug [{}] does not exist in backend", vulnId);
     }
 
     String statementPath = findStatementPath();
 
     if (statementPath != null) {
-      System.out.println("d");
+      //System.out.println("d");
       Vulnerability vuln;
       try {
         // System.out.println("getFromYaml...");
@@ -90,27 +96,34 @@ public class Import implements Runnable {
         log.error("Error while reading Yaml file for [{}]", vulnId);
         return;
       }
-      System.out.println("e");
+      //System.out.println("e");
       if (vuln.getCommits() == null || vuln.getCommits().size() == 0) {
         log.error("No fix commits for vulnerability " + vuln.getVulnId());
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.NO_FIXES);
         return;
       }
-
+      
       ExtractOrClone extractOrClone =
           new ExtractOrClone(this.manager, vuln, new File(this.vulnDir.toString()));
+      
+      this.stopWatch.lap("ExtractOrClone");
       extractOrClone.execute();
 
-      if (manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.FAILED) {
+      if (manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.FAILED &&
+          manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.NO_FIXES) {
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.DIFF_DONE);
         ImportVulnerability importVulnerability = new ImportVulnerability();
+
         ImportAffectedLibraries importAffectedLibraries = new ImportAffectedLibraries();
+
+        this.stopWatch.lap("ImportVulnerability");
         try {
           importVulnerability.execute(vuln, args, backendConnector);
         } catch (IOException | BackendConnectionException e) {
           manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_IMPORT_VULN);
           e.printStackTrace();
         }
+        this.stopWatch.lap("ImportAffectedLibraries");
         try {
           importAffectedLibraries.execute(vuln, args, backendConnector);
         } catch (IOException | MalformedPackageURLException | BackendConnectionException e) {
@@ -119,6 +132,8 @@ public class Import implements Runnable {
         }
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.IMPORTED);
       }
+      this.stopWatch.stop();
+      log.info(vuln.getVulnId() + " StopWatch Runtime " + Long.toString(this.stopWatch.getRuntime()));
     }
   }
 

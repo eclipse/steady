@@ -81,7 +81,6 @@ public class Metadata {
   public static void writeCommitMetadata(String commitDir, HashMap<String, String> commitMetadata)
       throws IOException {
     String filePath = commitDir + File.separator + META_PROPERTIES_FILE;
-    System.out.println(filePath);
     File file = new File(filePath);
     file.createNewFile();
     Writer writer = new FileWriter(filePath, false);
@@ -122,24 +121,20 @@ public class Metadata {
 
   public static Vulnerability getFromYaml(String metadataPathString) throws IOException {
     // Yaml yaml = new Yaml(new Constructor(Vulnerability.class));
-    System.out.println("in getFromYaml");
 
     Path metadataPath = Paths.get(metadataPathString);
     Yaml yaml = new Yaml();
 
     // String metadataString = File.readString(dirPath + "/metadata.yaml");
     String metadataString = new String(Files.readAllBytes(metadataPath));
-    System.out.println("getFromYaml 1");
 
     // Vulnerability vulnerability = yaml.load(metadataString);
     Map<String, Object> vulnerabilityMap = yaml.load(metadataString);
     // ObjectMapper objectMapper = new ObjectMapper();
     // Vulnerability vulnerability = objectMapper.convertValue(vulnerabilityMap,
     // Vulnerability.class);
-    System.out.println("getFromYaml 2");
 
     Vulnerability vulnerability = new Vulnerability();
-    System.out.println("getFromYaml 3");
 
     vulnerability.setVulnId((String) vulnerabilityMap.get("vulnerability_id"));
 
@@ -175,26 +170,15 @@ public class Metadata {
       List<String> aliases = (List<String>) vulnerabilityMap.get("aliases");
       vulnerability.setAliases(aliases);
     }
-    System.out.println("getFromYaml 4");
 
     List<Commit> commitList = new ArrayList<Commit>();
     if (vulnerabilityMap.containsKey("fixes")) {
-
-      System.out.println("getFromYaml contains fixes");
       List<HashMap<String, Object>> fixes =
           (List<HashMap<String, Object>>) vulnerabilityMap.get("fixes");
       for (HashMap<String, Object> fix : fixes) {
-        System.out.println("getFromYaml contains fixes 1");
-        System.out.println(fix);
-        System.out.println(fix.keySet());
-        System.out.println(fix.get("id"));
-
         String branch = fix.get("id").toString();
-        System.out.println("getFromYaml contains fixes branch:" + branch);
         List<HashMap<String, String>> commits = (List<HashMap<String, String>>) fix.get("commits");
         for (HashMap<String, String> commitMap : commits) {
-          System.out.println("Metadata for commit");
-          System.out.println(commitMap);
           Commit commit = new Commit();
           String repository = commitMap.get("repository");
           String commitId = commitMap.get("id");
@@ -204,10 +188,7 @@ public class Metadata {
           commitList.add(commit);
         }
       }
-      System.out.println("getFromYaml 5");
-
       vulnerability.setCommits(commitList);
-      System.out.println("getFromYaml 6");
     }
 
     return vulnerability;
