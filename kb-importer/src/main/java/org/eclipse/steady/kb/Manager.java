@@ -38,6 +38,7 @@ public class Manager {
     DIFF_DONE,
     IMPORTED,
     FAILED,
+    SKIP_CLONE,
     FAILED_IMPORT_LIB,
     FAILED_IMPORT_VULN,
     NO_FIXES
@@ -92,6 +93,8 @@ public class Manager {
     Set<Path> vulnDirsPaths = search.search(Paths.get(statementsDir.getPath()));
     for (Path dirPath : vulnDirsPaths) {
       File vulnDir = dirPath.toFile();
+
+      System.out.println("vuln dir " + vulnDir.getName());
       log.info("Found vulnerability directory: " + vulnDir.getName());
       String vulnId = vulnDir.getName().toString();
       setVulnStatus(vulnId, VulnStatus.NOT_STARTED);
@@ -129,6 +132,7 @@ public class Manager {
             (uploadConstruct != null
                 ? CoreConfiguration.ConnectType.READ_WRITE.toString()
                 : CoreConfiguration.ConnectType.READ_ONLY.toString()));
+    System.out.println("setUploadConfiguration");
   }
 
   public void kaybeeUpdate() throws IOException, InterruptedException {
@@ -158,6 +162,7 @@ public class Manager {
     int failed = 0;
     int failed_vuln = 0;
     int failed_lib = 0;
+    int skip_clone = 0;
     for (VulnStatus vulnStatus : new ArrayList<VulnStatus>(vulnerabilitiesStatus.values())) {
       switch (vulnStatus) {
         case NOT_STARTED:
@@ -184,26 +189,43 @@ public class Manager {
         case FAILED:
           failed += 1;
           break;
+        case SKIP_CLONE:
+          skip_clone += 1;
+          break;
         default:
           break;
       }
     }
-    return "imported = "
-        + Integer.toString(imported)
-        + "\nnot_started = "
+    String statusStr = 
+        "\nnot_started: "
         + Integer.toString(not_started)
-        + "\nextracting/cloning = "
+        + "\nextracting/cloning: "
         + Integer.toString(processing)
-        + "\ndiff_done = "
+        + "\nimporting vuln/libraries: "
         + Integer.toString(diff_done)
-        + "\nno_fixes = "
-        + Integer.toString(no_fixes)
-        + "\nfailed extract/clone = "
-        + Integer.toString(failed)
-        + "\nfailed vuln = "
-        + Integer.toString(failed_lib)
-        + "\nfailed lib = "
-        + Integer.toString(failed_vuln) + "\n";
+        + "\nimported: "
+        + Integer.toString(imported);
+    if (no_fixes > 0) {
+      statusStr += "\nno_fixes: "
+          + Integer.toString(no_fixes);
+    }
+    if (failed > 0) {
+      statusStr += "\nfailed extract/clone: "
+          + Integer.toString(failed);
+    }
+    if (failed_vuln > 0) {
+      statusStr += "\nfailed vuln: "
+          + Integer.toString(failed_lib);
+    }
+    if (failed_lib > 0) {
+      statusStr += "\nfailed lib: "
+          + Integer.toString(failed_vuln); 
+    }
+    if (skip_clone > 0) {
+      statusStr += "\nskip_clone: "
+          + Integer.toString(skip_clone); 
+    }
+    return statusStr + "\n";
   }
 
 }

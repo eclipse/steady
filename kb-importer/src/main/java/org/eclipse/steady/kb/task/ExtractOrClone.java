@@ -50,7 +50,7 @@ public class ExtractOrClone {
       //System.out.println("else");
       //System.out.println("skipping clone");
       log.info("Skipping clone for vulnerability " + this.vulnId);
-      manager.setVulnStatus(this.vulnId, Manager.VulnStatus.FAILED);
+      manager.setVulnStatus(this.vulnId, Manager.VulnStatus.SKIP_CLONE);
       //clone(vuln, dirPath);
     }
     log.info("ExtractOrClone : done (" + dirPath + ")");
@@ -107,7 +107,7 @@ public class ExtractOrClone {
     List<Commit> commits = vuln.getCommits();
     if (commits.size() == 0) {
       log.warn("No commits for vulnerability " + this.vulnId);
-      manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.NO_FIXES);
+      //manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.NO_FIXES);
       return;
     }
 

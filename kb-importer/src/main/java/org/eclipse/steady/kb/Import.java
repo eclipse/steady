@@ -1,13 +1,13 @@
 package org.eclipse.steady.kb;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
 import com.github.packageurl.MalformedPackageURLException;
 
 import org.eclipse.steady.shared.util.FileUtil;
@@ -17,6 +17,7 @@ import org.eclipse.steady.kb.task.ImportVulnerability;
 import org.eclipse.steady.kb.task.ImportAffectedLibraries;
 import org.eclipse.steady.kb.util.Metadata;
 import org.eclipse.steady.kb.model.Vulnerability;
+import org.eclipse.steady.kb.model.Commit;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.shared.util.StopWatch;
 
@@ -33,7 +34,7 @@ public class Import implements Runnable {
   public static final String DELETE = "del";
   public static final String SEQUENTIAL = "seq";
 
-  private static Logger log = LoggerFactory.getLogger(Import.class);
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
   private StopWatch stopWatch = null;
   private Path vulnDir;
@@ -97,20 +98,23 @@ public class Import implements Runnable {
         return;
       }
       //System.out.println("e");
-      if (vuln.getCommits() == null || vuln.getCommits().size() == 0) {
-        log.error("No fix commits for vulnerability " + vuln.getVulnId());
-        manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.NO_FIXES);
-        return;
+      if ((vuln.getCommits() == null || vuln.getCommits().size() == 0) 
+          && (vuln.getArtifacts() == null || vuln.getArtifacts().size() == 0)) {
+        log.warn("No fix commits or affected artifacts for vulnerability " + vuln.getVulnId());
+        vuln.setCommits(new ArrayList<Commit>());
+        //manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.NO_FIXES);
+        //return;
+      } else {
+        ExtractOrClone extractOrClone =
+            new ExtractOrClone(this.manager, vuln, new File(this.vulnDir.toString()));
+        
+        this.stopWatch.lap("ExtractOrClone");
+        extractOrClone.execute();
       }
       
-      ExtractOrClone extractOrClone =
-          new ExtractOrClone(this.manager, vuln, new File(this.vulnDir.toString()));
-      
-      this.stopWatch.lap("ExtractOrClone");
-      extractOrClone.execute();
-
-      if (manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.FAILED &&
-          manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.NO_FIXES) {
+      if (manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.FAILED
+          && manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.SKIP_CLONE) {
+          //&& manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.NO_FIXES) {
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.DIFF_DONE);
         ImportVulnerability importVulnerability = new ImportVulnerability();
 
