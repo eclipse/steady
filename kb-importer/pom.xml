@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.eclipse.steady</groupId>
 	<artifactId>kb-importer</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>3.2.3-SNAPSHOT</version>
 	<name>demo</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -34,10 +34,46 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.eclipse.steady</groupId>
-			<artifactId>kb-importer</artifactId>
-			<version>3.2.3-SNAPSHOT</version>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.11.0</version>
 		</dependency>
+		<!-- Only basic lang classes should be used at compile time -->
+		<dependency>
+			<groupId>org.eclipse.steady</groupId>
+			<artifactId>lang</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>org.eclipse.steady</groupId>
+			<artifactId>shared</artifactId>
+			<classifier>tests</classifier>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Runtime dependencies, to avoid compile time dependency on lang-specific 
+			classes -->
+		<dependency>
+			<groupId>org.eclipse.steady</groupId>
+			<artifactId>lang-java</artifactId>
+			<version>${project.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.steady</groupId>
+			<artifactId>lang-python</artifactId>
+			<version>${project.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

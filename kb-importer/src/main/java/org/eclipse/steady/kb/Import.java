@@ -27,6 +27,7 @@ public class Import implements Runnable {
   public static final String STATEMENT_YAML = "statement.yaml";
   public static final String SOURCE_TAR = "changed-source-code.tar.gz";
 
+  public static final String VERBOSE_OPTION = "v";
   public static final String UPLOAD_CONSTRUCT_OPTION = "u";
   public static final String OVERWRITE_OPTION = "o";
   public static final String DELETE_OPTION = "del";

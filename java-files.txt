@@ -299,7 +299,6 @@ kb-importer/src/main/java/org/eclipse/steady/kb/ImporterController.java
 kb-importer/src/main/java/org/eclipse/steady/kb/util/ConstructSet.java
 kb-importer/src/main/java/org/eclipse/steady/kb/util/FileComparator.java
 kb-importer/src/main/java/org/eclipse/steady/kb/util/Metadata.java
-kb-importer/src/main/java/org/eclipse/steady/kb/task/TaskProvider.java
 kb-importer/src/main/java/org/eclipse/steady/kb/task/ImportVulnerability.java
 kb-importer/src/main/java/org/eclipse/steady/kb/task/ImportAffectedLibraries.java
 kb-importer/src/main/java/org/eclipse/steady/kb/task/Task.java
@@ -311,11 +310,7 @@ kb-importer/src/main/java/org/eclipse/steady/kb/model/Commit.java
 kb-importer/src/main/java/org/eclipse/steady/kb/model/Note.java
 kb-importer/src/main/java/org/eclipse/steady/kb/exception/ValidationException.java
 kb-importer/src/main/java/org/eclipse/steady/kb/exception/CommandLineParserException.java
-kb-importer/src/main/java/org/eclipse/steady/kb/command/Command.java
-kb-importer/src/main/java/org/eclipse/steady/kb/command/Import.java
 kb-importer/src/main/java/org/eclipse/steady/kb/command/Version.java
-kb-importer/src/main/java/org/eclipse/steady/kb/command/CommandExecutor.java
-kb-importer/src/main/java/org/eclipse/steady/kb/command/CommandParser.java
 kb-importer/src/main/java/org/eclipse/steady/kb/command/Help.java
 kb-importer/src/main/java/org/eclipse/steady/kb/Manager.java
 cli-scanner/src/main/java/org/eclipse/steady/cli/package-info.java

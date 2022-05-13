@@ -26,8 +26,7 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.backend.BackendConnector;
-import org.eclipse.steady.kb.command.Import;
-import org.eclipse.steady.kb.command.Command;
+import org.eclipse.steady.kb.Import;
 import org.eclipse.steady.kb.model.Artifact;
 import org.eclipse.steady.kb.model.Vulnerability;
 import org.eclipse.steady.shared.enums.AffectedVersionSource;
@@ -143,9 +142,9 @@ public class ImportAffectedLibraries implements Task {
     affectedLibrary.setSource(AffectedVersionSource.KAYBEE);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc} 
   @Override
   public Command.NAME getCommandName() {
     return Command.NAME.IMPORT;
-  }
+  }*/
 }

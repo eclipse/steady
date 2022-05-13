@@ -28,12 +28,12 @@ import org.eclipse.steady.kb.exception.ValidationException;
 /**
  * version command
  */
-public class Version implements Command {
+public class Version {
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
   /** {@inheritDoc} */
-  @Override
+  //@Override
   public void run(HashMap<String, Object> args) {
     String vulasRelease = Main.class.getPackage().getImplementationVersion();
     if (StringUtils.isEmpty(vulasRelease)) {
@@ -43,21 +43,21 @@ public class Version implements Command {
     }
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc} 
   @Override
   public Options getOptions() {
     return new Options();
   }
 
   /** {@inheritDoc} */
-  @Override
+  //@Override
   public void validate(HashMap<String, Object> args) throws ValidationException {
     // Nothing to validate as help does not have any args
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc} 
   @Override
   public Command.NAME getCommandName() {
     return Command.NAME.VERSION;
-  }
+  }*/
 }

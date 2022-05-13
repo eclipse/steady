@@ -9,6 +9,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.TimeUnit;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -114,13 +115,12 @@ public class Manager {
       }
       System.out.println(status());
     }
-    while (true) {
-      System.out.println(status());
-      try {
-        Thread.sleep(10000);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
+    try {
+      executor.shutdown();
+      executor.awaitTermination(24, TimeUnit.HOURS);
+    } catch (InterruptedException e) {
+      log.error("Process interrupted");
+      log.error(e.getMessage());
     }
   }
 
@@ -132,7 +132,6 @@ public class Manager {
             (uploadConstruct != null
                 ? CoreConfiguration.ConnectType.READ_WRITE.toString()
                 : CoreConfiguration.ConnectType.READ_ONLY.toString()));
-    System.out.println("setUploadConfiguration");
   }
 
   public void kaybeeUpdate() throws IOException, InterruptedException {
