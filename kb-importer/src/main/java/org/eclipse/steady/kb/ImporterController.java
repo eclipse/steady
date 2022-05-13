@@ -22,14 +22,14 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 @CrossOrigin("*")
 public class ImporterController {
 
-	private static String REFRESH_ALL_MS = "vulas.kb.importer.refetchAllMs";
+	private static String TIME_REFRESH_ALL = "vulas.kb.importer.refetchAllMs";
 
 	private static Logger log = LoggerFactory.getLogger(ImporterController.class);
 
 	private Thread importerCacheFetch = null;
     // Refresh CVE cache
     final long time_refresh_all = 
-		VulasConfiguration.getGlobal().getConfiguration().getLong(REFRESH_ALL_MS, -1);
+		VulasConfiguration.getGlobal().getConfiguration().getLong(TIME_REFRESH_ALL, -1);
 	private final Manager manager;
 
 	@Autowired
