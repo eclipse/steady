@@ -19,6 +19,7 @@ import java.io.IOException;
 import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.shared.util.DirWithFileSearch;
+import org.eclipse.steady.backend.BackendConnector;
 
 public class Manager {
 
@@ -100,6 +101,7 @@ public class Manager {
       String vulnId = vulnDir.getName().toString();
       setVulnStatus(vulnId, VulnStatus.NOT_STARTED);
     }
+    BackendConnector backendConnector = BackendConnector.getInstance();
     for (Path vulnDirPath : vulnDirsPaths) {
       File vulnDir = vulnDirPath.toFile();
       String vulnDirStr = vulnDirPath.toString();
@@ -107,7 +109,7 @@ public class Manager {
       // It is necessary to copy the arguments to avoid concurrent modification
       HashMap<String, Object> args = new HashMap<String, Object>(mapCommandOptionValues);
       args.put(Import.DIRECTORY_OPTION, vulnDirStr);
-      Import command = new Import(this, args);
+      Import command = new Import(this, args, BackendConnector.getInstance());
       if (mapCommandOptionValues.containsKey(Import.SEQUENTIAL)) {
         command.run();
       } else {

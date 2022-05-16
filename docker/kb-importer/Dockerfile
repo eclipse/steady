@@ -19,6 +19,9 @@ COPY kb-importer-$VULAS_RELEASE.jar kb-importer.jar
 RUN chmod +x kb-importer.jar
 
 COPY start.sh /kb-importer/
+
+EXPOSE 8080
+
 RUN chmod +x /kb-importer/kb-importer.sh /kb-importer/start.sh
 
 ENTRYPOINT ["sh","/kb-importer/start.sh"]

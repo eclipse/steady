@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.RequestParam;  
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,45 +36,67 @@ public class ImporterController {
 
 	@Autowired
 	ImporterController() {
-		HashMap<String, Object> mapCommandOptionValues = new HashMap<String, Object>();
-		manager = new Manager();
-
-		System.out.println("ImportController Constructor");
-	
+		this.manager = new Manager();	
+		HashMap<String, Object> args = new HashMap<String, Object>();
 		this.importerCacheFetch =
-		  new Thread(
+			new Thread(
 			new Runnable() {
-			  public void run() {
-				while (true) {
-				  manager.start("/kb-importer/data/statements", mapCommandOptionValues);
-	
-				  long interval = time_refresh_all;
-				  System.out.println("interval: "+Long.toString(time_refresh_all));
-				  try {
-					Thread.sleep(interval);
-				  } catch (InterruptedException e) {
-					ImporterController.log.error(
-						"Interrupted exception: "
-							+ e.getMessage());
-				  }
+				public void run() {
+					while (true) {
+						manager.start("/kb-importer/data/statements", args);
+		
+						long interval = time_refresh_all;
+						System.out.println("interval: "+Long.toString(time_refresh_all));
+						try {
+							Thread.sleep(interval);
+						} catch (InterruptedException e) {
+							ImporterController.log.error(
+								"Interrupted exception: "
+									+ e.getMessage());
+						}
+					}
 				}
-			  }
 			},
 			"ImporterCacheFetch");
-		this.importerCacheFetch.setPriority(Thread.MIN_PRIORITY);
-		
+		this.importerCacheFetch.setPriority(Thread.MIN_PRIORITY);	
 	}
 
 	//@GetMapping("/start")
 	@RequestMapping(value = "/start", method = RequestMethod.POST)
-	public ResponseEntity<Boolean> start() {
-		System.out.println("ImportController.start()");
-
+	public ResponseEntity<Boolean> start(@RequestParam(defaultValue = "false") boolean overwrite, @RequestParam(defaultValue = "false") boolean upload,
+		@RequestParam(defaultValue = "false") boolean verbose) {
 		boolean started = false;
 		try {
 		  if (this.importerCacheFetch.isAlive()) {
 			log.info("Importer already running");
 		  } else {
+			HashMap<String, Object> args = new HashMap<String, Object>();
+			args.put(Import.OVERWRITE_OPTION, overwrite);
+			args.put(Import.UPLOAD_CONSTRUCT_OPTION, upload);
+			args.put(Import.VERBOSE_OPTION, verbose);
+			this.importerCacheFetch =
+				new Thread(
+				new Runnable() {
+					public void run() {
+						while (true) {
+							manager.start("/kb-importer/data/statements", args);
+			
+							long interval = time_refresh_all;
+							System.out.println("interval: "+Long.toString(time_refresh_all));
+							try {
+								Thread.sleep(interval);
+							} catch (InterruptedException e) {
+								ImporterController.log.error(
+									"Interrupted exception: "
+										+ e.getMessage());
+							}
+						}
+					}
+				},
+				"ImporterCacheFetch");
+			this.importerCacheFetch.setPriority(Thread.MIN_PRIORITY);
+
+			System.out.println(importerCacheFetch);
 			this.importerCacheFetch.start();
 			started = true;
 			log.info("Importer started");

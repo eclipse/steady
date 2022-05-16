@@ -44,9 +44,9 @@ public class Import implements Runnable {
   private HashMap<String, Object> args;
   Manager manager;
 
-  public Import(Manager manager, HashMap<String, Object> args) {
+  public Import(Manager manager, HashMap<String, Object> args, BackendConnector backendConnector) {
     this.manager = manager;
-    this.backendConnector = BackendConnector.getInstance();
+    this.backendConnector = backendConnector;
     this.vulnDir = Paths.get((String) args.get(DIRECTORY_OPTION));
     this.vulnId = vulnDir.getFileName().toString();
     this.args = args;

@@ -30,7 +30,7 @@ java -Dvulas.shared.backend.header.X-Vulas-Client-Token=$BACKEND_BUGS_TOKEN \
             -Dvulas.shared.backend.serviceUrl=$BACKEND_SERVICE_URL \
             -jar /kb-importer/data/kb-importer.jar >> analyzer_logs.txt &
 
-#Wait for backend to start
+#Wait for kb-importer and backend to start
 sleep 40
 
 curl localhost:8080/start -X POST

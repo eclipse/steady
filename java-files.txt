@@ -551,6 +551,17 @@ patch-analyzer/src/test/java/org/eclipse/steady/patcha/FileComparatorTest.java
 patch-lib-analyzer/src/test/java/org/eclipse/steady/patcheval/package-info.java
 patch-lib-analyzer/src/test/java/org/eclipse/steady/patcheval/CiaTest.java
 patch-lib-analyzer/src/test/java/org/eclipse/steady/patcheval/VersionTest.java
+kb-importer/src/test/java/org/eclipse/steady/kb/MainTest.java
+kb-importer/src/test/java/org/eclipse/steady/kb/util/MetadataTest.java
+kb-importer/src/test/java/org/eclipse/steady/kb/task/MockBackConnector.java
+kb-importer/src/test/java/org/eclipse/steady/kb/task/TestImportAffectedLibraries.java
+kb-importer/src/test/java/org/eclipse/steady/kb/task/TestExtractOrClone.java
+kb-importer/src/test/java/org/eclipse/steady/kb/task/TestImportVulnerability_CVE_2017_2617.java
+kb-importer/src/test/java/org/eclipse/steady/kb/task/TestImportVulnerability.java
+kb-importer/src/test/java/org/eclipse/steady/kb/ImportTest.java
+kb-importer/src/test/java/org/eclipse/steady/kb/ZipUtil.java
+kb-importer/src/test/java/org/eclipse/steady/kb/TestConstructs.java
+kb-importer/src/test/java/org/eclipse/steady/kb/TestPythonConstructs.java
 cli-scanner/src/test/java/org/eclipse/steady/cli/AbstractGoalTest.java
 cli-scanner/src/test/java/org/eclipse/steady/cli/FileAnalyzerTest.java
 cli-scanner/src/test/java/org/eclipse/steady/cli/VulasCliTest.java
