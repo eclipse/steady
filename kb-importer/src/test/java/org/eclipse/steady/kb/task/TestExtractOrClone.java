@@ -22,14 +22,14 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runner.RunWith;
 
-//@RunWith(Parameterized.class)
+@RunWith(Parameterized.class)
 public class TestExtractOrClone {
 
   Manager manager;
   ClassLoader classLoader;
   String dirPath;
 
- /* @Before
+  @Before
   public void initialize() {
     this.manager = new Manager();
     classLoader = getClass().getClassLoader();
@@ -47,14 +47,14 @@ public class TestExtractOrClone {
       { "testRootDir6" },
       { "testRootDir7" }
     });
-  }*/
+  }
 
   @Test
   public void testClone() throws IOException {
     
-    this.manager = new Manager();
+    /*this.manager = new Manager();
     classLoader = getClass().getClassLoader();
-    this.dirPath = classLoader.getResource("testRootDir7").getPath();
+    this.dirPath = classLoader.getResource("testRootDir7").getPath();*/
 
     File dir = new File(dirPath);
     String statementPath = dirPath + File.separator + "statement.yaml";
@@ -66,7 +66,7 @@ public class TestExtractOrClone {
     args.put(Import.OVERWRITE_OPTION, false);
     args.put(Import.DIRECTORY_OPTION, "");
 
-    ExtractOrClone extractOrClone = new ExtractOrClone(manager, vuln, dir);
+    ExtractOrClone extractOrClone = new ExtractOrClone(manager, vuln, dir, false);
     extractOrClone.execute();
 
     File commitDir1 = new File(dirPath + File.separator + "1db7e02de3eb0c011ee6681f5a12eb9d166fea8");
@@ -87,9 +87,9 @@ public class TestExtractOrClone {
     org.junit.Assert.assertEquals(commitDir3.exists(), true);
 
     // clean directories after testing
-    Files.delete(Paths.get(commitDir1.getPath()));
-    Files.delete(Paths.get(commitDir2.getPath()));
-    Files.delete(Paths.get(commitDir3.getPath()));
+    //Files.delete(Paths.get(commitDir1.getPath()));
+    //Files.delete(Paths.get(commitDir2.getPath()));
+    //Files.delete(Paths.get(commitDir3.getPath()));
     // TODO: remove directory git-repos before and/or after testing
   }
 

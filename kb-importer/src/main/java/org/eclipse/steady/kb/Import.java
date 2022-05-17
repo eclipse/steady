@@ -29,6 +29,7 @@ public class Import implements Runnable {
 
   public static final String VERBOSE_OPTION = "v";
   public static final String UPLOAD_CONSTRUCT_OPTION = "u";
+  public static final String SKIP_CLONE_OPTION = "u";
   public static final String OVERWRITE_OPTION = "o";
   public static final String DELETE_OPTION = "del";
   public static final String DIRECTORY_OPTION = "d";
@@ -107,7 +108,7 @@ public class Import implements Runnable {
         //return;
       } else {
         ExtractOrClone extractOrClone =
-            new ExtractOrClone(this.manager, vuln, new File(this.vulnDir.toString()));
+            new ExtractOrClone(this.manager, vuln, new File(this.vulnDir.toString()), (boolean) args.get(SKIP_CLONE_OPTION));
         
         this.stopWatch.lap("ExtractOrClone");
         extractOrClone.execute();

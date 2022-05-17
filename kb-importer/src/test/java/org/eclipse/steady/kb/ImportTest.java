@@ -70,6 +70,7 @@ public class ImportTest {
     HashMap<String, Object> args = new HashMap<String, Object>();
     args.put("o", false);
     args.put("v", false);
+    args.put("d", "");
     Manager manager = new Manager();
     Import command = new Import(manager, args, mockBackendConnector);
     command.run();

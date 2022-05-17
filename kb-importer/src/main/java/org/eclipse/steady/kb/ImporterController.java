@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.RequestParam;  
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ public class ImporterController {
     // Refresh CVE cache
     final long time_refresh_all = 
 		VulasConfiguration.getGlobal().getConfiguration().getLong(TIME_REFRESH_ALL, -1);
+
 	private final Manager manager;
 
 	@Autowired
@@ -46,7 +48,7 @@ public class ImporterController {
 						manager.start("/kb-importer/data/statements", args);
 		
 						long interval = time_refresh_all;
-						System.out.println("interval: "+Long.toString(time_refresh_all));
+						System.out.println("interval: " + Long.toString(time_refresh_all));
 						try {
 							Thread.sleep(interval);
 						} catch (InterruptedException e) {
@@ -64,7 +66,7 @@ public class ImporterController {
 	//@GetMapping("/start")
 	@RequestMapping(value = "/start", method = RequestMethod.POST)
 	public ResponseEntity<Boolean> start(@RequestParam(defaultValue = "false") boolean overwrite, @RequestParam(defaultValue = "false") boolean upload,
-		@RequestParam(defaultValue = "false") boolean verbose) {
+		@RequestParam(defaultValue = "false") boolean verbose, @RequestParam(defaultValue = "true") boolean skipClone) {
 		boolean started = false;
 		try {
 		  if (this.importerCacheFetch.isAlive()) {
@@ -74,6 +76,7 @@ public class ImporterController {
 			args.put(Import.OVERWRITE_OPTION, overwrite);
 			args.put(Import.UPLOAD_CONSTRUCT_OPTION, upload);
 			args.put(Import.VERBOSE_OPTION, verbose);
+			args.put(Import.SKIP_CLONE_OPTION, skipClone);
 			this.importerCacheFetch =
 				new Thread(
 				new Runnable() {
@@ -82,7 +85,7 @@ public class ImporterController {
 							manager.start("/kb-importer/data/statements", args);
 			
 							long interval = time_refresh_all;
-							System.out.println("interval: "+Long.toString(time_refresh_all));
+							System.out.println("interval: " + Long.toString(time_refresh_all));
 							try {
 								Thread.sleep(interval);
 							} catch (InterruptedException e) {
@@ -125,6 +128,14 @@ public class ImporterController {
 		  log.error("Exception when starting CVE cache refresh: " + e.getMessage(), e);
 		  return new ResponseEntity<Boolean>(stopped, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	@RequestMapping(
+		value = "/start/{id}",
+		method = RequestMethod.POST)
+	public ResponseEntity<Boolean> importSingleVuln(@PathVariable String id) {
+		
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 
 	@GetMapping("/status")

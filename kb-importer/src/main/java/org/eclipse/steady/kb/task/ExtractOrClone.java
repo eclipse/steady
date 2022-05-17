@@ -30,28 +30,28 @@ public class ExtractOrClone {
   private final String vulnId;
   private final String dirPath;
   private final File tarFile;
+  private final boolean skipClone;
 
-  public ExtractOrClone(Manager manager, Vulnerability vuln, File dir) {
+  public ExtractOrClone(Manager manager, Vulnerability vuln, File dir, boolean skipClone) {
     this.manager = manager;
     this.vuln = vuln;
     this.vulnId = vuln.getVulnId();
     this.dirPath = dir.getPath();
     this.tarFile = getTarFile(dirPath);
-    //System.out.println("ExtractOrClone constructor");
+    this.skipClone = skipClone;
   }
 
   public void execute() {
 
-    //System.out.println("ExtractOrClone.execute()");
     if (tarFile != null) {
-      //System.out.println("if (tarFile != null)");
       extract(tarFile, dirPath);
     } else {
-      //System.out.println("else");
-      //System.out.println("skipping clone");
-      log.info("Skipping clone for vulnerability " + this.vulnId);
-      manager.setVulnStatus(this.vulnId, Manager.VulnStatus.SKIP_CLONE);
-      //clone(vuln, dirPath);
+      if (this.skipClone) {
+        log.info("Skipping clone for vulnerability " + this.vulnId);
+        manager.setVulnStatus(this.vulnId, Manager.VulnStatus.SKIP_CLONE);
+      } else {
+        clone(vuln, dirPath);
+      }
     }
     log.info("ExtractOrClone : done (" + dirPath + ")");
   }
@@ -110,6 +110,8 @@ public class ExtractOrClone {
       //manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.NO_FIXES);
       return;
     }
+
+    log.info("Cloning ");
 
     for (Commit commit : commits) {
       String repoUrl = commit.getRepoUrl();
@@ -193,7 +195,9 @@ public class ExtractOrClone {
 
     if (Files.exists(Paths.get(repoDirPath))) {
       log.info("Folder " + repoDirPath + " exists. Skipping git clone.");
-    } else {
+    } /*else if (this.skipClone) {
+      // do something (throw exception?)
+    } */else {
       log.info("Cloning repository " + repoUrl);
       Process gitClone = Runtime.getRuntime().exec(gitCloneCommand);
       /*BufferedReader gitCloneStdInput =

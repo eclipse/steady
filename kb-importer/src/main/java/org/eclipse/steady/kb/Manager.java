@@ -115,7 +115,6 @@ public class Manager {
       } else {
         executor.submit(command);
       }
-      System.out.println(status());
     }
     try {
       executor.shutdown();
@@ -140,7 +139,7 @@ public class Manager {
     // TODO : write directory as option/property
     Process updateProcess = Runtime.getRuntime().exec("/kb-importer/data/kaybee update --force");
     updateProcess.waitFor();
-    if (updateProcess.exitValue() != 0){
+    if (updateProcess.exitValue() != 0) {
       log.error("Failed to update kaybee");
     }
   }
@@ -149,7 +148,7 @@ public class Manager {
     // TODO : write directories as option/property
     Process pullProcess = Runtime.getRuntime().exec("/kb-importer/data/kaybee pull -c /kb-importer/conf/kaybeeconf.yaml");
     pullProcess.waitFor();
-    if (pullProcess.exitValue() != 0){
+    if (pullProcess.exitValue() != 0) {
       log.error("Kaybee pull failed");
     }
   }
