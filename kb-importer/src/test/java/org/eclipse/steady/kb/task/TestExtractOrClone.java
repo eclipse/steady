@@ -3,6 +3,7 @@ package org.eclipse.steady.kb.task;
 import java.io.IOException;
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
@@ -16,11 +17,14 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 import com.github.packageurl.MalformedPackageURLException;
 import com.google.gson.JsonSyntaxException;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runner.RunWith;
+
+import org.apache.commons.io.FileUtils;
 
 @RunWith(Parameterized.class)
 public class TestExtractOrClone {
@@ -28,17 +32,19 @@ public class TestExtractOrClone {
   Manager manager;
   ClassLoader classLoader;
   String dirPath;
+  File dir;
 
   @Before
   public void initialize() {
     this.manager = new Manager();
     classLoader = getClass().getClassLoader();
-    this.dirPath = classLoader.getResource("testRootDir7").getPath();
+    //this.dirPath = classLoader.getResource("testRootDir7").getPath();
   }
 
   public TestExtractOrClone(String dirName) {
     classLoader = getClass().getClassLoader();
     this.dirPath = classLoader.getResource(dirName).getPath();
+    this.dir = new File(dirPath);
   }
   
   @Parameterized.Parameters
@@ -51,12 +57,7 @@ public class TestExtractOrClone {
 
   @Test
   public void testClone() throws IOException {
-    
-    /*this.manager = new Manager();
-    classLoader = getClass().getClassLoader();
-    this.dirPath = classLoader.getResource("testRootDir7").getPath();*/
 
-    File dir = new File(dirPath);
     String statementPath = dirPath + File.separator + "statement.yaml";
     
     Vulnerability vuln = Metadata.getFromYaml(statementPath);
@@ -66,7 +67,7 @@ public class TestExtractOrClone {
     args.put(Import.OVERWRITE_OPTION, false);
     args.put(Import.DIRECTORY_OPTION, "");
 
-    ExtractOrClone extractOrClone = new ExtractOrClone(manager, vuln, dir, false);
+    ExtractOrClone extractOrClone = new ExtractOrClone(manager, vuln, this.dir, false);
     extractOrClone.execute();
 
     File commitDir1 = new File(dirPath + File.separator + "1db7e02de3eb0c011ee6681f5a12eb9d166fea8");
@@ -78,19 +79,24 @@ public class TestExtractOrClone {
 
     org.junit.Assert.assertEquals(commitDir1before.exists(), true);
     org.junit.Assert.assertEquals(commitDir1after.exists(), true);
-
-    // TODO : count number of files instead
-    org.junit.Assert.assertEquals(commitDir1before.list().length > 0, true);
-    org.junit.Assert.assertEquals(commitDir1after.list().length > 0, true);
+    
+    org.junit.Assert.assertEquals(commitDir1before.list().length == 1, true);
+    org.junit.Assert.assertEquals(commitDir1after.list().length == 1, true);
+    
     org.junit.Assert.assertEquals(someJavaFile.exists(), true);
     org.junit.Assert.assertEquals(commitDir2.exists(), true);
     org.junit.Assert.assertEquals(commitDir3.exists(), true);
 
-    // clean directories after testing
-    //Files.delete(Paths.get(commitDir1.getPath()));
-    //Files.delete(Paths.get(commitDir2.getPath()));
-    //Files.delete(Paths.get(commitDir3.getPath()));
-    // TODO: remove directory git-repos before and/or after testing
+  }
+
+
+  @After
+  public void cleanup() {
+    try {
+      FileUtils.deleteDirectory(this.dir);
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
 }
