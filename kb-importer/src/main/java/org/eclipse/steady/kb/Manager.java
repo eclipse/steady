@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
@@ -15,6 +16,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.File;
 import java.io.IOException;
+
+import com.google.gson.Gson;
 
 import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.eclipse.steady.core.util.CoreConfiguration;
@@ -31,19 +34,29 @@ public class Manager {
   // (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
 
   private static Map<String, VulnStatus> vulnerabilitiesStatus = new HashMap<String, VulnStatus>();
+  private static Set<String> newVulnerabilities = new LinkedHashSet<String>();
+
+  // pairs of vulnId and reason for failure
+  private static Map<String, String> failures = new HashMap<String, String>();
 
   Map<String, Lock> repoLocks = new HashMap<String, Lock>();
+  
+  private boolean isRunningStart;
 
   public enum VulnStatus {
     NOT_STARTED,
-    PROCESSING,
-    DIFF_DONE,
+    EXTRACTING_OR_CLONING,
+    IMPORTING,
     IMPORTED,
-    FAILED,
+    FAILED_EXTRACT_OR_CLONE,
     SKIP_CLONE,
     FAILED_IMPORT_LIB,
     FAILED_IMPORT_VULN,
     NO_FIXES
+  }
+
+  public void addNewVulnerability(String vulnId) {
+    newVulnerabilities.add(vulnId);
   }
 
   public void setVulnStatus(String vulnId, VulnStatus vulnStatus) {
@@ -54,29 +67,36 @@ public class Manager {
     return vulnerabilitiesStatus.get(vulnId);
   }
 
+  public void addFailure(String vulnId, String reason) {
+    failures.put(vulnId, reason);
+  }
+
   public void lockRepo(String repo) {
-    //System.out.println("Lock: " + repo);
     if (!repoLocks.containsKey(repo)) {
-      //System.out.println("no key: " + repo);
       repoLocks.put(repo, new ReentrantLock());
     }
     repoLocks.get(repo).lock();
-    //System.out.println("Locked:" + repo);
   }
 
   public void unlockRepo(String repo) {
-    //System.out.println("Unlock: " + repo);
     if (!repoLocks.containsKey(repo)) {
-      //System.out.println("ERROR : Lock not found");
       return;
     }
     repoLocks.get(repo).unlock();
-    //System.out.println("Unlocked: " + repo);
+  }
+
+  public boolean getIsRunningStart() {
+    return this.isRunningStart;
   }
 
   public synchronized void start(
     String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
-    
+    this.isRunningStart = true;
+    if (this.executor.isShutdown() || this.executor.isTerminated()) {
+      this.executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+    }
+    newVulnerabilities = new LinkedHashSet<String>();
+
     try {
       log.info("Updating kaybee...");
       kaybeeUpdate();
@@ -84,6 +104,7 @@ public class Manager {
       kaybeePull();
     } catch (IOException | InterruptedException e) {
       log.error("Exception while performing update: " + e.getMessage());
+      this.isRunningStart = false;
       return;
     }
 
@@ -95,17 +116,17 @@ public class Manager {
     Set<Path> vulnDirsPaths = search.search(Paths.get(statementsDir.getPath()));
     for (Path dirPath : vulnDirsPaths) {
       File vulnDir = dirPath.toFile();
-
-      System.out.println("vuln dir " + vulnDir.getName());
       log.info("Found vulnerability directory: " + vulnDir.getName());
       String vulnId = vulnDir.getName().toString();
       setVulnStatus(vulnId, VulnStatus.NOT_STARTED);
+
     }
     BackendConnector backendConnector = BackendConnector.getInstance();
     for (Path vulnDirPath : vulnDirsPaths) {
       File vulnDir = vulnDirPath.toFile();
       String vulnDirStr = vulnDirPath.toString();
       log.info("Initializing process for directory " + vulnDirPath);
+
       // It is necessary to copy the arguments to avoid concurrent modification
       HashMap<String, Object> args = new HashMap<String, Object>(mapCommandOptionValues);
       args.put(Import.DIRECTORY_OPTION, vulnDirStr);
@@ -123,6 +144,7 @@ public class Manager {
       log.error("Process interrupted");
       log.error(e.getMessage());
     }
+    this.isRunningStart = false;
   }
 
   private void setUploadConfiguration(HashMap<String, Object> args) {
@@ -153,79 +175,56 @@ public class Manager {
     }
   }
 
+  public void stop() {
+    try {
+      executor.shutdownNow();
+      executor.awaitTermination(24, TimeUnit.HOURS);
+      this.isRunningStart = false;
+    } catch (InterruptedException e) {
+      log.error("Process interrupted");
+      log.error(e.getMessage());
+    }
+  }
+
+  public void importSingleVuln(
+    String vulnDirStr, HashMap<String, Object> mapCommandOptionValues, String vulnId) {
+
+    // Should have a lock per vulnerability
+
+    log.info("Initializing process for directory " + vulnDirStr);
+
+    if (this.executor.isShutdown() || this.executor.isTerminated()) {
+      this.executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+    }
+
+    // It is necessary to copy the arguments to avoid concurrent modification
+    HashMap<String, Object> args = new HashMap<String, Object>(mapCommandOptionValues);
+    args.put(Import.DIRECTORY_OPTION, vulnDirStr);
+    Import command = new Import(this, args, BackendConnector.getInstance());
+    if (mapCommandOptionValues.containsKey(Import.SEQUENTIAL)) {
+      command.run();
+    } else {
+      executor.submit(command);
+    }
+  }
+
   public String status() {
-    int not_started = 0;
-    int imported = 0;
-    int processing = 0;
-    int diff_done = 0;
-    int no_fixes = 0;
-    int failed = 0;
-    int failed_vuln = 0;
-    int failed_lib = 0;
-    int skip_clone = 0;
+    HashMap<VulnStatus, Integer> statusCount = new HashMap<VulnStatus, Integer>();
     for (VulnStatus vulnStatus : new ArrayList<VulnStatus>(vulnerabilitiesStatus.values())) {
-      switch (vulnStatus) {
-        case NOT_STARTED:
-          not_started += 1;
-          break;
-        case IMPORTED:
-          imported += 1;
-          break;
-        case PROCESSING:
-          processing += 1;
-          break;
-        case DIFF_DONE:
-          diff_done += 1;
-          break;
-        case NO_FIXES:
-          no_fixes += 1;
-          break;
-        case FAILED_IMPORT_VULN:
-          failed_vuln += 1;
-          break;
-        case FAILED_IMPORT_LIB:
-          failed_lib += 1;
-          break;
-        case FAILED:
-          failed += 1;
-          break;
-        case SKIP_CLONE:
-          skip_clone += 1;
-          break;
-        default:
-          break;
+      if (!statusCount.containsKey(vulnStatus)) {
+        statusCount.put(vulnStatus, 0);
       }
+      statusCount.put(vulnStatus, statusCount.get(vulnStatus)+1);
     }
-    String statusStr = 
-        "\nnot_started: "
-        + Integer.toString(not_started)
-        + "\nextracting/cloning: "
-        + Integer.toString(processing)
-        + "\nimporting vuln/libraries: "
-        + Integer.toString(diff_done)
-        + "\nimported: "
-        + Integer.toString(imported);
-    if (no_fixes > 0) {
-      statusStr += "\nno_fixes: "
-          + Integer.toString(no_fixes);
+    HashMap<String, VulnStatus> newVulnStatus = new HashMap<String, VulnStatus>();
+    for (String vulnId : newVulnerabilities) {
+      newVulnStatus.put(vulnId, vulnerabilitiesStatus.get(vulnId));
     }
-    if (failed > 0) {
-      statusStr += "\nfailed extract/clone: "
-          + Integer.toString(failed);
-    }
-    if (failed_vuln > 0) {
-      statusStr += "\nfailed vuln: "
-          + Integer.toString(failed_lib);
-    }
-    if (failed_lib > 0) {
-      statusStr += "\nfailed lib: "
-          + Integer.toString(failed_vuln); 
-    }
-    if (skip_clone > 0) {
-      statusStr += "\nskip_clone: "
-          + Integer.toString(skip_clone); 
-    }
-    return statusStr + "\n";
+    HashMap<String, Object> statusMap = new HashMap<String, Object>();
+    statusMap.put("count", statusCount);
+    statusMap.put("new_vulnerabilities", newVulnerabilities);
+    String statusStr = new Gson().toJson(statusMap);
+    return statusStr;
   }
 
 }

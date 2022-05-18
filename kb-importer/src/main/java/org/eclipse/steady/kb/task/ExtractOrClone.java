@@ -97,7 +97,8 @@ public class ExtractOrClone {
 
     } catch (IOException | InterruptedException e) {
       String vulnId = dirPath.split(File.separator)[dirPath.split(File.separator).length - 1];
-      manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED);
+      manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED_EXTRACT_OR_CLONE);
+      manager.addFailure(vuln.getVulnId(), e.toString());
       e.printStackTrace();
     }
   }
@@ -133,7 +134,8 @@ public class ExtractOrClone {
 
       } catch (IOException | InterruptedException e) {
         e.printStackTrace();
-        manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED);
+        manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_EXTRACT_OR_CLONE);
+        manager.addFailure(vuln.getVulnId(), e.toString());
         break;
       }
       manager.unlockRepo(repoUrl);
@@ -173,7 +175,8 @@ public class ExtractOrClone {
         log.error("Failed to get commit timestamp for repository " +repoUrl + " commit id " + commitId);
         String error = gitShowError.readLine();
         log.error("git show: " + error);
-        manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED);
+        manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_EXTRACT_OR_CLONE);
+        manager.addFailure(vuln.getVulnId(), "Failed to get commit timestamp for repository " +repoUrl + " commit id " + commitId);
       }
     }
     /*
@@ -278,7 +281,8 @@ public class ExtractOrClone {
       log.error("git cat-file didn't work");
       log.error(gitCatErrorInput.readLine());
       // What to do in case it doesn't work?
-      // manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED);
+      manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED_EXTRACT_OR_CLONE);
+      manager.addFailure(vuln.getVulnId(), "git cat-file didn't work");
     }
   }
 

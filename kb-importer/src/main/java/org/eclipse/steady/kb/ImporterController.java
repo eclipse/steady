@@ -25,69 +25,51 @@ import org.eclipse.steady.shared.util.VulasConfiguration;
 @CrossOrigin("*")
 public class ImporterController {
 
-	private static String TIME_REFRESH_ALL = "vulas.kb.importer.refetchAllMs";
-
 	private static Logger log = LoggerFactory.getLogger(ImporterController.class);
 
 	private Thread importerCacheFetch = null;
-    // Refresh CVE cache
-    final long time_refresh_all = 
-		VulasConfiguration.getGlobal().getConfiguration().getLong(TIME_REFRESH_ALL, -1);
+
+    final String defaultRefetchAllMs = 
+		Long.toString(VulasConfiguration.getGlobal().getConfiguration().getLong("vulas.kb.importer.refetchAllMs", -1));
 
 	private final Manager manager;
 
 	@Autowired
 	ImporterController() {
-		this.manager = new Manager();	
-		HashMap<String, Object> args = new HashMap<String, Object>();
-		this.importerCacheFetch =
-			new Thread(
-			new Runnable() {
-				public void run() {
-					while (true) {
-						manager.start("/kb-importer/data/statements", args);
-		
-						long interval = time_refresh_all;
-						System.out.println("interval: " + Long.toString(time_refresh_all));
-						try {
-							Thread.sleep(interval);
-						} catch (InterruptedException e) {
-							ImporterController.log.error(
-								"Interrupted exception: "
-									+ e.getMessage());
-						}
-					}
-				}
-			},
-			"ImporterCacheFetch");
-		this.importerCacheFetch.setPriority(Thread.MIN_PRIORITY);	
+		this.manager = new Manager();
 	}
 
-	//@GetMapping("/start")
 	@RequestMapping(value = "/start", method = RequestMethod.POST)
 	public ResponseEntity<Boolean> start(@RequestParam(defaultValue = "false") boolean overwrite, @RequestParam(defaultValue = "false") boolean upload,
-		@RequestParam(defaultValue = "false") boolean verbose, @RequestParam(defaultValue = "true") boolean skipClone) {
+		@RequestParam(defaultValue = "false") boolean verbose, @RequestParam(defaultValue = "true") boolean skipClone, @RequestParam(defaultValue = "0") long refetchAllMs) {
 		boolean started = false;
 		try {
-		  if (this.importerCacheFetch.isAlive()) {
+		  if (this.manager.getIsRunningStart()) {
 			log.info("Importer already running");
 		  } else {
+			if (this.importerCacheFetch != null && this.importerCacheFetch.isAlive()) {
+				this.importerCacheFetch.interrupt();
+			}
 			HashMap<String, Object> args = new HashMap<String, Object>();
 			args.put(Import.OVERWRITE_OPTION, overwrite);
 			args.put(Import.UPLOAD_CONSTRUCT_OPTION, upload);
 			args.put(Import.VERBOSE_OPTION, verbose);
 			args.put(Import.SKIP_CLONE_OPTION, skipClone);
+			if (refetchAllMs != 0) {
+				args.put(Import.TIME_REFETCH_ALL_OPTION, refetchAllMs);
+			} else {
+				args.put(Import.TIME_REFETCH_ALL_OPTION, defaultRefetchAllMs);
+			}
+
 			this.importerCacheFetch =
 				new Thread(
 				new Runnable() {
 					public void run() {
 						while (true) {
 							manager.start("/kb-importer/data/statements", args);
-			
-							long interval = time_refresh_all;
-							System.out.println("interval: " + Long.toString(time_refresh_all));
+
 							try {
-								Thread.sleep(interval);
+								Thread.sleep(Long.parseLong((String)args.get(Import.TIME_REFETCH_ALL_OPTION)));
 							} catch (InterruptedException e) {
 								ImporterController.log.error(
 									"Interrupted exception: "
@@ -99,7 +81,6 @@ public class ImporterController {
 				"ImporterCacheFetch");
 			this.importerCacheFetch.setPriority(Thread.MIN_PRIORITY);
 
-			System.out.println(importerCacheFetch);
 			this.importerCacheFetch.start();
 			started = true;
 			log.info("Importer started");
@@ -116,8 +97,9 @@ public class ImporterController {
 	public ResponseEntity<Boolean> stop() {
 		boolean stopped = false;
 		try {
-		  if (this.importerCacheFetch.isAlive()) {
+		  if (this.manager.getIsRunningStart() || (this.importerCacheFetch != null && this.importerCacheFetch.isAlive())) {
 			stopped = true;
+			this.manager.stop();
 			this.importerCacheFetch.interrupt();
 			log.info("Importer stopped");
 		  } else {
@@ -125,7 +107,7 @@ public class ImporterController {
 		  }
 		  return new ResponseEntity<Boolean>(stopped, HttpStatus.OK);
 		} catch (Exception e) {
-		  log.error("Exception when starting CVE cache refresh: " + e.getMessage(), e);
+		  log.error("Exception when starting kb-importer cache refresh: " + e.getMessage(), e);
 		  return new ResponseEntity<Boolean>(stopped, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -133,9 +115,26 @@ public class ImporterController {
 	@RequestMapping(
 		value = "/start/{id}",
 		method = RequestMethod.POST)
-	public ResponseEntity<Boolean> importSingleVuln(@PathVariable String id) {
+	public ResponseEntity<Boolean> importSingleVuln(@PathVariable String id, @RequestParam(defaultValue = "false") boolean overwrite, 
+			@RequestParam(defaultValue = "false") boolean upload, @RequestParam(defaultValue = "false") boolean verbose, @RequestParam(defaultValue = "true") boolean skipClone) {
 		
-		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+		try {
+			if (this.manager.getIsRunningStart()) {
+			  log.info("Importer already running");
+			  return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+			} else {
+				HashMap<String, Object> args = new HashMap<String, Object>();
+				args.put(Import.OVERWRITE_OPTION, overwrite);
+				args.put(Import.UPLOAD_CONSTRUCT_OPTION, upload);
+				args.put(Import.VERBOSE_OPTION, verbose);
+				args.put(Import.SKIP_CLONE_OPTION, skipClone);
+				manager.importSingleVuln("/kb-importer/data/statements/"+id, args, id);
+				return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			log.error("Exception when importing vulnerability: " + e.getMessage(), e);
+			return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@GetMapping("/status")
@@ -143,5 +142,10 @@ public class ImporterController {
 		return manager.status();
 	}
 
+	@GetMapping(
+		value = "/status/{id}")
+	public String statusSingleVuln(@PathVariable String id) {
+		return manager.getVulnStatus(id).toString();
+	}	
 
 }

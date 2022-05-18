@@ -14,6 +14,7 @@ sed "s|KB_IMPORTER_STATEMENTS_REPO|$KB_IMPORTER_STATEMENTS_REPO|g" ../conf/kaybe
 sed -i "s|KB_IMPORTER_STATEMENTS_BRANCH|$KB_IMPORTER_STATEMENTS_BRANCH|g" ../conf/kaybeeconf.yaml
 
 echo "Statements repo: " $KB_IMPORTER_STATEMENTS_REPO
+
 echo "Statements branch: " $KB_IMPORTER_STATEMENTS_BRANCH
 echo "Statements folder: " $KB_IMPORTER_STATEMENTS_FOLDER
 echo "Clones folder: " $KB_IMPORTER_CLONE_FOLDER

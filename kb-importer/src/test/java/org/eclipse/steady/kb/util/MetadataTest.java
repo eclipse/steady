@@ -105,10 +105,6 @@ public class MetadataTest {
     String path = classLoader.getResource("testRootDir1").getPath() + File.separator + "statement.yaml";
     Vulnerability vuln = Metadata.getFromYaml(path);
 
-    System.out.println("vuln");
-    System.out.println(vuln);
-    System.out.println(vuln.getArtifacts());
-
     assertEquals(3, vuln.getArtifacts().size());
     assertEquals(3, vuln.getNotes().size());
     assertEquals("COLLECTIONS-580", vuln.getVulnId());

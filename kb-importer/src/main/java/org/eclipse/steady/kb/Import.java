@@ -33,6 +33,7 @@ public class Import implements Runnable {
   public static final String OVERWRITE_OPTION = "o";
   public static final String DELETE_OPTION = "del";
   public static final String DIRECTORY_OPTION = "d";
+  public static final String TIME_REFETCH_ALL_OPTION = "t";
   public static final String DELETE = "del";
   public static final String SEQUENTIAL = "seq";
 
@@ -61,7 +62,7 @@ public class Import implements Runnable {
   @Override
   public void run() {
 
-    manager.setVulnStatus(vulnId, Manager.VulnStatus.PROCESSING);
+    manager.setVulnStatus(vulnId, Manager.VulnStatus.EXTRACTING_OR_CLONING);
     boolean bugExists = false;
     try {
       bugExists = this.backendConnector.isBugExisting(vulnId);
@@ -83,6 +84,8 @@ public class Import implements Runnable {
         return;
       }
     } else {
+
+        manager.addNewVulnerability(vulnId);
         log.info("Bug [{}] does not exist in backend", vulnId);
     }
 
@@ -114,10 +117,10 @@ public class Import implements Runnable {
         extractOrClone.execute();
       }
       
-      if (manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.FAILED
+      if (manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.FAILED_EXTRACT_OR_CLONE
           && manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.SKIP_CLONE) {
           //&& manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.NO_FIXES) {
-        manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.DIFF_DONE);
+        manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.IMPORTING);
         ImportVulnerability importVulnerability = new ImportVulnerability();
 
         ImportAffectedLibraries importAffectedLibraries = new ImportAffectedLibraries();
@@ -127,6 +130,7 @@ public class Import implements Runnable {
           importVulnerability.execute(vuln, args, backendConnector);
         } catch (IOException | BackendConnectionException e) {
           manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_IMPORT_VULN);
+          manager.addFailure(vuln.getVulnId(), e.toString());
           e.printStackTrace();
         }
         this.stopWatch.lap("ImportAffectedLibraries");
@@ -134,6 +138,7 @@ public class Import implements Runnable {
           importAffectedLibraries.execute(vuln, args, backendConnector);
         } catch (IOException | MalformedPackageURLException | BackendConnectionException e) {
           manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_IMPORT_LIB);
+          manager.addFailure(vuln.getVulnId(), e.toString());
           e.printStackTrace();
         }
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.IMPORTED);

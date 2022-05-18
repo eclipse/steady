@@ -38,7 +38,6 @@ public class TestExtractOrClone {
   public void initialize() {
     this.manager = new Manager();
     classLoader = getClass().getClassLoader();
-    //this.dirPath = classLoader.getResource("testRootDir7").getPath();
   }
 
   public TestExtractOrClone(String dirName) {
