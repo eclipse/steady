@@ -45,11 +45,17 @@ public class ExtractOrClone {
 
     if (tarFile != null) {
       extract(tarFile, dirPath);
+      manager.setVulnStatus(this.vulnId, Manager.VulnStatus.EXTRACTING);
     } else {
-      if (this.skipClone) {
+      List<Commit> commits = vuln.getCommits();
+      if (commits == null || commits.size() == 0) {
+        return;
+      } else if (this.skipClone) {
         log.info("Skipping clone for vulnerability " + this.vulnId);
         manager.setVulnStatus(this.vulnId, Manager.VulnStatus.SKIP_CLONE);
       } else {
+        manager.setVulnStatus(this.vulnId, Manager.VulnStatus.CLONING);
+        log.info("Cloning repository for vulnerability " + this.vulnId);
         clone(vuln, dirPath);
       }
     }
@@ -106,14 +112,6 @@ public class ExtractOrClone {
   public void clone(Vulnerability vuln, String dirPath) {
 
     List<Commit> commits = vuln.getCommits();
-    if (commits.size() == 0) {
-      log.warn("No commits for vulnerability " + this.vulnId);
-      //manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.NO_FIXES);
-      return;
-    }
-
-    log.info("Cloning ");
-
     for (Commit commit : commits) {
       String repoUrl = commit.getRepoUrl();
       String commitId = commit.getCommitId();

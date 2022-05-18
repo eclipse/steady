@@ -26,7 +26,7 @@ import org.eclipse.steady.backend.BackendConnector;
 
 public class Manager {
 
-  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
   private ThreadPoolExecutor executor =
       // new MyThreadExecutor(16, 32, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
@@ -45,14 +45,15 @@ public class Manager {
 
   public enum VulnStatus {
     NOT_STARTED,
-    EXTRACTING_OR_CLONING,
+    STARTING,
+    EXTRACTING,
+    CLONING,
     IMPORTING,
     IMPORTED,
     FAILED_EXTRACT_OR_CLONE,
     SKIP_CLONE,
     FAILED_IMPORT_LIB,
-    FAILED_IMPORT_VULN,
-    NO_FIXES
+    FAILED_IMPORT_VULN
   }
 
   public void addNewVulnerability(String vulnId) {
@@ -140,6 +141,7 @@ public class Manager {
     try {
       executor.shutdown();
       executor.awaitTermination(24, TimeUnit.HOURS);
+      log.info("Finished importing vulnerabilities");
     } catch (InterruptedException e) {
       log.error("Process interrupted");
       log.error(e.getMessage());

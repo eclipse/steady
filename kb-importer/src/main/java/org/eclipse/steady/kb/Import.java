@@ -62,7 +62,7 @@ public class Import implements Runnable {
   @Override
   public void run() {
 
-    manager.setVulnStatus(vulnId, Manager.VulnStatus.EXTRACTING_OR_CLONING);
+    manager.setVulnStatus(vulnId, Manager.VulnStatus.STARTING);
     boolean bugExists = false;
     try {
       bugExists = this.backendConnector.isBugExisting(vulnId);
@@ -107,8 +107,6 @@ public class Import implements Runnable {
           && (vuln.getArtifacts() == null || vuln.getArtifacts().size() == 0)) {
         log.warn("No fix commits or affected artifacts for vulnerability " + vuln.getVulnId());
         vuln.setCommits(new ArrayList<Commit>());
-        //manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.NO_FIXES);
-        //return;
       } else {
         ExtractOrClone extractOrClone =
             new ExtractOrClone(this.manager, vuln, new File(this.vulnDir.toString()), (boolean) args.get(SKIP_CLONE_OPTION));
@@ -119,7 +117,7 @@ public class Import implements Runnable {
       
       if (manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.FAILED_EXTRACT_OR_CLONE
           && manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.SKIP_CLONE) {
-          //&& manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.NO_FIXES) {
+        
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.IMPORTING);
         ImportVulnerability importVulnerability = new ImportVulnerability();
 

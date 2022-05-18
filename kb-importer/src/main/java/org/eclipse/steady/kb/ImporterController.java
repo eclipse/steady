@@ -41,7 +41,7 @@ public class ImporterController {
 
 	@RequestMapping(value = "/start", method = RequestMethod.POST)
 	public ResponseEntity<Boolean> start(@RequestParam(defaultValue = "false") boolean overwrite, @RequestParam(defaultValue = "false") boolean upload,
-		@RequestParam(defaultValue = "false") boolean verbose, @RequestParam(defaultValue = "true") boolean skipClone, @RequestParam(defaultValue = "0") long refetchAllMs) {
+		@RequestParam(defaultValue = "false") boolean verbose, @RequestParam(defaultValue = "true") boolean skipClone, @RequestParam(defaultValue = "0") String refetchAllMs) {
 		boolean started = false;
 		try {
 		  if (this.manager.getIsRunningStart()) {
@@ -55,8 +55,8 @@ public class ImporterController {
 			args.put(Import.UPLOAD_CONSTRUCT_OPTION, upload);
 			args.put(Import.VERBOSE_OPTION, verbose);
 			args.put(Import.SKIP_CLONE_OPTION, skipClone);
-			if (refetchAllMs != 0) {
-				args.put(Import.TIME_REFETCH_ALL_OPTION, refetchAllMs);
+			if (Long.parseLong(refetchAllMs) != 0) {
+				args.put(Import.TIME_REFETCH_ALL_OPTION, Long.parseLong(refetchAllMs));
 			} else {
 				args.put(Import.TIME_REFETCH_ALL_OPTION, defaultRefetchAllMs);
 			}
@@ -69,7 +69,7 @@ public class ImporterController {
 							manager.start("/kb-importer/data/statements", args);
 
 							try {
-								Thread.sleep(Long.parseLong((String)args.get(Import.TIME_REFETCH_ALL_OPTION)));
+								Thread.sleep((long) args.get(Import.TIME_REFETCH_ALL_OPTION));
 							} catch (InterruptedException e) {
 								ImporterController.log.error(
 									"Interrupted exception: "
@@ -128,7 +128,7 @@ public class ImporterController {
 				args.put(Import.UPLOAD_CONSTRUCT_OPTION, upload);
 				args.put(Import.VERBOSE_OPTION, verbose);
 				args.put(Import.SKIP_CLONE_OPTION, skipClone);
-				manager.importSingleVuln("/kb-importer/data/statements/"+id, args, id);
+				manager.importSingleVuln("/kb-importer/data/statements/" + id, args, id);
 				return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 			}
 		} catch (Exception e) {
