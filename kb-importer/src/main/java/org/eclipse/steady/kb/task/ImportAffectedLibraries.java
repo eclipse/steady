@@ -142,9 +142,4 @@ public class ImportAffectedLibraries implements Task {
     affectedLibrary.setSource(AffectedVersionSource.KAYBEE);
   }
 
-  /** {@inheritDoc} 
-  @Override
-  public Command.NAME getCommandName() {
-    return Command.NAME.IMPORT;
-  }*/
 }

@@ -120,19 +120,13 @@ public class Metadata {
   }
 
   public static Vulnerability getFromYaml(String metadataPathString) throws IOException {
-    // Yaml yaml = new Yaml(new Constructor(Vulnerability.class));
 
     Path metadataPath = Paths.get(metadataPathString);
     Yaml yaml = new Yaml();
 
-    // String metadataString = File.readString(dirPath + "/metadata.yaml");
     String metadataString = new String(Files.readAllBytes(metadataPath));
 
-    // Vulnerability vulnerability = yaml.load(metadataString);
     Map<String, Object> vulnerabilityMap = yaml.load(metadataString);
-    // ObjectMapper objectMapper = new ObjectMapper();
-    // Vulnerability vulnerability = objectMapper.convertValue(vulnerabilityMap,
-    // Vulnerability.class);
 
     Vulnerability vulnerability = new Vulnerability();
 

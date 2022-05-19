@@ -92,17 +92,13 @@ public class Import implements Runnable {
     String statementPath = findStatementPath();
 
     if (statementPath != null) {
-      //System.out.println("d");
       Vulnerability vuln;
       try {
-        // System.out.println("getFromYaml...");
         vuln = Metadata.getFromYaml(statementPath);
-        // System.out.println("after getFromYaml");
       } catch (IOException e) {
         log.error("Error while reading Yaml file for [{}]", vulnId);
         return;
       }
-      //System.out.println("e");
       if ((vuln.getCommits() == null || vuln.getCommits().size() == 0) 
           && (vuln.getArtifacts() == null || vuln.getArtifacts().size() == 0)) {
         log.warn("No fix commits or affected artifacts for vulnerability " + vuln.getVulnId());

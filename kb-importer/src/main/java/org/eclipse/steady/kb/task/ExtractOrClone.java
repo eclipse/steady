@@ -124,12 +124,8 @@ public class ExtractOrClone {
       manager.lockRepo(repoUrl);
       try {
         cloneOnce(repoUrl, repoDirPath);
-        //System.out.println("after cloneOnce");
         createAndWriteCommitMetadata(commit, repoDirPath, commitDirPath);
-        //System.out.println("after createAndWriteCommitMetadata");
         writeCommitDiff(commitId, repoDirPath, commitDirPath);
-        //System.out.println("after writeCommmitDiff");
-
       } catch (IOException | InterruptedException e) {
         e.printStackTrace();
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_EXTRACT_OR_CLONE);
@@ -146,10 +142,9 @@ public class ExtractOrClone {
     String commitId = commit.getCommitId();
     String commitMetadataPath = commitDirPath + File.separator + Import.METADATA_JSON;
     File commitMetadataFile = new File(commitDirPath);
-    // if (!Files.exists(commitMetadataPath)) {
     HashMap<String, String> commitMetadata = new HashMap<String, String>();
-
     String timestamp;
+
     if (repoDirPath == null) {
       Path timestampPath = Paths.get(commitDirPath + File.separator + "timestamp");
       timestamp = new String(Files.readAllBytes(timestampPath)).replace("\n", "");
@@ -177,10 +172,7 @@ public class ExtractOrClone {
         manager.addFailure(vuln.getVulnId(), "Failed to get commit timestamp for repository " +repoUrl + " commit id " + commitId);
       }
     }
-    /*
-    while ((timestamp = gitShowStdInput.readLine()) == null) {
-      System.out.println("timestamp : " + timestamp);
-    }*/
+
     commitMetadata.put("repository", commit.getRepoUrl());
     commitMetadata.put("branch", commit.getBranch());
     commitMetadata.put("timestamp", timestamp);
@@ -192,14 +184,12 @@ public class ExtractOrClone {
   public void cloneOnce(String repoUrl, String repoDirPath)
       throws IOException, InterruptedException {
 
-    String gitCloneCommand = "git clone " + repoUrl + " " + repoDirPath;
 
     if (Files.exists(Paths.get(repoDirPath))) {
       log.info("Folder " + repoDirPath + " exists. Skipping git clone.");
-    } /*else if (this.skipClone) {
-      // do something (throw exception?)
-    } */else {
+    } else {
       log.info("Cloning repository " + repoUrl);
+      String gitCloneCommand = "git clone " + repoUrl + " " + repoDirPath;
       Process gitClone = Runtime.getRuntime().exec(gitCloneCommand);
       /*BufferedReader gitCloneStdInput =
           new BufferedReader(new InputStreamReader(gitClone.getInputStream()));

@@ -84,6 +84,7 @@ public class ConstructSet {
           }
         } catch (Exception e) {
           ConstructSet.log.error("Error while analyzing {} : {}", c, e.getMessage());
+          e.printStackTrace();
         }
       }
 

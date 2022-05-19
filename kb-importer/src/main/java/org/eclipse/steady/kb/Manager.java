@@ -65,7 +65,9 @@ public class Manager {
   }
 
   public VulnStatus getVulnStatus(String vulnId) {
-    return vulnerabilitiesStatus.get(vulnId);
+    if (vulnerabilitiesStatus.containsKey(vulnId)) {
+      return vulnerabilitiesStatus.get(vulnId);
+    } else return null;
   }
 
   public void addFailure(String vulnId, String reason) {
@@ -225,6 +227,7 @@ public class Manager {
     HashMap<String, Object> statusMap = new HashMap<String, Object>();
     statusMap.put("count", statusCount);
     statusMap.put("new_vulnerabilities", newVulnerabilities);
+    statusMap.put("failures", failures);
     String statusStr = new Gson().toJson(statusMap);
     return statusStr;
   }

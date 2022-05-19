@@ -29,8 +29,8 @@ public class ImporterController {
 
 	private Thread importerCacheFetch = null;
 
-    final String defaultRefetchAllMs = 
-		Long.toString(VulasConfiguration.getGlobal().getConfiguration().getLong("vulas.kb.importer.refetchAllMs", -1));
+    final long defaultRefetchAllMs = 
+		VulasConfiguration.getGlobal().getConfiguration().getLong("vulas.kb.importer.refetchAllMs", -1);
 
 	private final Manager manager;
 
@@ -55,10 +55,11 @@ public class ImporterController {
 			args.put(Import.UPLOAD_CONSTRUCT_OPTION, upload);
 			args.put(Import.VERBOSE_OPTION, verbose);
 			args.put(Import.SKIP_CLONE_OPTION, skipClone);
+			long timeToWait;
 			if (Long.parseLong(refetchAllMs) != 0) {
-				args.put(Import.TIME_REFETCH_ALL_OPTION, Long.parseLong(refetchAllMs));
+				timeToWait = Long.parseLong(refetchAllMs);
 			} else {
-				args.put(Import.TIME_REFETCH_ALL_OPTION, defaultRefetchAllMs);
+				timeToWait = defaultRefetchAllMs;
 			}
 
 			this.importerCacheFetch =
@@ -69,7 +70,8 @@ public class ImporterController {
 							manager.start("/kb-importer/data/statements", args);
 
 							try {
-								Thread.sleep((long) args.get(Import.TIME_REFETCH_ALL_OPTION));
+								log.info("Wait " + Long.toString(timeToWait/1000) + " seconds for next execution");
+								Thread.sleep(timeToWait);
 							} catch (InterruptedException e) {
 								ImporterController.log.error(
 									"Interrupted exception: "
@@ -121,7 +123,7 @@ public class ImporterController {
 		try {
 			if (this.manager.getIsRunningStart()) {
 			  log.info("Importer already running");
-			  return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+			  return new ResponseEntity<Boolean>(false, HttpStatus.SERVICE_UNAVAILABLE);
 			} else {
 				HashMap<String, Object> args = new HashMap<String, Object>();
 				args.put(Import.OVERWRITE_OPTION, overwrite);
@@ -145,7 +147,9 @@ public class ImporterController {
 	@GetMapping(
 		value = "/status/{id}")
 	public String statusSingleVuln(@PathVariable String id) {
-		return manager.getVulnStatus(id).toString();
+		String statusStr = manager.getVulnStatus(id).toString();
+		if (statusStr == null) { 
+			return "Vulnerability not found";
+		} else return statusStr;
 	}	
-
 }
