@@ -44,8 +44,8 @@ public class ExtractOrClone {
   public void execute() {
 
     if (tarFile != null) {
-      extract(tarFile, dirPath);
       manager.setVulnStatus(this.vulnId, Manager.VulnStatus.EXTRACTING);
+      extract(tarFile, dirPath);
     } else {
       List<Commit> commits = vuln.getCommits();
       if (commits == null || commits.size() == 0) {
@@ -66,23 +66,6 @@ public class ExtractOrClone {
     if (FileUtil.isAccessibleFile(dirPath + File.separator + Import.SOURCE_TAR)) {
       return new File(dirPath + File.separator + Import.SOURCE_TAR);
     } else return null;
-    /*
-    File tarFile = null;
-    File[] cveFiles = dir.listFiles();
-    for (File cveFile : cveFiles) {
-      String filename = cveFile.getName();
-      String[] splitted = filename.split("[.]");
-      if (splitted.length == 0) {
-        continue;
-      }
-      String extension = splitted[splitted.length - 1];
-      if (extension.equals("tar")
-          || (splitted.length > 2 && splitted[splitted.length - 2].equals("tar"))) {
-        tarFile = cveFile;
-        break;
-      }
-    }
-    return tarFile;*/
   }
 
   public void extract(File tarFile, String dirPath) {
@@ -184,25 +167,12 @@ public class ExtractOrClone {
   public void cloneOnce(String repoUrl, String repoDirPath)
       throws IOException, InterruptedException {
 
-
     if (Files.exists(Paths.get(repoDirPath))) {
       log.info("Folder " + repoDirPath + " exists. Skipping git clone.");
     } else {
       log.info("Cloning repository " + repoUrl);
       String gitCloneCommand = "git clone " + repoUrl + " " + repoDirPath;
       Process gitClone = Runtime.getRuntime().exec(gitCloneCommand);
-      /*BufferedReader gitCloneStdInput =
-          new BufferedReader(new InputStreamReader(gitClone.getInputStream()));
-      BufferedReader gitCloneErrorInput =
-          new BufferedReader(new InputStreamReader(gitClone.getErrorStream()));
-      String line;
-      while ((line = gitCloneStdInput.readLine()) != null) {
-        System.out.println("git clone");
-        System.out.println(line);
-        if ((line = gitCloneErrorInput.readLine()) != null) {
-          System.out.println(line);
-        }
-      }*/
       gitClone.waitFor();
     }
   }
@@ -236,20 +206,18 @@ public class ExtractOrClone {
     String beforeOrAfter = before? "before" : "after";
     // for each file modified in the commit...
     String gitCatCommand =
-        "git -C " + repoDirPath + " cat-file -e " + commitStr + filename;// + " &> /dev/null";
+        "git -C " + repoDirPath + " cat-file -e " + commitStr + filename;
     Process gitCat = Runtime.getRuntime().exec(gitCatCommand);
     log.info("Executing: " + gitCatCommand);
     BufferedReader gitCatErrorInput =
         new BufferedReader(new InputStreamReader(gitCat.getErrorStream()));
     gitCat.waitFor();
     if (gitCat.exitValue() == 0) {
-      //System.out.println("git cat-file works");
       String filepath = commitDirPath + File.separator + beforeOrAfter + File.separator + filename;
       File file = new File(filepath);
       File dir = file.getParentFile();
-      // Paths.createDirectories(dir.getPath());
       dir.mkdirs();
-      // git -C $repo_dir show $commit_id~1:$F > $vulnerability_id/$commit_id/before/$F
+      
       String diffFileCommand =
           "git -C "
               + repoDirPath
@@ -277,11 +245,6 @@ public class ExtractOrClone {
   public void writeCmdOutputToFile(Process process, String filepath) throws IOException {
     BufferedReader stdInput =
         new BufferedReader(new InputStreamReader(process.getInputStream()));
-    /*BufferedReader errorInput =
-        new BufferedReader(new InputStreamReader(process.getErrorStream()));
-    if ((line = errorInput.readLine()) != null) {
-      System.out.println(line);
-    }*/
     String line;
     String lines = "";
     while ((line = stdInput.readLine()) != null) {
