@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Arrays;
 
 import org.eclipse.steady.kb.model.Vulnerability;
-import org.eclipse.steady.kb.Import;
+import org.eclipse.steady.kb.ImportCommand;
 import org.eclipse.steady.kb.Manager;
 import org.eclipse.steady.kb.util.Metadata;
 import org.eclipse.steady.shared.util.VulasConfiguration;
@@ -63,8 +63,8 @@ public class TestExtractOrClone {
 
     HashMap<String, Object> args = new HashMap<String, Object>();
     args.put("v", false);
-    args.put(Import.OVERWRITE_OPTION, false);
-    args.put(Import.DIRECTORY_OPTION, "");
+    args.put(ImportCommand.OVERWRITE_OPTION, false);
+    args.put(ImportCommand.DIRECTORY_OPTION, "");
 
     ExtractOrClone extractOrClone = new ExtractOrClone(manager, vuln, this.dir, false);
     extractOrClone.execute();

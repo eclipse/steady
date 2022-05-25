@@ -132,9 +132,9 @@ public class Manager {
 
       // It is necessary to copy the arguments to avoid concurrent modification
       HashMap<String, Object> args = new HashMap<String, Object>(mapCommandOptionValues);
-      args.put(Import.DIRECTORY_OPTION, vulnDirStr);
-      Import command = new Import(this, args, BackendConnector.getInstance());
-      if (mapCommandOptionValues.containsKey(Import.SEQUENTIAL)) {
+      args.put(ImportCommand.DIRECTORY_OPTION, vulnDirStr);
+      ImportCommand command = new ImportCommand(this, args, BackendConnector.getInstance());
+      if (mapCommandOptionValues.containsKey(ImportCommand.SEQUENTIAL)) {
         command.run();
       } else {
         executor.submit(command);
@@ -152,7 +152,7 @@ public class Manager {
   }
 
   private void setUploadConfiguration(HashMap<String, Object> args) {
-    Object uploadConstruct = args.get(Import.UPLOAD_CONSTRUCT_OPTION);
+    Object uploadConstruct = args.get(ImportCommand.UPLOAD_CONSTRUCT_OPTION);
     VulasConfiguration.getGlobal()
         .setProperty(
             CoreConfiguration.BACKEND_CONNECT,
@@ -203,9 +203,9 @@ public class Manager {
 
     // It is necessary to copy the arguments to avoid concurrent modification
     HashMap<String, Object> args = new HashMap<String, Object>(mapCommandOptionValues);
-    args.put(Import.DIRECTORY_OPTION, vulnDirStr);
-    Import command = new Import(this, args, BackendConnector.getInstance());
-    if (mapCommandOptionValues.containsKey(Import.SEQUENTIAL)) {
+    args.put(ImportCommand.DIRECTORY_OPTION, vulnDirStr);
+    ImportCommand command = new ImportCommand(this, args, BackendConnector.getInstance());
+    if (mapCommandOptionValues.containsKey(ImportCommand.SEQUENTIAL)) {
       command.run();
     } else {
       executor.submit(command);

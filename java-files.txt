@@ -303,7 +303,7 @@ kb-importer/src/main/java/org/eclipse/steady/kb/task/ImportVulnerability.java
 kb-importer/src/main/java/org/eclipse/steady/kb/task/ImportAffectedLibraries.java
 kb-importer/src/main/java/org/eclipse/steady/kb/task/Task.java
 kb-importer/src/main/java/org/eclipse/steady/kb/task/ExtractOrClone.java
-kb-importer/src/main/java/org/eclipse/steady/kb/Import.java
+kb-importer/src/main/java/org/eclipse/steady/kb/ImportCommand.java
 kb-importer/src/main/java/org/eclipse/steady/kb/model/Artifact.java
 kb-importer/src/main/java/org/eclipse/steady/kb/model/Vulnerability.java
 kb-importer/src/main/java/org/eclipse/steady/kb/model/Commit.java

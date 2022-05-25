@@ -21,7 +21,7 @@ import org.eclipse.steady.kb.model.Commit;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.shared.util.StopWatch;
 
-public class Import implements Runnable {
+public class ImportCommand implements Runnable {
 
   public static final String METADATA_JSON = "metadata.json";
   public static final String STATEMENT_YAML = "statement.yaml";
@@ -46,7 +46,7 @@ public class Import implements Runnable {
   private HashMap<String, Object> args;
   Manager manager;
 
-  public Import(Manager manager, HashMap<String, Object> args, BackendConnector backendConnector) {
+  public ImportCommand(Manager manager, HashMap<String, Object> args, BackendConnector backendConnector) {
     this.manager = manager;
     this.backendConnector = backendConnector;
     this.vulnDir = Paths.get((String) args.get(DIRECTORY_OPTION));
@@ -156,7 +156,7 @@ public class Import implements Runnable {
                 file.getAbsolutePath() + File.separator + STATEMENT_YAML)) {
               return file.getAbsolutePath() + File.separator + STATEMENT_YAML;
             } else {
-              Import.log.warn(
+              ImportCommand.log.warn(
                   "Skipping {} as the directory does not contain statement.yaml file",
                   file.getAbsolutePath());
             }
@@ -164,7 +164,7 @@ public class Import implements Runnable {
         }
       }
     } else {
-      Import.log.error("Invalid directory {}", vulnDir);
+      ImportCommand.log.error("Invalid directory {}", vulnDir);
     }
     return null;
   }

@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.kb.model.Vulnerability;
 import org.eclipse.steady.kb.model.Commit;
-import org.eclipse.steady.kb.Import;
+import org.eclipse.steady.kb.ImportCommand;
 import org.eclipse.steady.kb.util.Metadata;
 import org.eclipse.steady.kb.Manager;
 
@@ -63,8 +63,8 @@ public class ExtractOrClone {
   }
 
   public File getTarFile(String dirPath) {
-    if (FileUtil.isAccessibleFile(dirPath + File.separator + Import.SOURCE_TAR)) {
-      return new File(dirPath + File.separator + Import.SOURCE_TAR);
+    if (FileUtil.isAccessibleFile(dirPath + File.separator + ImportCommand.SOURCE_TAR)) {
+      return new File(dirPath + File.separator + ImportCommand.SOURCE_TAR);
     } else return null;
   }
 
@@ -123,7 +123,7 @@ public class ExtractOrClone {
       throws IOException {
 
     String commitId = commit.getCommitId();
-    String commitMetadataPath = commitDirPath + File.separator + Import.METADATA_JSON;
+    String commitMetadataPath = commitDirPath + File.separator + ImportCommand.METADATA_JSON;
     File commitMetadataFile = new File(commitDirPath);
     HashMap<String, String> commitMetadata = new HashMap<String, String>();
     String timestamp;

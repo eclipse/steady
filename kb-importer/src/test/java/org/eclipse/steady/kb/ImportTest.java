@@ -45,7 +45,7 @@ public class ImportTest {
     args.put("v", false);
     args.put("d", "");
     Manager manager = new Manager();
-    Import command = new Import(manager, args, mockBackendConnector);
+    ImportCommand command = new ImportCommand(manager, args, mockBackendConnector);
     command.run();
     assertNull(mockBackendConnector.getUploadJson());
   }

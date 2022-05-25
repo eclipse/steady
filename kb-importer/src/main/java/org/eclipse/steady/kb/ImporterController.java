@@ -51,10 +51,10 @@ public class ImporterController {
 				this.importerCacheFetch.interrupt();
 			}
 			HashMap<String, Object> args = new HashMap<String, Object>();
-			args.put(Import.OVERWRITE_OPTION, overwrite);
-			args.put(Import.UPLOAD_CONSTRUCT_OPTION, upload);
-			args.put(Import.VERBOSE_OPTION, verbose);
-			args.put(Import.SKIP_CLONE_OPTION, skipClone);
+			args.put(ImportCommand.OVERWRITE_OPTION, overwrite);
+			args.put(ImportCommand.UPLOAD_CONSTRUCT_OPTION, upload);
+			args.put(ImportCommand.VERBOSE_OPTION, verbose);
+			args.put(ImportCommand.SKIP_CLONE_OPTION, skipClone);
 			long timeToWait;
 			if (Long.parseLong(refetchAllMs) != 0) {
 				timeToWait = Long.parseLong(refetchAllMs);
@@ -126,10 +126,10 @@ public class ImporterController {
 			  return new ResponseEntity<Boolean>(false, HttpStatus.SERVICE_UNAVAILABLE);
 			} else {
 				HashMap<String, Object> args = new HashMap<String, Object>();
-				args.put(Import.OVERWRITE_OPTION, overwrite);
-				args.put(Import.UPLOAD_CONSTRUCT_OPTION, upload);
-				args.put(Import.VERBOSE_OPTION, verbose);
-				args.put(Import.SKIP_CLONE_OPTION, skipClone);
+				args.put(ImportCommand.OVERWRITE_OPTION, overwrite);
+				args.put(ImportCommand.UPLOAD_CONSTRUCT_OPTION, upload);
+				args.put(ImportCommand.VERBOSE_OPTION, verbose);
+				args.put(ImportCommand.SKIP_CLONE_OPTION, skipClone);
 				manager.importSingleVuln("/kb-importer/data/statements/" + id, args, id);
 				return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 			}
