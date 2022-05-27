@@ -192,24 +192,14 @@ public class Manager {
 
   public void importSingleVuln(
     String vulnDirStr, HashMap<String, Object> mapCommandOptionValues, String vulnId) {
-
-    // Should have a lock per vulnerability
-
+    
     log.info("Initializing process for directory " + vulnDirStr);
-
-    if (this.executor.isShutdown() || this.executor.isTerminated()) {
-      this.executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-    }
 
     // It is necessary to copy the arguments to avoid concurrent modification
     HashMap<String, Object> args = new HashMap<String, Object>(mapCommandOptionValues);
     args.put(ImportCommand.DIRECTORY_OPTION, vulnDirStr);
     ImportCommand command = new ImportCommand(this, args, BackendConnector.getInstance());
-    if (mapCommandOptionValues.containsKey(ImportCommand.SEQUENTIAL)) {
-      command.run();
-    } else {
-      executor.submit(command);
-    }
+    command.run();
   }
 
   public String status() {
