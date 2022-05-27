@@ -30,7 +30,7 @@ public class ImporterController {
 	private Thread importerCacheFetch = null;
 
     final long defaultRefetchAllMs = 
-		VulasConfiguration.getGlobal().getConfiguration().getLong("vulas.kb.importer.refetchAllMs", -1);
+		VulasConfiguration.getGlobal().getConfiguration().getLong("vulas.kb-importer.refetchAllMs", -1);
 
 	private final Manager manager;
 
