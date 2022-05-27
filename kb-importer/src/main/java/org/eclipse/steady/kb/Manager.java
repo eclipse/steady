@@ -30,8 +30,8 @@ public class Manager {
 
   private ThreadPoolExecutor executor =
       // new MyThreadExecutor(16, 32, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
-      (ThreadPoolExecutor) Executors.newCachedThreadPool();
-  // (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
+      // (ThreadPoolExecutor) Executors.newCachedThreadPool();
+     (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
 
   private static Map<String, VulnStatus> vulnerabilitiesStatus = new HashMap<String, VulnStatus>();
   private static Set<String> newVulnerabilities = new LinkedHashSet<String>();

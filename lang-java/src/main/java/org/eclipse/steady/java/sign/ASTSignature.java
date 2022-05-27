@@ -58,7 +58,7 @@ public abstract class ASTSignature extends Node implements Signature {
   @SuppressFBWarnings(
       value = "MS_PKGPROTECT",
       justification = "Subclasses can be in different packages")
-  protected static JavaMethodBodyConverter
+  protected JavaMethodBodyConverter
       sMethodBodyConverter; // Visitor for generation of the AST of construct bodies
 
   /** Constant <code>sInjector</code> */
