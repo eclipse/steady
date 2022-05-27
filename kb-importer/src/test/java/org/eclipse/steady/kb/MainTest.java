@@ -18,12 +18,11 @@
  */
 package org.eclipse.steady.kb;
 
-import org.junit.Test;
 
 public class MainTest {
   private static final String SPACE = " ";
 
-/*
+  /*
   @Test
   public void testHelp() {
     String args = "help";

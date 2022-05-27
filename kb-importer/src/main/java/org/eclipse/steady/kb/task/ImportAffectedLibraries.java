@@ -141,5 +141,4 @@ public class ImportAffectedLibraries implements Task {
     affectedLibrary.setAffectedcc(Collections.<AffectedConstructChange>emptyList());
     affectedLibrary.setSource(AffectedVersionSource.KAYBEE);
   }
-
 }

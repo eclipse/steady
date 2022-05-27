@@ -8,9 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.HashMap;
-import java.util.ArrayList;
 import org.apache.logging.log4j.Logger;
 
 import org.eclipse.steady.shared.util.FileUtil;
@@ -99,11 +97,15 @@ public class ExtractOrClone {
       String repoUrl = commit.getRepoUrl();
       String commitId = commit.getCommitId();
       String commitDirPath = dirPath + File.separator + commitId;
-      //System.out.println("commitDirPath : " + commitDirPath);
+      // System.out.println("commitDirPath : " + commitDirPath);
       File commitDir = new File(commitDirPath);
       commitDir.mkdir();
-      String repoDirPath = dirPath + File.separator + 
-          GIT_DIRECTORY + File.separator + repoUrl.replace("https://", "").replace("/", "_");
+      String repoDirPath =
+          dirPath
+              + File.separator
+              + GIT_DIRECTORY
+              + File.separator
+              + repoUrl.replace("https://", "").replace("/", "_");
       manager.lockRepo(repoUrl);
       try {
         cloneOnce(repoUrl, repoDirPath);
@@ -148,11 +150,14 @@ public class ExtractOrClone {
         BufferedReader gitShowError =
             new BufferedReader(new InputStreamReader(gitShow.getErrorStream()));
         String repoUrl = commit.getRepoUrl();
-        log.error("Failed to get commit timestamp for repository " +repoUrl + " commit id " + commitId);
+        log.error(
+            "Failed to get commit timestamp for repository " + repoUrl + " commit id " + commitId);
         String error = gitShowError.readLine();
         log.error("git show: " + error);
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_EXTRACT_OR_CLONE);
-        manager.addFailure(vuln.getVulnId(), "Failed to get commit timestamp for repository " +repoUrl + " commit id " + commitId);
+        manager.addFailure(
+            vuln.getVulnId(),
+            "Failed to get commit timestamp for repository " + repoUrl + " commit id " + commitId);
       }
     }
 
@@ -198,15 +203,14 @@ public class ExtractOrClone {
 
     String commitDirPath = dirPath + File.separator + commitId;
     String commitStr;
-    if (before) { 
+    if (before) {
       commitStr = commitId + "~1:";
     } else {
       commitStr = commitId + ":";
     }
-    String beforeOrAfter = before? "before" : "after";
+    String beforeOrAfter = before ? "before" : "after";
     // for each file modified in the commit...
-    String gitCatCommand =
-        "git -C " + repoDirPath + " cat-file -e " + commitStr + filename;
+    String gitCatCommand = "git -C " + repoDirPath + " cat-file -e " + commitStr + filename;
     Process gitCat = Runtime.getRuntime().exec(gitCatCommand);
     log.info("Executing: " + gitCatCommand);
     BufferedReader gitCatErrorInput =
@@ -217,20 +221,14 @@ public class ExtractOrClone {
       File file = new File(filepath);
       File dir = file.getParentFile();
       dir.mkdirs();
-      
-      String diffFileCommand =
-          "git -C "
-              + repoDirPath
-              + " show "
-              + commitId
-              + "~1:"
-              + filename;
+
+      String diffFileCommand = "git -C " + repoDirPath + " show " + commitId + "~1:" + filename;
 
       log.info("Executing: " + diffFileCommand);
       Process gitDiffFile = Runtime.getRuntime().exec(diffFileCommand);
-    
+
       writeCmdOutputToFile(gitDiffFile, filepath);
-    
+
       gitDiffFile.waitFor();
 
     } else {
@@ -243,8 +241,7 @@ public class ExtractOrClone {
   }
 
   public void writeCmdOutputToFile(Process process, String filepath) throws IOException {
-    BufferedReader stdInput =
-        new BufferedReader(new InputStreamReader(process.getInputStream()));
+    BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
     String line;
     String lines = "";
     while ((line = stdInput.readLine()) != null) {
@@ -255,5 +252,4 @@ public class ExtractOrClone {
 
     Files.write(path, bytes);
   }
-
 }

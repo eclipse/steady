@@ -1,6 +1,5 @@
 package org.eclipse.steady.kb;
 
-import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Map;
@@ -26,12 +25,13 @@ import org.eclipse.steady.backend.BackendConnector;
 
 public class Manager {
 
-  private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  private static final org.apache.logging.log4j.Logger log =
+      org.apache.logging.log4j.LogManager.getLogger();
 
   private ThreadPoolExecutor executor =
       // new MyThreadExecutor(16, 32, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
       // (ThreadPoolExecutor) Executors.newCachedThreadPool();
-     (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
+      (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
 
   private static Map<String, VulnStatus> vulnerabilitiesStatus = new HashMap<String, VulnStatus>();
   private static Set<String> newVulnerabilities = new LinkedHashSet<String>();
@@ -40,7 +40,7 @@ public class Manager {
   private static Map<String, String> failures = new HashMap<String, String>();
 
   Map<String, Lock> repoLocks = new HashMap<String, Lock>();
-  
+
   private boolean isRunningStart;
 
   public enum VulnStatus {
@@ -93,7 +93,7 @@ public class Manager {
   }
 
   public synchronized void start(
-    String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
+      String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
     this.isRunningStart = true;
     if (this.executor.isShutdown() || this.executor.isTerminated()) {
       this.executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
@@ -122,7 +122,6 @@ public class Manager {
       log.info("Found vulnerability directory: " + vulnDir.getName());
       String vulnId = vulnDir.getName().toString();
       setVulnStatus(vulnId, VulnStatus.NOT_STARTED);
-
     }
     BackendConnector backendConnector = BackendConnector.getInstance();
     for (Path vulnDirPath : vulnDirsPaths) {
@@ -172,7 +171,9 @@ public class Manager {
 
   public void kaybeePull() throws IOException, InterruptedException {
     // TODO : write directories as option/property
-    Process pullProcess = Runtime.getRuntime().exec("/kb-importer/data/kaybee pull -c /kb-importer/conf/kaybeeconf.yaml");
+    Process pullProcess =
+        Runtime.getRuntime()
+            .exec("/kb-importer/data/kaybee pull -c /kb-importer/conf/kaybeeconf.yaml");
     pullProcess.waitFor();
     if (pullProcess.exitValue() != 0) {
       log.error("Kaybee pull failed");
@@ -191,8 +192,8 @@ public class Manager {
   }
 
   public void importSingleVuln(
-    String vulnDirStr, HashMap<String, Object> mapCommandOptionValues, String vulnId) {
-    
+      String vulnDirStr, HashMap<String, Object> mapCommandOptionValues, String vulnId) {
+
     log.info("Initializing process for directory " + vulnDirStr);
 
     // It is necessary to copy the arguments to avoid concurrent modification
@@ -208,7 +209,7 @@ public class Manager {
       if (!statusCount.containsKey(vulnStatus)) {
         statusCount.put(vulnStatus, 0);
       }
-      statusCount.put(vulnStatus, statusCount.get(vulnStatus)+1);
+      statusCount.put(vulnStatus, statusCount.get(vulnStatus) + 1);
     }
     HashMap<String, VulnStatus> newVulnStatus = new HashMap<String, VulnStatus>();
     for (String vulnId : newVulnerabilities) {
@@ -221,5 +222,4 @@ public class Manager {
     String statusStr = new Gson().toJson(statusMap);
     return statusStr;
   }
-
 }

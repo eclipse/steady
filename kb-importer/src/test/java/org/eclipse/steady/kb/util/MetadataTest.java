@@ -102,7 +102,8 @@ public class MetadataTest {
   public void testGetFromYaml() throws IOException {
 
     ClassLoader classLoader = getClass().getClassLoader();
-    String path = classLoader.getResource("testRootDir1").getPath() + File.separator + "statement.yaml";
+    String path =
+        classLoader.getResource("testRootDir1").getPath() + File.separator + "statement.yaml";
     Vulnerability vuln = Metadata.getFromYaml(path);
 
     assertEquals(3, vuln.getArtifacts().size());

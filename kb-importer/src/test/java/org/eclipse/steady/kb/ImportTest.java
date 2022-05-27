@@ -21,11 +21,8 @@ package org.eclipse.steady.kb;
 import org.eclipse.steady.kb.task.MockBackConnector;
 import org.eclipse.steady.kb.model.Vulnerability;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNull;
 import java.util.HashMap;
-import org.apache.commons.cli.Options;
 
 import java.io.IOException;
 import com.google.gson.JsonSyntaxException;
@@ -33,7 +30,7 @@ import org.eclipse.steady.backend.BackendConnectionException;
 import org.junit.Test;
 
 public class ImportTest {
-  
+
   @Test
   public void testImportSkipExistingBug()
       throws JsonSyntaxException, IOException, BackendConnectionException {

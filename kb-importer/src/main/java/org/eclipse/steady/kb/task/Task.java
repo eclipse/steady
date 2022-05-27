@@ -2,7 +2,7 @@ package org.eclipse.steady.kb.task;
 
 import java.util.HashMap;
 import org.eclipse.steady.backend.BackendConnector;
-//import org.eclipse.steady.kb.command.Command;
+// import org.eclipse.steady.kb.command.Command;
 import org.eclipse.steady.kb.model.Vulnerability;
 
 /**
@@ -14,7 +14,7 @@ public interface Task {
    *
    * @return name of command
    */
-  //Command.NAME getCommandName();
+  // Command.NAME getCommandName();
 
   /**
    * Task Executor

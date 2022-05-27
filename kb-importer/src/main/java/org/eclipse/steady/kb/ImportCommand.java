@@ -46,7 +46,8 @@ public class ImportCommand implements Runnable {
   private HashMap<String, Object> args;
   Manager manager;
 
-  public ImportCommand(Manager manager, HashMap<String, Object> args, BackendConnector backendConnector) {
+  public ImportCommand(
+      Manager manager, HashMap<String, Object> args, BackendConnector backendConnector) {
     this.manager = manager;
     this.backendConnector = backendConnector;
     this.vulnDir = Paths.get((String) args.get(DIRECTORY_OPTION));
@@ -85,8 +86,8 @@ public class ImportCommand implements Runnable {
       }
     } else {
 
-        manager.addNewVulnerability(vulnId);
-        log.info("Bug [{}] does not exist in backend", vulnId);
+      manager.addNewVulnerability(vulnId);
+      log.info("Bug [{}] does not exist in backend", vulnId);
     }
 
     String statementPath = findStatementPath();
@@ -99,21 +100,25 @@ public class ImportCommand implements Runnable {
         log.error("Error while reading Yaml file for [{}]", vulnId);
         return;
       }
-      if ((vuln.getCommits() == null || vuln.getCommits().size() == 0) 
+      if ((vuln.getCommits() == null || vuln.getCommits().size() == 0)
           && (vuln.getArtifacts() == null || vuln.getArtifacts().size() == 0)) {
         log.warn("No fix commits or affected artifacts for vulnerability " + vuln.getVulnId());
         vuln.setCommits(new ArrayList<Commit>());
       } else {
         ExtractOrClone extractOrClone =
-            new ExtractOrClone(this.manager, vuln, new File(this.vulnDir.toString()), (boolean) args.get(SKIP_CLONE_OPTION));
-        
+            new ExtractOrClone(
+                this.manager,
+                vuln,
+                new File(this.vulnDir.toString()),
+                (boolean) args.get(SKIP_CLONE_OPTION));
+
         this.stopWatch.lap("ExtractOrClone");
         extractOrClone.execute();
       }
-      
+
       if (manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.FAILED_EXTRACT_OR_CLONE
           && manager.getVulnStatus(vuln.getVulnId()) != Manager.VulnStatus.SKIP_CLONE) {
-        
+
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.IMPORTING);
         ImportVulnerability importVulnerability = new ImportVulnerability();
 
@@ -138,7 +143,8 @@ public class ImportCommand implements Runnable {
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.IMPORTED);
       }
       this.stopWatch.stop();
-      log.info(vuln.getVulnId() + " StopWatch Runtime " + Long.toString(this.stopWatch.getRuntime()));
+      log.info(
+          vuln.getVulnId() + " StopWatch Runtime " + Long.toString(this.stopWatch.getRuntime()));
     }
   }
 
