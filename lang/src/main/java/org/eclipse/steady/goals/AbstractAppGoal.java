@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import java.io.IOException;
+
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.backend.BackendConnector;
@@ -133,7 +135,7 @@ public abstract class AbstractAppGoal extends AbstractGoal {
                 "Workspace ["
                     + this.getGoalContext().getSpace()
                     + "] cannot be verified: Not present in server");
-        } catch (BackendConnectionException e) {
+        } catch (BackendConnectionException | IOException e) {
           throw new GoalConfigurationException(
               "Workspace ["
                   + this.getGoalContext().getSpace()

@@ -36,7 +36,7 @@ public interface HttpRequest extends Serializable {
    * @return a {@link org.eclipse.steady.backend.HttpResponse} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public HttpResponse send() throws BackendConnectionException;
+  public HttpResponse send() throws BackendConnectionException, IOException;
 
   /**
    * <p>getGoalContext.</p>

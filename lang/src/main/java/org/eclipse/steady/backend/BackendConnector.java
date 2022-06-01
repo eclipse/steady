@@ -157,7 +157,7 @@ public class BackendConnector {
    * @return a boolean.
    */
   public boolean isSpaceExisting(GoalContext _goal_context, Space _space)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     Boolean exists = false;
     if (!cacheSpaceExistanceCheck.containsKey(_space)) {
 
@@ -187,7 +187,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public Space createSpace(GoalContext _goal_context, Space _space)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final BasicHttpRequest r = new BasicHttpRequest(HttpMethod.POST, PathBuilder.spaces(), null);
     r.setGoalContext(_goal_context);
     r.setPayload(JacksonUtil.asJsonString(_space), null, true);
@@ -214,7 +214,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public void modifySpace(GoalContext _goal_context, Space _space)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final BasicHttpRequest r =
         new BasicHttpRequest(HttpMethod.PUT, PathBuilder.space(_space), null);
     r.setGoalContext(_goal_context);
@@ -230,7 +230,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public void cleanSpace(GoalContext _goal_context, Space _space)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final Map<String, String> params = new HashMap<String, String>();
     params.put("clean", "true");
     final BasicHttpRequest r =
@@ -247,7 +247,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public void deleteSpace(GoalContext _goal_context, Space _space)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final BasicHttpRequest r =
         new BasicHttpRequest(HttpMethod.DELETE, PathBuilder.space(_space), null);
     r.setGoalContext(_goal_context);
@@ -265,7 +265,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public boolean isAppExisting(GoalContext _goal_context, Application _app)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     Boolean exists = false;
     if (!cacheAppExistanceCheck.containsKey(_app)) {
       final BasicHttpRequest r =
@@ -287,7 +287,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException
    */
   public void cleanApp(GoalContext _goal_context, Application _app, boolean _clean_history)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     if (this.isAppExisting(_goal_context, _app)) {
       final Map<String, String> params = new HashMap<String, String>();
       params.put("clean", "true");
@@ -308,7 +308,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public void purgeAppVersions(GoalContext _goal_context, Application _app, int _keep)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final Map<String, String> params = new HashMap<String, String>();
     params.put("keep", Integer.toString(_keep));
     params.put("mode", "VERSIONS"); // Mode DAYS is not yet support on client-side
@@ -326,7 +326,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public void uploadApp(GoalContext _goal_context, Application _app)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final String json = JacksonUtil.asJsonString(_app, null, Views.Default.class);
 
     // The request depending on whose result either POST or PUT will be called
@@ -367,7 +367,7 @@ public class BackendConnector {
    */
   public boolean uploadReachableConstructs(
       GoalContext _goal_context, Application _app, String _lib_digest, String _json)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     if (this.isAppExisting(_goal_context, _app)) {
       final BasicHttpRequest req =
           new BasicHttpRequest(
@@ -393,7 +393,7 @@ public class BackendConnector {
    */
   public boolean uploadTouchPoints(
       GoalContext _goal_context, Application _app, String _lib_digest, String _json)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     if (this.isAppExisting(_goal_context, _app)) {
       final Map<String, String> params = new HashMap<String, String>();
       params.put("skipResponseBody", "true");
@@ -418,7 +418,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public Set<ConstructId> getAppConstructIds(GoalContext _ctx, Application _app)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     if (!cacheAppConstructs.containsKey(_app)) {
       final boolean app_exists = this.isAppExisting(_ctx, _app);
       final Set<ConstructId> constructs = new HashSet<ConstructId>();
@@ -458,7 +458,7 @@ public class BackendConnector {
    * @return a {@link java.util.Map} object.
    */
   public Map<String, Set<ConstructId>> getAppBugs(GoalContext _ctx, Application _app)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     // Make request and put in cache
     if (!this.cacheBugChangeLists.containsKey(_app)) {
 
@@ -523,7 +523,7 @@ public class BackendConnector {
    * @return a {@link java.util.Map} object.
    */
   public Map<String, Set<ConstructId>> getAppBugs(
-      GoalContext _ctx, Application _app, String _filter) throws BackendConnectionException {
+      GoalContext _ctx, Application _app, String _filter) throws BackendConnectionException, IOException {
     // Return all change lists
     if (_filter == null || _filter.equals("")) {
       return this.getAppBugs(_ctx, _app);
@@ -548,19 +548,19 @@ public class BackendConnector {
     }
   }
 
-  /*public VulnerableDependency[] getVulnerableAppArchiveConstructs(Application _app) throws BackendConnectionException {
+  /*public VulnerableDependency[] getVulnerableAppArchiveConstructs(Application _app) throws BackendConnectionException, IOException {
   	final BasicHttpRequest req = new BasicHttpRequest(HttpMethod.GET, PathBuilder.vulnArchiveConstructs(_app), null);
   	final VulnerableDependency[] vulndeps = (VulnerableDependency[])JacksonUtil.asObject(req.send().getBody(), VulnerableDependency[].class);
   	return vulndeps;
   }*/
 
-  /*public VulnerableDependency[] getVulnerableDependencies(Application _app) throws BackendConnectionException {
+  /*public VulnerableDependency[] getVulnerableDependencies(Application _app) throws BackendConnectionException, IOException {
   	final BasicHttpRequest req = new BasicHttpRequest(HttpMethod.GET, PathBuilder.vulnArchiveConstructs(_app), null);
   	final VulnerableDependency[] vulndeps = (VulnerableDependency[])JacksonUtil.asObject(req.send().getBody(), VulnerableDependency[].class);
   	return vulndeps;
   }*/
 
-  /*public VulnerableDependency getVulnerableAppArchiveDependencyConstructs(Application _app, String _sha1, String _bugId) throws BackendConnectionException{
+  /*public VulnerableDependency getVulnerableAppArchiveDependencyConstructs(Application _app, String _sha1, String _bugId) throws BackendConnectionException, IOException{
   	final BasicHttpRequest req = new BasicHttpRequest(HttpMethod.GET,PathBuilder.vulnerableDependencyConstructs(_app, _sha1, _bugId), null);
   	VulnerableDependency vd = (VulnerableDependency)JacksonUtil.asObject(req.send().getBody(), VulnerableDependency.class);
   	return vd;
@@ -575,7 +575,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public Set<Dependency> getAppDeps(GoalContext _ctx, Application _app)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     if (!cacheAppDependencies.containsKey(_app)) {
       final Set<Dependency> deps = new HashSet<Dependency>();
       final boolean app_exists = this.isAppExisting(_ctx, _app);
@@ -613,7 +613,7 @@ public class BackendConnector {
       boolean _include_historical,
       boolean _include_affected,
       boolean _include_affected_unconfirmed)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final Set<VulnerableDependency> vuln_deps = new HashSet<VulnerableDependency>();
     final boolean app_exists = this.isAppExisting(_ctx, _app);
     if (app_exists) {
@@ -647,7 +647,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public VulnerableDependency[] getVulnDeps(Boolean unconfirmedOnly)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final Map<String, String> params = new HashMap<String, String>();
     params.put("unconfirmedOnly", unconfirmedOnly.toString());
     final BasicHttpRequest req =
@@ -667,7 +667,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public Set<ConstructId> getAppTraces(GoalContext _ctx, @NotNull Application _app)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     boolean app_exists = this.isAppExisting(_ctx, _app);
     final Set<ConstructId> constructs = new HashSet<ConstructId>();
     if (app_exists) {
@@ -706,7 +706,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public Set<Dependency> getAppDependencies(GoalContext _ctx, @NotNull Application _app)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     boolean app_exists = this.isAppExisting(_ctx, _app);
     final Set<Dependency> deps = new HashSet<Dependency>();
     if (app_exists) {
@@ -746,7 +746,7 @@ public class BackendConnector {
         throw new EntityNotFoundInBackendException(
             "Library with SHA1 [" + _sha1 + "] not found in backend");
       else return response.getBody();
-    } catch (BackendConnectionException e) {
+    } catch (BackendConnectionException  | IOException e) {
       throw new EntityNotFoundInBackendException(
           "Library with SHA1 [" + _sha1 + "] not found in backend");
     }
@@ -759,7 +759,7 @@ public class BackendConnector {
    * @return a int.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public int countLibraryConstructs(String _ja) throws BackendConnectionException {
+  public int countLibraryConstructs(String _ja) throws BackendConnectionException, IOException {
     int count_existing = -1;
     String http_response = null;
     try {
@@ -787,7 +787,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public synchronized void uploadLibrary(GoalContext _ctx, Library _lib)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final String sha1 = _lib.getDigest();
     final String json = JacksonUtil.asJsonString(_lib, null, Views.LibDetails.class);
     // Override setting
@@ -840,7 +840,7 @@ public class BackendConnector {
    * @param _file a {@link java.nio.file.Path} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public void uploadLibraryFile(String _sha1, Path _file) throws BackendConnectionException {
+  public void uploadLibraryFile(String _sha1, Path _file) throws BackendConnectionException, IOException {
     try (final FileInputStream inputStream = new FileInputStream(_file.toFile())) {
       final HttpRequestList req_list = new HttpRequestList();
       final BasicHttpRequest cond_req =
@@ -878,7 +878,7 @@ public class BackendConnector {
    * @return a boolean.
    */
   public boolean uploadGoalExecution(GoalContext _ctx, AbstractGoal _gexe, boolean _before)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     boolean ret = false;
 
     // Application goal
@@ -962,7 +962,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public void uploadTraces(GoalContext _ctx, Application _app, String _json)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     if (this.isAppExisting(_ctx, _app)) {
       final Map<String, String> params = new HashMap<String, String>();
       params.put("skipResponseBody", "true");
@@ -985,7 +985,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public void uploadPaths(GoalContext _ctx, Application _app, String _json)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     if (this.isAppExisting(_ctx, _app)) {
       final Map<String, String> params = new HashMap<String, String>();
       params.put("skipResponseBody", "true");
@@ -1006,7 +1006,7 @@ public class BackendConnector {
    * @return a boolean.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public boolean isBugExisting(String _bug) throws BackendConnectionException {
+  public boolean isBugExisting(String _bug) throws BackendConnectionException, IOException {
     final HttpResponse response =
         new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.bug(_bug), null).send();
     return response.isOk();
@@ -1019,7 +1019,7 @@ public class BackendConnector {
    * @param _json a {@link java.lang.String} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public void uploadChangeList(String _bug, String _json) throws BackendConnectionException {
+  public void uploadChangeList(String _bug, String _json) throws BackendConnectionException, IOException {
 
     // The request depending on whose result either POST or PUT will be called
     final BasicHttpRequest cond_req =
@@ -1047,7 +1047,7 @@ public class BackendConnector {
    * @param _bugId a {@link java.lang.String} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public void deleteBug(String _bugId) throws BackendConnectionException {
+  public void deleteBug(String _bugId) throws BackendConnectionException, IOException {
 
     final BasicHttpRequest del_req =
         new BasicHttpRequest(HttpMethod.DELETE, PathBuilder.bug(_bugId));
@@ -1064,7 +1064,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public void uploadCheckVersionResults(String _bugId, String _json)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final HashMap<String, String> params = new HashMap<String, String>();
     params.put("source", "CHECK_VERSION");
     final HttpRequestList req_list = new HttpRequestList();
@@ -1097,7 +1097,7 @@ public class BackendConnector {
    */
   public AffectedLibrary[] getBugAffectedLibraries(
       GoalContext _g, String _bugId, String _source, Boolean _onlyWellKnown)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final HashMap<String, String> params = new HashMap<String, String>();
     params.put("source", _source);
     params.put("onlyWellKnown", _onlyWellKnown.toString());
@@ -1116,7 +1116,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public void deletePatchEvalResults(String _bugId, AffectedVersionSource _source)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final HashMap<String, String> params = new HashMap<String, String>();
     params.put("source", _source.toString());
     final BasicHttpRequest del_req =
@@ -1137,7 +1137,7 @@ public class BackendConnector {
    */
   public void uploadBugAffectedLibraries(
       GoalContext _g, String _bugId, String _json, AffectedVersionSource _source)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final HashMap<String, String> params = new HashMap<String, String>();
     params.put("source", _source.toString());
 
@@ -1222,7 +1222,7 @@ public class BackendConnector {
   		} else {
   			BackendConnector.log.error("HTTP response status [" + response.getStatus() + "], no AST for GAV [" + _lib + "] and construct " + _cid + " found");
   		}
-  	} catch (BackendConnectionException e1) {
+  	} catch (BackendConnectionException  | IOException e1) {
   		BackendConnector.log.error("Error while retrieving AST for GAV [" + _lib + "] and construct " + _cid + ": " + e1.getMessage(), e1);
   	}
   	return ast;
@@ -1239,7 +1239,7 @@ public class BackendConnector {
   		} else {
   			BackendConnector.log.error("HTTP response status [" + response.getStatus() + "], no AST for SHA1 [" + _sha1 + "] and construct " + _cid + " found");
   		}
-  	} catch (BackendConnectionException e1) {
+  	} catch (BackendConnectionException  | IOException e1) {
   		BackendConnector.log.error("Error while retrieving AST for SHA1 [" + _sha1 + "] and construct " + _cid + ": " + e1.getMessage(), e1);
   	}
   	return ast;
@@ -1253,7 +1253,7 @@ public class BackendConnector {
    * @return a {@link org.eclipse.steady.shared.json.model.Bug} object.
    * @param _g a {@link org.eclipse.steady.goals.GoalContext} object
    */
-  public Bug getBug(GoalContext _g, String _bugId) throws BackendConnectionException {
+  public Bug getBug(GoalContext _g, String _bugId) throws BackendConnectionException, IOException {
     BasicHttpRequest request = new BasicHttpRequest(HttpMethod.GET, PathBuilder.bug(_bugId), null);
     if (_g != null) request.setGoalContext(_g);
     HttpResponse r = request.send();
@@ -1283,7 +1283,7 @@ public class BackendConnector {
       } else {
         log.info(String.valueOf(response.getStatus()));
       }
-    } catch (BackendConnectionException ex) {
+    } catch (BackendConnectionException  | IOException ex) {
       log.info(ex);
     }
     return json;
@@ -1315,7 +1315,7 @@ public class BackendConnector {
       } else {
         log.info(String.valueOf(response.getStatus()));
       }
-    } catch (BackendConnectionException ex) {
+    } catch (BackendConnectionException  | IOException ex) {
       log.info(ex);
     }
     return json;
@@ -1337,7 +1337,7 @@ public class BackendConnector {
       if (response.isOk()) {
         json = response.getBody();
       }
-    } catch (BackendConnectionException ex) {
+    } catch (BackendConnectionException  | IOException ex) {
       log.info(ex);
     }
     return json;
@@ -1355,7 +1355,7 @@ public class BackendConnector {
    */
   public synchronized ConstructId[] getArtifactBugConstructsIntersection(
       String _qString, List<ConstructId> c, String packaging, ProgrammingLanguage lang)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     String json = null;
     BasicHttpRequest bhr =
         new BasicHttpRequest(
@@ -1389,7 +1389,7 @@ public class BackendConnector {
       if (response.isOk()) {
         json = response.getBody();
       }
-    } catch (BackendConnectionException ex) {
+    } catch (BackendConnectionException  | IOException ex) {
       log.info(ex);
     }
     return json;
@@ -1416,7 +1416,7 @@ public class BackendConnector {
         json = response.getBody();
         // ast = (String)JacksonUtil.asObject(json, String.class);
       }
-    } catch (BackendConnectionException ex) {
+    } catch (BackendConnectionException  | IOException ex) {
       log.error(ex);
     }
     return json;
@@ -1429,7 +1429,7 @@ public class BackendConnector {
    * @return an array of {@link org.eclipse.steady.shared.json.model.Library} objects.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public Library[] getBugLibraries(String _bugId) throws BackendConnectionException {
+  public Library[] getBugLibraries(String _bugId) throws BackendConnectionException, IOException {
     final String json =
         new BasicHttpRequest(HttpMethod.GET, PathBuilder.bugLibraryVersions(_bugId), null)
             .send()
@@ -1448,7 +1448,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public Artifact[] getAllArtifactsGroupArtifact(String _g, String _a)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException , IOException{
     String json = null;
     Artifact[] result = null;
 
@@ -1472,7 +1472,7 @@ public class BackendConnector {
    * @return a {@link org.eclipse.steady.shared.json.model.Artifact} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public Artifact getArtifact(String _g, String _a, String _v) throws BackendConnectionException {
+  public Artifact getArtifact(String _g, String _a, String _v) throws BackendConnectionException, IOException {
     String json = null;
     Artifact result = null;
 
@@ -1496,7 +1496,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public synchronized ConstructId[] getArtifactConstructs(String _g, String _a, String _v)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final String json =
         new BasicHttpRequest(
                 Service.CIA, HttpMethod.GET, PathBuilder.artifactsConstruct(_g, _a, _v), null)
@@ -1521,7 +1521,7 @@ public class BackendConnector {
    */
   public synchronized boolean doesArtifactExist(
       String _g, String _a, String _v, Boolean _sources, String packaging)
-      throws InterruptedException, BackendConnectionException {
+      throws InterruptedException, BackendConnectionException, IOException {
     final Map<String, String> params = new HashMap<String, String>();
 
     if (_sources != null && _sources) params.put("classifier", "sources");
@@ -1557,7 +1557,7 @@ public class BackendConnector {
    * @return a {@link java.lang.String} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public String getBugsList(ProgrammingLanguage _l) throws BackendConnectionException {
+  public String getBugsList(ProgrammingLanguage _l) throws BackendConnectionException, IOException {
     final String json =
         new BasicHttpRequest(Service.BACKEND, HttpMethod.GET, PathBuilder.bugs(_l), null)
             .send()
@@ -1577,7 +1577,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public HttpResponse getJarForLib(String _g, String _a, String _v, Boolean _s, String _d)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     BasicHttpRequest b =
         new BasicHttpRequest(
             Service.CIA, HttpMethod.GET, PathBuilder.downloadArtifactJars(_g, _a, _v, _s), null);
@@ -1592,7 +1592,7 @@ public class BackendConnector {
    * @return a {@link java.lang.String} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public String getBugsForLib(String _digest) throws BackendConnectionException {
+  public String getBugsForLib(String _digest) throws BackendConnectionException, IOException {
     final String json =
         new BasicHttpRequest(Service.BACKEND, HttpMethod.GET, PathBuilder.libbugs(_digest), null)
             .send()
@@ -1619,7 +1619,7 @@ public class BackendConnector {
       String _artifact,
       String _version,
       AffectedVersionSource _source)
-      throws BackendConnectionException {
+      throws BackendConnectionException, IOException {
     final HashMap<String, String> params = new HashMap<String, String>();
     if (params != null) params.put("source", _source.toString());
     BasicHttpRequest request =
@@ -1641,7 +1641,7 @@ public class BackendConnector {
    * @return String
    * @throws org.eclipse.steady.backend.BackendConnectionException
    */
-  public String getCVE(String _bugId) throws BackendConnectionException {
+  public String getCVE(String _bugId) throws BackendConnectionException, IOException {
     return new BasicHttpRequest(HttpMethod.GET, PathBuilder.cve(_bugId), null).send().getBody();
   }
 }

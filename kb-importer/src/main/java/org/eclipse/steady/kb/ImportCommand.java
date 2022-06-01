@@ -67,8 +67,11 @@ public class ImportCommand implements Runnable {
     boolean bugExists = false;
     try {
       bugExists = this.backendConnector.isBugExisting(vulnId);
-    } catch (BackendConnectionException e) {
+    } catch (BackendConnectionException | IOException e) {
       log.error("Can't connect to the Backend");
+      manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED_CONNECTION);
+      manager.addFailure(vulnId, e.toString());
+      e.printStackTrace();
       return;
     }
     Boolean overwrite = false;
@@ -131,6 +134,7 @@ public class ImportCommand implements Runnable {
           manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_IMPORT_VULN);
           manager.addFailure(vuln.getVulnId(), e.toString());
           e.printStackTrace();
+          return;
         }
         this.stopWatch.lap("ImportAffectedLibraries");
         try {
@@ -139,6 +143,7 @@ public class ImportCommand implements Runnable {
           manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_IMPORT_LIB);
           manager.addFailure(vuln.getVulnId(), e.toString());
           e.printStackTrace();
+          return;
         }
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.IMPORTED);
       }

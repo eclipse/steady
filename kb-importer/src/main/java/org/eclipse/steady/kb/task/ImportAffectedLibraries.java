@@ -18,6 +18,7 @@
  */
 package org.eclipse.steady.kb.task;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,7 +52,7 @@ public class ImportAffectedLibraries implements Task {
   /** {@inheritDoc} */
   public void execute(
       Vulnerability vuln, HashMap<String, Object> args, BackendConnector backendConnector)
-      throws MalformedPackageURLException, BackendConnectionException, JsonProcessingException {
+      throws MalformedPackageURLException, BackendConnectionException, JsonProcessingException, IOException {
 
     log.info("Initiating ImportAffectedLibraries for vulnerability " + vuln.getVulnId());
 

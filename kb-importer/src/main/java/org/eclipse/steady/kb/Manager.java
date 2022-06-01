@@ -1,6 +1,7 @@
 package org.eclipse.steady.kb;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
@@ -30,8 +31,8 @@ public class Manager {
 
   private ThreadPoolExecutor executor =
       // new MyThreadExecutor(16, 32, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
-      // (ThreadPoolExecutor) Executors.newCachedThreadPool();
-      (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
+       (ThreadPoolExecutor) Executors.newCachedThreadPool();
+      //(ThreadPoolExecutor) Executors.newFixedThreadPool(8);
 
   private static Map<String, VulnStatus> vulnerabilitiesStatus = new HashMap<String, VulnStatus>();
   private static Set<String> newVulnerabilities = new LinkedHashSet<String>();
@@ -51,6 +52,7 @@ public class Manager {
     IMPORTING,
     IMPORTED,
     FAILED_EXTRACT_OR_CLONE,
+    FAILED_CONNECTION,
     SKIP_CLONE,
     FAILED_IMPORT_LIB,
     FAILED_IMPORT_VULN
@@ -95,9 +97,7 @@ public class Manager {
   public synchronized void start(
       String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
     this.isRunningStart = true;
-    if (this.executor.isShutdown() || this.executor.isTerminated()) {
-      this.executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-    }
+    
     newVulnerabilities = new LinkedHashSet<String>();
 
     try {
@@ -110,11 +110,30 @@ public class Manager {
       this.isRunningStart = false;
       return;
     }
+    setUploadConfiguration(mapCommandOptionValues);
+    List<String> vulnIds = this.identifyVulnerabilitiesToImport(statementsPath);
+    startList(statementsPath, mapCommandOptionValues, vulnIds);
+    retryFailed(statementsPath, mapCommandOptionValues);
+    this.isRunningStart = false;
+  }
 
+  public void retryFailed(
+      String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
+    
+    List<String> failedVulns = new ArrayList<String>();
+    for (String vulnId : failures.keySet()) {
+      failedVulns.add(vulnId);
+    }
+    while (!failures.isEmpty()) {
+      startList(statementsPath, mapCommandOptionValues, failedVulns);
+    }
+  }
+
+  public List<String> identifyVulnerabilitiesToImport(String statementsPath) {
     File statementsDir = new File(statementsPath);
     File[] subdirs = statementsDir.listFiles();
+    List<String> vulnIds = new ArrayList<String>();
 
-    setUploadConfiguration(mapCommandOptionValues);
     final DirWithFileSearch search = new DirWithFileSearch("statement.yaml");
     Set<Path> vulnDirsPaths = search.search(Paths.get(statementsDir.getPath()));
     for (Path dirPath : vulnDirsPaths) {
@@ -122,9 +141,21 @@ public class Manager {
       log.info("Found vulnerability directory: " + vulnDir.getName());
       String vulnId = vulnDir.getName().toString();
       setVulnStatus(vulnId, VulnStatus.NOT_STARTED);
+      vulnIds.add(vulnId);
     }
+    return vulnIds;
+  }
+
+  public synchronized void startList(
+      String statementsPath, HashMap<String, Object> mapCommandOptionValues, List<String> vulnIds) {
+
+    if (this.executor.isShutdown() || this.executor.isTerminated()) {
+      this.executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+    }
+      
     BackendConnector backendConnector = BackendConnector.getInstance();
-    for (Path vulnDirPath : vulnDirsPaths) {
+    for (String vulnId : vulnIds) {
+      Path vulnDirPath = Paths.get(statementsPath, vulnId);
       File vulnDir = vulnDirPath.toFile();
       String vulnDirStr = vulnDirPath.toString();
       log.info("Initializing process for directory " + vulnDirPath);
@@ -147,7 +178,6 @@ public class Manager {
       log.error("Process interrupted");
       log.error(e.getMessage());
     }
-    this.isRunningStart = false;
   }
 
   private void setUploadConfiguration(HashMap<String, Object> args) {
@@ -179,6 +209,8 @@ public class Manager {
       log.error("Kaybee pull failed");
     }
   }
+
+
 
   public void stop() {
     try {

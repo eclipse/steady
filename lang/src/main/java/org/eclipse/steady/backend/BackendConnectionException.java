@@ -35,6 +35,7 @@ public class BackendConnectionException extends Exception {
    */
   public BackendConnectionException(String _message, Throwable _cause) {
     super(_message, _cause);
+    this.printStackTrace();
   }
   /**
    * <p>Constructor for BackendConnectionException.</p>
@@ -58,6 +59,7 @@ public class BackendConnectionException extends Exception {
         _cause);
     this.httpResponseStatus = _response_status;
     this.uri = _uri;
+    this.printStackTrace();
   }
   /**
    * <p>Getter for the field <code>httpResponseBody</code>.</p>

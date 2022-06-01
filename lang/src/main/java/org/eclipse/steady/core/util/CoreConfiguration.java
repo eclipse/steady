@@ -20,6 +20,8 @@ package org.eclipse.steady.core.util;
 
 import java.util.ServiceLoader;
 
+import java.io.IOException;
+
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.logging.log4j.Logger;
@@ -369,7 +371,7 @@ public class CoreConfiguration {
       exists =
           BackendConnector.getInstance()
               .isAppExisting(CoreConfiguration.buildGoalContextFromGlobalConfiguration(), _app);
-    } catch (BackendConnectionException e) {
+    } catch (BackendConnectionException | IOException e) {
       log.error("Error while checking whether " + _app + " exists in backend: " + e.getMessage());
     }
     return exists;
