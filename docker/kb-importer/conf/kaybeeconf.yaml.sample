@@ -21,3 +21,38 @@ policies:
 #  - CVE-2005-3164
 #  - CVE-2005-4838
 #  - CVE-2007-0450
+
+export:
+  # - target: csv
+  #   filename: vulnerabilities.csv
+  #   pre:
+  #   each: |
+  #     {{ if .Fixes }} {{ .VulnerabilityID}},{{ (index (index .Fixes 0).Commits 0).RepositoryURL }}{{end}}
+  #   post:
+  - target: xml
+    filename: vulnerabilities.xml
+    pre:  |
+      <xml>
+        <Vulnerabilities>
+
+    each: |
+      <Vulnerability id="{{ .VulnerabilityID}}">
+        <fixes>
+        {{range .Fixes }}
+            <fix id="{{ .ID }}">
+            {{range .Commits }}
+              <commit hash="{{ .ID }}" repository="{{ .RepositoryURL }}" />{{end}}
+            </fix>
+          </fixes>{{end}}
+          <notes>
+        {{range .Notes }}
+            <note>
+              {{range $link := .Links }}<link url="{{ $link }}" />
+              {{end}}
+              {{ if .Text }}<text>{{ .Text }}</text>{{ end }}
+            </note>{{end}}
+          </notes>
+      </VulnerabilityID>
+    post: |
+      </Vulnerabilities>
+      </xml>

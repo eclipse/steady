@@ -88,7 +88,7 @@ public class ImporterController {
                 new Runnable() {
                   public void run() {
                     while (true) {
-                      manager.start("/kb-importer/data/statements", args);
+                      manager.start("/kb-importer/data/statements2", args);
 
                       try {
                         log.info(
@@ -154,7 +154,7 @@ public class ImporterController {
         args.put(ImportCommand.UPLOAD_CONSTRUCT_OPTION, upload);
         args.put(ImportCommand.VERBOSE_OPTION, verbose);
         args.put(ImportCommand.SKIP_CLONE_OPTION, skipClone);
-        manager.importSingleVuln("/kb-importer/data/statements/" + id, args, id);
+        manager.importSingleVuln("/kb-importer/data/statements2/" + id, args, id);
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
       }
     } catch (Exception e) {

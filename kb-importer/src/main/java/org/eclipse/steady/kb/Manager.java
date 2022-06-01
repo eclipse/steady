@@ -31,8 +31,8 @@ public class Manager {
 
   private ThreadPoolExecutor executor =
       // new MyThreadExecutor(16, 32, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
-       (ThreadPoolExecutor) Executors.newCachedThreadPool();
-      //(ThreadPoolExecutor) Executors.newFixedThreadPool(8);
+      // (ThreadPoolExecutor) Executors.newCachedThreadPool();
+      (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
 
   private static Map<String, VulnStatus> vulnerabilitiesStatus = new HashMap<String, VulnStatus>();
   private static Set<String> newVulnerabilities = new LinkedHashSet<String>();
@@ -120,18 +120,25 @@ public class Manager {
   public void retryFailed(
       String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
     
-    List<String> failedVulns = new ArrayList<String>();
-    for (String vulnId : failures.keySet()) {
-      failedVulns.add(vulnId);
-    }
-    while (!failures.isEmpty()) {
-      startList(statementsPath, mapCommandOptionValues, failedVulns);
+
+    List<String> failuresToRetry = new ArrayList<String>();
+    while (true) {
+      for (String vulnId : failures.keySet()) {
+        if (failures.get(vulnId).contains("Got error [500]") || failures.get(vulnId).contains("HttpHostConnectionException")) {
+          failuresToRetry.add(vulnId);
+        }
+      }
+      if (failuresToRetry.isEmpty()) {
+        break;
+      } else {
+        log.info("Retrying " + Integer.toString(failuresToRetry.size()) + " failed vulnerabilities");
+        startList(statementsPath, mapCommandOptionValues, failuresToRetry);
+      }
     }
   }
 
   public List<String> identifyVulnerabilitiesToImport(String statementsPath) {
     File statementsDir = new File(statementsPath);
-    File[] subdirs = statementsDir.listFiles();
     List<String> vulnIds = new ArrayList<String>();
 
     final DirWithFileSearch search = new DirWithFileSearch("statement.yaml");
@@ -152,11 +159,11 @@ public class Manager {
     if (this.executor.isShutdown() || this.executor.isTerminated()) {
       this.executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
     }
-      
-    BackendConnector backendConnector = BackendConnector.getInstance();
+
+    failures = new HashMap<String, String>();
+    
     for (String vulnId : vulnIds) {
       Path vulnDirPath = Paths.get(statementsPath, vulnId);
-      File vulnDir = vulnDirPath.toFile();
       String vulnDirStr = vulnDirPath.toString();
       log.info("Initializing process for directory " + vulnDirPath);
 
