@@ -210,7 +210,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
    * @return a {@link org.eclipse.steady.backend.HttpResponse} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public HttpResponse send() throws BackendConnectionException, IOException {
+  public HttpResponse send() throws BackendConnectionException {
     if (this.response == null) {
       // Check JSON
       Exception exception =
@@ -334,7 +334,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
     if (this.payloadPath != null) Paths.get(this.payloadPath).toFile().deleteOnExit();
   }
 
-  private final HttpResponse sendRequest() throws BackendConnectionException, IOException {
+  private final HttpResponse sendRequest() throws BackendConnectionException {
 
     int response_code = -1;
     org.apache.http.HttpResponse httpResponse = null;
@@ -415,7 +415,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
     requestBuilder.setConfig(config);
     httpUriRequest = requestBuilder.build();
 
-    // try {
+    try {
     do {
       is_503 = false;
 
@@ -552,12 +552,12 @@ public class BasicHttpRequest extends AbstractHttpRequest {
                 + "]");
       BasicHttpRequest.log.error("    Exception message: [" + bce.getMessage() + "]");
       if (this.hasPayload())
-        BasicHttpRequest.log.error("    HTTP Request body: [" + this.payload.toString() + "]");
-    } catch (Exception e) {
+        BasicHttpRequest.log.error("    HTTP Request body: [" + this.payload.toString() + "]");*/
+    } catch (IOException e) {
       final BackendConnectionException bce =
           new BackendConnectionException(this.method, uri, response_code, e);
       throwBceException(httpResponse, bce);
-    }*/
+    }
     return response;
   }
 

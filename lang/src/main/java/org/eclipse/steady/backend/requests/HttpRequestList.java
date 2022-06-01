@@ -83,7 +83,7 @@ public class HttpRequestList extends AbstractHttpRequest {
    * stop in case of a successful call.
    */
   @Override
-  public HttpResponse send() throws BackendConnectionException, IOException {
+  public HttpResponse send() throws BackendConnectionException {
     HttpResponse response = null;
     for (HttpRequest r : this.list) {
       response = r.send();

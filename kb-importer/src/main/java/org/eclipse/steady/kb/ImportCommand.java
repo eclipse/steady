@@ -67,7 +67,7 @@ public class ImportCommand implements Runnable {
     boolean bugExists = false;
     try {
       bugExists = this.backendConnector.isBugExisting(vulnId);
-    } catch (BackendConnectionException | IOException e) {
+    } catch (BackendConnectionException e) {
       log.error("Can't connect to the Backend");
       manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED_CONNECTION);
       manager.addFailure(vulnId, e.toString());

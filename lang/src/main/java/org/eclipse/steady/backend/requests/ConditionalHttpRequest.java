@@ -91,7 +91,7 @@ public class ConditionalHttpRequest extends BasicHttpRequest {
    * First performs the conditional requests. Only if all the responses meets the condition, the actual request will be performed.
    */
   @Override
-  public HttpResponse send() throws IllegalStateException, BackendConnectionException, IOException {
+  public HttpResponse send() throws IllegalStateException, BackendConnectionException {
     if (this.conditionRequest == null || this.conditions.size() == 0)
       throw new IllegalStateException("No condition request or no conditions set");
 
