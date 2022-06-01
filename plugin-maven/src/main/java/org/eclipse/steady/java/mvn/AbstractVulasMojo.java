@@ -460,13 +460,23 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     final String agent_filename =
         AGENT_ARTIFACT_NAME + "-" + version + "-" + AGENT_ARTIFACT_CLASSIFIER + ".jar";
     final Path agent =
-        Paths.get(this.project.getBuild().getDirectory(), "dependency", agent_filename);
+        Paths.get(
+            this.session.getLocalRepository().getBasedir(),
+            "org",
+            "eclipse",
+            "steady",
+            AGENT_ARTIFACT_NAME,
+            version,
+            agent_filename);
+
     if (agent == null || !agent.toFile().exists()) {
       throw new MojoExecutionException(
           "Could not find agent JAR ["
               + agent
-              + "], create with [mvn org.apache.maven.plugins:maven-dependency-plugin:3.2.0:copy"
-              + " -Dartifact=org.eclipse.steady:lang-java:"
+              + "], create with [mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:get"
+              + " -Dartifact=org.eclipse.steady:"
+              + AGENT_ARTIFACT_NAME
+              + ":"
               + version
               + ":jar:jar-with-dependencies]");
     }
