@@ -6,7 +6,7 @@ ARG VULAS_RELEASE
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        openssl wget tar git cron bash gettext\
+        openssl wget tar git cron bash gettext curl\
     && rm -rf /var/lib/apt/lists/* \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
