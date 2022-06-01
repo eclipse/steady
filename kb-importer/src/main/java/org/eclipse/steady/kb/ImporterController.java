@@ -65,7 +65,7 @@ public class ImporterController {
       @RequestParam(defaultValue = "0") String refetchAllMs) {
     boolean started = false;
     try {
-      if (this.manager.getIsRunningStart()) {
+      if (this.manager.isRunningStart()) {
         log.info("Importer already running");
       } else {
         if (this.importerCacheFetch != null && this.importerCacheFetch.isAlive()) {
@@ -120,7 +120,7 @@ public class ImporterController {
   public ResponseEntity<Boolean> stop() {
     boolean stopped = false;
     try {
-      if (this.manager.getIsRunningStart()
+      if (this.manager.isRunningStart()
           || (this.importerCacheFetch != null && this.importerCacheFetch.isAlive())) {
         stopped = true;
         this.manager.stop();
@@ -145,7 +145,7 @@ public class ImporterController {
       @RequestParam(defaultValue = "true") boolean skipClone) {
 
     try {
-      if (this.manager.getIsRunningStart()) {
+      if (this.manager.isRunningStart()) {
         log.info("Importer already running");
         return new ResponseEntity<Boolean>(false, HttpStatus.SERVICE_UNAVAILABLE);
       } else {

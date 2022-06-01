@@ -42,7 +42,7 @@ public class Manager {
 
   Map<String, Lock> repoLocks = new HashMap<String, Lock>();
 
-  private boolean isRunningStart;
+  private boolean startIsRunning;
 
   public enum VulnStatus {
     NOT_STARTED,
@@ -90,13 +90,13 @@ public class Manager {
     repoLocks.get(repo).unlock();
   }
 
-  public boolean getIsRunningStart() {
-    return this.isRunningStart;
+  public boolean isRunningStart() {
+    return this.startIsRunning;
   }
 
   public synchronized void start(
       String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
-    this.isRunningStart = true;
+    this.startIsRunning = true;
 
     newVulnerabilities = new LinkedHashSet<String>();
 
@@ -107,14 +107,14 @@ public class Manager {
       kaybeePull();
     } catch (IOException | InterruptedException e) {
       log.error("Exception while performing update: " + e.getMessage());
-      this.isRunningStart = false;
+      this.startIsRunning = false;
       return;
     }
     setUploadConfiguration(mapCommandOptionValues);
     List<String> vulnIds = this.identifyVulnerabilitiesToImport(statementsPath);
     startList(statementsPath, mapCommandOptionValues, vulnIds);
     retryFailed(statementsPath, mapCommandOptionValues);
-    this.isRunningStart = false;
+    this.startIsRunning = false;
   }
 
   public void retryFailed(String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
@@ -221,7 +221,7 @@ public class Manager {
     try {
       executor.shutdownNow();
       executor.awaitTermination(24, TimeUnit.HOURS);
-      this.isRunningStart = false;
+      this.startIsRunning = false;
     } catch (InterruptedException e) {
       log.error("Process interrupted");
       log.error(e.getMessage());
