@@ -52,7 +52,8 @@ public class ImportAffectedLibraries implements Task {
   /** {@inheritDoc} */
   public void execute(
       Vulnerability vuln, HashMap<String, Object> args, BackendConnector backendConnector)
-      throws MalformedPackageURLException, BackendConnectionException, JsonProcessingException, IOException {
+      throws MalformedPackageURLException, BackendConnectionException, JsonProcessingException,
+          IOException {
 
     log.info("Initiating ImportAffectedLibraries for vulnerability " + vuln.getVulnId());
 

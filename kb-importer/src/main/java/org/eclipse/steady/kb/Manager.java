@@ -97,7 +97,7 @@ public class Manager {
   public synchronized void start(
       String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
     this.isRunningStart = true;
-    
+
     newVulnerabilities = new LinkedHashSet<String>();
 
     try {
@@ -117,21 +117,21 @@ public class Manager {
     this.isRunningStart = false;
   }
 
-  public void retryFailed(
-      String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
-    
+  public void retryFailed(String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
 
     List<String> failuresToRetry = new ArrayList<String>();
     while (true) {
       for (String vulnId : failures.keySet()) {
-        if (failures.get(vulnId).contains("Got error [500]") || failures.get(vulnId).contains("HttpHostConnectionException")) {
+        if (failures.get(vulnId).contains("Got error [500]")
+            || failures.get(vulnId).contains("HttpHostConnectionException")) {
           failuresToRetry.add(vulnId);
         }
       }
       if (failuresToRetry.isEmpty()) {
         break;
       } else {
-        log.info("Retrying " + Integer.toString(failuresToRetry.size()) + " failed vulnerabilities");
+        log.info(
+            "Retrying " + Integer.toString(failuresToRetry.size()) + " failed vulnerabilities");
         startList(statementsPath, mapCommandOptionValues, failuresToRetry);
       }
     }
@@ -161,7 +161,7 @@ public class Manager {
     }
 
     failures = new HashMap<String, String>();
-    
+
     for (String vulnId : vulnIds) {
       Path vulnDirPath = Paths.get(statementsPath, vulnId);
       String vulnDirStr = vulnDirPath.toString();
@@ -216,8 +216,6 @@ public class Manager {
       log.error("Kaybee pull failed");
     }
   }
-
-
 
   public void stop() {
     try {

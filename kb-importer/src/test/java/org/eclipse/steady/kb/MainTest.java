@@ -18,7 +18,6 @@
  */
 package org.eclipse.steady.kb;
 
-
 public class MainTest {
   private static final String SPACE = " ";
 

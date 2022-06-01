@@ -523,7 +523,8 @@ public class BackendConnector {
    * @return a {@link java.util.Map} object.
    */
   public Map<String, Set<ConstructId>> getAppBugs(
-      GoalContext _ctx, Application _app, String _filter) throws BackendConnectionException, IOException {
+      GoalContext _ctx, Application _app, String _filter)
+      throws BackendConnectionException, IOException {
     // Return all change lists
     if (_filter == null || _filter.equals("")) {
       return this.getAppBugs(_ctx, _app);
@@ -746,7 +747,7 @@ public class BackendConnector {
         throw new EntityNotFoundInBackendException(
             "Library with SHA1 [" + _sha1 + "] not found in backend");
       else return response.getBody();
-    } catch (BackendConnectionException  | IOException e) {
+    } catch (BackendConnectionException | IOException e) {
       throw new EntityNotFoundInBackendException(
           "Library with SHA1 [" + _sha1 + "] not found in backend");
     }
@@ -840,7 +841,8 @@ public class BackendConnector {
    * @param _file a {@link java.nio.file.Path} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public void uploadLibraryFile(String _sha1, Path _file) throws BackendConnectionException, IOException {
+  public void uploadLibraryFile(String _sha1, Path _file)
+      throws BackendConnectionException, IOException {
     try (final FileInputStream inputStream = new FileInputStream(_file.toFile())) {
       final HttpRequestList req_list = new HttpRequestList();
       final BasicHttpRequest cond_req =
@@ -1019,7 +1021,8 @@ public class BackendConnector {
    * @param _json a {@link java.lang.String} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public void uploadChangeList(String _bug, String _json) throws BackendConnectionException, IOException {
+  public void uploadChangeList(String _bug, String _json)
+      throws BackendConnectionException, IOException {
 
     // The request depending on whose result either POST or PUT will be called
     final BasicHttpRequest cond_req =
@@ -1283,7 +1286,7 @@ public class BackendConnector {
       } else {
         log.info(String.valueOf(response.getStatus()));
       }
-    } catch (BackendConnectionException  | IOException ex) {
+    } catch (BackendConnectionException | IOException ex) {
       log.info(ex);
     }
     return json;
@@ -1315,7 +1318,7 @@ public class BackendConnector {
       } else {
         log.info(String.valueOf(response.getStatus()));
       }
-    } catch (BackendConnectionException  | IOException ex) {
+    } catch (BackendConnectionException | IOException ex) {
       log.info(ex);
     }
     return json;
@@ -1337,7 +1340,7 @@ public class BackendConnector {
       if (response.isOk()) {
         json = response.getBody();
       }
-    } catch (BackendConnectionException  | IOException ex) {
+    } catch (BackendConnectionException | IOException ex) {
       log.info(ex);
     }
     return json;
@@ -1389,7 +1392,7 @@ public class BackendConnector {
       if (response.isOk()) {
         json = response.getBody();
       }
-    } catch (BackendConnectionException  | IOException ex) {
+    } catch (BackendConnectionException | IOException ex) {
       log.info(ex);
     }
     return json;
@@ -1416,7 +1419,7 @@ public class BackendConnector {
         json = response.getBody();
         // ast = (String)JacksonUtil.asObject(json, String.class);
       }
-    } catch (BackendConnectionException  | IOException ex) {
+    } catch (BackendConnectionException | IOException ex) {
       log.error(ex);
     }
     return json;
@@ -1448,7 +1451,7 @@ public class BackendConnector {
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
   public Artifact[] getAllArtifactsGroupArtifact(String _g, String _a)
-      throws BackendConnectionException, IOException , IOException{
+      throws BackendConnectionException, IOException, IOException {
     String json = null;
     Artifact[] result = null;
 
@@ -1472,7 +1475,8 @@ public class BackendConnector {
    * @return a {@link org.eclipse.steady.shared.json.model.Artifact} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public Artifact getArtifact(String _g, String _a, String _v) throws BackendConnectionException, IOException {
+  public Artifact getArtifact(String _g, String _a, String _v)
+      throws BackendConnectionException, IOException {
     String json = null;
     Artifact result = null;
 
