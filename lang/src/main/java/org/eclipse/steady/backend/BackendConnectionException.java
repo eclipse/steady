@@ -35,7 +35,6 @@ public class BackendConnectionException extends Exception {
    */
   public BackendConnectionException(String _message, Throwable _cause) {
     super(_message, _cause);
-    this.printStackTrace();
   }
   /**
    * <p>Constructor for BackendConnectionException.</p>
