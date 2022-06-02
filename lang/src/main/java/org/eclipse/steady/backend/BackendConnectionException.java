@@ -58,7 +58,6 @@ public class BackendConnectionException extends Exception {
         _cause);
     this.httpResponseStatus = _response_status;
     this.uri = _uri;
-    this.printStackTrace();
   }
   /**
    * <p>Getter for the field <code>httpResponseBody</code>.</p>
