@@ -19,7 +19,7 @@
 package org.eclipse.steady.shared.enums;
 
 /**
- * The client running goal(s). 
+ * The client running goal(s).
  */
 public enum GoalClient {
   CLI((byte) 10),
