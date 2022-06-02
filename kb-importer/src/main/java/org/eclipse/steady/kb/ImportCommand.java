@@ -71,7 +71,7 @@ public class ImportCommand implements Runnable {
       log.error("Can't connect to the Backend");
       manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED_CONNECTION);
       manager.addFailure(vulnId, e.toString());
-      e.printStackTrace();
+      log.error(e.getMessage());
       return;
     }
     Boolean overwrite = false;
@@ -133,7 +133,7 @@ public class ImportCommand implements Runnable {
         } catch (IOException | BackendConnectionException e) {
           manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_IMPORT_VULN);
           manager.addFailure(vuln.getVulnId(), e.toString());
-          e.printStackTrace();
+          log.error(e.getMessage());
           return;
         }
         this.stopWatch.lap("ImportAffectedLibraries");
@@ -142,7 +142,7 @@ public class ImportCommand implements Runnable {
         } catch (IOException | MalformedPackageURLException | BackendConnectionException e) {
           manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_IMPORT_LIB);
           manager.addFailure(vuln.getVulnId(), e.toString());
-          e.printStackTrace();
+          log.error(e.getMessage());
           return;
         }
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.IMPORTED);
@@ -154,29 +154,11 @@ public class ImportCommand implements Runnable {
   }
 
   public String findStatementPath() {
-    // Review this function
     if (FileUtil.isAccessibleFile(vulnDir + File.separator + STATEMENT_YAML)) {
       return vulnDir + File.separator + STATEMENT_YAML;
-    } else if (FileUtil.isAccessibleDirectory(vulnDir)) {
-      File directory = new File(vulnDir.toString());
-      File[] fList = directory.listFiles();
-      if (fList != null) {
-        for (File file : fList) {
-          if (file.isDirectory()) {
-            if (FileUtil.isAccessibleFile(
-                file.getAbsolutePath() + File.separator + STATEMENT_YAML)) {
-              return file.getAbsolutePath() + File.separator + STATEMENT_YAML;
-            } else {
-              ImportCommand.log.warn(
-                  "Skipping {} as the directory does not contain statement.yaml file",
-                  file.getAbsolutePath());
-            }
-          }
-        }
-      }
     } else {
       ImportCommand.log.error("Invalid directory {}", vulnDir);
+      return null;
     }
-    return null;
   }
 }

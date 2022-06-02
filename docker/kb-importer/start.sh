@@ -26,10 +26,10 @@ for cert in $certs; do
    keytool -import -alias $cert -storepass changeit -keystore /usr/lib/jvm/java-1.8-openjdk/jre/lib/security/cacerts -file /kb-importer/certs/$cert -noprompt
 done
 
-java -Dvulas.shared.backend.header.X-Vulas-Client-Token=$BACKEND_BUGS_TOKEN \
+(java -Dvulas.shared.backend.header.X-Vulas-Client-Token=$BACKEND_BUGS_TOKEN \
             -Dvulas.shared.cia.serviceUrl=$CIA_SERVICE_URL \
             -Dvulas.shared.backend.serviceUrl=$BACKEND_SERVICE_URL \
-            -jar /kb-importer/data/kb-importer.jar >> analyzer_logs.txt &
+            -jar /kb-importer/data/kb-importer.jar | tee analyzer_logs.txt ) &
 
 #Wait for kb-importer and backend to start
 sleep 40

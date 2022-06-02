@@ -416,133 +416,133 @@ public class BasicHttpRequest extends AbstractHttpRequest {
     httpUriRequest = requestBuilder.build();
 
     try {
-    do {
-      is_503 = false;
+      do {
+        is_503 = false;
 
-      final long start_nano = System.nanoTime();
+        final long start_nano = System.nanoTime();
 
-      if (!this.hasPayload()) {
-        BasicHttpRequest.log.info(
-            "HTTP "
-                + this.method.toString().toUpperCase()
-                + " [uri="
-                + uri
-                + (tenant_token == null ? "" : ", tenant=" + tenant_token)
-                + (space_token == null ? "" : ", space=" + space_token)
-                + "]");
-      } else if (this.binPayload == null) {
-        BasicHttpRequest.log.info(
-            "HTTP "
-                + this.method.toString().toUpperCase()
-                + " [uri="
-                + uri
-                + ", size="
-                + StringUtil.byteToKBString(this.payload.getBytes(StandardCharsets.UTF_8).length)
-                + (tenant_token == null ? "" : ", tenant=" + tenant_token)
-                + (space_token == null ? "" : ", space=" + space_token)
-                + "]");
-      } else {
-        BasicHttpRequest.log.info(
-            "HTTP "
-                + this.method.toString().toUpperCase()
-                + " [uri="
-                + uri
-                + ", size="
-                + this.binPayload.available()
-                + (tenant_token == null ? "" : ", tenant=" + tenant_token)
-                + (space_token == null ? "" : ", space=" + space_token)
-                + "]");
-      }
-
-      SocketConfig socketConfig = SocketConfig.custom().setSoKeepAlive(true).build();
-      HttpClient client =
-          HttpClients.custom().setDefaultSocketConfig(socketConfig).useSystemProperties().build();
-
-      // Read response
-      httpResponse = client.execute(httpUriRequest);
-      response_code = httpResponse.getStatusLine().getStatusCode();
-      response = new HttpResponse(response_code);
-      // If the response body contains a JAR file, save it
-      if (response.isOk()
-          && httpResponse.getFirstHeader("Content-Type") != null
-          && httpResponse
-              .getFirstHeader("Content-Type")
-              .getValue()
-              .contains("application/java-archive")) {
-        String fileName = "";
-        Header disposition = httpResponse.getFirstHeader("Content-Disposition");
-        if (disposition != null) {
-          String dispositionValue = disposition.getValue();
-          // Extracts file name from header field
-          int index = dispositionValue.indexOf("filename=");
-          if (index > 0) {
-            fileName = dispositionValue.substring(index + 9, dispositionValue.length());
-          }
+        if (!this.hasPayload()) {
+          BasicHttpRequest.log.info(
+              "HTTP "
+                  + this.method.toString().toUpperCase()
+                  + " [uri="
+                  + uri
+                  + (tenant_token == null ? "" : ", tenant=" + tenant_token)
+                  + (space_token == null ? "" : ", space=" + space_token)
+                  + "]");
+        } else if (this.binPayload == null) {
+          BasicHttpRequest.log.info(
+              "HTTP "
+                  + this.method.toString().toUpperCase()
+                  + " [uri="
+                  + uri
+                  + ", size="
+                  + StringUtil.byteToKBString(this.payload.getBytes(StandardCharsets.UTF_8).length)
+                  + (tenant_token == null ? "" : ", tenant=" + tenant_token)
+                  + (space_token == null ? "" : ", space=" + space_token)
+                  + "]");
         } else {
-          // Extracts file name from URL
-          fileName = this.path.substring(this.path.lastIndexOf("/") + 1, this.path.length());
+          BasicHttpRequest.log.info(
+              "HTTP "
+                  + this.method.toString().toUpperCase()
+                  + " [uri="
+                  + uri
+                  + ", size="
+                  + this.binPayload.available()
+                  + (tenant_token == null ? "" : ", tenant=" + tenant_token)
+                  + (space_token == null ? "" : ", space=" + space_token)
+                  + "]");
         }
 
-        String saveFilePath = null;
-        if (this.dir != null) {
-          // create directories if not existing
-          if (!Files.exists(Paths.get(dir))) {
-            Files.createDirectories(Paths.get(dir));
+        SocketConfig socketConfig = SocketConfig.custom().setSoKeepAlive(true).build();
+        HttpClient client =
+            HttpClients.custom().setDefaultSocketConfig(socketConfig).useSystemProperties().build();
+
+        // Read response
+        httpResponse = client.execute(httpUriRequest);
+        response_code = httpResponse.getStatusLine().getStatusCode();
+        response = new HttpResponse(response_code);
+        // If the response body contains a JAR file, save it
+        if (response.isOk()
+            && httpResponse.getFirstHeader("Content-Type") != null
+            && httpResponse
+                .getFirstHeader("Content-Type")
+                .getValue()
+                .contains("application/java-archive")) {
+          String fileName = "";
+          Header disposition = httpResponse.getFirstHeader("Content-Disposition");
+          if (disposition != null) {
+            String dispositionValue = disposition.getValue();
+            // Extracts file name from header field
+            int index = dispositionValue.indexOf("filename=");
+            if (index > 0) {
+              fileName = dispositionValue.substring(index + 9, dispositionValue.length());
+            }
+          } else {
+            // Extracts file name from URL
+            fileName = this.path.substring(this.path.lastIndexOf("/") + 1, this.path.length());
           }
-          saveFilePath = dir + File.separator + fileName;
-        } else {
-          saveFilePath =
-              Paths.get(this.getVulasConfiguration().getTmpDir().toString()).toString()
-                  + File.separator
-                  + fileName;
-        }
 
-        try (
-        // Opens input stream from the HTTP connection
-        InputStream inputStream = httpResponse.getEntity().getContent();
-            // Opens an output stream to save into file
-            FileOutputStream outputStream = new FileOutputStream(saveFilePath); ) {
-          int bytesRead = -1;
-          byte[] buffer = new byte[inputStream.available()];
-          while ((bytesRead = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, bytesRead);
+          String saveFilePath = null;
+          if (this.dir != null) {
+            // create directories if not existing
+            if (!Files.exists(Paths.get(dir))) {
+              Files.createDirectories(Paths.get(dir));
+            }
+            saveFilePath = dir + File.separator + fileName;
+          } else {
+            saveFilePath =
+                Paths.get(this.getVulasConfiguration().getTmpDir().toString()).toString()
+                    + File.separator
+                    + fileName;
           }
 
-          response.setBody(saveFilePath);
+          try (
+          // Opens input stream from the HTTP connection
+          InputStream inputStream = httpResponse.getEntity().getContent();
+              // Opens an output stream to save into file
+              FileOutputStream outputStream = new FileOutputStream(saveFilePath); ) {
+            int bytesRead = -1;
+            byte[] buffer = new byte[inputStream.available()];
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+              outputStream.write(buffer, 0, bytesRead);
+            }
+
+            response.setBody(saveFilePath);
+          }
+        } else if (response.isOk() || response.isCreated()) {
+          final String body = this.readResponse(httpResponse);
+          if (StringUtils.isNotBlank(body)) response.setBody(body);
         }
-      } else if (response.isOk() || response.isCreated()) {
-        final String body = this.readResponse(httpResponse);
-        if (StringUtils.isNotBlank(body)) response.setBody(body);
-      }
 
-      // Stats
-      final long end_nano = System.nanoTime();
-      BasicHttpRequest.log.info(
-          "HTTP "
-              + this.method.toString().toUpperCase()
-              + " completed with response code ["
-              + response_code
-              + "] in "
-              + StringUtil.nanoToFlexDurationString(end_nano - start_nano)
-              + " (proxy="
-              + isProxySet()
-              + ")");
+        // Stats
+        final long end_nano = System.nanoTime();
+        BasicHttpRequest.log.info(
+            "HTTP "
+                + this.method.toString().toUpperCase()
+                + " completed with response code ["
+                + response_code
+                + "] in "
+                + StringUtil.nanoToFlexDurationString(end_nano - start_nano)
+                + " (proxy="
+                + isProxySet()
+                + ")");
 
-      // 503: Retry
-      if (response.isServiceUnavailable()) {
-        is_503 = true;
-      }
-      // 5xx: Throw exception
-      else if (response.isServerError()
-          || response.getStatus() == 400
-          || response.getStatus() == 403) {
-        final BackendConnectionException bce =
-            new BackendConnectionException(this.method, uri, response_code, null);
-        throwBceException(httpResponse, bce);
-      }
-    } while (repeater.repeat(is_503));
-    if (is_503) throw new BackendConnectionException(this.method, uri, 503, null);
-    /*} catch (BackendConnectionException bce) {
+        // 503: Retry
+        if (response.isServiceUnavailable()) {
+          is_503 = true;
+        }
+        // 5xx: Throw exception
+        else if (response.isServerError()
+            || response.getStatus() == 400
+            || response.getStatus() == 403) {
+          final BackendConnectionException bce =
+              new BackendConnectionException(this.method, uri, response_code, null);
+          throwBceException(httpResponse, bce);
+        }
+      } while (repeater.repeat(is_503));
+      if (is_503) throw new BackendConnectionException(this.method, uri, 503, null);
+      /*} catch (BackendConnectionException bce) {
       this.logHeaderFields("    Request-header", httpUriRequest.getAllHeaders());
       this.logHeaderFields("    Response-header", httpResponse.getAllHeaders());
       if (bce.getHttpResponseBody() != null)

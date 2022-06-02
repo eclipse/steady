@@ -86,7 +86,7 @@ public class ExtractOrClone {
       String vulnId = dirPath.split(File.separator)[dirPath.split(File.separator).length - 1];
       manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED_EXTRACT_OR_CLONE);
       manager.addFailure(vuln.getVulnId(), e.toString());
-      e.printStackTrace();
+      log.error(e.getMessage());
     }
   }
 
@@ -112,9 +112,9 @@ public class ExtractOrClone {
         createAndWriteCommitMetadata(commit, repoDirPath, commitDirPath);
         writeCommitDiff(commitId, repoDirPath, commitDirPath);
       } catch (IOException | InterruptedException e) {
-        e.printStackTrace();
         manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_EXTRACT_OR_CLONE);
         manager.addFailure(vuln.getVulnId(), e.toString());
+        log.error(e.getMessage());
         break;
       }
       manager.unlockRepo(repoUrl);
@@ -125,8 +125,6 @@ public class ExtractOrClone {
       throws IOException {
 
     String commitId = commit.getCommitId();
-    String commitMetadataPath = commitDirPath + File.separator + ImportCommand.METADATA_JSON;
-    File commitMetadataFile = new File(commitDirPath);
     HashMap<String, String> commitMetadata = new HashMap<String, String>();
     String timestamp;
 

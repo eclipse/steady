@@ -523,8 +523,7 @@ public class BackendConnector {
    * @return a {@link java.util.Map} object.
    */
   public Map<String, Set<ConstructId>> getAppBugs(
-      GoalContext _ctx, Application _app, String _filter)
-      throws BackendConnectionException {
+      GoalContext _ctx, Application _app, String _filter) throws BackendConnectionException {
     // Return all change lists
     if (_filter == null || _filter.equals("")) {
       return this.getAppBugs(_ctx, _app);
@@ -841,8 +840,7 @@ public class BackendConnector {
    * @param _file a {@link java.nio.file.Path} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public void uploadLibraryFile(String _sha1, Path _file)
-      throws BackendConnectionException {
+  public void uploadLibraryFile(String _sha1, Path _file) throws BackendConnectionException {
     try (final FileInputStream inputStream = new FileInputStream(_file.toFile())) {
       final HttpRequestList req_list = new HttpRequestList();
       final BasicHttpRequest cond_req =
@@ -1021,8 +1019,7 @@ public class BackendConnector {
    * @param _json a {@link java.lang.String} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public void uploadChangeList(String _bug, String _json)
-      throws BackendConnectionException {
+  public void uploadChangeList(String _bug, String _json) throws BackendConnectionException {
 
     // The request depending on whose result either POST or PUT will be called
     final BasicHttpRequest cond_req =
@@ -1475,8 +1472,7 @@ public class BackendConnector {
    * @return a {@link org.eclipse.steady.shared.json.model.Artifact} object.
    * @throws org.eclipse.steady.backend.BackendConnectionException if any.
    */
-  public Artifact getArtifact(String _g, String _a, String _v)
-      throws BackendConnectionException {
+  public Artifact getArtifact(String _g, String _a, String _v) throws BackendConnectionException {
     String json = null;
     Artifact result = null;
 
