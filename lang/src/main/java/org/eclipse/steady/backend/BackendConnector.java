@@ -1222,7 +1222,7 @@ public class BackendConnector {
   		} else {
   			BackendConnector.log.error("HTTP response status [" + response.getStatus() + "], no AST for GAV [" + _lib + "] and construct " + _cid + " found");
   		}
-  	} catch (BackendConnectionException  | IOException e1) {
+  	} catch (BackendConnectionException e1) {
   		BackendConnector.log.error("Error while retrieving AST for GAV [" + _lib + "] and construct " + _cid + ": " + e1.getMessage(), e1);
   	}
   	return ast;
@@ -1239,7 +1239,7 @@ public class BackendConnector {
   		} else {
   			BackendConnector.log.error("HTTP response status [" + response.getStatus() + "], no AST for SHA1 [" + _sha1 + "] and construct " + _cid + " found");
   		}
-  	} catch (BackendConnectionException  | IOException e1) {
+  	} catch (BackendConnectionException e1) {
   		BackendConnector.log.error("Error while retrieving AST for SHA1 [" + _sha1 + "] and construct " + _cid + ": " + e1.getMessage(), e1);
   	}
   	return ast;
