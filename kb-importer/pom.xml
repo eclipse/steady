@@ -51,6 +51,11 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.11.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.30</version>
+		</dependency>
 		<!-- Only basic lang classes should be used at compile time -->
 		<dependency>
 			<groupId>org.eclipse.steady</groupId>
