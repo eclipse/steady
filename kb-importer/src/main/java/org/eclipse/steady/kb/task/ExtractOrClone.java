@@ -36,6 +36,10 @@ import org.eclipse.steady.kb.ImportCommand;
 import org.eclipse.steady.kb.util.Metadata;
 import org.eclipse.steady.kb.Manager;
 
+/**
+ * Obtain modified source code files for each commit in a statement.
+ * These files are obtained by extracting from a tar file (if available) or directly from the repository.
+ */
 public class ExtractOrClone {
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();

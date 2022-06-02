@@ -39,6 +39,10 @@ import org.eclipse.steady.kb.model.Commit;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.shared.util.StopWatch;
 
+/**
+ * Import data of a single vulnerability.
+ * Calls 3 tasks sequentially: ExtractOrClone, ImportVulnerability and ImportAffectedLibraries.
+ */
 public class ImportCommand implements Runnable {
 
   public static final String METADATA_JSON = "metadata.json";

@@ -42,6 +42,10 @@ import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.shared.util.DirWithFileSearch;
 import org.eclipse.steady.backend.BackendConnector;
 
+/**
+ * Creates and executes threads for processing each vulnerability.
+ * Keeps track of the state of each one of them.
+ */
 public class Manager {
 
   private static final org.apache.logging.log4j.Logger log =

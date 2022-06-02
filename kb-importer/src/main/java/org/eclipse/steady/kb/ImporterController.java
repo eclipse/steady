@@ -36,6 +36,10 @@ import org.slf4j.LoggerFactory;
 
 import org.eclipse.steady.shared.util.VulasConfiguration;
 
+
+/**
+ * REST Controller for kb-importer
+ */
 @RestController
 @CrossOrigin("*")
 public class ImporterController {
