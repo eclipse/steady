@@ -22,4 +22,6 @@ COPY start.sh /kb-importer/
 
 EXPOSE 8080
 
+RUN chmod +x /kb-importer/start.sh
+
 ENTRYPOINT ["sh","/kb-importer/start.sh"]
