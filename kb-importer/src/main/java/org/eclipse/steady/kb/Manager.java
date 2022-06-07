@@ -51,9 +51,8 @@ public class Manager {
   private static final org.apache.logging.log4j.Logger log =
       org.apache.logging.log4j.LogManager.getLogger();
 
-  private ThreadPoolExecutor executor =
-      // (ThreadPoolExecutor) Executors.newCachedThreadPool();
-      (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
+  private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+  // (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
 
   private static Map<String, VulnStatus> vulnerabilitiesStatus = new HashMap<String, VulnStatus>();
   private static Set<String> newVulnerabilities = new LinkedHashSet<String>();
@@ -138,6 +137,9 @@ public class Manager {
     this.startIsRunning = false;
   }
 
+  /**
+   * Keep retrying vulnerabilities that failed due to the high amount of requests.
+   */
   public void retryFailed(String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
 
     List<String> failuresToRetry = new ArrayList<String>();

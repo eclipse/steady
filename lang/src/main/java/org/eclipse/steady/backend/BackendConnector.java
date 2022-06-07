@@ -1014,7 +1014,9 @@ public class BackendConnector {
     } else if (response.isNotFound()) {
       return false;
     } else {
-      throw new BackendConnectionException("Got response code " + response.getStatus() + " when communicating with the backend", null);
+      throw new BackendConnectionException(
+          "Got response code " + response.getStatus() + " when communicating with the backend",
+          null);
     }
   }
 
@@ -1112,7 +1114,8 @@ public class BackendConnector {
     if (_g != null) request.setGoalContext(_g);
     final HttpResponse response = request.send();
     if (!response.isOk()) {
-      throw new BackendConnectionException("Got respose " + response.getStatus() + " when communicating with the backend", null);
+      throw new BackendConnectionException(
+          "Got respose " + response.getStatus() + " when communicating with the backend", null);
     }
     final String json = response.getBody();
     return (AffectedLibrary[]) JacksonUtil.asObject(json, AffectedLibrary[].class);
@@ -1462,11 +1465,13 @@ public class BackendConnector {
     String json = null;
     Artifact[] result = null;
 
-    final HttpResponse response = new BasicHttpRequest(
+    final HttpResponse response =
+        new BasicHttpRequest(
                 Service.CIA, HttpMethod.GET, PathBuilder.artifactsGroupVersion(_g, _a), null)
             .send();
     if (!response.isOk()) {
-      throw new BackendConnectionException("Got respose " + response.getStatus() + " when communicating with the backend", null);
+      throw new BackendConnectionException(
+          "Got respose " + response.getStatus() + " when communicating with the backend", null);
     }
     json = response.getBody();
     BackendConnector.log.info("artifacts for  " + _g + ":" + _a + " received from backend");
@@ -1637,10 +1642,11 @@ public class BackendConnector {
     BasicHttpRequest request =
         new BasicHttpRequest(
             HttpMethod.GET, PathBuilder.affectedLibs(_bugId, _group, _artifact, _version), params);
-    
+
     final HttpResponse response = request.send();
     if (!response.isOk()) {
-      throw new BackendConnectionException("Got respose " + response.getStatus() + " when communicating with the backend", null);
+      throw new BackendConnectionException(
+          "Got respose " + response.getStatus() + " when communicating with the backend", null);
     }
     String json = response.getBody();
     if (json == null) {
