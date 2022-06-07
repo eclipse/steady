@@ -552,7 +552,7 @@ public class BasicHttpRequest extends AbstractHttpRequest {
                 + "]");
       BasicHttpRequest.log.error("    Exception message: [" + bce.getMessage() + "]");
       if (this.hasPayload())
-        BasicHttpRequest.log.error("    HTTP Request body: [" + this.payload.toString() + "]");*/
+        BasicHttpRequest.log.error("    HTTP Request body: [" + this.payload.toString() + "]");
     } catch (Exception e) {
       final BackendConnectionException bce =
           new BackendConnectionException(this.method, uri, response_code, e);
