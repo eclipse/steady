@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.core.util.CoreConfiguration;
+import org.eclipse.steady.kb.ImportCommand;
 import org.eclipse.steady.kb.ImportTest;
 import org.eclipse.steady.kb.model.Artifact;
 import org.eclipse.steady.kb.model.Vulnerability;
@@ -32,8 +33,8 @@ public class TestImportAffectedLibraries {
             ImportTest.class.getClassLoader().getResource("CVE-2011-4343").getPath());
     MockBackConnector mockBackendConnector = new MockBackConnector();
     HashMap<String, Object> args = new HashMap<String, Object>();
-    args.put("v", false);
-    args.put("o", false);
+    args.put(ImportCommand.VERBOSE_OPTION, false);
+    args.put(ImportCommand.OVERWRITE_OPTION, false);
     importAffectedLibs.execute(vuln, args, mockBackendConnector);
     ObjectMapper mapper = new ObjectMapper();
     List<AffectedLibrary> listAffectedLibUpserted =
@@ -57,8 +58,8 @@ public class TestImportAffectedLibraries {
             ImportTest.class.getClassLoader().getResource("CVE-2011-4343").getPath());
     MockBackConnector mockBackendConnector = new MockBackConnector();
     HashMap<String, Object> args = new HashMap<String, Object>();
-    args.put("o", true);
-    args.put("v", false);
+    args.put(ImportCommand.OVERWRITE_OPTION, true);
+    args.put(ImportCommand.VERBOSE_OPTION, false);
     importAffectedLibs.execute(vuln, args, mockBackendConnector);
     ObjectMapper mapper = new ObjectMapper();
     List<AffectedLibrary> listAffectedLibUpserted =
@@ -78,7 +79,7 @@ public class TestImportAffectedLibraries {
             ImportTest.class.getClassLoader().getResource("CVE-2011-4343").getPath());
     vuln.setArtifacts(new ArrayList<Artifact>());
     HashMap<String, Object> args = new HashMap<String, Object>();
-    args.put("o", false);
+    args.put(ImportCommand.OVERWRITE_OPTION, false);
     importAffectedLibs.execute(vuln, args, null);
   }
 }

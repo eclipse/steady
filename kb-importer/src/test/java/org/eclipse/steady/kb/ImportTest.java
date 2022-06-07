@@ -20,6 +20,7 @@ package org.eclipse.steady.kb;
 
 import org.eclipse.steady.kb.task.MockBackConnector;
 import org.eclipse.steady.kb.model.Vulnerability;
+import org.eclipse.steady.kb.ImportCommand;
 
 import static org.junit.Assert.assertNull;
 import java.util.HashMap;
@@ -38,9 +39,9 @@ public class ImportTest {
     vuln.setVulnId("CVE-TEST01");
     MockBackConnector mockBackendConnector = new MockBackConnector();
     HashMap<String, Object> args = new HashMap<String, Object>();
-    args.put("o", false);
-    args.put("v", false);
-    args.put("d", "");
+    args.put(ImportCommand.OVERWRITE_OPTION, false);
+    args.put(ImportCommand.VERBOSE_OPTION, false);
+    args.put(ImportCommand.DIRECTORY_OPTION, "");
     Manager manager = new Manager();
     ImportCommand command = new ImportCommand(manager, args, mockBackendConnector);
     command.run();
