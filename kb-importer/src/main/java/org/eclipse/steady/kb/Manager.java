@@ -35,13 +35,15 @@ import java.nio.file.Paths;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.http.conn.HttpHostConnectException;
 import com.google.gson.Gson;
 
 import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.shared.util.DirWithFileSearch;
+import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.backend.BackendConnector;
-
+import org.eclipse.steady.shared.util.StopWatch;
 /**
  * Creates and executes threads for processing each vulnerability.
  * Keeps track of the state of each one of them.
@@ -51,18 +53,20 @@ public class Manager {
   private static final org.apache.logging.log4j.Logger log =
       org.apache.logging.log4j.LogManager.getLogger();
 
-  private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-  // (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
+  private ThreadPoolExecutor executor;
 
   private static Map<String, VulnStatus> vulnerabilitiesStatus = new HashMap<String, VulnStatus>();
   private static Set<String> newVulnerabilities = new LinkedHashSet<String>();
 
   // pairs of vulnId and reason for failure
-  private static Map<String, String> failures = new HashMap<String, String>();
+  private static Map<String, Exception> failures = new HashMap<String, Exception>();
 
   Map<String, Lock> repoLocks = new HashMap<String, Lock>();
 
   private boolean startIsRunning;
+
+  private BackendConnector backendConnector;
+  private StopWatch stopWatch = null;
 
   public enum VulnStatus {
     NOT_STARTED,
@@ -76,6 +80,16 @@ public class Manager {
     SKIP_CLONE,
     FAILED_IMPORT_LIB,
     FAILED_IMPORT_VULN
+  }
+
+  public Manager(BackendConnector backendConnector) {
+    this.backendConnector = backendConnector;
+    this.createNewExecutor();
+  }
+
+  public void createNewExecutor() {
+    this.executor = // (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
   }
 
   public void addNewVulnerability(String vulnId) {
@@ -92,8 +106,8 @@ public class Manager {
     } else return null;
   }
 
-  public void addFailure(String vulnId, String reason) {
-    failures.put(vulnId, reason);
+  public void addFailure(String vulnId, Exception e) {
+    failures.put(vulnId, e);
   }
 
   public void lockRepo(String repo) {
@@ -118,6 +132,7 @@ public class Manager {
       String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
     this.startIsRunning = true;
 
+    this.stopWatch = new StopWatch("Manager started").start();
     newVulnerabilities = new LinkedHashSet<String>();
 
     try {
@@ -134,7 +149,9 @@ public class Manager {
     List<String> vulnIds = this.identifyVulnerabilitiesToImport(statementsPath);
     startList(statementsPath, mapCommandOptionValues, vulnIds);
     retryFailed(statementsPath, mapCommandOptionValues);
+    this.stopWatch.stop();
     this.startIsRunning = false;
+    log.info("Manager StopWatch Runtime " + Long.toString(this.stopWatch.getRuntime()));
   }
 
   /**
@@ -145,8 +162,8 @@ public class Manager {
     List<String> failuresToRetry = new ArrayList<String>();
     while (true) {
       for (String vulnId : failures.keySet()) {
-        if (failures.get(vulnId).contains("Got error [500]")
-            || failures.get(vulnId).contains("HttpHostConnectionException")) {
+        if (failures.get(vulnId) instanceof BackendConnectionException
+            || failures.get(vulnId) instanceof HttpHostConnectException) {
           failuresToRetry.add(vulnId);
         }
       }
@@ -180,10 +197,10 @@ public class Manager {
       String statementsPath, HashMap<String, Object> mapCommandOptionValues, List<String> vulnIds) {
 
     if (this.executor.isShutdown() || this.executor.isTerminated()) {
-      this.executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+      this.createNewExecutor();
     }
 
-    failures = new HashMap<String, String>();
+    failures = new HashMap<String, Exception>();
 
     for (String vulnId : vulnIds) {
       Path vulnDirPath = Paths.get(statementsPath, vulnId);
@@ -193,7 +210,7 @@ public class Manager {
       // It is necessary to copy the arguments to avoid concurrent modification
       HashMap<String, Object> args = new HashMap<String, Object>(mapCommandOptionValues);
       args.put(ImportCommand.DIRECTORY_OPTION, vulnDirStr);
-      ImportCommand command = new ImportCommand(this, args, BackendConnector.getInstance());
+      ImportCommand command = new ImportCommand(this, args, this.backendConnector);
       if (mapCommandOptionValues.containsKey(ImportCommand.SEQUENTIAL)) {
         command.run();
       } else {
@@ -259,7 +276,7 @@ public class Manager {
     // It is necessary to copy the arguments to avoid concurrent modification
     HashMap<String, Object> args = new HashMap<String, Object>(mapCommandOptionValues);
     args.put(ImportCommand.DIRECTORY_OPTION, vulnDirStr);
-    ImportCommand command = new ImportCommand(this, args, BackendConnector.getInstance());
+    ImportCommand command = new ImportCommand(this, args, this.backendConnector);
     command.run();
   }
 
@@ -278,7 +295,11 @@ public class Manager {
     HashMap<String, Object> statusMap = new HashMap<String, Object>();
     statusMap.put("count", statusCount);
     statusMap.put("new_vulnerabilities", newVulnerabilities);
-    statusMap.put("failures", failures);
+    HashMap<String, String> failureReasons = new HashMap<String, String>();
+    for (String vulnId : failures.keySet()) {
+      failureReasons.put(vulnId, failures.get(vulnId).toString());
+    }
+    statusMap.put("failures", failureReasons);
     String statusStr = new Gson().toJson(statusMap);
     return statusStr;
   }

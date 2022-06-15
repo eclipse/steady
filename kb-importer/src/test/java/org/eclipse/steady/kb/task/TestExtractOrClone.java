@@ -29,7 +29,7 @@ public class TestExtractOrClone {
 
   @Before
   public void initialize() {
-    this.manager = new Manager();
+    this.manager = new Manager(MockBackConnector.getInstance());
     classLoader = getClass().getClassLoader();
   }
 
@@ -41,7 +41,7 @@ public class TestExtractOrClone {
 
   @Parameterized.Parameters
   public static List directories() {
-    return Arrays.asList(new Object[][] {{"testRootDir6"}, {"testRootDir7"}});
+    return Arrays.asList(new Object[][] {{"statements/CVE-2018-1270"}, {"testRootDir7"}});
   }
 
   @Test

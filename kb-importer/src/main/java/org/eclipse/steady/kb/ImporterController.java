@@ -33,7 +33,7 @@ import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.eclipse.steady.backend.BackendConnector;
 import org.eclipse.steady.shared.util.VulasConfiguration;
 
 /**
@@ -56,7 +56,7 @@ public class ImporterController {
 
   @Autowired
   ImporterController() {
-    this.manager = new Manager();
+    this.manager = new Manager(BackendConnector.getInstance());
   }
 
   @RequestMapping(value = "/start", method = RequestMethod.POST)
@@ -91,7 +91,7 @@ public class ImporterController {
                 new Runnable() {
                   public void run() {
                     while (true) {
-                      manager.start("/kb-importer/data/statements2", args);
+                      manager.start("/kb-importer/data/statements", args);
 
                       try {
                         log.info(
@@ -157,7 +157,7 @@ public class ImporterController {
         args.put(ImportCommand.UPLOAD_CONSTRUCT_OPTION, upload);
         args.put(ImportCommand.VERBOSE_OPTION, verbose);
         args.put(ImportCommand.SKIP_CLONE_OPTION, skipClone);
-        manager.importSingleVuln("/kb-importer/data/statements2/" + id, args, id);
+        manager.importSingleVuln("/kb-importer/data/statements/" + id, args, id);
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
       }
     } catch (Exception e) {

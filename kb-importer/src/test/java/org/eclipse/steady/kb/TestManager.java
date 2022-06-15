@@ -19,31 +19,33 @@
 package org.eclipse.steady.kb;
 
 import org.eclipse.steady.kb.task.MockBackConnector;
-import org.eclipse.steady.kb.model.Vulnerability;
 
-import static org.junit.Assert.assertNull;
 import java.util.HashMap;
-
+import java.util.List;
 import java.io.IOException;
 import com.google.gson.JsonSyntaxException;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.junit.Test;
 
-public class ImportTest {
+public class TestManager {
 
   @Test
-  public void testImportSkipExistingBug()
-      throws JsonSyntaxException, IOException, BackendConnectionException {
-    Vulnerability vuln = new Vulnerability();
-    vuln.setVulnId("CVE-TEST01");
+  public void testStartList() throws JsonSyntaxException, IOException, BackendConnectionException {
+    String statementsPath = Manager.class.getClassLoader().getResource("statements").getPath();
     MockBackConnector mockBackendConnector = new MockBackConnector();
     HashMap<String, Object> args = new HashMap<String, Object>();
-    args.put(ImportCommand.OVERWRITE_OPTION, false);
+    args.put(ImportCommand.OVERWRITE_OPTION, true);
     args.put(ImportCommand.VERBOSE_OPTION, false);
-    args.put(ImportCommand.DIRECTORY_OPTION, "");
+    args.put(ImportCommand.SKIP_CLONE_OPTION, false);
     Manager manager = new Manager(mockBackendConnector);
-    ImportCommand command = new ImportCommand(manager, args, mockBackendConnector);
-    command.run();
-    assertNull(mockBackendConnector.getUploadJson());
+
+    List<String> vulnIds = manager.identifyVulnerabilitiesToImport(statementsPath);
+    manager.startList(statementsPath, args, vulnIds);
+
+    Manager.VulnStatus vulnStatus1 = manager.getVulnStatus("CVE-2018-1270");
+
+    org.junit.Assert.assertEquals(vulnStatus1, Manager.VulnStatus.IMPORTED);
+    org.junit.Assert.assertEquals(mockBackendConnector.getUploadedChangeLists().size(), 1);
+    org.junit.Assert.assertEquals(mockBackendConnector.getUploadedLibraries().size(), 0);
   }
 }

@@ -92,7 +92,7 @@ public class ImportCommand implements Runnable {
     } catch (BackendConnectionException e) {
       log.error("Can't connect to the Backend");
       manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED_CONNECTION);
-      manager.addFailure(vulnId, e.toString());
+      manager.addFailure(vulnId, e);
       log.error(e.getMessage());
       return;
     }
@@ -154,7 +154,7 @@ public class ImportCommand implements Runnable {
           importVulnerability.execute(vuln, args, backendConnector);
         } catch (IOException | BackendConnectionException e) {
           manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_IMPORT_VULN);
-          manager.addFailure(vuln.getVulnId(), e.toString());
+          manager.addFailure(vuln.getVulnId(), e);
           log.error(e.getMessage());
           return;
         }
@@ -163,7 +163,7 @@ public class ImportCommand implements Runnable {
           importAffectedLibraries.execute(vuln, args, backendConnector);
         } catch (IOException | MalformedPackageURLException | BackendConnectionException e) {
           manager.setVulnStatus(vuln.getVulnId(), Manager.VulnStatus.FAILED_IMPORT_LIB);
-          manager.addFailure(vuln.getVulnId(), e.toString());
+          manager.addFailure(vuln.getVulnId(), e);
           log.error(e.getMessage());
           return;
         }

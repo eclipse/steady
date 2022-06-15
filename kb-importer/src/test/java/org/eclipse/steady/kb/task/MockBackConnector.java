@@ -1,6 +1,8 @@
 package org.eclipse.steady.kb.task;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.backend.BackendConnector;
 import org.eclipse.steady.goals.GoalContext;
@@ -12,6 +14,8 @@ import org.eclipse.steady.shared.json.model.LibraryId;
 
 public class MockBackConnector extends BackendConnector {
   private String uploadJson;
+  private List<String> uploadedLibraries = new ArrayList<String>();
+  private List<String> uploadedChangeLists = new ArrayList<String>();
 
   @Override
   public AffectedLibrary[] getBugAffectedLibraries(
@@ -62,11 +66,13 @@ public class MockBackConnector extends BackendConnector {
       GoalContext _g, String _bugId, String _json, AffectedVersionSource _source)
       throws BackendConnectionException {
     uploadJson = _json;
+    uploadedLibraries.add(_json);
   }
 
   @Override
   public void uploadChangeList(String _bug, String _json) throws BackendConnectionException {
     uploadJson = _json;
+    uploadedChangeLists.add(_json);
   }
 
   @Override
@@ -84,5 +90,13 @@ public class MockBackConnector extends BackendConnector {
 
   public String getUploadJson() {
     return uploadJson;
+  }
+
+  public List<String> getUploadedChangeLists() {
+    return uploadedChangeLists;
+  }
+
+  public List<String> getUploadedLibraries() {
+    return uploadedLibraries;
   }
 }
