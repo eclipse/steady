@@ -29,7 +29,7 @@ import com.google.gson.JsonSyntaxException;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.junit.Test;
 
-public class ImportTest {
+public class TestImportCommand {
 
   @Test
   public void testImportSkipExistingBug()
@@ -42,7 +42,7 @@ public class ImportTest {
     args.put(ImportCommand.VERBOSE_OPTION, false);
     args.put(ImportCommand.DIRECTORY_OPTION, "");
     Manager manager = new Manager(mockBackendConnector);
-    ImportCommand command = new ImportCommand(manager, args, mockBackendConnector);
+    ImportCommand command = new ImportCommand(manager, args);
     command.run();
     assertNull(mockBackendConnector.getUploadJson());
   }

@@ -69,9 +69,9 @@ public class ImportCommand implements Runnable {
   Manager manager;
 
   public ImportCommand(
-      Manager manager, HashMap<String, Object> args, BackendConnector backendConnector) {
+      Manager manager, HashMap<String, Object> args) {
     this.manager = manager;
-    this.backendConnector = backendConnector;
+    this.backendConnector = manager.getBackendConnector();
     this.vulnDir = Paths.get((String) args.get(DIRECTORY_OPTION));
     this.vulnId = vulnDir.getFileName().toString();
     this.args = args;

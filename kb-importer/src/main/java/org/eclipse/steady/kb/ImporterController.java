@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.io.File;
 import java.util.HashMap;
 
 import org.slf4j.Logger;
@@ -47,10 +48,17 @@ public class ImporterController {
 
   private Thread importerCacheFetch = null;
 
-  final long defaultRefetchAllMs =
+  static final long defaultRefetchAllMs =
       VulasConfiguration.getGlobal()
           .getConfiguration()
           .getLong("vulas.kb-importer.refetchAllMs", -1);
+
+  static final String statementsPath =
+      VulasConfiguration.getGlobal()
+          .getConfiguration()
+          .getString("vulas.kb-importer.statementsPath");
+
+  static final String statementsKaybeePath = ".kaybee/repositories/github.com_sap.project-kb_vulnerability-data/statements";
 
   private final Manager manager;
 
@@ -91,7 +99,7 @@ public class ImporterController {
                 new Runnable() {
                   public void run() {
                     while (true) {
-                      manager.start("/kb-importer/data/statements", args);
+                      manager.start(statementsPath, args);
 
                       try {
                         log.info(
@@ -157,7 +165,7 @@ public class ImporterController {
         args.put(ImportCommand.UPLOAD_CONSTRUCT_OPTION, upload);
         args.put(ImportCommand.VERBOSE_OPTION, verbose);
         args.put(ImportCommand.SKIP_CLONE_OPTION, skipClone);
-        manager.importSingleVuln("/kb-importer/data/statements/" + id, args, id);
+        manager.importSingleVuln(statementsPath + File.separator + id, args, id);
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
       }
     } catch (Exception e) {

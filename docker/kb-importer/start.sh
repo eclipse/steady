@@ -2,9 +2,6 @@
 
 mkdir -p /kb-importer/data
 cd /kb-importer/data
-if [ -d $KB_IMPORTER_CLONE_FOLDER ] && [ ! -z $KB_IMPORTER_CLONE_FOLDER ]; then
-  mkdir -p $KB_IMPORTER_CLONE_FOLDER
-fi
 if [ -f /kb-importer/kb-importer.jar ]; then
   mv /kb-importer/kb-importer.jar /kb-importer/kaybee /kb-importer/data
 fi
@@ -17,7 +14,6 @@ echo "Statements repo: " $KB_IMPORTER_STATEMENTS_REPO
 
 echo "Statements branch: " $KB_IMPORTER_STATEMENTS_BRANCH
 echo "Statements folder: " $KB_IMPORTER_STATEMENTS_FOLDER
-echo "Clones folder: " $KB_IMPORTER_CLONE_FOLDER
 echo "Skip clones: " $KB_IMPORTER_SKIP_CLONE
 
 #Adding certs
@@ -34,4 +30,4 @@ done
 #Wait for kb-importer and backend to start
 sleep 40
 
-curl localhost:8080/start -X POST
+curl localhost:8080/start?skipClone=$KB_IMPORTER_SKIP_CLONE -X POST

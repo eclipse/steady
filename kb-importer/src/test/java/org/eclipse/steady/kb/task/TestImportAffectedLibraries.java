@@ -7,7 +7,7 @@ import java.util.List;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.kb.ImportCommand;
-import org.eclipse.steady.kb.ImportTest;
+import org.eclipse.steady.kb.TestImportCommand;
 import org.eclipse.steady.kb.model.Artifact;
 import org.eclipse.steady.kb.model.Vulnerability;
 import org.eclipse.steady.kb.util.Metadata;
@@ -30,7 +30,7 @@ public class TestImportAffectedLibraries {
     ImportAffectedLibraries importAffectedLibs = new ImportAffectedLibraries();
     Vulnerability vuln =
         Metadata.getVulnerabilityMetadata(
-            ImportTest.class.getClassLoader().getResource("CVE-2011-4343").getPath());
+            TestImportCommand.class.getClassLoader().getResource("CVE-2011-4343").getPath());
     MockBackConnector mockBackendConnector = new MockBackConnector();
     HashMap<String, Object> args = new HashMap<String, Object>();
     args.put(ImportCommand.VERBOSE_OPTION, false);
@@ -55,7 +55,7 @@ public class TestImportAffectedLibraries {
     ImportAffectedLibraries importAffectedLibs = new ImportAffectedLibraries();
     Vulnerability vuln =
         Metadata.getVulnerabilityMetadata(
-            ImportTest.class.getClassLoader().getResource("CVE-2011-4343").getPath());
+            TestImportCommand.class.getClassLoader().getResource("CVE-2011-4343").getPath());
     MockBackConnector mockBackendConnector = new MockBackConnector();
     HashMap<String, Object> args = new HashMap<String, Object>();
     args.put(ImportCommand.OVERWRITE_OPTION, true);
@@ -76,7 +76,7 @@ public class TestImportAffectedLibraries {
     ImportAffectedLibraries importAffectedLibs = new ImportAffectedLibraries();
     Vulnerability vuln =
         Metadata.getVulnerabilityMetadata(
-            ImportTest.class.getClassLoader().getResource("CVE-2011-4343").getPath());
+            TestImportCommand.class.getClassLoader().getResource("CVE-2011-4343").getPath());
     vuln.setArtifacts(new ArrayList<Artifact>());
     HashMap<String, Object> args = new HashMap<String, Object>();
     args.put(ImportCommand.OVERWRITE_OPTION, false);

@@ -53,6 +53,17 @@ public class Manager {
   private static final org.apache.logging.log4j.Logger log =
       org.apache.logging.log4j.LogManager.getLogger();
 
+  final String kaybeeBinaryPath =
+      VulasConfiguration.getGlobal()
+          .getConfiguration()
+          .getString("vulas.kb-importer.kaybeeBinaryPath");
+
+  final String kaybeeConfPath =
+      VulasConfiguration.getGlobal()
+          .getConfiguration()
+          .getString("vulas.kb-importer.kaybeeConfPath"); 
+
+
   private ThreadPoolExecutor executor;
 
   private static Map<String, VulnStatus> vulnerabilitiesStatus = new HashMap<String, VulnStatus>();
@@ -140,6 +151,8 @@ public class Manager {
       kaybeeUpdate();
       log.info("Running kaybee pull...");
       kaybeePull();
+      log.info("Copying statements folder...");
+      copyStatements();
     } catch (IOException | InterruptedException e) {
       log.error("Exception while performing update: " + e.getMessage());
       this.startIsRunning = false;
@@ -210,7 +223,7 @@ public class Manager {
       // It is necessary to copy the arguments to avoid concurrent modification
       HashMap<String, Object> args = new HashMap<String, Object>(mapCommandOptionValues);
       args.put(ImportCommand.DIRECTORY_OPTION, vulnDirStr);
-      ImportCommand command = new ImportCommand(this, args, this.backendConnector);
+      ImportCommand command = new ImportCommand(this, args);
       if (mapCommandOptionValues.containsKey(ImportCommand.SEQUENTIAL)) {
         command.run();
       } else {
@@ -238,8 +251,7 @@ public class Manager {
   }
 
   public void kaybeeUpdate() throws IOException, InterruptedException {
-    // TODO : write directory as option/property
-    Process updateProcess = Runtime.getRuntime().exec("/kb-importer/data/kaybee update --force");
+    Process updateProcess = Runtime.getRuntime().exec(kaybeeBinaryPath + " update --force");
     updateProcess.waitFor();
     if (updateProcess.exitValue() != 0) {
       log.error("Failed to update kaybee");
@@ -247,13 +259,24 @@ public class Manager {
   }
 
   public void kaybeePull() throws IOException, InterruptedException {
-    // TODO : write directories as option/property
+    String pullCommand = kaybeeBinaryPath + " pull -c " + kaybeeConfPath;
+    System.out.println(pullCommand);
     Process pullProcess =
         Runtime.getRuntime()
-            .exec("/kb-importer/data/kaybee pull -c /kb-importer/conf/kaybeeconf.yaml");
+            .exec(pullCommand);
     pullProcess.waitFor();
     if (pullProcess.exitValue() != 0) {
       log.error("Kaybee pull failed");
+    }
+  }
+
+  public void copyStatements() throws IOException, InterruptedException {
+    Process copyProcess =
+        Runtime.getRuntime()
+            .exec("cp " + ImporterController.statementsKaybeePath + " " + ImporterController.statementsPath);
+    copyProcess.waitFor();
+    if (copyProcess.exitValue() != 0) {
+      log.error("failed to copy statements from .kaybee directory");
     }
   }
 
@@ -276,7 +299,7 @@ public class Manager {
     // It is necessary to copy the arguments to avoid concurrent modification
     HashMap<String, Object> args = new HashMap<String, Object>(mapCommandOptionValues);
     args.put(ImportCommand.DIRECTORY_OPTION, vulnDirStr);
-    ImportCommand command = new ImportCommand(this, args, this.backendConnector);
+    ImportCommand command = new ImportCommand(this, args);
     command.run();
   }
 
@@ -302,5 +325,9 @@ public class Manager {
     statusMap.put("failures", failureReasons);
     String statusStr = new Gson().toJson(statusMap);
     return statusStr;
+  }
+
+  public BackendConnector getBackendConnector() {
+    return this.backendConnector;
   }
 }

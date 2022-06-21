@@ -17,11 +17,14 @@ import org.junit.Before;
 import org.junit.runners.Parameterized;
 import org.junit.runner.RunWith;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.commons.io.FileUtils;
 
 @RunWith(Parameterized.class)
 public class TestExtractOrClone {
 
+  private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
+  
   Manager manager;
   ClassLoader classLoader;
   String dirPath;
@@ -59,8 +62,6 @@ public class TestExtractOrClone {
     ExtractOrClone extractOrClone = new ExtractOrClone(manager, vuln, this.dir, false);
     extractOrClone.execute();
 
-    File commitDir1 =
-        new File(dirPath + File.separator + "1db7e02de3eb0c011ee6681f5a12eb9d166fea8");
     File commitDir1before =
         new File(
             dirPath
@@ -101,7 +102,7 @@ public class TestExtractOrClone {
     try {
       FileUtils.deleteDirectory(this.dir);
     } catch (IOException e) {
-      System.out.println(e.getMessage());
+      log.error(e.getMessage());
     }
   }
 }
