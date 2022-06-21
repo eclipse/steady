@@ -26,13 +26,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.1</version>
+		<version>2.5.12</version>
 		<relativePath/>
 	</parent>
 
 	<groupId>org.eclipse.steady</groupId>
 	<artifactId>rest-lib-utils</artifactId>
-	<version>3.2.3-SNAPSHOT</version>
+	<version>3.2.5-SNAPSHOT</version>
 	<packaging>${packaging.type}</packaging>
 
 	<name>REST service to analyze and compare libraries</name>

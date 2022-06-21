@@ -18,7 +18,6 @@
  */
 package org.eclipse.steady.python.virtualenv;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Path;
@@ -58,13 +57,13 @@ public class VirtualenvWrapperTest {
 
     // Get packages
     final Set<PipInstalledPackage> packs = vew.getInstalledPackages();
-    assertEquals(8, packs.size());
+    assertTrue(packs.size() >= 8);
 
     // Get rid of the project itself
     final Set<PipInstalledPackage> filtered_packs =
         PipInstalledPackage.filterUsingArtifact(
             packs, new StringList().add("cf-helloworld"), false);
-    assertEquals(7, filtered_packs.size());
+    assertTrue(filtered_packs.size() >= 7);
 
     // Get SHA1 for every package
     for (PipInstalledPackage p : filtered_packs) {
