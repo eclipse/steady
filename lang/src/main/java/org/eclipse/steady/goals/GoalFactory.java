@@ -44,7 +44,7 @@ public class GoalFactory {
     } else if (_type.equals(GoalType.APP)) {
       goal = new BomGoal();
     } else if (_type.equals(GoalType.A2C)) {
-      final String clazzname = "com.sap.psr.vulas.cg.A2CGoal";
+      final String clazzname = "org.eclipse.steady.cg.A2CGoal";
       try {
         final Class clazz = Class.forName(clazzname);
         goal = (AbstractGoal) clazz.newInstance();
@@ -59,7 +59,7 @@ public class GoalFactory {
             "Cannot create instance of class [" + clazzname + "]: " + e.getMessage());
       }
     } else if (_type.equals(GoalType.T2C)) {
-      final String clazzname = "com.sap.psr.vulas.cg.T2CGoal";
+      final String clazzname = "org.eclipse.steady.cg.T2CGoal";
       try {
         final Class clazz = Class.forName(clazzname);
         goal = (AbstractGoal) clazz.newInstance();
@@ -74,7 +74,7 @@ public class GoalFactory {
             "Cannot create instance of class [" + clazzname + "]: " + e.getMessage());
       }
     } else if (_type.equals(GoalType.INSTR)) {
-      final String clazzname = "com.sap.psr.vulas.java.goals.InstrGoal";
+      final String clazzname = "org.eclipse.steady.java.goals.InstrGoal";
       try {
         final Class clazz = Class.forName(clazzname);
         goal = (AbstractGoal) clazz.newInstance();
@@ -103,7 +103,7 @@ public class GoalFactory {
     } else if (_type.equals(GoalType.SPACEDEL)) {
       goal = new SpaceDelGoal();
     } else if (_type.equals(GoalType.CHECKCODE)) {
-      final String clazzname = "com.sap.psr.vulas.java.goals.CheckBytecodeGoal";
+      final String clazzname = "org.eclipse.steady.java.goals.CheckBytecodeGoal";
       try {
         final Class clazz = Class.forName(clazzname);
         goal = (AbstractGoal) clazz.newInstance();
