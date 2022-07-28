@@ -29,10 +29,26 @@
 	<version>3.2.5-SNAPSHOT</version>
 
 	<name>Knowledge Base Importer</name>
-	<description></description>
+	<description>
+		Imports vulnerabilities from Project KB into Steady's database.
+	</description>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<maven.compiler.release>8</maven.compiler.release>
+		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
+		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
+		<maven.compiler.skipMultiThreadWarning>true</maven.compiler.skipMultiThreadWarning>
+		
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		
+		<!-- Skip install and deploy -->
+		<skip.install.deploy>true</skip.install.deploy>
+		<maven.install.skip>${skip.install.deploy}</maven.install.skip>
+		<maven.deploy.skip>${skip.install.deploy}</maven.deploy.skip>
+
+		<!-- Used by several plugins, to make builds reproducible -->
+		<project.build.outputTimestamp>2021-06-22T10:45:00Z</project.build.outputTimestamp>
 	</properties>
 
 	<dependencies>
