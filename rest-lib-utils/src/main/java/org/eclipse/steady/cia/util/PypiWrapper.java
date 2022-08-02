@@ -85,7 +85,7 @@ public class PypiWrapper implements RepositoryWrapper {
     final Map<String, String> params = new HashMap<String, String>();
 
     String url = null;
-    params.put("artifact", _artifact);
+    params.put("artifact", _artifact.toLowerCase());
     if (_version != null) {
       params.put("version", _version);
       url = searchAVUrl;
