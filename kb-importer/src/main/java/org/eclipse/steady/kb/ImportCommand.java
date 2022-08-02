@@ -45,18 +45,30 @@ import org.eclipse.steady.shared.util.StopWatch;
  */
 public class ImportCommand implements Runnable {
 
+  /** Constant <code>METADATA_JSON="metadata.json"</code> */
   public static final String METADATA_JSON = "metadata.json";
+  /** Constant <code>STATEMENT_YAML="statement.yaml"</code> */
   public static final String STATEMENT_YAML = "statement.yaml";
+  /** Constant <code>SOURCE_TAR="changed-source-code.tar.gz"</code> */
   public static final String SOURCE_TAR = "changed-source-code.tar.gz";
 
+  /** Constant <code>VERBOSE_OPTION="v"</code> */
   public static final String VERBOSE_OPTION = "v";
+  /** Constant <code>UPLOAD_CONSTRUCT_OPTION="u"</code> */
   public static final String UPLOAD_CONSTRUCT_OPTION = "u";
+  /** Constant <code>SKIP_CLONE_OPTION="u"</code> */
   public static final String SKIP_CLONE_OPTION = "u";
+  /** Constant <code>OVERWRITE_OPTION="o"</code> */
   public static final String OVERWRITE_OPTION = "o";
+  /** Constant <code>DELETE_OPTION="del"</code> */
   public static final String DELETE_OPTION = "del";
+  /** Constant <code>DIRECTORY_OPTION="d"</code> */
   public static final String DIRECTORY_OPTION = "d";
+  /** Constant <code>TIME_REFETCH_ALL_OPTION="t"</code> */
   public static final String TIME_REFETCH_ALL_OPTION = "t";
+  /** Constant <code>DELETE="del"</code> */
   public static final String DELETE = "del";
+  /** Constant <code>SEQUENTIAL="seq"</code> */
   public static final String SEQUENTIAL = "seq";
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
@@ -68,6 +80,12 @@ public class ImportCommand implements Runnable {
   private HashMap<String, Object> args;
   Manager manager;
 
+  /**
+   * <p>Constructor for ImportCommand.</p>
+   *
+   * @param manager a {@link org.eclipse.steady.kb.Manager} object
+   * @param args a {@link java.util.HashMap} object
+   */
   public ImportCommand(
       Manager manager, HashMap<String, Object> args) {
     this.manager = manager;
@@ -78,10 +96,16 @@ public class ImportCommand implements Runnable {
     this.stopWatch = new StopWatch(this.vulnId).start();
   }
 
+  /**
+   * <p>Getter for the field <code>vulnId</code>.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String getVulnId() {
     return this.vulnId;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void run() {
 
@@ -175,6 +199,11 @@ public class ImportCommand implements Runnable {
     }
   }
 
+  /**
+   * <p>findStatementPath.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String findStatementPath() {
     if (FileUtil.isAccessibleFile(vulnDir + File.separator + STATEMENT_YAML)) {
       return vulnDir + File.separator + STATEMENT_YAML;

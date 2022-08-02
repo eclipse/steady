@@ -93,34 +93,70 @@ public class Manager {
     FAILED_IMPORT_VULN
   }
 
+  /**
+   * <p>Constructor for Manager.</p>
+   *
+   * @param backendConnector a {@link org.eclipse.steady.backend.BackendConnector} object
+   */
   public Manager(BackendConnector backendConnector) {
     this.backendConnector = backendConnector;
     this.createNewExecutor();
   }
 
+  /**
+   * <p>createNewExecutor.</p>
+   */
   public void createNewExecutor() {
     this.executor = // (ThreadPoolExecutor) Executors.newCachedThreadPool();
         (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
   }
 
+  /**
+   * <p>addNewVulnerability.</p>
+   *
+   * @param vulnId a {@link java.lang.String} object
+   */
   public void addNewVulnerability(String vulnId) {
     newVulnerabilities.add(vulnId);
   }
 
+  /**
+   * <p>setVulnStatus.</p>
+   *
+   * @param vulnId a {@link java.lang.String} object
+   * @param vulnStatus a {@link org.eclipse.steady.kb.Manager.VulnStatus} object
+   */
   public void setVulnStatus(String vulnId, VulnStatus vulnStatus) {
     vulnerabilitiesStatus.put(vulnId, vulnStatus);
   }
 
+  /**
+   * <p>getVulnStatus.</p>
+   *
+   * @param vulnId a {@link java.lang.String} object
+   * @return a {@link org.eclipse.steady.kb.Manager.VulnStatus} object
+   */
   public VulnStatus getVulnStatus(String vulnId) {
     if (vulnerabilitiesStatus.containsKey(vulnId)) {
       return vulnerabilitiesStatus.get(vulnId);
     } else return null;
   }
 
+  /**
+   * <p>addFailure.</p>
+   *
+   * @param vulnId a {@link java.lang.String} object
+   * @param e a {@link java.lang.Exception} object
+   */
   public void addFailure(String vulnId, Exception e) {
     failures.put(vulnId, e);
   }
 
+  /**
+   * <p>lockRepo.</p>
+   *
+   * @param repo a {@link java.lang.String} object
+   */
   public void lockRepo(String repo) {
     if (!repoLocks.containsKey(repo)) {
       repoLocks.put(repo, new ReentrantLock());
@@ -128,6 +164,11 @@ public class Manager {
     repoLocks.get(repo).lock();
   }
 
+  /**
+   * <p>unlockRepo.</p>
+   *
+   * @param repo a {@link java.lang.String} object
+   */
   public void unlockRepo(String repo) {
     if (!repoLocks.containsKey(repo)) {
       return;
@@ -135,10 +176,21 @@ public class Manager {
     repoLocks.get(repo).unlock();
   }
 
+  /**
+   * <p>isRunningStart.</p>
+   *
+   * @return a boolean
+   */
   public boolean isRunningStart() {
     return this.startIsRunning;
   }
 
+  /**
+   * <p>start.</p>
+   *
+   * @param statementsPath a {@link java.lang.String} object
+   * @param mapCommandOptionValues a {@link java.util.HashMap} object
+   */
   public synchronized void start(
       String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
     this.startIsRunning = true;
@@ -169,6 +221,9 @@ public class Manager {
 
   /**
    * Keep retrying vulnerabilities that failed due to the high amount of requests.
+   *
+   * @param statementsPath a {@link java.lang.String} object
+   * @param mapCommandOptionValues a {@link java.util.HashMap} object
    */
   public void retryFailed(String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
 
@@ -190,6 +245,12 @@ public class Manager {
     }
   }
 
+  /**
+   * <p>identifyVulnerabilitiesToImport.</p>
+   *
+   * @param statementsPath a {@link java.lang.String} object
+   * @return a {@link java.util.List} object
+   */
   public List<String> identifyVulnerabilitiesToImport(String statementsPath) {
     File statementsDir = new File(statementsPath);
     List<String> vulnIds = new ArrayList<String>();
@@ -206,6 +267,13 @@ public class Manager {
     return vulnIds;
   }
 
+  /**
+   * <p>startList.</p>
+   *
+   * @param statementsPath a {@link java.lang.String} object
+   * @param mapCommandOptionValues a {@link java.util.HashMap} object
+   * @param vulnIds a {@link java.util.List} object
+   */
   public synchronized void startList(
       String statementsPath, HashMap<String, Object> mapCommandOptionValues, List<String> vulnIds) {
 
@@ -250,6 +318,12 @@ public class Manager {
                 : CoreConfiguration.ConnectType.READ_ONLY.toString()));
   }
 
+  /**
+   * <p>kaybeeUpdate.</p>
+   *
+   * @throws java.io.IOException if any.
+   * @throws java.lang.InterruptedException if any.
+   */
   public void kaybeeUpdate() throws IOException, InterruptedException {
     Process updateProcess = Runtime.getRuntime().exec(kaybeeBinaryPath + " update --force");
     updateProcess.waitFor();
@@ -258,6 +332,12 @@ public class Manager {
     }
   }
 
+  /**
+   * <p>kaybeePull.</p>
+   *
+   * @throws java.io.IOException if any.
+   * @throws java.lang.InterruptedException if any.
+   */
   public void kaybeePull() throws IOException, InterruptedException {
     String pullCommand = kaybeeBinaryPath + " pull -c " + kaybeeConfPath;
     System.out.println(pullCommand);
@@ -270,6 +350,12 @@ public class Manager {
     }
   }
 
+  /**
+   * <p>copyStatements.</p>
+   *
+   * @throws java.io.IOException if any.
+   * @throws java.lang.InterruptedException if any.
+   */
   public void copyStatements() throws IOException, InterruptedException {
     Process copyProcess =
         Runtime.getRuntime()
@@ -280,6 +366,9 @@ public class Manager {
     }
   }
 
+  /**
+   * <p>stop.</p>
+   */
   public void stop() {
     try {
       executor.shutdownNow();
@@ -291,6 +380,13 @@ public class Manager {
     }
   }
 
+  /**
+   * <p>importSingleVuln.</p>
+   *
+   * @param vulnDirStr a {@link java.lang.String} object
+   * @param mapCommandOptionValues a {@link java.util.HashMap} object
+   * @param vulnId a {@link java.lang.String} object
+   */
   public void importSingleVuln(
       String vulnDirStr, HashMap<String, Object> mapCommandOptionValues, String vulnId) {
 
@@ -303,6 +399,11 @@ public class Manager {
     command.run();
   }
 
+  /**
+   * <p>status.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   public String status() {
     HashMap<VulnStatus, Integer> statusCount = new HashMap<VulnStatus, Integer>();
     for (VulnStatus vulnStatus : new ArrayList<VulnStatus>(vulnerabilitiesStatus.values())) {
@@ -327,6 +428,11 @@ public class Manager {
     return statusStr;
   }
 
+  /**
+   * <p>Getter for the field <code>backendConnector</code>.</p>
+   *
+   * @return a {@link org.eclipse.steady.backend.BackendConnector} object
+   */
   public BackendConnector getBackendConnector() {
     return this.backendConnector;
   }

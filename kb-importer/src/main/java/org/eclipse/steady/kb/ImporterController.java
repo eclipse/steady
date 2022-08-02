@@ -67,6 +67,16 @@ public class ImporterController {
     this.manager = new Manager(BackendConnector.getInstance());
   }
 
+  /**
+   * <p>start.</p>
+   *
+   * @param overwrite a boolean
+   * @param upload a boolean
+   * @param verbose a boolean
+   * @param skipClone a boolean
+   * @param refetchAllMs a {@link java.lang.String} object
+   * @return a {@link org.springframework.http.ResponseEntity} object
+   */
   @RequestMapping(value = "/start", method = RequestMethod.POST)
   public ResponseEntity<Boolean> start(
       @RequestParam(defaultValue = "false") boolean overwrite,
@@ -127,6 +137,11 @@ public class ImporterController {
     }
   }
 
+  /**
+   * <p>stop.</p>
+   *
+   * @return a {@link org.springframework.http.ResponseEntity} object
+   */
   @RequestMapping(value = "/stop", method = RequestMethod.POST)
   public ResponseEntity<Boolean> stop() {
     boolean stopped = false;
@@ -147,6 +162,16 @@ public class ImporterController {
     }
   }
 
+  /**
+   * <p>importSingleVuln.</p>
+   *
+   * @param id a {@link java.lang.String} object
+   * @param overwrite a boolean
+   * @param upload a boolean
+   * @param verbose a boolean
+   * @param skipClone a boolean
+   * @return a {@link org.springframework.http.ResponseEntity} object
+   */
   @RequestMapping(value = "/start/{id}", method = RequestMethod.POST)
   public ResponseEntity<Boolean> importSingleVuln(
       @PathVariable String id,
@@ -174,11 +199,22 @@ public class ImporterController {
     }
   }
 
+  /**
+   * <p>status.</p>
+   *
+   * @return a {@link java.lang.String} object
+   */
   @GetMapping("/status")
   public String status() {
     return manager.status();
   }
 
+  /**
+   * <p>statusSingleVuln.</p>
+   *
+   * @param id a {@link java.lang.String} object
+   * @return a {@link java.lang.String} object
+   */
   @GetMapping(value = "/status/{id}")
   public String statusSingleVuln(@PathVariable String id) {
     String statusStr = manager.getVulnStatus(id).toString();
