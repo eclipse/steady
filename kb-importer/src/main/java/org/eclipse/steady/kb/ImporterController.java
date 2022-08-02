@@ -65,6 +65,40 @@ public class ImporterController {
   @Autowired
   ImporterController() {
     this.manager = new Manager(BackendConnector.getInstance());
+    HashMap<String, Object> args = new HashMap<String, Object>();
+    args.put(ImportCommand.OVERWRITE_OPTION, false);
+    args.put(ImportCommand.UPLOAD_CONSTRUCT_OPTION, false);
+    args.put(ImportCommand.VERBOSE_OPTION, false);
+    args.put(ImportCommand.SKIP_CLONE_OPTION, true);
+    long timeToWait = defaultRefetchAllMs;
+
+    this.importerCacheFetch =
+        new Thread(
+            new Runnable() {
+              public void run() {
+                while (true) {
+                  manager.start(statementsPath, args);
+
+                  try {
+                    log.info(
+                        "Wait "
+                            + Long.toString(timeToWait / 1000)
+                            + " seconds for next execution");
+                    Thread.sleep(timeToWait);
+                  } catch (InterruptedException e) {
+                    ImporterController.log.error("Interrupted exception: " + e.getMessage());
+                  }
+                }
+              }
+            },
+            "ImporterCacheFetch");
+    this.importerCacheFetch.setPriority(Thread.MIN_PRIORITY);
+    try{
+      this.importerCacheFetch.start();
+      log.info("Importer started");
+    } catch (Exception e) {
+      log.error("Exception when starting CVE cache refresh: " + e.getMessage(), e);
+    }
   }
 
   /**
