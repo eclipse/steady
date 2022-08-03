@@ -52,6 +52,14 @@ public class ExtractOrClone {
   private final File tarFile;
   private final boolean skipClone;
 
+  /**
+   * <p>Constructor for ExtractOrClone.</p>
+   *
+   * @param manager a {@link org.eclipse.steady.kb.Manager} object
+   * @param vuln a {@link org.eclipse.steady.kb.model.Vulnerability} object
+   * @param dir a {@link java.io.File} object
+   * @param skipClone a boolean
+   */
   public ExtractOrClone(Manager manager, Vulnerability vuln, File dir, boolean skipClone) {
     this.manager = manager;
     this.vuln = vuln;
@@ -61,6 +69,9 @@ public class ExtractOrClone {
     this.skipClone = skipClone;
   }
 
+  /**
+   * <p>execute.</p>
+   */
   public void execute() {
 
     if (tarFile != null) {
@@ -82,12 +93,24 @@ public class ExtractOrClone {
     log.info("ExtractOrClone : done (" + dirPath + ")");
   }
 
+  /**
+   * <p>Getter for the field <code>tarFile</code>.</p>
+   *
+   * @param dirPath a {@link java.lang.String} object
+   * @return a {@link java.io.File} object
+   */
   public File getTarFile(String dirPath) {
     if (FileUtil.isAccessibleFile(dirPath + File.separator + ImportCommand.SOURCE_TAR)) {
       return new File(dirPath + File.separator + ImportCommand.SOURCE_TAR);
     } else return null;
   }
 
+  /**
+   * <p>extract.</p>
+   *
+   * @param tarFile a {@link java.io.File} object
+   * @param dirPath a {@link java.lang.String} object
+   */
   public void extract(File tarFile, String dirPath) {
 
     log.info("Extracting vulnerability " + vulnId);
@@ -112,6 +135,12 @@ public class ExtractOrClone {
     }
   }
 
+  /**
+   * <p>clone.</p>
+   *
+   * @param vuln a {@link org.eclipse.steady.kb.model.Vulnerability} object
+   * @param dirPath a {@link java.lang.String} object
+   */
   public void clone(Vulnerability vuln, String dirPath) {
 
     List<Commit> commits = vuln.getCommits();
@@ -143,6 +172,14 @@ public class ExtractOrClone {
     }
   }
 
+  /**
+   * <p>createAndWriteCommitMetadata.</p>
+   *
+   * @param commit a {@link org.eclipse.steady.kb.model.Commit} object
+   * @param repoDirPath a {@link java.lang.String} object
+   * @param commitDirPath a {@link java.lang.String} object
+   * @throws java.io.IOException if any.
+   */
   public void createAndWriteCommitMetadata(Commit commit, String repoDirPath, String commitDirPath)
       throws IOException {
 
@@ -193,6 +230,14 @@ public class ExtractOrClone {
     Metadata.writeCommitMetadata(commitDirPath, commitMetadata);
   }
 
+  /**
+   * <p>cloneOnce.</p>
+   *
+   * @param repoUrl a {@link java.lang.String} object
+   * @param repoDirPath a {@link java.lang.String} object
+   * @throws java.io.IOException if any.
+   * @throws java.lang.InterruptedException if any.
+   */
   public void cloneOnce(String repoUrl, String repoDirPath)
       throws IOException, InterruptedException {
 
@@ -206,6 +251,15 @@ public class ExtractOrClone {
     }
   }
 
+  /**
+   * <p>writeCommitDiff.</p>
+   *
+   * @param commitId a {@link java.lang.String} object
+   * @param repoDirPath a {@link java.lang.String} object
+   * @param commitDirPath a {@link java.lang.String} object
+   * @throws java.io.IOException if any.
+   * @throws java.lang.InterruptedException if any.
+   */
   public void writeCommitDiff(String commitId, String repoDirPath, String commitDirPath)
       throws IOException, InterruptedException {
     String gitDiffCommand =
@@ -222,6 +276,16 @@ public class ExtractOrClone {
     }
   }
 
+  /**
+   * <p>execGitDiffFile.</p>
+   *
+   * @param repoDirPath a {@link java.lang.String} object
+   * @param commitId a {@link java.lang.String} object
+   * @param filename a {@link java.lang.String} object
+   * @param before a boolean
+   * @throws java.io.IOException if any.
+   * @throws java.lang.InterruptedException if any.
+   */
   public void execGitDiffFile(String repoDirPath, String commitId, String filename, boolean before)
       throws IOException, InterruptedException {
 
@@ -264,6 +328,13 @@ public class ExtractOrClone {
     }
   }
 
+  /**
+   * <p>writeCmdOutputToFile.</p>
+   *
+   * @param process a {@link java.lang.Process} object
+   * @param filepath a {@link java.lang.String} object
+   * @throws java.io.IOException if any.
+   */
   public void writeCmdOutputToFile(Process process, String filepath) throws IOException {
     BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
     String line;

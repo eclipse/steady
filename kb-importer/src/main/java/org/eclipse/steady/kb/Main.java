@@ -22,9 +22,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
+/**
+ * <p>Main class.</p>
+ */
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class Main {
 
+  /**
+   * <p>main.</p>
+   *
+   * @param args an array of {@link java.lang.String} objects
+   */
   public static void main(String[] args) {
     SpringApplication.run(Main.class, args);
   }

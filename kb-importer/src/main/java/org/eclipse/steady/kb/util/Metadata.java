@@ -78,6 +78,13 @@ public class Metadata {
     return metadata;
   }
 
+  /**
+   * <p>writeCommitMetadata.</p>
+   *
+   * @param commitDir a {@link java.lang.String} object
+   * @param commitMetadata a {@link java.util.HashMap} object
+   * @throws java.io.IOException if any.
+   */
   public static void writeCommitMetadata(String commitDir, HashMap<String, String> commitMetadata)
       throws IOException {
     String filePath = commitDir + File.separator + META_PROPERTIES_FILE;
@@ -119,6 +126,13 @@ public class Metadata {
     return metadata;
   }
 
+  /**
+   * <p>getFromYaml.</p>
+   *
+   * @param metadataPathString a {@link java.lang.String} object
+   * @return a {@link org.eclipse.steady.kb.model.Vulnerability} object
+   * @throws java.io.IOException if any.
+   */
   public static Vulnerability getFromYaml(String metadataPathString) throws IOException {
 
     Path metadataPath = Paths.get(metadataPathString);
