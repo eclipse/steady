@@ -1,489 +1,149 @@
 {
-    "info": {
-        "maintainer": "", 
-        "docs_url": null, 
-        "requires_python": "", 
-        "maintainer_email": "", 
-        "cheesecake_code_kwalitee_id": null, 
-        "keywords": "", 
-        "package_url": "http://pypi.python.org/pypi/Flask", 
-        "author": "Armin Ronacher", 
-        "author_email": "armin.ronacher@active-4.com", 
-        "download_url": "", 
-        "platform": "any", 
-        "version": "0.12.2", 
-        "cheesecake_documentation_id": null, 
-        "_pypi_hidden": false, 
-        "description": "\nFlask\n-----\n\nFlask is a microframework for Python based on Werkzeug, Jinja 2 and good\nintentions. And before you ask: It's BSD licensed!\n\nFlask is Fun\n````````````\n\nSave in a hello.py:\n\n.. code:: python\n\n    from flask import Flask\n    app = Flask(__name__)\n\n    @app.route(\"/\")\n    def hello():\n        return \"Hello World!\"\n\n    if __name__ == \"__main__\":\n        app.run()\n\nAnd Easy to Setup\n`````````````````\n\nAnd run it:\n\n.. code:: bash\n\n    $ pip install Flask\n    $ python hello.py\n     * Running on http://localhost:5000/\n\n Ready for production? `Read this first <http://flask.pocoo.org/docs/deploying/>`.\n\nLinks\n`````\n\n* `website <http://flask.pocoo.org/>`_\n* `documentation <http://flask.pocoo.org/docs/>`_\n* `development version\n  <http://github.com/pallets/flask/zipball/master#egg=Flask-dev>`_\n\n", 
-        "release_url": "http://pypi.python.org/pypi/Flask/0.12.2", 
-        "downloads": {
-            "last_month": 0, 
-            "last_week": 0, 
-            "last_day": 0
-        }, 
-        "_pypi_ordering": 22, 
-        "classifiers": [
-            "Development Status :: 4 - Beta", 
-            "Environment :: Web Environment", 
-            "Intended Audience :: Developers", 
-            "License :: OSI Approved :: BSD License", 
-            "Operating System :: OS Independent", 
-            "Programming Language :: Python", 
-            "Programming Language :: Python :: 2", 
-            "Programming Language :: Python :: 2.6", 
-            "Programming Language :: Python :: 2.7", 
-            "Programming Language :: Python :: 3", 
-            "Programming Language :: Python :: 3.3", 
-            "Programming Language :: Python :: 3.4", 
-            "Programming Language :: Python :: 3.5", 
-            "Topic :: Internet :: WWW/HTTP :: Dynamic Content", 
-            "Topic :: Software Development :: Libraries :: Python Modules"
-        ], 
-        "name": "Flask", 
-        "bugtrack_url": null, 
-        "license": "BSD", 
-        "summary": "A microframework based on Werkzeug, Jinja2 and good intentions", 
-        "home_page": "http://github.com/pallets/flask/", 
-        "cheesecake_installability_id": null
-    }, 
-    "releases": {
-        "0.9": [
-            {
-                "has_sig": false, 
-                "upload_time": "2012-07-01T13:12:50", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/49/0a/fe5021b35436202d3d4225a766f3bdc7fb51521ad89e73c5162db36cdbc7/Flask-0.9.tar.gz", 
-                "md5_digest": "4a89ef2b3ab0f151f781182bd0cc8933", 
-                "downloads": 1642608, 
-                "filename": "Flask-0.9.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "49/0a/fe5021b35436202d3d4225a766f3bdc7fb51521ad89e73c5162db36cdbc7/Flask-0.9.tar.gz", 
-                "size": 481982
-            }
-        ], 
-        "0.8": [
-            {
-                "has_sig": false, 
-                "upload_time": "2011-09-29T23:34:21", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/f0/84/e3c207a6aad1acfdfe1eda20abeadff47035f24820f09ac6870f9c8a26a3/Flask-0.8.tar.gz", 
-                "md5_digest": "a5169306cfe49b3b369086f2a63816ab", 
-                "downloads": 576207, 
-                "filename": "Flask-0.8.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "f0/84/e3c207a6aad1acfdfe1eda20abeadff47035f24820f09ac6870f9c8a26a3/Flask-0.8.tar.gz", 
-                "size": 494211
-            }
-        ], 
-        "0.1": [
-            {
-                "has_sig": false, 
-                "upload_time": "2010-04-16T14:29:37", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/6e/49/43b514bfdaf4af12e6ef1f17aa25447157bcbb864c07775dacd72e8c8e02/Flask-0.1.tar.gz", 
-                "md5_digest": "d0c458397c49114fa279716798ca80c8", 
-                "downloads": 5022, 
-                "filename": "Flask-0.1.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "6e/49/43b514bfdaf4af12e6ef1f17aa25447157bcbb864c07775dacd72e8c8e02/Flask-0.1.tar.gz", 
-                "size": 9168
-            }
-        ], 
-        "0.3": [
-            {
-                "has_sig": false, 
-                "upload_time": "2010-05-28T01:24:37", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/8b/cb/706dbb37f4ef3a75366c9e715f41d22e73ca4594303f48d229d906c80632/Flask-0.3.tar.gz", 
-                "md5_digest": "5beb1e1b3c243d3ca078fe1ea9d6dbd8", 
-                "downloads": 4097, 
-                "filename": "Flask-0.3.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "8b/cb/706dbb37f4ef3a75366c9e715f41d22e73ca4594303f48d229d906c80632/Flask-0.3.tar.gz", 
-                "size": 1001397
-            }
-        ], 
-        "0.2": [
-            {
-                "has_sig": false, 
-                "upload_time": "2010-05-12T01:31:26", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/9a/db/245abc92428bcdfdc32d8017ddd1b079afffce9c74f94e34d1aa777bc771/Flask-0.2.tar.gz", 
-                "md5_digest": "6926822b17cc5c7baa7df9d22c9cf114", 
-                "downloads": 4242, 
-                "filename": "Flask-0.2.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "9a/db/245abc92428bcdfdc32d8017ddd1b079afffce9c74f94e34d1aa777bc771/Flask-0.2.tar.gz", 
-                "size": 13877
-            }
-        ], 
-        "0.5": [
-            {
-                "has_sig": false, 
-                "upload_time": "2010-07-06T16:28:02", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/d4/6a/93500f2a7089b4e993fb095215979890b6204a5ba3f6b0f63dc6c3c6c827/Flask-0.5.tar.gz", 
-                "md5_digest": "b5580ae05d75d80485c8694532f95910", 
-                "downloads": 4025, 
-                "filename": "Flask-0.5.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "d4/6a/93500f2a7089b4e993fb095215979890b6204a5ba3f6b0f63dc6c3c6c827/Flask-0.5.tar.gz", 
-                "size": 369558
-            }
-        ], 
-        "0.4": [
-            {
-                "has_sig": false, 
-                "upload_time": "2010-06-18T17:14:06", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/a3/89/a4bf29e78a87e11f0f6fdd4d9e02a0aece1eecd38118496da58d4826d7e3/Flask-0.4.tar.gz", 
-                "md5_digest": "aec554ae684e7ff5895fd1b5c0dea378", 
-                "downloads": 4768, 
-                "filename": "Flask-0.4.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "a3/89/a4bf29e78a87e11f0f6fdd4d9e02a0aece1eecd38118496da58d4826d7e3/Flask-0.4.tar.gz", 
-                "size": 352924
-            }
-        ], 
-        "0.7": [
-            {
-                "has_sig": false, 
-                "upload_time": "2011-06-28T16:06:18", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/43/08/e4907533c6ca0ebb1867182fa94b1ffa41fa3aba5f6cb4969e108262e92b/Flask-0.7.tar.gz", 
-                "md5_digest": "1aaf5504ae28925fb97fb3ab8b85d3cd", 
-                "downloads": 5830, 
-                "filename": "Flask-0.7.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "43/08/e4907533c6ca0ebb1867182fa94b1ffa41fa3aba5f6cb4969e108262e92b/Flask-0.7.tar.gz", 
-                "size": 469417
-            }
-        ], 
-        "0.6": [
-            {
-                "has_sig": false, 
-                "upload_time": "2010-07-27T14:39:13", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/44/86/481371798994529e105633a50b2332638105a1e191053bc0f4bbc9b91791/Flask-0.6.tar.gz", 
-                "md5_digest": "55a5222123978c8c16dae385724c0f3a", 
-                "downloads": 760532, 
-                "filename": "Flask-0.6.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "44/86/481371798994529e105633a50b2332638105a1e191053bc0f4bbc9b91791/Flask-0.6.tar.gz", 
-                "size": 388672
-            }
-        ], 
-        "0.10.1": [
-            {
-                "has_sig": false, 
-                "upload_time": "2013-06-14T08:54:19", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/db/9c/149ba60c47d107f85fe52564133348458f093dd5e6b57a5b60ab9ac517bb/Flask-0.10.1.tar.gz", 
-                "md5_digest": "378670fe456957eb3c27ddaef60b2b24", 
-                "downloads": 10188425, 
-                "filename": "Flask-0.10.1.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "db/9c/149ba60c47d107f85fe52564133348458f093dd5e6b57a5b60ab9ac517bb/Flask-0.10.1.tar.gz", 
-                "size": 544247
-            }
-        ], 
-        "0.6.1": [
-            {
-                "has_sig": false, 
-                "upload_time": "2010-12-31T15:23:05", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/8f/1c/453a427f55b91239b3368c8b975b55d089d5d79dc37545af41cd7157c187/Flask-0.6.1.tar.gz", 
-                "md5_digest": "7af56e33fb6a35db2818c20e604c8698", 
-                "downloads": 99679, 
-                "filename": "Flask-0.6.1.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "8f/1c/453a427f55b91239b3368c8b975b55d089d5d79dc37545af41cd7157c187/Flask-0.6.1.tar.gz", 
-                "size": 413766
-            }
-        ], 
-        "0.3.1": [
-            {
-                "has_sig": false, 
-                "upload_time": "2010-05-28T21:23:15", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/e0/d7/4de91ad9fc1854e651cf03f87eff939a92cd06716645dee86b0382674ea3/Flask-0.3.1.tar.gz", 
-                "md5_digest": "22bde65fbbcd93c6509b9939817e3853", 
-                "downloads": 4646, 
-                "filename": "Flask-0.3.1.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "e0/d7/4de91ad9fc1854e651cf03f87eff939a92cd06716645dee86b0382674ea3/Flask-0.3.1.tar.gz", 
-                "size": 339666
-            }
-        ], 
-        "0.7.2": [
-            {
-                "has_sig": false, 
-                "upload_time": "2011-07-06T10:19:39", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/1c/c7/a361d00f4c9ed3f1b7ab77976e820ca347f3b0aec4dee6c66fe5c5a2124d/Flask-0.7.2.tar.gz", 
-                "md5_digest": "a6f52d8de1f536ec982b363e4b6a0387", 
-                "downloads": 63275, 
-                "filename": "Flask-0.7.2.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "1c/c7/a361d00f4c9ed3f1b7ab77976e820ca347f3b0aec4dee6c66fe5c5a2124d/Flask-0.7.2.tar.gz", 
-                "size": 469996
-            }
-        ], 
-        "0.11.1": [
-            {
-                "has_sig": false, 
-                "upload_time": "2016-06-07T16:25:21", 
-                "comment_text": "", 
-                "python_version": "2.7", 
-                "url": "https://pypi.python.org/packages/63/2b/01f5ed23a78391f6e3e73075973da0ecb467c831376a0b09c0ec5afd7977/Flask-0.11.1-py2.py3-none-any.whl", 
-                "md5_digest": "920be5772ee6399f70794d33a9eb9a13", 
-                "downloads": 1212094, 
-                "filename": "Flask-0.11.1-py2.py3-none-any.whl", 
-                "packagetype": "bdist_wheel", 
-                "path": "63/2b/01f5ed23a78391f6e3e73075973da0ecb467c831376a0b09c0ec5afd7977/Flask-0.11.1-py2.py3-none-any.whl", 
-                "size": 80615
-            }, 
-            {
-                "has_sig": false, 
-                "upload_time": "2016-06-07T16:25:04", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/55/8a/78e165d30f0c8bb5d57c429a30ee5749825ed461ad6c959688872643ffb3/Flask-0.11.1.tar.gz", 
-                "md5_digest": "d2af95d8fe79cf7da099f062dd122a08", 
-                "downloads": 95539, 
-                "filename": "Flask-0.11.1.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "55/8a/78e165d30f0c8bb5d57c429a30ee5749825ed461ad6c959688872643ffb3/Flask-0.11.1.tar.gz", 
-                "size": 564993
-            }
-        ], 
-        "0.7.1": [
-            {
-                "has_sig": false, 
-                "upload_time": "2011-06-29T18:37:29", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/fe/3e/ad5eb51d4666e76f389cd4f9c6cc22e1544e0daf72419ccab8705e918911/Flask-0.7.1.tar.gz", 
-                "md5_digest": "4705d31035839dec320a1fd76ac2fa30", 
-                "downloads": 5910, 
-                "filename": "Flask-0.7.1.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "fe/3e/ad5eb51d4666e76f389cd4f9c6cc22e1544e0daf72419ccab8705e918911/Flask-0.7.1.tar.gz", 
-                "size": 469692
-            }
-        ], 
-        "0.12.2": [
-            {
-                "has_sig": false, 
-                "upload_time": "2017-05-16T06:39:38", 
-                "comment_text": "", 
-                "python_version": "2.7", 
-                "url": "https://pypi.python.org/packages/77/32/e3597cb19ffffe724ad4bf0beca4153419918e7fa4ba6a34b04ee4da3371/Flask-0.12.2-py2.py3-none-any.whl", 
-                "md5_digest": "a0ded1d9a2066d3522efba953b4ed874", 
-                "downloads": 0, 
-                "filename": "Flask-0.12.2-py2.py3-none-any.whl", 
-                "packagetype": "bdist_wheel", 
-                "path": "77/32/e3597cb19ffffe724ad4bf0beca4153419918e7fa4ba6a34b04ee4da3371/Flask-0.12.2-py2.py3-none-any.whl", 
-                "size": 83018
-            }, 
-            {
-                "has_sig": false, 
-                "upload_time": "2017-05-16T06:39:34", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/eb/12/1c7bd06fcbd08ba544f25bf2c6612e305a70ea51ca0eda8007344ec3f123/Flask-0.12.2.tar.gz", 
-                "md5_digest": "97278dfdafda98ba7902e890b0289177", 
-                "downloads": 0, 
-                "filename": "Flask-0.12.2.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "eb/12/1c7bd06fcbd08ba544f25bf2c6612e305a70ea51ca0eda8007344ec3f123/Flask-0.12.2.tar.gz", 
-                "size": 548510
-            }
-        ], 
-        "0.12.1": [
-            {
-                "has_sig": false, 
-                "upload_time": "2017-03-31T16:43:41", 
-                "comment_text": "", 
-                "python_version": "2.7", 
-                "url": "https://pypi.python.org/packages/f4/43/fb2d5fb1d10e1d0402dd57836cf9a78b7f69c8b5f76a04b6e6113d0d7c5a/Flask-0.12.1-py2.py3-none-any.whl", 
-                "md5_digest": "8229cb65bc853afb6e4cf4f251f026eb", 
-                "downloads": 108972, 
-                "filename": "Flask-0.12.1-py2.py3-none-any.whl", 
-                "packagetype": "bdist_wheel", 
-                "path": "f4/43/fb2d5fb1d10e1d0402dd57836cf9a78b7f69c8b5f76a04b6e6113d0d7c5a/Flask-0.12.1-py2.py3-none-any.whl", 
-                "size": 82997
-            }, 
-            {
-                "has_sig": false, 
-                "upload_time": "2017-03-31T16:43:38", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/24/6e/11b9c57e46f276a8a8dfda85a2fa7ada62b0463b68693616c7ab5df356fa/Flask-0.12.1.tar.gz", 
-                "md5_digest": "76e9fee5c3afcf4634b9baf96c578207", 
-                "downloads": 4524, 
-                "filename": "Flask-0.12.1.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "24/6e/11b9c57e46f276a8a8dfda85a2fa7ada62b0463b68693616c7ab5df356fa/Flask-0.12.1.tar.gz", 
-                "size": 548511
-            }
-        ], 
-        "0.5.1": [
-            {
-                "has_sig": false, 
-                "upload_time": "2010-07-06T19:25:37", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/16/a6/c458d3305e689d7e06a23eacee414ea10d870074a7673864ffea67109f9d/Flask-0.5.1.tar.gz", 
-                "md5_digest": "c54da4a640554eb616e4210f256199e6", 
-                "downloads": 4727, 
-                "filename": "Flask-0.5.1.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "16/a6/c458d3305e689d7e06a23eacee414ea10d870074a7673864ffea67109f9d/Flask-0.5.1.tar.gz", 
-                "size": 369739
-            }
-        ], 
-        "0.5.2": [
-            {
-                "has_sig": false, 
-                "upload_time": "2010-07-15T20:02:56", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/1c/b5/03c412ba48148e6c222e238201a0924360a85d755ce9597acbd99a1a6240/Flask-0.5.2.tar.gz", 
-                "md5_digest": "002b8ff41fa14d82662b1d7763f77855", 
-                "downloads": 4734, 
-                "filename": "Flask-0.5.2.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "1c/b5/03c412ba48148e6c222e238201a0924360a85d755ce9597acbd99a1a6240/Flask-0.5.2.tar.gz", 
-                "size": 369791
-            }
-        ], 
-        "0.8.1": [
-            {
-                "has_sig": false, 
-                "upload_time": "2012-07-01T13:08:59", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/20/5d/f355d122c9d7a45d7846449f94b9f1d26df88556f705f14dd84a8fa264ea/Flask-0.8.1.tar.gz", 
-                "md5_digest": "4b9e866bf43723d834b3ce8fcd13574d", 
-                "downloads": 11160, 
-                "filename": "Flask-0.8.1.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "20/5d/f355d122c9d7a45d7846449f94b9f1d26df88556f705f14dd84a8fa264ea/Flask-0.8.1.tar.gz", 
-                "size": 458490
-            }
-        ], 
-        "0.11": [
-            {
-                "has_sig": false, 
-                "upload_time": "2016-05-29T09:02:35", 
-                "comment_text": "", 
-                "python_version": "2.7", 
-                "url": "https://pypi.python.org/packages/ac/0b/191c5dc6b3e22dfacb8e1eba2bb8dc211c16972b23a0b419f8a33b3deb71/Flask-0.11-py2.py3-none-any.whl", 
-                "md5_digest": "fa0c2ac5c6980fc92e2591ebfcad706c", 
-                "downloads": 41452, 
-                "filename": "Flask-0.11-py2.py3-none-any.whl", 
-                "packagetype": "bdist_wheel", 
-                "path": "ac/0b/191c5dc6b3e22dfacb8e1eba2bb8dc211c16972b23a0b419f8a33b3deb71/Flask-0.11-py2.py3-none-any.whl", 
-                "size": 80577
-            }, 
-            {
-                "has_sig": false, 
-                "upload_time": "2016-05-29T09:02:29", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/dc/ca/c0ed9cc90c079085c698e284b672edbc1ffd6866b1830574095cbc5b7752/Flask-0.11.tar.gz", 
-                "md5_digest": "89fbdcb04b7b96c5b24625ae299cf48b", 
-                "downloads": 4429, 
-                "filename": "Flask-0.11.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "dc/ca/c0ed9cc90c079085c698e284b672edbc1ffd6866b1830574095cbc5b7752/Flask-0.11.tar.gz", 
-                "size": 563928
-            }
-        ], 
-        "0.10": [
-            {
-                "has_sig": false, 
-                "upload_time": "2013-06-13T08:35:51", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/f3/46/53d83cbdb79b27678c7b032d5deaa556655dd034cc747ee609b3e3cbf95b/Flask-0.10.tar.gz", 
-                "md5_digest": "92bc6b6ebd37d3120c235430a0491a15", 
-                "downloads": 171385, 
-                "filename": "Flask-0.10.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "f3/46/53d83cbdb79b27678c7b032d5deaa556655dd034cc747ee609b3e3cbf95b/Flask-0.10.tar.gz", 
-                "size": 544031
-            }
-        ], 
-        "0.12": [
-            {
-                "has_sig": false, 
-                "upload_time": "2016-12-21T20:22:15", 
-                "comment_text": "", 
-                "python_version": "2.7", 
-                "url": "https://pypi.python.org/packages/0e/e9/37ee66dde483dceefe45bb5e92b387f990d4f097df40c400cf816dcebaa4/Flask-0.12-py2.py3-none-any.whl", 
-                "md5_digest": "d3351b10f54446203ac0fd8839850c62", 
-                "downloads": 221701, 
-                "filename": "Flask-0.12-py2.py3-none-any.whl", 
-                "packagetype": "bdist_wheel", 
-                "path": "0e/e9/37ee66dde483dceefe45bb5e92b387f990d4f097df40c400cf816dcebaa4/Flask-0.12-py2.py3-none-any.whl", 
-                "size": 82841
-            }, 
-            {
-                "has_sig": false, 
-                "upload_time": "2016-12-21T20:22:12", 
-                "comment_text": "", 
-                "python_version": "source", 
-                "url": "https://pypi.python.org/packages/4b/3a/4c20183df155dd2e39168e35d53a388efb384a512ca6c73001d8292c094a/Flask-0.12.tar.gz", 
-                "md5_digest": "c1d30f51cff4a38f9454b23328a15c5a", 
-                "downloads": 18704, 
-                "filename": "Flask-0.12.tar.gz", 
-                "packagetype": "sdist", 
-                "path": "4b/3a/4c20183df155dd2e39168e35d53a388efb384a512ca6c73001d8292c094a/Flask-0.12.tar.gz", 
-                "size": 531923
-            }
-        ]
-    }, 
-    "urls": [
-        {
-            "has_sig": false, 
-            "upload_time": "2017-05-16T06:39:38", 
-            "comment_text": "", 
-            "python_version": "2.7", 
-            "url": "https://pypi.python.org/packages/77/32/e3597cb19ffffe724ad4bf0beca4153419918e7fa4ba6a34b04ee4da3371/Flask-0.12.2-py2.py3-none-any.whl", 
-            "md5_digest": "a0ded1d9a2066d3522efba953b4ed874", 
-            "downloads": 0, 
-            "filename": "Flask-0.12.2-py2.py3-none-any.whl", 
-            "packagetype": "bdist_wheel", 
-            "path": "77/32/e3597cb19ffffe724ad4bf0beca4153419918e7fa4ba6a34b04ee4da3371/Flask-0.12.2-py2.py3-none-any.whl", 
-            "size": 83018
-        }, 
-        {
-            "has_sig": false, 
-            "upload_time": "2017-05-16T06:39:34", 
-            "comment_text": "", 
-            "python_version": "source", 
-            "url": "https://pypi.python.org/packages/eb/12/1c7bd06fcbd08ba544f25bf2c6612e305a70ea51ca0eda8007344ec3f123/Flask-0.12.2.tar.gz", 
-            "md5_digest": "97278dfdafda98ba7902e890b0289177", 
-            "downloads": 0, 
-            "filename": "Flask-0.12.2.tar.gz", 
-            "packagetype": "sdist", 
-            "path": "eb/12/1c7bd06fcbd08ba544f25bf2c6612e305a70ea51ca0eda8007344ec3f123/Flask-0.12.2.tar.gz", 
-            "size": 548510
-        }
-    ]
+"info": {
+"author": "Armin Ronacher",
+"author_email": "armin.ronacher@active-4.com",
+"bugtrack_url": null,
+"classifiers": [
+"Development Status :: 4 - Beta",
+"Environment :: Web Environment",
+"Intended Audience :: Developers",
+"License :: OSI Approved :: BSD License",
+"Operating System :: OS Independent",
+"Programming Language :: Python",
+"Programming Language :: Python :: 2",
+"Programming Language :: Python :: 2.6",
+"Programming Language :: Python :: 2.7",
+"Programming Language :: Python :: 3",
+"Programming Language :: Python :: 3.3",
+"Programming Language :: Python :: 3.4",
+"Programming Language :: Python :: 3.5",
+"Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+"Topic :: Software Development :: Libraries :: Python Modules"
+],
+"description": "\nFlask\n-----\n\nFlask is a microframework for Python based on Werkzeug, Jinja 2 and good\nintentions. And before you ask: It's BSD licensed!\n\nFlask is Fun\n````````````\n\nSave in a hello.py:\n\n.. code:: python\n\n    from flask import Flask\n    app = Flask(__name__)\n\n    @app.route(\"/\")\n    def hello():\n        return \"Hello World!\"\n\n    if __name__ == \"__main__\":\n        app.run()\n\nAnd Easy to Setup\n`````````````````\n\nAnd run it:\n\n.. code:: bash\n\n    $ pip install Flask\n    $ python hello.py\n     * Running on http://localhost:5000/\n\n Ready for production? `Read this first <http://flask.pocoo.org/docs/deploying/>`.\n\nLinks\n`````\n\n* `website <http://flask.pocoo.org/>`_\n* `documentation <http://flask.pocoo.org/docs/>`_\n* `development version\n  <http://github.com/pallets/flask/zipball/master#egg=Flask-dev>`_\n\n",
+"description_content_type": null,
+"docs_url": null,
+"download_url": "",
+"downloads": {
+"last_day": -1,
+"last_month": -1,
+"last_week": -1
+},
+"home_page": "http://github.com/pallets/flask/",
+"keywords": "",
+"license": "BSD",
+"maintainer": "",
+"maintainer_email": "",
+"name": "Flask",
+"package_url": "https://pypi.org/project/Flask/",
+"platform": "any",
+"project_url": "https://pypi.org/project/Flask/",
+"project_urls": {
+"Homepage": "http://github.com/pallets/flask/"
+},
+"release_url": "https://pypi.org/project/Flask/0.12/",
+"requires_dist": null,
+"requires_python": "",
+"summary": "A microframework based on Werkzeug, Jinja2 and good intentions",
+"version": "0.12",
+"yanked": false,
+"yanked_reason": null
+},
+"last_serial": 14618858,
+"urls": [
+{
+"comment_text": "",
+"digests": {
+"md5": "d3351b10f54446203ac0fd8839850c62",
+"sha256": "7f03bb2c255452444f7265eddb51601806e5447b6f8a2d50bbc77a654a14c118"
+},
+"downloads": -1,
+"filename": "Flask-0.12-py2.py3-none-any.whl",
+"has_sig": false,
+"md5_digest": "d3351b10f54446203ac0fd8839850c62",
+"packagetype": "bdist_wheel",
+"python_version": "2.7",
+"requires_python": null,
+"size": 82841,
+"upload_time": "2016-12-21T20:22:15",
+"upload_time_iso_8601": "2016-12-21T20:22:15.304851Z",
+"url": "https://files.pythonhosted.org/packages/0e/e9/37ee66dde483dceefe45bb5e92b387f990d4f097df40c400cf816dcebaa4/Flask-0.12-py2.py3-none-any.whl",
+"yanked": false,
+"yanked_reason": null
+},
+{
+"comment_text": "",
+"digests": {
+"md5": "c1d30f51cff4a38f9454b23328a15c5a",
+"sha256": "93e803cdbe326a61ebd5c5d353959397c85f829bec610d59cb635c9f97d7ca8b"
+},
+"downloads": -1,
+"filename": "Flask-0.12.tar.gz",
+"has_sig": false,
+"md5_digest": "c1d30f51cff4a38f9454b23328a15c5a",
+"packagetype": "sdist",
+"python_version": "source",
+"requires_python": null,
+"size": 531923,
+"upload_time": "2016-12-21T20:22:12",
+"upload_time_iso_8601": "2016-12-21T20:22:12.557092Z",
+"url": "https://files.pythonhosted.org/packages/4b/3a/4c20183df155dd2e39168e35d53a388efb384a512ca6c73001d8292c094a/Flask-0.12.tar.gz",
+"yanked": false,
+"yanked_reason": null
+}
+],
+"vulnerabilities": [
+{
+"aliases": [
+"CVE-2019-1010083"
+],
+"details": "The Pallets Project Flask before 1.0 is affected by: unexpected memory usage. The impact is: denial of service. The attack vector is: crafted encoded JSON data. The fixed version is: 1. NOTE: this may overlap CVE-2018-1000656.",
+"fixed_in": [
+"1.0"
+],
+"id": "PYSEC-2019-179",
+"link": "https://osv.dev/vulnerability/PYSEC-2019-179",
+"source": "osv",
+"summary": null
+},
+{
+"aliases": [
+"CVE-2018-1000656"
+],
+"details": "The Pallets Project flask version Before 0.12.3 contains a CWE-20: Improper Input Validation vulnerability in flask that can result in Large amount of memory usage possibly leading to denial of service. This attack appear to be exploitable via Attacker provides JSON data in incorrect encoding. This vulnerability appears to have been fixed in 0.12.3. NOTE: this may overlap CVE-2019-1010083.",
+"fixed_in": [
+"0.12.3"
+],
+"id": "PYSEC-2018-66",
+"link": "https://osv.dev/vulnerability/PYSEC-2018-66",
+"source": "osv",
+"summary": null
+},
+{
+"aliases": [
+"CVE-2019-1010083"
+],
+"details": "The Pallets Project Flask before 1.0 is affected by unexpected memory usage. The impact is denial of service. The attack vector is crafted encoded JSON data. The fixed version is 1. NOTE this may overlap CVE-2018-1000656.",
+"fixed_in": [
+"1.0.0"
+],
+"id": "GHSA-5wv5-4vpf-pj6m",
+"link": "https://osv.dev/vulnerability/GHSA-5wv5-4vpf-pj6m",
+"source": "osv",
+"summary": null
+},
+{
+"aliases": [
+"CVE-2018-1000656"
+],
+"details": "The Pallets Project flask version Before 0.12.3 contains a CWE-20: Improper Input Validation vulnerability in flask that can result in Large amount of memory usage possibly leading to denial of service. This attack appear to be exploitable via Attacker provides JSON data in incorrect encoding. This vulnerability appears to have been fixed in 0.12.3.",
+"fixed_in": [
+"0.12.3"
+],
+"id": "GHSA-562c-5r94-xh97",
+"link": "https://osv.dev/vulnerability/GHSA-562c-5r94-xh97",
+"source": "osv",
+"summary": null
+}
+]
 }
