@@ -152,7 +152,7 @@
 		<module>lang-java-reach</module>
 		<module>lang-java-reach-wala</module>
 		<module>lang-java-reach-soot</module>
-		<module>lang-python</module>
+		<!-- <module>lang-python</module> -->
 
 		<!-- Analysis of security patches and libraries -->
 		<module>repo-client</module>
