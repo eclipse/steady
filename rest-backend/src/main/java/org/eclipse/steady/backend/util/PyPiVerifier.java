@@ -151,7 +151,7 @@ public class PyPiVerifier implements DigestVerifier {
   boolean containsMD5(String _json, final String _md5) {
     final List<String> releases =
         JsonPath.read(
-            _json, "$.releases..[?(@.md5_digest == \"" + _md5.toLowerCase() + "\")].upload_time");
+            _json, "$.urls..[?(@.md5_digest == \"" + _md5.toLowerCase() + "\")].upload_time");
 
     // One result, take the release's timestamp
     if (releases.size() == 1) {
