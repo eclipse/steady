@@ -7,7 +7,7 @@ ARG VULAS_RELEASE
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        openssl wget tar git cron bash gettext curl\
+        openssl wget tar git cron bash gettext curl \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
@@ -19,10 +19,9 @@ RUN chmod +x kaybee
 COPY kb-importer-$VULAS_RELEASE.jar kb-importer.jar
 RUN chmod +x kb-importer.jar
 
-COPY start.sh /kb-importer/
+COPY run.sh /kb-importer/
+RUN chmod +x /kb-importer/run.sh
 
 EXPOSE 8080
 
-RUN chmod +x /kb-importer/start.sh
-
-ENTRYPOINT ["sh","/kb-importer/start.sh"]
+ENTRYPOINT ["sh","/kb-importer/run.sh"]
