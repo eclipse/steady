@@ -44,6 +44,8 @@ import org.eclipse.steady.shared.util.DirWithFileSearch;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.backend.BackendConnector;
 import org.eclipse.steady.shared.util.StopWatch;
+import org.eclipse.steady.shared.util.ProcessWrapper;
+import org.eclipse.steady.shared.util.ProcessWrapperException;
 /**
  * Creates and executes threads for processing each vulnerability.
  * Keeps track of the state of each one of them.
@@ -325,10 +327,14 @@ public class Manager {
    * @throws java.lang.InterruptedException if any.
    */
   public void kaybeeUpdate() throws IOException, InterruptedException {
-    Process updateProcess = Runtime.getRuntime().exec(kaybeeBinaryPath + " update --force");
-    updateProcess.waitFor();
-    if (updateProcess.exitValue() != 0) {
+    try {
+      ProcessWrapper pw = new ProcessWrapper().setCommand(Paths.get(kaybeeBinaryPath), "update", "--force").setPath(Paths.get("/kb-importer/data"));
+      Thread t = new Thread(pw, "pip");
+      t.start();
+      t.join();
+    } catch (ProcessWrapperException e) {
       log.error("Failed to update kaybee");
+      log.error(e.getMessage());
     }
   }
 
@@ -339,14 +345,14 @@ public class Manager {
    * @throws java.lang.InterruptedException if any.
    */
   public void kaybeePull() throws IOException, InterruptedException {
-    String pullCommand = kaybeeBinaryPath + " pull -c " + kaybeeConfPath;
-    System.out.println(pullCommand);
-    Process pullProcess =
-        Runtime.getRuntime()
-            .exec(pullCommand);
-    pullProcess.waitFor();
-    if (pullProcess.exitValue() != 0) {
+    try {
+      ProcessWrapper pw = new ProcessWrapper().setCommand(Paths.get(kaybeeBinaryPath), "pull", "-c", kaybeeConfPath).setPath(Paths.get("/kb-importer/data"));
+      Thread t = new Thread(pw, "pip");
+      t.start();
+      t.join();
+    } catch (ProcessWrapperException e) {
       log.error("Kaybee pull failed");
+      log.error(e.getMessage());
     }
   }
 
@@ -357,12 +363,14 @@ public class Manager {
    * @throws java.lang.InterruptedException if any.
    */
   public void copyStatements() throws IOException, InterruptedException {
-    Process copyProcess =
-        Runtime.getRuntime()
-            .exec("cp " + ImporterController.statementsKaybeePath + " " + ImporterController.statementsPath);
-    copyProcess.waitFor();
-    if (copyProcess.exitValue() != 0) {
-      log.error("failed to copy statements from .kaybee directory");
+    try {
+      ProcessWrapper pw = new ProcessWrapper().setCommand(Paths.get("cp"), "-r", ImporterController.statementsKaybeePath, ImporterController.statementsPath).setPath(Paths.get("/kb-importer/data"));
+      Thread t = new Thread(pw, "pip");
+      t.start();
+      t.join();
+    } catch (ProcessWrapperException e) {
+      log.error("Failed to copy statements from .kaybee directory");
+      log.error(e.getMessage());
     }
   }
 
