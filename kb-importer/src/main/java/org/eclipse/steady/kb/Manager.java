@@ -329,7 +329,7 @@ public class Manager {
   public void kaybeeUpdate() throws IOException, InterruptedException {
     try {
       ProcessWrapper pw = new ProcessWrapper().setCommand(Paths.get(kaybeeBinaryPath), "update", "--force").setPath(Paths.get("/kb-importer/data"));
-      Thread t = new Thread(pw, "pip");
+      Thread t = new Thread(pw, "kaybeeUpdate");
       t.start();
       t.join();
     } catch (ProcessWrapperException e) {
@@ -347,7 +347,7 @@ public class Manager {
   public void kaybeePull() throws IOException, InterruptedException {
     try {
       ProcessWrapper pw = new ProcessWrapper().setCommand(Paths.get(kaybeeBinaryPath), "pull", "-c", kaybeeConfPath).setPath(Paths.get("/kb-importer/data"));
-      Thread t = new Thread(pw, "pip");
+      Thread t = new Thread(pw, "kaybeePull");
       t.start();
       t.join();
     } catch (ProcessWrapperException e) {
@@ -365,7 +365,7 @@ public class Manager {
   public void copyStatements() throws IOException, InterruptedException {
     try {
       ProcessWrapper pw = new ProcessWrapper().setCommand(Paths.get("cp"), "-r", ImporterController.statementsKaybeePath, ImporterController.statementsPath).setPath(Paths.get("/kb-importer/data"));
-      Thread t = new Thread(pw, "pip");
+      Thread t = new Thread(pw, "copyStatements");
       t.start();
       t.join();
     } catch (ProcessWrapperException e) {
