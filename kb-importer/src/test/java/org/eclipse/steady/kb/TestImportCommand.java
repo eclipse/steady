@@ -18,18 +18,37 @@
  */
 package org.eclipse.steady.kb;
 
-import org.eclipse.steady.kb.task.MockBackConnector;
-import org.eclipse.steady.kb.model.Vulnerability;
-
 import static org.junit.Assert.assertNull;
-import java.util.HashMap;
 
 import java.io.IOException;
-import com.google.gson.JsonSyntaxException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+
 import org.eclipse.steady.backend.BackendConnectionException;
+import org.eclipse.steady.backend.BackendConnector;
+import org.eclipse.steady.kb.model.Vulnerability;
+import org.eclipse.steady.kb.task.MockBackConnector;
+import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gson.JsonSyntaxException;
+
 public class TestImportCommand {
+
+  /**
+   * Enforce the use of {@link MockBackConnector}.
+   */
+  @Before
+  public void setup() {
+    try {
+      Field instance_field = BackendConnector.class.getDeclaredField("instance");
+      instance_field.setAccessible(true);
+      instance_field.set(null, new MockBackConnector());
+    } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+      e.printStackTrace();
+    }
+  }
 
   @Test
   public void testImportSkipExistingBug()
@@ -41,7 +60,7 @@ public class TestImportCommand {
     args.put(ImportCommand.OVERWRITE_OPTION, false);
     args.put(ImportCommand.VERBOSE_OPTION, false);
     args.put(ImportCommand.DIRECTORY_OPTION, "");
-    Manager manager = new Manager(mockBackendConnector);
+    Manager manager = new Manager();
     ImportCommand command = new ImportCommand(manager, args);
     command.run();
     assertNull(mockBackendConnector.getUploadJson());

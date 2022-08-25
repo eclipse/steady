@@ -27,8 +27,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.Logger;
-import org.eclipse.steady.shared.util.FileUtil;
-import org.eclipse.steady.shared.util.StringUtil;
 
 /**
  * <p>ProcessWrapper class.</p>
@@ -37,7 +35,7 @@ public class ProcessWrapper implements Runnable {
 
   private static Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
-  private static final Pattern ALLOWED = Pattern.compile("[\\.\\-\\w=]+");
+  private static final Pattern ALLOWED = Pattern.compile("[\\.\\-\\w=/]+");
 
   private String id = null;
 
@@ -97,7 +95,7 @@ public class ProcessWrapper implements Runnable {
           && !FileUtil.isAccessibleFile(_args[i])
           && !FileUtil.isAccessibleDirectory(_args[i]))
         throw new ProcessWrapperException(
-            "Illegal characters in argument [" + i + "], allowed are: a-zA-Z_0-9-.=");
+            "Cannot run [" + _executable + "] due to illegal characters in [" + i + ".] argument [" + _args[i] + "], allowed are: a-zA-Z_0-9-.=/");
     }
 
     this.exe = _executable;

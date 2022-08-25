@@ -40,8 +40,11 @@ import com.jayway.restassured.RestAssured;
 import com.xebialabs.restito.server.StubServer;
 
 /**
- * Singleton mocking the NVD REST service, which is used by different JUnit tests. Sets the system property {@link CveReader2#CVE_SERVICE_URL}.
- * To add a new vulnerability FOO, store the respective JSON as ./src/test/resources/cves/FOO-new.json and update the array {@link NvdRestServiceMockup#CVES}.
+ * Singleton mocking the NVD REST service, which is used by different JUnit
+ * tests. Sets the system property {@link CveReader2#CVE_SERVICE_URL}. To add a
+ * new vulnerability FOO, store the respective JSON as
+ * ./src/test/resources/cves/FOO-new.json and update the array
+ * {@link NvdRestServiceMockup#CVES}.
  */
 public class NvdRestServiceMockup {
 

@@ -19,42 +19,41 @@
 package org.eclipse.steady.kb.util;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.io.FileWriter;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.steady.kb.model.Artifact;
+import org.eclipse.steady.kb.model.Commit;
+import org.eclipse.steady.kb.model.Note;
+import org.eclipse.steady.kb.model.Vulnerability;
+import org.eclipse.steady.shared.util.FileUtil;
+import org.yaml.snakeyaml.Yaml;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import org.yaml.snakeyaml.Yaml;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.Logger;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-
-import org.eclipse.steady.shared.util.FileUtil;
-import org.eclipse.steady.kb.model.Commit;
-import org.eclipse.steady.kb.model.Vulnerability;
-import org.eclipse.steady.kb.model.Note;
-import org.eclipse.steady.kb.model.Artifact;
-
 /**
- * Metadata
+ * Helper methods to work with information provided in files statements.yaml and
+ * metadata.json.
  */
 public class Metadata {
 
-  private static final String META_PROPERTIES_FILE = "metadata.json";
-
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
+  private static final String METADATA_JSON = "metadata.json";
+
   /**
-   * read commit information from meta file
+   * Read commit information from metadata.json contained in the given dir.
    *
    * @param commitDir a {@link java.lang.String} object.
    * @return _commit a {@link org.eclipse.steady.kb.model.Commit} object.
@@ -62,15 +61,11 @@ public class Metadata {
    * @throws com.google.gson.JsonSyntaxException if any.
    */
   public static Commit getCommitMetadata(String commitDir) throws JsonSyntaxException, IOException {
-    String filePath = commitDir + File.separator + META_PROPERTIES_FILE;
+    String filePath = commitDir + File.separator + METADATA_JSON;
     if (!FileUtil.isAccessibleFile(filePath)) {
-      log.error(
-          "The commit folder {} or the meta file is missing {} in commit folder",
-          commitDir,
-          filePath);
+      log.error("File [" + filePath + "] cannot be read");
       return null;
     }
-
     Gson gson = new Gson();
     Commit metadata = null;
     metadata = gson.fromJson(FileUtil.readFile(filePath), Commit.class);
@@ -79,7 +74,7 @@ public class Metadata {
   }
 
   /**
-   * <p>writeCommitMetadata.</p>
+   * Write commit information to metadata.json in the given dir.
    *
    * @param commitDir a {@link java.lang.String} object
    * @param commitMetadata a {@link java.util.HashMap} object
@@ -87,7 +82,7 @@ public class Metadata {
    */
   public static void writeCommitMetadata(String commitDir, HashMap<String, String> commitMetadata)
       throws IOException {
-    String filePath = commitDir + File.separator + META_PROPERTIES_FILE;
+    String filePath = commitDir + File.separator + METADATA_JSON;
     File file = new File(filePath);
     file.createNewFile();
     Writer writer = new FileWriter(filePath, false);
@@ -96,20 +91,20 @@ public class Metadata {
   }
 
   /**
-   * read vulnerability information from meta file
+   * Creates a {@link Vulnerability} from the information provided in metadata.json in the given directory.
    *
-   * @param rootDir a {@link java.lang.String} object.
+   * @param _dir a {@link java.lang.String} object.
    * @return _commit a {@link org.eclipse.steady.kb.model.Vulnerability} object.
    * @throws java.io.IOException if any.
    * @throws com.google.gson.JsonSyntaxException if any.
    */
-  public static Vulnerability getVulnerabilityMetadata(String rootDir)
+  public static Vulnerability getFromMetadata(String _dir)
       throws JsonSyntaxException, IOException {
-    String filePath = rootDir + File.separator + META_PROPERTIES_FILE;
+    String filePath = _dir + File.separator + METADATA_JSON;
     if (!FileUtil.isAccessibleFile(filePath)) {
       throw new IllegalArgumentException(
           "The root folder "
-              + rootDir
+              + _dir
               + "  or the meta file in root directory is missing "
               + filePath);
     }
@@ -127,15 +122,16 @@ public class Metadata {
   }
 
   /**
-   * <p>getFromYaml.</p>
+   * Creates a {@link Vulnerability} from the information provided in the given
+   * statement.
    *
-   * @param metadataPathString a {@link java.lang.String} object
+   * @param _yaml_file a {@link java.lang.String} object
    * @return a {@link org.eclipse.steady.kb.model.Vulnerability} object
    * @throws java.io.IOException if any.
    */
-  public static Vulnerability getFromYaml(String metadataPathString) throws IOException {
+  public static Vulnerability getFromYaml(String _yaml_file) throws IOException {
 
-    Path metadataPath = Paths.get(metadataPathString);
+    Path metadataPath = Paths.get(_yaml_file);
     Yaml yaml = new Yaml();
 
     String metadataString = new String(Files.readAllBytes(metadataPath));

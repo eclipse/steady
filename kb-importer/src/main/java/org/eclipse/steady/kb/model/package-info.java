@@ -16,24 +16,9 @@
  * SPDX-License-Identifier: Apache-2.0
  * SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
  */
-package org.eclipse.steady.kb;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-
 /**
- * <p>Main class.</p>
+ * Classes in this package hold and encapsulate the information contained in
+ * statement.yaml files coming from Project KB. The statement itself corresponds
+ * to class {@link Vulnerability}.
  */
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-public class Main {
-
-  /**
-   * <p>main.</p>
-   *
-   * @param args an array of {@link java.lang.String} objects
-   */
-  public static void main(String[] args) {
-    SpringApplication.run(Main.class, args);
-  }
-}
+package org.eclipse.steady.kb.model;

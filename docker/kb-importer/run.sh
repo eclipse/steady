@@ -5,10 +5,10 @@ home="/kb-importer"
 
 mkdir -p $home/data
 
-echo "Statements repo: " $KB_IMPORTER_STATEMENTS_REPO
+echo "Statements repo:   " $KB_IMPORTER_STATEMENTS_REPO
 echo "Statements branch: " $KB_IMPORTER_STATEMENTS_BRANCH
 echo "Statements folder: " $KB_IMPORTER_STATEMENTS_FOLDER
-echo "Skip clones: " $KB_IMPORTER_SKIP_CLONE
+echo "Skip clones:       " $KB_IMPORTER_SKIP_CLONE
 
 # Substitute env variables used by kaybee in kaybeeconf.yaml
 sed    "s|KB_IMPORTER_STATEMENTS_REPO|$KB_IMPORTER_STATEMENTS_REPO|g"     $home/conf/kaybeeconf.yaml.sample > $home/conf/kaybeeconf.yaml

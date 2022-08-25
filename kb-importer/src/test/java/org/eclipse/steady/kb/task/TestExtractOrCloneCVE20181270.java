@@ -1,27 +1,36 @@
 package org.eclipse.steady.kb.task;
 
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Arrays;
 
-import org.eclipse.steady.kb.model.Vulnerability;
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.kb.ImportCommand;
 import org.eclipse.steady.kb.Manager;
+import org.eclipse.steady.kb.model.Vulnerability;
 import org.eclipse.steady.kb.util.Metadata;
-
 import org.junit.After;
-import org.junit.Test;
 import org.junit.Before;
-import org.junit.runners.Parameterized;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.commons.io.FileUtils;
-
+/**
+ * Tests the {@link ExtractOrClone} task with CVE-2018-1270, whose fix commits
+ * only modified existing files. Depending on whether the dir parameter, the
+ * repo will be cloned (<p>testRootDir7</p>) or not
+ * (<p>statements/CVE-2018-1270</p>).
+ */
 @RunWith(Parameterized.class)
-public class TestExtractOrClone {
+public class TestExtractOrCloneCVE20181270 {
+
+  @Parameterized.Parameters
+  public static List directories() {
+    return Arrays.asList(new Object[][] {{"statements/CVE-2018-1270"}, {"testRootDir7"}});
+  }
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
   
@@ -32,19 +41,14 @@ public class TestExtractOrClone {
 
   @Before
   public void initialize() {
-    this.manager = new Manager(MockBackConnector.getInstance());
+    this.manager = new Manager();
     classLoader = getClass().getClassLoader();
   }
 
-  public TestExtractOrClone(String dirName) {
+  public TestExtractOrCloneCVE20181270(String dirName) {
     classLoader = getClass().getClassLoader();
     this.dirPath = classLoader.getResource(dirName).getPath();
     this.dir = new File(dirPath);
-  }
-
-  @Parameterized.Parameters
-  public static List directories() {
-    return Arrays.asList(new Object[][] {{"statements/CVE-2018-1270"}, {"testRootDir7"}});
   }
 
   @Test
@@ -55,7 +59,7 @@ public class TestExtractOrClone {
     Vulnerability vuln = Metadata.getFromYaml(statementPath);
 
     HashMap<String, Object> args = new HashMap<String, Object>();
-    args.put("v", false);
+    //args.put("v", false);
     args.put(ImportCommand.OVERWRITE_OPTION, false);
     args.put(ImportCommand.DIRECTORY_OPTION, "");
 

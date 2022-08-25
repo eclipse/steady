@@ -18,34 +18,35 @@
  */
 package org.eclipse.steady.kb;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.TimeUnit;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.http.conn.HttpHostConnectException;
-import com.google.gson.Gson;
-
-import org.eclipse.steady.shared.util.VulasConfiguration;
+import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.shared.util.DirWithFileSearch;
-import org.eclipse.steady.backend.BackendConnectionException;
-import org.eclipse.steady.backend.BackendConnector;
-import org.eclipse.steady.shared.util.StopWatch;
+import org.eclipse.steady.shared.util.FileUtil;
 import org.eclipse.steady.shared.util.ProcessWrapper;
 import org.eclipse.steady.shared.util.ProcessWrapperException;
+import org.eclipse.steady.shared.util.StopWatch;
+import org.eclipse.steady.shared.util.ThreadUtil;
+import org.eclipse.steady.shared.util.VulasConfiguration;
+
+import com.google.gson.Gson;
 /**
  * Creates and executes threads for processing each vulnerability.
  * Keeps track of the state of each one of them.
@@ -63,12 +64,26 @@ public class Manager {
   final String kaybeeConfPath =
       VulasConfiguration.getGlobal()
           .getConfiguration()
-          .getString("vulas.kb-importer.kaybeeConfPath"); 
+          .getString("vulas.kb-importer.kaybeeConfPath");
 
+  /**
+   * The folder into which kaybee pulls the statements.
+   * Should be changed as soon as kaybee merge is properly implemented.
+   */
+  private static final String KAYBEE_STMTS_PATH = ".kaybee/repositories/github.com_sap.project-kb_vulnerability-data/statements";
 
+  /**
+   * The data folder inside kb-importer's Docker container.
+   */
+  private static final String IMPORT_STMTS_PATH =
+    VulasConfiguration.getGlobal()
+        .getConfiguration()
+        .getString("vulas.kb-importer.statementsPath");
+  
   private ThreadPoolExecutor executor;
 
   private static Map<String, VulnStatus> vulnerabilitiesStatus = new HashMap<String, VulnStatus>();
+
   private static Set<String> newVulnerabilities = new LinkedHashSet<String>();
 
   // pairs of vulnId and reason for failure
@@ -76,10 +91,9 @@ public class Manager {
 
   Map<String, Lock> repoLocks = new HashMap<String, Lock>();
 
-  private boolean startIsRunning;
-
-  private BackendConnector backendConnector;
   private StopWatch stopWatch = null;
+
+  private Path tmpDir = null;
 
   public enum VulnStatus {
     NOT_STARTED,
@@ -92,7 +106,8 @@ public class Manager {
     FAILED_CONNECTION,
     SKIP_CLONE,
     FAILED_IMPORT_LIB,
-    FAILED_IMPORT_VULN
+    FAILED_IMPORT_VULN,
+    MALFORMED_INPUT
   }
 
   /**
@@ -100,17 +115,20 @@ public class Manager {
    *
    * @param backendConnector a {@link org.eclipse.steady.backend.BackendConnector} object
    */
-  public Manager(BackendConnector backendConnector) {
-    this.backendConnector = backendConnector;
+  public Manager() {
     this.createNewExecutor();
+    try {
+      this.tmpDir = FileUtil.createTmpDir("import");
+    } catch (IOException e) {
+      log.error("Error creating temp dir: " + e.getMessage());
+    }
   }
 
   /**
    * <p>createNewExecutor.</p>
    */
   public void createNewExecutor() {
-    this.executor = // (ThreadPoolExecutor) Executors.newCachedThreadPool();
-        (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
+    this.executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(ThreadUtil.getNoThreads());
   }
 
   /**
@@ -179,50 +197,52 @@ public class Manager {
   }
 
   /**
-   * <p>isRunningStart.</p>
+   * Returns true if an import is underway, false otherwise.
    *
    * @return a boolean
    */
   public boolean isRunningStart() {
-    return this.startIsRunning;
+    return this.stopWatch != null && this.stopWatch.isRunning();
   }
 
   /**
-   * <p>start.</p>
+   * Calls kaybee and starts the import of all statements in the data folder.
    *
-   * @param statementsPath a {@link java.lang.String} object
    * @param mapCommandOptionValues a {@link java.util.HashMap} object
    */
-  public synchronized void start(
-      String statementsPath, HashMap<String, Object> mapCommandOptionValues) {
-    this.startIsRunning = true;
+  public synchronized void start(HashMap<String, Object> mapCommandOptionValues) {
 
-    this.stopWatch = new StopWatch("Manager started").start();
     newVulnerabilities = new LinkedHashSet<String>();
 
+    this.stopWatch = new StopWatch("Import vulnerabilities").start();
+    
     try {
-      log.info("Updating kaybee...");
       kaybeeUpdate();
-      log.info("Running kaybee pull...");
+      this.stopWatch.lap("Updated kaybee", true);
+
       kaybeePull();
-      log.info("Copying statements folder...");
-      copyStatements();
-    } catch (IOException | InterruptedException e) {
-      log.error("Exception while performing update: " + e.getMessage());
-      this.startIsRunning = false;
-      return;
+      this.stopWatch.lap("Ran kaybee pull", true);
+      
+      // Normally, we would call 'kaybee merge", but since this functionality
+      // has not been implemented yet, we simply copy the folder where the statements
+      // have been pulled to to another folder
+      FileUtil.copy(Paths.get(KAYBEE_STMTS_PATH), Paths.get(IMPORT_STMTS_PATH).getParent(), Paths.get(IMPORT_STMTS_PATH).getFileName(), StandardCopyOption.REPLACE_EXISTING);
+      this.stopWatch.lap("Copied statements", true);
+
+      setUploadConfiguration(mapCommandOptionValues);
+
+      List<String> vulnIds = this.identifyVulnerabilitiesToImport(IMPORT_STMTS_PATH);
+      startList(IMPORT_STMTS_PATH, mapCommandOptionValues, vulnIds);
+      retryFailed(IMPORT_STMTS_PATH, mapCommandOptionValues);
+
+      this.stopWatch.stop();
+    } catch (Exception e) {
+      this.stopWatch.stop(e);
     }
-    setUploadConfiguration(mapCommandOptionValues);
-    List<String> vulnIds = this.identifyVulnerabilitiesToImport(statementsPath);
-    startList(statementsPath, mapCommandOptionValues, vulnIds);
-    retryFailed(statementsPath, mapCommandOptionValues);
-    this.stopWatch.stop();
-    this.startIsRunning = false;
-    log.info("Manager StopWatch Runtime " + Long.toString(this.stopWatch.getRuntime()));
   }
 
   /**
-   * Keep retrying vulnerabilities that failed due to the high amount of requests.
+   * Keeps retrying vulnerabilities that failed due to the high amount of requests.
    *
    * @param statementsPath a {@link java.lang.String} object
    * @param mapCommandOptionValues a {@link java.util.HashMap} object
@@ -241,28 +261,27 @@ public class Manager {
         break;
       } else {
         log.info(
-            "Retrying " + Integer.toString(failuresToRetry.size()) + " failed vulnerabilities");
+            "Retrying [" + Integer.toString(failuresToRetry.size()) + "] failed vulnerabilities...");
         startList(statementsPath, mapCommandOptionValues, failuresToRetry);
       }
     }
   }
 
   /**
-   * <p>identifyVulnerabilitiesToImport.</p>
+   * Searches in the given folder for directories containing a
+   * <p>statements.yaml</p> file, which correspond to vulnerabilities being
+   * imported later on.
    *
    * @param statementsPath a {@link java.lang.String} object
    * @return a {@link java.util.List} object
    */
   public List<String> identifyVulnerabilitiesToImport(String statementsPath) {
-    File statementsDir = new File(statementsPath);
-    List<String> vulnIds = new ArrayList<String>();
-
     final DirWithFileSearch search = new DirWithFileSearch("statement.yaml");
-    Set<Path> vulnDirsPaths = search.search(Paths.get(statementsDir.getPath()));
+    Set<Path> vulnDirsPaths = search.search(Paths.get(statementsPath));
+    List<String> vulnIds = new ArrayList<String>();
     for (Path dirPath : vulnDirsPaths) {
-      File vulnDir = dirPath.toFile();
-      log.info("Found vulnerability directory: " + vulnDir.getName());
-      String vulnId = vulnDir.getName().toString();
+      String vulnId = dirPath.getFileName().toString();
+      log.debug("Found directory [" + dirPath + "] for vulnerability [" + vulnId + "]");
       setVulnStatus(vulnId, VulnStatus.NOT_STARTED);
       vulnIds.add(vulnId);
     }
@@ -270,11 +289,17 @@ public class Manager {
   }
 
   /**
-   * <p>startList.</p>
+   * Creates an {@link ImportCommand} for every vulnerability comprised in the
+   * given list. Depending on the presence of {@link ImportCommand.SEQUENTIAL}
+   * in the keys of the given arguments, those import commands will be executed
+   * sequentially are given to the thread pool executor
+   * {@link Manager#executor}.
    *
-   * @param statementsPath a {@link java.lang.String} object
-   * @param mapCommandOptionValues a {@link java.util.HashMap} object
-   * @param vulnIds a {@link java.util.List} object
+   * @param statementsPath a {@link java.lang.String} refering to the parent
+   * folder of the vulnerability folders to import
+   * @param mapCommandOptionValues a {@link java.util.HashMap} with arguments,
+   * incl. {@link ImportCommand.SEQUENTIAL}
+   * @param vulnIds a {@link java.util.List} of vulnerabilities to be imported
    */
   public synchronized void startList(
       String statementsPath, HashMap<String, Object> mapCommandOptionValues, List<String> vulnIds) {
@@ -285,14 +310,15 @@ public class Manager {
 
     failures = new HashMap<String, Exception>();
 
+    // Loop vulnerabilities
     for (String vulnId : vulnIds) {
       Path vulnDirPath = Paths.get(statementsPath, vulnId);
-      String vulnDirStr = vulnDirPath.toString();
-      log.info("Initializing process for directory " + vulnDirPath);
 
-      // It is necessary to copy the arguments to avoid concurrent modification
+      // Copy the arguments to avoid concurrent modification
       HashMap<String, Object> args = new HashMap<String, Object>(mapCommandOptionValues);
-      args.put(ImportCommand.DIRECTORY_OPTION, vulnDirStr);
+      args.put(ImportCommand.DIRECTORY_OPTION, vulnDirPath.toString());
+
+      // Create the import command. Start right away or submit to executor.
       ImportCommand command = new ImportCommand(this, args);
       if (mapCommandOptionValues.containsKey(ImportCommand.SEQUENTIAL)) {
         command.run();
@@ -300,13 +326,13 @@ public class Manager {
         executor.submit(command);
       }
     }
+
+    // Don't accept new vulns and wait for termination
     try {
       executor.shutdown();
       executor.awaitTermination(24, TimeUnit.HOURS);
-      log.info("Finished importing vulnerabilities");
     } catch (InterruptedException e) {
-      log.error("Process interrupted");
-      log.error(e.getMessage());
+      log.error("Process interrupted: " + e.getMessage());
     }
   }
 
@@ -321,88 +347,59 @@ public class Manager {
   }
 
   /**
-   * <p>kaybeeUpdate.</p>
+   * Runs 'kaybe update --force' to update the kaybee binary.
    *
    * @throws java.io.IOException if any.
    * @throws java.lang.InterruptedException if any.
    */
-  public void kaybeeUpdate() throws IOException, InterruptedException {
-    try {
-      ProcessWrapper pw = new ProcessWrapper().setCommand(Paths.get(kaybeeBinaryPath), "update", "--force").setPath(Paths.get("/kb-importer/data"));
-      Thread t = new Thread(pw, "kaybeeUpdate");
-      t.start();
-      t.join();
-    } catch (ProcessWrapperException e) {
-      log.error("Failed to update kaybee");
-      log.error(e.getMessage());
-    }
+  public void kaybeeUpdate() throws ProcessWrapperException, InterruptedException {
+    ProcessWrapper pw = new ProcessWrapper().setCommand(Paths.get(kaybeeBinaryPath), "update", "--force").setPath(this.tmpDir);
+    Thread t = new Thread(pw, "kaybee-update");
+    t.start();
+    t.join();
   }
 
   /**
-   * <p>kaybeePull.</p>
+   * Runs 'kaybee pull -c <config>' to pull statements from the configured source repositories.
    *
    * @throws java.io.IOException if any.
    * @throws java.lang.InterruptedException if any.
    */
-  public void kaybeePull() throws IOException, InterruptedException {
-    try {
-      ProcessWrapper pw = new ProcessWrapper().setCommand(Paths.get(kaybeeBinaryPath), "pull", "-c", kaybeeConfPath).setPath(Paths.get("/kb-importer/data"));
-      Thread t = new Thread(pw, "kaybeePull");
-      t.start();
-      t.join();
-    } catch (ProcessWrapperException e) {
-      log.error("Kaybee pull failed");
-      log.error(e.getMessage());
-    }
+  public void kaybeePull() throws Exception {
+    ProcessWrapper pw = new ProcessWrapper().setCommand(Paths.get(kaybeeBinaryPath), "pull", "-c", kaybeeConfPath).setPath(this.tmpDir);
+    Thread t = new Thread(pw, "kaybee-pull");
+    t.start();
+    t.join();
   }
 
   /**
-   * <p>copyStatements.</p>
-   *
-   * @throws java.io.IOException if any.
-   * @throws java.lang.InterruptedException if any.
-   */
-  public void copyStatements() throws IOException, InterruptedException {
-    try {
-      ProcessWrapper pw = new ProcessWrapper().setCommand(Paths.get("cp"), "-r", ImporterController.statementsKaybeePath, ImporterController.statementsPath).setPath(Paths.get("/kb-importer/data"));
-      Thread t = new Thread(pw, "copyStatements");
-      t.start();
-      t.join();
-    } catch (ProcessWrapperException e) {
-      log.error("Failed to copy statements from .kaybee directory");
-      log.error(e.getMessage());
-    }
-  }
-
-  /**
-   * <p>stop.</p>
+   * Stops all import threads and waits for their termination.
    */
   public void stop() {
     try {
       executor.shutdownNow();
       executor.awaitTermination(24, TimeUnit.HOURS);
-      this.startIsRunning = false;
     } catch (InterruptedException e) {
-      log.error("Process interrupted");
-      log.error(e.getMessage());
+      log.error("Process interrupted: " + e.getMessage(), e);
     }
   }
 
   /**
-   * <p>importSingleVuln.</p>
+   * Imports a single vulnerability whose statement.yaml is expected to be in
+   * the correct folder.
    *
    * @param vulnDirStr a {@link java.lang.String} object
    * @param mapCommandOptionValues a {@link java.util.HashMap} object
    * @param vulnId a {@link java.lang.String} object
    */
-  public void importSingleVuln(
-      String vulnDirStr, HashMap<String, Object> mapCommandOptionValues, String vulnId) {
-
-    log.info("Initializing process for directory " + vulnDirStr);
+  public void importSingleVuln(HashMap<String, Object> mapCommandOptionValues, String vulnId) {
+    String dir = IMPORT_STMTS_PATH + File.separator + vulnId;
+    log.info("Importing vulnerability [" + vulnId + "] from directory [" + dir + "]...");
 
     // It is necessary to copy the arguments to avoid concurrent modification
     HashMap<String, Object> args = new HashMap<String, Object>(mapCommandOptionValues);
-    args.put(ImportCommand.DIRECTORY_OPTION, vulnDirStr);
+    args.put(ImportCommand.DIRECTORY_OPTION, dir);
+
     ImportCommand command = new ImportCommand(this, args);
     command.run();
   }
@@ -434,14 +431,5 @@ public class Manager {
     statusMap.put("failures", failureReasons);
     String statusStr = new Gson().toJson(statusMap);
     return statusStr;
-  }
-
-  /**
-   * <p>Getter for the field <code>backendConnector</code>.</p>
-   *
-   * @return a {@link org.eclipse.steady.backend.BackendConnector} object
-   */
-  public BackendConnector getBackendConnector() {
-    return this.backendConnector;
   }
 }

@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.backend.BackendConnector;
@@ -34,6 +35,7 @@ import org.eclipse.steady.shared.enums.AffectedVersionSource;
 import org.eclipse.steady.shared.json.model.AffectedConstructChange;
 import org.eclipse.steady.shared.json.model.AffectedLibrary;
 import org.eclipse.steady.shared.json.model.LibraryId;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.packageurl.MalformedPackageURLException;

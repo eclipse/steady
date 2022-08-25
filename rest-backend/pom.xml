@@ -212,7 +212,6 @@
     		</exclusions>
 		</dependency>
 		
-
 		<!-- Used to mock REST services -->
 		<dependency>
 			<groupId>com.xebialabs.restito</groupId>
@@ -327,7 +326,7 @@
 
 		<!-- Activate when deploying to the Central Repo. Also see https://central.sonatype.org/pages/apache-maven.html#nexus-staging-maven-plugin-for-deployment-and-release -->
 		<profile>
-			<id>javadoc</id>
+			<id>prepare-release</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -355,6 +354,17 @@
 								<goals>
 									<goal>jar</goal>
 								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.cyclonedx</groupId>
+						<artifactId>cyclonedx-maven-plugin</artifactId>
+						<version>2.6.2</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals><goal>makeAggregateBom</goal></goals>
 							</execution>
 						</executions>
 					</plugin>
@@ -563,18 +573,6 @@
 			            <exclude>**/src/main/resources/db/migration/*.sql</exclude>
 			        </excludes>
 			    </configuration>
-			</plugin>
-
-			<plugin>
-					<groupId>org.cyclonedx</groupId>
-					<artifactId>cyclonedx-maven-plugin</artifactId>
-					<version>2.6.2</version>
-					<executions>
-						<execution>
-							<phase>package</phase>
-							<goals><goal>makeAggregateBom</goal></goals>
-						</execution>
-					</executions>
 			</plugin>
 		</plugins>
 	</build>

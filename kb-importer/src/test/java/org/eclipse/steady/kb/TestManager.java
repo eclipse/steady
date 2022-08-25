@@ -18,26 +18,45 @@
  */
 package org.eclipse.steady.kb;
 
-import org.eclipse.steady.kb.task.MockBackConnector;
-
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
-import java.io.IOException;
-import com.google.gson.JsonSyntaxException;
+
 import org.eclipse.steady.backend.BackendConnectionException;
+import org.eclipse.steady.backend.BackendConnector;
+import org.eclipse.steady.kb.task.MockBackConnector;
+import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gson.JsonSyntaxException;
+
 public class TestManager {
+
+  /**
+   * Enforce the use of {@link MockBackConnector}.
+   */
+  @Before
+  public void setup() {
+    try {
+      Field instance_field = BackendConnector.class.getDeclaredField("instance");
+      instance_field.setAccessible(true);
+      instance_field.set(null, new MockBackConnector());
+    } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+      e.printStackTrace();
+    }
+  }
 
   @Test
   public void testStartList() throws JsonSyntaxException, IOException, BackendConnectionException {
     String statementsPath = Manager.class.getClassLoader().getResource("statements").getPath();
-    MockBackConnector mockBackendConnector = new MockBackConnector();
+
     HashMap<String, Object> args = new HashMap<String, Object>();
     args.put(ImportCommand.OVERWRITE_OPTION, true);
     args.put(ImportCommand.VERBOSE_OPTION, false);
     args.put(ImportCommand.SKIP_CLONE_OPTION, false);
-    Manager manager = new Manager(mockBackendConnector);
+
+    Manager manager = new Manager();
 
     List<String> vulnIds = manager.identifyVulnerabilitiesToImport(statementsPath);
     manager.startList(statementsPath, args, vulnIds);
@@ -45,7 +64,7 @@ public class TestManager {
     Manager.VulnStatus vulnStatus1 = manager.getVulnStatus("CVE-2018-1270");
 
     org.junit.Assert.assertEquals(vulnStatus1, Manager.VulnStatus.IMPORTED);
-    org.junit.Assert.assertEquals(mockBackendConnector.getUploadedChangeLists().size(), 1);
-    org.junit.Assert.assertEquals(mockBackendConnector.getUploadedLibraries().size(), 0);
+    org.junit.Assert.assertEquals(((MockBackConnector)BackendConnector.getInstance()).getUploadedChangeLists().size(), 1);
+    org.junit.Assert.assertEquals(((MockBackConnector)BackendConnector.getInstance()).getUploadedLibraries().size(), 0);
   }
 }

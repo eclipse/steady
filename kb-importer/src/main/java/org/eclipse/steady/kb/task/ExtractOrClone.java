@@ -18,23 +18,23 @@
  */
 package org.eclipse.steady.kb.task;
 
-import java.io.IOException;
-import java.io.File;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.HashMap;
-import org.apache.logging.log4j.Logger;
+import java.util.List;
 
-import org.eclipse.steady.shared.util.FileUtil;
-import org.eclipse.steady.kb.model.Vulnerability;
-import org.eclipse.steady.kb.model.Commit;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.kb.ImportCommand;
-import org.eclipse.steady.kb.util.Metadata;
 import org.eclipse.steady.kb.Manager;
+import org.eclipse.steady.kb.model.Commit;
+import org.eclipse.steady.kb.model.Vulnerability;
+import org.eclipse.steady.kb.util.Metadata;
+import org.eclipse.steady.shared.util.FileUtil;
 
 /**
  * Obtain modified source code files for each commit in a statement.
@@ -70,27 +70,32 @@ public class ExtractOrClone {
   }
 
   /**
-   * <p>execute.</p>
+   * Extracts the tarball associated to a given vulnerability (if any). If no
+   * tarball is present, the repo will be cloned and the fix commits be pulled
+   * (since that is expensive, the configuration setting skipClone can alter
+   * this behavior).
    */
   public void execute() {
-
+    // Extract tarball
     if (tarFile != null) {
       manager.setVulnStatus(this.vulnId, Manager.VulnStatus.EXTRACTING);
       extract(tarFile, dirPath);
-    } else {
+      log.info("Vulnerability [" + this.vulnId + "]: Extracted tarball to [" + dirPath + "]");
+    }
+    // Clone (depending on the configuration)
+    else {
       List<Commit> commits = vuln.getCommits();
       if (commits == null || commits.size() == 0) {
-        return;
+        log.warn("Vulnerability [" + this.vulnId + "]: Neither tarball nor commits available");
       } else if (this.skipClone) {
-        log.info("Skipping clone for vulnerability " + this.vulnId);
+        log.info("Vulnerability [" + this.vulnId + "]: Cloning skipped");
         manager.setVulnStatus(this.vulnId, Manager.VulnStatus.SKIP_CLONE);
       } else {
+        log.info("Vulnerability [" + this.vulnId + "]: Cloning...");
         manager.setVulnStatus(this.vulnId, Manager.VulnStatus.CLONING);
-        log.info("Cloning repository for vulnerability " + this.vulnId);
         clone(vuln, dirPath);
       }
-    }
-    log.info("ExtractOrClone : done (" + dirPath + ")");
+    } 
   }
 
   /**
@@ -102,7 +107,9 @@ public class ExtractOrClone {
   public File getTarFile(String dirPath) {
     if (FileUtil.isAccessibleFile(dirPath + File.separator + ImportCommand.SOURCE_TAR)) {
       return new File(dirPath + File.separator + ImportCommand.SOURCE_TAR);
-    } else return null;
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -112,26 +119,20 @@ public class ExtractOrClone {
    * @param dirPath a {@link java.lang.String} object
    */
   public void extract(File tarFile, String dirPath) {
-
-    log.info("Extracting vulnerability " + vulnId);
     String extractCommand = "tar -xf " + tarFile.getPath() + " --directory " + dirPath;
-
     try {
-
       Process process = Runtime.getRuntime().exec(extractCommand);
       process.waitFor();
-
       List<Commit> commits = vuln.getCommits();
       for (Commit commit : commits) {
         String commitDirPath = dirPath + File.separator + commit.getCommitId();
         createAndWriteCommitMetadata(commit, null, commitDirPath);
       }
-
     } catch (IOException | InterruptedException e) {
       String vulnId = dirPath.split(File.separator)[dirPath.split(File.separator).length - 1];
       manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED_EXTRACT_OR_CLONE);
       manager.addFailure(vuln.getVulnId(), e);
-      log.error(e.getMessage());
+      log.error(e.getMessage(), e);
     }
   }
 
@@ -142,22 +143,26 @@ public class ExtractOrClone {
    * @param dirPath a {@link java.lang.String} object
    */
   public void clone(Vulnerability vuln, String dirPath) {
+    // Loop all commits
+    for (Commit commit : vuln.getCommits()) {
 
-    List<Commit> commits = vuln.getCommits();
-    for (Commit commit : commits) {
+      // Create dir for commit which will hold the before/after Java files
       String repoUrl = commit.getRepoUrl();
       String commitId = commit.getCommitId();
       String commitDirPath = dirPath + File.separator + commitId;
-      // System.out.println("commitDirPath : " + commitDirPath);
       File commitDir = new File(commitDirPath);
       commitDir.mkdir();
+
       String repoDirPath =
           dirPath
               + File.separator
               + GIT_DIRECTORY
               + File.separator
               + repoUrl.replace("https://", "").replace("/", "_");
+
+      // Create lock to avoid multiple threads interacting with the same clone
       manager.lockRepo(repoUrl);
+
       try {
         cloneOnce(repoUrl, repoDirPath);
         createAndWriteCommitMetadata(commit, repoDirPath, commitDirPath);
@@ -168,6 +173,8 @@ public class ExtractOrClone {
         log.error(e.getMessage());
         break;
       }
+
+      // Unlock
       manager.unlockRepo(repoUrl);
     }
   }
@@ -231,7 +238,8 @@ public class ExtractOrClone {
   }
 
   /**
-   * <p>cloneOnce.</p>
+   * Clones the given repo to the given directory (unless that directory already
+   * exists).
    *
    * @param repoUrl a {@link java.lang.String} object
    * @param repoDirPath a {@link java.lang.String} object
@@ -240,11 +248,10 @@ public class ExtractOrClone {
    */
   public void cloneOnce(String repoUrl, String repoDirPath)
       throws IOException, InterruptedException {
-
     if (Files.exists(Paths.get(repoDirPath))) {
-      log.info("Folder " + repoDirPath + " exists. Skipping git clone.");
+      log.info("Folder [" + repoDirPath + "] already exists, git clone will be skipped");
     } else {
-      log.info("Cloning repository " + repoUrl);
+      log.info("Cloning repository [" + repoUrl + "] to [" + repoDirPath + "]...");
       String gitCloneCommand = "git clone " + repoUrl + " " + repoDirPath;
       Process gitClone = Runtime.getRuntime().exec(gitCloneCommand);
       gitClone.waitFor();
@@ -304,13 +311,15 @@ public class ExtractOrClone {
     BufferedReader gitCatErrorInput =
         new BufferedReader(new InputStreamReader(gitCat.getErrorStream()));
     gitCat.waitFor();
+
+    
     if (gitCat.exitValue() == 0) {
       String filepath = commitDirPath + File.separator + beforeOrAfter + File.separator + filename;
       File file = new File(filepath);
       File dir = file.getParentFile();
       dir.mkdirs();
 
-      String diffFileCommand = "git -C " + repoDirPath + " show " + commitId + "~1:" + filename;
+      String diffFileCommand = "git -C " + repoDirPath + " show " + commitStr + filename;
 
       log.info("Executing: " + diffFileCommand);
       Process gitDiffFile = Runtime.getRuntime().exec(diffFileCommand);
@@ -318,13 +327,6 @@ public class ExtractOrClone {
       writeCmdOutputToFile(gitDiffFile, filepath);
 
       gitDiffFile.waitFor();
-
-    } else {
-      log.error("git cat-file didn't work");
-      log.error(gitCatErrorInput.readLine());
-      // What to do in case it doesn't work?
-      manager.setVulnStatus(vulnId, Manager.VulnStatus.FAILED_EXTRACT_OR_CLONE);
-      manager.addFailure(vuln.getVulnId(), new Exception("git cat-file didn't work"));
     }
   }
 

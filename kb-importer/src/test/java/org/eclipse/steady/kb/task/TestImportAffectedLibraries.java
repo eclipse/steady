@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.core.util.CoreConfiguration;
 import org.eclipse.steady.kb.ImportCommand;
@@ -14,6 +15,7 @@ import org.eclipse.steady.kb.util.Metadata;
 import org.eclipse.steady.shared.json.model.AffectedLibrary;
 import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.junit.Test;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.packageurl.MalformedPackageURLException;
 import com.google.gson.JsonSyntaxException;
@@ -29,7 +31,7 @@ public class TestImportAffectedLibraries {
             (CoreConfiguration.ConnectType.READ_WRITE.toString()));
     ImportAffectedLibraries importAffectedLibs = new ImportAffectedLibraries();
     Vulnerability vuln =
-        Metadata.getVulnerabilityMetadata(
+        Metadata.getFromMetadata(
             TestImportCommand.class.getClassLoader().getResource("CVE-2011-4343").getPath());
     MockBackConnector mockBackendConnector = new MockBackConnector();
     HashMap<String, Object> args = new HashMap<String, Object>();
@@ -54,7 +56,7 @@ public class TestImportAffectedLibraries {
             (CoreConfiguration.ConnectType.READ_WRITE.toString()));
     ImportAffectedLibraries importAffectedLibs = new ImportAffectedLibraries();
     Vulnerability vuln =
-        Metadata.getVulnerabilityMetadata(
+        Metadata.getFromMetadata(
             TestImportCommand.class.getClassLoader().getResource("CVE-2011-4343").getPath());
     MockBackConnector mockBackendConnector = new MockBackConnector();
     HashMap<String, Object> args = new HashMap<String, Object>();
@@ -75,7 +77,7 @@ public class TestImportAffectedLibraries {
           IOException {
     ImportAffectedLibraries importAffectedLibs = new ImportAffectedLibraries();
     Vulnerability vuln =
-        Metadata.getVulnerabilityMetadata(
+        Metadata.getFromMetadata(
             TestImportCommand.class.getClassLoader().getResource("CVE-2011-4343").getPath());
     vuln.setArtifacts(new ArrayList<Artifact>());
     HashMap<String, Object> args = new HashMap<String, Object>();
