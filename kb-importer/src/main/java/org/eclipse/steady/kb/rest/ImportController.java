@@ -68,7 +68,7 @@ public class ImportController {
   static final long waitTimeMs =
       VulasConfiguration.getGlobal()
           .getConfiguration()
-          .getLong("vulas.kb-importer.refetchAllMs", -1);
+          .getLong("vulas.kb-importer.refetchAllMs", 86400000);
 
   /**
    * Creates a new importer thread.
@@ -144,7 +144,7 @@ public class ImportController {
       @RequestParam(defaultValue = "false") boolean upload,
       @RequestParam(defaultValue = "false") boolean verbose,
       @RequestParam(defaultValue = "true") boolean skipClone,
-      @RequestParam(defaultValue = "0") long waitTimeMs) {
+      @RequestParam(defaultValue = "86400000") long waitTimeMs) {
     
     // On-going import: don't do anything
     if (this.manager.isRunningStart()) {
