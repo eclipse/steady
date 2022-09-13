@@ -132,7 +132,7 @@ public class Manager {
   }
 
   /**
-   * <p>addNewVulnerability.</p>
+   * Adds a vulnerability that does not yet exist in the backend. Called by {@link ImportCommand#run()}.
    *
    * @param vulnId a {@link java.lang.String} object
    */
@@ -377,6 +377,7 @@ public class Manager {
    */
   public void stop() {
     try {
+      log.info("Stopping manager...");
       executor.shutdownNow();
       executor.awaitTermination(24, TimeUnit.HOURS);
     } catch (InterruptedException e) {
@@ -410,26 +411,33 @@ public class Manager {
    * @return a {@link java.lang.String} object
    */
   public String status() {
+    HashMap<String, Object> statusMap = new HashMap<String, Object>();
+
+    // Counter for each status
     HashMap<VulnStatus, Integer> statusCount = new HashMap<VulnStatus, Integer>();
-    for (VulnStatus vulnStatus : new ArrayList<VulnStatus>(vulnerabilitiesStatus.values())) {
-      if (!statusCount.containsKey(vulnStatus)) {
-        statusCount.put(vulnStatus, 0);
+    for (String vul: vulnerabilitiesStatus.keySet()) {
+      if (!statusCount.containsKey(vulnerabilitiesStatus.get(vul))) {
+        statusCount.put(vulnerabilitiesStatus.get(vul), 0);
       }
-      statusCount.put(vulnStatus, statusCount.get(vulnStatus) + 1);
+      statusCount.put(vulnerabilitiesStatus.get(vul), statusCount.get(vulnerabilitiesStatus.get(vul)) + 1);
     }
+    statusMap.put("count", statusCount);
+
+    // New vulns
     HashMap<String, VulnStatus> newVulnStatus = new HashMap<String, VulnStatus>();
     for (String vulnId : newVulnerabilities) {
       newVulnStatus.put(vulnId, vulnerabilitiesStatus.get(vulnId));
-    }
-    HashMap<String, Object> statusMap = new HashMap<String, Object>();
-    statusMap.put("count", statusCount);
+    }    
     statusMap.put("new_vulnerabilities", newVulnerabilities);
+
+    // Failures
     HashMap<String, String> failureReasons = new HashMap<String, String>();
     for (String vulnId : failures.keySet()) {
       failureReasons.put(vulnId, failures.get(vulnId).toString());
     }
     statusMap.put("failures", failureReasons);
-    String statusStr = new Gson().toJson(statusMap);
-    return statusStr;
+
+    // Return JSON
+    return new Gson().toJson(statusMap);
   }
 }
