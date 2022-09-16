@@ -48,23 +48,23 @@ setup (){
     # Create directories
     #mkdir -p $DIR/certs
     for s in $conf_services; do
-        mkdir -p $DIR/conf/$s
+        mkdir -p $DIR/$s/conf
     done
     for s in $data_services; do
-        mkdir -p $DIR/data/$s
+        mkdir -p $DIR/$s/data
     done
 
     # Download all necessary files
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/docker-compose-new.yml -o ./$DIR/docker-compose.yml
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/.env.sample            -o ./$DIR/.env
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/start-steady.sh        -o ./$DIR/start-steady.sh
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/docker-compose.yml -o ./$DIR/docker-compose.yml
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/.env.sample        -o ./$DIR/.env
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/start-steady.sh    -o ./$DIR/start-steady.sh
     chmod 744 ./$DIR/start-steady.sh
 
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/haproxy/conf/haproxy.cfg                                -o ./$DIR/conf/haproxy/haproxy.cfg
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/postgresql/docker-entrypoint-initdb.d/10-vulas-setup.sh -o ./$DIR/conf/postgresql/10-vulas-setup.sh 
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/cache/nginx.conf                                        -o ./$DIR/conf/cache/nginx.conf
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/kb-importer/conf/kaybeeconf.yaml.sample                 -o ./$DIR/conf/kb-importer/kaybeeconf.yaml.sample
-    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/rest-backend/conf/restbackend.properties                -o ./$DIR/conf/rest-backend/restbackend.properties
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/haproxy/conf/haproxy.cfg                  -o ./$DIR/haproxy/conf/haproxy.cfg
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/postgresql/conf/10-vulas-setup.sh         -o ./$DIR/postgresql/conf/10-vulas-setup.sh 
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/cache/conf/nginx.conf                     -o ./$DIR/cache/conf/nginx.conf
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/kb-importer/conf/kaybeeconf.yaml.sample   -o ./$DIR/kb-importer/conf/kaybeeconf.yaml.sample
+    curl -s https://raw.githubusercontent.com/eclipse/steady/$TAG/docker/rest-backend/conf/restbackend.properties  -o ./$DIR/rest-backend/conf/restbackend.properties
 
     # Create default configuration in user's home directory
     home_config="$HOME/.steady.properties"

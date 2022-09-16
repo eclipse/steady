@@ -16,22 +16,31 @@
  * SPDX-License-Identifier: Apache-2.0
  * SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
  */
-package org.eclipse.steady.kb;
+package org.eclipse.steady.shared.util;
 
-import org.junit.Test;
+/**
+ * Thrown to indicate a problem when calling OS-level services.
+ */
+public class ProcessWrapperException extends Exception {
 
-public class MainTest {
-  private static final String SPACE = " ";
+  private static final long serialVersionUID = 1L;
 
-  @Test
-  public void testHelp() {
-    String args = "help";
-    Main.main(args.split(SPACE));
+  /**
+   * <p>Constructor for ProcessWrapperException.</p>
+   *
+   * @param _message a {@link java.lang.String} object.
+   */
+  public ProcessWrapperException(String _message) {
+    super(_message);
   }
 
-  @Test
-  public void testVersion() {
-    String args = "version";
-    Main.main(args.split(SPACE));
+  /**
+   * <p>Constructor for ProcessWrapperException.</p>
+   *
+   * @param _message a {@link java.lang.String} object.
+   * @param _cause a {@link java.lang.Throwable} object.
+   */
+  public ProcessWrapperException(String _message, Throwable _cause) {
+    super(_message, _cause);
   }
 }

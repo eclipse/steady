@@ -27,6 +27,7 @@ import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Set;
 
 import org.eclipse.steady.shared.enums.DigestAlgorithm;
@@ -67,22 +68,6 @@ public class FileUtilTest {
   }
 
   @Test
-  public void testCopyFile() {
-    try {
-      final VulasConfiguration cfg = new VulasConfiguration();
-      final Path tmp_dir = cfg.getTmpDir();
-      final Path source_file = Paths.get("./src/test/resources/Outer.jar");
-      final Path target_file = FileUtil.copyFile(source_file, tmp_dir);
-      assertEquals(
-          FileUtil.getDigest(source_file.toFile(), DigestAlgorithm.SHA1),
-          FileUtil.getDigest(target_file.toFile(), DigestAlgorithm.SHA1));
-    } catch (IOException e) {
-      e.printStackTrace();
-      assertEquals(true, false);
-    }
-  }
-
-  @Test
   public void testGetJarFilePathsForResources() {
     final String[] resources = new String[] {"LICENSE-junit.txt"}; // Contained in junit-4.12.jar
     final Set<String> jars =
@@ -113,5 +98,49 @@ public class FileUtilTest {
     final String name3 =
         FileUtil.getFileName(Paths.get("./project/js/hello.io.min.js").toString(), false);
     assertEquals("hello.io.min", name3);
+  }
+
+  @Test
+  public void testCopy() {
+    try {
+      // Copy file and keep name
+      Path source = Paths.get("./src/test/resources/foo.txt");
+      Path target_dir = Paths.get("./target");
+      Path target_name = null;
+      Path target = FileUtil.copy(source, target_dir, target_name, StandardCopyOption.REPLACE_EXISTING);
+      assertTrue(FileUtil.isAccessibleFile("./target/foo.txt"));
+      assertEquals(
+          FileUtil.getDigest(source.toFile(), DigestAlgorithm.SHA1),
+          FileUtil.getDigest(target.toFile(), DigestAlgorithm.SHA1));
+
+      // Copy file and change name
+      source = Paths.get("./src/test/resources/foo.txt");
+      target_dir = Paths.get("./target");
+      target_name = Paths.get("bar.txt");
+      target = FileUtil.copy(source, target_dir, target_name, StandardCopyOption.REPLACE_EXISTING);
+      assertTrue(FileUtil.isAccessibleFile("./target/bar.txt"));
+      assertEquals(
+          FileUtil.getDigest(source.toFile(), DigestAlgorithm.SHA1),
+          FileUtil.getDigest(target.toFile(), DigestAlgorithm.SHA1));
+
+      // Copy dir and keep name
+      source = Paths.get("./src/test/resources/foo");
+      target_dir = Paths.get("./target");
+      target_name = null;
+      target = FileUtil.copy(source, target_dir, target_name, StandardCopyOption.REPLACE_EXISTING);
+      assertTrue(FileUtil.isAccessibleFile("./target/foo/bar/bar.baz"));
+      assertTrue(FileUtil.isAccessibleDirectory("./target/foo/bar"));
+
+      // Copy dir and change name
+      source = Paths.get("./src/test/resources/foo");
+      target_dir = Paths.get("./target");
+      target_name = Paths.get("baz");
+      target = FileUtil.copy(source, target_dir, target_name, StandardCopyOption.REPLACE_EXISTING);
+      assertTrue(FileUtil.isAccessibleFile("./target/baz/bar/bar.baz"));
+      assertTrue(FileUtil.isAccessibleDirectory("./target/baz/bar"));
+    } catch (IOException e) {
+      e.printStackTrace();
+      assertTrue(false);
+    }
   }
 }

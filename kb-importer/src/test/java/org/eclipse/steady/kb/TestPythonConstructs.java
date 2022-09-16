@@ -50,7 +50,7 @@ public class TestPythonConstructs {
   }
 
   @Test
-  public void testImport() {
+  public void testImportCommand() {
     Commit commit = new Commit();
     commit.setBranch("master");
     commit.setCommitId("adbca5e4db42542575734b8e5d26961c8ada7265");

@@ -1009,7 +1009,15 @@ public class BackendConnector {
   public boolean isBugExisting(String _bug) throws BackendConnectionException {
     final HttpResponse response =
         new BasicHttpRequest(HttpMethod.OPTIONS, PathBuilder.bug(_bug), null).send();
-    return response.isOk();
+    if (response.isOk()) {
+      return response.isOk();
+    } else if (response.isNotFound()) {
+      return false;
+    } else {
+      throw new BackendConnectionException(
+          "Got response code " + response.getStatus() + " when communicating with the backend",
+          null);
+    }
   }
 
   /**
@@ -1039,6 +1047,21 @@ public class BackendConnector {
             .addCondition(new StatusCondition(HttpURLConnection.HTTP_OK))
             .setPayload(_json, null, false));
     req_list.send();
+  }
+
+  /**
+   * <p>deleteBug.</p>
+   *
+   * @param _bugId a {@link java.lang.String} object.
+   * @throws org.eclipse.steady.backend.BackendConnectionException if any.
+   */
+  public void deleteBug(String _bugId) throws BackendConnectionException {
+
+    final BasicHttpRequest del_req =
+        new BasicHttpRequest(HttpMethod.DELETE, PathBuilder.bug(_bugId));
+    // payload cannot be empty otherwise request doesn t work
+    del_req.setPayload("[]", "application/json", true);
+    del_req.send();
   }
 
   /**
@@ -1089,7 +1112,12 @@ public class BackendConnector {
     BasicHttpRequest request =
         new BasicHttpRequest(HttpMethod.GET, PathBuilder.bugAffectedLibs(_bugId), params);
     if (_g != null) request.setGoalContext(_g);
-    final String json = request.send().getBody();
+    final HttpResponse response = request.send();
+    if (!response.isOk()) {
+      throw new BackendConnectionException(
+          "Got respose " + response.getStatus() + " when communicating with the backend", null);
+    }
+    final String json = response.getBody();
     return (AffectedLibrary[]) JacksonUtil.asObject(json, AffectedLibrary[].class);
   }
 
@@ -1437,11 +1465,15 @@ public class BackendConnector {
     String json = null;
     Artifact[] result = null;
 
-    json =
+    final HttpResponse response =
         new BasicHttpRequest(
                 Service.CIA, HttpMethod.GET, PathBuilder.artifactsGroupVersion(_g, _a), null)
-            .send()
-            .getBody();
+            .send();
+    if (!response.isOk()) {
+      throw new BackendConnectionException(
+          "Got respose " + response.getStatus() + " when communicating with the backend", null);
+    }
+    json = response.getBody();
     BackendConnector.log.info("artifacts for  " + _g + ":" + _a + " received from backend");
     if (json != null) result = (Artifact[]) JacksonUtil.asObject(json, Artifact[].class);
 
@@ -1610,7 +1642,13 @@ public class BackendConnector {
     BasicHttpRequest request =
         new BasicHttpRequest(
             HttpMethod.GET, PathBuilder.affectedLibs(_bugId, _group, _artifact, _version), params);
-    String json = request.send().getBody();
+
+    final HttpResponse response = request.send();
+    if (!response.isOk()) {
+      throw new BackendConnectionException(
+          "Got respose " + response.getStatus() + " when communicating with the backend", null);
+    }
+    String json = response.getBody();
     if (json == null) {
       json = "[]";
     }

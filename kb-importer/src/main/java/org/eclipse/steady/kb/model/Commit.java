@@ -21,7 +21,7 @@ package org.eclipse.steady.kb.model;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Commit information
+ * A commit in a statement.yaml file.
  */
 public class Commit {
   private String timestamp;

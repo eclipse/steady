@@ -16,31 +16,9 @@
  * SPDX-License-Identifier: Apache-2.0
  * SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
  */
-package org.eclipse.steady.kb.exception;
-
 /**
- * Validation exception
+ * Classes in this package hold and encapsulate the information contained in
+ * statement.yaml files coming from Project KB. The statement itself corresponds
+ * to class {@link Vulnerability}.
  */
-public class ValidationException extends Exception {
-
-  private static final long serialVersionUID = 4113470472092415302L;
-
-  /**
-   * <p>Constructor for ValidationException.</p>
-   *
-   * @param message a {@link java.lang.String} object
-   */
-  public ValidationException(String message) {
-    super(message);
-  }
-
-  /**
-   * <p>Constructor for ValidationException.</p>
-   *
-   * @param message a {@link java.lang.String} object
-   * @param cause a {@link java.lang.Throwable} object
-   */
-  public ValidationException(String message, Throwable cause) {
-    super(message, cause);
-  }
-}
+package org.eclipse.steady.kb.model;

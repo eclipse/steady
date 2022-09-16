@@ -21,7 +21,7 @@ package org.eclipse.steady.kb.model;
 import java.util.List;
 
 /**
- * <p>Note class.</p>
+ * A note contained in a statement.yaml file.
  */
 public class Note {
   private List<String> links;

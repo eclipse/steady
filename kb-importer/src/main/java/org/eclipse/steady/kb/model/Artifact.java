@@ -19,7 +19,7 @@
 package org.eclipse.steady.kb.model;
 
 /**
- * <p>Artifact class.</p>
+ * Information about the affectedness of artifacts contained in a statement.yaml file.
  */
 public class Artifact {
   private String id;

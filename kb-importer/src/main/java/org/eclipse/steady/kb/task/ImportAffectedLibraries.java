@@ -18,21 +18,24 @@
  */
 package org.eclipse.steady.kb.task;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.backend.BackendConnectionException;
 import org.eclipse.steady.backend.BackendConnector;
-import org.eclipse.steady.kb.command.Command;
+import org.eclipse.steady.kb.ImportCommand;
 import org.eclipse.steady.kb.model.Artifact;
 import org.eclipse.steady.kb.model.Vulnerability;
 import org.eclipse.steady.shared.enums.AffectedVersionSource;
 import org.eclipse.steady.shared.json.model.AffectedConstructChange;
 import org.eclipse.steady.shared.json.model.AffectedLibrary;
 import org.eclipse.steady.shared.json.model.LibraryId;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.packageurl.MalformedPackageURLException;
@@ -45,16 +48,23 @@ import com.github.packageurl.PackageURL;
  * </p>
  */
 public class ImportAffectedLibraries implements Task {
-  private static final String OVERWRITE_OPTION = "o";
+
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
 
   /** {@inheritDoc} */
   public void execute(
       Vulnerability vuln, HashMap<String, Object> args, BackendConnector backendConnector)
-      throws MalformedPackageURLException, BackendConnectionException, JsonProcessingException {
+      throws MalformedPackageURLException, BackendConnectionException, JsonProcessingException,
+          IOException {
+
+    log.info("Initiating ImportAffectedLibraries for vulnerability " + vuln.getVulnId());
+
     List<Artifact> artifacts = vuln.getArtifacts();
     if (artifacts == null || artifacts.isEmpty()) {
       return;
+    }
+    if (args.containsKey(ImportCommand.DELETE) && (boolean) args.get(ImportCommand.DELETE)) {
+      backendConnector.deletePatchEvalResults(vuln.getVulnId(), AffectedVersionSource.KAYBEE);
     }
 
     List<AffectedLibrary> affectedLibsToUpsert = new ArrayList<AffectedLibrary>();
@@ -71,7 +81,7 @@ public class ImportAffectedLibraries implements Task {
               vuln.getVulnId(), purlGroup, purlArtifact, purlVersion, AffectedVersionSource.KAYBEE);
       if (affectedLibs != null && affectedLibs.length > 0) {
         AffectedLibrary affectedLibrary = affectedLibs[0];
-        Boolean overwrite = (Boolean) args.get(OVERWRITE_OPTION);
+        Boolean overwrite = (Boolean) args.get(ImportCommand.OVERWRITE_OPTION);
         if (overwrite || affectedLibrary.getAffected() == null) {
           setAfftectedLib(artifact, affectedLibrary);
           affectedLibsToUpsert.add(affectedLibrary);
@@ -125,6 +135,8 @@ public class ImportAffectedLibraries implements Task {
       backendConnector.uploadBugAffectedLibraries(
           null, vuln.getVulnId(), json, AffectedVersionSource.KAYBEE);
     }
+
+    log.info("ImportAffectedLibraries: " + vuln.getVulnId() + " complete");
   }
 
   private void setAfftectedLib(Artifact artifact, AffectedLibrary affectedLibrary) {
@@ -132,11 +144,5 @@ public class ImportAffectedLibraries implements Task {
     affectedLibrary.setExplanation(artifact.getReason());
     affectedLibrary.setAffectedcc(Collections.<AffectedConstructChange>emptyList());
     affectedLibrary.setSource(AffectedVersionSource.KAYBEE);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public Command.NAME getCommandName() {
-    return Command.NAME.IMPORT;
   }
 }
