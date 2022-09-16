@@ -23,6 +23,14 @@ As such, it addresses the OWASP Top 10 security risk A6, [Vulnerable and Outdate
 
 In comparison to other tools, the detection is code-centric and usage-based, which allows for more accurate detection and assessment than tools relying on meta-data.  It is a collection of client-side scan tools, microservices and rich [OpenUI5](https://openui5.hana.ondemand.com/) Web frontends.
 
+## Disclaimer
+
+Please note the following:
+- Steady can only find vulnerabilities maintained in [Project KB](https://github.com/sap/project-kb), which is Steady's only source of vulnerability information. The reason is that only Project KB provides information about fix commits in a systematic way and in machine readable format. As of September 2022, Project KB contains roughly 700+ vulnerabilities, with little coverage of the years 2021 and later.
+- The [ideal Steady setup](https://eclipse.github.io/steady/admin/tutorials/docker/) is to run the Docker Compose application on an internal cloud, with CI/CD systems and developer work stations connecting to that instance. This makes the operation of Steady more heavy-weight compared to other open source vulnerablity scanners like [OWASP Dependency Check](https://owasp.org/www-project-dependency-check/). This architecture comes with some advantages and disadvantages. For example, scan results from different systems are uploaded to such central server, which offers a user interface with various features to explore application dependencies and understand vulnerability exploitability. On the other hand, the architecture makes it more difficult to run some quick tests.
+
+As a consequence, we recommend Steady primarily for organizations that can afford (a) hosting Steady on their internal cloud and (b) dedicating resources to contribute to the vulnerability information in [Project KB](https://github.com/sap/project-kb).
+
 ## Quickstart
 
 This section provides the bare minimum to setup Steady and to use its Maven plugin for scanning a Java application.
@@ -33,7 +41,7 @@ This section provides the bare minimum to setup Steady and to use its Maven plug
 
     **Notes**:
     - Tested with Docker 20.10.11 + Docker Compose 1.29.2 on macOS 12.3.1, and Docker 20.10.15 + Docker Compose 1.29.0 on Ubuntu 20.04.4 and 18.04.6.
-    - During its first execution, triggered by the setup script or directly using `start-steady.sh -s ui`, the backend will be bootstrapped by downloading and processing code-level information of hundreds of vulnerabilities maintained in the open-source knowledge base [Project KB](https://github.com/sap/project-kb). While the bootstrapping can take up to one hour, later updates will import the delta on a daily basis. Run `start-steady.sh -s none` to shut down all Docker Compose services of the backend.
+    - During its first execution, triggered by the setup script or directly using `start-steady.sh -s ui`, the backend will be bootstrapped by downloading and processing code-level information of hundreds of vulnerabilities maintained in the open-source knowledge base [Project KB](https://github.com/sap/project-kb). While the bootstrapping can take up to two hours, later updates will import the delta on a daily basis. Run `start-steady.sh -s none` to shut down all Docker Compose services of the backend.
 
 2. A Steady **scan client**, e.g. the Maven plugin, analyzes the code of your application project and its dependencies. Being [available on Maven Central](https://search.maven.org/search?q=g:org.eclipse.steady), the clients do not require any installation. However, they need to be run whenever your application's code or dependencies change.
 
@@ -47,7 +55,7 @@ This section provides the bare minimum to setup Steady and to use its Maven plug
 
 ## History
 
-[Originally developed](https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en) by [SAP Security Research](https://www.sap.com/documents/2017/12/cc047065-e67c-0010-82c7-eda71af511fa.html), the tool is productively used at SAP since late 2016 (but an earlier prototype was available since 2015). In April 2017, the tool became the officially recommended open-source scan solution for Java (and then Python) applications at SAP. As of April 2019, it has been used to perform 1M+ scans of ~1000 Java and Python development projects, and its adoption is growing at a steady pace.
+[Originally developed](https://scholar.google.com/citations?user=FOEVZyYAAAAJ&hl=en) by [SAP Security Research](https://www.sap.com/documents/2017/12/cc047065-e67c-0010-82c7-eda71af511fa.html), the tool has been productively used at SAP between late 2016 and April 2021. As of April 2017, the tool was the officially recommended open-source scan solution for Java (and then Python) applications at SAP. As of April 2019, it has been used to perform 1M+ scans of ~1000 Java and Python development projects.
 
 The tool approach is best described in the following scientific papers, please cite these if you use the tool for your research work:
 
