@@ -62,8 +62,8 @@ public class MvnPluginInstr extends AbstractVulasMojo {
     final Path lib_dir = this.vulasConfiguration.getDir(CoreConfiguration.INSTR_LIB_DIR);
     final Path incl_dir = this.vulasConfiguration.getDir(CoreConfiguration.INSTR_INCLUDE_DIR);
 
-    final Path incl_agent = FileUtil.copyFile(this.getAgentJarFile().toPath(), incl_dir);
-    final Path lib_agent = FileUtil.copyFile(this.getAgentJarFile().toPath(), lib_dir);
+    final Path incl_agent = FileUtil.copy(this.getAgentJarFile().toPath(), incl_dir, null);
+    final Path lib_agent = FileUtil.copy(this.getAgentJarFile().toPath(), lib_dir, null);
 
     getLog()
         .info(
