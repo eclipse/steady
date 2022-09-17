@@ -10,4 +10,4 @@ java \
 	-Dhttps.proxyHost=$HTTPS_PROXY_HOST \
 	-Dhttps.proxyPort=$HTTPS_PROXY_PORT \
     -Dspring.profiles.active=docker \
-	-jar /vulas/patch-lib-analyzer.jar $PATCHEVAL_OPTS
+	-jar /steady/patch-lib-analyzer.jar $PATCHEVAL_OPTS

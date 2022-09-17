@@ -1,5 +1,5 @@
-# https://hub.docker.com/layers/eclipse-temurin/library/eclipse-temurin/11.0.15_10-jre/images/sha256-1543416e05e9fde8ffede76cd5f0955b640d7159bdbff8574eed6560a98e4ad3?context=explore
-FROM eclipse-temurin@sha256:1543416e05e9fde8ffede76cd5f0955b640d7159bdbff8574eed6560a98e4ad3
+# https://hub.docker.com/layers/library/eclipse-temurin/11.0.16.1_1-jre/images/sha256-ba66fe69ca119df55837f1e1185a242912ebb67431b332c67b153a8dbbe42106?context=explore
+FROM eclipse-temurin@sha256:ba66fe69ca119df55837f1e1185a242912ebb67431b332c67b153a8dbbe42106
 
 LABEL maintainer="steady-dev@eclipse.org"
 
