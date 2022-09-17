@@ -11,9 +11,9 @@
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4202/badge)](https://bestpractices.coreinfrastructure.org/projects/4202)
 [![REUSE status](https://api.reuse.software/badge/github.com/eclipse/steady)](https://api.reuse.software/info/github.com/eclipse/steady)
 
-**Discover, assess and mitigate known vulnerabilities in your Java and Python projects**
+**Discover, assess and mitigate known vulnerabilities in your Java projects**
 
-Eclipse Steady supports software development organizations in regards to the secure use of open-source components during application development. The tool analyzes **Java** and **Python** applications in order to:
+Eclipse Steady supports software development organizations in regards to the secure use of open-source components during application development. The tool analyzes **Java** applications in order to:
 
 - detect whether they depend on open-source components with known vulnerabilities,
 - collect evidence regarding the execution of vulnerable code in a given application context (through the combination of static and dynamic analysis techniques), and
@@ -85,13 +85,13 @@ To build/test the entire project, the following tools are needed:
 
 ## Build and Test
 
-Eclipse Steady is built with Maven. To enable the support for Gradle the profile `gradle` needs to be activated (`-P gradle`)
+Eclipse Steady is built with Maven. The module `lang-python` requires Python 3 to be installed. To enable the support for Gradle the profile `gradle` needs to be activated (`-P gradle`).
 
 ```sh
 mvn clean install
 ```
 
-During the `install`ation phase of `mvn` all the tests are run. Long-running tests can be disabled with the flag `-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow`. All the tests can be disabled with the flag `-DskipTests`.
+During the `install`ation phase of `mvn` all the tests are run. Long-running tests can be disabled with the flag `-DexcludedGroups=org.eclipse.steady.shared.categories.Slow`.
 
 ## Limitations
 
@@ -101,14 +101,6 @@ Other limitations:
 
 - Static and dynamic analyses are not implemented for Python
 - Java 9 multi-release archives are not supported (classes below `META-INF/versions` are simply ignored)
-
-## Todo (upcoming changes)
-
-The following is a subset of pending feature requests:
-
-- Static and dynamic analysis for Python
-- Support of JavaScript (client- and server-side)
-- UI dashboards for workspaces
 
 ## Acknowledgement 
 
