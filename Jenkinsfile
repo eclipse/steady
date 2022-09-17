@@ -81,14 +81,14 @@ spec:
       }
     }
     // Verifies that the -javadoc and -sources artifacts can be generated (by enabling the
-    // javadoc profile contained in three pom.xml files). Also verifies that the build
+    // prepare-release profile contained in three pom.xml files). Also verifies that the build
     // is reproducible, and that Spotbugs checks do not fail (cf.
     // https://eclipse.github.io/steady/contributor/#contribution-content-guidelines).
-    stage('Create javadoc + sources, Verify Spotbugs and Reproducibility') {
+    stage('Create javadoc + sources + CycloneDX BOM, Verify Spotbugs and Reproducibility') {
       steps {
         container('maven') {
           sh 'export MAVEN_OPTS="-Xms4g -Xmx8g"'
-          sh 'mvn -B -e -P gradle,javadoc \
+          sh 'mvn -B -e -P gradle,prepare-release \
                   -Dspring.standalone \
                   -DskipTests \
                   -Dvulas.shared.m2Dir=/home/jenkins/agent/workspace \
@@ -96,7 +96,7 @@ spec:
                   -Dspotbugs.includeFilterFile=findbugs-include.xml \
                   -Dspotbugs.failOnError=true \
                   clean install com.github.spotbugs:spotbugs-maven-plugin:4.2.3:check'
-          // sh 'mvn -B -e -P javadoc \
+          // sh 'mvn -B -e -P prepare-release \
           //         -Dspring.standalone \
           //         -DskipTests \
           //         -Dreference.repo=https://repo.maven.apache.org/maven2 \
@@ -132,7 +132,7 @@ spec:
             sh 'gpg --batch --import "${KEYRING}"'
             sh 'for fpr in $(gpg --list-keys --with-colons  | awk -F: \'/fpr:/ {print $10}\' | sort -u); do echo -e "5\ny\n" |  gpg --batch --command-fd 0 --expert --edit-key ${fpr} trust; done'
           }
-          sh 'mvn -B -e -P gradle,javadoc,release \
+          sh 'mvn -B -e -P gradle,prepare-release,release \
                   -Dspring.standalone \
                   -DskipTests \
                   clean deploy'
