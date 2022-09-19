@@ -1,4 +1,5 @@
-FROM openjdk:11-jre-slim
+# https://hub.docker.com/layers/library/eclipse-temurin/11.0.16.1_1-jre/images/sha256-ba66fe69ca119df55837f1e1185a242912ebb67431b332c67b153a8dbbe42106?context=explore
+FROM eclipse-temurin@sha256:ba66fe69ca119df55837f1e1185a242912ebb67431b332c67b153a8dbbe42106
 
 LABEL maintainer="steady-dev@eclipse.org"
 
