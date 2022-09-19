@@ -276,9 +276,13 @@ public class FileUtil {
    * taken.
    *
    * @throws java.io.IOException if any.
-   * @throws java.lang.InterruptedException if any.
    * @throws java.lang.IllegalArgumentException if _source is neither an
    * existing file nor directory or the target folder does not exist.
+   * @param _source a path to the source file
+   * @param _target_dir a path to the target file
+   * @param _target_name a name of the target file or directory (optional)
+   * @param options a {@link java.nio.file.CopyOption} object
+   * @return a {@link java.nio.file.Path} object to the target
    */
   public static Path copy(Path _source, Path _target_dir, Path _target_name, CopyOption... options)
       throws IOException, IllegalArgumentException {
@@ -494,6 +498,7 @@ public class FileUtil {
 
   /**
    * Returns the CRC-32 checksum for the given byte array.
+   *
    * @param _bytes a byte array
    * @return the CRC-32 checksum of the array
    */
@@ -506,6 +511,7 @@ public class FileUtil {
   /**
    * Returns the CRC-32 checksum for the given {@link File}.
    * Returns -1 if the checksum cannot be computed.
+   *
    * @param _file a file
    * @return the CRC-32 checksum of the file
    */
