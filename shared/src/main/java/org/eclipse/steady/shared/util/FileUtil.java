@@ -24,12 +24,15 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
+import java.nio.file.FileVisitResult;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.CopyOption;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
@@ -267,22 +270,70 @@ public class FileUtil {
   }
 
   /**
-   * <p>copyFile.</p>
+   * Copies the given source file or directory to the given target directory. If
+   * no _target_name is provided, the source will be copied with the identical
+   * name into _target_dir. If _target_name is provided, that name will be
+   * taken.
    *
-   * @param _source_file a {@link java.nio.file.Path} object.
-   * @param _target_dir a {@link java.nio.file.Path} object.
-   * @return a {@link java.nio.file.Path} object.
    * @throws java.io.IOException if any.
+   * @throws java.lang.IllegalArgumentException if _source is neither an
+   * existing file nor directory or the target folder does not exist.
+   * @param _source a path to the source file
+   * @param _target_dir a path to the target file
+   * @param _target_name a name of the target file or directory (optional)
+   * @param options a {@link java.nio.file.CopyOption} object
+   * @return a {@link java.nio.file.Path} object to the target
    */
-  public static Path copyFile(Path _source_file, Path _target_dir) throws IOException {
-    final Path to = _target_dir.resolve(_source_file.getFileName());
-    try (final InputStream is = new FileInputStream(_source_file.toFile());
-        final OutputStream os = new FileOutputStream(to.toFile())) {
-      final byte[] byte_buffer = new byte[1024];
-      int len = 0;
-      while ((len = is.read(byte_buffer)) != -1) os.write(byte_buffer, 0, len);
+  public static Path copy(Path _source, Path _target_dir, Path _target_name, CopyOption... options)
+      throws IOException, IllegalArgumentException {
+
+    // Check args
+    if (!FileUtil.isAccessibleFile(_source) && !FileUtil.isAccessibleDirectory(_source)) {
+      throw new IllegalArgumentException("Source [" + _source + "] does not exist");
+    } else if (!FileUtil.isAccessibleDirectory(_target_dir)) {
+      throw new IllegalArgumentException(
+          "Target [" + _target_dir + "] does not exist or is not a directory");
     }
-    return to;
+
+    Path p = _target_dir.resolve(_target_name == null ? _source.getFileName() : _target_name);
+
+    // A single file is copied
+    if (FileUtil.isAccessibleFile(_source)) {
+      log.info("Copying [" + _source + "] to [" + p + "]");
+      Files.copy(_source, p, options);
+    }
+    // A directory is copied
+    else if (FileUtil.isAccessibleDirectory(_source)) {
+      Files.walkFileTree(
+          _source,
+          new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+                throws IOException {
+              Path p =
+                  _target_dir
+                      .resolve(_target_name == null ? _source.getFileName() : _target_name)
+                      .resolve(_source.relativize(dir));
+              log.debug("Visiting dir [" + dir + "], creating dir [" + p + "]");
+              Files.createDirectories(p);
+              return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                throws IOException {
+              Path p =
+                  _target_dir
+                      .resolve(_target_name == null ? _source.getFileName() : _target_name)
+                      .resolve(_source.relativize(file));
+              log.debug("Visiting file [" + file + "], copying to [" + p + "]");
+              Files.copy(file, p, options);
+              return FileVisitResult.CONTINUE;
+            }
+          });
+    }
+
+    return p;
   }
 
   // Reading files
@@ -447,6 +498,7 @@ public class FileUtil {
 
   /**
    * Returns the CRC-32 checksum for the given byte array.
+   *
    * @param _bytes a byte array
    * @return the CRC-32 checksum of the array
    */
@@ -459,6 +511,7 @@ public class FileUtil {
   /**
    * Returns the CRC-32 checksum for the given {@link File}.
    * Returns -1 if the checksum cannot be computed.
+   *
    * @param _file a file
    * @return the CRC-32 checksum of the file
    */

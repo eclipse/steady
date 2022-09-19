@@ -43,3 +43,6 @@ google-java-format-*.jar
 docker/kb-importer/data/**
 **/*.buildinfo
 docker/kb-importer/data/**
+
+java-files.txt
+non-compliant-files.txt
