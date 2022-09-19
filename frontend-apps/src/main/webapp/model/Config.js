@@ -325,7 +325,7 @@ model.Config.loadData = function(oModel,sUrl, method) {
 	oModel.attachRequestFailed(function(oControlEvent){
 		if(oControlEvent.getParameters().statusCode=="503"){
 			sap.m.MessageBox.warning(
-				"The Vulas backend is in maintenance mode. Please come back later."
+				"The backend is in maintenance mode. Please come back later."
 			);
 		}
 	});
@@ -343,7 +343,7 @@ model.Config.loadDataSync = function(oModel,sUrl, method, tenant) {
 		console.log(oControlEvent.getParameters().statusCode);
 		if(oControlEvent.getParameters().statusCode=="503"){
 			sap.m.MessageBox.warning(
-				"The Vulas backend is in maintenance mode. Please come back later."
+				"The backend is in maintenance mode. Please come back later."
 			);
 		}
 	});
