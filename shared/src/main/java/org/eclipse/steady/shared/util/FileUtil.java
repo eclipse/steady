@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -282,44 +281,52 @@ public class FileUtil {
    * existing file nor directory or the target folder does not exist.
    */
   public static Path copy(Path _source, Path _target_dir, Path _target_name, CopyOption... options)
-    throws IOException, IllegalArgumentException {
+      throws IOException, IllegalArgumentException {
 
     // Check args
-    if(!FileUtil.isAccessibleFile(_source) && !FileUtil.isAccessibleDirectory(_source)) {
+    if (!FileUtil.isAccessibleFile(_source) && !FileUtil.isAccessibleDirectory(_source)) {
       throw new IllegalArgumentException("Source [" + _source + "] does not exist");
-    } else if(!FileUtil.isAccessibleDirectory(_target_dir)) {
-      throw new IllegalArgumentException("Target [" + _target_dir + "] does not exist or is not a directory");
+    } else if (!FileUtil.isAccessibleDirectory(_target_dir)) {
+      throw new IllegalArgumentException(
+          "Target [" + _target_dir + "] does not exist or is not a directory");
     }
 
     Path p = _target_dir.resolve(_target_name == null ? _source.getFileName() : _target_name);
 
     // A single file is copied
-    if(FileUtil.isAccessibleFile(_source)) {
+    if (FileUtil.isAccessibleFile(_source)) {
       log.info("Copying [" + _source + "] to [" + p + "]");
       Files.copy(_source, p, options);
     }
     // A directory is copied
-    else if(FileUtil.isAccessibleDirectory(_source)) {
-      Files.walkFileTree(_source, new SimpleFileVisitor<Path>() {
-          @Override
-          public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
-                  throws IOException {
-              Path p = _target_dir.resolve(_target_name == null ? _source.getFileName() : _target_name).resolve(_source.relativize(dir));
+    else if (FileUtil.isAccessibleDirectory(_source)) {
+      Files.walkFileTree(
+          _source,
+          new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+                throws IOException {
+              Path p =
+                  _target_dir
+                      .resolve(_target_name == null ? _source.getFileName() : _target_name)
+                      .resolve(_source.relativize(dir));
               log.debug("Visiting dir [" + dir + "], creating dir [" + p + "]");
               Files.createDirectories(p);
               return FileVisitResult.CONTINUE;
-          }
+            }
 
-          @Override
-          public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-                  throws IOException {
-              Path p = _target_dir.resolve(_target_name == null ? _source.getFileName() : _target_name).resolve(_source.relativize(file));
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                throws IOException {
+              Path p =
+                  _target_dir
+                      .resolve(_target_name == null ? _source.getFileName() : _target_name)
+                      .resolve(_source.relativize(file));
               log.debug("Visiting file [" + file + "], copying to [" + p + "]");
               Files.copy(file, p, options);
               return FileVisitResult.CONTINUE;
-          }
-        }
-      );
+            }
+          });
     }
 
     return p;

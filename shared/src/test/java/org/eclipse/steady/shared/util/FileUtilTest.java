@@ -74,7 +74,8 @@ public class FileUtilTest {
       Path source = Paths.get("./src/test/resources/foo.txt");
       Path target_dir = Paths.get("./target");
       Path target_name = null;
-      Path target = FileUtil.copy(source, target_dir, target_name, StandardCopyOption.REPLACE_EXISTING);
+      Path target =
+          FileUtil.copy(source, target_dir, target_name, StandardCopyOption.REPLACE_EXISTING);
       assertTrue(FileUtil.isAccessibleFile("./target/foo.txt"));
       assertEquals(
           FileUtil.getDigest(source.toFile(), DigestAlgorithm.SHA1),
