@@ -43,6 +43,8 @@ docker run -it --rm -v ${PWD}/docker:/exporter --env-file ./docker/.env -e mvn_f
 
 > In case you are running behind a proxy you need to configure it in the `--build-arg` arguments. Check the [predefined `ARG`s](https://docs.docker.com/engine/reference/builder/#predefined-args) documentation to know more.
 
+> In case you'd like to avoid downloading all dependencies by reusing your local Maven repository, add a volume as follows `-v "$HOME/.m2":/root/.m2`, see [here](https://hub.docker.com/_/maven/) for more information.
+
 As a result, the folders `docker/<component-name>` will contain compiled JARs (or WARs, depending on the component). The folder `docker/client-tools` will be populated with the JARs for client side tools (CLI, plugins, patchanalyzer).
 
 Additionally, you may want to make the artifacts available to the developers of your organization (e.g., through an internal Nexus or other artifact distribution system).
@@ -58,12 +60,18 @@ You are now ready to run the system with the generated archives and create the D
 You can create and run containers from the generated images.
 
 ```sh
-(cd docker && docker-compose -f docker-compose.yml -f docker-compose.build.yml up -d)
+(cd docker && docker-compose -f docker-compose.yml -f docker-compose.build.yml --profile vdb --profile ui up -d)
 ```
 
 To check everything started successfully, browse the page `http://localhost:8033/haproxy?stats`. All endpoints should appear as green.
 
 > `username` and `password` can be found in your `.env` file, be also advised that `rest-backend` could take more than 30 seconds to be ready to answer HTTP requests
+
+Run the following to stop all containers.
+
+```sh
+(cd docker && docker-compose -f docker-compose.yml -f docker-compose.build.yml --profile vdb --profile ui down)
+```
 
 ---
 

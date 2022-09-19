@@ -1,7 +1,0 @@
-vulas.backend.cveCache.refetchAllMs=7200000
-vulas.backend.cveCache.refetchSingleMs=10000
-vulas.backend.frontend.apps.dl.regex=
-vulas.backend.frontend.apps.sw.id.label=Software ID
-vulas.backend.frontend.apps.sw.id.mandatory=false
-vulas.backend.frontend.apps.wiki.url=https://eclipse.github.io/steady
-vulas.core.noThreads=AUTO

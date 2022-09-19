@@ -43,10 +43,6 @@ nav:
       - 'Deploy on Docker': 'admin/tutorials/docker.md'
       - 'Build JAVA archives/Docker images': 'admin/tutorials/build.md'
       - 'Push Docker images to a registry': 'admin/tutorials/registry.md'
-    #  - 'Deploy on Kubernetes with Kustomize': 'admin/tutorials/kustomize.md'
-    #  - 'Deploy on Kubernetes with Helm': 'admin/tutorials/helm.md'
-    - Misc:
-      - 'Kubernetes resources requirements': 'admin/tutorials/kubernetes_resources.md'
   - Contribute:
     - Contribute: contributor/index.md
     # - Tutorials:

@@ -21,10 +21,6 @@ bin/
 /.metadata/
 out/
 gradle.zip
-/docker/**/*.*ar
-/docker/.env
-/docker/data
-/docker/client-components
 /.vscode
 lang-java-reach-soot-init/lib/*.jar
 docs/site
@@ -33,16 +29,20 @@ docs/.tmp
 /*/src/main/webapp/model/Version.js
 values_dev.yaml
 test.yaml
-kubernetes/helm/vulnerability-assessment-tool-admin/charts/nginx-ingress/files/tls/*.key
-kubernetes/helm/vulnerability-assessment-tool-admin/charts/nginx-ingress/files/tls/*.crt
-/kubernetes/kustomize/secrets/*
-!/kubernetes/kustomize/secrets/*.sample
-/docker/**/import_vulas_kb.sh
-google-java-format-*.jar
 .DS_Store
-docker/kb-importer/data/**
 **/*.buildinfo
-docker/kb-importer/data/**
 
+# Created by the generator Docker container (/docker/Dockerfile and /docker/run.sh)
+/docker/**/*.*ar
+/docker/client-components
+/docker/all-components
+
+# Environment and data folders when running the Docker Compose app in the cloned repo
+/docker/.env
+/docker/*/data
+/docker/kb-importer/conf/kaybeeconf.yaml
+
+# Files created by .travis/check_code_style.sh
+google-java-format-*.jar
 java-files.txt
 non-compliant-files.txt

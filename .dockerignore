@@ -8,6 +8,5 @@ docs
 .git
 .vscode
 findbugs-exclude.xml
-kubernetes
 .gradle
 .gradle_home

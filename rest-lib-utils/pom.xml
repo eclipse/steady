@@ -507,7 +507,6 @@
 			            <exclude>**/*.tokens</exclude>
 			            <exclude>**/*.log</exclude>
 			            <exclude>**/.travis/**</exclude>
-			            <exclude>**/kubernetes/**</exclude>
 			            <exclude>**/docker/**</exclude>
 			            <exclude>**/docs/**</exclude>
 			            <exclude>**/.github/**</exclude>
