@@ -371,7 +371,9 @@ public class WarAnalyzer extends JarAnalyzer {
 
             // Instrument (if requested and not blacklisted)
             if (this.instrument && !this.instrControl.isBlacklistedClass(cn)) {
-              cv.setOriginalArchiveDigest(this.getSHA1());
+              // The WAR itself is not a dependency, hence, we do not set the digest
+              // cv.setOriginalArchiveDigest(this.getSHA1());
+
               cv.setAppContext(WarAnalyzer.getAppContext());
               if (cv.isInstrumented())
                 this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), null);

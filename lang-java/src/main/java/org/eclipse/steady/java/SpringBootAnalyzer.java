@@ -404,7 +404,9 @@ public class SpringBootAnalyzer extends JarAnalyzer {
 
             // Instrument (if requested and not blacklisted)
             if (this.instrument && !this.instrControl.isBlacklistedClass(cn)) {
-              cv.setOriginalArchiveDigest(this.getSHA1());
+              // The SpringBoot JAR itself is not a dependency, hence, we do not set the digest
+              // cv.setOriginalArchiveDigest(this.getSHA1());
+
               cv.setAppContext(SpringBootAnalyzer.getAppContext());
               if (cv.isInstrumented())
                 this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), null);
@@ -559,7 +561,7 @@ public class SpringBootAnalyzer extends JarAnalyzer {
             "No instrumented class found for Jar Entry [" + _entry.getName() + "]");
       }
     }
-    // Called during rewrite of WAR
+    // Called during rewrite of JARs
     else if (_regex.equals("^BOOT-INF/lib/.*.jar$")) {
       JarAnalyzer ja = null;
       try {

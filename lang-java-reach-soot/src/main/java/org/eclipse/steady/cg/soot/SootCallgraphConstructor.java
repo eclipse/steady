@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
@@ -74,14 +75,12 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
 
   private VulasConfiguration vulasConfiguration = null;
 
-  /**
-   * The JAR to be analyzed.
-   */
-  // private String appJar = null;
   protected String classpath = null;
 
   private String appClasspath = null;
+
   protected final List<SootMethod> entrypoints = new ArrayList<>();
+
   private final Set<org.eclipse.steady.shared.json.model.ConstructId> filteredEP = new HashSet<>();
 
   private CallGraph callgraph = null;
@@ -133,7 +132,9 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
     if (this.classpath != null) {
       this.classpath += System.getProperty("path.separator");
       this.classpath += _cp;
-    } else this.classpath = _cp;
+    } else {
+      this.classpath = _cp;
+    }
     this.appClasspath = _cp;
 
     SootCallgraphConstructor.log.info(
@@ -233,9 +234,13 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
     }
 
     ArrayList<String> processDirs = new ArrayList<>();
-    processDirs.add(this.appClasspath);
-    Options.v().set_process_dir(processDirs);
+    final StringTokenizer tokenizer =
+        new StringTokenizer(this.appClasspath, System.getProperty("path.separator"));
+    while (tokenizer.hasMoreTokens()) {
+      processDirs.add(tokenizer.nextToken());
+    }
 
+    Options.v().set_process_dir(processDirs);
     Options.v().set_soot_classpath(this.classpath);
   }
 

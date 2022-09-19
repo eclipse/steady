@@ -410,7 +410,7 @@ public abstract class AbstractGoal implements Runnable {
 
     // Monitor mem consumption?
     if (this.memoThread != null) {
-      final Thread t = new Thread(this.memoThread, "vulas-memo");
+      final Thread t = new Thread(this.memoThread, "memo");
       t.setPriority(Thread.MIN_PRIORITY);
       t.start();
     }
