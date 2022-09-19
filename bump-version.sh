@@ -60,6 +60,3 @@ if [ -z $is_snap ]; then
   sed -i "" "s/${old_doc}/${new}/" docker/start-steady.sh
   sed -i "" "s/${old_doc}/${new}/" docker/.env.sample
 fi
-
-# Kubernetes doc files
-find kubernetes -name README.md -exec sed -i "" "s/${old}/${new}/" {} \;

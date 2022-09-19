@@ -96,10 +96,18 @@ if [[ $rc == 0 ]]; then
     exit 1
 fi
 
+# If run from the cloned repo, the file docker-compose.build.yaml can be used to
+# create new Docker images for snapshot versions. When run after
+# steady-setup.sh, the images will be downloaded from Docker Hub.
+build=""
+if [[ -f docker-compose.build.yml ]]; then
+    build="-f docker-compose.build.yml"
+fi
+
 # Start different sets of services
 case $SERVICES in
     none)
-        docker-compose -f ./docker-compose.yml stop
+        docker-compose -f ./docker-compose.yml $build stop
         rc=$?
         if [[ $rc == 0 ]]; then
             printf "Stopped all of Steady's Docker Compose services\n"
@@ -111,7 +119,7 @@ case $SERVICES in
     core)
         stop_ui
         stop_vdb
-        docker-compose -f ./docker-compose.yml up -d --build
+        docker-compose -f ./docker-compose.yml $build up -d --build
         rc=$?
         if [[ $rc == 0 ]]; then
             printf "Started Steady's core Docker Compose services\n"
@@ -122,7 +130,7 @@ case $SERVICES in
         ;;
     ui)
         stop_vdb
-        docker-compose -f ./docker-compose.yml --profile ui up -d --build
+        docker-compose -f ./docker-compose.yml $build --profile ui up -d --build
         rc=$?
         if [[ $rc == 0 ]]; then
             printf "Started Steady's core and UI Docker Compose services\n"
@@ -133,7 +141,7 @@ case $SERVICES in
         ;;
     vdb)
         stop_ui
-        docker-compose -f ./docker-compose.yml --profile vdb up -d --build
+        docker-compose -f ./docker-compose.yml $build --profile vdb up -d --build
         rc=$?
         if [[ $rc == 0 ]]; then
             printf "Started Steady's core and vdb Docker Compose services\n"
@@ -143,7 +151,7 @@ case $SERVICES in
         fi
         ;;
     all)
-        docker-compose -f ./docker-compose.yml --profile ui --profile vdb up -d --build
+        docker-compose -f ./docker-compose.yml $build --profile ui --profile vdb up -d --build
         rc=$?
         if [[ $rc == 0 ]]; then
             printf "Started all of Steady's Docker Compose services\n"
