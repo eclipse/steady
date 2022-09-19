@@ -11,9 +11,9 @@
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4202/badge)](https://bestpractices.coreinfrastructure.org/projects/4202)
 [![REUSE status](https://api.reuse.software/badge/github.com/eclipse/steady)](https://api.reuse.software/info/github.com/eclipse/steady)
 
-**Discover, assess and mitigate known vulnerabilities in your Java and Python projects**
+**Discover, assess and mitigate known vulnerabilities in your Java projects**
 
-Eclipse Steady supports software development organizations in regards to the secure use of open-source components during application development. The tool analyzes **Java** and **Python** applications in order to:
+Eclipse Steady supports software development organizations in regards to the secure use of open-source components during application development. The tool analyzes **Java** applications in order to:
 
 - detect whether they depend on open-source components with known vulnerabilities,
 - collect evidence regarding the execution of vulnerable code in a given application context (through the combination of static and dynamic analysis techniques), and
@@ -40,7 +40,7 @@ This section provides the bare minimum to setup Steady and to use its Maven plug
     Download and run [`setup-steady.sh`](https://raw.githubusercontent.com/eclipse/steady/master/docker/setup-steady.sh) to install the backend on any host with a recent version of Docker/Docker Compose (the use of profiles requires a version >= 1.28, installable with `pip install docker-compose` or as [described here](https://github.com/docker/compose#where-to-get-docker-compose)).
 
     **Notes**:
-    - Tested with Docker 20.10.11 + Docker Compose 1.29.2 on macOS 12.3.1, and Docker 20.10.15 + Docker Compose 1.29.0 on Ubuntu 20.04.4 and 18.04.6.
+    - Tested with Docker 20.10.11 + Docker Compose 1.29.2 on Intel Macs with macOS 12.3.1, and Docker 20.10.15 + Docker Compose 1.29.0 on Ubuntu 20.04.4 and 18.04.6.
     - During its first execution, triggered by the setup script or directly using `start-steady.sh -s ui`, the backend will be bootstrapped by downloading and processing code-level information of hundreds of vulnerabilities maintained in the open-source knowledge base [Project KB](https://github.com/sap/project-kb). While the bootstrapping can take up to two hours, later updates will import the delta on a daily basis. Run `start-steady.sh -s none` to shut down all Docker Compose services of the backend.
 
 2. A Steady **scan client**, e.g. the Maven plugin, analyzes the code of your application project and its dependencies. Being [available on Maven Central](https://search.maven.org/search?q=g:org.eclipse.steady), the clients do not require any installation. However, they need to be run whenever your application's code or dependencies change.
@@ -85,13 +85,13 @@ To build/test the entire project, the following tools are needed:
 
 ## Build and Test
 
-Eclipse Steady is built with Maven. To enable the support for Gradle the profile `gradle` needs to be activated (`-P gradle`)
+Eclipse Steady is built with Maven. The module `lang-python` requires Python 3 to be installed. To enable the support for Gradle the profile `gradle` needs to be activated (`-P gradle`).
 
 ```sh
 mvn clean install
 ```
 
-During the `install`ation phase of `mvn` all the tests are run. Long-running tests can be disabled with the flag `-DexcludedGroups=com.sap.psr.vulas.shared.categories.Slow`. All the tests can be disabled with the flag `-DskipTests`.
+During the `install`ation phase of `mvn` all the tests are run. Long-running tests can be disabled with the flag `-DexcludedGroups=org.eclipse.steady.shared.categories.Slow`.
 
 ## Limitations
 
@@ -101,14 +101,7 @@ Other limitations:
 
 - Static and dynamic analyses are not implemented for Python
 - Java 9 multi-release archives are not supported (classes below `META-INF/versions` are simply ignored)
-
-## Todo (upcoming changes)
-
-The following is a subset of pending feature requests:
-
-- Static and dynamic analysis for Python
-- Support of JavaScript (client- and server-side)
-- UI dashboards for workspaces
+- Docker containers crash on Apple M1
 
 ## Acknowledgement 
 
