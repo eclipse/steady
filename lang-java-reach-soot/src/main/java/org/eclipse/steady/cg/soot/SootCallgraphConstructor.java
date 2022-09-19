@@ -234,11 +234,12 @@ public class SootCallgraphConstructor implements ICallgraphConstructor {
     }
 
     ArrayList<String> processDirs = new ArrayList<>();
-    final StringTokenizer tokenizer = new StringTokenizer(this.appClasspath, System.getProperty("path.separator"));
-    while(tokenizer.hasMoreTokens()) {
-       processDirs.add(tokenizer.nextToken());
+    final StringTokenizer tokenizer =
+        new StringTokenizer(this.appClasspath, System.getProperty("path.separator"));
+    while (tokenizer.hasMoreTokens()) {
+      processDirs.add(tokenizer.nextToken());
     }
-    
+
     Options.v().set_process_dir(processDirs);
     Options.v().set_soot_classpath(this.classpath);
   }
