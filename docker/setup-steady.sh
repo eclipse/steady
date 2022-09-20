@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REL="3.2.4"
+REL="3.2.5"
 DC_REQUIRED="1.28"
 
 usage () {
