@@ -40,7 +40,7 @@
     
     
       
-        <title>Getting started - Eclipse Steady 3.2.4 (Incubator Project)</title>
+        <title>Getting started - Eclipse Steady 3.2.5 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.4 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.5 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.2.4 (Incubator Project)
+              Eclipse Steady 3.2.5 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -290,12 +290,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.4 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.5 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.2.4 (Incubator Project)
+    Eclipse Steady 3.2.5 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -820,42 +820,6 @@
   </li>
 
         
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-3" type="checkbox" id="nav-3-3">
-    
-    <label class="md-nav__link" for="nav-3-3">
-      Misc
-    </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
-      <label class="md-nav__title" for="nav-3-3">
-        Misc
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../admin/tutorials/kubernetes_resources/" title="Kubernetes resources requirements" class="md-nav__link">
-      Kubernetes resources requirements
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
@@ -1016,7 +980,7 @@
 <ol>
 <li>
 <p>The Steady <strong>backend</strong>, a Docker Compose application, stores information about open-source vulnerabilities and scan results. It has to be installed once, ideally on a dedicated host, and must be running during application scans.</p>
-<p>Download and run <a href="https://raw.githubusercontent.com/eclipse/steady/release-3.2.4/docker/setup-steady.sh"><code>setup-steady.sh</code></a> to install the backend on any host with a recent version of Docker/Docker Compose (the use of profiles requires a version &gt;= 1.28, installable with <code>pip install docker-compose</code> or as <a href="https://github.com/docker/compose#where-to-get-docker-compose">described here</a>).</p>
+<p>Download and run <a href="https://raw.githubusercontent.com/eclipse/steady/release-3.2.5/docker/setup-steady.sh"><code>setup-steady.sh</code></a> to install the backend on any host with a recent version of Docker/Docker Compose (the use of profiles requires a version &gt;= 1.28, installable with <code>pip install docker-compose</code> or as <a href="https://github.com/docker/compose#where-to-get-docker-compose">described here</a>).</p>
 <p><strong>Notes</strong>: During its first execution, triggered by the setup script or directly using <code>start-steady.sh -s ui</code>, the backend will be bootstrapped by downloading and processing code-level information of hundreds of vulnerabilities maintained in the open-source knowledge base <a href="https://github.com/sap/project-kb">Project KB</a>. While the bootstrapping can take up to one hour, later updates will import the delta on a daily basis. Run <code>start-steady.sh -s none</code> to shut down all Docker Compose services of the backend.</p>
 </li>
 <li>

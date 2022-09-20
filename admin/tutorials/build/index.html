@@ -40,7 +40,7 @@
     
     
       
-        <title>Build JAVA archives/Docker images - Eclipse Steady 3.2.4 (Incubator Project)</title>
+        <title>Build JAVA archives/Docker images - Eclipse Steady 3.2.5 (Incubator Project)</title>
       
     
     
@@ -111,7 +111,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.4 (Incubator Project)" class="md-header-nav__button md-logo">
+        <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.5 (Incubator Project)" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -124,7 +124,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              Eclipse Steady 3.2.4 (Incubator Project)
+              Eclipse Steady 3.2.5 (Incubator Project)
             </span>
             <span class="md-header-nav__topic">
               
@@ -290,12 +290,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.4 (Incubator Project)" class="md-nav__button md-logo">
+    <a href="https://eclipse.github.io/steady/" title="Eclipse Steady 3.2.5 (Incubator Project)" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
     </a>
-    Eclipse Steady 3.2.4 (Incubator Project)
+    Eclipse Steady 3.2.5 (Incubator Project)
   </label>
   
     <div class="md-nav__source">
@@ -870,42 +870,6 @@
   </li>
 
         
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-3" type="checkbox" id="nav-3-3">
-    
-    <label class="md-nav__link" for="nav-3-3">
-      Misc
-    </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
-      <label class="md-nav__title" for="nav-3-3">
-        Misc
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../kubernetes_resources/" title="Kubernetes resources requirements" class="md-nav__link">
-      Kubernetes resources requirements
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
@@ -1108,7 +1072,7 @@
 <h2 id="customization">Customization<a class="headerlink" href="#customization" title="Permanent link">&para;</a></h2>
 <p>All the following commands are supposed to be executed from the root folder of the project.</p>
 <p>If you want to build images specific to a version you can checkout a stable version of Steady. Usually the <code>master</code> branch holds a <code>-SNAPSHOT</code> version.</p>
-<div class="codehilite"><pre><span></span>git checkout tags/release-3.2.4
+<div class="codehilite"><pre><span></span>git checkout tags/release-3.2.5
 </pre></div>
 <p>Make a copy of the sample configuration:</p>
 <div class="codehilite"><pre><span></span>cp docker/.env.sample docker/.env
@@ -1119,14 +1083,15 @@
 </blockquote>
 <h2 id="generate-java-archives">Generate JAVA archives<a class="headerlink" href="#generate-java-archives" title="Permanent link">&para;</a></h2>
 <p>At this point, you are ready to build the JAR/WAR artifacts with the following command:</p>
-<div class="codehilite"><pre><span></span>docker build --tag steady-generator:3.2.4 -f docker/Dockerfile .
-docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span>-DskipTests steady-generator:3.2.4
+<div class="codehilite"><pre><span></span>docker build --tag steady-generator:3.2.5 -f docker/Dockerfile .
+docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span>-DskipTests steady-generator:3.2.5
 </pre></div>
 <blockquote>
 <p>If the command above fails, add <code>-DreuseForks=False</code> flag to <code>mvn_flags</code>. As shown in the example below.</p>
-<div class="codehilite"><pre><span></span>docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span><span class="s1">&#39;-DskipTests -DreuseForks=False&#39;</span> steady-generator:3.2.4
+<div class="codehilite"><pre><span></span>docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/docker:/exporter --env-file ./docker/.env -e <span class="nv">mvn_flags</span><span class="o">=</span><span class="s1">&#39;-DskipTests -DreuseForks=False&#39;</span> steady-generator:3.2.5
 </pre></div>
 <p>In case you are running behind a proxy you need to configure it in the <code>--build-arg</code> arguments. Check the <a href="https://docs.docker.com/engine/reference/builder/#predefined-args">predefined <code>ARG</code>s</a> documentation to know more.</p>
+<p>In case you'd like to avoid downloading all dependencies by reusing your local Maven repository, add a volume as follows <code>-v "$HOME/.m2":/root/.m2</code>, see <a href="https://hub.docker.com/_/maven/">here</a> for more information.</p>
 </blockquote>
 <p>As a result, the folders <code>docker/&lt;component-name&gt;</code> will contain compiled JARs (or WARs, depending on the component). The folder <code>docker/client-tools</code> will be populated with the JARs for client side tools (CLI, plugins, patchanalyzer).</p>
 <p>Additionally, you may want to make the artifacts available to the developers of your organization (e.g., through an internal Nexus or other artifact distribution system).</p>
@@ -1135,12 +1100,15 @@ docker run -it --rm -v <span class="si">${</span><span class="nv">PWD</span><spa
 <div class="codehilite"><pre><span></span><span class="o">(</span><span class="nb">cd</span> docker <span class="o">&amp;&amp;</span> docker-compose -f docker-compose.build.yml build<span class="o">)</span>
 </pre></div>
 <p>You can create and run containers from the generated images.</p>
-<div class="codehilite"><pre><span></span><span class="o">(</span><span class="nb">cd</span> docker <span class="o">&amp;&amp;</span> docker-compose -f docker-compose.yml -f docker-compose.build.yml up -d<span class="o">)</span>
+<div class="codehilite"><pre><span></span><span class="o">(</span><span class="nb">cd</span> docker <span class="o">&amp;&amp;</span> docker-compose -f docker-compose.yml -f docker-compose.build.yml --profile vdb --profile ui up -d<span class="o">)</span>
 </pre></div>
 <p>To check everything started successfully, browse the page <code>http://localhost:8033/haproxy?stats</code>. All endpoints should appear as green.</p>
 <blockquote>
 <p><code>username</code> and <code>password</code> can be found in your <code>.env</code> file, be also advised that <code>rest-backend</code> could take more than 30 seconds to be ready to answer HTTP requests</p>
 </blockquote>
+<p>Run the following to stop all containers.</p>
+<div class="codehilite"><pre><span></span><span class="o">(</span><span class="nb">cd</span> docker <span class="o">&amp;&amp;</span> docker-compose -f docker-compose.yml -f docker-compose.build.yml --profile vdb --profile ui down<span class="o">)</span>
+</pre></div>
 <hr />
 <p>Get going:</p>
 <ol>
