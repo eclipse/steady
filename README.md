@@ -101,7 +101,6 @@ Other limitations:
 
 - Static and dynamic analyses are not implemented for Python
 - Java 9 multi-release archives are not supported (classes below `META-INF/versions` are simply ignored)
-- Docker containers crash on Apple M1
 
 ## Acknowledgement 
 
