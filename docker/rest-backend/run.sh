@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FLYWAY_OPTS="-Dflyway.skipDefaultCallbacks=true" 
+FLYWAY_OPTS="-Dflyway.skipDefaultCallbacks=true"
 
 if [ "x$DELAY_STARTUP" != "x"  ];
 then
@@ -19,5 +19,6 @@ java \
     -Dvulas.jira.usr=$JIRA_USER \
     -Dvulas.jira.pwd=$JIRA_PASSWORD \
     $FLYWAY_OPTS \
+    $DEBUG_OPTS \
     -Dspring.profiles.active=docker \
 	-jar /steady/rest-backend.jar
