@@ -35,7 +35,7 @@ package org.eclipse.steady.backend.model.view;
  */
 public class Views {
 
-  public interface Default {}
+  public interface Default extends CountDetails {}
 
   public interface BugDetails {}
 
