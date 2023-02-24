@@ -21,9 +21,6 @@ package org.eclipse.steady.cia.rest;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-
 import org.eclipse.steady.java.sign.ASTConstructBodySignature;
 import org.eclipse.steady.java.sign.ASTSignatureChange;
 import org.eclipse.steady.java.sign.gson.ASTConstructBodySignatureDeserializer;
@@ -41,6 +38,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+
 /**
  * <p>MainController class.</p>
  */
@@ -56,7 +56,7 @@ public class MainController extends SpringBootServletInitializer {
    */
   @Bean
   public GroupedOpenApi publicApi() {
-    return GroupedOpenApi.builder().setGroup("public").pathsToMatch("/**").build();
+    return GroupedOpenApi.builder().group("public").pathsToMatch("/**").build();
   }
 
   /**
