@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -214,7 +215,7 @@ public class VulasConfiguration {
     }
 
     // Add: Environment variables
-    final Map<String, String> env = System.getenv();
+    final Map<String, String> env = new ProcessBuilder().environment();
     Configuration env_config = new MapConfiguration(env);
     addConfiguration(env_config, ENV_CFG_LAYER);
 
@@ -298,13 +299,17 @@ public class VulasConfiguration {
    */
   public void sanitize(Configuration _cfg) {
     final Iterator<String> i = _cfg.getKeys();
+    List<String> keys_to_remove = new ArrayList<String>();
     while (i.hasNext()) {
       final String k = i.next();
       final Matcher m = KEY_PATTERN.matcher(k);
       if (!m.matches()) {
         getLog().warn("Configuration key [" + k + "] removed due to illegal characters");
-        _cfg.clearProperty(k);
+        keys_to_remove.add(k);
       }
+    }
+    for (String p : keys_to_remove) {
+      _cfg.clearProperty(p);
     }
   }
 
