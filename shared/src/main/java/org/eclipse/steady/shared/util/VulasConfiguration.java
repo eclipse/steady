@@ -306,8 +306,6 @@ public class VulasConfiguration {
       if (!m.matches()) {
         getLog().warn("Configuration key [" + k + "] removed due to illegal characters");
         keys_to_remove.add(k);
-        //_cfg.clearProperty(k);
-        //i.remove();
       }
     }
     for (String p : keys_to_remove) {
