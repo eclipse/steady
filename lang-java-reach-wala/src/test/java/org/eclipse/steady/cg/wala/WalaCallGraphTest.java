@@ -128,4 +128,50 @@ public class WalaCallGraphTest {
       e.printStackTrace();
     }
   }
+
+  @Test
+  public void examplesWalaTestJdk17() {
+    final ReachabilityAnalyzer ra = new ReachabilityAnalyzer(this.getGoalContext());
+    ra.setCallgraphConstructor(WalaCallgraphConstructor.FRAMEWORK, false);
+
+    // Set classpaths
+    final Set<Path> app_paths = new HashSet<Path>(), dep_paths = new HashSet<Path>();
+    app_paths.add(Paths.get("./src/test/resources/examplesJdk17.jar"));
+    dep_paths.add(Paths.get("./src/test/resources/empty.jar"));
+    ra.setAppClasspaths(app_paths);
+    ra.setDependencyClasspaths(dep_paths);
+
+    // Set the EP manually
+    final Set<ConstructId> entrypoint = new HashSet<ConstructId>();
+    entrypoint.add(
+            JavaId.toSharedType(
+                    JavaId.parseMethodQName("org.example.Examples.main(String[])")));
+    ra.setEntryPoints(entrypoint, PathSource.A2C, false);
+    ra.setAppConstructs(entrypoint);
+
+    // Set the target constructs (manually, rather than using a bug)
+    final Map<String, Set<ConstructId>> target_constructs = new HashMap<String, Set<ConstructId>>();
+    final Set<ConstructId> changes = new HashSet<ConstructId>();
+    changes.add(
+            JavaId.toSharedType(
+                    JavaId.parseMethodQName("org.example.Cat.saySomething()")));
+    changes.add(
+            JavaId.toSharedType(
+                    JavaId.parseMethodQName("org.example.Fish.saySomething()")));
+    changes.add(
+            JavaId.toSharedType(
+                    JavaId.parseMethodQName("org.example.Dog.saySomething()")));
+    changes.add(
+            JavaId.toSharedType(
+                    JavaId.parseMethodQName("org.example.Car.saySomething()")));
+    target_constructs.put("does-not-exist", changes);
+    ra.setTargetConstructs(target_constructs);
+
+    try {
+      ReachabilityAnalyzer.startAnalysis(ra, 600000);
+    } catch (InterruptedException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
 }

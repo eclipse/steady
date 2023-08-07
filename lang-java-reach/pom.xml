@@ -37,7 +37,7 @@
 	<properties>
 		<maven.deploy.skip>false</maven.deploy.skip>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.steady</groupId>
@@ -51,17 +51,17 @@
 		<dependency>
 			<groupId>com.ibm.wala</groupId>
 			<artifactId>com.ibm.wala.core</artifactId>
-			<version>1.4.3</version>
+			<version>1.6.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.ibm.wala</groupId>
 			<artifactId>com.ibm.wala.util</artifactId>
-			<version>1.4.3</version>
+			<version>1.6.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.ibm.wala</groupId>
 			<artifactId>com.ibm.wala.shrike</artifactId>
-			<version>1.4.3</version>
+			<version>1.6.2</version>
 		</dependency>
 
 		<!-- Test -->
@@ -80,7 +80,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 			</plugin>
-			
+
 			<!-- Increase memory for Junit test case execution -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
