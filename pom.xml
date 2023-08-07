@@ -25,7 +25,7 @@
 
 	<groupId>org.eclipse.steady</groupId>
 	<artifactId>root</artifactId>
-	<version>3.2.6-SNAPSHOT</version>
+	<version>3.2.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Eclipse Steady</name>
