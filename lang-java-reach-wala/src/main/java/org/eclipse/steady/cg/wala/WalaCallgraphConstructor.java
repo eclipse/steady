@@ -1,20 +1,18 @@
 /**
  * This file is part of Eclipse Steady.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * SPDX-License-Identifier: Apache-2.0
- * SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
+ * <p>SPDX-License-Identifier: Apache-2.0 SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or
+ * an SAP affiliate company and Eclipse Steady contributors
  */
 package org.eclipse.steady.cg.wala;
 
@@ -58,9 +56,7 @@ import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 
-/**
- * Callgraph constructor using wala framework; implementing the interface ICallgraphConstructor
- */
+/** Callgraph constructor using wala framework; implementing the interface ICallgraphConstructor */
 public class WalaCallgraphConstructor implements ICallgraphConstructor {
 
   private static final Logger log = org.apache.logging.log4j.LogManager.getLogger();
@@ -70,15 +66,13 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
   // Packages to be excluded for call graph construction, which is read from wala-cfg.properties
   private File excludedPackagesFile = null;
 
-  /**
-   * The context information of the application JAR to be analyzed
-   */
+  /** The context information of the application JAR to be analyzed */
   private Application appContext = null;
 
   private VulasConfiguration vulasConfiguration = null;
 
   /**
-   * <p>getFramework.</p>
+   * getFramework.
    *
    * @return a {@link java.lang.String} object.
    */
@@ -87,7 +81,7 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
   }
 
   /**
-   * <p>Getter for the field <code>appContext</code>.</p>
+   * Getter for the field <code>appContext</code>.
    *
    * @return a {@link org.eclipse.steady.shared.json.model.Application} object.
    */
@@ -100,9 +94,7 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
     this.vulasConfiguration = _cfg;
   }
 
-  /**
-   * The JAR to be analyzed.
-   */
+  /** The JAR to be analyzed. */
   // private String appJar = null;
   private String classpath = null;
 
@@ -146,7 +138,7 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
   /**
    * {@inheritDoc}
    *
-   * Filter and find all entrypoints in scope
+   * <p>Filter and find all entrypoints in scope
    */
   public void setEntrypoints(Set<org.eclipse.steady.shared.json.model.ConstructId> _constructs)
       throws CallgraphConstructException {
@@ -266,7 +258,8 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
   }
 
   /**
-   * Given an IMethod, identify whether it's an object constructor&lt;clinit&gt;, class initializer&lt;clinit&gt; or a method, return the ConstructId
+   * Given an IMethod, identify whether it's an object constructor&lt;clinit&gt;, class
+   * initializer&lt;clinit&gt; or a method, return the ConstructId
    *
    * @param _method
    * @return
@@ -313,7 +306,8 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
   }
 
   /**
-   * Returns the time required for building the call graph (in nanoseconds), or -1 if the construction did not finish.
+   * Returns the time required for building the call graph (in nanoseconds), or -1 if the
+   * construction did not finish.
    *
    * @return the time required for building the call graph (in nanoseconds)
    */
@@ -333,7 +327,7 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
   /**
    * {@inheritDoc}
    *
-   * Parse command line arguments, and then build callgraph based on these properties
+   * <p>Parse command line arguments, and then build callgraph based on these properties
    */
   public void buildCallgraph(boolean _policy) throws CallgraphConstructException {
     WalaCallgraphConstructor.log.info(
@@ -377,7 +371,8 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
       } else if (cg_algorithm.equals("0-ctn-CFA")) {
         builder = Util.makeZeroContainerCFABuilder(options, cache, this.cha, this.scope);
       } else if (cg_algorithm.equals("vanilla-0-1-CFA")) {
-        builder = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, cache, this.cha, this.scope);
+        builder =
+            Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, cache, this.cha, this.scope);
       } else if (cg_algorithm.equals("0-1-CFA")) {
         builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, this.cha, this.scope);
       } else if (cg_algorithm.equals("0-1-ctn-CFA")) {
@@ -502,7 +497,7 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
   }
 
   /**
-   * <p>Getter for the field <code>entrypoints</code>.</p>
+   * Getter for the field <code>entrypoints</code>.
    *
    * @return a {@link java.util.Set} object.
    */
