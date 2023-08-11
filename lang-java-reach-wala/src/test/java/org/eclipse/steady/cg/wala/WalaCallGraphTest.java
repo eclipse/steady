@@ -1,46 +1,41 @@
 /**
  * This file is part of Eclipse Steady.
  *
- * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
- * except in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * <p>http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * <p>Unless required by applicable law or agreed to in writing, software distributed under the
- * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing permissions and
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * <p>SPDX-License-Identifier: Apache-2.0 SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or
- * an SAP affiliate company and Eclipse Steady contributors
+ * SPDX-License-Identifier: Apache-2.0
+ * SPDX-FileCopyrightText: Copyright (c) 2018-2020 SAP SE or an SAP affiliate company and Eclipse Steady contributors
  */
 package org.eclipse.steady.cg.wala;
 /**
  * This file is part of Eclipse Steady.
  *
- * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
- * except in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * <p>http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * <p>Unless required by applicable law or agreed to in writing, software distributed under the
- * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing permissions and
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * <p>SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: Apache-2.0
  *
- * <p>Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
+ * Copyright (c) 2018 SAP SE or an SAP affiliate company. All rights reserved.
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import org.eclipse.steady.cg.ReachabilityAnalyzer;
 import org.eclipse.steady.cg.spi.CallgraphConstructorFactory;
 import org.eclipse.steady.cg.spi.ICallgraphConstructor;
@@ -52,6 +47,16 @@ import org.eclipse.steady.shared.json.model.Application;
 import org.eclipse.steady.shared.json.model.ConstructId;
 import org.eclipse.steady.shared.util.VulasConfiguration;
 import org.junit.Test;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class WalaCallGraphTest {
 
@@ -139,17 +144,26 @@ public class WalaCallGraphTest {
     // Set the EP manually
     final Set<ConstructId> entrypoint = new HashSet<ConstructId>();
     entrypoint.add(
-        JavaId.toSharedType(JavaId.parseMethodQName("org.example.Examples.main(String[])")));
+            JavaId.toSharedType(
+                    JavaId.parseMethodQName("org.example.Examples.main(String[])")));
     ra.setEntryPoints(entrypoint, PathSource.A2C, false);
     ra.setAppConstructs(entrypoint);
 
     // Set the target constructs (manually, rather than using a bug)
     final Map<String, Set<ConstructId>> target_constructs = new HashMap<String, Set<ConstructId>>();
     final Set<ConstructId> changes = new HashSet<ConstructId>();
-    changes.add(JavaId.toSharedType(JavaId.parseMethodQName("org.example.Cat.saySomething()")));
-    changes.add(JavaId.toSharedType(JavaId.parseMethodQName("org.example.Fish.saySomething()")));
-    changes.add(JavaId.toSharedType(JavaId.parseMethodQName("org.example.Dog.saySomething()")));
-    changes.add(JavaId.toSharedType(JavaId.parseMethodQName("org.example.Car.saySomething()")));
+    changes.add(
+            JavaId.toSharedType(
+                    JavaId.parseMethodQName("org.example.Cat.saySomething()")));
+    changes.add(
+            JavaId.toSharedType(
+                    JavaId.parseMethodQName("org.example.Fish.saySomething()")));
+    changes.add(
+            JavaId.toSharedType(
+                    JavaId.parseMethodQName("org.example.Dog.saySomething()")));
+    changes.add(
+            JavaId.toSharedType(
+                    JavaId.parseMethodQName("org.example.Car.saySomething()")));
     target_constructs.put("does-not-exist", changes);
     ra.setTargetConstructs(target_constructs);
 
