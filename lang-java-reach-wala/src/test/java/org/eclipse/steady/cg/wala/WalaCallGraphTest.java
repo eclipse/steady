@@ -144,26 +144,17 @@ public class WalaCallGraphTest {
     // Set the EP manually
     final Set<ConstructId> entrypoint = new HashSet<ConstructId>();
     entrypoint.add(
-            JavaId.toSharedType(
-                    JavaId.parseMethodQName("org.example.Examples.main(String[])")));
+        JavaId.toSharedType(JavaId.parseMethodQName("org.example.ExamplesJdk17.main(String[])")));
     ra.setEntryPoints(entrypoint, PathSource.A2C, false);
     ra.setAppConstructs(entrypoint);
 
     // Set the target constructs (manually, rather than using a bug)
     final Map<String, Set<ConstructId>> target_constructs = new HashMap<String, Set<ConstructId>>();
     final Set<ConstructId> changes = new HashSet<ConstructId>();
-    changes.add(
-            JavaId.toSharedType(
-                    JavaId.parseMethodQName("org.example.Cat.saySomething()")));
-    changes.add(
-            JavaId.toSharedType(
-                    JavaId.parseMethodQName("org.example.Fish.saySomething()")));
-    changes.add(
-            JavaId.toSharedType(
-                    JavaId.parseMethodQName("org.example.Dog.saySomething()")));
-    changes.add(
-            JavaId.toSharedType(
-                    JavaId.parseMethodQName("org.example.Car.saySomething()")));
+    changes.add(JavaId.toSharedType(JavaId.parseMethodQName("org.example.Cat.saySomething()")));
+    changes.add(JavaId.toSharedType(JavaId.parseMethodQName("org.example.Fish.saySomething()")));
+    changes.add(JavaId.toSharedType(JavaId.parseMethodQName("org.example.Dog.saySomething()")));
+    changes.add(JavaId.toSharedType(JavaId.parseMethodQName("org.example.Car.saySomething()")));
     target_constructs.put("does-not-exist", changes);
     ra.setTargetConstructs(target_constructs);
 

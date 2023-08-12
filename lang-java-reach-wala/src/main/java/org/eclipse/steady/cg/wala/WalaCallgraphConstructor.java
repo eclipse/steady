@@ -146,7 +146,7 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
   /**
    * {@inheritDoc}
    *
-   * Filter and find all entrypoints in scope
+   * <p>Filter and find all entrypoints in scope
    */
   public void setEntrypoints(Set<org.eclipse.steady.shared.json.model.ConstructId> _constructs)
       throws CallgraphConstructException {
@@ -333,7 +333,7 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
   /**
    * {@inheritDoc}
    *
-   * Parse command line arguments, and then build callgraph based on these properties
+   * <p>Parse command line arguments, and then build callgraph based on these properties
    */
   public void buildCallgraph(boolean _policy) throws CallgraphConstructException {
     WalaCallgraphConstructor.log.info(
@@ -377,7 +377,8 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
       } else if (cg_algorithm.equals("0-ctn-CFA")) {
         builder = Util.makeZeroContainerCFABuilder(options, cache, this.cha, this.scope);
       } else if (cg_algorithm.equals("vanilla-0-1-CFA")) {
-        builder = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, cache, this.cha, this.scope);
+        builder =
+            Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, cache, this.cha, this.scope);
       } else if (cg_algorithm.equals("0-1-CFA")) {
         builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, this.cha, this.scope);
       } else if (cg_algorithm.equals("0-1-ctn-CFA")) {
