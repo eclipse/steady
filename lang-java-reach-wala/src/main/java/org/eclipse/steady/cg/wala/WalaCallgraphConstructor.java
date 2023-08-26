@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.ibm.wala.classLoader.Language;
 import org.apache.commons.configuration.Configuration;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.steady.cg.CallgraphConstructException;
@@ -53,7 +54,7 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 
@@ -145,13 +146,13 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
   /**
    * {@inheritDoc}
    *
-   * Filter and find all entrypoints in scope
+   * <p>Filter and find all entrypoints in scope
    */
   public void setEntrypoints(Set<org.eclipse.steady.shared.json.model.ConstructId> _constructs)
       throws CallgraphConstructException {
     try {
       this.scope =
-          AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+          AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
               this.classpath, this.excludedPackagesFile);
 
       // The removal of ClassHierarchy.make(AnalysisScope) was made with commit
@@ -207,13 +208,11 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
             && (cha.getScope()
                 .getApplicationLoader()
                 .equals(klass.getClassLoader().getReference()))) {
-          for (Iterator<IMethod> m_iter = klass.getDeclaredMethods().iterator();
-              m_iter.hasNext(); ) {
-            method = (IMethod) m_iter.next();
-            if (!method.isClinit()) {
-              method_qname = getCid(method).getQname();
-              if (!method.isAbstract() && (_constructs_qname.contains(method_qname))) {
-                ep.add(new ArgumentTypeEntrypoint(method, cha));
+          for (IMethod declaredMethod : klass.getDeclaredMethods()) {
+            if (!declaredMethod.isClinit()) {
+              method_qname = getCid(declaredMethod).getQname();
+              if (!declaredMethod.isAbstract() && (_constructs_qname.contains(method_qname))) {
+                ep.add(new ArgumentTypeEntrypoint(declaredMethod, cha));
               }
             }
           }
@@ -334,7 +333,7 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
   /**
    * {@inheritDoc}
    *
-   * Parse command line arguments, and then build callgraph based on these properties
+   * <p>Parse command line arguments, and then build callgraph based on these properties
    */
   public void buildCallgraph(boolean _policy) throws CallgraphConstructException {
     WalaCallgraphConstructor.log.info(
@@ -374,17 +373,18 @@ public class WalaCallgraphConstructor implements ICallgraphConstructor {
       if (cg_algorithm.equals("RTA")) {
         builder = Util.makeRTABuilder(options, cache, this.cha, this.scope);
       } else if (cg_algorithm.equals("0-CFA")) {
-        builder = Util.makeZeroCFABuilder(options, cache, this.cha, this.scope);
+        builder = Util.makeZeroCFABuilder(Language.JAVA, options, cache, this.cha, this.scope);
       } else if (cg_algorithm.equals("0-ctn-CFA")) {
         builder = Util.makeZeroContainerCFABuilder(options, cache, this.cha, this.scope);
       } else if (cg_algorithm.equals("vanilla-0-1-CFA")) {
-        builder = Util.makeVanillaZeroOneCFABuilder(options, cache, this.cha, this.scope);
+        builder =
+            Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, cache, this.cha, this.scope);
       } else if (cg_algorithm.equals("0-1-CFA")) {
-        builder = Util.makeZeroOneCFABuilder(options, cache, this.cha, this.scope);
+        builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, this.cha, this.scope);
       } else if (cg_algorithm.equals("0-1-ctn-CFA")) {
         builder = Util.makeZeroOneContainerCFABuilder(options, cache, this.cha, this.scope);
       } else {
-        builder = Util.makeZeroOneCFABuilder(options, cache, this.cha, this.scope);
+        builder = Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, this.cha, this.scope);
       }
 
       // Build callgraph based on options and algorithm
