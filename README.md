@@ -49,7 +49,7 @@ This section provides the bare minimum to setup Steady and to use its Maven plug
 
     For Maven, `cd` into your project and run the `app` analysis goal as follows (see [here](https://eclipse.github.io/steady/user/manuals/analysis/) for more information about available goals):
 
-    `mvn org.eclipse.steady:plugin-maven:3.2.0:app`
+    `mvn org.eclipse.steady:plugin-maven:3.2.5:app`
 
     **Note**: During application scans, a lot of information about its dependencies is uploaded to the backend, which makes that the first scan takes significantly more time than later scans of the same application.
 
