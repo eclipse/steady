@@ -54,12 +54,12 @@ public class SootCallGraphTest {
     return ctx;
   }
 
-  private void runSootAnalysis() {
+  private void runSootAnalysis(String jarPAth) {
     final ReachabilityAnalyzer ra = new ReachabilityAnalyzer(this.getGoalContext());
     ra.setCallgraphConstructor(SootCallgraphConstructor.FRAMEWORK, false);
     // Set classpaths
     final Set<Path> app_paths = new HashSet<Path>(), dep_paths = new HashSet<Path>();
-    app_paths.add(Paths.get("./src/test/resources/examples.jar"));
+    app_paths.add(Paths.get(jarPAth));
     dep_paths.add(Paths.get("./src/test/resources/empty.jar"));
     ra.setAppClasspaths(app_paths);
     ra.setDependencyClasspaths(dep_paths);
@@ -111,7 +111,13 @@ public class SootCallGraphTest {
   @Test
   public void examplesSootTestNoneEntrypointGenerator() {
     VulasConfiguration.getGlobal().setProperty("vulas.reach.soot.entrypointGenerator", "none");
-    runSootAnalysis();
+    runSootAnalysis("./src/test/resources/examples.jar");
+  }
+
+  @Test
+  public void examplesSootTestNoneEntrypointGeneratorJDK17() {
+    VulasConfiguration.getGlobal().setProperty("vulas.reach.soot.entrypointGenerator", "none");
+    runSootAnalysis("./src/test/resources/examples17.jar");
   }
 
   @Test
@@ -120,7 +126,16 @@ public class SootCallGraphTest {
         .setProperty(
             "vulas.reach.soot.entrypointGenerator",
             "soot.jimple.infoflow.entryPointCreators.DefaultEntryPointCreator");
-    runSootAnalysis();
+    runSootAnalysis("./src/test/resources/examples.jar");
+  }
+
+  @Test
+  public void examplesSootTestDefaultEntryPointGeneratorJDK17() {
+    VulasConfiguration.getGlobal()
+        .setProperty(
+            "vulas.reach.soot.entrypointGenerator",
+            "soot.jimple.infoflow.entryPointCreators.DefaultEntryPointCreator");
+    runSootAnalysis("./src/test/resources/examples17.jar");
   }
 
   @Test
@@ -129,6 +144,15 @@ public class SootCallGraphTest {
         .setProperty(
             "vulas.reach.soot.entrypointGenerator",
             "org.eclipse.steady.cg.soot.CustomEntryPointCreator");
-    runSootAnalysis();
+    runSootAnalysis("./src/test/resources/examples.jar");
+  }
+
+  @Test
+  public void examplesSootTestCustomEntryPointGeneratorJDK17() {
+    VulasConfiguration.getGlobal()
+        .setProperty(
+            "vulas.reach.soot.entrypointGenerator",
+            "org.eclipse.steady.cg.soot.CustomEntryPointCreator");
+    runSootAnalysis("./src/test/resources/examples17.jar");
   }
 }
