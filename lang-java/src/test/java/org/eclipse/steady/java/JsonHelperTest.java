@@ -57,12 +57,9 @@ public class JsonHelperTest {
       }
 
       assertEquals(json1, json2);
-    } catch (IllegalStateException ise) {
-      // TODO Auto-generated catch block
-      ise.printStackTrace();
-    } catch (IOException ioe) {
-      // TODO Auto-generated catch block
-      ioe.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
+      assert (false);
     }
   }
 

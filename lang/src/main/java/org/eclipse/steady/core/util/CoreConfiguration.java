@@ -105,6 +105,8 @@ public class CoreConfiguration {
   // BOM, fka APP
   /** Constant <code>APP_DIRS="vulas.core.app.sourceDir"</code> */
   public static final String APP_DIRS = "vulas.core.app.sourceDir";
+  /** Constant <code>TEST_DIRS="vulas.core.app.testDir"</code> */
+  public static final String TEST_DIRS = "vulas.core.app.testDir";
   /** Constant <code>APP_PREFIXES="vulas.core.app.appPrefixes"</code> */
   public static final String APP_PREFIXES = "vulas.core.app.appPrefixes";
   /** Constant <code>APP_JAR_NAMES="vulas.core.app.appJarNames"</code> */
@@ -124,6 +126,9 @@ public class CoreConfiguration {
   public static final String REP_OVERRIDE_VER = "vulas.report.overridePomVersion";
   /** Constant <code>REP_LIB_ASSESS="vulas.report.createLibraryAssessments"</code> */
   public static final String REP_CREATE_AFF_LIB = "vulas.report.createLibraryAssessments";
+
+  /** Constant <code>SLICING_DIR="vulas.slicing.slicingDir"</code> */
+  public static final String SLICING_DIR = "vulas.slicing.slicingDir";
 
   /** Constant <code>SEQ_DEFAULT="vulas.core.sequence.defaultGoals"</code> */
   public static final String SEQ_DEFAULT = "vulas.core.sequence.defaultGoals";

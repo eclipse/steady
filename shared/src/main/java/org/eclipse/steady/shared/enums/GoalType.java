@@ -36,6 +36,7 @@ public enum GoalType {
   T2C,
   REPORT,
   UPLOAD,
+  DEBLOAT,
 
   // Workspace goals
   SPACENEW,

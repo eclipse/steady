@@ -526,62 +526,57 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
         try {
           ctclass = JarAnalyzer.getClassPool().get(cn);
 
-          // Ignore interfaces (no executable code) and enums (rarely containing executable code,
-          // perhaps to be included later on)
-          if (ctclass.isInterface()) {
-            this.interfaceCount++;
-          } else {
+          if (ctclass.isEnum()) this.enumCount++;
+          else if (ctclass.isInterface()) this.interfaceCount++;
+          else this.classCount++;
 
-            if (ctclass.isEnum()) this.enumCount++;
-            else this.classCount++;
+          // Create ClassVisitor for the current Java class
+          cv = new ClassVisitor(ctclass);
+          this.constructs.addAll(cv.getConstructs());
 
-            // Create ClassVisitor for the current Java class
-            cv = new ClassVisitor(ctclass);
-            this.constructs.addAll(cv.getConstructs());
-
-            // Instrument (if requested and not blacklisted)
-            if (this.instrument && !this.instrControl.isBlacklistedClass(cn)) {
-              cv.setOriginalArchiveDigest(this.getSHA1());
-              cv.setAppContext(JarAnalyzer.getAppContext());
-              if (cv.isInstrumented())
-                this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), null);
-              else {
-                try {
-                  cv.visitMethods(true);
-                  cv.visitConstructors(true);
-                  cv.finalizeInstrumentation();
-                  this.instrumentedClasses.put(cv.getJavaId(), cv);
-                  this.instrControl.updateInstrumentationStatistics(
-                      cv.getJavaId(), Boolean.valueOf(true));
-                } catch (IOException ioe) {
-                  JarAnalyzer.log.error(
-                      "I/O exception while instrumenting class ["
-                          + cv.getJavaId().getQualifiedName()
-                          + "]: "
-                          + ioe.getMessage());
-                  this.instrControl.updateInstrumentationStatistics(
-                      cv.getJavaId(), Boolean.valueOf(false));
-                } catch (CannotCompileException cce) {
-                  JarAnalyzer.log.warn(
-                      "Cannot compile instrumented class ["
-                          + cv.getJavaId().getQualifiedName()
-                          + "]: "
-                          + cce.getMessage());
-                  this.instrControl.updateInstrumentationStatistics(
-                      cv.getJavaId(), Boolean.valueOf(false));
-                } catch (Exception e) {
-                  JarAnalyzer.log.error(
-                      e.getClass().getName()
-                          + " occured while instrumenting class ["
-                          + cv.getJavaId().getQualifiedName()
-                          + "]: "
-                          + e.getMessage());
-                  this.instrControl.updateInstrumentationStatistics(
-                      cv.getJavaId(), Boolean.valueOf(false));
-                }
+          // Instrument (if requested and not blacklisted)
+          if (this.instrument && !this.instrControl.isBlacklistedClass(cn)) {
+            cv.setOriginalArchiveDigest(this.getSHA1());
+            cv.setAppContext(JarAnalyzer.getAppContext());
+            if (cv.isInstrumented())
+              this.instrControl.updateInstrumentationStatistics(cv.getJavaId(), null);
+            else {
+              try {
+                cv.visitMethods(true);
+                cv.visitConstructors(true);
+                cv.finalizeInstrumentation();
+                this.instrumentedClasses.put(cv.getJavaId(), cv);
+                this.instrControl.updateInstrumentationStatistics(
+                    cv.getJavaId(), Boolean.valueOf(true));
+              } catch (IOException ioe) {
+                JarAnalyzer.log.error(
+                    "I/O exception while instrumenting class ["
+                        + cv.getJavaId().getQualifiedName()
+                        + "]: "
+                        + ioe.getMessage());
+                this.instrControl.updateInstrumentationStatistics(
+                    cv.getJavaId(), Boolean.valueOf(false));
+              } catch (CannotCompileException cce) {
+                JarAnalyzer.log.warn(
+                    "Cannot compile instrumented class ["
+                        + cv.getJavaId().getQualifiedName()
+                        + "]: "
+                        + cce.getMessage());
+                this.instrControl.updateInstrumentationStatistics(
+                    cv.getJavaId(), Boolean.valueOf(false));
+              } catch (Exception e) {
+                JarAnalyzer.log.error(
+                    e.getClass().getName()
+                        + " occured while instrumenting class ["
+                        + cv.getJavaId().getQualifiedName()
+                        + "]: "
+                        + e.getMessage());
+                this.instrControl.updateInstrumentationStatistics(
+                    cv.getJavaId(), Boolean.valueOf(false));
               }
             }
           }
+
           if (!this.instrument) {
             // only detach if no static instrumentation (otherwise it will fail
             // because the class was modified) in case the instrumentation is
@@ -627,7 +622,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
                 + constructs.size()
                 + "], enums ["
                 + enumCount
-                + "], interfaces (ignored) ["
+                + "], interfaces ["
                 + interfaceCount
                 + "]");
       else
@@ -639,7 +634,7 @@ public class JarAnalyzer implements Callable<FileAnalyzer>, JarEntryWriter, File
                 + this.classCount
                 + "], enums ["
                 + enumCount
-                + "], interfaces (ignored) ["
+                + "], interfaces ["
                 + interfaceCount
                 + "]");
     }

@@ -300,6 +300,8 @@ public abstract class JavaId extends ConstructId {
         return ConstructType.ENUM;
       case CLASS:
         return ConstructType.CLAS;
+      case INTERFACE:
+        return ConstructType.INTF;
       default:
         throw new IllegalArgumentException("Unknown type [" + _core_type + "]");
     }
@@ -327,6 +329,8 @@ public abstract class JavaId extends ConstructId {
         return JavaId.parseEnumQName(_cid.getQname());
       case CLAS:
         return JavaId.parseClassQName(_cid.getQname());
+      case INTF:
+        return JavaId.parseInterfaceQName(_cid.getQname());
       default:
         throw new IllegalArgumentException("Unknown type [" + _cid.getType() + "]");
     }
@@ -380,7 +384,7 @@ public abstract class JavaId extends ConstructId {
       class_name = _s.substring(i + 1);
     }
 
-    // Create Java class id (for regular or nested class)
+    // Create Java enum id (for regular or nested class)
     int j = 0, k = 0;
     do {
       // HP, 12.09.2015: $ is also permitted in class names, i.e., it can also exist w/o a class
@@ -452,6 +456,53 @@ public abstract class JavaId extends ConstructId {
   }
 
   /**
+   * <p>parseInterfaceQName.</p>
+   *
+   * @param _s a {@link java.lang.String} object.
+   * @return a {@link org.eclipse.steady.java.JavaInterfaceId} object.
+   */
+  public static JavaInterfaceId parseInterfaceQName(@NotNull String _s) {
+    if (_s == null || _s.equals("")) throw new IllegalArgumentException("String null or empty");
+
+    final int i = _s.lastIndexOf('.');
+    String class_name = null;
+    JavaPackageId pid = null;
+    JavaInterfaceId cid = null;
+
+    // Create Java package id
+    if (i != -1) {
+      pid = new JavaPackageId(_s.substring(0, i));
+      class_name = _s.substring(i + 1);
+    } else {
+      pid = JavaPackageId.DEFAULT_PACKAGE;
+      class_name = _s.substring(i + 1);
+    }
+
+    // Create Java interface id (for regular or nested class)
+    int j = 0, k = 0;
+    do {
+      // HP, 12.09.2015: $ is also permitted in class names, i.e., it can also exist w/o a class
+      // context
+      j = class_name.indexOf("$", k);
+      if (j != -1) {
+        if (cid == null) cid = new JavaInterfaceId(pid, class_name.substring(k, j));
+        else cid = new JavaInterfaceId(cid, class_name.substring(k, j));
+        k = j + 1;
+      } else {
+        if (cid == null) cid = new JavaInterfaceId(pid, class_name.substring(k));
+        else cid = new JavaInterfaceId(cid, class_name.substring(k));
+        k = j + 1;
+      }
+    } while (j != -1);
+    //		if(j!=-1)
+    //			cid = new JavaClassId(new JavaClassId(pid, class_name.substring(0, j)),
+    // class_name.substring(j+1));
+    //		else
+    //			cid = new JavaClassId(pid, class_name);
+    return cid;
+  }
+
+  /**
    * Creates a {@link JavaMethodId} from the given string, whereby the definition context is defaulted to
    * type {@link JavaId.Type#CLASS}.
    *
@@ -474,9 +525,11 @@ public abstract class JavaId extends ConstructId {
 
     if (_s == null || _s.equals("")) throw new IllegalArgumentException("String null or empty");
     if (_ctx_type == null
-        || (!_ctx_type.equals(JavaId.Type.CLASS) && !_ctx_type.equals(JavaId.Type.ENUM)))
+        || (!_ctx_type.equals(JavaId.Type.CLASS)
+            && !_ctx_type.equals(JavaId.Type.ENUM)
+            && !_ctx_type.equals(JavaId.Type.INTERFACE)))
       throw new IllegalArgumentException(
-          "Accepts context types CLASS or ENUM, got [" + _ctx_type + "]");
+          "Accepts context types CLASS, ENUM and INTERFACE, got [" + _ctx_type + "]");
 
     final int i = _s.indexOf('(');
     if (i == -1 || !_s.endsWith(")"))
@@ -491,9 +544,13 @@ public abstract class JavaId extends ConstructId {
     JavaId def_ctx = null;
     JavaMethodId mid = null;
     try {
-      if (_ctx_type.equals(JavaId.Type.CLASS)) def_ctx = JavaId.parseClassQName(_s.substring(0, j));
-      else if (_ctx_type.equals(JavaId.Type.ENUM))
+      if (_ctx_type.equals(JavaId.Type.CLASS)) {
+        def_ctx = JavaId.parseClassQName(_s.substring(0, j));
+      } else if (_ctx_type.equals(JavaId.Type.ENUM)) {
         def_ctx = JavaId.parseEnumQName(_s.substring(0, j));
+      } else if (_ctx_type.equals(JavaId.Type.INTERFACE)) {
+        def_ctx = JavaId.parseInterfaceQName(_s.substring(0, j));
+      }
 
       mid =
           new JavaMethodId(
@@ -501,7 +558,7 @@ public abstract class JavaId extends ConstructId {
               _s.substring(j + 1, i),
               JavaId.parseParameterTypes(_s.substring(i + 1, _s.length() - 1)));
     } catch (StringIndexOutOfBoundsException e) {
-      JavaId.log.error("Exception while parsing the string '" + _s + "'");
+      JavaId.log.error("Exception while parsing the string [" + _s + "]");
     }
     return mid;
   }
@@ -534,9 +591,11 @@ public abstract class JavaId extends ConstructId {
 
     if (_s == null || _s.equals("")) throw new IllegalArgumentException("String null or empty");
     if (_ctx_type == null
-        || (!_ctx_type.equals(JavaId.Type.CLASS) && !_ctx_type.equals(JavaId.Type.ENUM)))
+        || (!_ctx_type.equals(JavaId.Type.CLASS)
+            && !_ctx_type.equals(JavaId.Type.ENUM)
+            && !_ctx_type.equals(JavaId.Type.INTERFACE)))
       throw new IllegalArgumentException(
-          "Accepts context types CLASS or ENUM, got [" + _ctx_type + "]");
+          "Accepts context types CLASS, ENUM and INTERFACE, got [" + _ctx_type + "]");
 
     final int i = _s.indexOf('(');
     if (i == -1 || !_s.endsWith(")"))
@@ -568,7 +627,7 @@ public abstract class JavaId extends ConstructId {
       }
       coid = new JavaConstructorId(def_ctx, params);
     } catch (StringIndexOutOfBoundsException e) {
-      JavaId.log.error("Exception while parsing the string '" + _s + "'");
+      JavaId.log.error("Exception while parsing the string [" + _s + "]");
     }
     return coid;
   }
@@ -585,7 +644,7 @@ public abstract class JavaId extends ConstructId {
     final int i = _s.indexOf(JavaClassInit.NAME);
     if (i == -1)
       throw new IllegalArgumentException(
-          "String does not contain brackets "
+          "String does not contain "
               + JavaClassInit.NAME
               + ", as required for qualified names for Java class initializers");
 
@@ -594,7 +653,7 @@ public abstract class JavaId extends ConstructId {
       final JavaClassId cid = JavaId.parseClassQName(_s.substring(0, i - 1));
       clinit = cid.getClassInit();
     } catch (StringIndexOutOfBoundsException e) {
-      JavaId.log.error("Exception while parsing the string '" + _s + "'");
+      JavaId.log.error("Exception while parsing the string [" + _s + "]");
     }
     return clinit;
   }

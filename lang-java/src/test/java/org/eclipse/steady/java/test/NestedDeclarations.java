@@ -20,8 +20,7 @@ package org.eclipse.steady.java.test;
 
 import java.io.Serializable;
 
-public class NestedDeclarations { // Do not change this class, the corresponding test case
-  // (testNestedDeclarationMess) refers to the line numbers!!!!!!!!!!!!!!!
+public class NestedDeclarations {
 
   // Member interface
   interface DoSomethingElse {

@@ -22,13 +22,13 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.steady.shared.enums.DependencyOrigin;
-import org.eclipse.steady.shared.enums.Scope;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import org.eclipse.steady.shared.enums.DependencyOrigin;
+import org.eclipse.steady.shared.enums.Scope;
 
 /**
  * <p>Dependency class.</p>
@@ -36,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonIgnoreProperties(
     ignoreUnknown = true,
-    value = {"reachableConstructIds", "touchPoints"},
+    value = {"touchPoints"},
     allowGetters = true)
 public class Dependency implements Serializable, Comparable<Dependency> {
 

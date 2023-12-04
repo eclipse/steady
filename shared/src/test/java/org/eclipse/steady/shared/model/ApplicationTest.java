@@ -18,8 +18,14 @@
  */
 package org.eclipse.steady.shared.model;
 
+import static org.junit.Assert.assertNotNull;
+
+import java.io.IOException;
+
+import org.eclipse.steady.shared.json.JacksonUtil;
 import org.eclipse.steady.shared.json.model.Application;
 import org.eclipse.steady.shared.util.Constants;
+import org.eclipse.steady.shared.util.FileUtil;
 import org.junit.Test;
 
 public class ApplicationTest {
@@ -34,5 +40,18 @@ public class ApplicationTest {
     final StringBuilder g = new StringBuilder();
     for (int i = 0; i <= Constants.MAX_LENGTH_GROUP + 10; i++) g.append("a");
     new Application(g.toString(), "foo", "bar");
+  }
+
+  @Test
+  public void testAppReachDeserialization() {
+    try {
+      String json = FileUtil.readFile("./src/test/resources/appReachConstructIds.json");
+      org.eclipse.steady.shared.json.model.Dependency[] backend_deps =
+          (org.eclipse.steady.shared.json.model.Dependency[])
+              JacksonUtil.asObject(json, org.eclipse.steady.shared.json.model.Dependency[].class);
+      assertNotNull(backend_deps[0].getReachableConstructIds());
+    } catch (IOException e) {
+      assert (false);
+    }
   }
 }

@@ -41,7 +41,7 @@ public interface ConfigurationKey {
         }
       };
 
-  Class getType();
+  Class getType(String a, int b);
 
   String getKey();
 

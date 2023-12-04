@@ -721,6 +721,9 @@ public class BackendConnector {
             (org.eclipse.steady.shared.json.model.Dependency[])
                 JacksonUtil.asObject(json, org.eclipse.steady.shared.json.model.Dependency[].class);
       else backend_deps = new org.eclipse.steady.shared.json.model.Dependency[] {};
+      for (org.eclipse.steady.shared.json.model.Dependency d : backend_deps) {
+        d.setApp(_app);
+      }
       deps.addAll(Arrays.asList(backend_deps));
       BackendConnector.log.info("[" + deps.size() + "] dependencies received from backend");
     }

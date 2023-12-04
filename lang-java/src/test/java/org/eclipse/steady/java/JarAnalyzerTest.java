@@ -131,7 +131,7 @@ public class JarAnalyzerTest {
       ja.analyze(
           new File("./src/test/resources/org.apache.servicemix.bundles.jaxb-xjc-2.2.4_1.jar"));
       ja.call();
-      assertEquals(8984, ja.getConstructIds().size());
+      assertEquals(9884, ja.getConstructIds().size());
     } catch (Exception e) {
       e.printStackTrace();
       assertTrue(false);

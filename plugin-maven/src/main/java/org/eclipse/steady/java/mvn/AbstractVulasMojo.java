@@ -165,6 +165,9 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
     _cfg.setPropertyIfEmpty(
         CoreConfiguration.REP_DIR,
         Paths.get(_prj.getBuild().getDirectory(), "vulas", "report").toString());
+    _cfg.setPropertyIfEmpty(
+        CoreConfiguration.SLICING_DIR,
+        Paths.get(_prj.getBuild().getDirectory(), "vulas", "debloat").toString());
 
     // Read app constructs from src/main/java and target/classes
     final String p =
@@ -172,6 +175,12 @@ public abstract class AbstractVulasMojo extends AbstractMojo {
             + ","
             + Paths.get(_prj.getBuild().getSourceDirectory()).toString();
     _cfg.setPropertyIfEmpty(CoreConfiguration.APP_DIRS, p);
+
+    final String test_paths =
+        Paths.get(_prj.getBuild().getTestOutputDirectory()).toString()
+            + ","
+            + Paths.get(_prj.getBuild().getTestSourceDirectory()).toString();
+    _cfg.setPropertyIfEmpty(CoreConfiguration.TEST_DIRS, test_paths);
   }
 
   /**

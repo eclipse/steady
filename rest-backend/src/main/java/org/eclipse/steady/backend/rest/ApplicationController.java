@@ -1601,14 +1601,17 @@ public class ApplicationController {
   }
 
   /**
-   * Provides application-specific metrics regarding application size and the size of all application dependencies.
-   * Requires that the given dependency has a valid library Id.
+   * Provides application-specific metrics regarding application size and the
+   * size of all application dependencies. Requires that the given dependency
+   * has a valid library Id.
    *
-   * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does not exist, 200 {@link HttpStatus#OK} if the application is found
+   * @return 404 {@link HttpStatus#NOT_FOUND} if application with given GAV does
+   * not exist, 200 {@link HttpStatus#OK} if the application is found
    * @param mvnGroup a {@link java.lang.String} object.
    * @param artifact a {@link java.lang.String} object.
    * @param version a {@link java.lang.String} object.
-   * @param excludedScopes an array of {@link org.eclipse.steady.shared.enums.Scope} objects.
+   * @param excludedScopes an array of
+   * {@link org.eclipse.steady.shared.enums.Scope} objects.
    * @param space a {@link java.lang.String} object.
    */
   @RequestMapping(
@@ -1664,27 +1667,28 @@ public class ApplicationController {
       packages.incrementTotal(count_packages);
       metrics.addRatio(packages);
 
-      // Classes
-      final Ratio classes = new Ratio("class_ratio", af.countClass(), af.countClass());
-      int count_classes;
+      // Classes, enums and interfaces
+      final int _count = af.countClass() + af.countEnum() + af.countIntf();
+      final Ratio classes = new Ratio("class_ratio", _count, _count);
+      int count_classes_interfaces_enums;
       if (excludedScopes == null || excludedScopes.length == 0)
-        count_classes =
+        count_classes_interfaces_enums =
             this.appRepository.countDepConstructTypes(
                 a.getMvnGroup(),
                 a.getArtifact(),
                 a.getVersion(),
                 a.getSpace(),
-                new ConstructType[] {ConstructType.CLAS});
+                new ConstructType[] {ConstructType.CLAS, ConstructType.ENUM, ConstructType.INTF});
       else
-        count_classes =
+        count_classes_interfaces_enums =
             this.appRepository.countDepConstructTypes(
                 a.getMvnGroup(),
                 a.getArtifact(),
                 a.getVersion(),
                 a.getSpace(),
-                new ConstructType[] {ConstructType.CLAS},
+                new ConstructType[] {ConstructType.CLAS, ConstructType.ENUM, ConstructType.INTF},
                 excludedScopes);
-      classes.incrementTotal(count_classes);
+      classes.incrementTotal(count_classes_interfaces_enums);
       metrics.addRatio(classes);
 
       // Executable constructs (METH, CONS, INIT)
