@@ -18,17 +18,46 @@
  */
 package org.eclipse.steady.cg.soot;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import soot.*;
-import soot.javaToJimple.LocalGenerator;
-import soot.jimple.*;
+
+import soot.Body;
+import soot.BooleanType;
+import soot.ByteType;
+import soot.CharType;
+import soot.DoubleType;
+import soot.FloatType;
+import soot.IntType;
+import soot.Local;
+import soot.LocalGenerator;
+import soot.LongType;
+import soot.Modifier;
+import soot.RefType;
+import soot.Scene;
+import soot.ShortType;
+import soot.SootClass;
+import soot.SootMethod;
+import soot.SootMethodRef;
+import soot.Type;
+import soot.VoidType;
+import soot.javaToJimple.DefaultLocalGenerator;
+import soot.jimple.AssignStmt;
+import soot.jimple.Jimple;
+import soot.jimple.JimpleBody;
+import soot.jimple.NullConstant;
+import soot.jimple.SpecialInvokeExpr;
+import soot.jimple.Stmt;
 import soot.jimple.infoflow.data.SootMethodAndClass;
 import soot.jimple.infoflow.entryPointCreators.DefaultEntryPointCreator;
 import soot.jimple.infoflow.util.SootMethodRepresentationParser;
 import soot.jimple.internal.JNopStmt;
-
-import java.util.*;
 
 /**
  * <p>CustomEntryPointCreator class.</p>
@@ -260,7 +289,7 @@ public class CustomEntryPointCreator extends DefaultEntryPointCreator {
 
     // add locals for Parameter
     // Add a parameter reference to the body
-    LocalGenerator lg = new LocalGenerator(body);
+    LocalGenerator lg = new DefaultLocalGenerator(body);
 
     // create a local for the this reference
     if (!methodToImplement.isStatic()) {
